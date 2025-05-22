@@ -33,6 +33,7 @@ public final class ModConstants {
     public static final String DEPTH_METER_NAME = "altimeter";
     public static final String SLICE_MAP_NAME = "slice_map";
     public static final String CONFETTI_POPPER_NAME = "confetti_popper";
+    public static final String CONFETTI_LITTER_NAME = "confetti_litter";
     public static final String DRAGON_PATTERN_NAME = "dragon_banner_pattern";
 
     public static final String WAY_SIGN_NAME = "way_sign";

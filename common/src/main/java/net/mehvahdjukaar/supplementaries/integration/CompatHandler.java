@@ -24,6 +24,7 @@ public class CompatHandler {
     public static final boolean JEI = isLoaded("jei");
     public static final boolean REI = isLoaded("roughlyenoughitems");
     public static final boolean EMI = isLoaded("emi");
+    public static final boolean EMF = isLoaded("entity_model_features");
     public static final boolean DECO_BLOCKS = isLoaded("decorative_blocks");
     public static final boolean GOATED = isLoaded("goated");
     public static final boolean IRIS = isLoaded("goated") || isLoaded("oculus");

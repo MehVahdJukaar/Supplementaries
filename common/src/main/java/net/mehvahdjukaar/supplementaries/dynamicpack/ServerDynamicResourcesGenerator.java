@@ -8,6 +8,8 @@ import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesGenerator;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack;
+import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
+import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -25,6 +27,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator {
 
@@ -48,70 +51,71 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
     public static final Map<ResourceLocation, Resource> R = new HashMap<>();
 
     @Override
-    public void regenerateDynamicAssets(ResourceManager manager) {
+    public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
+        executor.accept((manager,sink)->{
+            //R.putAll(manager.listResources("tags", r->true);
 
-        //R.putAll(manager.listResources("tags", r->true);
-
-        //sing posts
-        {
-            SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("way_signs"));
-            builder.addEntries(ModRegistry.WAY_SIGN_ITEMS.values());
-            dynamicPack.addTag(builder, Registries.ITEM);
-        }
-
-        //recipes
-        if (CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
-            addSignPostRecipes(manager);
-        }
-
-        //fabric has it done another way beucase it needs tag before this...
-        if (PlatHelper.getPlatform().isForge()) {
-            //way signs tag
+            //sing posts
             {
-                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-                if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get() && CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
-                    builder.addTag(BiomeTags.IS_OVERWORLD);
-                }
-                dynamicPack.addTag(builder, Registries.BIOME);
+                SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("way_signs"));
+                builder.addEntries(ModRegistry.WAY_SIGN_ITEMS.values());
+                sink.addTag(builder, Registries.ITEM);
             }
 
-            //cave urns tag
-
-            {
-                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
-
-                if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
-                    builder.addTag(BiomeTags.IS_OVERWORLD);
-                }
-                dynamicPack.addTag(builder, Registries.BIOME);
+            //recipes
+            if (CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
+                addSignPostRecipes(manager, sink);
             }
 
-            //wild flax tag
-
-            {
-                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
-
-                if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
-                    builder.addTag(BiomeTags.IS_OVERWORLD);
+            //fabric has it done another way beucase it needs tag before this...
+            if (PlatHelper.getPlatform().isForge()) {
+                //way signs tag
+                {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
+                    if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get() && CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
+                        builder.addTag(BiomeTags.IS_OVERWORLD);
+                    }
+                    sink.addTag(builder, Registries.BIOME);
                 }
-                dynamicPack.addTag(builder, Registries.BIOME);
-            }
 
-            //ash
+                //cave urns tag
 
-            {
-                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
+                {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
 
-                if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
-                    builder.add(Biomes.BASALT_DELTAS.location());
-                    builder.addOptionalElement(ResourceLocation.parse("incendium:volcanic_deltas"));
+                    if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
+                        builder.addTag(BiomeTags.IS_OVERWORLD);
+                    }
+                    sink.addTag(builder, Registries.BIOME);
                 }
-                dynamicPack.addTag(builder, Registries.BIOME);
+
+                //wild flax tag
+
+                {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
+
+                    if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
+                        builder.addTag(BiomeTags.IS_OVERWORLD);
+                    }
+                    sink.addTag(builder, Registries.BIOME);
+                }
+
+                //ash
+
+                {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
+
+                    if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
+                        builder.add(Biomes.BASALT_DELTAS.location());
+                        builder.addOptionalElement(ResourceLocation.parse("incendium:volcanic_deltas"));
+                    }
+                    sink.addTag(builder, Registries.BIOME);
+                }
             }
-        }
+        });
     }
 
-    private void addSignPostRecipes(ResourceManager manager) {
+    private void addSignPostRecipes(ResourceManager manager, ResourceSink sink) {
         Recipe<?> recipe = RPUtils.readRecipe(manager, Supplementaries.res("way_sign_oak"));
         Recipe<?> recipe2 = RPUtils.readRecipe(manager, Supplementaries.res("way_sign_mod_template"));
 
@@ -126,41 +130,12 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                     var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w,
                              Supplementaries.res("way_sign_oak"));
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
-                    this.dynamicPack.addRecipe(newR);
-                    this.dynamicPack.markNotClearable(newR.id());
+                    sink.addRecipe(newR);
+                    sink.markNotClearable(newR.id());
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
                 }
             }
         });
-    }
-
-    private static void removeNullEntries(JsonObject jsonObject) {
-        jsonObject.entrySet().removeIf(entry -> entry.getValue().isJsonNull());
-
-        jsonObject.entrySet().forEach(entry -> {
-            JsonElement element = entry.getValue();
-            if (element.isJsonObject()) {
-                removeNullEntries(element.getAsJsonObject());
-            } else if (element.isJsonArray()) {
-                removeNullEntries(element.getAsJsonArray());
-            }
-        });
-    }
-
-    private static void removeNullEntries(JsonArray jsonArray) {
-        JsonArray newArray = new JsonArray();
-        jsonArray.forEach(element -> {
-            if (!element.isJsonNull()) {
-                if (element.isJsonObject()) {
-                    removeNullEntries(element.getAsJsonObject());
-                } else if (element.isJsonArray()) {
-                    removeNullEntries(element.getAsJsonArray());
-                }
-                newArray.add(element);
-            }
-        });
-        for (int i = 0; i < jsonArray.size(); i++) jsonArray.remove(i);
-        jsonArray.addAll(newArray);
     }
 }

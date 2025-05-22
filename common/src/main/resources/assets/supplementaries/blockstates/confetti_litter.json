@@ -1,0 +1,67 @@
+{
+  "variants": {
+    "facing=north,confetti=1": {
+      "model": "supplementaries:block/confetti_litter_1"
+    },
+    "facing=east,confetti=1": {
+      "model": "supplementaries:block/confetti_litter_1",
+      "y": 90
+    },
+    "facing=south,confetti=1": {
+      "model": "supplementaries:block/confetti_litter_1",
+      "y": 180
+    },
+    "facing=west,confetti=1": {
+      "model": "supplementaries:block/confetti_litter_1",
+      "y": 270
+    },
+
+    "facing=north,confetti=2": {
+      "model": "supplementaries:block/confetti_litter_2"
+    },
+    "facing=east,confetti=2": {
+      "model": "supplementaries:block/confetti_litter_2",
+      "y": 90
+    },
+    "facing=south,confetti=2": {
+      "model": "supplementaries:block/confetti_litter_2",
+      "y": 180
+    },
+    "facing=west,confetti=2": {
+      "model": "supplementaries:block/confetti_litter_2",
+      "y": 270
+    },
+
+    "facing=north,confetti=3": {
+      "model": "supplementaries:block/confetti_litter_3"
+    },
+    "facing=east,confetti=3": {
+      "model": "supplementaries:block/confetti_litter_3",
+      "y": 90
+    },
+    "facing=south,confetti=3": {
+      "model": "supplementaries:block/confetti_litter_3",
+      "y": 180
+    },
+    "facing=west,confetti=3": {
+      "model": "supplementaries:block/confetti_litter_3",
+      "y": 270
+    },
+
+    "facing=north,confetti=4": {
+      "model": "supplementaries:block/confetti_litter_4"
+    },
+    "facing=east,confetti=4": {
+      "model": "supplementaries:block/confetti_litter_4",
+      "y": 90
+    },
+    "facing=south,confetti=4": {
+      "model": "supplementaries:block/confetti_litter_4",
+      "y": 180
+    },
+    "facing=west,confetti=4": {
+      "model": "supplementaries:block/confetti_litter_4",
+      "y": 270
+    }
+  }
+}

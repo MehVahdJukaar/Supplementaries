@@ -27,6 +27,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -119,7 +120,17 @@ public class ModRegistry {
             .durability(192)));
 
     //confetti
-    public static final Supplier<Item> CONFETTI_POPPER = regItem(CONFETTI_POPPER_NAME, () -> new ConfettiPopperItem(new Item.Properties()));
+    public static final Supplier<Block> CONFETTI_LITTER = regBlock(CONFETTI_LITTER_NAME, () -> new ConfettiLitterBlock(
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.NONE)
+                    .sound(SoundType.AZALEA_LEAVES)
+                    .strength(0, 0)
+                    .forceSolidOff()
+                    .noOcclusion()
+    ));
+
+    public static final Supplier<Item> CONFETTI_POPPER = regItem(CONFETTI_POPPER_NAME, () ->
+            new ConfettiPopperItem(CONFETTI_LITTER.get(), new Item.Properties()));
 
     //flute
     public static final Supplier<Item> FLUTE_ITEM = regItem(FLUTE_NAME, () -> new FluteItem(new Item.Properties()
@@ -224,6 +235,8 @@ public class ModRegistry {
     // awnings
 
     public static final Map<DyeColor, Supplier<Block>> AWNINGS = RegUtils.registerAwnings(AWNING_NAME);
+
+    public static final Map<WoodType, CannonBoatItem> CANNON_BOAT_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
 
     //decoration blocks
 

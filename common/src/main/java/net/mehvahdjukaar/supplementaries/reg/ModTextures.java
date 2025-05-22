@@ -94,6 +94,7 @@ public class ModTextures {
     public static final ResourceLocation CANNON_DEPLETED_HOVERED_SPRITE = Supplementaries.res("cannon/depleted_highlighted");
     public static final ResourceLocation CANNON_MANEUVER_SPRITE = Supplementaries.res("cannon/maneuver");
     public static final ResourceLocation CANNON_MANEUVER_HOVERED_SPRITE = Supplementaries.res("cannon/maneuver_highlighted");
+    public static final ResourceLocation CANNON_MANEUVER_DISABLED_SPRITE = Supplementaries.res("cannon/maneuver_disabled");
     public static final ResourceLocation CANNON_HOTBAR_SPRITE = Supplementaries.res("hud/cannon_hotbar");
     public static final ResourceLocation CANNON_TRAJECTORY_0_SPRITE = Supplementaries.res("hud/cannon_trajectory_0");
     public static final ResourceLocation CANNON_TRAJECTORY_1_SPRITE = Supplementaries.res("hud/cannon_trajectory_1");

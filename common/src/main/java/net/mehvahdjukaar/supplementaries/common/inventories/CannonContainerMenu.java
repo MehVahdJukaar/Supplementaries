@@ -16,8 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class CannonContainerMenu extends AbstractContainerMenu implements IContainerProvider {
 
-    public final
-    CannonAccess access;
+    public final CannonAccess access;
 
     @Override
     public CannonBlockTile getContainer() {

@@ -9,13 +9,12 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
-import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.common.items.CannonBoatItem;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
@@ -23,8 +22,6 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.BuzzierBeesCompat;
 import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.minecraft.Util;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -56,6 +53,7 @@ public class RegUtils {
 
     public static void initDynamicRegistry() {
         BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
+        BlockSetAPI.addDynamicItemRegistration(RegUtils::registerCannonBoatItems, WoodType.class);
     }
 
     public static void registerAdditionalPlacements() {
@@ -212,7 +210,17 @@ public class RegUtils {
         }
     }
 
-    public static Map<DyeColor, Supplier<Block>> registerAwnings(String baseName) {
+    private static void registerCannonBoatItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
+        for (WoodType wood : woodTypes) {
+            String name = wood.getVariantId(ModConstants.CANNON_BOAT_NAME);
+            CannonBoatItem item = new CannonBoatItem(new Item.Properties().stacksTo(1), wood);
+            wood.addChild("supplementaries:cannon_boat", item);
+            event.register(Supplementaries.res(name), item);
+            ModRegistry.CANNON_BOAT_ITEMS.put(wood, item);
+        }
+    }
+
+        public static Map<DyeColor, Supplier<Block>> registerAwnings(String baseName) {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
         Supplier<Block> defAwning = regBlock(baseName, () -> new AwningBlock(null,
                 BlockBehaviour.Properties.of()

@@ -3,10 +3,10 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
-import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -44,7 +44,9 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.titleLabelX = 8;
         int i = this.leftPos;
         int j = this.topPos;
-        this.addRenderableWidget(new ManeuverButton(i + 154, j + 10 + 6));
+        ManeuverButton maneuver = new ManeuverButton(i + 154, j + 10 + 6);
+        this.addRenderableWidget(maneuver);
+        maneuver.active = this.access.canManeuverFromGUI(Minecraft.getInstance().player);
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
         this.yawSelector.setNumber(access.getCannon().getYaw());
@@ -63,9 +65,11 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
     }
 
     private void onManeuverPressed(Button button) {
-        CannonController.startControlling(access);
-        //dont sync cannon and dont clear owner
-        this.onClose();
+        if (button.active) {
+            CannonController.startControlling(access);
+            //dont sync cannon and dont clear owner
+            this.onClose();
+        }
     }
 
     @Override
@@ -132,6 +136,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         @Override
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float f) {
             var texture = this.isHovered() ? ModTextures.CANNON_MANEUVER_HOVERED_SPRITE : ModTextures.CANNON_MANEUVER_SPRITE;
+            texture = active ? texture : ModTextures.CANNON_MANEUVER_DISABLED_SPRITE;
             guiGraphics.blitSprite(texture, this.getX(), this.getY(), this.width, this.height);
         }
     }

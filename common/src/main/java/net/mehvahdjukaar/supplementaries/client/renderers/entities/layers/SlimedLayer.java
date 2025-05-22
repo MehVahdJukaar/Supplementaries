@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.client.IModelPartExtension;
 import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.EMFCompat;
 import net.mehvahdjukaar.supplementaries.mixins.AgeableListAccessor;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HierarchicalModel;
@@ -35,15 +37,21 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
         int width = 64;
         int height = 64;
         M model = this.getParentModel();
-        if (model instanceof AgeableListAccessor al) {
+        ModelPart modelPart = null;
+        if (CompatHandler.EMF) {
+            modelPart = EMFCompat.getFirstEMFModelPart(model);
+        }
+        if (modelPart == null && model instanceof AgeableListAccessor al) {
             for (ModelPart v : al.invokeBodyParts()) {
-                IModelPartExtension part = (IModelPartExtension) (Object) v;
-                height = part.supp$getTextHeight();
-                width = part.supp$getTextWidth();
+                modelPart = v;
                 break;
             }
         } else if (model instanceof HierarchicalModel<?> m) {
-            IModelPartExtension part = (IModelPartExtension) (Object) m.root();
+            modelPart = m.root();
+        }
+
+        if (modelPart != null) {
+            IModelPartExtension part = (IModelPartExtension) (Object) modelPart;
             height = part.supp$getTextHeight();
             width = part.supp$getTextWidth();
         }

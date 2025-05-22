@@ -10,6 +10,8 @@ import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesGenerator;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicTexturePack;
+import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
+import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
@@ -36,6 +38,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 
 public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator {
@@ -66,6 +69,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
     @Override
     public void regenerateDynamicAssets(ResourceManager manager) {
+        super.regenerateDynamicAssets(manager);
         //generateTagTranslations();
 
         //need this here for reasons I forgot
@@ -74,61 +78,21 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         ColoredMapHandler.onResourceReload();
         SlimedRenderTypes.clear();
 
-        if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get()) {
-            try (var text = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman"));
-                 var eyeText = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman_eyes"))) {
-                dynamicPack.addAndCloseTexture(Supplementaries.res("entity/enderman_head"), text, false);
-                dynamicPack.addAndCloseTexture(Supplementaries.res("entity/enderman_head_eyes"), eyeText, false);
-            } catch (Exception ignored) {
-            }
-        }
-        if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
-            RPUtils.appendModelOverride(manager, this.dynamicPack, ResourceLocation.withDefaultNamespace("crossbow"), e -> {
-                e.add(new ItemOverride(ResourceLocation.withDefaultNamespace("item/crossbow_rope_arrow"),
-                        List.of(new ItemOverride.Predicate(ResourceLocation.withDefaultNamespace("charged"), 1f),
-                                new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
-            });
-        }
+    }
 
-        if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-            RPUtils.appendModelOverride(manager, this.dynamicPack, ResourceLocation.withDefaultNamespace("written_book"), e -> {
-                e.add(new ItemOverride(ResourceLocation.withDefaultNamespace("item/written_book_tattered"),
-                        List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
-            });
-            RPUtils.appendModelOverride(manager, this.dynamicPack, ResourceLocation.withDefaultNamespace("filled_map"), e -> {
-                e.add(new ItemOverride(ResourceLocation.withDefaultNamespace("item/antique_map"),
-                        List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
-            });
-        }
-
-        RPUtils.appendModelOverride(manager, this.dynamicPack, Supplementaries.res("globe"), e -> {
-            int i = 0;
-            for (var text : GlobeManager.TEXTURES) {
-                String name = text.getPath().split("/")[3].split("\\.")[0];
-                e.add(new ItemOverride(Supplementaries.res("item/" + name),
-                        List.of(new ItemOverride.Predicate(Supplementaries.res("type"), i))));
-                i++;
-                this.dynamicPack.addItemModel(Supplementaries.res(name), JsonParser.parseString(
-                        """ 
-                                {
-                                    "parent": "item/generated",
-                                    "textures": {
-                                        "layer0": "supplementaries:item/globes/""" + name + "\"" +
-                                """               
-                                            }
-                                        }
-                                        """));
-            }
-
+    @Override
+    public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
+        executor.accept((manager, sink) -> {
+            addEndermanHead(manager, sink);
+            addRopeArrowModel(manager, sink);
+            addTatteredBook(manager, sink);
+            addGlobeItemModels(manager, sink);
+            addSignPostAssets(manager, sink);
+            generateBoatTextures(manager, sink);
         });
+    }
 
-
-        //models are dynamic too as packs can change them
-
-        //textures
-
-
-        //------sing posts-----
+    private void addSignPostAssets(ResourceManager manager, ResourceSink sink) {
         {
             StaticResource spItemModel = StaticResource.getOrLog(manager,
                     ResType.ITEM_MODELS.getPath(Supplementaries.res("way_sign_oak")));
@@ -140,8 +104,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 //langBuilder.addEntry(sign, wood.getVariantReadableName("way_sign"));
 
                 try {
-                    addSimilarJsonResource(manager, spItemModel, "way_sign_oak", id);
-                    addSimilarJsonResource(manager, spBlockModel, "way_sign_oak", id);
+                    sink.addSimilarJsonResource(manager, spItemModel, "way_sign_oak", id);
+                    sink.addSimilarJsonResource(manager, spBlockModel, "way_sign_oak", id);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Sign Post item model for {} : {}", sign, ex);
                 }
@@ -156,7 +120,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
                 ResourceLocation textureRes = Supplementaries.res("item/way_signs/" + Utils.getID(sign).getPath());
-                if (alreadyHasTextureAtLocation(manager, textureRes)) return;
+                if (sink.alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 TextureImage newImage = null;
                 Item signItem = wood.getItemOfThis("sign");
@@ -193,7 +157,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                     }
                 }
                 if (newImage != null) {
-                    dynamicPack.addAndCloseTexture(textureRes, newImage);
+                    sink.addAndCloseTexture(textureRes, newImage);
                 }
             });
         } catch (Exception ex) {
@@ -209,7 +173,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
                 //if (wood.isVanilla()) continue;
                 var textureRes = Supplementaries.res("block/way_signs/" + Utils.getID(sign).getPath());
-                if (alreadyHasTextureAtLocation(manager, textureRes)) return;
+                if (sink.alreadyHasTextureAtLocation(manager, textureRes)) return;
 
                 try (TextureImage plankTexture = TextureImage.open(manager,
                         RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
@@ -217,13 +181,156 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
                     TextureImage newImage = respriter.recolor(palette);
 
-                    dynamicPack.addAndCloseTexture(textureRes, newImage);
+                    sink.addAndCloseTexture(textureRes, newImage);
                 } catch (Exception ex) {
                     getLogger().error("Failed to generate Sign Post block texture for for {} : {}", sign, ex);
                 }
             });
         } catch (Exception ex) {
             getLogger().error("Could not generate any Sign Post block texture : ", ex);
+        }
+    }
+
+    private void addGlobeItemModels(ResourceManager manager, ResourceSink sink) {
+        RPUtils.appendModelOverride(manager, sink, Supplementaries.res("globe"), e -> {
+            int i = 0;
+            for (var text : GlobeManager.TEXTURES) {
+                String name = text.getPath().split("/")[3].split("\\.")[0];
+                e.add(new ItemOverride(Supplementaries.res("item/" + name),
+                        List.of(new ItemOverride.Predicate(Supplementaries.res("type"), i))));
+                i++;
+                sink.addItemModel(Supplementaries.res(name), JsonParser.parseString(
+                        """ 
+                                {
+                                    "parent": "item/generated",
+                                    "textures": {
+                                        "layer0": "supplementaries:item/globes/""" + name + "\"" +
+                                """               
+                                            }
+                                        }
+                                        """));
+            }
+
+        });
+    }
+
+    private void addTatteredBook(ResourceManager manager, ResourceSink sink) {
+        if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
+            RPUtils.appendModelOverride(manager, sink, ResourceLocation.withDefaultNamespace("written_book"), e -> {
+                e.add(new ItemOverride(ResourceLocation.withDefaultNamespace("item/written_book_tattered"),
+                        List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
+            });
+            RPUtils.appendModelOverride(manager, sink, ResourceLocation.withDefaultNamespace("filled_map"), e -> {
+                e.add(new ItemOverride(ResourceLocation.withDefaultNamespace("item/antique_map"),
+                        List.of(new ItemOverride.Predicate(Supplementaries.res("antique_ink"), 1))));
+            });
+        }
+    }
+
+    private void addRopeArrowModel(ResourceManager manager, ResourceSink sink) {
+        if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
+            RPUtils.appendModelOverride(manager, sink, ResourceLocation.withDefaultNamespace("crossbow"), e -> {
+                e.add(new ItemOverride(ResourceLocation.withDefaultNamespace("item/crossbow_rope_arrow"),
+                        List.of(new ItemOverride.Predicate(ResourceLocation.withDefaultNamespace("charged"), 1f),
+                                new ItemOverride.Predicate(Supplementaries.res("rope_arrow"), 1f))));
+            });
+        }
+    }
+
+    private void addEndermanHead(ResourceManager manager, ResourceSink sink) {
+        if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get()) {
+            try (var text = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman"));
+                 var eyeText = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman_eyes"))) {
+                sink.addAndCloseTexture(Supplementaries.res("entity/enderman_head"), text, false);
+                sink.addAndCloseTexture(Supplementaries.res("entity/enderman_head_eyes"), eyeText, false);
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    public void generateBoatTextures(ResourceManager manager, ResourceSink sink) {
+        StaticResource itemModel = StaticResource.getOrLog(manager,
+                ResType.ITEM_MODELS.getPath(Supplementaries.res("cannon_boat_oak")));
+
+        ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
+
+            try {
+                sink.addSimilarJsonResource(manager, itemModel, "cannon_boat_oak", wood.getVariantId("cannon_boat"));
+            } catch (Exception ex) {
+                getLogger().error("Failed to generate Cannon Boat item model for {} : {}", sled, ex);
+            }
+        });
+
+        //entity textures
+        try (TextureImage template = TextureImage.open(manager, Supplementaries.res("entity/cannon_boat/oak"))) {
+
+            Respriter respriter = Respriter.of(template);
+
+            ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
+
+                ResourceLocation textureRes = Supplementaries.res("entity/cannon_boat/" + wood.getTexturePath());
+                if (sink.alreadyHasTextureAtLocation(manager, textureRes)) return;
+
+
+                try (TextureImage plankTexture = TextureImage.open(manager,
+                        RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
+                    //Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankTexture);
+                    var targetPalette = Palette.fromImage(plankTexture);
+                    TextureImage newImage = respriter.recolor(targetPalette);
+                    //TextureImage newImage = respriter.recolorWithAnimationOf(plankTexture);
+                    sink.addAndCloseTexture(textureRes, newImage, false);
+
+                } catch (Exception ex) {
+                    getLogger().error("Failed to generate sled entity texture for for {} : {}", sled, ex);
+                }
+            });
+        } catch (Exception ex) {
+            getLogger().error("Could not generate any sled entity texture : ", ex);
+        }
+
+        //item textures
+        try (TextureImage template = TextureImage.open(manager, Supplementaries.res("item/cannon_boat/oak"));
+             TextureImage boatMask = TextureImage.open(manager, Supplementaries.res("item/cannon_boat/boat_mask"));
+             TextureImage sledMask = TextureImage.open(manager, Supplementaries.res("item/cannon_boat/cannon_boat_mask"))) {
+
+            Palette palette = Palette.fromImage(template, sledMask);
+            Respriter respriter = Respriter.ofPalette(template, palette);
+
+            ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
+                //if (wood.isVanilla()) continue;
+                ResourceLocation textureRes = Supplementaries.res("item/cannon_boat/" + Utils.getID(sled).getPath());
+                if (sink.alreadyHasTextureAtLocation(manager, textureRes)) return;
+
+                TextureImage newImage = null;
+                Item boat = wood.getItemOfThis("boat");
+                if (boat != null) {
+                    try (TextureImage vanillaBoat = TextureImage.open(manager,
+                            RPUtils.findFirstItemTextureLocation(manager, boat))) {
+
+                        Palette targetPalette = Palette.fromImage(vanillaBoat, boatMask);
+                        newImage = respriter.recolor(targetPalette);
+
+                    } catch (Exception ex) {
+                        getLogger().warn("Could not find boat texture for wood type {}. Using plank texture : {}", wood, ex);
+                    }
+                }
+                //if it failed use plank one
+                if (newImage == null) {
+                    try (TextureImage plankPalette = TextureImage.open(manager,
+                            RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
+                        Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
+                        newImage = respriter.recolor(targetPalette);
+
+                    } catch (Exception ex) {
+                        getLogger().error("Failed to generate Cannon Boat item texture for for {} : {}", sled, ex);
+                    }
+                }
+                if (newImage != null) {
+                    sink.addAndCloseTexture(textureRes, newImage);
+                }
+            });
+        } catch (Exception ex) {
+            getLogger().error("Could not generate any Cannon Boat item texture : ", ex);
         }
     }
 
@@ -246,9 +353,9 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
      * recolors the template image with the color grabbed from the given image restrained to its mask, if possible
      */
     @Nullable
-    public static TextureImage recolorFromVanilla(ResourceManager manager, TextureImage
+    private static TextureImage recolorFromVanilla(ResourceManager manager, TextureImage
             vanillaTexture, ResourceLocation vanillaMask,
-                                                  ResourceLocation templateTexture) {
+                                                   ResourceLocation templateTexture) {
         try (TextureImage scribbleMask = TextureImage.open(manager, vanillaMask);
              TextureImage template = TextureImage.open(manager, templateTexture)) {
             Respriter respriter = Respriter.of(template);

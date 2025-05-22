@@ -5,11 +5,8 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
-import net.mehvahdjukaar.supplementaries.mixins.ModelPartMixin;
-import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,6 +16,8 @@ import net.minecraft.world.phys.Vec3;
 public interface CannonAccess {
 
     CannonBlockTile getCannon();
+
+    boolean canManeuverFromGUI(Player player);
 
     void syncToServer(boolean fire, boolean removeOwner);
 
@@ -50,6 +49,11 @@ public interface CannonAccess {
         }
 
         @Override
+        public boolean canManeuverFromGUI(Player player) {
+            return true; //if gui is open it means we can always maneuver
+        }
+
+        @Override
         public Vec3 getCannonGlobalPosition() {
             return cannon.getBlockPos().getCenter();
         }
@@ -63,8 +67,6 @@ public interface CannonAccess {
         public float getCannonGlobalYawOffset() {
             return 0;
         }
-
-
 
         @Override
         public CannonBlockTile getCannon() {

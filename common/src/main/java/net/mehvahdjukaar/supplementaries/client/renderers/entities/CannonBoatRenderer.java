@@ -1,7 +1,11 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CannonBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.entities.CannnonBoatEntity;
@@ -10,14 +14,26 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
+import java.util.Map;
+
 public class CannonBoatRenderer extends BoatRenderer {
+
+    private final Map<WoodType, ResourceLocation> textures;
 
     public CannonBoatRenderer(EntityRendererProvider.Context context) {
         super(context, false);
+        this.textures = WoodTypeRegistry.getTypes().stream().collect(ImmutableMap.toImmutableMap((e) -> e,
+                (t) -> Supplementaries.res("textures/entity/cannon_boat/" + t.getTexturePath() + ".png")));
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(Boat entity) {
+        return textures.get(((CannnonBoatEntity) entity).getWoodType());
     }
 
     @Override

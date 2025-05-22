@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundUpdateCannonBoatPacket;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -189,6 +192,7 @@ public class CannonController {
     }
 
     public static void onKeyShift() {
+        Player player = Minecraft.getInstance().player;
         stopControllingAndSync();
     }
 
