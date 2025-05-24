@@ -12,7 +12,10 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.*;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundUpdateCannonBoatPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
+import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -44,6 +47,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, CannonAccess, IControllableVehicle {
@@ -317,15 +321,15 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @Override
     public Vec3 getCannonGlobalPosition(float partialTicks) {
-        float yaw = getCannonGlobalYawOffset();
+        float yaw = getCannonGlobalYawOffset(partialTicks);
         Vec3 vv = getCannonGlobalOffset();
         vv = vv.yRot(Mth.DEG_TO_RAD * yaw);
         return this.getPosition(partialTicks).add(vv);
     }
 
     @Override
-    public float getCannonGlobalYawOffset() {
-        return 180 - this.getYRot();
+    public float getCannonGlobalYawOffset(float partialTicks) {
+        return 180 - this.getViewYRot(partialTicks);
     }
 
     @Override
@@ -381,14 +385,19 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     }
 
     @Override
-    public void applyRecoil(Vec3 shootForce) {
-        float scale = 1f;
-        Vec3 v = new Vec3(-shootForce.x * scale, 0, -shootForce.z * scale);
+    public void applyRecoil() {
+        Vec3 v = getCannonRecoil();
         if (this.hasControllingPassenger()) {
-            NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
-                    new ClientBoundSendKnockbackPacket(this.getId(), v));
-        }
-        this.addDeltaMovement(v);
+       //     NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
+         //           new ClientBoundSendKnockbackPacket(this.getId(), v));
+        } else this.addDeltaMovement(v);
 
+    }
+
+    public @NotNull Vec3 getCannonRecoil() {
+        float power= this.cannon.getFirePower();
+        float scale = 1;
+        Vec3 shootForce = this.getCannonGlobalFacing(1).scale(power*scale);
+        return new Vec3(-shootForce.x, 0, -shootForce.z);
     }
 }

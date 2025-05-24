@@ -35,7 +35,7 @@ public class CannonTrajectoryRenderer {
 
         boolean rendersRed = !tile.readyToFire();
 
-        Vec3 cannonPos = access.getCannonGlobalPosition();
+        Vec3 cannonPos = access.getCannonGlobalPosition(partialTicks);
 
 
         Minecraft mc = Minecraft.getInstance();
@@ -60,8 +60,7 @@ public class CannonTrajectoryRenderer {
 
         if (!hitAir && hit instanceof BlockHitResult bh) {
             if (bh.getDirection() == Direction.UP) {
-                renderTargetCircle(poseStack, buffer, rendersRed,
-                        trajectory.getHitLocation(cannonPos, yaw).subtract(cannonPos));
+                renderTargetCircle(poseStack, buffer, rendersRed, trajectory.getHitLocation(Vec3.ZERO, yaw), partialTicks);
             }
         }
 
@@ -83,14 +82,15 @@ public class CannonTrajectoryRenderer {
         poseStack.popPose();
     }
 
-    private static void renderTargetCircle(PoseStack poseStack, MultiBufferSource buffer, boolean red, Vec3 targetPos) {
+    private static void renderTargetCircle(PoseStack poseStack, MultiBufferSource buffer,
+                                           boolean red, Vec3 targetPos, float partialTicks) {
         poseStack.pushPose();
 
         Material circleMaterial = red ? ModMaterials.CANNON_TARGET_RED_MATERIAL : ModMaterials.CANNON_TARGET_MATERIAL;
         VertexConsumer circleBuilder = circleMaterial.buffer(buffer, RenderType::entityCutout);
 
         poseStack.translate(targetPos.x, targetPos.y + 0.05, targetPos.z );
-        poseStack.mulPose(Axis.YP.rotationDegrees(-access.getCannonGlobalYawOffset()));
+        poseStack.mulPose(Axis.YP.rotationDegrees(-access.getCannonGlobalYawOffset(partialTicks)));
 
         poseStack.mulPose(Axis.XP.rotationDegrees(90));
         int lu = LightTexture.FULL_BLOCK;

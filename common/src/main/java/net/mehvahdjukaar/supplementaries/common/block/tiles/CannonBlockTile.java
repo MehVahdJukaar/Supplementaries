@@ -105,6 +105,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (this.getLevel() instanceof ServerLevel sl) {
             //level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
             if (this.shootProjectile(sl, access)) {
+                access.applyRecoil();
+
                 Player p = this.getPlayerWhoFired();
                 if (p == null || !p.isCreative()) {
                     ItemStack fuel = this.getFuel();
@@ -116,13 +118,13 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
                     this.setChanged();
                     access.updateClients();
 
-                    level.gameEvent(p, GameEvent.EXPLODE, access.getCannonGlobalPosition());
+                    level.gameEvent(p, GameEvent.EXPLODE, access.getCannonGlobalPosition(1));
                 }
-                //   NetworkHelper.sendToAllClientPlayersInRange(sl, this.getBlockPos(), 128,
-                //         new ClientBoundControlCannonPacket(TileOrEntityTarget.of(this)));
+                NetworkHelper.sendToAllClientPlayersInRange(sl, this.getBlockPos(), 128,
+                        new ClientBoundCannonAnimationPacket(access.makeNetworkTarget(), true));
             }
         } else {
-            access.playFiringEffects();
+            // access.playFiringEffects();
         }
         this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
     }
@@ -265,10 +267,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         return (float) (Math.pow(powerLevel, CommonConfigs.Functional.CANNON_FIRE_POWER.get()));
     }
 
-    private float getGlobalYaw(CannonAccess access) {
-        return this.yaw - access.getCannonGlobalYawOffset();
-    }
-
     public float getYaw(float partialTicks) {
         return Mth.rotLerp(partialTicks, this.prevYaw, this.yaw);
     }
@@ -300,7 +298,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void setRestrainedYaw(CannonAccess access, float yaw) {
         var r = access.getPitchAndYawRestrains();
-        this.yaw = MthUtils.clampDegrees(yaw + access.getCannonGlobalYawOffset(), r.minYaw(), r.maxYaw());
+        this.yaw = MthUtils.clampDegrees(yaw + access.getCannonGlobalYawOffset(1), r.minYaw(), r.maxYaw());
     }
 
     // sets both prev and current yaw. Only makes sense to be called from render thread
@@ -383,20 +381,19 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         //particles
         if (this.level instanceof ServerLevel serverLevel) {
             NetworkHelper.sendToAllClientPlayersInDefaultRange(serverLevel,
-                    BlockPos.containing(access.getCannonGlobalPosition()),
-                    new ClientBoundCannonAnimationPacket(access.makeNetworkTarget(),false));
+                    BlockPos.containing(access.getCannonGlobalPosition(1)),
+                    new ClientBoundCannonAnimationPacket(access.makeNetworkTarget(), false));
         }
         this.playerWhoIgnitedUUID = entityWhoIgnited != null ? entityWhoIgnited.getUUID() : null;
 
         this.setChanged();
         //update other clients
-        this.level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        access.updateClients();
     }
 
 
     protected boolean shootProjectile(ServerLevel serverLevel, CannonAccess access) {
-        Vec3 facing = Vec3.directionFromRotation(this.pitch,
-                this.getGlobalYaw(access)).scale(-1);
+        Vec3 facing = access.getCannonGlobalFacing(1);
         ItemStack projectile = this.getProjectile().copy();
 
         if (projectile.getItem() instanceof CannonBallItem && breakWhitelist != null) {
@@ -407,15 +404,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
 
         float firePower = getFirePower();
-        boolean success = behavior.fire(projectile.copy(), serverLevel, access.getCannonGlobalPosition(), 0.5f,
+
+        return behavior.fire(projectile.copy(), serverLevel, access.getCannonGlobalPosition(1), 0.5f,
                 facing, firePower, 0, getPlayerWhoFired());
-
-        if (success) {
-            access.applyRecoil(facing.scale(firePower));
-        }
-        return success;
     }
-
 
     @Nullable
     protected Player getPlayerWhoFired() {

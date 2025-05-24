@@ -39,12 +39,11 @@ public record ServerBoundSyncCannonPacket(
 
         // server world
         if (context.getPlayer() instanceof ServerPlayer player) {
-            Level level = player.level();
 
             CannonAccess access = CannonAccess.find(player.level(), this.target);
             if (access != null) {
                 var cannon = access.getCannon();
-                if (cannon.isEditingPlayer(BlockPos.containing(access.getCannonGlobalPosition()), player)) {
+                if (cannon.isEditingPlayer(BlockPos.containing(access.getCannonGlobalPosition(1)), player)) {
                     cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player, access);
                     cannon.setChanged();
                     if (stopControlling) {

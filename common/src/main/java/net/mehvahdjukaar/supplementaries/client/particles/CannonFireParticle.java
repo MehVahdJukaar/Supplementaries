@@ -43,7 +43,7 @@ public class CannonFireParticle extends TextureSheetParticle {
                                SpriteSet ringSprites, SpriteSet boomSprites, float size,
                                double xSpeed, double ySpeed, double zSpeed) {
         super(world, x, y, z, xSpeed, ySpeed, zSpeed);
-        this.setParticleSpeed(0, 0, 0);
+        this.setParticleSpeed(xSpeed, ySpeed, zSpeed);
         this.pitch = pitch;
         this.yaw = yaw;
         this.ringSprites = ringSprites;
@@ -51,6 +51,7 @@ public class CannonFireParticle extends TextureSheetParticle {
         this.lifetime = 5;
         this.hasPhysics = false;
         this.quadSize = 1.25f * size;
+        this.friction = 0.96F;
 
         this.setSpriteFromAge(ringSprites);
     }

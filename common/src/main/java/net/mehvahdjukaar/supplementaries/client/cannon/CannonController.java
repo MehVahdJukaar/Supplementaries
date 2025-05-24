@@ -246,5 +246,9 @@ public class CannonController {
         }
         return false;
     }
+
+    public static boolean rendersXpBar() {
+        return isActive() || (Minecraft.getInstance().player.getVehicle() instanceof CannonAccess);
+    }
 }
 

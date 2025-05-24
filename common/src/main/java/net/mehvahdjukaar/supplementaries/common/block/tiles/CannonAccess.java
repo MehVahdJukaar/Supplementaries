@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector4f;
 
 //used to access a cannon position and rotation, be it in a block or an entity
@@ -30,19 +31,15 @@ public interface CannonAccess {
 
     TileOrEntityTarget makeNetworkTarget();
 
-    void applyRecoil(Vec3 shootForce);
+    void applyRecoil();
 
     boolean canManeuverFromGUI(Player player);
 
     void syncToServer(boolean fire, boolean removeOwner);
 
-    default Vec3 getCannonGlobalPosition() {
-        return getCannonGlobalPosition(0);
-    }
-
     Vec3 getCannonGlobalPosition(float partialTicks);
 
-    float getCannonGlobalYawOffset();
+    float getCannonGlobalYawOffset(float partialTicks);
 
     Vec3 getCannonGlobalOffset();
 
@@ -54,6 +51,11 @@ public interface CannonAccess {
 
     void updateClients();
 
+    default Vec3 getCannonGlobalFacing(float partialTicks) {
+        CannonBlockTile cannon = this.getCannon();
+        return Vec3.directionFromRotation(cannon.getPitch(partialTicks),
+                cannon.getYaw(partialTicks) - this.getCannonGlobalYawOffset(partialTicks)).scale(-1);
+    }
 
     Restraint getPitchAndYawRestrains();
 
@@ -72,7 +74,12 @@ public interface CannonAccess {
         }
 
         @Override
-        public void applyRecoil(Vec3 shootForce) {
+        public Vec3 getCannonRecoil() {
+            return Vec3.ZERO; //no recoil for block cannons
+        }
+
+        @Override
+        public void applyRecoil() {
         }
 
         @Override
@@ -96,7 +103,7 @@ public interface CannonAccess {
         }
 
         @Override
-        public float getCannonGlobalYawOffset() {
+        public float getCannonGlobalYawOffset(float partialTicks) {
             return 0;
         }
 
@@ -173,13 +180,13 @@ public interface CannonAccess {
     default void playIgniteEffects() {
         Level level = this.getCannon().getLevel();
         PoseStack poseStack = CannonAccess.calculateGlobalPose(this);
-        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.75f, 1));
+        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.752f, 1));
 
         Vec3 speed = this.getCannonGlobalVelocity();
-        level.addParticle(ParticleTypes.FLAME,
+        level.addParticle(ParticleTypes.CRIT,
                 p.x, p.y, p.z, speed.x, speed.y, speed.z);
 
-        Vec3 pos = this.getCannonGlobalPosition();
+        Vec3 pos = this.getCannonGlobalPosition(1);
         level.playLocalSound(pos.x, pos.y, pos.z, ModSounds.CANNON_IGNITE.get(), SoundSource.BLOCKS, 0.6f,
                 1.2f + level.getRandom().nextFloat() * 0.2f, false);
     }
@@ -189,18 +196,19 @@ public interface CannonAccess {
         PoseStack poseStack = CannonAccess.calculateGlobalPose(this);
         CannonBlockTile cannon = this.getCannon();
         Level level = cannon.getLevel();
-        float yaw = cannon.getYaw() - this.getCannonGlobalYawOffset();
+        float yaw = cannon.getYaw() - this.getCannonGlobalYawOffset(1);
         float pitch = cannon.getPitch();
         float power = cannon.getPowerLevel();
-        Vec3 pos = this.getCannonGlobalPosition();
+        Vec3 pos = this.getCannonGlobalPosition(1);
         Vec3 speed = this.getCannonGlobalVelocity();
+        speed = speed.scale(0.4);
         var opt = new CannonFireParticle.Options(pitch, yaw, 1);
         level.addParticle(opt, pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
 
         RandomSource ran = level.random;
 
-        spawnDustRing(level, poseStack);
-        spawnSmokeTrail(level, poseStack, ran);
+        spawnDustRing(level, poseStack, speed);
+        spawnSmokeTrail(level, poseStack, ran, speed);
 
         // power from 1 to 4
         float soundPitch = 1.3f - power * 0.1f;
@@ -209,13 +217,15 @@ public interface CannonAccess {
                 soundVolume, soundPitch, false);
     }
 
+    Vec3 getCannonRecoil();
+
     private static PoseStack calculateGlobalPose(CannonAccess access) {
         CannonBlockTile tile = access.getCannon();
-        float yaw = tile.getYaw() - access.getCannonGlobalYawOffset();
+        float yaw = tile.getYaw() - access.getCannonGlobalYawOffset(1);
         float pitch = tile.getPitch();
 
         PoseStack poseStack = new PoseStack();
-        var pos = access.getCannonGlobalPosition();
+        var pos = access.getCannonGlobalPosition(1);
         poseStack.translate(pos.x, pos.y + 1 / 16f, pos.z);
 
         poseStack.mulPose(Axis.YP.rotationDegrees(-yaw));
@@ -224,13 +234,14 @@ public interface CannonAccess {
         return poseStack;
     }
 
-    private static void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran) {
+    private static void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran,Vec3 sp) {
         int smokeCount = 40;
         for (int i = 0; i < smokeCount; i += 1) {
 
             poseStack.pushPose();
 
-            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, -MthUtils.nextWeighted(ran, 0.5f, 1, 0.06f), 0));
+            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0,
+                    -MthUtils.nextWeighted(ran, 0.5f, 1, 0.06f), 0));
 
             float aperture = 0.5f;
             poseStack.translate(-aperture / 2 + ran.nextFloat() * aperture, -aperture / 2 + ran.nextFloat() * aperture, 0);
@@ -239,12 +250,12 @@ public interface CannonAccess {
 
             level.addParticle(ParticleTypes.SMOKE,
                     p.x, p.y, p.z,
-                    speed.x, speed.y, speed.z);
+                    speed.x + sp.x, speed.y+sp.y, speed.z+sp.z);
             poseStack.popPose();
         }
     }
 
-    private static void spawnDustRing(Level level, PoseStack poseStack) {
+    private static void spawnDustRing(Level level, PoseStack poseStack, Vec3 sp) {
         poseStack.pushPose();
 
         Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
@@ -261,9 +272,10 @@ public interface CannonAccess {
 
             Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, vel, 0));
             SimpleParticleType campfireCosySmoke = ModParticles.BOMB_SMOKE_PARTICLE.get();
+
             level.addParticle(campfireCosySmoke,
                     p.x, p.y, p.z,
-                    speed.x, speed.y, speed.z);
+                    speed.x+sp.x, speed.y+sp.y, speed.z+sp.z);
             poseStack.popPose();
         }
 
