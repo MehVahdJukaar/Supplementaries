@@ -188,6 +188,7 @@ public class ClientRegistry {
 
         RenderType cutout = RenderType.cutout();
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), cutout);
+        ClientHelper.registerRenderType(ModRegistry.CONFETTI_LITTER.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.FIRE_PIT.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.BUNTING_BLOCK.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.BOOK_PILE.get(), cutout);

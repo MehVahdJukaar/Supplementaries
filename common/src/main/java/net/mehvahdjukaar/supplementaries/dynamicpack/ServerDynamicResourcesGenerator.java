@@ -1,8 +1,5 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
@@ -52,7 +49,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
     @Override
     public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
-        executor.accept((manager,sink)->{
+        executor.accept((manager, sink) -> {
             //R.putAll(manager.listResources("tags", r->true);
 
             //sing posts
@@ -62,9 +59,19 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                 sink.addTag(builder, Registries.ITEM);
             }
 
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("cannon_boats"));
+                builder.addEntries(ModRegistry.CANNON_BOAT_ITEMS.values());
+                sink.addTag(builder, Registries.ITEM);
+            }
+
             //recipes
             if (CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
                 addSignPostRecipes(manager, sink);
+            }
+
+            if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
+                addCannonBoatRecipes(manager, sink);
             }
 
             //fabric has it done another way beucase it needs tag before this...
@@ -115,6 +122,25 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         });
     }
 
+    private void addCannonBoatRecipes(ResourceManager manager, ResourceSink sink) {
+        Recipe<?> recipeTemplate = RPUtils.readRecipe(manager, Supplementaries.res("cannon_boat_oak"));
+        WoodType oak = WoodTypeRegistry.OAK_TYPE;
+        ModRegistry.WAY_SIGN_ITEMS.forEach((w, i) -> {
+            if (w != oak) {
+                try {
+                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w,
+                            Supplementaries.res("cannon_boat_oak"));
+                    //newR = ForgeHelper.addRecipeConditions(newR, recipe);
+                    sink.addRecipe(newR);
+                    sink.markNotClearable(newR.id());
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("Failed to generate recipe for cannon boat {}:", i, e);
+                }
+            }
+        });
+    }
+
+
     private void addSignPostRecipes(ResourceManager manager, ResourceSink sink) {
         Recipe<?> recipe = RPUtils.readRecipe(manager, Supplementaries.res("way_sign_oak"));
         Recipe<?> recipe2 = RPUtils.readRecipe(manager, Supplementaries.res("way_sign_mod_template"));
@@ -128,7 +154,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                     Recipe<?> recipeTemplate = w.getChild("sign") == null ? recipe2 : recipe;
 
                     var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w,
-                             Supplementaries.res("way_sign_oak"));
+                            Supplementaries.res("way_sign_oak"));
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     sink.addRecipe(newR);
                     sink.markNotClearable(newR.id());

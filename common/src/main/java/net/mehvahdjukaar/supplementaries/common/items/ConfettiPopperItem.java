@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientReceivers;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -17,7 +16,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -35,8 +33,15 @@ public class ConfettiPopperItem extends BlockItem {
     }
 
     @Override
+    public String getDescriptionId() {
+        return this.getOrCreateDescriptionId();
+    }
+
+    @Override
     protected boolean canPlace(BlockPlaceContext context, BlockState state) {
-        return super.canPlace(context, state) && false;
+        return (context.isSecondaryUseActive() || (context.canPlace() &&
+                context.getLevel().getBlockState(context.getClickedPos()).is(this.getBlock())))
+                && super.canPlace(context, state);
     }
 
     @Override

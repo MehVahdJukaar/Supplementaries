@@ -1,0 +1,27 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "cannon_boat"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cannon_boat"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "supplementaries:cannon"
+    },
+    {
+      "item": "minecraft:bamboo_raft"
+    }
+  ],
+  "result": {
+    "id": "supplementaries:cannon_boat_bamboo",
+    "count": 1
+  }
+}

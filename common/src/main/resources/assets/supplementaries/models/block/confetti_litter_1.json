@@ -1,0 +1,16 @@
+{
+	"parent": "minecraft:block/cube_column",
+	"textures": {
+		"top": "supplementaries:block/confetti_litter"
+	},
+	"elements": [
+		{
+			"from": [0, 0.25, 0],
+			"to": [8, 0.25, 8],
+			"faces": {
+				"up": {"uv": [0, 0, 8, 8], "texture": "#top"},
+				"down": {"uv": [0, 0, 8, 8], "texture": "#top"}
+			}
+		}
+	]
+}

@@ -742,6 +742,7 @@ public class CommonConfigs {
                     .define("fuse_time", 40, 0, 500);
             CANNON_COOLDOWN = builder.comment("Time for a cannon to be able to fire again after it has been fired")
                     .define("cooldown", 60, 0, 500);
+            CANNON_BOAT_ENABLED = feature(builder, ModConstants.CANNON_BOAT_NAME);
             builder.push("cannonball");
             CANNONBALL_ENABLED = feature(builder);
             CANNONBALL_POWER_SCALING = builder.comment("Cannonball power scaling. Higher values will make cannonballs have more energy. Reminder that the damage and breaking power of a cannonball is proportional to its energy (speed squared) times this constant")
@@ -852,6 +853,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
         public static final Supplier<Boolean> CANNON_ENABLED;
+        public static final Supplier<Boolean> CANNON_BOAT_ENABLED;
         public static final Supplier<Double> CANNON_FIRE_POWER;
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;
