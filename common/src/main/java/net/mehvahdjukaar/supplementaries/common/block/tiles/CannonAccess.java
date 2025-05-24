@@ -201,7 +201,7 @@ public interface CannonAccess {
         float power = cannon.getPowerLevel();
         Vec3 pos = this.getCannonGlobalPosition(1);
         Vec3 speed = this.getCannonGlobalVelocity();
-        speed = speed.scale(0.4);
+        speed = speed.scale(0.3);
         var opt = new CannonFireParticle.Options(pitch, yaw, 1);
         level.addParticle(opt, pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
 

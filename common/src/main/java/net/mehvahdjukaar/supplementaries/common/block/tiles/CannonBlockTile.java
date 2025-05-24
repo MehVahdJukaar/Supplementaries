@@ -120,7 +120,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
                     level.gameEvent(p, GameEvent.EXPLODE, access.getCannonGlobalPosition(1));
                 }
-                NetworkHelper.sendToAllClientPlayersInRange(sl, this.getBlockPos(), 128,
+                NetworkHelper.sendToAllClientPlayersInRange(sl,
+                        BlockPos.containing(access.getCannonGlobalPosition(1)), 128,
                         new ClientBoundCannonAnimationPacket(access.makeNetworkTarget(), true));
             }
         } else {
@@ -156,7 +157,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         this.yaw = tag.getFloat("yaw");
         this.pitch = tag.getFloat("pitch");
         this.cooldownTimer = tag.getInt("cooldown");
-        this.fuseTimer = tag.getInt("fuse_timer");
+        this.fuseTimer = Math.max(this.fuseTimer, tag.getInt("fuse_timer"));
         this.powerLevel = tag.getByte("fire_power");
         if (tag.contains("player_ignited")) {
             this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");

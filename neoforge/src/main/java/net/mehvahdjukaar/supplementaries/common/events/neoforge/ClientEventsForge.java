@@ -87,17 +87,6 @@ public class ClientEventsForge {
                 SelectableContainerItemHud.getInstance().setUsingKeybind(SlotReference.EMPTY, mc.player);
             }
         }
-
-        if (CannonController.isActive() && action == GLFW.GLFW_PRESS) {
-            int key = event.getKey();
-            int scanCode = event.getScanCode();
-            if (mc.options.keyJump.matches(key, scanCode)) {
-                CannonController.onKeyJump();
-            }
-            if (mc.options.keyShift.matches(key, scanCode)) {
-                CannonController.onKeyShift();
-            }
-        }
     }
 
     @SubscribeEvent

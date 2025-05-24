@@ -7,6 +7,7 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -21,6 +22,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class CannonController {
 
+    protected static boolean isOnCannonBoat = false;
     protected static CannonAccess access;
 
     private static CameraType lastCameraType;
@@ -52,9 +54,12 @@ public class CannonController {
             lastCameraType = mc.options.getCameraType();
         } //if not it means we entered from manouver mode gui
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-        mc.gui.setOverlayMessage(Component.translatable("message.supplementaries.cannon_maneuver",
+        MutableComponent message = Component.translatable("message.supplementaries.cannon_maneuver",
                 mc.options.keyShift.getTranslatedKeyMessage(),
-                mc.options.keyAttack.getTranslatedKeyMessage()), false);
+                mc.options.keyAttack.getTranslatedKeyMessage());
+        mc.gui.setOverlayMessage(message, false);
+        mc.getNarrator().sayNow(message);
+
     }
 
     // only works if we are already controlling
@@ -208,20 +213,23 @@ public class CannonController {
 
     public static void onInputUpdate(Input input) {
         // resets input
-        input.down = false;
-        input.jumping = false;
-        input.up = false;
-        input.left = false;
-        input.right = false;
+        if(!isOnCannonBoat) {
+            input.down = false;
+            input.up = false;
+            input.left = false;
+            input.right = false;
+            input.forwardImpulse = 0;
+            input.leftImpulse = 0;
+        }
         input.shiftKeyDown = false;
-        input.forwardImpulse = 0;
-        input.leftImpulse = 0;
+        input.jumping = false;
     }
 
     public static void onClientTick(Minecraft mc) {
-        if (!isActive()) return;
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
+        isOnCannonBoat = player.getVehicle() instanceof CannonAccess;
+        if (!isActive()) return;
         if (access.stillValid(player)) {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
@@ -233,22 +241,30 @@ public class CannonController {
     }
 
     //called by mixin. its cancellable. maybe switch all to this
-    public static boolean onEarlyKeyPress(int key, int scancode, int action, int modifiers) {
+    public static boolean onEarlyKeyPress(int key, int scanCode, int action, int modifiers) {
         if (!isActive()) return false;
         if (action != GLFW.GLFW_PRESS) return false;
-
+        var options = Minecraft.getInstance().options;
         if (key == 256) {
             stopControllingAndSync();
             return true;
-        } else if (Minecraft.getInstance().options.keyInventory.matches(key, scancode)) {
+        } else if (options.keyInventory.matches(key, scanCode)) {
             onKeyInventory();
+            return true;
+        }
+        if (options.keyJump.matches(key, scanCode)) {
+            onKeyJump();
+            return true;
+        }
+        if (options.keyShift.matches(key, scanCode)) {
+            onKeyShift();
             return true;
         }
         return false;
     }
 
     public static boolean rendersXpBar() {
-        return isActive() || (Minecraft.getInstance().player.getVehicle() instanceof CannonAccess);
+        return isActive() || isOnCannonBoat;
     }
 }
 

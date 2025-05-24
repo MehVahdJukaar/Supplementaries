@@ -22,6 +22,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
@@ -354,7 +355,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         if (jump && level().isClientSide) {
             CannonController.startControlling(this);
         }
-        if (ctrl) {
+        if (ctrl && cannon.readyToFire()) {
             syncToServer(true, false);
         }
     }
@@ -388,16 +389,16 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     public void applyRecoil() {
         Vec3 v = getCannonRecoil();
         if (this.hasControllingPassenger()) {
-       //     NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
-         //           new ClientBoundSendKnockbackPacket(this.getId(), v));
+            NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
+                    new ClientBoundSendKnockbackPacket(this.getId(), v));
         } else this.addDeltaMovement(v);
 
     }
 
     public @NotNull Vec3 getCannonRecoil() {
-        float power= this.cannon.getFirePower();
+        float power = this.cannon.getFirePower();
         float scale = 1;
-        Vec3 shootForce = this.getCannonGlobalFacing(1).scale(power*scale);
+        Vec3 shootForce = this.getCannonGlobalFacing(1).scale(power * scale);
         return new Vec3(-shootForce.x, 0, -shootForce.z);
     }
 }

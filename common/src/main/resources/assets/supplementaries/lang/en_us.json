@@ -453,6 +453,7 @@
   "message.supplementaries.cage.tooltip": "[%s] to place",
   "message.supplementaries.candle_holder": "Stackable",
   "message.supplementaries.cannon_maneuver": "Press %1$s to Dismount, %2$s to Fire",
+  "message.supplementaries.cannon_boat": "Press %1$s to Dismount, %2$s to Fire, %3$s to Maneuver",
   "message.supplementaries.cartographers_quill": "Unknown",
   "message.supplementaries.command.configs": "Install Configured to access configs",
   "message.supplementaries.command.configs_reloaded": "Configs reloaded",
