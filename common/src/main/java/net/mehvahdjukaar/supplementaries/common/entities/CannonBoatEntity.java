@@ -22,11 +22,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -42,6 +43,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -56,6 +58,8 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     private static final EntityDataAccessor<WoodType> DATA_WOOD_TYPE =
             SynchedEntityData.defineId(
                     CannonBoatEntity.class, WoodType.ENTITY_SERIALIZER.get());
+    private static final EntityDataAccessor<ItemStack> BANNER_ITEM = SynchedEntityData.defineId(
+            CannonBoatEntity.class, EntityDataSerializers.ITEM_STACK);
 
     private final CannonBlockTile cannon;
     private boolean isBamboo;
@@ -87,6 +91,15 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(DATA_WOOD_TYPE, WoodTypeRegistry.OAK_TYPE);
+        builder.define(BANNER_ITEM, ItemStack.EMPTY);
+    }
+
+    public ItemStack getBannerItem() {
+        return entityData.get(BANNER_ITEM);
+    }
+
+    public void setBannerItem(ItemStack stack) {
+        this.entityData.set(BANNER_ITEM, stack);
     }
 
     public void setWoodType(WoodType type) {
@@ -139,6 +152,8 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     public void destroy(DamageSource source) {
         this.destroy(this.getDropItem());
         this.chestVehicleDestroyed(source, this.level(), this);
+        ItemStack bannerItem = this.getBannerItem();
+        if (!bannerItem.isEmpty()) this.spawnAtLocation(bannerItem);
     }
 
     @Override
@@ -153,9 +168,19 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     public InteractionResult interact(Player player, InteractionHand hand) {
         InteractionResult interactionResult;
         if (!player.isSecondaryUseActive()) {
+
             interactionResult = super.interact(player, hand);
             if (interactionResult != InteractionResult.PASS) {
                 return interactionResult;
+            }
+        } else {
+            var item = player.getItemInHand(hand);
+            boolean hasNoBanner = this.getBannerItem().isEmpty();
+            if (hasNoBanner && item.is(ItemTags.BANNERS)) {
+                this.setBannerItem(item.copy());
+                if (!player.getAbilities().instabuild) item.shrink(1);
+                this.playSound(((BlockItem) item.getItem()).getBlock().defaultBlockState().getSoundType().getPlaceSound(), 1.0F, 1.2f);
+                return InteractionResult.sidedSuccess(level().isClientSide);
             }
         }
 

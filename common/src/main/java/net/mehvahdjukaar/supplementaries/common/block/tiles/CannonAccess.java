@@ -147,10 +147,10 @@ public interface CannonAccess {
         public Restraint getPitchAndYawRestrains() {
             BlockState state = cannon.getBlockState();
             return switch (state.getValue(CannonBlock.FACING).getOpposite()) {
-                case NORTH -> new Restraint(70, 290, -360, 360);
-                case SOUTH -> new Restraint(-110, 110, -360, 360);
-                case EAST -> new Restraint(-200, 20, -360, 360);
-                case WEST -> new Restraint(-20, 200, -360, 360);
+                case NORTH -> new Restraint(70, 290, -180, 180);
+                case SOUTH -> new Restraint(-110, 110, -180, 180);
+                case EAST -> new Restraint(-200, 20, -180, 180);
+                case WEST -> new Restraint(-20, 200, -180, 180);
                 case UP -> new Restraint(-360, 360, -200, 20);
                 case DOWN -> new Restraint(-360, 360, -20, 200);
             };

@@ -157,7 +157,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         this.yaw = tag.getFloat("yaw");
         this.pitch = tag.getFloat("pitch");
         this.cooldownTimer = tag.getInt("cooldown");
-        this.fuseTimer = Math.max(this.fuseTimer, tag.getInt("fuse_timer"));
+        this.fuseTimer = Math.max(this.fuseTimer, tag.getInt("fuse_timer")); //don lose client animation
         this.powerLevel = tag.getByte("fire_power");
         if (tag.contains("player_ignited")) {
             this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");
@@ -286,8 +286,8 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void setAttributes(float yaw, float pitch, byte firePower, boolean fire,
                               Player controllingPlayer, CannonAccess access) {
-        this.yaw = yaw;
-        this.pitch = pitch;
+        this.setRestrainedYaw(access, yaw);
+        this.setRestrainedPitch(access, pitch);
         this.powerLevel = firePower;
         if (fire) this.ignite(controllingPlayer, access);
     }
@@ -299,12 +299,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void setRestrainedYaw(CannonAccess access, float yaw) {
         var r = access.getPitchAndYawRestrains();
-        this.yaw = MthUtils.clampDegrees(yaw + access.getCannonGlobalYawOffset(1), r.minYaw(), r.maxYaw());
+        this.yaw = MthUtils.clampDegrees(yaw, r.minYaw(), r.maxYaw());
     }
 
     // sets both prev and current yaw. Only makes sense to be called from render thread
     public void setRenderYaw(CannonAccess access, float newYaw) {
-        setRestrainedYaw(access, newYaw);
+        setRestrainedYaw(access, newYaw + access.getCannonGlobalYawOffset(1));
         this.prevYaw = this.yaw;
     }
 

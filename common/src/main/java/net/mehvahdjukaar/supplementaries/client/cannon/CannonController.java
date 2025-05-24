@@ -6,6 +6,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.Mth;
@@ -172,6 +173,15 @@ public class CannonController {
             yawIncrease += (float) (yawAdd * scale);
             pitchIncrease += (float) (pitchAdd * scale);
             if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
+
+            if (isOnCannonBoat) {
+                //make player face camera while maneuvering
+                LocalPlayer player = Minecraft.getInstance().player;
+                player.turn(Mth.wrapDegrees((lastCameraYaw + yawAdd) - player.yHeadRot),
+                        Mth.wrapDegrees((lastCameraPitch + pitchAdd) - player.getXRot()));
+                player.yHeadRotO = player.yHeadRot;
+                player.xRotO = player.getXRot();
+            }
             return true;
         }
         return false;
@@ -213,7 +223,7 @@ public class CannonController {
 
     public static void onInputUpdate(Input input) {
         // resets input
-        if(!isOnCannonBoat) {
+        if (!isOnCannonBoat) {
             input.down = false;
             input.up = false;
             input.left = false;
