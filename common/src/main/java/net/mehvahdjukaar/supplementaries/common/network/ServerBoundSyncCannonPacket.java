@@ -47,7 +47,7 @@ public record ServerBoundSyncCannonPacket(
                 if (cannon.isEditingPlayer(BlockPos.containing(access.getCannonGlobalPosition()), player)) {
                     cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player, access);
                     cannon.setChanged();
-                    if (stopControlling && access.isBlock()) {
+                    if (stopControlling) {
                         cannon.setPlayerWhoMayEdit(null);
                     }
                     access.updateClients();

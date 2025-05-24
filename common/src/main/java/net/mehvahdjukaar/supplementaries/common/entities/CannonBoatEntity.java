@@ -12,9 +12,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundUpdateCannonBoatPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
+import net.mehvahdjukaar.supplementaries.common.network.*;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -30,8 +28,10 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.HasCustomInventoryScreen;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -53,22 +53,29 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
                     CannonBoatEntity.class, WoodType.ENTITY_SERIALIZER.get());
 
     private final CannonBlockTile cannon;
+    private boolean isBamboo;
 
     public CannonBoatEntity(EntityType<CannonBoatEntity> entityType, Level level) {
         super(entityType, level);
         this.cannon = new CannonBlockTile(BlockPos.ZERO, ModRegistry.CANNON.get()
                 .defaultBlockState().setValue(CannonBlock.FACING, Direction.UP));
         this.cannon.setLevel(level);
+        this.cannon.setRenderYaw(this, 0);
         this.setWoodType(WoodTypeRegistry.OAK_TYPE);
     }
 
-    public CannonBoatEntity(Level level, CannonBlockTile cannon, double x, double y, double z, WoodType type) {
+    public CannonBoatEntity(Level level, double x, double y, double z, WoodType type) {
         this(ModEntities.CANNON_BOAT.get(), level);
         this.setPos(x, y, z);
         this.xo = x;
         this.yo = y;
         this.zo = z;
         this.setWoodType(type);
+        this.setVariant(type.toVanillaBoatOrOak());
+    }
+
+    public boolean isBamboo() {
+        return isBamboo;
     }
 
     @Override
@@ -79,6 +86,15 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     public void setWoodType(WoodType type) {
         this.entityData.set(DATA_WOOD_TYPE, type);
+        this.isBamboo = type.getId().toString().equals("minecraft:bamboo");
+    }
+
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
+        super.onSyncedDataUpdated(dataAccessor);
+        if (dataAccessor == DATA_WOOD_TYPE) {
+            this.isBamboo = getWoodType().getId().toString().equals("minecraft:bamboo");
+        }
     }
 
     public WoodType getWoodType() {
@@ -87,7 +103,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @Override
     protected float getSinglePassengerXOffset() {
-        return 0.15F;
+        return 0.15F + (isBamboo ? 0.125f : 0.125f);
     }
 
     @Override
@@ -162,10 +178,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @Override
     public Item getDropItem() {
-        Item var10000;
-
-
-        return ModRegistry.ASH_BRICK_ITEM.get();
+        return ModRegistry.CANNON_BOAT_ITEMS.get(this.getWoodType());
     }
 
     @Override
@@ -199,7 +212,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     }
 
     @Override
-    public SlotAccess getSlot(int slot) {//TODO
+    public SlotAccess getSlot(int slot) {
         return this.getChestVehicleSlot(slot);
     }
 
@@ -275,10 +288,15 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     }
 
     @Override
+    public TileOrEntityTarget makeNetworkTarget() {
+        return TileOrEntityTarget.of(this);
+    }
+
+    @Override
     public void syncToServer(boolean fire, boolean removeOwner) {
         NetworkHelper.sendToServer(new ServerBoundSyncCannonPacket(
                 cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
-                fire, removeOwner, TileOrEntityTarget.of(this)));
+                fire, false, TileOrEntityTarget.of(this)));
     }
 
     @Override
@@ -288,16 +306,21 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @Override
     public Vec3 getCannonGlobalOffset() {
-        float backOff = 7 / 16f;
-        return new Vec3(0, 12 / 16f, backOff);
+        if (isBamboo) {
+            float backOff = 6 / 16f;
+            return new Vec3(0, 16 / 16f, backOff);
+        } else {
+            float backOff = 7 / 16f;
+            return new Vec3(0, 12 / 16f, backOff);
+        }
     }
 
     @Override
-    public Vec3 getCannonGlobalPosition() {
+    public Vec3 getCannonGlobalPosition(float partialTicks) {
         float yaw = getCannonGlobalYawOffset();
         Vec3 vv = getCannonGlobalOffset();
         vv = vv.yRot(Mth.DEG_TO_RAD * yaw);
-        return this.position().add(vv);
+        return this.getPosition(partialTicks).add(vv);
     }
 
     @Override
@@ -318,19 +341,17 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     }
 
     @Override
-    public void playFireEffects() {
-
+    public Vec3 getCannonGlobalVelocity() {
+        return this.getDeltaMovement();
     }
 
     @Override
-    public void playIgniteEffects() {
-
-    }
-
-    @Override
-    public void onInputUpdate(boolean b, boolean b1, boolean b2, boolean b3, boolean b4, boolean jump) {
-        if(jump && level().isClientSide){
+    public void onInputUpdate(boolean b, boolean b1, boolean b2, boolean b3, boolean ctrl, boolean jump) {
+        if (jump && level().isClientSide) {
             CannonController.startControlling(this);
+        }
+        if (ctrl) {
+            syncToServer(true, false);
         }
     }
 
@@ -360,23 +381,14 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     }
 
     @Override
-    protected Vec3 getPassengerAttachmentPoint(Entity entity, EntityDimensions dimensions, float partialTick) {
-        return super.getPassengerAttachmentPoint(entity, dimensions, partialTick)
-                .add(0.125, 0, 0);
-    }
+    public void applyRecoil(Vec3 shootForce) {
+        float scale = 1f;
+        Vec3 v = new Vec3(-shootForce.x * scale, 0, -shootForce.z * scale);
+        if (this.hasControllingPassenger()) {
+            NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
+                    new ClientBoundSendKnockbackPacket(this.getId(), v));
+        }
+        this.addDeltaMovement(v);
 
-    @Override
-    public void stopRiding() {
-        super.stopRiding();
-    }
-
-    @Override
-    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
-        return super.getDismountLocationForPassenger(passenger);
-    }
-
-    @Override
-    public void ejectPassengers() {
-        super.ejectPassengers();
     }
 }

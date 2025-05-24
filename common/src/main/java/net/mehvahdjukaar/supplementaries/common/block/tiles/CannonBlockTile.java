@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBe
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonAnimationPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -30,7 +31,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -75,6 +75,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
     }
 
+    public CannonBlockTile(BlockPos pos, BlockState blockState, float initialYaw) {
+        this(pos, blockState);
+        this.yaw = initialYaw;
+        this.prevYaw = initialYaw;
+    }
+
     public final CannonAccess selfAccess = CannonAccess.tile(this);
 
 
@@ -112,9 +118,11 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
                     level.gameEvent(p, GameEvent.EXPLODE, access.getCannonGlobalPosition());
                 }
+                //   NetworkHelper.sendToAllClientPlayersInRange(sl, this.getBlockPos(), 128,
+                //         new ClientBoundControlCannonPacket(TileOrEntityTarget.of(this)));
             }
         } else {
-            access.playFireEffects();
+            access.playFiringEffects();
         }
         this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
     }
@@ -287,12 +295,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void setRestrainedPitch(CannonAccess access, float pitch) {
         var r = access.getPitchAndYawRestrains();
-        this.pitch = MthUtils. clampDegrees(pitch, r.minPitch(), r.maxPitch());
+        this.pitch = MthUtils.clampDegrees(pitch, r.minPitch(), r.maxPitch());
     }
 
     public void setRestrainedYaw(CannonAccess access, float yaw) {
         var r = access.getPitchAndYawRestrains();
-         this.yaw =  MthUtils.clampDegrees(yaw + access.getCannonGlobalYawOffset(), r.minYaw(), r.maxYaw());
+        this.yaw = MthUtils.clampDegrees(yaw + access.getCannonGlobalYawOffset(), r.minYaw(), r.maxYaw());
     }
 
     // sets both prev and current yaw. Only makes sense to be called from render thread
@@ -372,9 +380,12 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         // called from server when firing
         this.fuseTimer = CommonConfigs.Functional.CANNON_FUSE_TIME.get();
 
-        //make this entity agnostic
         //particles
-        access.playIgniteEffects();
+        if (this.level instanceof ServerLevel serverLevel) {
+            NetworkHelper.sendToAllClientPlayersInDefaultRange(serverLevel,
+                    BlockPos.containing(access.getCannonGlobalPosition()),
+                    new ClientBoundCannonAnimationPacket(access.makeNetworkTarget(),false));
+        }
         this.playerWhoIgnitedUUID = entityWhoIgnited != null ? entityWhoIgnited.getUUID() : null;
 
         this.setChanged();
@@ -395,8 +406,14 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
         IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
 
-        return behavior.fire(projectile.copy(), serverLevel, access.getCannonGlobalPosition(), 0.5f,
-                facing, getFirePower(), 0, getPlayerWhoFired());
+        float firePower = getFirePower();
+        boolean success = behavior.fire(projectile.copy(), serverLevel, access.getCannonGlobalPosition(), 0.5f,
+                facing, firePower, 0, getPlayerWhoFired());
+
+        if (success) {
+            access.applyRecoil(facing.scale(firePower));
+        }
+        return success;
     }
 
 

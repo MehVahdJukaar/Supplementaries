@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
@@ -11,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
@@ -51,6 +55,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -85,7 +90,7 @@ public class ClientReceivers {
     public static void handleSendBombKnockbackPacket(ClientBoundSendKnockbackPacket message) {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.id());
-            if (e != null) e.setDeltaMovement(e.getDeltaMovement().add(message.knockback()));
+            if (e != null) e.addDeltaMovement(message.knockback());
         });
     }
 
@@ -486,4 +491,20 @@ public class ClientReceivers {
             }
         });
     }
+
+
+    public static void handleCannonAnimation(ClientBoundCannonAnimationPacket message) {
+        withLevelDo(l -> {
+            CannonAccess access = CannonAccess.find(l, message.target());
+            if (access != null) {
+                if(message.fire()) {
+                    access.playFiringEffects();
+                } else {
+                    access.playIgniteEffects();
+                }
+            }
+        });
+    }
+
+
 }

@@ -136,10 +136,8 @@ public class ClientEvents {
                 var unseen = TextureImage.open(res, Supplementaries.res("unseen"));
 
                 Set<Item> items = new HashSet<>();
-                items.add(Items.CLOCK.asItem());
-                items.add(Items.LANTERN);
-                items.add(ModRegistry.DAUB.get().asItem());
-                items.add(ModRegistry.SPEAKER_BLOCK.get().asItem());
+                items.add(ModRegistry.PLANTER.get().asItem());
+                items.add(ModRegistry.PEDESTAL.get().asItem());
 
                 for (var item : items) {
                     var id = Utils.getID(item);
@@ -200,7 +198,7 @@ public class ClientEvents {
                             }
                         });
                     }
-                }, true);
+                }, false);
         if (t.isInitialized()) {
             try {
                 t.saveTextureToFile(PlatHelper.getGamePath().resolve("guide"));

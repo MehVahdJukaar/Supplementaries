@@ -2,9 +2,13 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -12,10 +16,15 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
@@ -31,8 +40,9 @@ public class CannonFireParticle extends TextureSheetParticle {
     private TextureAtlasSprite boomSprite;
 
     private CannonFireParticle(ClientLevel world, double x, double y, double z, double pitch, double yaw,
-                               SpriteSet ringSprites, SpriteSet boomSprites, float size) {
-        super(world, x, y, z, 0, 0, 0);
+                               SpriteSet ringSprites, SpriteSet boomSprites, float size,
+                               double xSpeed, double ySpeed, double zSpeed) {
+        super(world, x, y, z, xSpeed, ySpeed, zSpeed);
         this.setParticleSpeed(0, 0, 0);
         this.pitch = pitch;
         this.yaw = yaw;
@@ -93,7 +103,7 @@ public class CannonFireParticle extends TextureSheetParticle {
         float V0 = boomSprite.getV0();
         float V1 = boomSprite.getV1();
 
-        int i = (int) Math.min(4, ((float)age / (lifetime)) * 5 )+1;
+        int i = (int) Math.min(4, ((float) age / (lifetime)) * 5) + 1;
 
         float d = i / 16f;
         float s = 0.25f;
@@ -147,7 +157,7 @@ public class CannonFireParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
-    public static class Factory implements ParticleProvider<SimpleParticleType> {
+    public static class Factory implements ParticleProvider<Options> {
         private final SpriteSet sprites;
         private final Supplier<SpriteSet> sprites2 = Suppliers.memoize(() -> {
             TextureAtlas atlas = ((TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES));
@@ -165,16 +175,21 @@ public class CannonFireParticle extends TextureSheetParticle {
         }
 
         @Override
-        public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z,
-                                       double pitch, double yaw, double size) {
-            Vec3 offset = Vec3.directionFromRotation((float) pitch * Mth.RAD_TO_DEG, -(float) yaw * Mth.RAD_TO_DEG);
+        public @Nullable Particle createParticle(Options type, ClientLevel level, double x, double y, double z,
+                                                 double xSpeed, double ySpeed, double zSpeed) {
+            float pitch = type.pitch();
+            float yaw = type.yaw();
+            float size = type.size();
+
+            Vec3 offset = Vec3.directionFromRotation(pitch, yaw);
             offset = offset.scale(-6.501 / 16f);
-            offset =  offset.add(0, 1/16f, 0);
-            offset =  offset.scale(size);
+            offset = offset.add(0, 2 / 16f, 0);
+            offset = offset.scale(size);
 
-
-            return new CannonFireParticle(worldIn, x + offset.x, y + offset.y+1/16f, z + offset.z, pitch, yaw,
-                    sprites, sprites2.get(), (float) size);
+            return new CannonFireParticle(level, x + offset.x, y + offset.y, z + offset.z,
+                    pitch * Mth.DEG_TO_RAD,
+                    -yaw * Mth.DEG_TO_RAD,
+                    sprites, sprites2.get(), size, xSpeed, ySpeed, zSpeed);
         }
     }
 
@@ -186,6 +201,28 @@ public class CannonFireParticle extends TextureSheetParticle {
 
         public TextureAtlasSprite get(RandomSource random) {
             return this.sprites.get(random.nextInt(this.sprites.size()));
+        }
+    }
+
+    public record Options(float pitch, float yaw, float size) implements ParticleOptions {
+
+        public static final MapCodec<Options> CODEC = RecordCodecBuilder.mapCodec(
+                instance -> instance.group(
+                        Codec.FLOAT.fieldOf("pitch").forGetter(Options::pitch),
+                        Codec.FLOAT.fieldOf("yaw").forGetter(Options::yaw),
+                        Codec.FLOAT.fieldOf("size").forGetter(Options::size)
+                ).apply(instance, Options::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, Options> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.FLOAT, Options::pitch,
+                ByteBufCodecs.FLOAT, Options::yaw,
+                ByteBufCodecs.FLOAT, Options::size,
+                Options::new
+        );
+
+        @Override
+        public ParticleType<?> getType() {
+            return ModParticles.CANNON_FIRE_PARTICLE.get();
         }
     }
 

@@ -33,7 +33,11 @@ public class CannonBoatRenderer extends BoatRenderer {
 
     @Override
     public ResourceLocation getTextureLocation(Boat entity) {
-        return textures.get(((CannonBoatEntity) entity).getWoodType());
+        WoodType woodType = ((CannonBoatEntity) entity).getWoodType();
+        if (woodType.isVanilla()) {
+            return super.getTextureLocation(entity);
+        }
+        return textures.get(woodType);
     }
 
     @Override
@@ -48,7 +52,7 @@ public class CannonBoatRenderer extends BoatRenderer {
 
         poseStack.pushPose();
 
-        Quaternionf boatRot = Axis.YP.rotationDegrees(boat.getCannonGlobalYawOffset());
+        Quaternionf boatRot = Axis.YP.rotationDegrees(180 - entityYaw);
         poseStack.mulPose(boatRot);
         Vec3 offset = boat.getCannonGlobalOffset();
         poseStack.translate(offset.x, offset.y, offset.z);
