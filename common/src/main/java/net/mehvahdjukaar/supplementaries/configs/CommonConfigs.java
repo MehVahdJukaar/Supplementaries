@@ -742,6 +742,11 @@ public class CommonConfigs {
                     .define("fuse_time", 40, 0, 500);
             CANNON_COOLDOWN = builder.comment("Time for a cannon to be able to fire again after it has been fired")
                     .define("cooldown", 60, 0, 500);
+            builder.push(ModConstants.CANNON_BOAT_NAME);
+            CANNON_BOAT_ENABLED = feature(builder);
+            CANNON_BOAT_RECOIL = builder.comment("Cannon boat recoil multiplier. Higher values will make the cannon boat recoil more when firing a cannonball")
+                    .define("recoil_multiplier", 0.5d, 0, 5);
+            builder.pop();
             builder.push("cannonball");
             CANNONBALL_ENABLED = feature(builder);
             CANNONBALL_POWER_SCALING = builder.comment("Cannonball power scaling. Higher values will make cannonballs have more energy. Reminder that the damage and breaking power of a cannonball is proportional to its energy (speed squared) times this constant")
@@ -852,6 +857,8 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
         public static final Supplier<Boolean> CANNON_ENABLED;
+        public static final Supplier<Boolean> CANNON_BOAT_ENABLED;
+        public static final Supplier<Double> CANNON_BOAT_RECOIL;
         public static final Supplier<Double> CANNON_FIRE_POWER;
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;
@@ -1164,8 +1171,8 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("placeable_books");
-            PLACEABLE_BOOKS =  feature(builder.comment("Allow books and enchanted books to be placed on the ground"));
-            WRITTEN_BOOKS =  feature(builder.comment("Allows written books to be placed down. Requires shift clicking"),
+            PLACEABLE_BOOKS = feature(builder.comment("Allow books and enchanted books to be placed on the ground"));
+            WRITTEN_BOOKS = feature(builder.comment("Allows written books to be placed down. Requires shift clicking"),
                     "written_books");
             MIXED_BOOKS = builder.comment("Allow all books to be placed both vertically and horizontally")
                     .define("mixed_books", false);

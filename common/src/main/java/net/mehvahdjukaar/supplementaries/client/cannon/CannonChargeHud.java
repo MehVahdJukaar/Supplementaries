@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.DeltaTracker;
@@ -24,12 +25,12 @@ public class CannonChargeHud implements LayeredDraw.Layer {
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
-        if (!mc.options.hideGui && CannonController.isActive()) {
+        if (mc.options.hideGui) return;
+        if (CannonController.isActive()) {
 
-            setupOverlayRenderState();
             CannonBlockTile cannon = CannonController.access.getCannon();
 
-
+            setupOverlayRenderState();
             int screenWidth = graphics.guiWidth();
             int screenHeight = graphics.guiHeight();
 
@@ -41,6 +42,11 @@ public class CannonChargeHud implements LayeredDraw.Layer {
 
             renderTrajectoryIcons(graphics, screenWidth, screenHeight);
 
+        } else if (mc.player.getVehicle() instanceof CannonAccess be) {
+            setupOverlayRenderState();
+            int screenWidth = graphics.guiWidth();
+            int screenHeight = graphics.guiHeight();
+            renderBar(graphics, screenWidth, screenHeight, be.getCannon(), deltaTracker.getGameTimeDeltaPartialTick(false));
         }
     }
 
@@ -103,7 +109,7 @@ public class CannonChargeHud implements LayeredDraw.Layer {
                 0, 0, xpBarLeft, xpBarTop, k, 5);
 
 
-        byte power = CannonController.access.getCannon().getPowerLevel();
+        byte power = cannon.getPowerLevel();
 
         int color = switch (power) {
             case 2 -> 0xffaa00;

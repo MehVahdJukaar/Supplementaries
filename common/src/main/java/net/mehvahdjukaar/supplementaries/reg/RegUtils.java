@@ -125,7 +125,7 @@ public class RegUtils {
 
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName.getPath() + "_" + color.getName();
-            Supplier<Block> coloredBlock = RegHelper.registerBlockWithItem(baseName.withPath( name),
+            Supplier<Block> coloredBlock = RegHelper.registerBlockWithItem(baseName.withPath(name),
                     () -> new CandleHolderBlock(color, prop)
             );
             map.put(color, coloredBlock);
@@ -212,6 +212,7 @@ public class RegUtils {
 
     private static void registerCannonBoatItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
+            if (!wood.canBurn()) return;
             String name = wood.getVariantId(ModConstants.CANNON_BOAT_NAME);
             CannonBoatItem item = new CannonBoatItem(new Item.Properties().stacksTo(1), wood);
             wood.addChild("supplementaries:cannon_boat", item);
@@ -220,7 +221,7 @@ public class RegUtils {
         }
     }
 
-        public static Map<DyeColor, Supplier<Block>> registerAwnings(String baseName) {
+    public static Map<DyeColor, Supplier<Block>> registerAwnings(String baseName) {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
         Supplier<Block> defAwning = regBlock(baseName, () -> new AwningBlock(null,
                 BlockBehaviour.Properties.of()

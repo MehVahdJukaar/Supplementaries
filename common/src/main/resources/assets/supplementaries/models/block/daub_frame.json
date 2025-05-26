@@ -1,6 +1,6 @@
 {
 	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"all": "supplementaries:block/daub"
+		"all": "supplementaries:block/daub_frame"
 	}
 }

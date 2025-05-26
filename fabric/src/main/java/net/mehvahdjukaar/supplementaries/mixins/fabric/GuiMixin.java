@@ -14,7 +14,7 @@ public class GuiMixin {
 
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
     public void supp$cannonCancelXPBar(GuiGraphics guiGraphics, int x, CallbackInfo ci) {
-        if (CannonController.isActive()) ci.cancel();
+        if (CannonController.rendersXpBar()) ci.cancel();
     }
 
     @Inject(method = "renderHotbarAndDecorations", at = @At("HEAD"), cancellable = true)

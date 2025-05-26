@@ -65,6 +65,7 @@
     "CameraMixin",
     "CartographyTableScreenMixin",
     "ClientLevelMixin",
+    "ClientPacketListenerMixin",
     "FontRendererMixin",
     "GameRendererMixin",
     "IronGolemRendererMixin",

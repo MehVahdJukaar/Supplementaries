@@ -134,7 +134,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                         newImage = respriter.recolor(targetPalette);
 
                         try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
-                                Supplementaries.res("item/hanging_signs/sign_scribbles_mask"),
+                                Supplementaries.res("item/way_signs/sign_scribbles_mask"),
                                 Supplementaries.res("item/way_signs/scribbles_template"))) {
                             newImage.applyOverlay(scribbles);
                         } catch (Exception ex) {
@@ -262,12 +262,12 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         });
 
         //entity textures
-        try (TextureImage template = TextureImage.open(manager, Supplementaries.res("entity/cannon_boat/oak"))) {
+        try (TextureImage template = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/boat/oak"))) {
 
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
-
+                if (wood.isVanilla()) return;
                 ResourceLocation textureRes = Supplementaries.res("entity/cannon_boat/" + wood.getTexturePath());
                 if (sink.alreadyHasTextureAtLocation(manager, textureRes)) return;
 
@@ -289,9 +289,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         }
 
         //item textures
-        try (TextureImage template = TextureImage.open(manager, Supplementaries.res("item/cannon_boat/oak"));
-             TextureImage boatMask = TextureImage.open(manager, Supplementaries.res("item/cannon_boat/boat_mask"));
-             TextureImage sledMask = TextureImage.open(manager, Supplementaries.res("item/cannon_boat/cannon_boat_mask"))) {
+        try (TextureImage template = TextureImage.open(manager, Supplementaries.res("item/cannon_boat/cannon_boat_oak"));
+             TextureImage sledMask = TextureImage.open(manager, Supplementaries.res("item/cannon_boat/mask"))) {
 
             Palette palette = Palette.fromImage(template, sledMask);
             Respriter respriter = Respriter.ofPalette(template, palette);
@@ -307,7 +306,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                     try (TextureImage vanillaBoat = TextureImage.open(manager,
                             RPUtils.findFirstItemTextureLocation(manager, boat))) {
 
-                        Palette targetPalette = Palette.fromImage(vanillaBoat, boatMask);
+                        Palette targetPalette = Palette.fromImage(vanillaBoat);
                         newImage = respriter.recolor(targetPalette);
 
                     } catch (Exception ex) {

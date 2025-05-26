@@ -221,13 +221,26 @@ public class ModCreativeTabs {
                 ModConstants.TIMBER_FRAME_NAME,
                 ModRegistry.TIMBER_FRAME, ModRegistry.TIMBER_BRACE, ModRegistry.TIMBER_CROSS_BRACE);
 
-        if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && !PlatHelper.isDev()) {
+        if (CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
             for (var v : ModRegistry.WAY_SIGN_ITEMS.entrySet()) {
                 var w = v.getKey();
                 e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> {
                     if (i.is(ItemTags.HANGING_SIGNS)) {
                         var b = w.getBlockOfThis("hanging_sign");
                         return b != null && i.is(b.asItem());
+                    }
+                    return false;
+                }, v.getValue());
+            }
+        }
+
+        if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
+            for (var v : ModRegistry.CANNON_BOAT_ITEMS.entrySet()) {
+                var w = v.getKey();
+                e.addAfter(CreativeModeTabs.TOOLS_AND_UTILITIES, i -> {
+                    if (i.is(ItemTags.CHEST_BOATS)) {
+                        var b = w.getItemOfThis("chest_boat");
+                        return b != null && i.is(b);
                     }
                     return false;
                 }, v.getValue());
@@ -648,9 +661,16 @@ public class ModCreativeTabs {
     private static void after(RegHelper.ItemToTabEvent event, Predicate<ItemStack> targetPred,
                               ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
         if (CommonConfigs.isEnabled(key)) {
-            if (items[0].get() instanceof ItemStack) {
+            var first = items[0].get();
+            if (first instanceof ItemStack) {
                 ItemStack[] entries = Arrays.stream(items).map(s -> (ItemStack) s.get()).toArray(ItemStack[]::new);
                 event.addAfter(tab, targetPred, entries);
+            }else if(first instanceof Collection<?>  ){
+                for (Object i : items) {
+                    if (!(i instanceof Collection<?> c)) continue;
+                    ItemLike[] entries = c.stream().map(s -> (ItemLike) s).toArray(ItemLike[]::new);
+                    event.addAfter(tab, targetPred, entries);
+                }
             } else {
                 ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
                 event.addAfter(tab, targetPred, entries);

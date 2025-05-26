@@ -1,6 +1,12 @@
 {
-	"parent": "minecraft:block/cube_all",
+	"parent": "minecraft:block/cube",
 	"textures": {
-		"all": "supplementaries:block/daub_brace_f"
+		"up": "supplementaries:block/daub_brace",
+		"north": "supplementaries:block/daub_brace_f",
+		"south": "supplementaries:block/daub_brace_f",
+		"west": "supplementaries:block/daub_brace",
+		"east": "supplementaries:block/daub_brace",
+		"particle": "supplementaries:block/daub_brace",
+		"down": "supplementaries:block/daub_brace"
 	}
 }

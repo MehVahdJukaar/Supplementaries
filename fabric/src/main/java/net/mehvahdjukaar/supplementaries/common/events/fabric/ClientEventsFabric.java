@@ -78,9 +78,6 @@ public class ClientEventsFabric {
 
     }
 
-    private static boolean wasJumpDown = true;
-    private static boolean wasShiftDown = true;
-
     private static void onRenderHud(GuiGraphics graphics, DeltaTracker partialTicks) {
         SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
         SlimedOverlayHud.INSTANCE.render(graphics, partialTicks);
@@ -91,22 +88,6 @@ public class ClientEventsFabric {
             boolean keyDown = ClientRegistry.QUIVER_KEYBIND.isDown();
             if (keyDown) SelectableContainerItemHud.getInstance().setUsingKeybind(
                     qe.supplementaries$getQuiverSlot(), mc.player);
-        }
-
-        if (CannonController.isActive()) {
-            if (mc.options.keyJump.isDown()) {
-                if (!wasJumpDown) CannonController.onKeyJump();
-                wasJumpDown = true;
-            } else wasJumpDown = false;
-            if (mc.options.keyShift.isDown()) {
-                if (!wasShiftDown) CannonController.onKeyShift();
-                wasShiftDown = true;
-
-            } else wasShiftDown = false;
-
-        } else {
-            wasJumpDown = true;
-            wasShiftDown = true;
         }
     }
 }
