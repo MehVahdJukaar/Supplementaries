@@ -65,7 +65,6 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
-        books.clear();
         DynamicOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
         Codec<Optional<BookType>> codec = ForgeHelper.conditionalCodec(BookType.CODEC);
         Map<ResourceLocation, BookType> bookTypes = new HashMap<>();
@@ -77,6 +76,7 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
     }
 
     public void setData(Map<ResourceLocation, BookType> bookTypes) {
+        //this.books.clear();
         //clear previous placements
         for (var entry : itemToBooks.entries()) {
             AdditionalItemPlacementsAPI.unregisterPlacement(entry.getKey());
