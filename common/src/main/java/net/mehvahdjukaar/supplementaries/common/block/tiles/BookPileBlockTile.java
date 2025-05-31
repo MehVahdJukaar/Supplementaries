@@ -158,18 +158,38 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     @Override
     public void updateClientVisualsOnLoad() {
         this.booksVisuals.clear();
+        final BookPileBlockTile thisBlockTile = this;
+        Thread waitForSync = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int index = 0; index < 4; index++) {
+                    ItemStack stack = thisBlockTile.getItem(index);
+                    if (stack.isEmpty()) break;
+                    var last = index == 0 ? null : thisBlockTile.booksVisuals.get(index - 1).type;
+                    BookVisualData visualData = new BookVisualData(stack, thisBlockTile.worldPosition, index,
+                            thisBlockTile.horizontal, level.registryAccess(), last);
+                    thisBlockTile.booksVisuals.add(index, visualData);
+                }
 
-        for (int index = 0; index < 4; index++) {
-            ItemStack stack = this.getItem(index);
-            if (stack.isEmpty()) break;
-            var last = index == 0 ? null : this.booksVisuals.get(index - 1).type;
-            this.booksVisuals.add(index, new BookVisualData(stack, this.worldPosition, index,
-                    this.horizontal, level.registryAccess(), last));
-        }
+                if (booksVisuals.isEmpty()) {
+                    displayRandomColoredBooks(thisBlockTile.getBlockState().getValue(BookPileBlock.BOOKS),
+                            thisBlockTile.level.registryAccess());
+                }
+            }
+        });
+        waitForSync.start();
 
-        if (booksVisuals.isEmpty()) {
-            displayRandomColoredBooks(this.getBlockState().getValue(BookPileBlock.BOOKS), this.level.registryAccess());
-        }
+//        for (int index = 0; index < 4; index++) {
+//            ItemStack stack = this.getItem(index);
+//            if (stack.isEmpty()) break;
+//            var last = index == 0 ? null : this.booksVisuals.get(index - 1).type;
+//            this.booksVisuals.add(index, new BookVisualData(stack, this.worldPosition, index,
+//                    this.horizontal, level.registryAccess(), last));
+//        }
+//
+//        if (booksVisuals.isEmpty()) {
+//            displayRandomColoredBooks(this.getBlockState().getValue(BookPileBlock.BOOKS), this.level.registryAccess());
+//        }
     }
 
     public float getEnchantPower() {

@@ -75,8 +75,7 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         this.setData(bookTypes);
     }
 
-    public void setData(Map<ResourceLocation, BookType> bookTypes) {
-        //this.books.clear();
+    public synchronized void setData(Map<ResourceLocation, BookType> bookTypes) {
         //clear previous placements
         for (var entry : itemToBooks.entries()) {
             AdditionalItemPlacementsAPI.unregisterPlacement(entry.getKey());
@@ -92,10 +91,17 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
             this.itemToBooks.put(item, value);
             AdditionalItemPlacementsAPI.registerPlacement(item, value.isHorizontal() ? horizontalPlacement : verticalPlacement);
         }
+        notify();
     }
 
     @Nullable
-    public BookType get(Item item, boolean horizontal) {
+    public synchronized BookType get(Item item, boolean horizontal) {
+        while (itemToBooks.isEmpty()) {
+            try {
+                wait();
+            } catch (InterruptedException ignored) {}
+        }
+        notify();
         for (var entry : itemToBooks.get(item)) {
             if (entry.isHorizontal() == horizontal || CommonConfigs.Tweaks.MIXED_BOOKS.get()) {
                 return entry;
