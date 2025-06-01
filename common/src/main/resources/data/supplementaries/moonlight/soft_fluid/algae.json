@@ -26,7 +26,7 @@
       "modid": "goodending"
     }
   ],
-  "from_mod": "goodending",
+
   "still_texture": "goodending:block/algae",
   "translation_key": "item.goodending.algae_bucket"
 }

@@ -22,7 +22,7 @@
       "modid": "alexsmobs"
     }
   ],
-  "from_mod": "alexsmobs",
+
   "still_texture": "moonlight:block/soft_fluids/dragon_breath_liquid",
   "translation_key": "item.alexsmobs.mimicream"
 }

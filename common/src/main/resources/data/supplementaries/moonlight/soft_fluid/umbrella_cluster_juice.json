@@ -26,7 +26,7 @@
       "modid": "betterendforge"
     }
   ],
-  "from_mod": "betterendforge",
+
   "still_texture": "moonlight:block/soft_fluids/potion_still",
   "translation_key": "item.betterendforge.umbrella_cluster_juice"
 }

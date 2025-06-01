@@ -26,7 +26,7 @@
       "modid": "simplefarming"
     }
   ],
-  "from_mod": "simplefarming",
+
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.simplefarming.wine"
 }

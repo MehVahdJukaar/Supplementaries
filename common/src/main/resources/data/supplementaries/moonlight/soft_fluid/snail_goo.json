@@ -26,7 +26,7 @@
       "modid": "autumnity"
     }
   ],
-  "from_mod": "autumnity",
+
   "still_texture": "autumnity:block/snail_goo",
   "translation_key": "item.autumnity.snail_goo"
 }

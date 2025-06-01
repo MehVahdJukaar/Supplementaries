@@ -22,7 +22,7 @@
       "modid": "iceandfire"
     }
   ],
-  "from_mod": "iceandfire",
+
   "still_texture": "moonlight:block/soft_fluids/milk_liquid",
   "translation_key": "item.iceandfire.siren_tear"
 }

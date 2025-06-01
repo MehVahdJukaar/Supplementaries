@@ -37,7 +37,7 @@
       "modid": "farmersdelight"
     }
   ],
-  "from_mod": "farmersdelight",
+
   "still_texture": "moonlight:block/soft_fluids/soup_liquid",
   "translation_key": "item.farmersdelight.pumpkin_soup"
 }

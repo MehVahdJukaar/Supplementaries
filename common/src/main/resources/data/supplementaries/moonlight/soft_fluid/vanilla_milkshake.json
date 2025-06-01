@@ -22,7 +22,7 @@
       "modid": "neapolitan"
     }
   ],
-  "from_mod": "neapolitan",
+
   "still_texture": "moonlight:block/soft_fluids/soup_liquid",
   "translation_key": "item.neapolitan.vanilla_milkshake"
 }

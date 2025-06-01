@@ -11,7 +11,7 @@
       "modid": "aether"
     }
   ],
-  "from_mod": "aether",
+
   "target_block": {
     "block": "aether:aether_portal",
     "predicate_type": "minecraft:block_match"

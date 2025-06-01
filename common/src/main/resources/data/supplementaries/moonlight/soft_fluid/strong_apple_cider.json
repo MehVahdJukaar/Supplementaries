@@ -25,7 +25,7 @@
       "modid": "farmersrespite"
     }
   ],
-  "from_mod": "farmersrespite",
+
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.farmersrespite.strong_apple_cider"
 }

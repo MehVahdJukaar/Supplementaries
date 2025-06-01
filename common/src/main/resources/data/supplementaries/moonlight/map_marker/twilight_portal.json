@@ -12,7 +12,7 @@
       "modid": "twilightforest"
     }
   ],
-  "from_mod": "twilightforest",
+
   "target_block": {
     "block": "twilightforest:twilight_portal",
     "predicate_type": "minecraft:block_match"

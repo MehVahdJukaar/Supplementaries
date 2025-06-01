@@ -22,7 +22,7 @@
       "modid": "malum"
     }
   ],
-  "from_mod": "malum",
+
   "still_texture": "moonlight:block/soft_fluids/honey_liquid",
   "translation_key": "item.malum.holy_syrup"
 }

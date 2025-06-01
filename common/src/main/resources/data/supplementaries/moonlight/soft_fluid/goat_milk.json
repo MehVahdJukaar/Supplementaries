@@ -21,7 +21,7 @@
       "modid": "betteranimalsplus"
     }
   ],
-  "from_mod": "betteranimalsplus",
+
   "still_texture": "moonlight:block/soft_fluids/milk_liquid",
   "translation_key": "item.betteranimalsplus.goatmilk"
 }

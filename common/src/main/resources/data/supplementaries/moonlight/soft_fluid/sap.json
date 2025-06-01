@@ -33,7 +33,7 @@
       "modid": "supplementaries"
     }
   ],
-  "from_mod": "supplementaries",
+
   "translation_key": "fluid.supplementaries.sap",
   "use_texture_from": "thermal:sap"
 }

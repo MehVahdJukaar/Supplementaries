@@ -26,7 +26,7 @@
       "modid": "abundance"
     }
   ],
-  "from_mod": "abundance",
+
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.abundance.lavender_tea"
 }

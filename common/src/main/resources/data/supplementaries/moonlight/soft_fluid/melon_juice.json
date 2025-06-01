@@ -26,7 +26,7 @@
       "modid": "farmersdelight"
     }
   ],
-  "from_mod": "farmersdelight",
+
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.farmersdelight.melon_juice"
 }

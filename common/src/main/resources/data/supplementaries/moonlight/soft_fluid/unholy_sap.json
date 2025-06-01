@@ -22,7 +22,7 @@
       "modid": "malum"
     }
   ],
-  "from_mod": "malum",
+
   "still_texture": "moonlight:block/soft_fluids/potion_still",
   "translation_key": "item.malum:unholy_sap"
 }

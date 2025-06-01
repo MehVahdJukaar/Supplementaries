@@ -22,7 +22,7 @@
       "modid": "minecraft"
     }
   ],
-  "from_mod": "minecraft",
+
   "still_texture": "moonlight:block/soft_fluids/magma_still",
   "translation_key": "item.minecraft.magma_cream"
 }

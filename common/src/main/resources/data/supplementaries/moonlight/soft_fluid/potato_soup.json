@@ -28,7 +28,7 @@
       "modid": "inspirations"
     }
   ],
-  "from_mod": "inspirations",
+
   "still_texture": "moonlight:block/soft_fluids/soup_liquid",
   "use_texture_from": "inspirations:potato_soup"
 }

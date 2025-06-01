@@ -26,7 +26,7 @@
       "modid": "farmersdelight"
     }
   ],
-  "from_mod": "farmersdelight",
+
   "still_texture": "moonlight:soft_fluids/potion_still",
   "translation_key": "item.windswept.wild_berry_juice"
 }

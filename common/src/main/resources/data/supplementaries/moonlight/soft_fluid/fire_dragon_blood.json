@@ -26,7 +26,7 @@
       "modid": "iceandfire"
     }
   ],
-  "from_mod": "iceandfire",
+
   "still_texture": "moonlight:block/soft_fluids/potion_still",
   "translation_key": "item.iceandfire.fire_dragon_blood"
 }

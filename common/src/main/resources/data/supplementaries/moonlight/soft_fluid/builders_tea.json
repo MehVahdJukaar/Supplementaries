@@ -28,7 +28,7 @@
       "modid": "minecraft"
     }
   ],
-  "from_mod": "minecraft",
+
   "still_texture": "minecraft:block/water_still",
   "use_texture_from": "create:tea"
 }
