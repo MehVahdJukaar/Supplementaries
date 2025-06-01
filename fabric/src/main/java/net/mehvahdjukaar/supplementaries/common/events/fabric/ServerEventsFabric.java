@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -39,7 +40,9 @@ public class ServerEventsFabric {
         ServerPlayConnectionEvents.JOIN.register((l, s, m) -> ServerEvents.onPlayerLoggedIn(l.player));
         UseEntityCallback.EVENT.register(ServerEvents::onRightClickEntity);
         ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register(ServerEvents::onDataSyncToPlayer);
-
+        ServerLifecycleEvents.SERVER_STARTING.register(s -> {
+            ServerEvents.beforeServerStart(s.registryAccess());
+        });
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (var p : server.getPlayerList().getPlayers()) {
                 ServerEvents.serverPlayerTick(p);

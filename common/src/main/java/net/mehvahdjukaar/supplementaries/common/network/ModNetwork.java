@@ -20,6 +20,8 @@ public class ModNetwork {
         event.registerClientBound(ClientBoundSetSlidingBlockEntityPacket.CODEC);
         event.registerClientBound(ClientBoundSendHourglassDataPacket.CODEC);
         event.registerClientBound(ClientBoundSendCapturedMobsPacket.CODEC);
+        event.registerClientBound(ClientBoundFinalizeBookDataPacket.CODEC);
+        event.registerClientBound(ClientBoundDisplayClockTimePacket.CODEC);
         event.registerClientBound(ClientBoundSetSongPacket.CODEC);
         event.registerClientBound(ClientBoundParticlePacket.CODEC);
         event.registerClientBound(ClientBoundPlaySongNotesPacket.CODEC);

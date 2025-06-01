@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
-import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
@@ -14,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
@@ -32,6 +28,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.core.BlockPos;
@@ -55,7 +52,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -305,6 +301,37 @@ public class ClientReceivers {
 
     }
 
+    public static void handleFinalizeBookData(ClientBoundFinalizeBookDataPacket message) {
+        withLevelDo(l -> {
+            PlaceableBookManager.registerBookPlacements(l.registryAccess());
+        });
+    }
+
+    public static void showTime(ClientBoundDisplayClockTimePacket message) {
+        withPlayerDo(p -> {
+            var tOpt = message.time;
+            int time;
+            String ob = "";
+            String br = "";
+            if (tOpt.isEmpty()) {
+                time = p.getRandom().nextInt(24000);
+                ob += ChatFormatting.OBFUSCATED;
+                br += ChatFormatting.RESET;
+            } else time = ((int) (tOpt.get() + 6000) % 24000);
+            int minutes = (int) (((time % 1000f) / 1000f) * 60);
+            int hours = time / 1000;
+            String postfix = "";
+
+            if (!ClientConfigs.Blocks.CLOCK_24H.get()) {
+                postfix = time < 12000 ? " AM" : " PM";
+                hours = hours % 12;
+                if (hours == 0) hours = 12;
+            }
+            String text = ob + hours + br + ":" + ob + String.format("%02d", minutes) + br + postfix;
+            p.displayClientMessage(Component.literal(text), true);
+        });
+    }
+
 
     //triangle distribution?
     private double r(RandomSource random, double a) {
@@ -489,7 +516,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             CannonAccess access = CannonAccess.find(l, message.target());
             if (access != null) {
-                if(message.fire()) {
+                if (message.fire()) {
                     access.playFiringEffects();
                 } else {
                     access.playIgniteEffects();

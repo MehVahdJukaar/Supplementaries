@@ -163,8 +163,6 @@ public class ClientConfigs {
         private static void init() {
         }
 
-        public static final Supplier<Boolean> CLOCK_CLICK;
-        public static final Supplier<Boolean> COMPASS_CLICK;
         public static final Supplier<Boolean> BOOK_GLINT;
         public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
         public static final Supplier<Boolean> PAINTINGS_TOOLTIPS;
@@ -184,13 +182,9 @@ public class ClientConfigs {
 
             builder.comment("Game tweaks")
                     .push("tweaks");
-            CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
-                    .define("clock_right_click", true);
+
             PROJECTILE_WEAPON_OVERLAY = builder.comment("Adds an overlay to projectile weapons in gui displaying currently selected ammo")
-                    .define("projectile_weapon_overlay", true);
-            COMPASS_CLICK = builder.comment("Allow to right click with a compass to display current coordinates in numerical form")
-                    .define("compass_right_click", false);
-            BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books" +
+                    .define("projectile_weapon_overlay", true);   BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books" +
                             "Note that turning this on will make book piles use tile renderer instead of baked models making them slower to render")
                     .define("placeable_books_glint", false);
             BANNER_PATTERN_TOOLTIP = builder.comment("Enables banner pattern tooltip image preview")
@@ -293,7 +287,6 @@ public class ClientConfigs {
         public static final Supplier<Double> WIND_VANE_PERIOD_2;
         public static final Supplier<Boolean> CLOCK_24H;
         public static final Supplier<Boolean> GLOBE_RANDOM;
-        public static final Supplier<Boolean> GLOBE_COORDINATES;
 
         public static final Supplier<GraphicsFanciness> FLAG_FANCINESS;
         public static final Supplier<Boolean> FLAG_BANNER;
@@ -326,7 +319,6 @@ public class ClientConfigs {
 
             builder.push("globe");
             GLOBE_RANDOM = builder.comment("Enable a random globe texture for each world").define("random_world", true);
-            GLOBE_COORDINATES = builder.comment("Displays current coordinates when using a globe").define("show_coordinates", true);
             builder.pop();
 
             builder.push("notice_board");

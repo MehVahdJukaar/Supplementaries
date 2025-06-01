@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events.neoforge;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
@@ -40,6 +41,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.NoteBlockEvent;
+import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -123,9 +125,14 @@ public class ServerEventsForge {
             ServerEvents.onDataSyncToPlayer(event.getPlayer(), true);
         } else {
             for (var p : event.getPlayerList().getPlayers()) {
-                ServerEvents.onDataSyncToPlayer(p, true);
+                ServerEvents.onDataSyncToPlayer(p, false);
             }
         }
+    }
+
+    @SubscribeEvent
+    public static void beforeServerStart(ServerAboutToStartEvent event) {
+        ServerEvents.beforeServerStart(event.getServer().registryAccess());
     }
 
     //for flute and cage. fabric calls directly

@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
@@ -54,6 +55,7 @@ public class ModSetup {
         RandomArrowFunction.setup();
         LootTablesInjects.setup();
         ModSetup.registerFrameBlocks();
+        PlaceableBookManager.setup();
         //  PlaceableBookManager.setup();
     }
 

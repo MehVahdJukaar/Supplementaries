@@ -418,6 +418,7 @@ public class CommonConfigs {
 
             builder.push("globe");
             GLOBE_ENABLED = feature(builder);
+            GLOBE_COORDINATES = builder.comment("Displays current coordinates when using a globe").define("show_coordinates", true);
             GLOBE_SEPIA = feature(builder, "sepia_globe");
             builder.pop();
 
@@ -538,6 +539,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ROAD_SIGN_ENABLED;
 
         public static final Supplier<Boolean> GLOBE_ENABLED;
+        public static final Supplier<Boolean> GLOBE_COORDINATES;
         public static final Supplier<Boolean> GLOBE_SEPIA;
 
         public static final Supplier<Boolean> PEDESTAL_ENABLED;
@@ -1220,6 +1222,14 @@ public class CommonConfigs {
                     .define("chance_per_slime_size", 0.15d, 0, 1);
             builder.pop();
 
+            builder.push("clock_and_compass");
+            CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
+                    .define("clock_right_click", true);
+
+            COMPASS_CLICK = builder.comment("Allow to right click with a compass to display current coordinates in numerical form")
+                    .define("compass_right_click", false);
+builder.pop();
+
             builder.pop();
         }
 
@@ -1263,6 +1273,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SUS_RECIPES;
         public static final Supplier<Boolean> SLIMED_EFFECT;
         public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
+        public static final Supplier<Boolean> CLOCK_CLICK;
+        public static final Supplier<Boolean> COMPASS_CLICK;
         public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
         public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;

@@ -6,6 +6,8 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.core.Moonlight;
+import net.mehvahdjukaar.moonlight.core.fluid.SoftFluidInternal;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -36,6 +38,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -171,6 +174,12 @@ public class ServerEvents {
         GlobeData.sendDataToClient(player);
         HourglassTimesManager.sendDataToClient(player);
         MapLightHandler.sendDataToClient(player);
+        PlaceableBookManager.onDataSync(player, joined);
+    }
+
+    @EventCalled
+    public static void beforeServerStart(RegistryAccess ra) {
+        PlaceableBookManager.registerBookPlacements(ra);
     }
 
     private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();

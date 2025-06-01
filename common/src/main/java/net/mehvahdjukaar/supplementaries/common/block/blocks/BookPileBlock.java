@@ -4,7 +4,6 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookModelVisuals;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
@@ -69,8 +68,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
     public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
         if (state.getValue(BOOKS) < 4) {
             ItemStack stack = context.getItemInHand();
-            PlaceableBookManager bookReg = PlaceableBookManager.getInstance(context.getLevel());
-            BookType type = bookReg.get(stack.getItem(), horizontal);
+            BookType type = PlaceableBookManager.get(stack.getItem(), horizontal, context.getLevel().registryAccess());
             if (type != null) {
                 return true;
             }

@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -123,8 +124,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
 
                 level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
                 level.blockEvent(pos, state.getBlock(), 1, 0);
-            } else {
-                if (ClientConfigs.Blocks.GLOBE_COORDINATES.get()) {
+                if (CommonConfigs.Building.GLOBE_COORDINATES.get()) {
                     displayCurrentCoordinates(level, player, pos);
                 }
             }

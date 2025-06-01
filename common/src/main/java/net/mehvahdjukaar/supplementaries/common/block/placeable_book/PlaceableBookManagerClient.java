@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.ItemStack;
@@ -47,8 +46,7 @@ public class PlaceableBookManagerClient {
 
     //client stuff. Ugly
     public static List<BookModelVisuals> getValidModelsForBookItem(HolderLookup.Provider level, ItemStack stack, boolean horizontal) {
-        var instance = PlaceableBookManager.getInstance(level); //client instance
-        BookType type = instance.get(stack.getItem(), horizontal);
+        BookType type = PlaceableBookManager.get(stack.getItem(), horizontal, level);
         if (type == null) {
             Supplementaries.LOGGER.warn("No book type found for item: {}", stack.getItem());
             return List.of(missingModel);

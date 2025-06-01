@@ -1,93 +1,85 @@
 package net.mehvahdjukaar.supplementaries.common.block.placeable_book;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.JsonOps;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
-import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendBookDataPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundFinalizeBookDataPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
-public class PlaceableBookManager  {
+@ApiStatus.Internal
+public class PlaceableBookManager {
     public static final ResourceKey<Registry<BookType>> REGISTRY_KEY = ResourceKey
             .createRegistryKey(Supplementaries.res("placeable_books"));
 
-    private static final MapRegistry<BookType> books = new MapRegistry<>("placeable_books");
-    private static final SidedInstance<Multimap<Item, BookType>> itemToBooks = SidedInstance.of(
-            r -> HashMultimap.create()); //populate here
-    private final SuppAdditionalPlacement horizontalPlacement;
-    private final SuppAdditionalPlacement verticalPlacement;
+    private static final SidedInstance<Multimap<Item, BookType>> ITEMS_TO_BOOKS = SidedInstance.of(
+            PlaceableBookManager::populateData); //populate here
+    private static final Set<Item> ITEMS_WITH_PLACEMENTS = new HashSet<>();
+    private static SuppAdditionalPlacement horizontalPlacement;
+    private static SuppAdditionalPlacement verticalPlacement;
 
 
-    public static void init(){
-        RegHelper.registerDatapackRegistry(REGISTRY_KEY, BookType.CODEC, BookType.CODEC);
-
-    }
-    public PlaceableBookManager(HolderLookup.Provider registryAccess) {
-        this.horizontalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE_H.get());
-        this.verticalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get());
+    public static void init() {
+        RegHelper.registerDataPackRegistry(REGISTRY_KEY, BookType.CODEC, BookType.CODEC);
     }
 
-    public static PlaceableBookManager getInstance(HolderLookup.Provider ra) {
-        return INSTANCES.get(ra);
+    public static void setup() {
+        horizontalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE_H.get());
+        verticalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get());
     }
 
-    public static PlaceableBookManager getInstance(@NotNull Level level) {
-        Preconditions.checkNotNull(level);
-        return getInstance(level.registryAccess());
+    public static HolderLookup.RegistryLookup<BookType> getRegistry(HolderLookup.Provider ra) {
+        return ra.lookupOrThrow(REGISTRY_KEY);
     }
 
-
-    public void setData(Map<ResourceLocation, BookType> bookTypes) {
-        //this.books.clear();
+    //called on server start and on player first logn from datapack sync event
+    public static void registerBookPlacements(RegistryAccess registryAccess) {
         //clear previous placements
-        for (var entry : itemToBooks.entries()) {
-            AdditionalItemPlacementsAPI.unregisterPlacement(entry.getKey());
+        var reg = getRegistry(registryAccess);
+        for (var entry : ITEMS_WITH_PLACEMENTS) {
+            AdditionalItemPlacementsAPI.unregisterPlacement(entry);
         }
-        this.itemToBooks.clear();
-        for (var entry : bookTypes.entrySet()) {
-            BookType value = entry.getValue();
-            this.books.register(entry.getKey(), value);
+
+        for (var entry : reg.listElements().toList()) {
+            BookType value = entry.value();
             Item item = value.item();
-            if (itemToBooks.containsKey(item)) {
-                Supplementaries.LOGGER.warn("Duplicate book type for item: {}, overriding", item);
-            }
-            this.itemToBooks.put(item, value);
-            AdditionalItemPlacementsAPI.registerPlacement(item, value.isHorizontal() ? horizontalPlacement : verticalPlacement);
+            AdditionalItemPlacementsAPI.registerPlacement(item,
+                    value.isHorizontal() ? horizontalPlacement : verticalPlacement);
+            ITEMS_WITH_PLACEMENTS.add(item);
         }
+    }
+
+    public static HashMultimap<Item, BookType> populateData(HolderLookup.Provider ra) {
+        HashMultimap<Item, BookType> itemToBooks = HashMultimap.create();
+
+        var reg = getRegistry(ra);
+        for (var entry : reg.listElements().toList()) {
+            BookType value = entry.value();
+            Item item = value.item();
+            itemToBooks.put(item, value);
+        }
+        return itemToBooks;
     }
 
     @Nullable
-    public BookType get(Item item, boolean horizontal) {
-        for (var entry : itemToBooks.get(item)) {
+    public static BookType get(Item item, boolean horizontal, HolderLookup.Provider ra) {
+        for (var entry : ITEMS_TO_BOOKS.get(ra).get(item)) {
             if (entry.isHorizontal() == horizontal || CommonConfigs.Tweaks.MIXED_BOOKS.get()) {
                 return entry;
             }
@@ -95,4 +87,10 @@ public class PlaceableBookManager  {
         return null;
     }
 
+    public static void onDataSync(ServerPlayer player, boolean joined) {
+        //just sends on login
+        if (joined) {
+            NetworkHelper.sendToClientPlayer(player, new ClientBoundFinalizeBookDataPacket());
+        }
+    }
 }

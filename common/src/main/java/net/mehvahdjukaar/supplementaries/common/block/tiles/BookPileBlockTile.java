@@ -131,12 +131,11 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             }
         }
         this.enchantPower = 0;
-        PlaceableBookManager bookReg = PlaceableBookManager.getInstance(level);
         for (int i = 0; i < 4; i++) {
             ItemStack itemStack = this.getItem(i);
             if (itemStack.isEmpty()) continue;
             Item item = itemStack.getItem();
-            BookType type = bookReg.get(item, this.horizontal);
+            BookType type = PlaceableBookManager.get(item, this.horizontal, level.registryAccess());
             if (type != null) {
                 this.enchantPower += type.enchantPower();
             }

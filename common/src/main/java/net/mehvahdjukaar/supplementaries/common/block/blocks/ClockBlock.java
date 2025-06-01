@@ -1,16 +1,16 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundDisplayClockTimePacket;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -63,33 +63,15 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     }
 
     public static void displayCurrentHour(Level world, Player player) {
-        int time = ((int) (world.getDayTime() + 6000) % 24000);
-        int minutes = (int) (((time % 1000f) / 1000f) * 60);
-        int hours = time / 1000;
-        String postfix = "";
-
-        String ob = "";
-        String br = "";
-        if (!world.dimensionType().natural()) {
-            time = world.random.nextInt(24000);
-            ob += ChatFormatting.OBFUSCATED;
-            br += ChatFormatting.RESET;
-        }
-
-        if (!ClientConfigs.Blocks.CLOCK_24H.get()) {
-            postfix = time < 12000 ? " AM" : " PM";
-            hours = hours % 12;
-            if (hours == 0) hours = 12;
-        }
-        String text = ob + hours + br + ":" + ob + String.format("%02d", minutes) + br + postfix;
-
-        player.displayClientMessage(Component.literal(text), true);
-
+        if (player instanceof ServerPlayer sp)
+            NetworkHelper.sendToClientPlayer(sp,
+                    new ClientBoundDisplayClockTimePacket(
+                            world.getDayTime(), world.dimensionType().natural()));
     }
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if(stack.is(this.asItem()) && !player.isSecondaryUseActive() && hitResult.getDirection() == state.getValue(FACING).getOpposite() && !state.getValue(TWO_FACED)){
+        if (stack.is(this.asItem()) && !player.isSecondaryUseActive() && hitResult.getDirection() == state.getValue(FACING).getOpposite() && !state.getValue(TWO_FACED)) {
             return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -97,7 +79,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide()) {
+        if (!level.isClientSide()) {
             displayCurrentHour(level, player);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
