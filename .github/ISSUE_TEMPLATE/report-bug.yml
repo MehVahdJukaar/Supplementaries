@@ -17,7 +17,7 @@ body:
           required: true
         - label: "Always include a latest.log if you are crashing"
           required: true
-        - label: "Remove known hacky mods such as: Optifine, Fabric API/Connector on forge, and every kind of hybrid server like Mohist and Velocity. None of these are supported. Also try without other lesser usual suspects like Sodium and Lithium.
+        - label: "Remove known hacky mods such as: Optifine, Fabric API/Connector on forge, and every kind of hybrid server like Mohist and Velocity. None of these are supported. Also try without other lesser usual suspects like Sodium and Lithium."
           required: true
         - label: "If you are unsure which mod is the culprit.\nDisable all of your mods and enable them 1-2 mods each time to isolate the culprit"
           required: true
