@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "simplefarming:mead"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "simplefarming"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "simplefarming"
+    }
+  ],
   "from_mod": "simplefarming",
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.simplefarming.mead"

@@ -14,6 +14,18 @@
     "divider": "BUCKET",
     "item": "goodending:algae_bucket"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "goodending"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "goodending"
+    }
+  ],
   "from_mod": "goodending",
   "still_texture": "goodending:block/algae",
   "translation_key": "item.goodending.algae_bucket"

@@ -13,6 +13,18 @@
   "food": {
     "item": "farmersrespite:long_apple_cider"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersrespite"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersrespite"
+    }
+  ],
   "from_mod": "farmersrespite",
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.farmersrespite.long_apple_cider"

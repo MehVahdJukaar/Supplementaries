@@ -1,19 +1,11 @@
 {
   "fabric:load_conditions": [
     {
-      "condition": "supplementaries:flag",
-      "flag": "placeable_books"
-    },
-    {
       "condition": "fabric:mod_loaded",
         "modid": "quark"
     }
   ],
   "neoforge:conditions": [
-    {
-      "type": "supplementaries:flag",
-      "flag": "placeable_books"
-    },
     {
       "type": "neoforge:mod_loaded",
       "modid": "quark"

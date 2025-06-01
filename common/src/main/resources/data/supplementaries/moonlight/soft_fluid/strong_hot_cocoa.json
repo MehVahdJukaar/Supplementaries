@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "farmersrespite:strong_hot_cocoa"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersrespite"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersrespite"
+    }
+  ],
   "from_mod": "farmersrespite",
   "still_texture": "moonlight:block/soft_fluids/milk_liquid",
   "translation_key": "item.farmersrespite.strong_hot_cocoa"

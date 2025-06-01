@@ -1,0 +1,7 @@
+
+{
+  "item": "minecraft:writable_book",
+  "horizontal": true,
+  "enchant_power": 0.25,
+  "book_visuals": "supplementaries:writable_book"
+}

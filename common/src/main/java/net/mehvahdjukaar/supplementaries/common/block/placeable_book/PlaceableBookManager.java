@@ -12,6 +12,7 @@ import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItem
 import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.SidedInstance;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
@@ -19,6 +20,8 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendBookDataP
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -33,23 +36,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
+public class PlaceableBookManager  {
+    public static final ResourceKey<Registry<BookType>> REGISTRY_KEY = ResourceKey
+            .createRegistryKey(Supplementaries.res("placeable_books"));
 
-    private static final SidedInstance<PlaceableBookManager> INSTANCES = SidedInstance.of(PlaceableBookManager::new);
-
-    private final MapRegistry<BookType> books = new MapRegistry<>("placeable_books");
-    private final Multimap<Item, BookType> itemToBooks = HashMultimap.create();
-    private final HolderLookup.Provider registryAccess;
+    private static final MapRegistry<BookType> books = new MapRegistry<>("placeable_books");
+    private static final SidedInstance<Multimap<Item, BookType>> itemToBooks = SidedInstance.of(
+            r -> HashMultimap.create()); //populate here
     private final SuppAdditionalPlacement horizontalPlacement;
     private final SuppAdditionalPlacement verticalPlacement;
 
+
+    public static void init(){
+        RegHelper.registerDatapackRegistry(REGISTRY_KEY, BookType.CODEC, BookType.CODEC);
+
+    }
     public PlaceableBookManager(HolderLookup.Provider registryAccess) {
-        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
-                "placeable_books");
-        this.registryAccess = registryAccess;
-
-        INSTANCES.set(registryAccess, this);
-
         this.horizontalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE_H.get());
         this.verticalPlacement = new SuppAdditionalPlacement(ModRegistry.BOOK_PILE.get());
     }
@@ -63,17 +65,6 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
         return getInstance(level.registryAccess());
     }
 
-    @Override
-    protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
-        DynamicOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
-        Codec<Optional<BookType>> codec = ForgeHelper.conditionalCodec(BookType.CODEC);
-        Map<ResourceLocation, BookType> bookTypes = new HashMap<>();
-        for (var entry : object.entrySet()) {
-            codec.parse(ops, entry.getValue())
-                    .getOrThrow().ifPresent(type -> bookTypes.put(entry.getKey(), type));
-        }
-        this.setData(bookTypes);
-    }
 
     public void setData(Map<ResourceLocation, BookType> bookTypes) {
         //this.books.clear();
@@ -102,11 +93,6 @@ public class PlaceableBookManager extends SimpleJsonResourceReloadListener {
             }
         }
         return null;
-    }
-
-    public static void sendDataToClient(ServerPlayer player) {
-        PlaceableBookManager instance = INSTANCES.get(player.level().registryAccess());
-        NetworkHelper.sendToClientPlayer(player, new ClientBoundSendBookDataPacket(instance.books.getEntries()));
     }
 
 }

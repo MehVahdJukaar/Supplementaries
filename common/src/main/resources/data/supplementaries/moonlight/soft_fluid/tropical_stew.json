@@ -14,6 +14,18 @@
     "divider": "BOWL",
     "item": "ecologics:tropical_stew"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "ecologics"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "ecologics"
+    }
+  ],
   "from_mod": "ecologics",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid"
 }

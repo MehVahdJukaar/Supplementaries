@@ -19,6 +19,18 @@
   "food": {
     "item": "upgrade_aquatic:mulberry_jam_bottle"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "upgrade_aquatic"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "upgrade_aquatic"
+    }
+  ],
   "from_mod": "upgrade_aquatic",
   "still_texture": "upgrade_aquatic:block/mulberry_jam_block_top",
   "tint_method": "flowing",

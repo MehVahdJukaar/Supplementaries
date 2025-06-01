@@ -47,8 +47,6 @@ public class CommonConfigs {
     private static final Supplier<Boolean> FALSE = () -> false;
     private static final Supplier<Double> ZERO = () -> 0d;
 
-    private static String currentCat = "";
-
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.MOD_ID, ConfigType.COMMON_SYNCED);
 
@@ -1172,8 +1170,6 @@ public class CommonConfigs {
 
             builder.push("placeable_books");
             PLACEABLE_BOOKS = feature(builder.comment("Allow books and enchanted books to be placed on the ground"));
-            WRITTEN_BOOKS = feature(builder.comment("Allows written books to be placed down. Requires shift clicking"),
-                    "written_books");
             MIXED_BOOKS = builder.comment("Allow all books to be placed both vertically and horizontally")
                     .define("mixed_books", false);
             builder.pop();
@@ -1251,7 +1247,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
         public static final Supplier<Boolean> TINTED_MAP;
         public static final Supplier<Boolean> PLACEABLE_BOOKS;
-        public static final Supplier<Boolean> WRITTEN_BOOKS;
         public static final Supplier<Boolean> ZOMBIE_HORSE_CONVERSION;
         public static final Supplier<Boolean> ZOMBIE_HORSE;
         public static final Supplier<Integer> ZOMBIE_HORSE_COST;

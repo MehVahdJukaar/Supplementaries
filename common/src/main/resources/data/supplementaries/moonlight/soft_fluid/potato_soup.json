@@ -16,6 +16,18 @@
     "divider": "BOWL",
     "item": "inspirations:potato_soup"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "inspirations"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "inspirations"
+    }
+  ],
   "from_mod": "inspirations",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid",
   "use_texture_from": "inspirations:potato_soup"

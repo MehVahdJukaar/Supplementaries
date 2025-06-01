@@ -30,6 +30,18 @@
     "divider": 1,
     "item": "autumnity:syrup_bottle"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "autumnity"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "autumnity"
+    }
+  ],
   "from_mod": "autumnity",
   "color": "#bd6e2a",
   "still_texture": "moonlight:block/soft_fluids/honey_liquid",

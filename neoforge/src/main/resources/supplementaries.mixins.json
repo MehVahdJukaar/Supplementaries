@@ -8,12 +8,12 @@
     "compat.CompatEmbFluidRendererMixin",
     "compat.CompatIFMapAtlasTextureMixin",
     "compat.CompatIFMapTextureMixin2",
+    "compat.CompatSodiumFluidRendererMixin",
     "LevelRendererMixin"
   ],
   "mixins": [
     "ChunkHolderMixin",
     "compat.CompatFarmersDelightTomatoMixin",
-    "compat.CompatSodiumFluidRendererMixin",
     "FireBlockAccessor",
     "ItemStackAccessor",
     "LivingEntityMixin",

@@ -288,14 +288,6 @@ public class ClientReceivers {
         });
     }
 
-    public static void handleSyncBookTypes(ClientBoundSendBookDataPacket packet) {
-        withLevelDo(l -> {
-            PlaceableBookManager.getInstance(l.registryAccess())
-                    .setData(packet.bookTypes);
-            Supplementaries.LOGGER.info("Synced Placeable Book Types");
-        });
-    }
-
     public static void handleSyncCapturedMobs(ClientBoundSendCapturedMobsPacket packet) {
         withLevelDo(l -> {
             CapturedMobHandler.getInstance(l).acceptData(packet.mobSet, packet.fish);

@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "betterendforge:umbrella_cluster_juice"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "betterendforge"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "betterendforge"
+    }
+  ],
   "from_mod": "betterendforge",
   "still_texture": "moonlight:block/soft_fluids/potion_still",
   "translation_key": "item.betterendforge.umbrella_cluster_juice"

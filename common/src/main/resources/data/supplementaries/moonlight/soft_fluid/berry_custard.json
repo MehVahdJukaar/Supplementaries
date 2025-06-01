@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "farmersdelight:berry_custard"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
   "from_mod": "farmersdelight",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid",
   "translation_key": "item.farmersdelight.berry_custard"

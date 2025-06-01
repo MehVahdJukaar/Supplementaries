@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "snowyspirit:eggnog"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "snowyspirit"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "snowyspirit"
+    }
+  ],
   "from_mod": "snowyspirit",
   "still_texture": "moonlight:block/soft_fluids/potion_still",
   "translation_key": "item.snowyspirit.eggnog"

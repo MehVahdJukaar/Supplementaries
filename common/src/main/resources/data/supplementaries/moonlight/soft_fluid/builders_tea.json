@@ -16,6 +16,18 @@
     "divider": 1,
     "item": "create:builders_tea"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "minecraft"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "minecraft"
+    }
+  ],
   "from_mod": "minecraft",
   "still_texture": "minecraft:block/water_still",
   "use_texture_from": "create:tea"

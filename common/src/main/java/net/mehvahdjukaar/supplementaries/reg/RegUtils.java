@@ -228,7 +228,7 @@ public class RegUtils {
                         .ignitedByLava()
                         .mapColor(MapColor.SAND)
                         .strength(1.0F)
-                        .forceSolidOn()
+                        .forceSolidOff()
                         .noOcclusion()
                         .sound(SoundType.WOOL))
         );
@@ -239,9 +239,9 @@ public class RegUtils {
             Supplier<Block> block = regBlock(name, () -> new AwningBlock(color,
                     BlockBehaviour.Properties.of()
                             .ignitedByLava()
-                            .forceSolidOn()
                             .mapColor(color.getMapColor())
                             .strength(1.0F)
+                            .forceSolidOff()
                             .noOcclusion()
                             .sound(SoundType.WOOL))
             );

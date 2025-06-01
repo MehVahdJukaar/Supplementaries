@@ -1,5 +1,17 @@
 
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "twilightforest"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "twilightforest"
+    }
+  ],
   "from_mod": "twilightforest",
   "target_block": {
     "block": "twilightforest:twilight_portal",

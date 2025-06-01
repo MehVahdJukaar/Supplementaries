@@ -13,6 +13,18 @@
     "divider": 1,
     "item": "tconstruct:ender_slime_ball"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "tconstruct"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "tconstruct"
+    }
+  ],
   "from_mod": "tconstruct",
   "still_texture": "tconstruct:block/ender_congealed_slime"
 }

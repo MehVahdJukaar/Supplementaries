@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "alexsmobs:fish_oil"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "alexsmobs"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "alexsmobs"
+    }
+  ],
   "from_mod": "alexsmobs",
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.alexsmobs.fish_oil"

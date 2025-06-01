@@ -10,6 +10,18 @@
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "malum"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "malum"
+    }
+  ],
   "from_mod": "malum",
   "still_texture": "moonlight:block/soft_fluids/potion_still",
   "translation_key": "item.malum:holy_sap"

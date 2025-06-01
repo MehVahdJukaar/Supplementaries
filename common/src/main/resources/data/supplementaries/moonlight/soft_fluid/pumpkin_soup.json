@@ -25,6 +25,18 @@
     "divider": 1,
     "item":  "miners_delight:pumpkin_soup_cup"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
   "from_mod": "farmersdelight",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid",
   "translation_key": "item.farmersdelight.pumpkin_soup"

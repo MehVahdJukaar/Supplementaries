@@ -14,6 +14,18 @@
     "divider": "BOWL",
     "item": "alexsmobs:sopa_de_macaco"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "alexsmobs"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "alexsmobs"
+    }
+  ],
   "from_mod": "alexsmobs",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid"
 }

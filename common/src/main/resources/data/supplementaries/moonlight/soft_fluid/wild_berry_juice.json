@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "windswept:wild_berry_juice"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
   "from_mod": "farmersdelight",
   "still_texture": "moonlight:soft_fluids/potion_still",
   "translation_key": "item.windswept.wild_berry_juice"

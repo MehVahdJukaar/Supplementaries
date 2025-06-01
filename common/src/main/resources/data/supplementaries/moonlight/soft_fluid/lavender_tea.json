@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "abundance:lavender_tea"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "abundance"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "abundance"
+    }
+  ],
   "from_mod": "abundance",
   "still_texture": "minecraft:block/water_still",
   "translation_key": "item.abundance.lavender_tea"

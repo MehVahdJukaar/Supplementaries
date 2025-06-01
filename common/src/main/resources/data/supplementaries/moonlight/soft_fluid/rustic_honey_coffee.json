@@ -14,6 +14,18 @@
         "divider": "BOTTLE",
         "item": "rusticdelight:honey_coffee"
     },
-    "from_mod": "rusticdelight",
+    "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "rusticdelight"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "rusticdelight"
+    }
+  ],
+  "from_mod": "rusticdelight",
     "still_texture": "moonlight:block/soft_fluids/soup_liquid"
 }

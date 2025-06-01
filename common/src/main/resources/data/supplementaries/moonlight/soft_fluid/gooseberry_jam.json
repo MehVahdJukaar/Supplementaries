@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "gooseberry_jam:gooseberry_jam_bottle"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "bayou_blues"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "bayou_blues"
+    }
+  ],
   "from_mod": "bayou_blues",
   "still_texture": "moonlight:block/soft_fluids/soup_liquid",
   "translation_key": "item.bayou_blues.gooseberry_jam_bottle"

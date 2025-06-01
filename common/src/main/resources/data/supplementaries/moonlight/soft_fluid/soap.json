@@ -14,6 +14,18 @@
     "divider": 1,
     "item": "betteranimalsplus:horseshoe_crab_blood"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "betteranimalsplus"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "betteranimalsplus"
+    }
+  ],
   "from_mod": "betteranimalsplus",
   "still_texture": "moonlight:block/soft_fluids/potion_still",
   "translation_key": "item.betteranimalsplus.horseshoe_crab_blood"

@@ -170,7 +170,6 @@ public class ServerEvents {
         CapturedMobHandler.sendDataToClient(player);
         GlobeData.sendDataToClient(player);
         HourglassTimesManager.sendDataToClient(player);
-        PlaceableBookManager.sendDataToClient(player);
         MapLightHandler.sendDataToClient(player);
     }
 

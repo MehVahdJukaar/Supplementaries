@@ -21,6 +21,18 @@
   "food": {
     "item": "autumnity:sap_bottle"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "supplementaries"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "supplementaries"
+    }
+  ],
   "from_mod": "supplementaries",
   "translation_key": "fluid.supplementaries.sap",
   "use_texture_from": "thermal:sap"

@@ -1,0 +1,6 @@
+{
+  "item": "minecraft:book",
+  "horizontal": true,
+  "enchant_power": 0.25,
+  "book_visuals": "supplementaries:normal_book"
+}

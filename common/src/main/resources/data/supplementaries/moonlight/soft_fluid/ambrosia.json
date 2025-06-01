@@ -14,6 +14,18 @@
     "divider": "BOWL",
     "item": "iceandfire:ambrosia"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "iceandfire"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "iceandfire"
+    }
+  ],
   "from_mod": "iceandfire",
   "still_texture": "moonlight:block/soft_fluids/dragon_breath_liquid",
   "translation_key": "item.iceandfire.ambrosia"

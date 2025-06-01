@@ -20,6 +20,18 @@
     "divider": "BOTTLE",
     "item": "atmospheric:aloe_gel_bottle"
   },
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "atmospheric"
+    }
+  ],
   "from_mod": "atmospheric",
   "still_texture": "atmospheric:block/aloe_gel_block_top",
   "tint_method": "flowing",

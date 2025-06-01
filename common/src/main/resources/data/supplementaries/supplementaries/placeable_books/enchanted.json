@@ -1,0 +1,7 @@
+{
+
+  "item": "minecraft:enchanted_book",
+  "enchant_power": 0.375,
+  "horizontal": false,
+  "book_visuals": "supplementaries:enchanted_book"
+}

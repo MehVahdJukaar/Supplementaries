@@ -10,6 +10,18 @@
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "minecraft"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "minecraft"
+    }
+  ],
   "from_mod": "minecraft",
   "still_texture": "moonlight:block/soft_fluids/milk_liquid",
   "translation_key": "item.minecraft.ghast_tear"

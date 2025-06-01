@@ -9,6 +9,18 @@
     }
   ],
   "flowing_texture": "moonlight:block/soft_fluids/milk_liquid",
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "betteranimalsplus"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "betteranimalsplus"
+    }
+  ],
   "from_mod": "betteranimalsplus",
   "still_texture": "moonlight:block/soft_fluids/milk_liquid",
   "translation_key": "item.betteranimalsplus.goatmilk"
