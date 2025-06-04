@@ -31,7 +31,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class SpecialRecipeDisplays {
@@ -240,7 +242,7 @@ public class SpecialRecipeDisplays {
         }
 
         ItemStack content = Items.GOLD_INGOT.getDefaultInstance();
-        content.set(DataComponents.ITEM_NAME, Component.literal("Precious Item"));
+        content.setHoverName(Component.literal("Precious Item"));
         for (var e : blocks.entrySet()) {
             ItemStack output = new ItemStack(e.getValue());
             ItemStack input = new ItemStack(e.getKey());
