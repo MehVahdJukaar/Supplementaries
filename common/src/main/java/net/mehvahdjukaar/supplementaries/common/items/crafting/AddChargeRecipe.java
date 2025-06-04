@@ -59,7 +59,7 @@ public class AddChargeRecipe extends CustomRecipe {
             } else if (!stack.isEmpty()) return false;
         }
         return arrow != null && rope != null && (canOverflow || newTotalCharges <=
-                arrow.getOrDefault(ModComponents.MAX_CHARGES.get(), 0));
+                result.getDefaultInstance().getOrDefault(ModComponents.MAX_CHARGES.get(), 0));
     }
 
     @Override

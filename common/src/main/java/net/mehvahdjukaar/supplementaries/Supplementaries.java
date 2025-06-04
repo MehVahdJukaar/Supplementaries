@@ -5,12 +5,10 @@ import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBallBlock;
 import net.mehvahdjukaar.supplementaries.common.block.dispenser.DispenserBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
-import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
@@ -29,8 +27,6 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGener
 import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.levelgen.Heightmap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,6 +84,7 @@ public class Supplementaries {
         ColoredMapHandler.init();
         MapLightHandler.init();
         DispenserBehaviorsManager.init();
+        PlaceableBookManager.init();
 
         ServerDynamicResourcesGenerator.INSTANCE.register();
 
@@ -95,7 +92,6 @@ public class Supplementaries {
         PlatHelper.addServerReloadListener(HourglassTimesManager::new, res("hourglass_data"));
         PlatHelper.addServerReloadListener(FaucetBehaviorsManager::new, res("faucet_interactions"));
         PlatHelper.addServerReloadListener(CapturedMobHandler::new, res("catchable_mobs_properties"));
-        PlatHelper.addServerReloadListener(PlaceableBookManager::new, res("placeable_books"));
 
         if (PlatHelper.getPhysicalSide().isClient()) {
             ClientDynamicResourcesGenerator.INSTANCE.register();

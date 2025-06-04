@@ -21,7 +21,7 @@ class WrittenBookHackBehavior implements ItemUseOnBlockBehavior {
 
     @Override
     public boolean isEnabled() {
-        return CommonConfigs.Tweaks.WRITTEN_BOOKS.get();
+        return CommonConfigs.Tweaks.PLACEABLE_BOOKS.get();
     }
 
     @Override
@@ -34,9 +34,10 @@ class WrittenBookHackBehavior implements ItemUseOnBlockBehavior {
                                                  ItemStack stack, BlockHitResult hit) {
         if (player.isSecondaryUseActive()) {
             //calls the placement logic that the item already has, skipping the open book stuff
-            var r = AdditionalItemPlacementsAPI.getBehavior(stack.getItem())
-                    .overrideUseOn(new UseOnContext(player, hand, hit), null);
-            if (r.consumesAction()) return r;
+            var b = AdditionalItemPlacementsAPI.getBehavior(stack.getItem());
+            if (b == null) return InteractionResult.PASS;
+            var result = b.overrideUseOn(new UseOnContext(player, hand, hit), null);
+            if (result.consumesAction()) return result;
         }
         return InteractionResult.PASS;
     }

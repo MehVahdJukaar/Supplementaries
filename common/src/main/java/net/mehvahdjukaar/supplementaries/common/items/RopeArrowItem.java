@@ -43,7 +43,8 @@ public class RopeArrowItem extends ArrowItem {
 
     @Override
     public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
-        RopeArrowEntity arrow = new RopeArrowEntity(pos.x(), pos.y(), pos.z(), null, stack.copyWithCount(1), null);
+        RopeArrowEntity arrow = new RopeArrowEntity(pos.x(), pos.y(), pos.z(),
+                level, stack.copyWithCount(1), null);
         arrow.pickup = AbstractArrow.Pickup.ALLOWED;
         return arrow;
     }

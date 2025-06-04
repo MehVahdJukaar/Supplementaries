@@ -3,4 +3,7 @@
 - confetti can be placed on the ground with shift
 - registry command can now save stuff to file
 - changed daub brace model
+- moved/changed some configs
+- fixed rope arow recipe
+- fixed rope arows from dispenser
 - improved slingshot block placement pipeline even more to not only call directly blockItem.place but also some stuff usually calle by item.onUse
