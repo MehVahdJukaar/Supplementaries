@@ -10,9 +10,10 @@ public class ModelPartMixin implements IModelPartExtension {
 
     //just so we take up a bit less memory
     @Unique
-    private byte supp$textWidth;
+    private byte supp$textWidth = (byte) (64 / 4);
     @Unique
-    private byte supp$textHeight;
+    private byte supp$textHeight = (byte) (64 / 4);
+
 
     @Override
     public void supp$setDimensions(int texWidth, int texHeight) {

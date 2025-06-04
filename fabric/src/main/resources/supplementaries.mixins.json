@@ -10,7 +10,6 @@
     "GuiMixin",
     "ItemInHandRendererMixin",
     "LevelRendererMixin",
-    "MC263524FixMixin",
     "MinecraftInputMixin",
     "MouseScrollMixin",
     "SkullBlockRendererMixin"

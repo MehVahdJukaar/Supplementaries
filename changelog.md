@@ -1,1 +1,1 @@
-fixed a crash with buntings in worldgen
+removed a fix for a mc bug, MC-263524, since some mods for some reason were relying on it being broken
