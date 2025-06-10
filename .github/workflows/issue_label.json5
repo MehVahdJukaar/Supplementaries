@@ -17,7 +17,8 @@
     'duplicate',
     'help wanted',
     'invalid',
-    'information'
+    'information',
+    'server'
   ],
   //defaultLabels: ['bug']
 }
