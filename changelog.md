@@ -1,1 +1,2 @@
-removed a fix for a mc bug, MC-263524
+flax can spawn and be placed on dirt-like blocks too, not just sand
+quiver overlay with keybind will close when any screen is opened

@@ -31,7 +31,7 @@ public class WildFlaxBlock extends BushBlock implements BonemealableBlock {
 
     @Override
     protected boolean mayPlaceOn(BlockState state, BlockGetter worldIn, BlockPos pos) {
-        return state.is(BlockTags.SAND);
+        return state.is(BlockTags.SAND) || super.mayPlaceOn(state, worldIn, pos);
     }
 
     @Override

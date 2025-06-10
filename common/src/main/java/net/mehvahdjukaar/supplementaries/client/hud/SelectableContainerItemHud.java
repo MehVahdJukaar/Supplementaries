@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.hud;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -174,13 +173,15 @@ public abstract class SelectableContainerItemHud {
             closeHud();
             return;
         }
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.screen != null) {
+            closeHud();
+            return;
+        }
         //checks for keypress here to handle all possible cases
         if (isUsingKey()) {
             if (!ClientRegistry.QUIVER_KEYBIND.isUnbound()) {
-                boolean keyDown = InputConstants.isKeyDown(
-                        Minecraft.getInstance().getWindow().getWindow(),
-                        ClientRegistry.QUIVER_KEYBIND.key.getValue()
-                );
+                boolean keyDown = ClientRegistry.QUIVER_KEYBIND.isDown();
                 if (!keyDown) {
                     closeHud();
                     return;

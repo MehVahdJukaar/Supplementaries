@@ -1,6 +1,6 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.9-SNAPSHOT" apply false
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.modrinth.minotaur" version "2.+"
     id "com.github.johnrengelman.shadow" version "7.1.2" apply false
@@ -149,6 +149,11 @@ allprojects {
             url = "https://www.cursemaven.com"
             allowInsecureProtocol = true
         }
+
+        maven { url "https://maven.shedaniel.me/" }
+        maven { url "https://maven.terraformersmc.com/releases" }
+        maven { url 'https://maven.ladysnake.org/releases' }
+
 
         maven {
             url "https://maven.firstdarkdev.xyz/snapshots"
