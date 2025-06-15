@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,11 +14,19 @@ import java.util.Optional;
 
 public class QuiverItemImpl {
 
+    @Nullable
     public static QuiverItem.Data getQuiverData(ItemStack stack) {
         if (stack.getItem() instanceof QuiverItem) {
             return new QuiverNBTData(stack.getOrCreateTag());
         }
         return null;
+    }
+
+    public static QuiverItem.Data getQuiverDataOrThrow(ItemStack stack) {
+        if (stack.getItem() instanceof QuiverItem) {
+            return new QuiverNBTData(stack.getOrCreateTag());
+        }
+        throw new IllegalStateException("Failed to get quiver data for " + stack);
     }
 
     public static class QuiverNBTData implements QuiverItem.Data {

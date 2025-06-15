@@ -6,11 +6,9 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IAntiqueTextProvider;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.forge.LunchBoxItemImpl;
 import net.mehvahdjukaar.supplementaries.common.items.forge.QuiverItemImpl;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.HangingSignBlockEntity;
@@ -71,6 +69,12 @@ public class CapabilityHandler {
     @org.jetbrains.annotations.Nullable
     public static <T> T get(ICapabilityProvider provider, Capability<T> cap) {
         return provider.getCapability(cap).orElse(null);
+    }
+
+    public static <T> T getOrThrow(ICapabilityProvider provider, Capability<T> cap) {
+        return provider.getCapability(cap).orElseThrow(
+                () -> new RuntimeException("Count not get capability " + cap.getName() + " from " + provider + ". HOW?? Might be a bug from some other mod or from the loader.")
+        );
     }
 
     @SuppressWarnings("ConstantConditions")

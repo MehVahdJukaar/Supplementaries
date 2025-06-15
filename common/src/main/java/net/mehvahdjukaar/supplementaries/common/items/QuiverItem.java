@@ -24,8 +24,8 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
     }
 
     @Override
-    public Data getData(ItemStack stack) {
-        return getQuiverData(stack);
+    public @NotNull Data getData(ItemStack stack) {
+        return getQuiverDataOrThrow(stack);
     }
 
     @Override
@@ -36,6 +36,12 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
     @Nullable
     @ExpectPlatform
     public static QuiverItem.Data getQuiverData(ItemStack stack) {
+        throw new AssertionError();
+    }
+
+    @Nullable
+    @ExpectPlatform
+    public static QuiverItem.Data getQuiverDataOrThrow(ItemStack stack) {
         throw new AssertionError();
     }
 

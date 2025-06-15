@@ -1,13 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.items.fabric;
 
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
-import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,11 +14,19 @@ import java.util.Optional;
 
 public class LunchBoxItemImpl {
 
+    @Nullable
     public static LunchBoxItem.Data getLunchBoxData(ItemStack stack) {
         if (stack.getItem() instanceof LunchBoxItem) {
             return new LunchBoxItemImpl.LunchBoxNBTData(stack.getOrCreateTag());
         }
         return null;
+    }
+
+    public static LunchBoxItem.Data getLunchBoxDataOrThrow(ItemStack stack) {
+        if (stack.getItem() instanceof LunchBoxItem) {
+            return new LunchBoxItemImpl.LunchBoxNBTData(stack.getOrCreateTag());
+        }
+        throw new IllegalStateException("Failed to get Lunch Box data for " + stack);
     }
 
     public static class LunchBoxNBTData implements LunchBoxItem.Data {

@@ -1,12 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items.forge;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.animal.MushroomCow;
-import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -16,6 +13,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,8 +21,13 @@ import java.util.Optional;
 public class LunchBoxItemImpl {
 
 
+    @Nullable
     public static LunchBoxItem.Data getLunchBoxData(ItemStack stack) {
         return CapabilityHandler.get(stack, CapabilityHandler.LUNCH_BOX_ITEM_HANDLER);
+    }
+
+    public static LunchBoxItem.Data getLunchBoxDataOrThrow(ItemStack stack) {
+        return CapabilityHandler.getOrThrow(stack, CapabilityHandler.LUNCH_BOX_ITEM_HANDLER);
     }
 
     //mess but will get rewritten in 1.20.6 anyways
@@ -45,7 +48,7 @@ public class LunchBoxItemImpl {
         @Override
         public CompoundTag serializeNBT() {
             var c = super.serializeNBT();
-            c.putByte("SelectedSlot",(byte) this.selectedSlot);
+            c.putByte("SelectedSlot", (byte) this.selectedSlot);
             c.putBoolean("Open", this.isOpen);
             return c;
         }

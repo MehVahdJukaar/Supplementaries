@@ -24,6 +24,10 @@ public class QuiverItemImpl {
         return CapabilityHandler.get(stack, CapabilityHandler.QUIVER_ITEM_HANDLER);
     }
 
+    public static QuiverItem.Data getQuiverDataOrThrow(ItemStack stack) {
+        return CapabilityHandler.getOrThrow(stack, CapabilityHandler.QUIVER_ITEM_HANDLER);
+    }
+
     public static class Cap extends ItemStackHandler implements ICapabilitySerializable<CompoundTag>, QuiverItem.Data {
 
         private final LazyOptional<IItemHandler> lazyOptional = LazyOptional.of(() -> this);

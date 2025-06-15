@@ -69,7 +69,7 @@ public class SupplementariesForgeClient {
                 skeletonRenderer.addLayer(new QuiverLayer(skeletonRenderer, true));
             }
         } catch (Exception e) {
-            Supplementaries.LOGGER.warn("Failed to add quiver layer to skeleton. This bug was caused by forge! Use neo");
+            Supplementaries.LOGGER.warn("Failed to add quiver layer to skeleton. This bug was caused by forge!");
         }
         try {
             var strayRenderer = event.getRenderer(EntityType.STRAY);
@@ -77,7 +77,7 @@ public class SupplementariesForgeClient {
                 strayRenderer.addLayer(new QuiverLayer(strayRenderer, true));
             }
         } catch (Exception e) {
-            Supplementaries.LOGGER.warn("Failed to add quiver layer to stray. This bug was caused by forge! Use neo");
+            Supplementaries.LOGGER.warn("Failed to add quiver layer to stray. This bug was caused by forge!");
         }
 
 
@@ -95,7 +95,7 @@ public class SupplementariesForgeClient {
                 var r = event.getRenderer(entityType);
                 if (r != null && !((Object) r instanceof NoopRenderer<?>)) r.addLayer(new SlimedLayer(r));
             } catch (Exception e) {
-                Supplementaries.LOGGER.warn("Failed to add slimed layer to entity: {}. This bug was caused by forge! Use neo", entityType);
+                Supplementaries.LOGGER.warn("Failed to add slimed layer to entity: {}. This bug was caused by forge!", entityType);
             }
         }));
 
@@ -106,7 +106,7 @@ public class SupplementariesForgeClient {
                 creeperRenderer.addLayer(new PartyHatLayer.Creeper(creeperRenderer, event.getEntityModels(), event.getContext().getItemInHandRenderer()));
             }
         } catch (Exception e) {
-            Supplementaries.LOGGER.warn("Failed to add party hat layer to creeper. This bug was caused by forge! Use neo");
+            Supplementaries.LOGGER.warn("Failed to add party hat layer to creeper. This bug was caused by forge!");
         }
         //player skins
         for (String skinType : event.getSkins()) {

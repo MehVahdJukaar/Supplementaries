@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         super(properties);
     }
 
+    @NotNull
     public abstract D getData(ItemStack stack);
 
     @Override
@@ -112,6 +114,8 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         ItemStack stack = player.getItemInHand(hand);
         D data = this.getData(stack);
 
+        if (data == null) return InteractionResultHolder.pass(stack);
+
         InteractionHand otherHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         ItemStack possibleArrowStack = player.getItemInHand(otherHand);
 
@@ -159,20 +163,14 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public boolean isBarVisible(ItemStack pStack) {
         D data = this.getData(pStack);
-        if (data != null) {
-            return data.getSelected().getCount() > 0;
-        }
-        return false;
+        return data.getSelected().getCount() > 0;
     }
 
     @Override
     public int getBarWidth(ItemStack pStack) {
         D data = this.getData(pStack);
-        if (data != null) {
-            return Math.min(1 + 12 * data.getSelectedItemCount() /
-                    (data.getSelected().getMaxStackSize() * data.getContentView().size()), 13);
-        }
-        return 0;
+        return Math.min(1 + 12 * data.getSelectedItemCount() /
+                (data.getSelected().getMaxStackSize() * data.getContentView().size()), 13);
     }
 
     @Override
@@ -184,16 +182,14 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
         D data = this.getData(pStack);
-        if (data != null) {
-            NonNullList<ItemStack> list = NonNullList.create();
-            boolean isEmpty = true;
-            for (var v : data.getContentView()) {
-                if (!v.isEmpty()) isEmpty = false;
-                list.add(v);
-            }
-            if (!isEmpty) {
-                return Optional.of(new SelectableContainerTooltip(data.getContentView(), data.getSelectedSlot()));
-            }
+        NonNullList<ItemStack> list = NonNullList.create();
+        boolean isEmpty = true;
+        for (var v : data.getContentView()) {
+            if (!v.isEmpty()) isEmpty = false;
+            list.add(v);
+        }
+        if (!isEmpty) {
+            return Optional.of(new SelectableContainerTooltip(data.getContentView(), data.getSelectedSlot()));
         }
         return Optional.empty();
     }

@@ -49,12 +49,10 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             addClientTooltip(list);
         }
         Data data = this.getData(pStack);
-        if (data != null) {
-            boolean open = data.canEatFrom();
-            list.add(open ?
-                    Component.translatable("message.supplementaries.lunch_box.tooltip.open") :
-                    Component.translatable("message.supplementaries.lunch_box.tooltip.closed"));
-        }
+        boolean open = data.canEatFrom();
+        list.add(open ?
+                Component.translatable("message.supplementaries.lunch_box.tooltip.open") :
+                Component.translatable("message.supplementaries.lunch_box.tooltip.closed"));
 
     }
 
@@ -196,13 +194,18 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return CommonConfigs.Tools.LUNCH_BOX_SLOTS.get();
     }
 
+    @NotNull
     @Override
     public Data getData(ItemStack stack) {
-        return getLunchBoxData(stack);
+        return getLunchBoxDataOrThrow(stack);
     }
 
+    @ExpectPlatform
+    public static Data getLunchBoxDataOrThrow(ItemStack stack) {
+        throw new AssertionError();
+    }
 
-    @NotNull
+    @Nullable
     @ExpectPlatform
     public static Data getLunchBoxData(ItemStack stack) {
         throw new AssertionError();
