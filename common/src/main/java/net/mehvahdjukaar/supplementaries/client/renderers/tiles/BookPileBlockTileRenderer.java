@@ -10,10 +10,9 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BookPileHorizontalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.BooksList;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.BookVisualData;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile.BooksList;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
@@ -30,10 +29,8 @@ import java.util.function.Function;
 
 public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBlockTile> {
 
-    private static ModelBlockRenderer renderer;
-    private static ModelManager modelManager;
-
     public BookPileBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+
     }
 
     @Override
@@ -130,14 +127,11 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         if (xRot != 0) poseStack.mulPose(Axis.XP.rotation(xRot));
         poseStack.translate(-0.5, -0.5 + 3 / 16f, -0.5);
 
-        if (renderer == null) {
-            renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
-        }
-        if (modelManager == null) {
-            modelManager = Minecraft.getInstance().getModelManager();
-        }
+        Minecraft mc = Minecraft.getInstance();
+        ModelManager modelManager = mc.getModelManager();
+        ModelBlockRenderer renderer = mc.getBlockRenderer().getModelRenderer();
         //TODO: swap with java model for correct shading. same for wall lanterns and block animation a good place
-        BakedModel model = ClientHelper.getModel(modelManager,  b.getModel());
+        BakedModel model = ClientHelper.getModel(modelManager, b.getModel());
         if (model != null) {
             renderer.renderModel(poseStack.last(),
                     builder,
