@@ -212,7 +212,7 @@ public class BlockUtil {
 
     private static boolean isBlacklisted(BlockState state) {
         // double blocks
-        if (state.getBlock() instanceof BedBlock) return true;
+        if (state.hasProperty(BedBlock.PART)) return true;
         if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
             if (state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.SINGLE) return true;
         }
@@ -243,7 +243,7 @@ public class BlockUtil {
             var opt = rotatePistonHead(state, pos, level, face, ccw);
             if (opt.isPresent()) return opt;
         }
-        if (b instanceof BedBlock) {
+        if (state.hasProperty(BedBlock.PART)) {
             return rotateBedBlock(face, pos, level, state, rot);
         }
         if (b instanceof ChestBlock) {
