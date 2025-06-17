@@ -28,9 +28,6 @@ import java.util.function.Function;
 
 public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBlockTile> {
 
-    private static ModelBlockRenderer renderer;
-    private static ModelManager modelManager;
-
     public BookPileBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
@@ -127,12 +124,11 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
         if (zRot != 0) poseStack.mulPose(Axis.ZP.rotation(zRot));
         if (xRot != 0) poseStack.mulPose(Axis.XP.rotation(xRot));
         poseStack.translate(-0.5, -0.5 + 3 / 16f, -0.5);
-        if (renderer == null) {
-            renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
-        }
-        if (modelManager == null) {
-            modelManager = Minecraft.getInstance().getModelManager();
-        }
+
+        Minecraft mc = Minecraft.getInstance();
+        ModelManager modelManager = mc.getModelManager();
+        ModelBlockRenderer renderer = mc.getBlockRenderer().getModelRenderer();
+
         //TODO: swap with java model for correct shading. same for wall lanterns and block animation a good place
         BakedModel model = ClientHelper.getModel(modelManager, b.getType().modelPath());
         if (model != null) {

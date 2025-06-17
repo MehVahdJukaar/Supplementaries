@@ -57,26 +57,22 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
             AtomicBoolean didStuff = new AtomicBoolean(false);
             if (itemstack.isEmpty()) {
                 D data = this.getData(quiver);
-                if (data != null) {
-                    data.removeOneStack().ifPresent((stack) -> {
-                        this.playRemoveOneSound(pPlayer);
-                        data.tryAdding(pSlot.safeInsert(stack));
-                        didStuff.set(true);
-                    });
-                }
+                data.removeOneStack().ifPresent((stack) -> {
+                    this.playRemoveOneSound(pPlayer);
+                    data.tryAdding(pSlot.safeInsert(stack));
+                    didStuff.set(true);
+                });
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
                 D data = this.getData(quiver);
-                if (data != null) {
-                    var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
-                    ItemStack remaining = data.tryAdding(taken);
-                    if (!remaining.equals(taken)) {
-                        this.playInsertSound(pPlayer);
-                        didStuff.set(true);
-                    }
-                    pSlot.set(remaining);
+                var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
+                ItemStack remaining = data.tryAdding(taken);
+                if (!remaining.equals(taken)) {
+                    this.playInsertSound(pPlayer);
+                    didStuff.set(true);
                 }
+                pSlot.set(remaining);
             }
             return didStuff.get();
         }
@@ -86,24 +82,22 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     public boolean overrideOtherStackedOnMe(ItemStack quiver, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
         if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
             AbstractData data = this.getData(quiver);
-            if (data != null) {
-                AtomicBoolean didStuff = new AtomicBoolean(false);
-                if (pOther.isEmpty()) {
-                    data.removeOneStack().ifPresent((removed) -> {
-                        this.playRemoveOneSound(pPlayer);
-                        pAccess.set(removed);
-                        didStuff.set(true);
-                    });
-                } else {
-                    ItemStack i = data.tryAdding(pOther);
-                    if (!i.equals(pOther)) {
-                        this.playInsertSound(pPlayer);
-                        pAccess.set(i);
-                        didStuff.set(true);
-                    }
+            AtomicBoolean didStuff = new AtomicBoolean(false);
+            if (pOther.isEmpty()) {
+                data.removeOneStack().ifPresent((removed) -> {
+                    this.playRemoveOneSound(pPlayer);
+                    pAccess.set(removed);
+                    didStuff.set(true);
+                });
+            } else {
+                ItemStack i = data.tryAdding(pOther);
+                if (!i.equals(pOther)) {
+                    this.playInsertSound(pPlayer);
+                    pAccess.set(i);
+                    didStuff.set(true);
                 }
-                return didStuff.get();
             }
+            return didStuff.get();
         }
         return false;
     }
@@ -113,8 +107,6 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         D data = this.getData(stack);
-
-        if (data == null) return InteractionResultHolder.pass(stack);
 
         InteractionHand otherHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
         ItemStack possibleArrowStack = player.getItemInHand(otherHand);
@@ -198,12 +190,10 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         D data = this.getData(pStack);
-        if (data != null) {
-            int c = data.getSelectedItemCount();
-            if (c != 0) {
-                pTooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
-                        data.getSelected().getItem().getDescription(), c).withStyle(ChatFormatting.GRAY));
-            }
+        int c = data.getSelectedItemCount();
+        if (c != 0) {
+            pTooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
+                    data.getSelected().getItem().getDescription(), c).withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -211,9 +201,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void onDestroyed(ItemEntity pItemEntity) {
         D data = this.getData(pItemEntity.getItem());
-        if (data != null) {
-            ItemUtils.onContainerDestroyed(pItemEntity, data.getContentView().stream());
-        }
+        ItemUtils.onContainerDestroyed(pItemEntity, data.getContentView().stream());
     }
 
     protected void playRemoveOneSound(Entity pEntity) {
@@ -232,7 +220,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         D data = this.getData(stack);
-        if (data != null) data.updateSelectedIfNeeded();
+        data.updateSelectedIfNeeded();
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 

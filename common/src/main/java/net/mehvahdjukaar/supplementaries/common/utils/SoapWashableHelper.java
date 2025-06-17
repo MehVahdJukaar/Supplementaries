@@ -15,10 +15,13 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BannerBlockEntity;
+import net.minecraft.world.level.block.entity.BedBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -156,21 +159,19 @@ public class SoapWashableHelper {
 
         if (newColor != null) {
             if (!canCleanColor(state.getBlock())) return false;
-            //TODO: add back
-            if (state.getBlock() instanceof BedBlock) {
-                if (true) return false;
+            if (state.hasProperty(BedBlock.PART)) {
                 BlockPos other = pos.relative(BlockUtil.getConnectedBedDirection(state));
                 BlockState otherBed = level.getBlockState(other);
                 Block otherBedColor = BlocksColorAPI.changeColor(otherBed.getBlock(), null);
                 if (otherBedColor != null) {
                     //level.removeBlock(other,false);
-                    level.setBlock(other, otherBedColor.withPropertiesOf(otherBed), 2);
+                    level.setBlock(other, otherBedColor.withPropertiesOf(otherBed), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
                 }
             }
 
             CompoundTag tag = null;
             if (newColor instanceof EntityBlock) {
-                var be = level.getBlockEntity(pos);
+                BlockEntity be = level.getBlockEntity(pos);
                 if (be != null) {
                     tag = be.saveWithoutMetadata();
                 }
@@ -180,7 +181,7 @@ public class SoapWashableHelper {
 
             level.setBlock(pos, toPlace, 2);
             if (tag != null) {
-                var be = level.getBlockEntity(pos);
+                BlockEntity be = level.getBlockEntity(pos);
                 if (be != null) {
                     be.load(tag);
                 }
