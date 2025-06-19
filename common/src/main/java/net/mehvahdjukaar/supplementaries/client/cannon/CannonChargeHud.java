@@ -95,9 +95,9 @@ public class CannonChargeHud implements LayeredDraw.Layer {
 
         if (f > 0) {
             f = 1 - f;
-            float red = f * 0.4F + min;
+            float red = Math.min(f * 0.4F + min,1);
 
-            float green = min - f * 0.4f * min;
+            float green = Math.min(min - f * 0.4f * min,1);
             float blue = min;
 
             RenderSystem.setShaderColor(red, green, min - f * blue, 1.0F);
