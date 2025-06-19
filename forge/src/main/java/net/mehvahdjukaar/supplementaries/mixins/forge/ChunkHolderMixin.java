@@ -22,10 +22,12 @@ public class ChunkHolderMixin {
 
     @Inject(method = "broadcastBlockEntity", at = @At("TAIL"))
     private void syncBedCap(List<ServerPlayer> list, Level arg, BlockPos pos, CallbackInfo ci, @Local BlockEntity te) {
-        var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
-        if (cap.isPresent()) {
-            var c = cap.orElseThrow(() -> new IllegalStateException("Antique text capability was null. How?"));
-            list.forEach(p -> NetworkHandler.CHANNEL.sendToClientPlayer(p, new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
+        if(te != null) {
+            var cap = te.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP);
+            if (cap.isPresent()) {
+                var c = cap.orElseThrow(() -> new IllegalStateException("Antique text capability was null. How?"));
+                list.forEach(p -> NetworkHandler.CHANNEL.sendToClientPlayer(p, new ClientBoundSyncAntiqueInk(pos, c.hasAntiqueInk())));
+            }
         }
     }
 }
