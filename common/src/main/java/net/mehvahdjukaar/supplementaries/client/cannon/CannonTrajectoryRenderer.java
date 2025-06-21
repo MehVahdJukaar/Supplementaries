@@ -53,22 +53,23 @@ public class CannonTrajectoryRenderer {
         poseStack.mulPose(Axis.YP.rotation(-yaw));
 
         boolean hitAir = shootingMode == ShootingMode.STRAIGHT || trajectory.miss() ||
-                mc.level.getBlockState(trajectory.getHitPos(cannonPos)).isAir();
+                mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
 
         renderArrows(poseStack, buffer, partialTicks,
                 trajectory, hitAir, rendersRed);
 
         poseStack.popPose();
-        poseStack.mulPose(Axis.YP.rotationDegrees(-access.getCannonGlobalYawOffset(partialTicks)));
 
         if (!hitAir && hit instanceof BlockHitResult bh) {
             if (bh.getDirection() == Direction.UP) {
-                renderTargetCircle(poseStack, buffer, rendersRed, trajectory.getHitLocation(Vec3.ZERO), partialTicks);
+                renderTargetCircle(poseStack, buffer, rendersRed, trajectory.getHitLocation(Vec3.ZERO,yaw), partialTicks);
             }
         }
 
-        if (!hitAir && debug && hit instanceof BlockHitResult bh)
+        if (!hitAir && debug && hit instanceof BlockHitResult bh) {
+            poseStack.mulPose(Axis.YP.rotationDegrees(-access.getCannonGlobalYawOffset(partialTicks)));
             renderBlockReticule(poseStack, buffer, cannonPos, bh);
+        }
     }
 
     private static void renderBlockReticule(PoseStack poseStack, MultiBufferSource buffer,

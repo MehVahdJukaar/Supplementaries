@@ -68,10 +68,7 @@ public class ManeuverAndShootCannonGoal extends Goal {
         } else {
             this.seeTime = 0;
         }
-
-
         this.mob.getLookControl().setLookAt(this.target, 0, 0);
-
 
         if (attackDelay > 0) {
             attackDelay--;
@@ -82,7 +79,5 @@ public class ManeuverAndShootCannonGoal extends Goal {
         if (aimCannonAndShoot(access, this.mob, this.target, attackDelay <= 0)) {
             attackDelay = Mth.randomBetweenInclusive(this.mob.getRandom(), attackIntervalMin, attackIntervalMax); //random delay between shots
         }
-
-
     }
 }

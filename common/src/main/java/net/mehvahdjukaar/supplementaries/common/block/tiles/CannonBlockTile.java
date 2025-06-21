@@ -301,19 +301,19 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (fire) this.ignite(controllingPlayer, access);
     }
 
-    public void setRestrainedPitch(CannonAccess access, float pitch) {
+    public void setRestrainedPitch(CannonAccess access, float relativePitch) {
         var r = access.getPitchAndYawRestrains();
-        this.pitch = MthUtils.clampDegrees(pitch, r.minPitch(), r.maxPitch());
+        this.pitch = MthUtils.clampDegrees(relativePitch, r.minPitch(), r.maxPitch());
     }
 
-    public void setRestrainedYaw(CannonAccess access, float yaw) {
+    public void setRestrainedYaw(CannonAccess access, float relativeYaw) {
         var r = access.getPitchAndYawRestrains();
-        this.yaw = MthUtils.clampDegrees(yaw, r.minYaw(), r.maxYaw());
+        this.yaw = MthUtils.clampDegrees(relativeYaw, r.minYaw(), r.maxYaw());
     }
 
     // sets both prev and current yaw. Only makes sense to be called from render thread
-    public void setRenderYaw(CannonAccess access, float newYaw) {
-        setRestrainedYaw(access, newYaw );
+    public void setRenderYaw(CannonAccess access, float relativeYaw) {
+        setRestrainedYaw(access, relativeYaw );
         this.prevYaw = this.yaw;
     }
 

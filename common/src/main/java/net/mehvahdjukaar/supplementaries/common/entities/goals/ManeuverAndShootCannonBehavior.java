@@ -105,7 +105,7 @@ public class ManeuverAndShootCannonBehavior extends Behavior<LivingEntity> {
         }
 
         //hack. Aim bot
-        targetLoc.add(target.getDeltaMovement().scale(distance * 0.2));
+        //targetLoc =  targetLoc.add(target.getDeltaMovement().scale(distance * 0.2));
 
         power = (byte) Math.min(power, maxPower);
         cannonTile.setPowerLevel(power);
@@ -113,16 +113,18 @@ public class ManeuverAndShootCannonBehavior extends Behavior<LivingEntity> {
         var comp = CannonUtils.computeTrajectory(access, targetLoc, ShootingMode.DOWN);
 
         var cannonTrajectory = comp.getFirst();
-        float initialYaw = comp.getSecond();
+        float initialYawRad = comp.getSecond();
         if (cannonTrajectory != null) {
-            setCannonAnglesToFollowTrajectory(access, cannonTrajectory, initialYaw);
+            setCannonAnglesToFollowTrajectory(access, cannonTrajectory, initialYawRad);
 
             if (canShoot) {
-                float cannonYaw = cannonTile.getYaw();
-                Vec3 hitLoc = cannonTrajectory.getHitLocation(cannonGlobalPosition, cannonYaw);
+                float cannonGlobalYaw = (cannonTile.getYaw() +
+                        access.getCannonGlobalYawOffset(0)) * Mth.DEG_TO_RAD;
+
+                Vec3 hitLoc = cannonTrajectory.getHitLocation(cannonGlobalPosition, cannonGlobalYaw);
 
                 //distance
-                if (hitLoc.distanceToSqr(targetLoc) < 2) {
+                if (hitLoc.distanceTo(targetLoc) < 2) {
                     cannonTile.ignite(shooter, access);
                     return true;
                 }
@@ -134,7 +136,8 @@ public class ManeuverAndShootCannonBehavior extends Behavior<LivingEntity> {
 
     }
 
-    private static void setCannonAnglesToFollowTrajectory(CannonAccess access, CannonTrajectory trajectory, float initialYaw) {
+    private static void setCannonAnglesToFollowTrajectory(CannonAccess access, CannonTrajectory trajectory,
+                                                          float wantedYaw) {
         if (trajectory != null) {
             float followSpeed = 1;
             CannonBlockTile cannon = access.getInternalCannon();
@@ -142,7 +145,9 @@ public class ManeuverAndShootCannonBehavior extends Behavior<LivingEntity> {
             cannon.setRestrainedPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
                     trajectory.pitch() * Mth.RAD_TO_DEG));
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            cannon.setRestrainedYaw(access, initialYaw * Mth.RAD_TO_DEG);
+            cannon.setRestrainedYaw(access,
+                    wantedYaw * Mth.RAD_TO_DEG +
+                            access.getCannonGlobalYawOffset(0));
 
             //sync
             cannon.setChanged();
