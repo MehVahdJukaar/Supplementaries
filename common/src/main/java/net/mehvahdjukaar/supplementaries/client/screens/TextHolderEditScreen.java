@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -107,7 +109,7 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
 
     private boolean isValid() {
         return this.minecraft != null && this.minecraft.player != null && !this.tile.isRemoved() &&
-                !this.tile.isEditingPlayer(this.tile.getBlockPos(), this.minecraft.player);
+                this.tile.isEditingPlayer(this.tile.getBlockPos(), this.minecraft.player);
     }
 
     @Override

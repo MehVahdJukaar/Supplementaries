@@ -1,6 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
@@ -11,6 +15,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 
 public class NoticeBoardContainerMenu extends AbstractContainerMenu implements IContainerProvider {
@@ -18,9 +25,23 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
 
 
     public NoticeBoardContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, ModRegistry.NOTICE_BOARD_TILE.get().getBlockEntity(playerInventory.player.level(),
-                packetBuffer.readBlockPos()));
+        this(id, playerInventory, getBlockEntityOrThrow(
+                TileOrEntityTarget.read(packetBuffer), playerInventory.player.level(),
+                ModRegistry.NOTICE_BOARD_TILE.get()));
     }
+
+
+    @Deprecated(forRemoval = true)
+    public static  <T extends BlockEntity> T getBlockEntityOrThrow(TileOrEntityTarget target, Level level, BlockEntityType<T> type) {
+        if (target.getPos()!= null) {
+            var be = type.getBlockEntity(level, target.getPos());
+            if (be != null) {
+                return be;
+            }
+        }
+        throw new IllegalStateException("No BlockEntity found at " + target);
+    }
+
 
     public NoticeBoardContainerMenu(int id, Inventory playerInventory, NoticeBoardBlockTile container) {
 

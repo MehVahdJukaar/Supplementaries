@@ -106,6 +106,9 @@ public class FlagFromBannerRecipe extends CustomRecipe {
             if (!withPatterns.isEmpty()) {
                 BannerPatternLayers patterns = withPatterns.get(DataComponents.BANNER_PATTERNS);
                 //find item with patterns
+                if(patterns != null && patterns.layers().isEmpty()) {
+                    continue; //no patterns
+                }
                 for (int k = 0; k < inv.size(); ++k) {
                     if (i != k) {
                         ItemStack empty = inv.getItem(k);
@@ -135,10 +138,12 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                 Optional<ItemStack> container = ForgeHelper.getCraftingRemainingItem(itemstack);
                 if (container.isPresent()) {
                     stacks.set(i, container.get());
-                } else if (itemstack.has(DataComponents.BANNER_PATTERNS)) {
-                    ItemStack copy = itemstack.copy();
-                    copy.setCount(1);
-                    stacks.set(i, copy);
+                } else {
+                    BannerPatternLayers patterns = itemstack.get(DataComponents.BANNER_PATTERNS);
+                    //if item has patterns, return it as is
+                    if (patterns != null && !patterns.layers().isEmpty()) {
+                        stacks.set(i, itemstack.copyWithCount(1));
+                    }
                 }
             }
         }

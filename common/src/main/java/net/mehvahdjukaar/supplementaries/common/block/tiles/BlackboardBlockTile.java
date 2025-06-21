@@ -117,6 +117,7 @@ public class BlackboardBlockTile extends BlockEntity implements
         } else {
             this.clearPixels();
         }
+        requestModelReload();
     }
 
     @Override
@@ -155,7 +156,12 @@ public class BlackboardBlockTile extends BlockEntity implements
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return this.saveWithoutMetadata(registries);
+        var c = this.saveWithoutMetadata(registries);
+        if(c.isEmpty()){
+            //Dumb otherwise forge wont even load the packet...
+            c.putBoolean("Empty", true);
+        }
+        return c;
     }
 
     public Direction getDirection() {

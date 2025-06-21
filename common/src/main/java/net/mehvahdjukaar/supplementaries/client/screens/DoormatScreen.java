@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTile
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -34,7 +33,6 @@ public class DoormatScreen extends TextHolderEditScreen<DoormatBlockTile> {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
 
         super.render(graphics, mouseX, mouseY, partialTicks);
 
@@ -77,8 +75,6 @@ public class DoormatScreen extends TextHolderEditScreen<DoormatBlockTile> {
 
         poseStack.popPose();
         Lighting.setupFor3DItems();
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
-
     }
 }
 

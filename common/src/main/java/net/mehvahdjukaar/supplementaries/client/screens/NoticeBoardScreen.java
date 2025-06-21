@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlock
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.MapRenderer;
@@ -41,7 +40,6 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
         graphics.blit(ModTextures.NOTICE_BOARD_GUI_TEXTURE, this.leftPos, this.topPos, 0, 0,
                 this.imageWidth, this.imageHeight);
         this.slotBG.render(this.menu, graphics, partialTicks, this.leftPos, this.topPos);
@@ -67,7 +65,6 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
             );
             poseStack.popPose();
         }
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
     }
 
     @Override

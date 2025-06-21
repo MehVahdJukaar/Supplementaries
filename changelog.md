@@ -1,9 +1,3 @@
-- added compat with EMF so slimed layer has right resolution on EMF models
-- added cannon boats
-- confetti can be placed on the ground with shift
-- registry command can now save stuff to file
-- changed daub brace model
-- moved/changed some configs
-- fixed rope arow recipe
-- fixed rope arows from dispenser
-- improved slingshot block placement pipeline even more to not only call directly blockItem.place but also some stuff usually calle by item.onUse
+- removed IF compat
+- fixed cannon boat recipe
+- fixed some issues with blackboards and notice board screens

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.moonlight.core.network.ClientBoundOpenScreenPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -30,7 +31,6 @@ public class BlackboardDuplicateRecipe extends CustomRecipe {
 
         ItemStack itemstack = null;
         ItemStack itemstack1 = null;
-
         for (int i = 0; i < inv.size(); ++i) {
             ItemStack stack = inv.getItem(i);
             Item item = stack.getItem();

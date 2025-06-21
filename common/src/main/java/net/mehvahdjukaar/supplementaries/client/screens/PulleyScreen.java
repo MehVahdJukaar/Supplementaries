@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.mehvahdjukaar.supplementaries.common.inventories.PulleyContainerMenu;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -29,10 +28,8 @@ public class PulleyScreen extends AbstractContainerScreen<PulleyContainerMenu> {
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int x, int y) {
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
         graphics.blit(ModTextures.PULLEY_BLOCK_GUI_TEXTURE, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         this.slotBG.render(this.menu, graphics, partialTicks, this.leftPos, this.topPos);
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
     }
 
     @Override

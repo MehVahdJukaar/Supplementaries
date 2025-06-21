@@ -1,17 +1,15 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
+import net.mehvahdjukaar.moonlight.api.misc.CircularList;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.DrawableBlackBoardButton;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.DyeBlackBoardButton;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
-import net.mehvahdjukaar.supplementaries.common.utils.CircularList;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.ImmediatelyFastCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -66,7 +64,7 @@ public class BlackBoardScreen extends Screen {
 
     private boolean isValid() {
         return this.minecraft != null && this.minecraft.player != null && !this.tile.isRemoved() &&
-                !this.tile.isEditingPlayer(this.tile.getBlockPos(), this.minecraft.player);
+                this.tile.isEditingPlayer(this.tile.getBlockPos(), this.minecraft.player);
     }
 
     public byte getSelectedColor() {
@@ -184,8 +182,6 @@ public class BlackBoardScreen extends Screen {
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
 
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.startBatching();
-
         // RenderSystem.enableDepthTest();
         super.render(graphics, mouseX, mouseY, partialTicks);
         // RenderSystem.disableDepthTest();
@@ -201,7 +197,6 @@ public class BlackBoardScreen extends Screen {
             }
         }
         graphics.pose().popPose();
-        if (CompatHandler.IMMEDIATELY_FAST) ImmediatelyFastCompat.endBatching();
     }
 }
 
