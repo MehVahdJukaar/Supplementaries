@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
@@ -295,7 +295,7 @@ public class ClientReceivers {
         withLevelDo(l -> {
             CannonAccess access = CannonAccess.find(l, packet.target());
             if (access != null) {
-                access.getCannon().loadWithComponents(packet.tileTag(), l.registryAccess());
+                access.getInternalCannon().loadWithComponents(packet.tileTag(), l.registryAccess());
             }
         });
 

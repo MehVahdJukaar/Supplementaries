@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
@@ -49,12 +49,12 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.addRenderableWidget(maneuver);
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
-        this.yawSelector.setNumber(access.getCannon().getYaw());
+        this.yawSelector.setNumber(access.getInternalCannon().getYaw());
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
-        this.pitchSelector.setNumber(access.getCannon().getPitch());
+        this.pitchSelector.setNumber(access.getInternalCannon().getPitch());
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, 4));
-        this.powerSelector.power = access.getCannon().getPowerLevel();
+        this.powerSelector.power = access.getInternalCannon().getPowerLevel();
         this.menu.addSlotListener(this);
     }
 
@@ -79,12 +79,12 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         float pitch = this.pitchSelector.getNumber();
         byte power = this.powerSelector.getPower();
         //update client immediately too
-        this.access.getCannon().setAttributes(yaw, pitch, power, false, minecraft.player, this.access);
+        this.access.getInternalCannon().setAttributes(yaw, pitch, power, false, minecraft.player, this.access);
         this.access.syncToServer(false, !CannonController.isActive());
     }
 
     private int getActualPower() {
-        return Math.min(this.powerSelector.getPower(), access.getCannon().getFuel().getCount());
+        return Math.min(this.powerSelector.getPower(), access.getInternalCannon().getFuel().getCount());
     }
 
     @Override

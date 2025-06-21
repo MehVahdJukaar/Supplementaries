@@ -21,7 +21,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Quaternionf;
 
 import java.util.Map;
 
@@ -49,7 +48,7 @@ public class CannonBoatRenderer extends BoatRenderer {
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
         CannonBoatEntity boat = (CannonBoatEntity) entity;
-        var cannon = boat.getCannon();
+        var cannon = boat.getInternalCannon();
         var renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher()
                 .getRenderer(cannon);
         if (renderer == null) return;

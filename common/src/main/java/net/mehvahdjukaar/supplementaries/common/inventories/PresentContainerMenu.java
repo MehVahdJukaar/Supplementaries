@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,6 +14,8 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+
+import static net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu.getBlockEntityOrThrow;
 
 
 public class PresentContainerMenu extends AbstractContainerMenu implements IContainerProvider {
@@ -24,16 +28,12 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
         return inventory;
     }
 
-
-    public static PresentContainerMenu create(Integer integer, Inventory inventory, FriendlyByteBuf buf) {
-        if (buf != null) {
-            BlockPos pos = buf.readBlockPos();
-            if (inventory.player.level().getBlockEntity(pos) instanceof AbstractPresentBlockTile tile) {
-                return new PresentContainerMenu(integer, inventory, tile);
-            }
-        }
-        return new PresentContainerMenu(integer, inventory, null);
+    public PresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+        this(id, playerInventory, getBlockEntityOrThrow(
+                TileOrEntityTarget.read(packetBuffer), playerInventory.player.level(),
+                ModRegistry.PRESENT_TILE.get()));
     }
+
 
     public <T extends PresentContainerMenu> PresentContainerMenu(int id, Inventory playerInventory,
                                                                  AbstractPresentBlockTile inventory) {

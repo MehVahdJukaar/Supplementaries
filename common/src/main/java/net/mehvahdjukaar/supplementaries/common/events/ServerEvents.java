@@ -6,8 +6,6 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.moonlight.core.Moonlight;
-import net.mehvahdjukaar.moonlight.core.fluid.SoftFluidInternal;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -19,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTi
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
@@ -50,7 +49,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Evoker;
+import net.minecraft.world.entity.monster.Pillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
@@ -153,7 +154,7 @@ public class ServerEvents {
     public static void onServerStopped() {
         if (PlatHelper.getPhysicalSide().isClient()) {
             CapturedMobCache.clear();
-        } 
+        }
         WeatheredMapRecipe.onWorldUnload();
         WaySignStructure.clearCache();
         EndermanSkullBlockTile.clearCache();
@@ -182,11 +183,10 @@ public class ServerEvents {
         PlaceableBookManager.registerBookPlacements(ra);
     }
 
-    private static final boolean FODDER_ENABLED = CommonConfigs.Functional.FODDER_ENABLED.get();
 
     @EventCalled
     public static void onEntityLoad(Entity entity, ServerLevel serverLevel) {
-        if (FODDER_ENABLED) {
+        if (CommonConfigs.Functional.FODDER_ENABLED.get()) {
             if (entity instanceof Animal animal) {
                 EntityType<?> type = entity.getType();
                 if (type.is(ModTags.EATS_FODDER)) {
@@ -199,6 +199,12 @@ public class ServerEvents {
         if (entity.getType() == EntityType.EVOKER) {
             ((Evoker) entity).goalSelector.addGoal(6,
                     new EvokerRedMerchantWololooSpellGoal((Evoker) entity));
+        }
+        if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
+            if (entity instanceof AbstractIllager pillager) {
+                pillager.goalSelector.addGoal(2,
+                        new ManeuverAndShootCannonGoal(pillager, 20, 40));
+            }
         }
     }
 
@@ -243,7 +249,7 @@ public class ServerEvents {
     public static boolean onArrowPickup(AbstractArrow arrow, Player player, Supplier<ItemStack> pickup) {
         if (CommonConfigs.Tools.QUIVER_PICKUP.get()) {
             ItemStack stack = pickup.get();
-            Preconditions.checkNotNull(stack, "Arrow pickup item was null! This is an issue from the mod that added this entity "+ arrow);
+            Preconditions.checkNotNull(stack, "Arrow pickup item was null! This is an issue from the mod that added this entity " + arrow);
             return takeArrow(arrow, player, stack);
         }
         return false;

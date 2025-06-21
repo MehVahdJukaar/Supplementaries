@@ -7,6 +7,8 @@ import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.ModRenderTypes;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -30,7 +32,7 @@ public class CannonTrajectoryRenderer {
 
     public static void render(CannonBlockTile tile, PoseStack poseStack, MultiBufferSource buffer,
                               int packedLight, int packedOverlay, float partialTicks) {
-        if (access == null || access.getCannon() != tile) return;
+        if (access == null || access.getInternalCannon() != tile) return;
         if (hit == null || trajectory == null || !showsTrajectory) return;
 
         boolean rendersRed = !tile.readyToFire();
@@ -51,16 +53,17 @@ public class CannonTrajectoryRenderer {
         poseStack.mulPose(Axis.YP.rotation(-yaw));
 
         boolean hitAir = shootingMode == ShootingMode.STRAIGHT || trajectory.miss() ||
-                mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();
+                mc.level.getBlockState(trajectory.getHitPos(cannonPos)).isAir();
 
         renderArrows(poseStack, buffer, partialTicks,
                 trajectory, hitAir, rendersRed);
 
         poseStack.popPose();
+        poseStack.mulPose(Axis.YP.rotationDegrees(-access.getCannonGlobalYawOffset(partialTicks)));
 
         if (!hitAir && hit instanceof BlockHitResult bh) {
             if (bh.getDirection() == Direction.UP) {
-                renderTargetCircle(poseStack, buffer, rendersRed, trajectory.getHitLocation(Vec3.ZERO, yaw), partialTicks);
+                renderTargetCircle(poseStack, buffer, rendersRed, trajectory.getHitLocation(Vec3.ZERO), partialTicks);
             }
         }
 
@@ -90,7 +93,6 @@ public class CannonTrajectoryRenderer {
         VertexConsumer circleBuilder = circleMaterial.buffer(buffer, RenderType::entityCutout);
 
         poseStack.translate(targetPos.x, targetPos.y + 0.05, targetPos.z );
-        poseStack.mulPose(Axis.YP.rotationDegrees(-access.getCannonGlobalYawOffset(partialTicks)));
 
         poseStack.mulPose(Axis.XP.rotationDegrees(90));
         int lu = LightTexture.FULL_BLOCK;

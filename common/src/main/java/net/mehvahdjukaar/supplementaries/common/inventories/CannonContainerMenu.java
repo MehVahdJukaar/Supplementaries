@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
@@ -20,7 +20,7 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
 
     @Override
     public CannonBlockTile getContainer() {
-        return access.getCannon();
+        return access.getInternalCannon();
     }
 
     //client container factory

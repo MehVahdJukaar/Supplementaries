@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -12,6 +13,8 @@ import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.inventory.ShulkerBoxSlot;
 import net.minecraft.world.inventory.Slot;
 
+import static net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu.getBlockEntityOrThrow;
+
 public class SafeContainerMenu extends ShulkerBoxMenu implements IContainerProvider {
 
     private final SafeBlockTile tile;
@@ -22,9 +25,9 @@ public class SafeContainerMenu extends ShulkerBoxMenu implements IContainerProvi
     }
 
     public SafeContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, ModRegistry.SAFE_TILE.get().getBlockEntity(
-                playerInventory.player.level(), packetBuffer.readBlockPos()
-        ));
+        this(id, playerInventory, getBlockEntityOrThrow(
+                TileOrEntityTarget.read(packetBuffer), playerInventory.player.level(),
+                ModRegistry.SAFE_TILE.get()));
     }
 
     @Override

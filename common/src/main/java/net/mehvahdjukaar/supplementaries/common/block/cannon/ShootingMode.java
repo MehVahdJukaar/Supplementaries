@@ -1,11 +1,11 @@
-package net.mehvahdjukaar.supplementaries.client.cannon;
+package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 public enum ShootingMode {
     DOWN,
     UP,
     STRAIGHT;
 
-    ShootingMode cycle(){
+    public ShootingMode cycle(){
         return switch(this){
             case DOWN -> UP;
             case UP -> STRAIGHT;

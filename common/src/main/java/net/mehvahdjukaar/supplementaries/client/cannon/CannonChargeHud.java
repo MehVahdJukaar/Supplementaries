@@ -2,7 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.DeltaTracker;
@@ -28,7 +29,7 @@ public class CannonChargeHud implements LayeredDraw.Layer {
         if (mc.options.hideGui) return;
         if (CannonController.isActive()) {
 
-            CannonBlockTile cannon = CannonController.access.getCannon();
+            CannonBlockTile cannon = CannonController.access.getInternalCannon();
 
             setupOverlayRenderState();
             int screenWidth = graphics.guiWidth();
@@ -46,7 +47,7 @@ public class CannonChargeHud implements LayeredDraw.Layer {
             setupOverlayRenderState();
             int screenWidth = graphics.guiWidth();
             int screenHeight = graphics.guiHeight();
-            renderBar(graphics, screenWidth, screenHeight, be.getCannon(), deltaTracker.getGameTimeDeltaPartialTick(false));
+            renderBar(graphics, screenWidth, screenHeight, be.getInternalCannon(), deltaTracker.getGameTimeDeltaPartialTick(false));
         }
     }
 

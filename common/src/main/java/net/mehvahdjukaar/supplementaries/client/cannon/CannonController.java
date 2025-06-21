@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
@@ -51,7 +54,7 @@ public class CannonController {
         Minecraft mc = Minecraft.getInstance();
         if (access == null) {
             access = cannonAccess;
-            shootingMode = cannonAccess.getCannon().getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
+            shootingMode = cannonAccess.getInternalCannon().getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
             lastCameraType = mc.options.getCameraType();
         } //if not it means we entered from manouver mode gui
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
@@ -119,7 +122,7 @@ public class CannonController {
         pitchIncrease = 0;
 
         //TODO: no perfect solution exist: add config
-        CannonBlockTile cannonTile = access.getCannon();
+        CannonBlockTile cannonTile = access.getInternalCannon();
         if (!cannonTile.isFiring()) {
 
 
@@ -137,32 +140,30 @@ public class CannonController {
             Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
             target = target.add(target.normalized().scale(0.05f)); //so we hopefully hit the block we are looking at
 
-            // calculate the yaw of target. no clue why its like this
             float wantedCannonYaw = Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z);
 
-            var restraints = access.getPitchAndYawRestrains();
-            var ballistic = cannonTile.getTrajectoryData();
-            trajectory = CannonTrajectory.findBest(target,
-                    ballistic.gravity(), ballistic.drag(),
-                    cannonTile.getFirePower() * ballistic.initialSpeed(),
-                    shootingMode,
-                    restraints.minPitch(), restraints.maxPitch());
+            var comp = CannonUtils.computeTrajectory(access, hit.getLocation(), shootingMode);
 
-            setCannonAngles(partialTick, wantedCannonYaw * Mth.RAD_TO_DEG);
+            trajectory = comp.getFirst();
+            float wantedYaw = comp.getSecond();
+
+            updateCannonRenderAngles(partialTick, wantedYaw);
         }
 
         return true;
     }
 
-    private static void setCannonAngles(float partialTick, float targetYawDeg) {
+    private static void updateCannonRenderAngles(float partialTick, float wantedYaw) {
         if (trajectory != null) {
             float followSpeed = 1;
-            CannonBlockTile cannon = access.getCannon();
+            CannonBlockTile cannon = access.getInternalCannon();
             //TODO: improve
             cannon.setRestrainedPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
                     trajectory.pitch() * Mth.RAD_TO_DEG));
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            cannon.setRenderYaw(access, targetYawDeg);
+            cannon.setRenderYaw(access,
+                    wantedYaw * Mth.RAD_TO_DEG +
+                            access.getCannonGlobalYawOffset(partialTick));
         }
     }
 
@@ -205,14 +206,16 @@ public class CannonController {
 
     public static void onMouseScrolled(double scrollDelta) {
         if (scrollDelta != 0) {
-            access.getCannon().changeFirePower((int) scrollDelta);
+            CannonBlockTile tile = access.getInternalCannon();
+            byte newPower = (byte) (1 + Math.floorMod((int) (tile.getPowerLevel() - 1 + scrollDelta), 4));
+            tile.setPowerLevel(newPower);
             needsToUpdateServer = true;
         }
     }
 
 
     public static void onPlayerAttack() {
-        if (access != null && access.getCannon().readyToFire()) {
+        if (access != null && access.getInternalCannon().readyToFire()) {
             access.syncToServer(true, false);
         }
     }

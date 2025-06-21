@@ -9,7 +9,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
@@ -313,7 +313,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     }
 
     @Override
-    public CannonBlockTile getCannon() {
+    public CannonBlockTile getInternalCannon() {
         return cannon;
     }
 

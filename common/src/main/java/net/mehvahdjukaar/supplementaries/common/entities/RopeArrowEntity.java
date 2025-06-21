@@ -177,7 +177,7 @@ public class RopeArrowEntity extends AbstractArrow {
             player = player1;
         }
         BlockPos hitPos = this.prevPlacedPos;
-        //Block hitBlock = this.level.getBlockState(hitPos).getBlock();
+        //Block hitBlock = this.level.getBlockState(pointHit).getBlock();
         //try adding rope down
         //hitBlock == ropeBlock &&
         if (RopeHelper.addRopeDown(hitPos.below(), level(), player, InteractionHand.MAIN_HAND, ropeBlock)) {

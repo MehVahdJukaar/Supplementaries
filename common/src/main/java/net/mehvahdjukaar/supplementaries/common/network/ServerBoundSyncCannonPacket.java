@@ -3,14 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonAccess;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
 
 public record ServerBoundSyncCannonPacket(
         float yaw, float pitch, byte firePower, boolean fire, boolean stopControlling,
@@ -42,7 +40,7 @@ public record ServerBoundSyncCannonPacket(
 
             CannonAccess access = CannonAccess.find(player.level(), this.target);
             if (access != null) {
-                var cannon = access.getCannon();
+                var cannon = access.getInternalCannon();
                 if (cannon.isEditingPlayer(BlockPos.containing(access.getCannonGlobalPosition(1)), player)) {
                     cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player, access);
                     cannon.setChanged();

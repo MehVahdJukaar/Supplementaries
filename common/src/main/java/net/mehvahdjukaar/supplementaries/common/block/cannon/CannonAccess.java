@@ -1,19 +1,17 @@
-package net.mehvahdjukaar.supplementaries.common.block.tiles;
+package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -21,13 +19,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector4f;
 
 //used to access a cannon position and rotation, be it in a block or an entity
 public interface CannonAccess {
 
-    CannonBlockTile getCannon();
+    CannonBlockTile getInternalCannon();
 
     TileOrEntityTarget makeNetworkTarget();
 
@@ -52,7 +49,7 @@ public interface CannonAccess {
     void updateClients();
 
     default Vec3 getCannonGlobalFacing(float partialTicks) {
-        CannonBlockTile cannon = this.getCannon();
+        CannonBlockTile cannon = this.getInternalCannon();
         return Vec3.directionFromRotation(cannon.getPitch(partialTicks),
                 cannon.getYaw(partialTicks) - this.getCannonGlobalYawOffset(partialTicks)).scale(-1);
     }
@@ -108,7 +105,7 @@ public interface CannonAccess {
         }
 
         @Override
-        public CannonBlockTile getCannon() {
+        public CannonBlockTile getInternalCannon() {
             return this.cannon;
         }
 
@@ -169,7 +166,7 @@ public interface CannonAccess {
     }
 
 
-    static CannonAccess tile(CannonBlockTile cannonBlockTile) {
+    static CannonAccess block(CannonBlockTile cannonBlockTile) {
         return new Block(cannonBlockTile);
     }
 
@@ -178,8 +175,8 @@ public interface CannonAccess {
 
 
     default void playIgniteEffects() {
-        Level level = this.getCannon().getLevel();
-        PoseStack poseStack = CannonAccess.calculateGlobalPose(this);
+        Level level = this.getInternalCannon().getLevel();
+        PoseStack poseStack = calculateGlobalCannonPose(this);
         Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.752f, 1));
 
         Vec3 speed = this.getCannonGlobalVelocity();
@@ -193,8 +190,8 @@ public interface CannonAccess {
 
 
     default void playFiringEffects() {
-        PoseStack poseStack = CannonAccess.calculateGlobalPose(this);
-        CannonBlockTile cannon = this.getCannon();
+        PoseStack poseStack = calculateGlobalCannonPose(this);
+        CannonBlockTile cannon = this.getInternalCannon();
         Level level = cannon.getLevel();
         float yaw = cannon.getYaw() - this.getCannonGlobalYawOffset(1);
         float pitch = cannon.getPitch();
@@ -207,8 +204,8 @@ public interface CannonAccess {
 
         RandomSource ran = level.random;
 
-        spawnDustRing(level, poseStack, speed);
-        spawnSmokeTrail(level, poseStack, ran, speed);
+        CannonUtils.spawnDustRing(level, poseStack, speed);
+        CannonUtils.spawnSmokeTrail(level, poseStack, ran, speed);
 
         // power from 1 to 4
         float soundPitch = 1.3f - power * 0.1f;
@@ -219,8 +216,9 @@ public interface CannonAccess {
 
     Vec3 getCannonRecoil();
 
-    private static PoseStack calculateGlobalPose(CannonAccess access) {
-        CannonBlockTile tile = access.getCannon();
+
+    private static PoseStack calculateGlobalCannonPose(CannonAccess access) {
+        CannonBlockTile tile = access.getInternalCannon();
         float yaw = tile.getYaw() - access.getCannonGlobalYawOffset(1);
         float pitch = tile.getPitch();
 
@@ -233,54 +231,4 @@ public interface CannonAccess {
         poseStack.translate(0, 0, -1.4);
         return poseStack;
     }
-
-    private static void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran,Vec3 sp) {
-        int smokeCount = 40;
-        for (int i = 0; i < smokeCount; i += 1) {
-
-            poseStack.pushPose();
-
-            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0,
-                    -MthUtils.nextWeighted(ran, 0.5f, 1, 0.06f), 0));
-
-            float aperture = 0.5f;
-            poseStack.translate(-aperture / 2 + ran.nextFloat() * aperture, -aperture / 2 + ran.nextFloat() * aperture, 0);
-
-            Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
-
-            level.addParticle(ParticleTypes.SMOKE,
-                    p.x, p.y, p.z,
-                    speed.x + sp.x, speed.y+sp.y, speed.z+sp.z);
-            poseStack.popPose();
-        }
-    }
-
-    private static void spawnDustRing(Level level, PoseStack poseStack, Vec3 sp) {
-        poseStack.pushPose();
-
-        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
-
-        int dustCount = 16;
-        for (int i = 0; i < dustCount; i += 1) {
-
-            poseStack.pushPose();
-
-            poseStack.mulPose(Axis.YP.rotationDegrees(90));
-
-            poseStack.mulPose(Axis.XP.rotationDegrees(380f * i / dustCount));
-            float vel = 0.05f;
-
-            Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0, vel, 0));
-            SimpleParticleType campfireCosySmoke = ModParticles.BOMB_SMOKE_PARTICLE.get();
-
-            level.addParticle(campfireCosySmoke,
-                    p.x, p.y, p.z,
-                    speed.x+sp.x, speed.y+sp.y, speed.z+sp.z);
-            poseStack.popPose();
-        }
-
-        poseStack.popPose();
-    }
-
-
 }

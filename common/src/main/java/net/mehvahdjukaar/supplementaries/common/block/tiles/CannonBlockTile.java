@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
@@ -81,7 +82,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         this.prevYaw = initialYaw;
     }
 
-    public final CannonAccess selfAccess = CannonAccess.tile(this);
+    public final CannonAccess selfAccess = CannonAccess.block(this);
 
 
     public void tick(CannonAccess access) {
@@ -201,7 +202,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     public boolean readyToFire() {
-        return cooldownTimer == 0 && fuseTimer == 0 && hasFuelAndProjectiles();
+        return !isOnCooldown() && fuseTimer == 0 && hasFuelAndProjectiles();
     }
 
     public boolean hasFuelAndProjectiles() {
@@ -216,6 +217,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     public float getFiringAnimation(float partialTicks) {
         if (fuseTimer <= 0) return 0;
         return (fuseTimer - partialTicks) / CommonConfigs.Functional.CANNON_FUSE_TIME.get();
+    }
+
+    public boolean isOnCooldown() {
+        return cooldownTimer > 0;
     }
 
     public float getCooldownAnimation(float partialTicks) {
@@ -264,6 +269,10 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         return powerLevel;
     }
 
+    public void setPowerLevel(byte powerLevel) {
+        this.powerLevel = powerLevel;
+    }
+
     public float getFirePower() {
         return (float) (Math.pow(powerLevel, CommonConfigs.Functional.CANNON_FIRE_POWER.get()));
     }
@@ -304,17 +313,13 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     // sets both prev and current yaw. Only makes sense to be called from render thread
     public void setRenderYaw(CannonAccess access, float newYaw) {
-        setRestrainedYaw(access, newYaw + access.getCannonGlobalYawOffset(1));
+        setRestrainedYaw(access, newYaw );
         this.prevYaw = this.yaw;
     }
 
     public void setRenderPitch(CannonAccess access, float pitch) {
         setRestrainedPitch(access, pitch);
         this.prevPitch = this.pitch;
-    }
-
-    public void changeFirePower(int scrollDelta) {
-        this.powerLevel = (byte) (1 + Math.floorMod(this.powerLevel - 1 + scrollDelta, 4));
     }
 
     @Override

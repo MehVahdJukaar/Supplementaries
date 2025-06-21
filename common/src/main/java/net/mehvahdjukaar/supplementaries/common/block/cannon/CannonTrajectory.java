@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.client.cannon;
+package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
@@ -9,16 +9,15 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolean miss,
+public record CannonTrajectory(Vec2 pointHit, float pitch, double finalTime, boolean miss,
                                float gravity, float drag, float v0x, float v0y) {
 
-    public static CannonTrajectory of(Vec2 point, float pitch, double finalTime, boolean miss, float gravity, float drag, float pow) {
-        return new CannonTrajectory(point, pitch, finalTime, miss, gravity, drag, (float) (Math.cos(pitch) * pow), (float) (Math.sin(pitch) * pow));
-    }
 
     @Nullable
     public static CannonTrajectory findBest(Vec2 targetPoint, float gravity, float drag, float initialPow,
-                                            ShootingMode mode, float minPitch, float maxPitch) {
+                                            ShootingMode mode,
+                                            float minPitch, float maxPitch) {
+        if (initialPow == 0) return null;
 
         double targetAngle = Math.atan2(targetPoint.y, targetPoint.x);
 
@@ -27,8 +26,9 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
             float v0y = Mth.sin((float) targetAngle) * initialPow;
 
             if (drag == 0 || drag == 1 || mode == ShootingMode.STRAIGHT) {
-                return new CannonTrajectory(targetPoint, (float) targetAngle,
-                        6, true, gravity, 1, v0x, v0y);
+                return new CannonTrajectory(targetPoint,
+                        (float) targetAngle, 6,
+                        true, gravity, 1, v0x, v0y);
             }
 
             // simple line
@@ -54,7 +54,6 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
                     miss, gravity, drag, v0x, v0y);
         }
 
-        if (initialPow == 0) return null;
         float tolerance = 0.001f;
 
         float start = (float) targetAngle + 0.01f; // Initial pitch
@@ -228,7 +227,6 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
                 break; // Stop iterating if the difference in distances is below the tolerance
             }
         }
-
         return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
     }
 
@@ -345,7 +343,8 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
             }
         }
 
-        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss, gravity, drag, bestV0x, bestV0y);
+        return new CannonTrajectory(bestPoint, bestAngle, bestPointTime, miss, gravity,
+                drag, bestV0x, bestV0y);
     }
 
     private static Pair<Vec2, Double> findLineIntersection(float m, float g, float d, float V0x, float V0y, float precision) {
@@ -516,16 +515,12 @@ public record CannonTrajectory(Vec2 point, float pitch, double finalTime, boolea
     }
 
     public BlockPos getHitPos(Vec3 cannonPos, float yaw) {
-        Vec2 v = this.point;
-        Vec3 localPos = new Vec3(0, v.y, -v.x).yRot(-yaw);
         float offsetDown = -1 / 16f; //so we pick the block below
-        return BlockPos.containing(cannonPos.add(localPos).add(0, offsetDown, 0));
+        return BlockPos.containing(getHitLocation(cannonPos, yaw).add(0, offsetDown, 0));
     }
 
-    public Vec3 getHitLocation(Vec3 cannonPos, float yaw) {
-        Vec2 v = this.point;
-        Vec3 localPos = new Vec3(0, v.y, -v.x).yRot(-yaw);
-        return cannonPos.add(localPos);
+    public Vec3 getHitLocation(Vec3 origin, float yaw) {
+        return origin.add(CannonUtils.point2dToVec3(this.pointHit, yaw));
     }
 
 
