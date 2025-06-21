@@ -1,4 +1,16 @@
 {
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "placeable_books"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "placeable_books"
+    }
+  ],
   "item": "minecraft:written_book",
   "horizontal": true,
   "enchant_power": 0.25,

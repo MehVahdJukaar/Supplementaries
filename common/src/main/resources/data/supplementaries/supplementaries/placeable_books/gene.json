@@ -3,12 +3,20 @@
     {
       "condition": "fabric:mod_loaded",
       "modid": "horse_colors"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "placeable_books"
     }
   ],
   "neoforge:conditions": [
     {
       "type": "neoforge:mod_loaded",
       "modid": "horse_colors"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "placeable_books"
     }
   ],
 

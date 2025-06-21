@@ -75,7 +75,8 @@ public class AdventurerMapsHandler {
 
         //adds custom decoration
         if (decoration == null) {
-            var type = MapDataRegistry.getAssociatedType(structure);
+            var type =
+                    MapDataRegistry.getAssociatedType(structure);
             decoration = Utils.getID(type);
             if (color == 0) {
                 color = type.getDefaultMapColor();

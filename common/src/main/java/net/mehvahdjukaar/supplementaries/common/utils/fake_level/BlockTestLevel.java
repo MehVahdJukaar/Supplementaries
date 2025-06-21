@@ -19,10 +19,6 @@ public class BlockTestLevel extends FakeServerLevel {
         return FakeLevelManager.getServer("faucet_test_level", level, BlockTestLevel::new);
     }
 
-    public void invalidate() {
-        FakeLevelManager.invalidate("faucet_test_level");
-    }
-
     @Override
     public boolean setBlock(BlockPos pos, BlockState state, int flags, int recursionLeft) {
         this.blockState = state;

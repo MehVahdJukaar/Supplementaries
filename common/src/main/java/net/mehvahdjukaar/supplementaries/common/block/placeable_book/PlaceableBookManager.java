@@ -56,12 +56,14 @@ public class PlaceableBookManager {
             AdditionalItemPlacementsAPI.unregisterPlacement(entry);
         }
 
-        for (var entry : reg.listElements().toList()) {
-            BookType value = entry.value();
-            Item item = value.item();
-            AdditionalItemPlacementsAPI.registerPlacement(item,
-                    value.isHorizontal() ? horizontalPlacement : verticalPlacement);
-            ITEMS_WITH_PLACEMENTS.add(item);
+        if(CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
+            for (var entry : reg.listElements().toList()) {
+                BookType value = entry.value();
+                Item item = value.item();
+                AdditionalItemPlacementsAPI.registerPlacement(item,
+                        value.isHorizontal() ? horizontalPlacement : verticalPlacement);
+                ITEMS_WITH_PLACEMENTS.add(item);
+            }
         }
     }
 

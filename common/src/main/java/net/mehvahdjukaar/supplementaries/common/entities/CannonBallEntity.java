@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -177,6 +178,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             BlockPos pos = result.getBlockPos();
             CannonballWhitelist wl = this.getItem().get(ModComponents.CANNONBALL_WHITELIST.get());
             Set<Block> whitelist = wl != null ? wl.blocks(): null;
+            whitelist = new HashSet<>(); //TOD:O: remove
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
                     loc.x(), loc.y(), loc.z(), pos, maxAmount, (float) radius, whitelist);
             exp.explode();

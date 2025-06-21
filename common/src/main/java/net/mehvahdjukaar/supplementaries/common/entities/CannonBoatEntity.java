@@ -27,6 +27,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
@@ -37,6 +38,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HasCustomInventoryScreen;
 import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -351,6 +354,19 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         Vec3 vv = getCannonGlobalOffset();
         vv = vv.yRot(Mth.DEG_TO_RAD * yaw);
         return this.getPosition(partialTicks).add(vv);
+    }
+
+
+    //TODO:fix vanilla bug where entities rotate like shit in boats
+    @Override
+    protected void positionRider(Entity passenger, Entity.MoveFunction callback) {
+        super.positionRider(passenger, callback);
+    }
+
+    @Override
+    protected void clampRotation(Entity entityToUpdate) {
+        if(entityToUpdate instanceof AbstractIllager)return;
+        super.clampRotation(entityToUpdate);
     }
 
     @Override

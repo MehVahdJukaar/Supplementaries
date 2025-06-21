@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;

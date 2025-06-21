@@ -4,7 +4,10 @@ import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
+import net.minecraft.world.entity.vehicle.Boat;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -26,7 +29,7 @@ public class ManeuverAndShootCannonGoal extends Goal {
         this.mob = rangedAttackMob;
         this.attackIntervalMin = attackIntervalMin;
         this.attackIntervalMax = attackIntervalMax;
-        this.setFlags(EnumSet.of(Flag.LOOK));
+        this.setFlags(EnumSet.of(Flag.MOVE,Flag.LOOK));
     }
 
     @Override
@@ -68,7 +71,8 @@ public class ManeuverAndShootCannonGoal extends Goal {
         } else {
             this.seeTime = 0;
         }
-        this.mob.getLookControl().setLookAt(this.target, 0, 0);
+
+        this.mob.getLookControl().setLookAt(this.target, 90, 90);
 
         if (attackDelay > 0) {
             attackDelay--;

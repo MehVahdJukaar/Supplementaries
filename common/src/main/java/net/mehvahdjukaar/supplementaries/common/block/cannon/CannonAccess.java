@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -200,8 +201,8 @@ public interface CannonAccess {
         Vec3 speed = this.getCannonGlobalVelocity();
         speed = speed.scale(0.3);
         var opt = new CannonFireParticle.Options(pitch, yaw, 1);
+        speed = Vec3.ZERO;
         level.addParticle(opt, pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
-
         RandomSource ran = level.random;
 
         CannonUtils.spawnDustRing(level, poseStack, speed);

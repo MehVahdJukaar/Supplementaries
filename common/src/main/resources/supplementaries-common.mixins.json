@@ -40,6 +40,7 @@
     "MineshaftPiecesMixin",
     "ObserverBlockMixin",
     "PaintingItemMixin",
+    "PillagerMixin",
     "PlayerMixin",
     "PlayerProjectileMixin",
     "ProjectileWeaponItemMixin",

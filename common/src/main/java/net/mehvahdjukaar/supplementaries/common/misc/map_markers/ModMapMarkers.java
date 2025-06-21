@@ -41,7 +41,7 @@ public class ModMapMarkers {
 
     //with markers
     public static final HolderReference<MLMapDecorationType<?, ?>> DEATH_MARKER =
-            HolderReference.of(Supplementaries.res("death_marker"), MapDataRegistry.REGISTRY_KEY);
+            HolderReference.of(Supplementaries.res("death_marker"), MapDataRegistry.MAP_DECORATION_REGISTRY_KEY);
 
     public static final ResourceLocation WAY_SIGN_FACTORY_ID = Supplementaries.res("way_sign");
     public static final ResourceLocation WAYSTONE_FACTORY_ID = Supplementaries.res("waystone");
