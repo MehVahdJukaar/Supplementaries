@@ -158,7 +158,7 @@ public class CannonController {
             float followSpeed = 1;
             CannonBlockTile cannon = access.getInternalCannon();
             //TODO: improve
-            cannon.setRestrainedPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
+            cannon.setPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
                     trajectory.pitch() * Mth.RAD_TO_DEG));
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
             cannon.setRenderYaw(access,

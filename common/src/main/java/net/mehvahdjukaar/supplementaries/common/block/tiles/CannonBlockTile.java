@@ -295,30 +295,36 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public void setAttributes(float yaw, float pitch, byte firePower, boolean fire,
                               Player controllingPlayer, CannonAccess access) {
-        this.setRestrainedYaw(access, yaw);
-        this.setRestrainedPitch(access, pitch);
+        this.setYaw(access, yaw);
+        this.setPitch(access, pitch);
         this.powerLevel = firePower;
         if (fire) this.ignite(controllingPlayer, access);
     }
 
-    public void setRestrainedPitch(CannonAccess access, float relativePitch) {
+    public void setPitch(CannonAccess access, float relativePitch) {
         var r = access.getPitchAndYawRestrains();
         this.pitch = MthUtils.clampDegrees(relativePitch, r.minPitch(), r.maxPitch());
     }
 
-    public void setRestrainedYaw(CannonAccess access, float relativeYaw) {
+    public void setYaw(CannonAccess access, float relativeYaw) {
         var r = access.getPitchAndYawRestrains();
         this.yaw = MthUtils.clampDegrees(relativeYaw, r.minYaw(), r.maxYaw());
     }
 
+    public void setGlobalYaw(CannonAccess access, float relativeYaw) {
+        //calculateyaw here
+        float yawOffset = access.getCannonGlobalYawOffset(1);
+        setYaw(access, relativeYaw);
+    }
+
     // sets both prev and current yaw. Only makes sense to be called from render thread
     public void setRenderYaw(CannonAccess access, float relativeYaw) {
-        setRestrainedYaw(access, relativeYaw );
+        setYaw(access, relativeYaw );
         this.prevYaw = this.yaw;
     }
 
     public void setRenderPitch(CannonAccess access, float pitch) {
-        setRestrainedPitch(access, pitch);
+        setPitch(access, pitch);
         this.prevPitch = this.pitch;
     }
 

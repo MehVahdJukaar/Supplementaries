@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
@@ -15,19 +13,13 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotBe
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
-import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -63,7 +55,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.util.List;
 import java.util.Map;
@@ -174,11 +165,11 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
             if (dir.getAxis() == Direction.Axis.Y) {
                 float pitch = dir == Direction.UP ? -90 : 90;
-                cannon.setRestrainedPitch(cannon.selfAccess, (myDir.getOpposite() == dir ? pitch + 180 : pitch));
+                cannon.setPitch(cannon.selfAccess, (myDir.getOpposite() == dir ? pitch + 180 : pitch));
 
             } else {
                 float yaw = dir.toYRot();
-                cannon.setRestrainedYaw(cannon.selfAccess, (myDir.getOpposite() == dir ? yaw + 180 : yaw));
+                cannon.setYaw(cannon.selfAccess, (myDir.getOpposite() == dir ? yaw + 180 : yaw));
             }
         }
     }
@@ -328,8 +319,8 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             Quaternionf q = new Quaternionf().rotateAxis(angle * Mth.DEG_TO_RAD, axis.step());
             currentDir.rotate(q);
             Vec3 newDir = new Vec3(currentDir);
-            tile.setRestrainedYaw(tile.selfAccess, (float) MthUtils.getYaw(newDir));
-            tile.setRestrainedPitch(tile.selfAccess, (float) MthUtils.getPitch(newDir));
+            tile.setYaw(tile.selfAccess, (float) MthUtils.getYaw(newDir));
+            tile.setPitch(tile.selfAccess, (float) MthUtils.getPitch(newDir));
             tile.setChanged();
             tile.getLevel().sendBlockUpdated(pos, oldState, newState, 3);
         }

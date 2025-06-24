@@ -178,7 +178,6 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             BlockPos pos = result.getBlockPos();
             CannonballWhitelist wl = this.getItem().get(ModComponents.CANNONBALL_WHITELIST.get());
             Set<Block> whitelist = wl != null ? wl.blocks(): null;
-            whitelist = new HashSet<>(); //TOD:O: remove
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
                     loc.x(), loc.y(), loc.z(), pos, maxAmount, (float) radius, whitelist);
             exp.explode();
@@ -366,7 +365,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
     @Override
     public boolean isPushable() {
-        return true;
+        return false; //if entities can body push this
     }
 
     @Override

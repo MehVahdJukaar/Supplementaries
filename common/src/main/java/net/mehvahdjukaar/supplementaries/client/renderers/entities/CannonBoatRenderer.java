@@ -11,7 +11,9 @@ import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CannonBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -20,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
@@ -94,5 +97,23 @@ public class CannonBoatRenderer extends BoatRenderer {
         // poseStack.mulPose(RotHlpr.Z90);
 
         poseStack.popPose();
+        if (this.entityRenderDispatcher.shouldRenderHitBoxes()) {
+
+            var vc = buffer.getBuffer(RenderType.lines());
+            poseStack.pushPose();
+            var p = boat.getCannonGlobalPosition(partialTicks);
+            p = p.subtract(boat.position());
+            poseStack.translate(p.x, p.y, p.z);
+            var pose = poseStack.last();
+            vc.addVertex(pose, 0.0F, 0 + 0.25f, 0.0F)
+                    .setColor(255, 0, 255, 255)
+                    .setNormal(pose, 0, 1, 0);
+            vc.addVertex(pose, 0, (float) (0 + 0.25f + 1), 0)
+                    .setColor(255, 0, 255, 255)
+                    .setNormal(pose, 0, 1, 0);
+
+            poseStack.popPose();
+        }
+
     }
 }

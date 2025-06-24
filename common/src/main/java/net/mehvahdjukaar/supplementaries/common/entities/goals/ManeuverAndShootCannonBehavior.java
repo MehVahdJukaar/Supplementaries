@@ -107,7 +107,7 @@ public class ManeuverAndShootCannonBehavior extends Behavior<LivingEntity> {
         //hack. Aim bot
         //predict movement based off distance and speed
         targetLoc = targetLoc.add(target.getDeltaMovement().scale(distance * 0.2))
-                .add(0,0.5,0);
+                .add(0,0.6,0);
 
         power = (byte) Math.min(power, maxPower);
         cannonTile.setPowerLevel(power);
@@ -127,7 +127,8 @@ public class ManeuverAndShootCannonBehavior extends Behavior<LivingEntity> {
                 Vec3 hitLoc = cannonTrajectory.getHitLocation(cannonGlobalPosition, newCannonGlobalYaw);
 
                 //distance
-                if (hitLoc.distanceTo(targetLoc) < 0.1) {
+                double distance1 = hitLoc.distanceTo(targetLoc);
+                if (distance1 < 0.1) {
                     cannonTile.ignite(shooter, access);
                     return true;
                 }
@@ -145,10 +146,10 @@ public class ManeuverAndShootCannonBehavior extends Behavior<LivingEntity> {
             float followSpeed = 1;
             CannonBlockTile cannon = access.getInternalCannon();
             //TODO: improve
-            cannon.setRestrainedPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
+            cannon.setPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
                     trajectory.pitch() * Mth.RAD_TO_DEG));
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            cannon.setRestrainedYaw(access, wantedLocalYawDeg);
+            cannon.setYaw(access, wantedLocalYawDeg);
 
             //sync
             cannon.setChanged();
