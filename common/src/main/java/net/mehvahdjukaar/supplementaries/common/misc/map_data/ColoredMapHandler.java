@@ -47,6 +47,7 @@ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class ColoredMapHandler {
@@ -132,10 +133,10 @@ public class ColoredMapHandler {
     }
 
     //probably very dumb idea
-    private static final Object2IntOpenHashMap<Block> BLOCK_IDS_CACHE = new Object2IntOpenHashMap<>();
-    private static final Int2ObjectOpenHashMap<Block> IDS_TO_BLOCK_CACHE = new Int2ObjectOpenHashMap<>();
-    private static final Object2IntOpenHashMap<Holder<Biome>> BIOME_IDS_CACHE = new Object2IntOpenHashMap<>();
-    private static final Int2ObjectOpenHashMap<Holder<Biome>> IDS_TO_BIOME_CACHE = new Int2ObjectOpenHashMap<>();
+    private static final Map<Block, Integer> BLOCK_IDS_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Integer, Block> IDS_TO_BLOCK_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Holder<Biome>, Integer> BIOME_IDS_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Integer, Holder<Biome>> IDS_TO_BIOME_CACHE = new ConcurrentHashMap<>();
     // brightness index to block-biome pair mapping to a color
     private static final Map<Pair<BlockAndBiome, Integer>, Integer> GLOBAL_COLOR_CACHE = new Object2IntOpenHashMap<>();
     private static final int[] IND2COLOR_BUFFER = new int[256 * 4];
@@ -153,7 +154,7 @@ public class ColoredMapHandler {
     }
 
     private static int getBlockId(Block block) {
-        return BLOCK_IDS_CACHE.computeIntIfAbsent(block, BuiltInRegistries.BLOCK::getId);
+        return BLOCK_IDS_CACHE.computeIfAbsent(block, BuiltInRegistries.BLOCK::getId);
     }
 
     private static Block getBlockFromId(int id) {
@@ -161,7 +162,7 @@ public class ColoredMapHandler {
     }
 
     private static int getBiomeId(Holder<Biome> biome, RegistryAccess registryAccess) {
-        return BIOME_IDS_CACHE.computeIntIfAbsent(biome, r -> {
+        return BIOME_IDS_CACHE.computeIfAbsent(biome, r -> {
             var biomeReg = registryAccess.registryOrThrow(Registries.BIOME);
             return biomeReg.getId(r.value());
         });

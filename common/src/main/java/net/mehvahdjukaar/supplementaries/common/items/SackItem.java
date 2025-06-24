@@ -47,8 +47,7 @@ public class SackItem extends BlockItem {
                 !player.isCreative() && !entityIn.isSpectator()) {
             //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
             //keep refreshing for better accuracy
-            float amount;
-            amount = ItemsUtil.getEncumbermentFromInventory(stack, player);
+            float amount = ItemsUtil.getEncumbermentFromInventory(stack, player);
             int inc = CommonConfigs.Functional.SACK_INCREMENT.get();
             if (amount > inc) {
                 player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.getHolder(),
