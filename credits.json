@@ -12,6 +12,10 @@
        "uuid": "defe187e-4220-44d9-856d-4dc8c73b105c",
        "has_statue": true
     },
+    "oneVR": {
+      "uuid": "dcd4b443-657d-4c02-95b5-cffd5ceb9f77",
+      "has_statue": true
+    },
     "FishSupreme": {
       "has_globe": true,
       "uuid": "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34",
