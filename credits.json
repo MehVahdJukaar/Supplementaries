@@ -17,6 +17,10 @@
       "has_statue": true,
       "has_globe": true
     },
+    "jordoVR": {
+      "uuid": "a01e815c-def7-4f2e-b608-bb87ea9db78f",
+      "has_statue": true
+    },
     "oneVR": {
       "uuid": "dcd4b443-657d-4c02-95b5-cffd5ceb9f77",
       "has_statue": true
