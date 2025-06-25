@@ -115,6 +115,8 @@ dependencies {
     modImplementation("curse.maven:jei-238222:5846880")
     modImplementation("curse.maven:configured-457570:5873783")
     modCompileOnly("curse.maven:amendments-896746:5692774")
+    modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140")
+    modRuntimeOnly("curse.maven:regions-unexplored-659110:5579932")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
     modImplementation("curse.maven:forgified-fabric-api-889079:6289153")

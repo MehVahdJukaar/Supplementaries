@@ -212,7 +212,7 @@ public class RegUtils {
 
     private static void registerCannonBoatItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
         for (WoodType wood : woodTypes) {
-            if (!wood.canBurn()) return;
+            if (wood.getItemOfThis("boat") == null) return;
             String name = wood.getVariantId(ModConstants.CANNON_BOAT_NAME);
             CannonBoatItem item = new CannonBoatItem(new Item.Properties().stacksTo(1), wood);
             wood.addChild("supplementaries:cannon_boat", item);

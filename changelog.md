@@ -1,3 +1,1 @@
-- removed IF compat
-- fixed cannon boat recipe
-- fixed some issues with blackboards and notice board screens
+- Added Cannon Boat AI for pillagers. Arr
