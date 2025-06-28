@@ -45,7 +45,7 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
         int lv = combinedLightIn >> 16 & '\uffff';
 
         matrixStackIn.translate(0, 0, 0.6875);
-        VertexUtil.addQuad(builder, matrixStackIn, 0, 0, 1, 1, lu, lv);
+        VertexUtil.addQuad(builder, matrixStackIn, 1, 0, 0, 1, lu, lv);
 
         matrixStackIn.popPose();
     }
