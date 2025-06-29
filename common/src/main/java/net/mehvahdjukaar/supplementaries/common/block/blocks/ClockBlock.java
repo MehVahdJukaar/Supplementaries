@@ -66,7 +66,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
         if (player instanceof ServerPlayer sp)
             NetworkHelper.sendToClientPlayer(sp,
                     new ClientBoundDisplayClockTimePacket(
-                            world.getDayTime(), world.dimensionType().natural()));
+                            world.getDayTime(), !world.dimensionType().natural()));
     }
 
     @Override
