@@ -1,1 +1,3 @@
-- added RP driven mob head shaders
+- mob head shaders are now dara driven
+- fixed alex caves nukes compat
+- added config to make cannon projectiles ingnite on impact (TNT like)

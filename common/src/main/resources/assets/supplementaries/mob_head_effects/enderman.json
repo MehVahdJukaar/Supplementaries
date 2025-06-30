@@ -2,5 +2,5 @@
   "items": [
     "supplementaries:enderman_head"
   ],
-  "shader": "supplementaries:glitter"
+  "shader": "minecraft:invert"
 }

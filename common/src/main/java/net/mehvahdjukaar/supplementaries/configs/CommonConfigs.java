@@ -737,6 +737,8 @@ public class CommonConfigs {
 
             builder.push("cannon");
             CANNON_ENABLED = feature(builder);
+            CANNON_EXPLODE_TNT = builder.comment("Makes TNT-like block shot from a cannon explode on impact")
+                    .define("explode_tnt", true);
             CANNON_FIRE_POWER = builder.comment("Cannon fire power multiplier")
                     .define("fire_power", 0.6d, 0, 5);
             CANNON_FUSE_TIME = builder.comment("Time for a cannon to fire a projectile after it has been lit up")
@@ -860,6 +862,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CANNON_ENABLED;
         public static final Supplier<Boolean> CANNON_BOAT_ENABLED;
         public static final Supplier<Double> CANNON_BOAT_RECOIL;
+        public static final Supplier<Boolean> CANNON_EXPLODE_TNT;
         public static final Supplier<Double> CANNON_FIRE_POWER;
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;

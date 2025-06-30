@@ -7,10 +7,12 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -37,6 +39,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -208,6 +211,11 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     InteractionHand.MAIN_HAND, stack, hit);
             success = ItemsUtil.place(item, context).consumesAction();
 
+            if(success && CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() && level instanceof ServerLevel sl){
+                BlockPos pos = context.getClickedPos();
+                BlockState placed = level.getBlockState(pos);
+                TntBehavior.tryExplodeTNTHack(sl, pos.getCenter(), placed.getBlock(), pos);
+            }
             this.isStuck = true;
         }
         if (success) {
