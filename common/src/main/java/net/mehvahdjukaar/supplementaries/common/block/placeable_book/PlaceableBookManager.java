@@ -56,7 +56,7 @@ public class PlaceableBookManager {
             AdditionalItemPlacementsAPI.unregisterPlacement(entry);
         }
 
-        if(CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
+        if (CommonConfigs.Tweaks.PLACEABLE_BOOKS.get()) {
             for (var entry : reg.listElements().toList()) {
                 BookType value = entry.value();
                 Item item = value.item();

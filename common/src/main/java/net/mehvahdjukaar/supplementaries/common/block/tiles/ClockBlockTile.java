@@ -99,18 +99,12 @@ public class ClockBlockTile extends BlockEntity {
         }
     }
 
-
-
-    protected boolean canReadTime(Level level) {
-        return level.dimensionType().natural() ^ MiscUtils.FESTIVITY.isAprilsFool();
-    }
-
     public static void tick(Level level, BlockPos pPos, BlockState pState, ClockBlockTile tile) {
         int dayTime = (int) (level.getDayTime() % 24000);
         int time = level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT) ?
                 dayTime : (int) (level.getGameTime() % 24000);
 
-        boolean canReadTime = tile.canReadTime(level);
+        boolean canReadTime = ClockBlock.canReadTime(level);
 
         if (canReadTime && time % 20 == 0) {
             tile.updateTargetTime(dayTime, level, pState, pPos);

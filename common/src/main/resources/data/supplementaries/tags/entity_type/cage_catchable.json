@@ -12,6 +12,7 @@
     {"id":"minecraft:rabbit","required":false},
     {"id":"minecraft:cat","required":false},
     {"id":"minecraft:chicken","required":false},
+    {"id":"minecraft:armadillo","required":false},
     {"id":"minecraft:bat","required":false},
     {"id":"minecraft:fox","required":false},
     {"id":"minecraft:ocelot","required":false},

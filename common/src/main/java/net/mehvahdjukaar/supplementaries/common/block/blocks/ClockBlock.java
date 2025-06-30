@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundDisplayClockTimePacket;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -66,7 +67,11 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
         if (player instanceof ServerPlayer sp)
             NetworkHelper.sendToClientPlayer(sp,
                     new ClientBoundDisplayClockTimePacket(
-                            world.getDayTime(), world.dimensionType().natural()));
+                            world.getDayTime(), canReadTime(world)));
+    }
+
+    public static boolean canReadTime(Level level) {
+        return level.dimensionType().natural() ^ MiscUtils.FESTIVITY.isAprilsFool();
     }
 
     @Override
