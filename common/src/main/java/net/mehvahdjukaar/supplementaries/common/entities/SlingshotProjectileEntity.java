@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;

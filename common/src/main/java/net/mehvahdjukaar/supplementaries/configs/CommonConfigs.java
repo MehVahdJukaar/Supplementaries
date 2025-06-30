@@ -854,6 +854,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
         public static final Supplier<Boolean> CANNON_ENABLED;
         public static final Supplier<Boolean> CANNON_EXPLODE_TNT;
+        public static final Supplier<Boolean> CANNON_EXPLODE_TNT;
         public static final Supplier<Double> CANNON_FIRE_POWER;
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;

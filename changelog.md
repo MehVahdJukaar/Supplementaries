@@ -1,1 +1,3 @@
-- fixed a possible exploits with presents due to a presumed mc bug thats aparently fixed in 1.21
+- mob head shaders are now dara driven
+- fixed alex caves nukes compat
+- added config to make cannon projectiles ingnite on impact (TNT like)
