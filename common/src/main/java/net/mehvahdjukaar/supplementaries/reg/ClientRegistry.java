@@ -15,6 +15,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
@@ -32,6 +33,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
@@ -135,6 +137,8 @@ public class ClientRegistry {
     public static void init() {
         CompatHandlerClient.init();
         ClientHelper.addClientSetup(ClientRegistry::setup);
+        ClientHelper.addClientReloadListener(() -> MobHeadShadersManager.INSTANCE, Supplementaries.res("mob_head_effects"));
+
 
         ClientHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
         ClientHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);

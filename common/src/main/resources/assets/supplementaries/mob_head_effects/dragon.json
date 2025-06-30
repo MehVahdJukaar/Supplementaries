@@ -1,0 +1,9 @@
+{
+  "items": [
+    "minecraft:dragon_head"
+  ],
+  "entity_types": [
+    "minecraft:ender_dragon"
+  ],
+  "shader": "supplementaries:flare"
+}

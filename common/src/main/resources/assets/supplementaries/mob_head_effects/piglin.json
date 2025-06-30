@@ -1,0 +1,10 @@
+{
+  "items": [
+    "minecraft:piglin_head"
+  ],
+  "entity_types": [
+    "minecraft:piglin",
+    "minecraft:piglin_brute"
+  ],
+  "shader": "minecraft:invert"
+}
