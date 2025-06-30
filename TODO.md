@@ -1,10 +1,10 @@
 # 1.21 bugs and stuff
 
+- sticky piston cleaned when extended diappears
 - burnable stuff on fabric
 - seagulls steal from lunch basket
 - safe rename add name bug
 - Lumisene has no sound when bucketed.
-- Placeable books do not work, but still consumes the item as if it did.
 - check rope sound
 - sound event from bell ring with rope
 - polytone season compat

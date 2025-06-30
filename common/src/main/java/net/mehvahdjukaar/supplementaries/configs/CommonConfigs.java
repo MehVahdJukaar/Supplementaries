@@ -727,7 +727,6 @@ public class CommonConfigs {
                             "xycraft_world:glowing_rgb_viewer", "xycraft_world:glowing_matte_rgb_block", "xycraft_world:rgb_lamp_pole"));
             SOAP_SPECIAL = builder.comment("This is a map of special blocks that can be cleaned with soap")
                     .defineObject("special_blocks", () -> Map.of(
-                                    BlockPredicate.create("sticky_piston"), ResourceLocation.withDefaultNamespace("piston"),
                                     BlockPredicate.create("quark:dirty_glass"), ResourceLocation.withDefaultNamespace("glass"),
                                     BlockPredicate.create("quark:dirty_glass_pane"), ResourceLocation.withDefaultNamespace("glass_pane"),
                                     BlockPredicate.create("#alexscaves:cave_paintings"), ResourceLocation.parse("alexscaves:smooth_limestone")

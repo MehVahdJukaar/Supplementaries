@@ -62,9 +62,8 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
         for (var entry : object.entrySet()) {
          //   RegistryOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, null, this);
 
-            var effect = MobHeadEffect.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow(
-                    false, error -> Supplementaries.LOGGER.error("Failed to parse mob head effect {}: {}", entry.getKey(), error)
-            );
+            var effect = MobHeadEffect.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow();
+
             String shaderPath = effect.getShaderPath();
             for (Item item : effect.items) {
                 if (item == Items.AIR)
@@ -152,7 +151,7 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
         if (entity instanceof AbstractSkeleton) {
             return (ClientRegistry.BLACK_AND_WHITE_SHADER);
         } else if (entity instanceof Zombie) {
-            return (ClientRegistry.VANILLA_DESATURATE_SHADER);
+            return (ClientRegistry.DESATURATE_SHADER);
         } else if (entity instanceof Rabbit e && e.getVariant() == Rabbit.Variant.EVIL) {
             return (ClientRegistry.RAGE_SHADER);
         } else if (entity instanceof Piglin) {
