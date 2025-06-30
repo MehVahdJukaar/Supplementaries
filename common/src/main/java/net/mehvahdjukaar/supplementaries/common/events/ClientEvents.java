@@ -15,6 +15,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
@@ -248,77 +249,9 @@ public class ClientEvents {
         if (p == null) return;
 
         checkIfOnRope(p);
-        applyMobHeadShaders(p, minecraft);
+      MobHeadShadersManager.INSTANCE. applyMobHeadShaders(p, minecraft);
         CannonController.onClientTick(minecraft);
     }
-
-    private static String lastAppliedShader = null;
-
-    private static void applyMobHeadShaders(Player p, Minecraft mc) {
-        if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get()) {
-            GameRenderer renderer = Minecraft.getInstance().gameRenderer;
-
-            String rendererShader = renderer.postEffect == null ? null : renderer.postEffect.getName();
-
-            if (rendererShader != null && !MY_SHADERS.get().contains(rendererShader)) {
-                return;
-            }
-
-            //no shaders in spectator
-            if (p.isSpectator()) {
-                if (rendererShader != null && lastAppliedShader != null) {
-                    renderer.shutdownEffect();
-                    lastAppliedShader = null;
-                }
-                return;
-            }
-
-            if (rendererShader == null && lastAppliedShader != null) {
-                lastAppliedShader = null; //clear when something else unsets it
-            }
-
-            ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
-            if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
-
-            Item item = stack.getItem();
-            String newShader;
-            if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-                newShader = EFFECTS_PER_ITEM.get().get(item);
-            } else newShader = null;
-
-            if (newShader == null && shouldHaveGoatedEffect(p, item)) {
-                newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
-            }
-            if (newShader != null && (!newShader.equals(rendererShader) || !renderer.effectActive)) {
-                renderer.loadEffect(ResourceLocation.tryParse(newShader));
-                lastAppliedShader = newShader;
-            } else if (rendererShader != null && newShader == null) {
-                //remove my effect
-                renderer.shutdownEffect();
-                lastAppliedShader = null;
-            }
-        }
-    }
-
-    private static boolean shouldHaveGoatedEffect(Player p, Item item) {
-        return CompatHandler.GOATED && item == CompatObjects.BARBARIC_HELMET.get() && p.getHealth() < 5;
-    }
-
-    private static final Supplier<Map<Item, String>> EFFECTS_PER_ITEM = Suppliers.memoize(() -> {
-        var map = new Object2ObjectOpenHashMap<Item, String>();
-        map.put(Items.CREEPER_HEAD, "minecraft:shaders/post/creeper.json");
-        map.put(Items.SKELETON_SKULL, ClientRegistry.BLACK_AND_WHITE_SHADER.toString());
-        map.put(Items.WITHER_SKELETON_SKULL, ClientRegistry.BLACK_AND_WHITE_SHADER.toString());
-        map.put(Items.ZOMBIE_HEAD, ClientRegistry.DESATURATE_SHADER.toString());
-        map.put(Items.DRAGON_HEAD, ClientRegistry.FLARE_SHADER.toString());
-        map.put(Items.PIGLIN_HEAD, ClientRegistry.GLITTER_SHADER.toString());
-        map.put(ModRegistry.CAGE_ITEM.get(), ClientRegistry.RAGE_SHADER.toString());
-        map.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), "minecraft:shaders/post/invert.json");
-        return map;
-    });
-
-    private static final Supplier<Set<String>> MY_SHADERS = Suppliers.memoize(() -> EFFECTS_PER_ITEM.get().values().stream()
-            .collect(Collectors.toUnmodifiableSet()));
 
     private static boolean isOnRope;
 

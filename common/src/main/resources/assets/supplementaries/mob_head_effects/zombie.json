@@ -1,0 +1,13 @@
+{
+  "items": [
+    "minecraft:piglin_head"
+  ],
+  "entity_types": [
+    "minecraft:zombie",
+    "minecraft:zombie_villager",
+    "minecraft:hoglin",
+    "minecraft:drowned",
+    "minecraft:zombified_piglin"
+  ],
+  "shader": "supplementaries:desaturate"
+}
