@@ -4,14 +4,12 @@ import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.core.mixins.MinecraftMixin;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.IronGateBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -22,9 +20,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
+import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 public class SoapWashableHelper {
 
@@ -44,6 +44,7 @@ public class SoapWashableHelper {
         if (tryWashWithInterface(level, pos, state, hitVec) ||
                 tryCleaningSign(level, pos, state) ||
                 tryChangingColor(level, pos, state) ||
+                tryCleaningPiston(level, pos, state) ||
                 tryCleanFromConfig(level, pos, state) ||
                 tryUnWax(level, pos, state)
         ) {
@@ -90,6 +91,31 @@ public class SoapWashableHelper {
         }
         return false;
     }
+
+
+    private static boolean tryCleaningPiston(Level level, BlockPos pos, BlockState state) {
+        if (state.is(Blocks.STICKY_PISTON)) {
+            Direction dir = state.getValue(PistonBaseBlock.FACING);
+            BlockPos headPos = pos.relative(dir);
+            BlockState headState = level.getBlockState(headPos);
+            if (headState.is(Blocks.PISTON_HEAD) && headState.getValue(PistonHeadBlock.FACING) == dir) {
+                level.setBlockAndUpdate(headPos, headState.setValue(PistonHeadBlock.TYPE, PistonType.DEFAULT));
+            }
+            level.setBlockAndUpdate(pos, Blocks.PISTON.withPropertiesOf(state));
+            return true;
+        } else if (state.is(Blocks.PISTON_HEAD) && state.getValue(PistonHeadBlock.TYPE) == PistonType.STICKY) {
+            Direction dir = state.getValue(PistonHeadBlock.FACING);
+            BlockPos basePos = pos.relative(dir.getOpposite());
+            BlockState baseState = level.getBlockState(basePos);
+            level.setBlockAndUpdate(pos, Blocks.PISTON_HEAD.withPropertiesOf(state).setValue(PistonHeadBlock.TYPE, PistonType.DEFAULT));
+            if (baseState.is(Blocks.STICKY_PISTON) && baseState.getValue(PistonBaseBlock.FACING) == dir) {
+                level.setBlockAndUpdate(basePos, Blocks.PISTON.withPropertiesOf(baseState));
+            }
+            return true;
+        }
+        return false;
+    }
+
 
     private static boolean tryCleanFromConfig(Level level, BlockPos pos, BlockState state) {
         BlockState toPlace = null;
