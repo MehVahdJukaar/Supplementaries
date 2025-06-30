@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -54,9 +56,13 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
         entityEffects.clear();
         myShaders.clear();
         for (var entry : object.entrySet()) {
-            var effect = MobHeadEffect.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow();
+            var effect = MobHeadEffect.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow(
+                    false, error -> Supplementaries.LOGGER.error("Failed to parse mob head effect {}: {}", entry.getKey(), error)
+            );
             String shaderPath = effect.getShaderPath();
             for (Item item : effect.items) {
+                if (item == Items.AIR)
+                    throw new IllegalArgumentException("Mob head effect cannot have AIR item: " + effect.shader);
                 effects.put(item, shaderPath);
             }
             for (EntityType<?> entityType : effect.entityTypes) {
@@ -137,14 +143,18 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
             return ResourceLocation.tryParse(s);
         }
         //hardcoded ones. Instance check is more compatible
-        return switch (entity) {
-            case AbstractSkeleton abstractSkeleton -> (ClientRegistry.BLACK_AND_WHITE_SHADER);
-            case Zombie zombie -> (ClientRegistry.DESATURATE_SHADER);
-            case Rabbit e when e.getVariant() == Rabbit.Variant.EVIL -> (ClientRegistry.RAGE_SHADER);
-            case Piglin piglin -> (ClientRegistry.GLITTER_SHADER);
-            case WitherBoss witherBoss -> (ClientRegistry.BLACK_AND_WHITE_SHADER);
-            default -> null;
-        };
+        if (entity instanceof AbstractSkeleton) {
+            return (ClientRegistry.BLACK_AND_WHITE_SHADER);
+        } else if (entity instanceof Zombie) {
+            return (ClientRegistry.VANILLA_DESATURATE_SHADER);
+        } else if (entity instanceof Rabbit e && e.getVariant() == Rabbit.Variant.EVIL) {
+            return (ClientRegistry.RAGE_SHADER);
+        } else if (entity instanceof Piglin) {
+            return (ClientRegistry.GLITTER_SHADER);
+        } else if (entity instanceof WitherBoss) {
+            return (ClientRegistry.BLACK_AND_WHITE_SHADER);
+        }
+        return null;
     }
 
     //no holders since it loads on boot. lets keep it simple for once

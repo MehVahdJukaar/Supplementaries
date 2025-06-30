@@ -27,13 +27,7 @@ public class TntBehavior implements IFireItemBehavior {
 
         if (stack.getItem() instanceof BlockItem bi) {
             Block tnt = bi.getBlock();
-            if (tnt instanceof TntBlock) {
-                Explosion dummyExplosion = new Explosion(level, null,
-                        firePos.x, firePos.y, firePos.z, 0, false, Explosion.BlockInteraction.KEEP);
-                tnt.wasExploded(level, blockpos, dummyExplosion);
-            } else {
-                GunpowderExplosion.igniteTntHack(level, blockpos, tnt);
-            }
+            tryExplodeTNTHack(level, firePos, tnt, blockpos);
 
             var entities = level.getEntities((Entity) null, new AABB(blockpos).move(0, 0.5, 0),
                     entity -> (entity instanceof PrimedTnt) || entity.getType() == CompatObjects.ALEX_NUKE.get());
@@ -46,6 +40,16 @@ public class TntBehavior implements IFireItemBehavior {
             return true;
         }
         return false;
+    }
+
+    public static void tryExplodeTNTHack(ServerLevel level, Vec3 firePos, Block tnt, BlockPos blockpos) {
+        if (tnt instanceof TntBlock) {
+            Explosion dummyExplosion = new Explosion(level, null,
+                    firePos.x, firePos.y, firePos.z, 0, false, Explosion.BlockInteraction.KEEP);
+            tnt.wasExploded(level, blockpos, dummyExplosion);
+        } else {
+            GunpowderExplosion.igniteTntHack(level, blockpos, tnt);
+        }
     }
 
 

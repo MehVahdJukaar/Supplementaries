@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
@@ -15,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
@@ -22,6 +24,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -40,6 +43,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -211,7 +215,14 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 BlockPlaceContext context = new BlockPlaceContext(level, fakePlayer, InteractionHand.MAIN_HAND, this.getItem(), hit);
                 shoulKill = ItemsUtil.place(item,
                         context).consumesAction();
+
+                if(CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() && level instanceof ServerLevel sl){
+                    BlockPos pos = context.getClickedPos();
+                    BlockState placed = level.getBlockState(pos);
+                    TntBehavior.tryExplodeTNTHack(sl, pos.getCenter(), placed.getBlock(), pos);
+                }
             }
+            //bucket
             if (!shoulKill && item instanceof DispensibleContainerItem dc && item.hasCraftingRemainingItem()) {
                 Item craftingRemainingItem = stack.getItem().getCraftingRemainingItem();
                 SuppPlatformStuff.dispenseContent(dc, stack, hit, level, player);

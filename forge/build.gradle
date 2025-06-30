@@ -190,7 +190,8 @@ dependencies {
 
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
     //modImplementation("curse.maven:alexs-mobs-426558:4959531")
-    modCompileOnly("curse.maven:citadel-331936:4786380")
+    modImplementation("curse.maven:alexs-caves-924854:5848216")
+    modImplementation("curse.maven:citadel-331936:6702068")
     modCompileOnly("curse.maven:immediatelyfast-686911:4937545")
     modCompileOnly("curse.maven:cyanide-541676:4824162")
     modCompileOnly("curse.maven:embeddium-908741:5566632")

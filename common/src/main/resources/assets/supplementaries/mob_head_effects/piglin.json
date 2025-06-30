@@ -6,5 +6,5 @@
     "minecraft:piglin",
     "minecraft:piglin_brute"
   ],
-  "shader": "minecraft:invert"
+  "shader": "supplementaries:glitter"
 }

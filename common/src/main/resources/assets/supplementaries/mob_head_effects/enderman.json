@@ -1,6 +1,6 @@
 {
   "items": [
-    "minecraft:enderman_head"
+    "supplementaries:enderman_head"
   ],
-  "shader": "supplementaries:glitter"
+  "shader": "minecraft:invert"
 }
