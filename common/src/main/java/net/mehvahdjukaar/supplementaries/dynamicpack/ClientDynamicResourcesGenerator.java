@@ -89,6 +89,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             addGlobeItemModels(manager, sink);
             addSignPostAssets(manager, sink);
             generateBoatTextures(manager, sink);
+            MojangNeedsToAddMoreCopper.run(manager, sink);
         });
     }
 
@@ -369,6 +370,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
     @Override
     public void addDynamicTranslations(AfterLanguageLoadEvent lang) {
+        MojangNeedsToAddMoreCopper.runTranslations(lang);
         ModRegistry.WAY_SIGN_ITEMS.forEach((type, item) ->
                 LangBuilder.addDynamicEntry(lang, "item.supplementaries.way_sign", type, item));
         ModRegistry.CANNON_BOAT_ITEMS.forEach((type, item) ->

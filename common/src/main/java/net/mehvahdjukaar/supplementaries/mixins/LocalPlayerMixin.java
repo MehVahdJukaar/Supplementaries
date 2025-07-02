@@ -34,7 +34,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
     @Inject(method = "hasEnoughImpulseToStartSprinting", at = @At("RETURN"), cancellable = true)
     private void suppl$PreventSprintingWithOverencumbered(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue() && this.hasEffect(ModRegistry.OVERENCUMBERED.getHolder())) {
-            cir.setReturnValue(false);
+            cir.setReturnValue(false); //not MRV so we always stop sprinting no matter what
         }
     }
 
