@@ -37,7 +37,7 @@ public class VibeChecker {
         if (checkedOnce) return;
         checkedOnce = true;
         Level level = player.level();
-        testCannonStuff(player);
+      //  testCannonStuff(player);
 
         //check sheets class
         if (PlatHelper.getPhysicalSide().isClient()) clientStuff();
