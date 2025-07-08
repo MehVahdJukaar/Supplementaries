@@ -115,7 +115,7 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
             ItemStack stack = this.getItem(0);
             IFireItemBehavior behavior = TrappedPresentBlock.getPresentBehavior(stack.getItem());
             this.updateState(false);
-            if (behavior.fire(stack.copy(), sl, pos, 0.4f, new Vec3(0, 1, 0),
+            if (behavior.fire(stack.copyWithCount(1), sl, pos, 0.4f, new Vec3(0, 1, 0),
                     0.35f, 11, opener)) {
                 stack.shrink(1);
             }
