@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EnvironmentalCompat;
@@ -22,12 +21,15 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.entity.monster.Slime;
+import net.minecraft.world.entity.monster.WitherSkeleton;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.DyeColor;
@@ -104,6 +106,17 @@ public class SoapItem extends Item {
             success = true;
         } else if (target instanceof Sheep s && s.getColor() != DyeColor.WHITE) {
             s.setColor(DyeColor.WHITE);
+            success = true;
+        } else if (target instanceof WitherSkeleton s) {
+
+           var wither  = s.convertTo(EntityType.SKELETON, true);
+           if(wither != null) {
+               wither.absRotateTo(target.getYRot(), target.getXRot());
+               target = wither;
+               success = true;
+           }
+        } else if (target instanceof Slime s) {
+            s.hurt(level.damageSources().playerAttack(player), 2);
             success = true;
         } else if (target instanceof Pig pig && CompatHandler.ENVIRONMENTAL &&
                 EnvironmentalCompat.maybeCleanMuddyPig(pig)) {

@@ -14,7 +14,7 @@ public interface ISlimeable {
     void supp$setSlimedTicks(int slimed, boolean sync);
 
     static float getAlpha(LivingEntity le, float partialTicks) {
-        if (ClientConfigs.Tweaks.SLIME_OVERLAY.get()) return 0;
+        if (!ClientConfigs.Tweaks.SLIME_OVERLAY.get()) return 0;
         float slimeTicks = ((ISlimeable) le).supp$getSlimedTicks() - partialTicks;
         float maxFade = 70;
         return slimeTicks > maxFade ? 1 : Mth.clamp(slimeTicks / maxFade, 0, 1);

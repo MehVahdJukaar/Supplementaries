@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
-import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -24,7 +23,7 @@ public class MojangNeedsToAddMoreCopper {
 
 
     public static void run(ResourceManager manager, ResourceSink sink) {
-        if(!MiscUtils.Festivity.APRILS_FOOL.isAprilsFool())return;
+        if (!MiscUtils.FESTIVITY.isAprilsFool()) return;
 
         try (TextureImage c0 = TextureImage.open(manager, RPUtils.findFirstBlockTextureLocation(manager, Blocks.COPPER_BLOCK));
              TextureImage c1 = TextureImage.open(manager, RPUtils.findFirstBlockTextureLocation(manager, Blocks.EXPOSED_COPPER));
@@ -42,7 +41,7 @@ public class MojangNeedsToAddMoreCopper {
             var res = manager.listResources("textures/block", t -> t.getPath().endsWith(".png"));
             for (var r : res.entrySet()) {
                 ResourceLocation relPat = r.getKey().withPath(p -> p.replace("textures/", "").replace(".png", ""));
-                try (TextureImage toRecolor =  TextureImage.open(manager, relPat)) {
+                try (TextureImage toRecolor = TextureImage.open(manager, relPat)) {
                     Respriter resp = Respriter.of(toRecolor);
                     var recolored = resp.recolor(textures.get(random.nextInt(textures.size())));
                     sink.addAndCloseTexture(relPat, recolored);
@@ -76,7 +75,7 @@ public class MojangNeedsToAddMoreCopper {
                 }
             }
 
-            var white = Palette.fromArc(new RGBColor(-1), new RGBColor(-1).asHCL().withLuminance(0.99f).asRGB(),4);
+            var white = Palette.fromArc(new RGBColor(-1), new RGBColor(-1).asHCL().withLuminance(0.99f).asRGB(), 4);
             var res2 = manager.listResources("textures/colormap", t -> t.getPath().endsWith(".png"));
             for (var r : res2.entrySet()) {
                 ResourceLocation relPat = r.getKey().withPath(p -> p.replace("textures/", "").replace(".png", ""));
@@ -119,23 +118,23 @@ public class MojangNeedsToAddMoreCopper {
     }
 
     public static void runTranslations(AfterLanguageLoadEvent lang) {
-        if(!MiscUtils.Festivity.APRILS_FOOL.isAprilsFool())return;
+        if (!MiscUtils.FESTIVITY.isAprilsFool()) return;
         Random random = new Random();
         try {
             Field f = lang.getClass().getDeclaredField("languageLines");
             f.setAccessible(true);
-            Map<String, String> ll = (Map<String,String>) f.get(lang);
+            Map<String, String> ll = (Map<String, String>) f.get(lang);
             List<String> prefix = List.of("Copper ", "Slightly Weathered Copper ", "Weathered Copper ", "Exposed Copper ", "Oxidized Copper ");
 
             for (var b : BuiltInRegistries.ITEM) {
                 var id = b.getDescriptionId();
                 var existing = lang.getEntry(id);
-                if (existing != null ) {
+                if (existing != null) {
                     var pr = prefix.get(random.nextInt(prefix.size()));
                     ll.put(id, pr + existing);
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }

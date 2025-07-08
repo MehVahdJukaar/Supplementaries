@@ -1,4 +1,3 @@
-- mob head shaders are now dara driven
-- fixed alex caves nukes compat
-- added config to make cannon projectiles ingnite on impact (TNT like)
-- fixed soap cleaning extended sticky pistons 
+- fixed slime overlay not working
+- you can now wash the wither out of a skeleton
+- you can damage slimes with soap
