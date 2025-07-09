@@ -191,6 +191,7 @@ public abstract class FiniteFluid extends Fluid {
         }
     }
 
+    // Copy pasted version of the same method in FlowingFluid
     private boolean canHoldFluid(BlockGetter level, BlockPos pos, BlockState state) {
         FluidState fluidState = state.getFluidState();
         if (!fluidState.isEmpty() && !fluidState.is(this)) return false;
