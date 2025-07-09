@@ -313,7 +313,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             }
             int percentage = CommonConfigs.Functional.CAGE_HEALTH_THRESHOLD.get();
             if (percentage != 100 && (le.getHealth() > le.getMaxHealth() * (percentage / 100f))) {
-                failedMessage = Component.translatable("message.supplementaries.cage.fail_health", percentage);
+                failedMessage = Component.translatable("message.supplementaries.cage.fail_health", percentage+"%");
                 canCatch = false;
             }
         }
