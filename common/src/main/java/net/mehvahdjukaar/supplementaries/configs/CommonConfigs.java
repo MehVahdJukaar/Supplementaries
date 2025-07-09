@@ -725,9 +725,9 @@ public class CommonConfigs {
                             "xycraft_world:glowing_rgb_viewer", "xycraft_world:glowing_matte_rgb_block", "xycraft_world:rgb_lamp_pole"));
             SOAP_SPECIAL = builder.comment("This is a map of special blocks that can be cleaned with soap")
                     .defineObject("special_blocks", () -> Map.of(
-                                    BlockPredicate.create("quark:dirty_glass"), ResourceLocation.withDefaultNamespace("glass"),
-                                    BlockPredicate.create("quark:dirty_glass_pane"), ResourceLocation.withDefaultNamespace("glass_pane"),
-                                    BlockPredicate.create("#alexscaves:cave_paintings"), ResourceLocation.parse("alexscaves:smooth_limestone")
+                                    BlockPredicate.create("quark:dirty_glass"), new ResourceLocation("glass"),
+                                    BlockPredicate.create("quark:dirty_glass_pane"), new ResourceLocation("glass_pane"),
+                                    BlockPredicate.create("#alexscaves:cave_paintings"), new ResourceLocation("alexscaves:smooth_limestone")
                             ),
                             Codec.unboundedMap(BlockPredicate.CODEC, ResourceLocation.CODEC));
             builder.pop();
@@ -852,7 +852,6 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
         public static final Supplier<Boolean> CANNON_ENABLED;
-        public static final Supplier<Boolean> CANNON_EXPLODE_TNT;
         public static final Supplier<Boolean> CANNON_EXPLODE_TNT;
         public static final Supplier<Double> CANNON_FIRE_POWER;
         public static final Supplier<Integer> CANNON_FUSE_TIME;

@@ -1,4 +1,1 @@
-- mob head shaders are now dara driven
-- fixed alex caves nukes compat
-- added config to make cannon projectiles ingnite on impact (TNT like)
-- fixed soap cleaning extended sticky pistons 
+backported some fixes 2

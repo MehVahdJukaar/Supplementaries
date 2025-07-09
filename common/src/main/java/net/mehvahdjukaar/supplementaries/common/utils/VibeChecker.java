@@ -37,7 +37,8 @@ public class VibeChecker {
         if (checkedOnce) return;
         checkedOnce = true;
         Level level = player.level();
-      //  testCannonStuff(player);
+        //Why is this here? because if it wasnt users would get random crashes when using cannons instead. We try to force them here if mods for whatever reason have added improper conditions
+        testCannonStuff(player);
 
         //check sheets class
         if (PlatHelper.getPhysicalSide().isClient()) clientStuff();

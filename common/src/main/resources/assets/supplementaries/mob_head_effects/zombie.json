@@ -9,5 +9,5 @@
     "minecraft:drowned",
     "minecraft:zombified_piglin"
   ],
-  "shader": "supplementaries:desaturate"
+  "shader": "desaturate"
 }
