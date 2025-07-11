@@ -90,6 +90,10 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         super(properties);
     }
 
+    public static void clearBehaviors() {
+        FIRE_BEHAVIORS.clear();
+    }
+
     public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
         FIRE_BEHAVIORS.put(pItem.asItem(), pBehavior);
     }

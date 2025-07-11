@@ -7,7 +7,11 @@ import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ChunkPos;
@@ -18,6 +22,7 @@ import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.ScheduledTick;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 import java.util.function.Supplier;
@@ -30,6 +35,14 @@ public class MiscUtils {
             return ClientConfigs.General.TOOLTIP_HINTS.get();
         }
         return false;
+    }
+
+    @Nullable
+    public static Entity cloneEntity(Entity entity, ServerLevel level) {
+        CompoundTag c = new CompoundTag();
+        entity.save(c);
+        var opt = EntityType.create(c, level); // create new to reset level properly
+        return opt.orElse(null);
     }
 
     public enum Festivity {

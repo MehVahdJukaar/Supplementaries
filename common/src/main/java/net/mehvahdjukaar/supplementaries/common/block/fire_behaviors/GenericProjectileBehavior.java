@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.IEntityInterceptFakeLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -53,30 +54,30 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         Entity entity = createEntity(stack, IEntityInterceptFakeLevel.get(level), facing);
 
         if (entity != null) {
+            //create new one just to be sure. Need since it might have been created in a different level
+            entity = MiscUtils.cloneEntity(entity, level);
+            if (entity != null) {
 
-            //create new one just to be sure
-            CompoundTag c = new CompoundTag();
-            entity.save(c);
-            var opt = EntityType.create(c, level); // create new to reset level properly
-            if (opt.isPresent()) entity = opt.get();
+                // setup entity
+                if (entity instanceof Projectile pr) {
+                    pr.cachedOwner = null;
+                    pr.ownerUUID = null;
+                    pr.setOwner(owner);
 
-            // setup entity
-            if (entity instanceof Projectile pr) {
-                pr.cachedOwner = null;
-                pr.ownerUUID = null;
-                pr.setOwner(owner);
+                    pr.shoot(facing.x, facing.y, facing.z,
+                            scalePower, inaccuracy);
+                }else{
+                    entity.setDeltaMovement(facing.scale(scalePower));
+                }
 
-                pr.shoot(facing.x, facing.y, facing.z,
-                        scalePower, inaccuracy);
+                //  float radius = entity.getBbWidth() * 1.42f;
+                //firePos = firePos.add(facing.normalize().scale(radius));
+                entity.setPos(firePos.x, firePos.y, firePos.z);
+
+                level.addFreshEntity(entity);
+
+                return true;
             }
-
-            //  float radius = entity.getBbWidth() * 1.42f;
-            //firePos = firePos.add(facing.normalize().scale(radius));
-            entity.setPos(firePos.x, firePos.y, firePos.z);
-
-            level.addFreshEntity(entity);
-
-            return true;
         }
         return false;
     }

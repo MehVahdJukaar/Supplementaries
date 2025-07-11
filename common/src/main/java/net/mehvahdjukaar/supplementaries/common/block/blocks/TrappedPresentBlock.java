@@ -3,10 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SpitItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,6 +13,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
@@ -47,6 +45,10 @@ public class TrappedPresentBlock extends AbstractPresentBlock implements ILighta
         super(color, properties);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH)
                 .setValue(ON_COOLDOWN, false));
+    }
+
+    public static void clearBehaviors() {
+        FIRE_BEHAVIORS.clear();
     }
 
     public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {

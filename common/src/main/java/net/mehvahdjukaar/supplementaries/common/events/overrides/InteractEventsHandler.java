@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.common.events.overrides;
 
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FlanCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -59,7 +59,7 @@ public class InteractEventsHandler {
     }
 
 
-    public static void setupOverrides() {
+    public static void registerOverrides(HolderLookup.Provider access) {
         ITEM_USE_ON_BLOCK.clear();
         ITEM_USE_ON_BLOCK_HP.clear();
         ITEM_USE.clear();

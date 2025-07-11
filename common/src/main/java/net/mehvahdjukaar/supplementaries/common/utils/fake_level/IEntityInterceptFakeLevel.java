@@ -17,7 +17,6 @@ public interface IEntityInterceptFakeLevel {
     Entity getIntercepted();
 
     static <L extends Level & IEntityInterceptFakeLevel> L get(Level level) {
-        // always server sie even on client as projectiles entities wont get fire on client
         return (L) FakeLevelManager.get("projectile_test_level", level, ClientSide::new,
                 ServerSide::new);
     }
