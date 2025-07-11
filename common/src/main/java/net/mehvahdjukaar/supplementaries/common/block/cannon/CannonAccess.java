@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
@@ -218,6 +220,7 @@ public interface CannonAccess {
     Vec3 getCannonRecoil();
 
 
+    @Environment(value = EnvType.CLIENT)
     private static PoseStack calculateGlobalCannonPose(CannonAccess access) {
         CannonBlockTile tile = access.getInternalCannon();
         float yaw = tile.getYaw() - access.getCannonGlobalYawOffset(1);
