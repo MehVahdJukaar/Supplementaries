@@ -1,16 +1,23 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
+import com.mojang.math.Axis;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
@@ -52,6 +59,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -517,12 +525,68 @@ public class ClientReceivers {
             CannonAccess access = CannonAccess.find(l, message.target());
             if (access != null) {
                 if (message.fire()) {
-                    access.playFiringEffects();
+                    playFiringEffects(access);
                 } else {
-                    access.playIgniteEffects();
+                    playIgniteEffects(access);
                 }
             }
         });
+    }
+
+
+    private static void playIgniteEffects(CannonAccess access) {
+        Level level = access.getInternalCannon().getLevel();
+        PoseStack poseStack = calculateGlobalCannonPose(access);
+        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.752f, 1));
+
+        Vec3 speed = access.getCannonGlobalVelocity();
+        level.addParticle(ParticleTypes.CRIT,
+                p.x, p.y, p.z, speed.x, speed.y, speed.z);
+
+        Vec3 pos = access.getCannonGlobalPosition(1);
+        level.playLocalSound(pos.x, pos.y, pos.z, ModSounds.CANNON_IGNITE.get(), SoundSource.BLOCKS, 0.6f,
+                1.2f + level.getRandom().nextFloat() * 0.2f, false);
+    }
+
+
+    private static void playFiringEffects(CannonAccess access) {
+        PoseStack poseStack = calculateGlobalCannonPose(access);
+        CannonBlockTile cannon = access.getInternalCannon();
+        Level level = cannon.getLevel();
+        float yaw = cannon.getYaw() - access.getCannonGlobalYawOffset(1);
+        float pitch = cannon.getPitch();
+        float power = cannon.getPowerLevel();
+        Vec3 pos = access.getCannonGlobalPosition(1);
+        Vec3 speed = access.getCannonGlobalVelocity();
+        speed = speed.scale(0.3);
+        var opt = new CannonFireParticle.Options(pitch, yaw, 1);
+        speed = Vec3.ZERO;
+        level.addParticle(opt, pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
+        RandomSource ran = level.random;
+
+        CannonUtils.spawnDustRing(level, poseStack, speed);
+        CannonUtils.spawnSmokeTrail(level, poseStack, ran, speed);
+
+        // power from 1 to 4
+        float soundPitch = 1.3f - power * 0.1f;
+        float soundVolume = 2f + power * 0.6f;
+        level.playLocalSound(pos.x, pos.y, pos.z, ModSounds.CANNON_FIRE.get(), SoundSource.BLOCKS,
+                soundVolume, soundPitch, false);
+    }
+
+    private static PoseStack calculateGlobalCannonPose(CannonAccess access) {
+        CannonBlockTile tile = access.getInternalCannon();
+        float yaw = tile.getYaw() - access.getCannonGlobalYawOffset(1);
+        float pitch = tile.getPitch();
+
+        PoseStack poseStack = new PoseStack();
+        var pos = access.getCannonGlobalPosition(1);
+        poseStack.translate(pos.x, pos.y + 1 / 16f, pos.z);
+
+        poseStack.mulPose(Axis.YP.rotationDegrees(-yaw));
+        poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+        poseStack.translate(0, 0, -1.4);
+        return poseStack;
     }
 
 

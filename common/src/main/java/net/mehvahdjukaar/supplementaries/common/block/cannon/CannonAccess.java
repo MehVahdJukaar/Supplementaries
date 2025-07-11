@@ -177,62 +177,8 @@ public interface CannonAccess {
     }
 
 
-    default void playIgniteEffects() {
-        Level level = this.getInternalCannon().getLevel();
-        PoseStack poseStack = calculateGlobalCannonPose(this);
-        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.752f, 1));
-
-        Vec3 speed = this.getCannonGlobalVelocity();
-        level.addParticle(ParticleTypes.CRIT,
-                p.x, p.y, p.z, speed.x, speed.y, speed.z);
-
-        Vec3 pos = this.getCannonGlobalPosition(1);
-        level.playLocalSound(pos.x, pos.y, pos.z, ModSounds.CANNON_IGNITE.get(), SoundSource.BLOCKS, 0.6f,
-                1.2f + level.getRandom().nextFloat() * 0.2f, false);
-    }
-
-
-    default void playFiringEffects() {
-        PoseStack poseStack = calculateGlobalCannonPose(this);
-        CannonBlockTile cannon = this.getInternalCannon();
-        Level level = cannon.getLevel();
-        float yaw = cannon.getYaw() - this.getCannonGlobalYawOffset(1);
-        float pitch = cannon.getPitch();
-        float power = cannon.getPowerLevel();
-        Vec3 pos = this.getCannonGlobalPosition(1);
-        Vec3 speed = this.getCannonGlobalVelocity();
-        speed = speed.scale(0.3);
-        var opt = new CannonFireParticle.Options(pitch, yaw, 1);
-        speed = Vec3.ZERO;
-        level.addParticle(opt, pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
-        RandomSource ran = level.random;
-
-        CannonUtils.spawnDustRing(level, poseStack, speed);
-        CannonUtils.spawnSmokeTrail(level, poseStack, ran, speed);
-
-        // power from 1 to 4
-        float soundPitch = 1.3f - power * 0.1f;
-        float soundVolume = 2f + power * 0.6f;
-        level.playLocalSound(pos.x, pos.y, pos.z, ModSounds.CANNON_FIRE.get(), SoundSource.BLOCKS,
-                soundVolume, soundPitch, false);
-    }
 
     Vec3 getCannonRecoil();
 
 
-    @Environment(value = EnvType.CLIENT)
-    private static PoseStack calculateGlobalCannonPose(CannonAccess access) {
-        CannonBlockTile tile = access.getInternalCannon();
-        float yaw = tile.getYaw() - access.getCannonGlobalYawOffset(1);
-        float pitch = tile.getPitch();
-
-        PoseStack poseStack = new PoseStack();
-        var pos = access.getCannonGlobalPosition(1);
-        poseStack.translate(pos.x, pos.y + 1 / 16f, pos.z);
-
-        poseStack.mulPose(Axis.YP.rotationDegrees(-yaw));
-        poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
-        poseStack.translate(0, 0, -1.4);
-        return poseStack;
-    }
 }
