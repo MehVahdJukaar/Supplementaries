@@ -126,7 +126,7 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
             if (canFall(pos, level)) {
                 ImprovedFallingBlockEntity entity = ImprovedFallingBlockEntity.fall(ModEntities.FALLING_SACK.get(),
                         level, pos, state, true);
-                entity.blockData = tile.saveWithoutMetadata(level.registryAccess());
+                entity.blockData = tile.saveWithFullMetadata(level.registryAccess());
                 float power = this.getAnalogOutputSignal(state, level, pos) / 15f;
                 entity.setHurtsEntities(1 + power * 5, 40);
             }

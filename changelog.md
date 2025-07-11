@@ -1,3 +1,2 @@
-- fixed slime overlay not working
-- you can now wash the wither out of a skeleton
-- you can damage slimes with soap
+- improved cannon & present shooting tnt logic, added a tag for modded tnts
+- fixed sacks not saving data to item correctly

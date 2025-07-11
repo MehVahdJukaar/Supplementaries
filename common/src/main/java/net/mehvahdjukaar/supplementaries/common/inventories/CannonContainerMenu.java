@@ -12,6 +12,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 
 public class CannonContainerMenu extends AbstractContainerMenu implements IContainerProvider {
@@ -92,7 +93,7 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
     }
 
     @Override
-    public void removed(Player playerIn) {
+    public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
         this.getContainer().stopOpen(playerIn);
     }
