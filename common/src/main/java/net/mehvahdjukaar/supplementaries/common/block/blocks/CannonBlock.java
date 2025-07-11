@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -310,7 +312,6 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
-        System.out.println("Event "+id + "_ "+level.isClientSide()+" "+level.getGameTime());
         if (id > 1) return false;
         if (!level.isClientSide) return true;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
@@ -334,6 +335,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         return false;
     }
 
+    @Environment(value = EnvType.CLIENT)
     private static void playIgniteEffects(BlockPos pos, Level level, PoseStack poseStack) {
         Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.75f, 1));
 
@@ -345,6 +347,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
 
+    @Environment(value = EnvType.CLIENT)
     private void playFiringEffects(BlockPos pos, Level level, PoseStack poseStack, float pitch, float yaw, int power) {
         level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                 pitch * Mth.DEG_TO_RAD, -yaw * Mth.DEG_TO_RAD, 0);
@@ -360,6 +363,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                 soundVolume, soundPitch, false);
     }
 
+    @Environment(value = EnvType.CLIENT)
     private void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran) {
         int smokeCount = 40;
         for (int i = 0; i < smokeCount; i += 1) {
@@ -380,6 +384,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         }
     }
 
+    @Environment(value = EnvType.CLIENT)
     private void spawnDustRing(Level level, PoseStack poseStack) {
         poseStack.pushPose();
 
