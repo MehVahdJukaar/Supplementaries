@@ -46,7 +46,6 @@ public class ModSetup {
             ModSetup::registerFlammables,
             CauldronBehaviorsManager::registerBehaviors,
             ModCreativeTabs::setup,
-            FireBehaviorsManager::registerBehaviors,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkExplosion.Shape.CREEPER)
     );
 
@@ -133,7 +132,10 @@ public class ModSetup {
             }
         }
         // this we can properly refresh every time
-        InteractEventsHandler.setupOverrides();
+        InteractEventsHandler.registerOverrides(registryAccess);
+
+        FireBehaviorsManager.registerBehaviors(registryAccess);
+
 
         if (!client) {
             WaySignStructure.recomputeValidStructureCache(registryAccess);

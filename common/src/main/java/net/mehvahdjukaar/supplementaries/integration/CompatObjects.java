@@ -76,10 +76,6 @@ public class CompatObjects {
     public static final OptionalHolder<Enchantment> END_VEIL = OptionalHolder.of (
             "betterend:end_veil", Registries.ENCHANTMENT);
 
-    public static final Supplier<EntityType<?>> ALEX_NUKE = make("alexscaves:nuclear_bomb", Registries.ENTITY_TYPE);
-
-    public static final Supplier<Block> NUKE_BLOCK = make("alexscaves:nuclear_bomb", Registries.BLOCK);
-
 
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 

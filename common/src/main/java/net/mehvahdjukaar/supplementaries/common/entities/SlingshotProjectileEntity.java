@@ -211,10 +211,12 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     InteractionHand.MAIN_HAND, stack, hit);
             success = ItemsUtil.place(item, context).consumesAction();
 
-            if(success && CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() && level instanceof ServerLevel sl){
+            if (success && CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() == CommonConfigs.TNTMode.IGNITE_ON_IMPACT
+                    && level instanceof ServerLevel sl) {
                 BlockPos pos = context.getClickedPos();
                 BlockState placed = level.getBlockState(pos);
-                TntBehavior.tryExplodeTNTHack(sl, pos.getCenter(), placed.getBlock(), pos);
+                TntBehavior.igniteTntHack(placed, sl, pos);
+                level.removeBlock(pos, false);
             }
             this.isStuck = true;
         }

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#c:tnts","required":false},
+    {"id":"#c:tnt","required":false},
+    {"id":"alexscaves:nuclear_bomb","required":false},
+    {"id":"minecraft:tnt","required":false}
+  ]
+}
