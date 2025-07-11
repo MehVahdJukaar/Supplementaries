@@ -1,7 +1,7 @@
 # Supplementaries Team License
-Version 1.2, December 2024
+Version 1.3, July 2025
 
-Copyright (c) 2024 Supplementaries Team.  All Rights Reserved.
+Copyright (c) 2025 Supplementaries Team.  All Rights Reserved.
 
 This License Agreement is made between the author(s) of the Software and any person or entity who obtains a copy of this Software and/or its associated files.
 
@@ -30,14 +30,15 @@ Permissions are hereby granted below to any person having a copy of
 this software and/or its associated files:
 
 ### 2.1. Usage
-The Software may be used for both private and public purposes as well integrated with your code as either a soft or hard dependency provided that it is downloaded from "Our Sources". 
+The Software may be used for both private and public purposes. 
+It may be integrated with your code as either a soft (e.g., dynamic linking or API access) or hard (e.g., static linking or direct calls) dependency, provided that the Software is obtained exclusively from "Our Sources".
 
 ### 2.2. Copying
 The Software may be copied for private use or to contribute to its development.
 The Licensee may incorporate part of this Software code into their own projects provided that:
 - Appropriate credit is given to the original authors of the Software.
 - The Licensee's project does not "Compete" with the Software.
-- "Assets" are exempt from this clause and require explicit premission
+- "Assets" are exempt from this clause and require explicit permission
 
 ### 2.3. Modification
 The Software may be modified for private use or to contribute to its development.
@@ -64,11 +65,11 @@ Credits must include a link back to the source of the Software.
 The Licensee may not claim ownership of the Software or its associated files.
 
 ## 5. Modpack Clarification
-Permission is granted for the Software to be used in Modpacks, provided that:
+Permission is granted for the Software to be used in "Modpacks", provided that:
 
 - The Software used is an unmodified copy obtained from "Our Sources."
-- The Software is not directly bundled in the Modpack, as this would violate the redistribution clause.
-- Explicit credits within the Modpack are not required.
+- The Software is not directly bundled in the "Modpack", as this would violate the redistribution clause.
+- Explicit credits within the "Modpack" are not required.
 
 ## 4. Contributions
 By submitting contributions (including but not limited to code, documentation, bug fixes, or feature enhancements) to the Software, the contributor ("Contributor") agrees to the following terms:
