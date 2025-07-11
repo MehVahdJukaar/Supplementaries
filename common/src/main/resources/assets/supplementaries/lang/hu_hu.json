@@ -445,7 +445,7 @@
   "message.supplementaries.cage.tooltip": "[%s] a lehelyezéshez",
   "message.supplementaries.cage.fail": "Csak kis állatokat lehet befogni",
   "message.supplementaries.cage.fail_tamed": "Előbb meg kell szelídítened ezt az állatot",
-  "message.supplementaries.cage.fail_health": "Csak olyan állatokat lehet befogni, akiknek a %s%-nál kevesebb az életereje",
+  "message.supplementaries.cage.fail_health": "Csak olyan állatokat lehet befogni, akiknek a %s-nál kevesebb az életereje",
   "message.supplementaries.candle_holder": "Halmozható",
   "message.supplementaries.bunting": "Kötélre helyezhető",
   "message.supplementaries.flower_box": "Bármilyen nagy növényt elbír",

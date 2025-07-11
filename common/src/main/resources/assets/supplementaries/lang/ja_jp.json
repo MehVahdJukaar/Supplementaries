@@ -424,7 +424,7 @@
   "message.supplementaries.bubble_blower_tooltip": "石鹸：%1$s／%2$s",
   "message.supplementaries.bunting": "ロープに設置できます",
   "message.supplementaries.cage.fail": "この動物を入れることはできません",
-  "message.supplementaries.cage.fail_health": "体力が%s%以下の動物のみ入れることができます",
+  "message.supplementaries.cage.fail_health": "体力が%s以下の動物のみ入れることができます",
   "message.supplementaries.cage.fail_tamed": "先にこの動物を手懐けてください",
   "message.supplementaries.cage.tooltip": "［%s］で設置",
   "message.supplementaries.candle_holder": "積み重ねることができます",
