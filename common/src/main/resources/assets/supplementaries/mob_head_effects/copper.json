@@ -1,0 +1,6 @@
+{
+  "items": [
+    "minecraft:copper_block"
+  ],
+  "shader": "supplementaries:copper_vision"
+}
