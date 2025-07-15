@@ -28,7 +28,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -62,6 +61,7 @@ import java.util.Optional;
 
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable {
 
+    public static final int MAX_POWER_LEVELS = 4;
     public static final MapCodec<CannonBlock> CODEC = simpleCodec(CannonBlock::new);
 
     private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
@@ -304,7 +304,27 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
-        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(blockPos));
+        int power = 0;
+        if (level.getBlockEntity(blockPos) instanceof CannonBlockTile tile) {
+            if (tile.isOnCooldown() || tile.isFiring()) {
+                power += 15;
+            }
+            if (!tile.getProjectile().isEmpty()) {
+                power += 8;
+            }
+            ItemStack ammo = tile.getFuel();
+            int maxStackSize = ammo.getMaxStackSize();
+            int ammoCount = ammo.getCount();
+            int importantCount = Math.min(ammoCount, MAX_POWER_LEVELS);
+            power += importantCount;
+            int nonImportantCount = maxStackSize - MAX_POWER_LEVELS;
+            float remainingPower = Mth.map(nonImportantCount, 0, maxStackSize - MAX_POWER_LEVELS,
+                    0, 3);
+            if (remainingPower > 0) {
+                power += (int) remainingPower;
+            }
+        }
+        return Mth.clamp(power, 0, 15);
     }
 
     @Override
