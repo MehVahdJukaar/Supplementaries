@@ -60,11 +60,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         return Supplementaries.LOGGER;
     }
 
-    @Override
-    public boolean dependsOnLoadedPacks() {
-        return true;
-    }
-
     //-------------resource pack dependant textures-------------
 
     @Override

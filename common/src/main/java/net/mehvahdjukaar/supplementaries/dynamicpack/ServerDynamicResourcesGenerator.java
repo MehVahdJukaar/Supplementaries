@@ -40,11 +40,6 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         return Supplementaries.LOGGER;
     }
 
-    @Override
-    public boolean dependsOnLoadedPacks() {
-        return true;
-    }
-
     public static final Map<ResourceLocation, Resource> R = new HashMap<>();
 
     @Override

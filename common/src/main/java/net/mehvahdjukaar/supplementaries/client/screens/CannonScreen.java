@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -53,7 +54,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
         this.pitchSelector.setNumber(access.getInternalCannon().getPitch());
 
-        this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, 4));
+        this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, CannonBlock.MAX_POWER_LEVELS));
         this.powerSelector.power = access.getInternalCannon().getPowerLevel();
         this.menu.addSlotListener(this);
     }
