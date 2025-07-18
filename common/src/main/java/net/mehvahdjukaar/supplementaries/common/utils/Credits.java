@@ -62,6 +62,7 @@ public class Credits implements Serializable {
         addSpecialPlayer("Dev", true, false, false, "380df991-f603-344c-a090-369bad2a924a");
         addSpecialPlayer("Dev", true, false, true, "5084e6f3-8f54-43f1-8df5-1dca109e430f");
         addSpecialPlayer("MehVahdJukaar", true, false, true, "898b3a39-e486-405c-a873-d6b472dc3ba2", "TheEvilGolem");
+        addSpecialPlayer("Moofellow", true, false, true, "a290a9b9-b6ba-4561-b2a4-55ef774000ea");
         addSpecialPlayer("Plantkillable", true, true, true, "720f165c-b066-4113-9622-63fc63c65696");
         addSpecialPlayer("DarkShrek_", true, false, true, "351a126a-705e-4c5f-9ab1-3051f18e16f0");
         addSpecialPlayer("Agrona", true, true, false, (UUID) null, "Pancake", "Pancakes");

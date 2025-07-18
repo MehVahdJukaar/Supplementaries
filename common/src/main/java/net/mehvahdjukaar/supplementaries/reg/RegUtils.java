@@ -26,10 +26,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -76,6 +73,9 @@ public class RegUtils {
                 @Override
                 public InteractionResult overrideUseOn(UseOnContext pContext, FoodProperties foodProperties) {
                     if (!pContext.getPlayer().isSecondaryUseActive()) return InteractionResult.PASS;
+                    ItemStack basket = pContext.getItemInHand();
+                    var content = basket.get(ModComponents.LUNCH_BASKET_CONTENT.get());
+                    if (content != null && content.canEatFrom()) return InteractionResult.PASS;
                     return super.overrideUseOn(pContext, foodProperties);
                 }
             });

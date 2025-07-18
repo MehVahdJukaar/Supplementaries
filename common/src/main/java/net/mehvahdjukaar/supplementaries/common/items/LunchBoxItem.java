@@ -36,8 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, LunchBaskedContent.Mutable>
-        implements ILeftClickReact {
+public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, LunchBaskedContent.Mutable> implements ILeftClickReact {
 
     public LunchBoxItem(Properties properties) {
         super(properties);
