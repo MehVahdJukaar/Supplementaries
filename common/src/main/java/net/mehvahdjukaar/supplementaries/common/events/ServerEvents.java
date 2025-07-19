@@ -43,7 +43,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -51,6 +50,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
@@ -151,11 +151,10 @@ public class ServerEvents {
             if (SoapItem.interactWithEntity(stack, player, entity, hand)) {
                 return InteractionResult.SUCCESS;
             }
-        }
-        else if(item == Items.CARROT && entity.getType() == EntityType.PUFFERFISH){
+        } else if (item == Items.CARROT && entity.getType() == EntityType.PUFFERFISH) {
             stack.shrink(1);
-            entity.playSound(SoundEvents.CAMEL_EAT);
             entity.playSound(ModSounds.AEUGH.get());
+            ((LivingEntity) entity).heal(2);
 
             return InteractionResult.SUCCESS;
         }
