@@ -24,6 +24,7 @@ public class ModSounds {
     public static final Supplier<SoundEvent> PIRATE_MUSIC = regSound("music.heave_ho");
     public static final Supplier<SoundEvent> GUNPOWDER_IGNITE = regSound("block.gunpowder.ignite");
     public static final Supplier<SoundEvent> CRANK = regSound("block.crank");
+    public static final Supplier<SoundEvent> AEUGH = regSound("item.aeugh");
 
     public static final Supplier<SoundEvent> BLOCK_ROTATE = regSound("block.rotate");
 
