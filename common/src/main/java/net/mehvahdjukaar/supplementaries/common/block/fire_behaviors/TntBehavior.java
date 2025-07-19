@@ -41,7 +41,7 @@ public class TntBehavior extends GenericProjectileBehavior {
 
     public static void igniteTntHack(BlockState tntState, Level level, BlockPos pos) {
         Arrow dummyArrow = new Arrow(level, pos.getX() + 0.5, pos.getY() + 0.5,
-                pos.getZ() + 0.5, Items.ARROW.getDefaultInstance(), null);
+                pos.getZ() + 0.5);
         dummyArrow.setRemainingFireTicks(20);
         tntState.onProjectileHit(level, tntState,
                 new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.UP, pos, true),

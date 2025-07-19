@@ -10,7 +10,6 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
 import net.mehvahdjukaar.supplementaries.common.items.BombItem;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -217,7 +216,8 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                 shoulKill = ItemsUtil.place(item,
                         context).consumesAction();
 
-                if(CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() && level instanceof ServerLevel sl){
+                if (CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() == CommonConfigs.TNTMode.IGNITE_ON_IMPACT
+                        && level instanceof ServerLevel sl) {
                     BlockPos pos = context.getClickedPos();
                     BlockState placed = level.getBlockState(pos);
                     TntBehavior.igniteTntHack(placed, sl, pos);
