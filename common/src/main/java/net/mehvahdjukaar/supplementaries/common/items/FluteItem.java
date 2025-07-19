@@ -8,8 +8,7 @@ import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.common.items.components.FlutePet;
-import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
+import net.mehvahdjukaar.supplementaries.common.items.components.FluteTargets;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -57,7 +56,7 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
 
     @Override
     public boolean isFoil(ItemStack pStack) {
-        FlutePet flutePet = pStack.get(ModComponents.FLUTE_PET.get());
+        FluteTargets flutePet = pStack.get(ModComponents.FLUTE_PETS.get());
         return flutePet != null || super.isFoil(pStack);
     }
 
@@ -84,18 +83,23 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
     @EventCalled
     public static boolean interactWithPet(ItemStack stack, Player player, Entity target, InteractionHand hand) {
         if (!(target instanceof LivingEntity)) return false;
-        FlutePet flutePet = stack.get(ModComponents.FLUTE_PET.get());
 
-        if (flutePet != null) return false;
         if (target instanceof TamableAnimal animal && animal.isTame() && animal.getOwnerUUID().equals(player.getUUID())
                 || target.getType().is(ModTags.FLUTE_PET)) {
 
             if (target instanceof AbstractHorse horse && !horse.isTamed()) return false;
             else if (target instanceof Fox fox && !fox.trusts(player.getUUID())) return false;
 
-            stack.set(ModComponents.FLUTE_PET.get(), FlutePet.of(target));
-            player.setItemInHand(hand, stack);
-            player.getCooldowns().addCooldown(stack.getItem(), 20);
+            FluteTargets flutePets = stack.getOrDefault(ModComponents.FLUTE_PETS.get(),
+                    FluteTargets.of(target));
+            if (flutePets.size() > 5) {
+                player.displayClientMessage(Component.translatable("message.supplementaries.flute"), true);
+            } else {
+                flutePets = flutePets.andAdd(target);
+                stack.set(ModComponents.FLUTE_PETS.get(), flutePets);
+                player.setItemInHand(hand, stack);
+                player.getCooldowns().addCooldown(stack.getItem(), 20);
+            }
             return true;
         }
         return false;
@@ -112,19 +116,22 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
             double y = player.getY();
             double z = player.getZ();
             int r = CommonConfigs.Tools.FLUTE_RADIUS.get();
-            FlutePet flutePet = stack.get(ModComponents.FLUTE_PET.get());
-            if (flutePet != null) {
-                Entity entity = serverLevel.getEntity(flutePet.uuid());
-                int maxDist = CommonConfigs.Tools.FLUTE_DISTANCE.get() * CommonConfigs.Tools.FLUTE_DISTANCE.get();
-                if (entity instanceof LivingEntity pet) {
-                    if (pet.level() == player.level() && pet.distanceToSqr(player) < maxDist) {
-                        if (pet.randomTeleport(x, y, z, false)) {
-                            pet.stopSleeping();
+            FluteTargets fluteTargets = stack.get(ModComponents.FLUTE_PETS.get());
+            if (fluteTargets != null) {
+                for (Entity entity : fluteTargets.getEntities(serverLevel)) {
+                    int maxDist = CommonConfigs.Tools.FLUTE_DISTANCE.get() * CommonConfigs.Tools.FLUTE_DISTANCE.get();
+                    if (entity instanceof LivingEntity pet) {
+                        if (pet.level() == player.level() && pet.distanceToSqr(player) < maxDist) {
+                            if (pet.randomTeleport(x, y, z, false)) {
+                                pet.stopSleeping();
+                            }
                         }
                     }
                 }
+                player.getCooldowns().addCooldown(this, 20);
 
-            } else {
+            } else if (CommonConfigs.Tools.FLUTE_UNBOUND.get()) {
+                //disabled. dont like
                 AABB bb = new AABB(x - r, y - r, z - r, x + r, y + r, z + r);
                 List<Entity> entities = level.getEntities(player, bb, TamableAnimal.class::isInstance);
                 for (Entity e : entities) {
@@ -133,8 +140,8 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
                         pet.randomTeleport(x, y, z, false);
                     }
                 }
+                player.getCooldowns().addCooldown(this, 20);
             }
-            player.getCooldowns().addCooldown(this, 20);
         }
         //consumes on both so doesn't swing hand
         return InteractionResultHolder.consume(stack);
@@ -149,7 +156,7 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        FlutePet flutePet = stack.get(ModComponents.FLUTE_PET.get());
+        FluteTargets flutePet = stack.get(ModComponents.FLUTE_PETS.get());
         if (flutePet != null) {
             flutePet.addToTooltip(context, tooltipComponents::add, tooltipFlag);
         }

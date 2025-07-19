@@ -35,8 +35,8 @@ public class ModComponents {
     public static final Supplier<DataComponentType<SafeOwner>> SAFE_OWNER = register("safe_owner",
             SafeOwner.CODEC, SafeOwner.STREAM_CODEC);
 
-    public static final Supplier<DataComponentType<FlutePet>> FLUTE_PET = register("flute_pet",
-            FlutePet.CODEC, FlutePet.STREAM_CODEC);
+    public static final Supplier<DataComponentType<FluteTargets>> FLUTE_PETS = register("flute_pets",
+            FluteTargets.CODEC, FluteTargets.STREAM_CODEC);
 
     public static final Supplier<DataComponentType<BlackboardData>> BLACKBOARD = register("blackboard",
             BlackboardData.CODEC, BlackboardData.STREAM_CODEC, true);

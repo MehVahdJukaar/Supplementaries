@@ -946,6 +946,8 @@ public class CommonConfigs {
             //flute
             builder.push("flute");
             FLUTE_ENABLED = feature(builder);
+            FLUTE_UNBOUND = builder.comment("Allows flute to be unbound. Unbound flutes will search for pets in a radius and teleport them to the player")
+                    .define("unbound", false);
             FLUTE_RADIUS = builder.comment("Radius in which an unbound flute will search pets")
                     .define("unbound_radius", 64, 0, 500);
             FLUTE_DISTANCE = builder.comment("Max distance at which a bound flute will allow a pet to teleport")
@@ -1054,6 +1056,7 @@ public class CommonConfigs {
         public static final Supplier<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
 
         public static final Supplier<Boolean> FLUTE_ENABLED;
+        public static final Supplier<Boolean> FLUTE_UNBOUND;
         public static final Supplier<Integer> FLUTE_RADIUS;
         public static final Supplier<Integer> FLUTE_DISTANCE;
 
