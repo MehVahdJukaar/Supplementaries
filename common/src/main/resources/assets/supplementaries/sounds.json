@@ -120,6 +120,14 @@
       }
     ]
   },
+  "item.aeugh": {
+    "subtitle": "subtitles.supplementaries.aeugh",
+    "sounds": [
+      {
+        "name": "supplementaries:item/aeugh"
+      }
+    ]
+  },
   "block.generic.turn": {
     "subtitle": "subtitles.supplementaries.generic.block.turn",
     "sounds": [
