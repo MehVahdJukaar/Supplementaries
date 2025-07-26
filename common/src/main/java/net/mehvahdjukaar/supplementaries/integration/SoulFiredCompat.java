@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
+import it.crystalnest.soul_fire_d.api.Fire;
 import it.crystalnest.soul_fire_d.api.FireManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.reg.ModFluids;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
@@ -9,12 +12,22 @@ public class SoulFiredCompat {
     public static final ResourceLocation LUMISENE_FIRE_TYPE = Supplementaries.res("lumisene");
 
     public static void setup() {
-        FireManager.registerFire(
-                FireManager.fireBuilder(LUMISENE_FIRE_TYPE)
-                        .setDamage(1)
-                        .setCanRainDouse(false)
-                        .build()
-        );
+        var fire = FireManager.fireBuilder(LUMISENE_FIRE_TYPE)
+                .setDamage(1)
+                .setCanRainDouse(false)
+                .setComponent(Fire.Component.SOURCE_BLOCK, ModFluids.LUMISENE_BLOCK.getId())
+                .removeComponent(Fire.Component.WALL_TORCH_BLOCK)
+                .removeComponent(Fire.Component.CAMPFIRE_BLOCK)
+                .removeComponent(Fire.Component.FLAME_PARTICLE)
+                .removeComponent(Fire.Component.CAMPFIRE_ITEM)
+                .removeComponent(Fire.Component.LANTERN_BLOCK)
+                .removeComponent(Fire.Component.LANTERN_BLOCK)
+                .removeComponent(Fire.Component.TORCH_BLOCK)
+                .removeComponent(Fire.Component.TORCH_ITEM)
+                .build();
+
+
+        FireManager.registerFire(fire);
     }
 
     public static void setOnFire(Entity entity, int duration) {
