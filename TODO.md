@@ -1,6 +1,6 @@
 # 1.21 bugs and stuff
 
-- sticky piston cleaned when extended diappears
+- soap block slippery for spiders
 - burnable stuff on fabric
 - seagulls steal from lunch basket
 - safe rename add name bug
