@@ -94,6 +94,7 @@ public class ClientRegistry {
     // core shaders
     public static final CoreShaderContainer ENTITY_OFFSET_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntityCutoutShader);
     public static final CoreShaderContainer NOISE_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntitySolidShader);
+    public static final CoreShaderContainer SPHERE_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntitySolidShader);
     //entity models
     public static final ModelLayerLocation BELLOWS_MODEL = loc("bellows");
     public static final ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
@@ -435,6 +436,7 @@ public class ClientRegistry {
     @EventCalled
     private static void registerShaders(ClientHelper.ShaderEvent event) {
         event.register(Supplementaries.res("static_noise"), DefaultVertexFormat.NEW_ENTITY, NOISE_SHADER::assign);
+        event.register(Supplementaries.res("spherify"), DefaultVertexFormat.NEW_ENTITY, SPHERE_SHADER::assign);
         event.register(Supplementaries.res("entity_cutout_texture_offset"), DefaultVertexFormat.NEW_ENTITY, ENTITY_OFFSET_SHADER::assign);
     }
 

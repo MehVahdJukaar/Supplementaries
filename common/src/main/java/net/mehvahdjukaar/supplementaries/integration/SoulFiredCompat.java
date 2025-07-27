@@ -12,6 +12,7 @@ public class SoulFiredCompat {
     public static final ResourceLocation LUMISENE_FIRE_TYPE = Supplementaries.res("lumisene");
 
     public static void setup() {
+        //why arent these null by default? seems bad api
         var fire = FireManager.fireBuilder(LUMISENE_FIRE_TYPE)
                 .setDamage(1)
                 .setCanRainDouse(false)

@@ -7,14 +7,18 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
+import net.mehvahdjukaar.supplementaries.client.renderers.SphereRenderType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -140,6 +144,21 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
         if (texture == null) {
+            if(true){
+                builder = buffer.getBuffer(SphereRenderType.STATIC_NOISE.apply(ModTextures.GLOBE_TEXTURE));
+                int lu = VertexUtil.lightU(light);
+                int lv = VertexUtil.lightV(light);
+                poseStack.last().pose().setRotationYXZ(0,0,0);
+                Camera cam = Minecraft.getInstance().gameRenderer.getMainCamera();
+                poseStack.mulPose(cam.rotation());
+             //   Uniform intensity = ClientRegistry.SPHERE_SHADER.get().getUniform("CameraPos");
+            //    intensity.set(cam.getPosition().toVector3f());
+                poseStack.mulPose(Axis.XP.rotationDegrees(180));
+float radius = 0.25f;
+                VertexUtil.addQuad(builder, poseStack, -radius, -radius, radius, radius, lu, lv);
+                poseStack.popPose();
+                return;
+            }
             if (noise) {
                 double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
                 float v = (float) Mth.clamp(si, -0.5, 0.5);
@@ -149,7 +168,8 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 poseStack.scale(v + 0.5f + 0.01f, 1, 1);
                 builder = buffer.getBuffer(NoiseRenderType.STATIC_NOISE.apply(ModTextures.GLOBE_TEXTURE));
             } else {
-                builder = buffer.getBuffer(GlobeManager.getRenderType(level, isSepia));
+                RenderType renderType = GlobeManager.getRenderType(level, isSepia);
+                builder = buffer.getBuffer(renderType);
             }
         } else {
             builder = buffer.getBuffer(RenderType.entityTranslucentCull(texture));

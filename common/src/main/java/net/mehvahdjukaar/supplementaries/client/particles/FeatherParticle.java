@@ -116,19 +116,19 @@ public class FeatherParticle extends TextureSheetParticle {
     }
 
     @Override
-    public void render(VertexConsumer builder, Camera info, float partialTicks) {
+    public void render(VertexConsumer builder, Camera camera, float partialTicks) {
         Quaternionf quaternion;
         if (this.roll == 0.0F) {
-            quaternion = info.rotation();
+            quaternion = camera.rotation();
         } else {
-            quaternion = new Quaternionf(info.rotation());
+            quaternion = new Quaternionf(camera.rotation());
             float p = Mth.RAD_TO_DEG;
             float f3 = Mth.rotLerp(partialTicks, (this.rotOffset + this.oRoll) * p,
                     (this.rotOffset + this.roll) * p);
             quaternion.mul(Axis.ZP.rotation(f3 / p));
         }
 
-        this.renderRotatedQuad(builder, info, quaternion, partialTicks);
+        this.renderRotatedQuad(builder, camera, quaternion, partialTicks);
     }
 
     @Override
