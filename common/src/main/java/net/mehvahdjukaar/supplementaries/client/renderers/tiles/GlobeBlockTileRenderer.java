@@ -150,10 +150,10 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 int lv = VertexUtil.lightV(light);
                 poseStack.last().pose().setRotationYXZ(0,0,0);
                 Camera cam = Minecraft.getInstance().gameRenderer.getMainCamera();
-               // poseStack.mulPose(cam.rotation());
+                poseStack.mulPose(cam.rotation());
              //   Uniform intensity = ClientRegistry.SPHERE_SHADER.get().getUniform("CameraPos");
             //    intensity.set(cam.getPosition().toVector3f());
-                poseStack.mulPose(Axis.YP.rotationDegrees(90));
+                poseStack.mulPose(Axis.YP.rotationDegrees(180));
 float radius = 0.25f;
                 VertexUtil.addQuad(builder, poseStack, -radius, -radius, radius, radius, lu, lv);
                 poseStack.popPose();

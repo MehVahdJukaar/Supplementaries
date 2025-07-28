@@ -19,7 +19,6 @@ in vec4 lightMapColor;
 in vec4 overlayColor;
 in vec2 texCoord0;
 in vec3 viewPos;
-in mat3 frag_IViewRotMat; // inverse of view rotation matrix
 
 out vec4 fragColor;
 
@@ -47,7 +46,7 @@ void main() {
     vec3 sphereNormal = normalize(intersectPos - sphereCenter);
 
     // Convert normal to world space
-    vec3 worldNormal = normalize(frag_IViewRotMat * sphereNormal);
+    vec3 worldNormal = normalize(sphereNormal);
 
     // Texture lookup (spherical UV mapping)
     float theta = atan(sphereNormal.y, sphereNormal.x);
