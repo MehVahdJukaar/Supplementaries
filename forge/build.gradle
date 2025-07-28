@@ -134,8 +134,8 @@ dependencies {
 
     modCompileOnly("curse.maven:cc-tweaked-282001:4579775")
     modImplementation("curse.maven:curios-309927:5843594")
-    modImplementation("curse.maven:soul-fire-d-662413:5448803")
-    modImplementation("curse.maven:cobweb-968456:5441209")
+    modCompileOnly("curse.maven:soul-fire-d-662413:5448803")
+    modCompileOnly("curse.maven:cobweb-968456:5441209")
     modImplementation("curse.maven:just-enough-effect-descriptions-jeed-532286:5589681")
     modCompileOnly("curse.maven:better-archeology-835687:5668732")
     modCompileOnly("curse.maven:supermartijn642s-config-lib-438332:4715408")

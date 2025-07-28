@@ -144,21 +144,6 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder = null;
         if (texture == null) {
-            if(true){
-                builder = buffer.getBuffer(SphereRenderType.STATIC_NOISE.apply(ModTextures.GLOBE_TEXTURE));
-                int lu = VertexUtil.lightU(light);
-                int lv = VertexUtil.lightV(light);
-                poseStack.last().pose().setRotationYXZ(0,0,0);
-                Camera cam = Minecraft.getInstance().gameRenderer.getMainCamera();
-               // poseStack.mulPose(cam.rotation());
-             //   Uniform intensity = ClientRegistry.SPHERE_SHADER.get().getUniform("CameraPos");
-            //    intensity.set(cam.getPosition().toVector3f());
-                poseStack.mulPose(Axis.YP.rotationDegrees(90));
-float radius = 0.25f;
-                VertexUtil.addQuad(builder, poseStack, -radius, -radius, radius, radius, lu, lv);
-                poseStack.popPose();
-                return;
-            }
             if (noise) {
                 ShaderInstance shader = ClientRegistry.NOISE_SHADER.get();
                 double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;

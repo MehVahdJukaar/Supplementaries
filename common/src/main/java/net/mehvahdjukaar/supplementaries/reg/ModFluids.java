@@ -5,6 +5,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.DynamicHolder;
+import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
@@ -41,7 +42,7 @@ public class ModFluids {
 
 
     public static final Supplier<FiniteFluid> LUMISENE_FLUID;
-    public static final Supplier<FlammableLiquidBlock> LUMISENE_BLOCK;
+    public static final RegSupplier<FlammableLiquidBlock> LUMISENE_BLOCK;
     public static final Supplier<BucketItem> LUMISENE_BUCKET;
     public static final Supplier<Item> LUMISENE_BOTTLE;
 

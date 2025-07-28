@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
+import it.crystalnest.soul_fire_d.api.Fire;
 import it.crystalnest.soul_fire_d.api.FireManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
