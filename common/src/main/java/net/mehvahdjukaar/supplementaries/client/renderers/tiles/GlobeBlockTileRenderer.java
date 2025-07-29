@@ -126,7 +126,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         poseStack.mulPose(RotHlpr.rot(tile.getDirection()));
         poseStack.translate(0, 0.0625, 0);
         poseStack.mulPose(RotHlpr.X22);
-        poseStack.mulPose(Axis.YP.rotationDegrees(-tile.getRotation(partialTicks)));
+        poseStack.mulPose(Axis.YP.rotationDegrees(90-tile.getRotation(partialTicks)));
 
         PoseStack test = new PoseStack();
         test.mulPose(RotHlpr.X22);
@@ -146,8 +146,8 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
 
-        if (globeModel == GlobeManager.Model.ROUND) {
-            poseStack.mulPose(RotHlpr.X180);
+        if (globeModel == GlobeManager.Model.ROUND ||(noise && isSepia)) {
+            poseStack.mulPose(RotHlpr.Z180);
             builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
             try {
                 var mc = Minecraft.getInstance();

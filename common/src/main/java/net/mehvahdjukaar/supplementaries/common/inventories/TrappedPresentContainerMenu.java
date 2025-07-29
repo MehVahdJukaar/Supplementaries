@@ -7,14 +7,11 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 
-import static net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu.getBlockEntityOrThrow;
-
-
 public class TrappedPresentContainerMenu extends PresentContainerMenu {
 
     public TrappedPresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, getBlockEntityOrThrow(
-                TileOrEntityTarget.read(packetBuffer), playerInventory.player.level(),
+        this(id, playerInventory,
+                TileOrEntityTarget.read(packetBuffer).getBlockEntityOrThrow(playerInventory.player.level(),
                 ModRegistry.TRAPPED_PRESENT_TILE.get()));
     }
 

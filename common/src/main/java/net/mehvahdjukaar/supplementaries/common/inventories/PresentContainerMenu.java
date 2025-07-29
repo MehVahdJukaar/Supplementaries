@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.AbstractPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -14,8 +13,6 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-
-import static net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu.getBlockEntityOrThrow;
 
 
 public class PresentContainerMenu extends AbstractContainerMenu implements IContainerProvider {
@@ -29,9 +26,8 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
     }
 
     public PresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, getBlockEntityOrThrow(
-                TileOrEntityTarget.read(packetBuffer), playerInventory.player.level(),
-                ModRegistry.PRESENT_TILE.get()));
+        this(id, playerInventory, TileOrEntityTarget.read(packetBuffer)
+                .getBlockEntityOrThrow(playerInventory.player.level(), ModRegistry.PRESENT_TILE.get()));
     }
 
 

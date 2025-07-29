@@ -13,8 +13,6 @@ import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.inventory.ShulkerBoxSlot;
 import net.minecraft.world.inventory.Slot;
 
-import static net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainerMenu.getBlockEntityOrThrow;
-
 public class SafeContainerMenu extends ShulkerBoxMenu implements IContainerProvider {
 
     private final SafeBlockTile tile;
@@ -25,9 +23,8 @@ public class SafeContainerMenu extends ShulkerBoxMenu implements IContainerProvi
     }
 
     public SafeContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, getBlockEntityOrThrow(
-                TileOrEntityTarget.read(packetBuffer), playerInventory.player.level(),
-                ModRegistry.SAFE_TILE.get()));
+        this(id, playerInventory, TileOrEntityTarget.read(packetBuffer)
+                .getBlockEntityOrThrow(playerInventory.player.level(), ModRegistry.SAFE_TILE.get()));
     }
 
     @Override

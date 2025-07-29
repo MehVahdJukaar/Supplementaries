@@ -11,6 +11,8 @@ import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
@@ -231,7 +233,7 @@ public class GlobeManager {
         TEXTURES.clear();
         Set<ResourceLocation> allTextures = new HashSet<>();
         NAME_CACHE.values().forEach(o -> {
-            if(o == DEFAULT_DATA) return; //skip default data
+            if(o == DEFAULT_DATA || o == SpecialGlobe.ROUND) return; //skip default data
             ResourceLocation t1 = o.getTexture(false);
             allTextures.add(t1);
             ResourceLocation t2 = o.getTexture(true);
@@ -277,7 +279,11 @@ public class GlobeManager {
             if (!ClientConfigs.Blocks.GLOBE_RANDOM.get()) {
                 return SpecialGlobe.EARTH.getTexture(sepia);
             }
-            return getTextureInstance(Minecraft.getInstance().level, sepia).textureLocation;
+            Level level = Minecraft.getInstance().level;
+            if(level == null){
+                return GLOBE_EARTH_TEXTURE;
+            }
+            return getTextureInstance(level, sepia).textureLocation;
         }
 
     };

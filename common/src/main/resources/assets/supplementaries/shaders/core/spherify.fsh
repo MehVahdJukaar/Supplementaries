@@ -80,7 +80,7 @@ vec2 cubeMapUV(vec3 direction) {
         } else {
             // Down → 3rd cell in top row
             uc = -x;
-            vc = z;
+            vc = -z;
             u = 0.5 * (uc / max_axis + 1.0);
             v = 0.5 * (vc / max_axis + 1.0);
             base_uv = vec2(2.0 / 4.0, 0.0 / 2.0);
@@ -119,20 +119,27 @@ void main() {
     vec4 clipFar  = vec4(ndc,  1.0, 1.0);
 
     // Unproject to view space
+    //problem must be somewhere here
+
     mat4 invProj = inverse(ProjMat);
     vec4 viewNear = invProj * clipNear;
     viewNear /= viewNear.w;
     vec4 viewFar  = invProj * clipFar;
     viewFar /= viewFar.w;
 
-    vec3 rayOrigin = vec3(0.0);
+    //mega hack to alleviate the translation issue... wont solve it
+    vec4 transl = ProjMat[3];
+    transl[2] = 0;
+    vec3 rayOrigin =  -transl.xyz+vec3(0.0).xyz;
+    vec3 sp =   spherePos;
+
     vec3 rayDir = normalize(viewFar.xyz - viewNear.xyz);
 
-    float t = intersectSphere(rayOrigin, rayDir, spherePos, Radius);
+    float t = intersectSphere(rayOrigin, rayDir, sp, Radius);
     if (t < 0.0) discard;
 
     vec3 intersect = rayOrigin + t * rayDir;
-    vec3 normal_view = normalize(intersect - spherePos);
+    vec3 normal_view = normalize(intersect - sp);
 
     // Convert normal to world space by inverse rotation of ModelView
     vec3 normal_world = normalize(inverse(mat3(ModelViewMat)) * normal_view);
