@@ -1,4 +1,5 @@
 {
+	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "supplementaries:block/globe_stand",
@@ -36,7 +37,7 @@
 				"east": {"uv": [7, 12, 9, 14], "texture": "#0"},
 				"south": {"uv": [7, 12, 9, 14], "texture": "#0"},
 				"west": {"uv": [7, 12, 9, 14], "texture": "#0"},
-				"up": {"uv": [3, 3, 5, 5], "texture": "#0"}
+				"up": {"uv": [2, 10, 4, 12], "texture": "#0"}
 			}
 		}
 	],
@@ -46,7 +47,6 @@
 			"name": "group",
 			"origin": [15.5, 17, 15.5],
 			"color": 0,
-			"nbt": "{}",
 			"children": [1]
 		},
 		2

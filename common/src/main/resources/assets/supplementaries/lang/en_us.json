@@ -329,6 +329,7 @@
   "globe.supplementaries.earth": "Earth",
   "globe.supplementaries.flat": "Flat",
   "globe.supplementaries.moon": "Moon",
+  "globe.supplementaries.round": "Round",
   "globe.supplementaries.sun": "Sun",
 
   "gui.supplementaries.amendments.message": "As of update 2.8.0 some of Supplementaries features in the Tweaks section were moved to a dedicated mod, Amendments.\n\n The mods are meant to function separately, but if you wish to keep all the already-existing old blocks you must install Amendments.\n\n The features moved are the following: WALL LANTERNS, SKULL CANDLES, CEILING POTS, CEILING BANNERS and SKULL PILES. \n\nNote that if you proceed without it, all those existing blocks will be lost.",

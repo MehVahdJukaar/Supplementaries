@@ -36,6 +36,7 @@ float intersectSphere(vec3 rayOrigin, vec3 rayDir, vec3 center, float radius) {
     return (t >= 0.0) ? t : (-b + sqrt(disc) >= 0.0 ? -b + sqrt(disc) : -1.0);
 }
 
+// maps a direction vector to UV coordinates on a cubemap atlas
 vec2 cubeMapUV(vec3 direction) {
     float x = direction.x;
     float y = direction.y;

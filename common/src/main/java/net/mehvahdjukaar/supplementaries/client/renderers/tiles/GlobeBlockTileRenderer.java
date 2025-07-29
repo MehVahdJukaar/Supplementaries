@@ -5,6 +5,7 @@ import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
@@ -23,6 +24,7 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -30,6 +32,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import java.util.EnumMap;
@@ -139,65 +142,54 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         poseStack.pushPose();
         poseStack.mulPose(RotHlpr.X180);
 
-//Keep these 2
-        boolean shouldRenderSphere = true;
-        boolean shouldRenderNoise = false;
+        GlobeManager.Model globeModel = data.getModel(isSepia);
 
         VertexConsumer builder;
 
-        if (shouldRenderSphere) {
+        if (globeModel == GlobeManager.Model.ROUND) {
             poseStack.mulPose(RotHlpr.X180);
             builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
-
-            Vector3f eulerAngles = poseStack.last().pose().getEulerAnglesXYZ(new Vector3f());
-
-            poseStack.last().pose().setRotationYXZ(0, 0, 0);
-
-            Minecraft mc = Minecraft.getInstance();
-            Camera cam = mc.gameRenderer.getMainCamera();
-            poseStack.mulPose(cam.rotation());
-
             try {
+                var mc = Minecraft.getInstance();
                 ClientRegistry.SPHERE_SHADER.get().getUniform("ScreenSize")
                         .set(mc.getWindow().getWidth(), mc.getWindow().getHeight());
-
-            } catch (Exception e) {
-                //ignore
+            } catch (Exception ignored) {
             }
-            float radius = 0.8f;
-            addSphereQuad(poseStack, builder, radius, light, eulerAngles);
+            addSphereQuad(poseStack, builder, 0.8f, light);
             poseStack.popPose();
             return;
         }
-        if (shouldRenderNoise) {
+
+        if (noise) {
             double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
             float v = (float) Mth.clamp(si, -0.5, 0.5);
             float c = (float) Mth.clamp(si, -2, 2);
             Uniform intensity = ClientRegistry.NOISE_SHADER.get().getUniform("Intensity");
             if (intensity != null) intensity.set(Mth.cos(Mth.PI * c / 4f));
             poseStack.scale(v + 0.5f + 0.01f, 1, 1);
-            builder = buffer.getBuffer(NoiseRenderType.RENDER_TYPE.apply(ModTextures.GLOBE_EARTH_TEXTURE));
-            poseStack.popPose();
-            return;
-        }
-        ModelPart model = this.models.get(data.getModel(isSepia));
-
-        if (ClientConfigs.Blocks.GLOBE_RANDOM.get()) {
-            RenderType renderType = GlobeManager.getRandomGlobeRenderType(level, isSepia);
+            builder = buffer.getBuffer(NoiseRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
+        } else  {
+            RenderType renderType =   RenderUtil.getEntityCutoutMipmapRenderType(data.getTexture(isSepia));
             builder = buffer.getBuffer(renderType);
-
-        } else {
-            ResourceLocation texture = GlobeManager.getEarthTexture(isSepia);
-            builder = buffer.getBuffer(RenderType.entityTranslucentCull(texture));
         }
+        ModelPart model = this.models.get(globeModel);
 
         model.render(poseStack, builder, light, overlay, -1);
         poseStack.popPose();
     }
 
-    private static void addSphereQuad(PoseStack stack, VertexConsumer consumer, float radius, int light, Vector3f rot) {
-        var matrix = stack.last().pose();
+    private static void addSphereQuad(PoseStack stack, VertexConsumer consumer, float radius, int light) {
+        Matrix4f matrix = stack.last().pose();
+
+        Vector3f sphereRot = matrix.getEulerAnglesXYZ(new Vector3f());
         var spherePos = matrix.transformPosition(new Vector3f(0, 0, 0));
+
+        matrix.setRotationYXZ(0, 0, 0);
+
+        Minecraft mc = Minecraft.getInstance();
+        Camera cam = mc.gameRenderer.getMainCamera();
+
+        matrix.rotate(cam.rotation());
         matrix.translate(0, 0, 0.08f);
 
         Vector3f v1 = matrix.transformPosition(new Vector3f(radius, radius, 0));
@@ -206,7 +198,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 .setNormal(centerRel1.x, centerRel1.y, centerRel1.z) //sphere center
                 .setColor(-1)
                 .setLight(light);
-        addExtraVec3f(consumer, rot);
+        addExtraVec3f(consumer, sphereRot);
 
         Vector3f v2 = matrix.transformPosition(new Vector3f(-radius, radius, 0));
         Vector3f centerRel2 = spherePos.sub(v2, new Vector3f());
@@ -214,7 +206,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 .setNormal(centerRel2.x, centerRel2.y, centerRel2.z) //sphere center
                 .setColor(-1)
                 .setLight(light);
-        addExtraVec3f(consumer, rot);
+        addExtraVec3f(consumer, sphereRot);
 
         Vector3f v3 = matrix.transformPosition(new Vector3f(-radius, -radius, 0));
         Vector3f centerRel3 = spherePos.sub(v3, new Vector3f());
@@ -222,7 +214,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 .setNormal(centerRel3.x, centerRel3.y, centerRel3.z) //sphere center
                 .setColor(-1)
                 .setLight(light);
-        addExtraVec3f(consumer, rot);
+        addExtraVec3f(consumer, sphereRot);
 
         Vector3f v4 = matrix.transformPosition(new Vector3f(radius, -radius, 0));
         Vector3f centerRel4 = spherePos.sub(v4, new Vector3f());
@@ -230,7 +222,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                 .setNormal(centerRel4.x, centerRel4.y, centerRel4.z) //sphere center
                 .setColor(-1)
                 .setLight(light);
-        addExtraVec3f(consumer, rot);
+        addExtraVec3f(consumer, sphereRot);
 
     }
 

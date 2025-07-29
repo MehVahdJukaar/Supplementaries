@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
@@ -16,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -71,14 +73,10 @@ public class GlobeManager {
         //return MODEL_ID_MAP.getOrDefault(text.toLowerCase(Locale.ROOT), Float.NEGATIVE_INFINITY);
     }
 
-    public static RenderType getRandomGlobeRenderType(Level level, boolean isSepia) {
-        return getTextureInstance(level, isSepia).renderType;
-    }
 
     private static class TextureInstance implements AutoCloseable {
         private final ResourceLocation textureLocation;
         private final DynamicTexture texture;
-        private final RenderType renderType;
         private final ResourceLocation dimensionId;
         private final boolean sepiaColored;
 
@@ -91,7 +89,6 @@ public class GlobeManager {
             this.updateTexture(world);
             this.textureLocation = Minecraft.getInstance().getTextureManager()
                     .register("globe/" + dimensionId.toString().replace(":", "_"), this.texture);
-            this.renderType = RenderUtil.getEntitySolidMipmapRenderType(textureLocation);
         }
 
         private void updateTexture(Level world) {
@@ -136,7 +133,6 @@ public class GlobeManager {
      * Refresh colors and textures
      */
     public static void refreshColorsAndTextures(ResourceManager manager) {
-        recomputeCache();
 
         DIMENSION_COLORS.clear();
         int targetColors = 13;
@@ -157,12 +153,14 @@ public class GlobeManager {
             Supplementaries.LOGGER.error("Could not find any globe palette in textures/entity/globes/palettes");
         }
 
+        recomputeCache();
+
         refreshTextures();
     }
 
     // remove this. its very random
     private enum SpecialGlobe implements GlobeRenderData {
-        FLAT(Component.translatable("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE, GLOBE_FLAT_TEXTURE_SEPIA,
+        FLAT(Component.translatable("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE, GLOBE_FLAT_TEXTURE_SEPIA, Model.FLAT,
                 "flat", "flat earth"),
         MOON(Component.translatable("globe.supplementaries.moon"), GLOBE_MOON_TEXTURE, GLOBE_MOON_TEXTURE,
                 "moon", "luna", "selene", "cynthia"),
@@ -171,7 +169,9 @@ public class GlobeManager {
         SUN(Component.translatable("globe.supplementaries.sun"), GLOBE_SUN_TEXTURE, GLOBE_SUN_TEXTURE,
                 "sun", "sol", "helios"),
         SHEARED(Component.literal("sheared"), GLOBE_SHEARED_TEXTURE, GLOBE_SHEARED_SEPIA_TEXTURE,
-                Model.SHEARED);
+                Model.SHEARED),
+        ROUND(Component.translatable("globe.supplementaries.round"), GLOBE_EARTH_TEXTURE, GLOBE_EARTH_TEXTURE_SEPIA,
+                Model.ROUND, "round", "sphere", "spherical"),;
 
         SpecialGlobe(Component tr, ResourceLocation texture, ResourceLocation textureSepia, String... key) {
             this(tr, texture, textureSepia, Model.GLOBE, key);
@@ -192,7 +192,10 @@ public class GlobeManager {
         private final ResourceLocation textureSepia;
         private final Model model;
 
-        public ResourceLocation getTexture(boolean sepia) {
+        public @NotNull ResourceLocation getTexture(boolean sepia) {
+            if(this == ROUND){
+                return DEFAULT_DATA.getTexture(sepia);
+            }
             return sepia ? this.textureSepia : this.texture;
         }
 
@@ -228,10 +231,11 @@ public class GlobeManager {
         TEXTURES.clear();
         Set<ResourceLocation> allTextures = new HashSet<>();
         NAME_CACHE.values().forEach(o -> {
+            if(o == DEFAULT_DATA) return; //skip default data
             ResourceLocation t1 = o.getTexture(false);
-            if (t1 != null) allTextures.add(t1);
+            allTextures.add(t1);
             ResourceLocation t2 = o.getTexture(true);
-            if (t2 != null && t1 != t2) allTextures.add(t2);
+            if (t1 != t2) allTextures.add(t2);
         });
         TEXTURES.addAll(allTextures);
         //DISABLED for now. requires too much maintenance
@@ -240,13 +244,13 @@ public class GlobeManager {
     }
 
     public enum Model {
-        GLOBE, FLAT, SNOW, SHEARED
+        GLOBE, FLAT, SNOW, SHEARED, ROUND
     }
 
 
-    private record SimpleData(Model model, @Nullable ResourceLocation texture) implements GlobeRenderData {
+    private record SimpleData(Model model,@NotNull ResourceLocation texture) implements GlobeRenderData {
 
-        public static SimpleData of(Model model, @Nullable ResourceLocation texture) {
+        public static SimpleData of(Model model, @NotNull ResourceLocation texture) {
             return new SimpleData(model, texture);
         }
 
@@ -256,7 +260,7 @@ public class GlobeManager {
         }
 
         @Override
-        public ResourceLocation getTexture(boolean sepia) {
+        public @NotNull ResourceLocation getTexture(boolean sepia) {
             return texture;
         }
     }
@@ -269,9 +273,13 @@ public class GlobeManager {
         }
 
         @Override
-        public @Nullable ResourceLocation getTexture(boolean sepia) {
-            return null;
+        public @NotNull ResourceLocation getTexture(boolean sepia) {
+            if (!ClientConfigs.Blocks.GLOBE_RANDOM.get()) {
+                return SpecialGlobe.EARTH.getTexture(sepia);
+            }
+            return getTextureInstance(Minecraft.getInstance().level, sepia).textureLocation;
         }
+
     };
 }
 
