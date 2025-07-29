@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
 import com.mojang.blaze3d.shaders.Uniform;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
@@ -24,13 +23,13 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -148,8 +147,12 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
         if (texture == null) {
-            if (true) {
+            if (pos.getX() % 2 == 0) {
                 builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(ModTextures.GLOBE_TEXTURE));
+
+                var facing = poseStack.last().transformNormal(
+                        Direction.NORTH.step(), new Vector3f());
+
                 poseStack.last().pose().setRotationYXZ(0, 0, 0);
 
                 Minecraft mc = Minecraft.getInstance();
@@ -166,7 +169,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                     //ignore
                 }
                 float radius = 0.8f;
-                addSphereQuad(poseStack, builder, radius, light);
+                addSphereQuad(poseStack, builder, radius, light, facing);
                 poseStack.popPose();
                 return;
             }
@@ -190,46 +193,50 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         poseStack.popPose();
     }
 
-    private static void addSphereQuad(PoseStack stack, VertexConsumer consumer, float radius, int light) {
+    private static void addSphereQuad(PoseStack stack, VertexConsumer consumer, float radius, int light, Vector3f dir) {
         var last = stack.last().pose();
+        var spherePos = last.transformPosition(new Vector3f(0, 0, 0));
         Vector3f v1 = last.transformPosition(new Vector3f(radius, radius, 0));
-        Vector3f n1 = last.transformPosition(new Vector3f(0,0, 0))
-                .sub(v1);
         consumer.addVertex(v1.x, v1.y, v1.z)
-                .setNormal(n1.x, n1.y, n1.z) //sphere center
+                .setNormal(dir.x, dir.y, dir.z) //sphere center
                 .setColor(-1)
-                .setUv(0, 0)
-                .setLight(light)
-                .setOverlay(OverlayTexture.NO_OVERLAY);
+                .setLight(light);
+        addSpherePos(consumer, spherePos);
 
         Vector3f v2 = last.transformPosition(new Vector3f(-radius, radius, 0));
-        Vector3f n2 = last.transformPosition(new Vector3f(0,0, 0))
-                .sub(v2);
         consumer.addVertex(v2.x, v2.y, v2.z)
-                .setNormal(n2.x, n2.y, n2.z) //sphere center
+                .setNormal(dir.x, dir.y, dir.z) //sphere center
                 .setColor(-1)
-                .setUv(0, 1)
-                .setLight(light)
-                .setOverlay(OverlayTexture.NO_OVERLAY);
-        Vector3f v3 = last.transformPosition(new Vector3f(-radius, -radius, 0));
-        Vector3f n3 = last.transformPosition(new Vector3f(0,0, 0))
-                .sub(v3);
-        consumer.addVertex(v3.x, v3.y, v3.z)
-                .setNormal(n3.x, n3.y, n3.z) //sphere center
-                .setColor(-1)
-                .setUv(1, 1)
-                .setLight(light)
-                .setOverlay(OverlayTexture.NO_OVERLAY);
-        Vector3f v4 = last.transformPosition(new Vector3f(radius, -radius, 0));
-        Vector3f n4 = last.transformPosition(new Vector3f(0,0, 0))
-                .sub(v4);
-        consumer.addVertex(v4.x, v4.y, v4.z)
-                .setNormal(n4.x, n4.y, n4.z) //sphere center
-                .setColor(-1)
-                .setUv(1, 0)
-                .setLight(light)
-                .setOverlay(OverlayTexture.NO_OVERLAY);
+                .setLight(light);
+        addSpherePos(consumer, spherePos);
 
+        Vector3f v3 = last.transformPosition(new Vector3f(-radius, -radius, 0));
+        consumer.addVertex(v3.x, v3.y, v3.z)
+                .setNormal(dir.x, dir.y, dir.z) //sphere center
+                .setColor(-1)
+                .setLight(light);
+        addSpherePos(consumer, spherePos);
+
+        Vector3f v4 = last.transformPosition(new Vector3f(radius, -radius, 0));
+        consumer.addVertex(v4.x, v4.y, v4.z)
+                .setNormal(dir.x, dir.y, dir.z) //sphere center
+                .setColor(-1)
+                .setLight(light);
+        addSpherePos(consumer, spherePos);
+
+    }
+
+    private static void addSpherePos(VertexConsumer consumer, Vector3f dir) {
+        consumer.setUv(dir.x, dir.y);
+        var shorts = floatToTwoShorts(dir.z);
+        consumer.setUv1(shorts[0], shorts[1]);
+    }
+
+    public static short[] floatToTwoShorts(float value) {
+        int bits = Float.floatToIntBits(value); // Step 1: convert float to raw int bits
+        short high = (short) ((bits >>> 16) & 0xFFFF); // Step 2: high 16 bits
+        short low = (short) (bits & 0xFFFF);          // Step 3: low 16 bits
+        return new short[]{high, low};
     }
 
 }
