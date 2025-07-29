@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.StatueEntityModel;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -180,14 +181,10 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                     if (GlobeBlockTileRenderer.INSTANCE != null) {
 
                         boolean sepia = pose == StatueBlockTile.StatuePose.SEPIA_GLOBE;
-                        Pair<GlobeManager.Model, ResourceLocation> pair =
-                                stack.has(DataComponents.CUSTOM_NAME) ?
-                                        GlobeManager.getModelAndTexture(stack.getHoverName().getString()) :
-                                        Pair.of(GlobeManager.Model.GLOBE, null);
+                        GlobeRenderData data = GlobeManager.computeRenderData(false, stack.get(DataComponents.CUSTOM_NAME));
 
-                        GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, poseStack, bufferIn,
-                                combinedLightIn, combinedOverlayIn, sepia, tile.getLevel(),
-                                tile.getBlockPos());
+                        GlobeBlockTileRenderer.INSTANCE.renderGlobe(data, poseStack, bufferIn,
+                                combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
                     }
                 } else {
                     this.itemRenderer.render(stack, ItemDisplayContext.FIXED, true, poseStack, bufferIn, combinedLightIn,

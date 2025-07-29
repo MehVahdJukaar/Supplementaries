@@ -4,10 +4,10 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
 import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
 import net.mehvahdjukaar.supplementaries.client.renderers.SphereRenderType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
@@ -27,8 +27,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -127,71 +125,69 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         poseStack.mulPose(RotHlpr.X22);
         poseStack.mulPose(Axis.YP.rotationDegrees(-tile.getRotation(partialTicks)));
 
-PoseStack test = new PoseStack();
-test.mulPose(RotHlpr.X22);
-
-var angles = poseStack.last().pose().getEulerAnglesXYZ(new Vector3f());
-
-var angles2 = test.last().pose().getEulerAnglesXYZ(new Vector3f());
+        PoseStack test = new PoseStack();
+        test.mulPose(RotHlpr.X22);
 
         this.renderGlobe(tile.getRenderData(), poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
-                tile.isSepia(), tile.getLevel(), tile.getBlockPos());
+                tile.isSepia(), tile.getLevel());
 
         poseStack.popPose();
     }
 
-    public void renderGlobe(Pair<GlobeManager.Model, ResourceLocation> data, PoseStack poseStack, MultiBufferSource buffer,
-                            int light, int overlay, boolean isSepia, Level level, BlockPos pos) {
-        if (data == null) return;
+    public void renderGlobe(GlobeRenderData data, PoseStack poseStack, MultiBufferSource buffer,
+                            int light, int overlay, boolean isSepia, Level level) {
         poseStack.pushPose();
-     //   poseStack.mulPose(RotHlpr.X180);
-        ResourceLocation texture = ClientConfigs.Blocks.GLOBE_RANDOM.get() ? data.getSecond() :
-                GlobeManager.Type.EARTH.getTexture();
+        poseStack.mulPose(RotHlpr.X180);
 
-        ModelPart model = this.models.get(data.getFirst());
+//Keep these 2
+        boolean shouldRenderSphere = true;
+        boolean shouldRenderNoise = false;
 
         VertexConsumer builder;
-        if (texture == null) {
-            if (true) {
-                builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(
-                      ModTextures.GLOBE_TEXTURE));
 
-                Vector3f eulerAngles =  poseStack.last().pose().getEulerAnglesXYZ(new Vector3f());
+        if (shouldRenderSphere) {
+            poseStack.mulPose(RotHlpr.X180);
+            builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
 
+            Vector3f eulerAngles = poseStack.last().pose().getEulerAnglesXYZ(new Vector3f());
 
-                poseStack.last().pose().setRotationYXZ(0, 0, 0);
+            poseStack.last().pose().setRotationYXZ(0, 0, 0);
 
-                Minecraft mc = Minecraft.getInstance();
-                Camera cam = mc.gameRenderer.getMainCamera();
-                poseStack.mulPose(cam.rotation());
+            Minecraft mc = Minecraft.getInstance();
+            Camera cam = mc.gameRenderer.getMainCamera();
+            poseStack.mulPose(cam.rotation());
 
-                try {
-                    ClientRegistry.SPHERE_SHADER.get().getUniform("ScreenSize")
-                            .set(mc.getWindow().getWidth(), mc.getWindow().getHeight());
-                    ClientRegistry.SPHERE_SHADER.get().getUniform("CameraPos")
-                            .set(cam.getPosition().toVector3f());
+            try {
+                ClientRegistry.SPHERE_SHADER.get().getUniform("ScreenSize")
+                        .set(mc.getWindow().getWidth(), mc.getWindow().getHeight());
 
-                } catch (Exception e) {
-                    //ignore
-                }
-                float radius = 0.8f;
-                addSphereQuad(poseStack, builder, radius, light, eulerAngles);
-                poseStack.popPose();
-                return;
+            } catch (Exception e) {
+                //ignore
             }
-            if (noise) {
-                double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
-                float v = (float) Mth.clamp(si, -0.5, 0.5);
-                float c = (float) Mth.clamp(si, -2, 2);
-                Uniform intensity = ClientRegistry.NOISE_SHADER.get().getUniform("Intensity");
-                if (intensity != null) intensity.set(Mth.cos(Mth.PI * c / 4f));
-                poseStack.scale(v + 0.5f + 0.01f, 1, 1);
-                builder = buffer.getBuffer(NoiseRenderType.RENDER_TYPE.apply(ModTextures.GLOBE_TEXTURE));
-            } else {
-                RenderType renderType = GlobeManager.getRenderType(level, isSepia);
-                builder = buffer.getBuffer(renderType);
-            }
+            float radius = 0.8f;
+            addSphereQuad(poseStack, builder, radius, light, eulerAngles);
+            poseStack.popPose();
+            return;
+        }
+        if (shouldRenderNoise) {
+            double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
+            float v = (float) Mth.clamp(si, -0.5, 0.5);
+            float c = (float) Mth.clamp(si, -2, 2);
+            Uniform intensity = ClientRegistry.NOISE_SHADER.get().getUniform("Intensity");
+            if (intensity != null) intensity.set(Mth.cos(Mth.PI * c / 4f));
+            poseStack.scale(v + 0.5f + 0.01f, 1, 1);
+            builder = buffer.getBuffer(NoiseRenderType.RENDER_TYPE.apply(ModTextures.GLOBE_EARTH_TEXTURE));
+            poseStack.popPose();
+            return;
+        }
+        ModelPart model = this.models.get(data.getModel(isSepia));
+
+        if (ClientConfigs.Blocks.GLOBE_RANDOM.get()) {
+            RenderType renderType = GlobeManager.getRandomGlobeRenderType(level, isSepia);
+            builder = buffer.getBuffer(renderType);
+
         } else {
+            ResourceLocation texture = GlobeManager.getEarthTexture(isSepia);
             builder = buffer.getBuffer(RenderType.entityTranslucentCull(texture));
         }
 
@@ -202,7 +198,7 @@ var angles2 = test.last().pose().getEulerAnglesXYZ(new Vector3f());
     private static void addSphereQuad(PoseStack stack, VertexConsumer consumer, float radius, int light, Vector3f rot) {
         var matrix = stack.last().pose();
         var spherePos = matrix.transformPosition(new Vector3f(0, 0, 0));
-        matrix.translate(0,0,0.08f);
+        matrix.translate(0, 0, 0.08f);
 
         Vector3f v1 = matrix.transformPosition(new Vector3f(radius, radius, 0));
         Vector3f centerRel1 = spherePos.sub(v1, new Vector3f());

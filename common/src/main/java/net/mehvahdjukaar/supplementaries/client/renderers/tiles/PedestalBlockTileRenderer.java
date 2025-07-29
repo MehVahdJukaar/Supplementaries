@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
@@ -138,14 +139,10 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                             if (GlobeBlockTileRenderer.INSTANCE != null) {
 
                                 boolean sepia = tile.getDisplayType() == PedestalBlockTile.DisplayType.SEPIA_GLOBE;
-                                Pair<GlobeManager.Model, ResourceLocation> pair =
-                                        stack.has(DataComponents.CUSTOM_NAME) ?
-                                                GlobeManager.getModelAndTexture(stack.getHoverName().getString()) :
-                                                Pair.of(GlobeManager.Model.GLOBE, null);
+                                GlobeRenderData data = GlobeManager.computeRenderData(false, stack.get(DataComponents.CUSTOM_NAME));
 
-                                GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
-                                        combinedLightIn, combinedOverlayIn, sepia, tile.getLevel(),
-                                        tile.getBlockPos());
+                                GlobeBlockTileRenderer.INSTANCE.renderGlobe(data, matrixStackIn, bufferIn,
+                                        combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
                             }
                             matrixStackIn.popPose();
                             return;

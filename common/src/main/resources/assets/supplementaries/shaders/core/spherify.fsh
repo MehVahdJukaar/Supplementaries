@@ -52,15 +52,15 @@ vec2 cubeMapUV(vec3 direction) {
 
     if (abs_x >= abs_y && abs_x >= abs_zf) {
         max_axis = abs_x;
-        if (x > 0.0) {
-            // East → leftmost cell in bottom row
+        if (x < 0.0) {
+            // West → leftmost cell in bottom row
             uc = z;
             vc = -y;
             u = 0.5 * (uc / max_axis + 1.0);
             v = 0.5 * (vc / max_axis + 1.0);
             base_uv = vec2(2.0 / 4.0, 1.0 / 2.0);
         } else {
-            // West → 3rd cell in bottom row
+            // East → 3rd cell in bottom row
             uc = -z;
             vc = -y;
             u = 0.5 * (uc / max_axis + 1.0);
@@ -71,14 +71,14 @@ vec2 cubeMapUV(vec3 direction) {
         max_axis = abs_y;
         if (y > 0.0) {
             // Up → 2nd cell in top row
-            uc = x;
+            uc = -x;
             vc = -z;
             u = 0.5 * (uc / max_axis + 1.0);
             v = 0.5 * (vc / max_axis + 1.0);
             base_uv = vec2(1.0 / 4.0, 0.0 / 2.0);
         } else {
             // Down → 3rd cell in top row
-            uc = x;
+            uc = -x;
             vc = z;
             u = 0.5 * (uc / max_axis + 1.0);
             v = 0.5 * (vc / max_axis + 1.0);
@@ -88,14 +88,14 @@ vec2 cubeMapUV(vec3 direction) {
         max_axis = abs_zf;
         if (-z > 0.0) {
             // North → 2nd cell in bottom row
-            uc = x;
+            uc = -x;
             vc = -y;
             u = 0.5 * (uc / max_axis + 1.0);
             v = 0.5 * (vc / max_axis + 1.0);
             base_uv = vec2(1.0 / 4.0, 1.0 / 2.0);
         } else {
             // South → 4th cell in bottom row
-            uc = -x;
+            uc = x;
             vc = -y;
             u = 0.5 * (uc / max_axis + 1.0);
             v = 0.5 * (vc / max_axis + 1.0);

@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client;
 
 
 import com.google.common.collect.Maps;
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
@@ -27,26 +26,53 @@ public class GlobeManager {
 
     private static final Map<String, TextureInstance> TEXTURE_CACHE = Maps.newHashMap();
 
-    private static final HashMap<ResourceLocation, IntList> DIMENSION_COLOR_MAP = new HashMap<>();
+    private static final HashMap<ResourceLocation, IntList> DIMENSION_COLORS = new HashMap<>();
     private static final IntList SEPIA_COLORS = new IntArrayList();
+
+    private static final Map<String, GlobeRenderData> NAME_CACHE = new HashMap<>();
+    private static final Map<String, Float> MODEL_ID_MAP = new HashMap<>();
+
+    public static final List<ResourceLocation> TEXTURES = new ArrayList<>();
+
 
     public static void refreshTextures() {
         TEXTURE_CACHE.clear();
     }
 
-    public static RenderType getRenderType(Level world, boolean sepia) {
-        return getTextureInstance(world, sepia).renderType;
-    }
-
     private static TextureInstance getTextureInstance(Level world, boolean sepia) {
-        return TEXTURE_CACHE.computeIfAbsent(getTextureId(world, sepia),
+        return TEXTURE_CACHE.computeIfAbsent(getTextureIdPerDimension(world, sepia),
                 i -> new TextureInstance(world, sepia));
     }
 
-    private static String getTextureId(Level level, boolean sepia) {
+    private static String getTextureIdPerDimension(Level level, boolean sepia) {
         String id = level.dimension().location().getPath();
         if (sepia) id = id + "_sepia";
         return id;
+    }
+
+    public static ResourceLocation getEarthTexture(boolean isSepia) {
+        return SpecialGlobe.EARTH.getTexture(isSepia);
+    }
+
+    public static GlobeRenderData computeRenderData(boolean sheared, @Nullable Component customName) {
+        if (sheared) {
+            return SpecialGlobe.SHEARED;
+        } else if (customName != null) {
+            var specialGlobe = NAME_CACHE.get(customName.getString().toLowerCase(Locale.ROOT));
+            if (specialGlobe != null) return specialGlobe;
+        }
+        return DEFAULT_DATA;
+    }
+
+    //for supporter globe item texture
+    //Disabled because it requires too much maintenance
+    public static Float getNamedGlobeTextureID(String text) {
+        return Float.NEGATIVE_INFINITY;
+        //return MODEL_ID_MAP.getOrDefault(text.toLowerCase(Locale.ROOT), Float.NEGATIVE_INFINITY);
+    }
+
+    public static RenderType getRandomGlobeRenderType(Level level, boolean isSepia) {
+        return getTextureInstance(level, isSepia).renderType;
     }
 
     private static class TextureInstance implements AutoCloseable {
@@ -54,10 +80,10 @@ public class GlobeManager {
         private final DynamicTexture texture;
         private final RenderType renderType;
         private final ResourceLocation dimensionId;
-        private final boolean sepia;
+        private final boolean sepiaColored;
 
         private TextureInstance(Level world, boolean sepia) {
-            this.sepia = sepia;
+            this.sepiaColored = sepia;
             this.dimensionId = world.dimension().location();
             RenderUtil.setDynamicTexturesToUseMipmap(true);
             this.texture = new DynamicTexture(32, 16, false);
@@ -81,7 +107,7 @@ public class GlobeManager {
             for (int y = 0; y < pixels.length; y++) {
                 for (int x = 0; x < pixels[y].length; x++) {
                     this.texture.getPixels().setPixelRGBA(y, x,
-                            getRGBA(pixels[y][x], this.dimensionId, this.sepia));
+                            getRGBA(pixels[y][x], this.dimensionId, this.sepiaColored));
                 }
             }
             RenderUtil.setDynamicTexturesToUseMipmap(true);
@@ -97,9 +123,9 @@ public class GlobeManager {
 
         private static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
             if (sepia) return SEPIA_COLORS.getInt(b);
-            IntList l = DIMENSION_COLOR_MAP.getOrDefault(dimension, DIMENSION_COLOR_MAP.get(ResourceLocation.withDefaultNamespace("overworld")));
+            IntList l = DIMENSION_COLORS.getOrDefault(dimension, DIMENSION_COLORS.get(ResourceLocation.withDefaultNamespace("overworld")));
             if (l != null) {
-               return l.getInt(b);
+                return l.getInt(b);
             }
             return 1;
         }
@@ -112,7 +138,7 @@ public class GlobeManager {
     public static void refreshColorsAndTextures(ResourceManager manager) {
         recomputeCache();
 
-        DIMENSION_COLOR_MAP.clear();
+        DIMENSION_COLORS.clear();
         int targetColors = 13;
 
         for (var res : manager.listResources("textures/entity/globes/palettes",
@@ -124,10 +150,10 @@ public class GlobeManager {
                 SEPIA_COLORS.clear();
                 SEPIA_COLORS.addAll(l);
             } else {
-                DIMENSION_COLOR_MAP.put(ResourceLocation.tryParse(name.replace(".", ":")), new IntArrayList(l));
+                DIMENSION_COLORS.put(ResourceLocation.tryParse(name.replace(".", ":")), new IntArrayList(l));
             }
         }
-        if (DIMENSION_COLOR_MAP.isEmpty()) {
+        if (DIMENSION_COLORS.isEmpty()) {
             Supplementaries.LOGGER.error("Could not find any globe palette in textures/entity/globes/palettes");
         }
 
@@ -135,46 +161,57 @@ public class GlobeManager {
     }
 
     // remove this. its very random
-    public enum Type {
-        FLAT(new String[]{"flat", "flat earth"}, Component.translatable("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE),
-        MOON(new String[]{"moon", "luna", "selene", "cynthia"},
-                Component.translatable("globe.supplementaries.moon"), GLOBE_MOON_TEXTURE),
-        EARTH(new String[]{"earth", "terra", "gaia", "gaea", "tierra", "tellus", "terre"},
-                Component.translatable("globe.supplementaries.earth"), GLOBE_TEXTURE),
-        SUN(new String[]{"sun", "sol", "helios"},
-                Component.translatable("globe.supplementaries.sun"), GLOBE_SUN_TEXTURE);
+    private enum SpecialGlobe implements GlobeRenderData {
+        FLAT(Component.translatable("globe.supplementaries.flat"), GLOBE_FLAT_TEXTURE, GLOBE_FLAT_TEXTURE_SEPIA,
+                "flat", "flat earth"),
+        MOON(Component.translatable("globe.supplementaries.moon"), GLOBE_MOON_TEXTURE, GLOBE_MOON_TEXTURE,
+                "moon", "luna", "selene", "cynthia"),
+        EARTH(Component.translatable("globe.supplementaries.earth"), GLOBE_EARTH_TEXTURE, GLOBE_EARTH_TEXTURE_SEPIA,
+                "earth", "terra", "gaia", "gaea", "tierra", "tellus", "terre"),
+        SUN(Component.translatable("globe.supplementaries.sun"), GLOBE_SUN_TEXTURE, GLOBE_SUN_TEXTURE,
+                "sun", "sol", "helios"),
+        SHEARED(Component.literal("sheared"), GLOBE_SHEARED_TEXTURE, GLOBE_SHEARED_SEPIA_TEXTURE,
+                Model.SHEARED);
 
-        Type(String[] key, Component tr, ResourceLocation res) {
-            this.keyWords = key;
+        SpecialGlobe(Component tr, ResourceLocation texture, ResourceLocation textureSepia, String... key) {
+            this(tr, texture, textureSepia, Model.GLOBE, key);
+        }
+
+        SpecialGlobe(Component tr, ResourceLocation texture,
+                     ResourceLocation textureSepia, Model model, String... keywords) {
+            this.keyWords = keywords;
             this.transKeyWord = tr;
-            this.texture = res;
+            this.texture = texture;
+            this.textureSepia = textureSepia;
+            this.model = model;
         }
 
         private final String[] keyWords;
         private final Component transKeyWord;
         private final ResourceLocation texture;
+        private final ResourceLocation textureSepia;
+        private final Model model;
 
-        public ResourceLocation getTexture() {
-            return texture;
+        public ResourceLocation getTexture(boolean sepia) {
+            return sepia ? this.textureSepia : this.texture;
+        }
+
+        @Override
+        public Model getModel(boolean sepia) {
+            return this.model;
         }
     }
 
-
-    private static final Map<String, Pair<Model, ResourceLocation>> NAME_CACHE = new HashMap<>();
-    private static final Map<String, Float> MODEL_ID_MAP = new HashMap<>();
-    public static final List<ResourceLocation> TEXTURES = new ArrayList<>();
-
-    public static void recomputeCache() {
+    private static void recomputeCache() {
         NAME_CACHE.clear();
-        for (Type type : Type.values()) {
-            Model model = type == Type.FLAT ? Model.FLAT : Model.GLOBE;
-            var pair = Pair.of(model, type.texture);
-            if (type.transKeyWord != null && !type.transKeyWord.getString().equals("")) {
-                NAME_CACHE.put(type.transKeyWord.getString().toLowerCase(Locale.ROOT), pair);
+        for (SpecialGlobe type : SpecialGlobe.values()) {
+            if (type.keyWords.length == 0) continue;
+            if (type.transKeyWord != null && !type.transKeyWord.getString().isEmpty()) {
+                NAME_CACHE.put(type.transKeyWord.getString().toLowerCase(Locale.ROOT), type);
             }
             for (String s : type.keyWords) {
-                if (!s.equals("")) {
-                    NAME_CACHE.put(s, pair);
+                if (!s.isEmpty()) {
+                    NAME_CACHE.put(s, type);
                 }
             }
         }
@@ -182,32 +219,59 @@ public class GlobeManager {
         for (var g : Credits.INSTANCE.globes().entrySet()) {
             var path = g.getValue();
             Model model = Model.GLOBE;
+            //I should have stopped giving away special model globes from the start... this uglifies everything
             if (path.getPath().contains("globe_wais")) {
                 model = Model.SNOW;
             }
-            NAME_CACHE.put(g.getKey(), Pair.of(model, path));
+            NAME_CACHE.put(g.getKey(), SimpleData.of(model, path));
         }
         TEXTURES.clear();
+        Set<ResourceLocation> allTextures = new HashSet<>();
         NAME_CACHE.values().forEach(o -> {
-            if (!TEXTURES.contains(o.getSecond())) TEXTURES.add(o.getSecond());
+            ResourceLocation t1 = o.getTexture(false);
+            if (t1 != null) allTextures.add(t1);
+            ResourceLocation t2 = o.getTexture(true);
+            if (t2 != null && t1 != t2) allTextures.add(t2);
         });
-        Collections.sort(TEXTURES);
-        MODEL_ID_MAP.clear();
-        NAME_CACHE.forEach((key, value) -> MODEL_ID_MAP.put(key, (float) TEXTURES.indexOf(value.getSecond())));
-    }
-
-    @Nullable
-    public static Pair<Model, ResourceLocation> getModelAndTexture(String text) {
-        return NAME_CACHE.get(text.toLowerCase(Locale.ROOT));
-    }
-
-    public static Float getTextureID(String text) {
-        return MODEL_ID_MAP.getOrDefault(text.toLowerCase(Locale.ROOT), Float.NEGATIVE_INFINITY);
+        TEXTURES.addAll(allTextures);
+        //DISABLED for now. requires too much maintenance
+        //  TEXTURES.sort(Comparator.comparing(ResourceLocation::toString));
+        // NAME_CACHE.forEach((key, value) -> MODEL_ID_MAP.put(key, (float) TEXTURES.indexOf(value.texture)));
     }
 
     public enum Model {
         GLOBE, FLAT, SNOW, SHEARED
     }
 
+
+    private record SimpleData(Model model, @Nullable ResourceLocation texture) implements GlobeRenderData {
+
+        public static SimpleData of(Model model, @Nullable ResourceLocation texture) {
+            return new SimpleData(model, texture);
+        }
+
+        @Override
+        public Model getModel(boolean sepia) {
+            return model;
+        }
+
+        @Override
+        public ResourceLocation getTexture(boolean sepia) {
+            return texture;
+        }
+    }
+
+    //random globe
+    public static final GlobeRenderData DEFAULT_DATA = new GlobeRenderData() {
+        @Override
+        public Model getModel(boolean sepia) {
+            return Model.GLOBE;
+        }
+
+        @Override
+        public @Nullable ResourceLocation getTexture(boolean sepia) {
+            return null;
+        }
+    };
 }
 

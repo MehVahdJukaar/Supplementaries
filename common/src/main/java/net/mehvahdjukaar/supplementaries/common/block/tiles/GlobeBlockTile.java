@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager.Model;
+import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -27,7 +28,6 @@ import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SHEARED_SE
 import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SHEARED_TEXTURE;
 
 public class GlobeBlockTile extends BlockEntity implements Nameable {
-    private static final Pair<Model, @Nullable ResourceLocation> DEFAULT_DATA = Pair.of(Model.GLOBE, null);
 
     private final boolean sepia;
 
@@ -37,7 +37,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     private Component customName = null;
     private float yaw = 0;
     private float prevYaw = 0;
-    private Pair<Model, @Nullable ResourceLocation> renderData = DEFAULT_DATA;
+    private GlobeRenderData renderData = GlobeManager.DEFAULT_DATA;
 
 
     public GlobeBlockTile(BlockPos pos, BlockState state) {
@@ -55,7 +55,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     @NotNull
-    public Pair<Model, ResourceLocation> getRenderData() {
+    public GlobeRenderData getRenderData() {
         return renderData;
     }
 
@@ -74,15 +74,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     private void updateRenderData() {
-        if (this.sheared) {
-            this.renderData = Pair.of(Model.SHEARED,
-                    sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
-                            GLOBE_SHEARED_TEXTURE);
-        } else if (this.hasCustomName()) {
-            var customData = GlobeManager.getModelAndTexture(this.getCustomName().getString());
-            if (customData != null) this.renderData = customData;
-            else this.renderData = DEFAULT_DATA;
-        } else this.renderData = DEFAULT_DATA;
+        this.renderData = GlobeManager.computeRenderData(this.sheared, this.customName);
     }
 
     @Override

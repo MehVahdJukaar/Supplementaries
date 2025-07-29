@@ -30,7 +30,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
-import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
@@ -293,7 +292,7 @@ public class ClientRegistry {
         public float call(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int i) {
             var customName = itemStack.get(DataComponents.CUSTOM_NAME);
             if (customName != null) {
-                return GlobeManager.getTextureID(customName.getString());
+                return GlobeManager.getNamedGlobeTextureID(customName.getString());
             }
             return Float.NEGATIVE_INFINITY;
         }
