@@ -186,7 +186,8 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                                         Pair.of(GlobeManager.Model.GLOBE, null);
 
                         GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, poseStack, bufferIn,
-                                combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
+                                combinedLightIn, combinedOverlayIn, sepia, tile.getLevel(),
+                                tile.getBlockPos());
                     }
                 } else {
                     this.itemRenderer.render(stack, ItemDisplayContext.FIXED, true, poseStack, bufferIn, combinedLightIn,

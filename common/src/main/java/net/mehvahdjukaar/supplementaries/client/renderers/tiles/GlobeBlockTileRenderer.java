@@ -2,13 +2,12 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
 import com.mojang.blaze3d.shaders.Uniform;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
 import net.mehvahdjukaar.supplementaries.client.renderers.SphereRenderType;
@@ -25,13 +24,17 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import org.joml.Vector3f;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -128,12 +131,13 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
 
         this.renderGlobe(tile.getRenderData(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn,
-                tile.isSepia(), tile.getLevel());
+                tile.isSepia(), tile.getLevel(), tile.getBlockPos());
 
         matrixStackIn.popPose();
     }
 
-    public void renderGlobe(Pair<GlobeManager.Model, ResourceLocation> data, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay, boolean isSepia, Level level) {
+    public void renderGlobe(Pair<GlobeManager.Model, ResourceLocation> data, PoseStack poseStack, MultiBufferSource buffer,
+                            int light, int overlay, boolean isSepia, Level level, BlockPos pos) {
         if (data == null) return;
         poseStack.pushPose();
         poseStack.mulPose(RotHlpr.X180);
@@ -144,18 +148,25 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
         if (texture == null) {
-            if(true){
-                builder = buffer.getBuffer(SphereRenderType.STATIC_NOISE.apply(ModTextures.GLOBE_TEXTURE));
-                int lu = VertexUtil.lightU(light);
-                int lv = VertexUtil.lightV(light);
-                poseStack.last().pose().setRotationYXZ(0,0,0);
-                Camera cam = Minecraft.getInstance().gameRenderer.getMainCamera();
+            if (true) {
+                builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(ModTextures.GLOBE_TEXTURE));
+                poseStack.last().pose().setRotationYXZ(0, 0, 0);
+
+                Minecraft mc = Minecraft.getInstance();
+                Camera cam = mc.gameRenderer.getMainCamera();
                 poseStack.mulPose(cam.rotation());
-             //   Uniform intensity = ClientRegistry.SPHERE_SHADER.get().getUniform("CameraPos");
-            //    intensity.set(cam.getPosition().toVector3f());
-                poseStack.mulPose(Axis.YP.rotationDegrees(180));
-float radius = 0.25f;
-                VertexUtil.addQuad(builder, poseStack, -radius, -radius, radius, radius, lu, lv);
+
+                try {
+                    ClientRegistry.SPHERE_SHADER.get().getUniform("ScreenSize")
+                            .set(mc.getWindow().getWidth(), mc.getWindow().getHeight());
+                    ClientRegistry.SPHERE_SHADER.get().getUniform("CameraPos")
+                            .set(cam.getPosition().toVector3f());
+
+                } catch (Exception e) {
+                    //ignore
+                }
+                float radius = 0.8f;
+                addSphereQuad(poseStack, builder, radius, light);
                 poseStack.popPose();
                 return;
             }
@@ -166,7 +177,7 @@ float radius = 0.25f;
                 Uniform intensity = ClientRegistry.NOISE_SHADER.get().getUniform("Intensity");
                 if (intensity != null) intensity.set(Mth.cos(Mth.PI * c / 4f));
                 poseStack.scale(v + 0.5f + 0.01f, 1, 1);
-                builder = buffer.getBuffer(NoiseRenderType.STATIC_NOISE.apply(ModTextures.GLOBE_TEXTURE));
+                builder = buffer.getBuffer(NoiseRenderType.RENDER_TYPE.apply(ModTextures.GLOBE_TEXTURE));
             } else {
                 RenderType renderType = GlobeManager.getRenderType(level, isSepia);
                 builder = buffer.getBuffer(renderType);
@@ -177,6 +188,48 @@ float radius = 0.25f;
 
         model.render(poseStack, builder, light, overlay, -1);
         poseStack.popPose();
+    }
+
+    private static void addSphereQuad(PoseStack stack, VertexConsumer consumer, float radius, int light) {
+        var last = stack.last().pose();
+        Vector3f v1 = last.transformPosition(new Vector3f(radius, radius, 0));
+        Vector3f n1 = last.transformPosition(new Vector3f(0,0, 0))
+                .sub(v1);
+        consumer.addVertex(v1.x, v1.y, v1.z)
+                .setNormal(n1.x, n1.y, n1.z) //sphere center
+                .setColor(-1)
+                .setUv(0, 0)
+                .setLight(light)
+                .setOverlay(OverlayTexture.NO_OVERLAY);
+
+        Vector3f v2 = last.transformPosition(new Vector3f(-radius, radius, 0));
+        Vector3f n2 = last.transformPosition(new Vector3f(0,0, 0))
+                .sub(v2);
+        consumer.addVertex(v2.x, v2.y, v2.z)
+                .setNormal(n2.x, n2.y, n2.z) //sphere center
+                .setColor(-1)
+                .setUv(0, 1)
+                .setLight(light)
+                .setOverlay(OverlayTexture.NO_OVERLAY);
+        Vector3f v3 = last.transformPosition(new Vector3f(-radius, -radius, 0));
+        Vector3f n3 = last.transformPosition(new Vector3f(0,0, 0))
+                .sub(v3);
+        consumer.addVertex(v3.x, v3.y, v3.z)
+                .setNormal(n3.x, n3.y, n3.z) //sphere center
+                .setColor(-1)
+                .setUv(1, 1)
+                .setLight(light)
+                .setOverlay(OverlayTexture.NO_OVERLAY);
+        Vector3f v4 = last.transformPosition(new Vector3f(radius, -radius, 0));
+        Vector3f n4 = last.transformPosition(new Vector3f(0,0, 0))
+                .sub(v4);
+        consumer.addVertex(v4.x, v4.y, v4.z)
+                .setNormal(n4.x, n4.y, n4.z) //sphere center
+                .setColor(-1)
+                .setUv(1, 0)
+                .setLight(light)
+                .setOverlay(OverlayTexture.NO_OVERLAY);
+
     }
 
 }

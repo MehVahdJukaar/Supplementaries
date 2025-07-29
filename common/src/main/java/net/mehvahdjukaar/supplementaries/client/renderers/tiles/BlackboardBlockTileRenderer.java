@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
@@ -82,7 +81,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             poseStack.mulPose(RotHlpr.rot(dir));
             poseStack.translate(-0.5, -0.5, 0.1875 - 0.001);
 
-            VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, NoiseRenderType.STATIC_NOISE);
+            VertexConsumer builder = ModMaterials.BLACKBOARD_OUTLINE.buffer(bufferSource, NoiseRenderType.RENDER_TYPE);
 
 
             VertexUtil.addQuad(builder, poseStack, 0, 0, 1, 1,

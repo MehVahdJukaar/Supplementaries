@@ -144,7 +144,8 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
                                                 Pair.of(GlobeManager.Model.GLOBE, null);
 
                                 GlobeBlockTileRenderer.INSTANCE.renderGlobe(pair, matrixStackIn, bufferIn,
-                                        combinedLightIn, combinedOverlayIn, sepia, tile.getLevel());
+                                        combinedLightIn, combinedOverlayIn, sepia, tile.getLevel(),
+                                        tile.getBlockPos());
                             }
                             matrixStackIn.popPose();
                             return;

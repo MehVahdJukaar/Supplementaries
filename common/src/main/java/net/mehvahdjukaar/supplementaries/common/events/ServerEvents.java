@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.core.fluid.SoftFluidInternal;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;

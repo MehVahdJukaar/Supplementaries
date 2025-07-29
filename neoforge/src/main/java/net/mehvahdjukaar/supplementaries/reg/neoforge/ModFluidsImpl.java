@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg.neoforge;
 
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;

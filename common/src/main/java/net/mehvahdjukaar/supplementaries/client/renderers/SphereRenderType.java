@@ -11,7 +11,7 @@ import java.util.function.Function;
 
 public abstract class SphereRenderType extends RenderType {
 
-    public static final Function<ResourceLocation, RenderType> STATIC_NOISE = Util.memoize((resourceLocation) -> {
+    public static final Function<ResourceLocation, RenderType> RENDER_TYPE = Util.memoize((resourceLocation) -> {
         CompositeState compositeState = CompositeState.builder()
                 .setShaderState(new ShaderStateShard(ClientRegistry.SPHERE_SHADER::get))
                 .setTextureState(new TextureStateShard(resourceLocation, false, false))

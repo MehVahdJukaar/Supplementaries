@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public abstract class NoiseRenderType extends RenderType {
 
-    public static final Function<ResourceLocation, RenderType> STATIC_NOISE = Util.memoize((resourceLocation) -> {
+    public static final Function<ResourceLocation, RenderType> RENDER_TYPE = Util.memoize((resourceLocation) -> {
         CompositeState compositeState = RenderType.CompositeState.builder()
                 .setShaderState(new ShaderStateShard(ClientRegistry.NOISE_SHADER::get))
                 .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
