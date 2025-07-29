@@ -3,13 +3,13 @@
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"textures": {
-		"0": "supplementaries:block/buntings/wall_bunting_white",
-		"particle": "supplementaries:block/buntings/wall_bunting_white"
+		"0": "supplementaries:block/buntings/wall_bunting_gray",
+		"particle": "supplementaries:block/buntings/wall_bunting_gray"
 	},
 	"elements": [
 		{
-			"from": [0, 0, 8],
-			"to": [16, 16, 8],
+			"from": [0, 0, 0.25],
+			"to": [16, 16, 0.25],
 			"faces": {
 				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#0"}

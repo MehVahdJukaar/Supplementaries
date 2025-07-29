@@ -9,7 +9,7 @@ COLORS = [
 
 def generate_all_colors_from_file(file_path):
     if not os.path.isfile(file_path) or not file_path.endswith(".json"):
-        print("Provided path is not a valid .json file.")
+        print("Provided path is not a valid .json file. " + file_path)
         return
 
     filename = os.path.basename(file_path)
@@ -59,4 +59,4 @@ if __name__ == "__main__":
     parser.add_argument("file_path", type=str, help="Path to the .json file containing a base color name.")
     args = parser.parse_args()
 
-    generate_all_colors_from_file("./common/src/main/resources/assets/supplementaries/"+ args.file_path+".json")
+    generate_all_colors_from_file("./common/src/main/resources/"+ args.file_path+".json")

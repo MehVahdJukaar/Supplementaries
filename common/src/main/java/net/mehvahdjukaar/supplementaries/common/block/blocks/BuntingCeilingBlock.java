@@ -3,9 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -13,6 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class BuntingCeilingBlock extends Block implements IColored {
@@ -21,6 +26,9 @@ public class BuntingCeilingBlock extends Block implements IColored {
             BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BuntingWallBlock::properties)
     ).apply(i, BuntingWallBlock::new));
 
+    protected static final VoxelShape SHAPE_Z= Block.box(0.0D, 0.0D, 7.0D, 16.0D, 16.0D, 9.0D);
+    protected static final VoxelShape SHAPE_X = MthUtils.rotateVoxelShape(SHAPE_Z, Direction.SOUTH);
+
     private static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
     private final DyeColor color;
@@ -28,6 +36,11 @@ public class BuntingCeilingBlock extends Block implements IColored {
     public BuntingCeilingBlock(DyeColor color, Properties properties) {
         super(properties);
         this.color = color;
+    }
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return state.getValue(AXIS) == Direction.Axis.Z ? SHAPE_Z : SHAPE_X;
     }
 
     @Override

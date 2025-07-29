@@ -143,19 +143,21 @@ public class RegUtils {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
 //TODO: fire flammability
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
-            String name = baseName + "_" + color.getName();
             BlockBehaviour.Properties prop = BlockBehaviour.Properties.of()
                     .ignitedByLava()
                     .mapColor(color.getMapColor())
                     .instabreak()
                     .noOcclusion()
                     .sound(SoundType.WOOL);
-            Supplier<Block> wallBlock = regBlock(name+"_wall", () -> new BuntingWallBlock(color, prop));
+            Supplier<Block> wallBlock = regBlock(baseName + "_wall_" + color.getName(),
+                    () -> new BuntingWallBlock(color, prop));
 
-            Supplier<Block> ceilingBlock = regBlock(name, () -> new BuntingCeilingBlock(color, prop));
+            Supplier<Block> ceilingBlock = regBlock(baseName + "_" + color.getName(),
+                    () -> new BuntingCeilingBlock(color, prop));
             map.put(color, ceilingBlock);
+            ModRegistry.BUNTING_WALL_BLOCKS.put(color, wallBlock);
 
-            regItem(name, () -> new BuntingItem(ceilingBlock.get(), wallBlock.get(),
+            regItem(baseName + "_" + color.getName(), () -> new BuntingItem(ceilingBlock.get(), wallBlock.get(),
                     new Item.Properties(),
                     Direction.UP));
         }

@@ -234,6 +234,8 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.ROPE_KNOT.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.LUNCH_BASKET.get(), cutout);
         ModRegistry.CANDLE_HOLDERS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), cutout));
+        ModRegistry.BUNTING_BLOCKS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), cutout));
+        ModRegistry.BUNTING_WALL_BLOCKS.values().forEach(c -> ClientHelper.registerRenderType(c.get(), cutout));
 
         ClientHelper.registerRenderType(ModFluids.LUMISENE_BLOCK.get(), cutoutMipped);
         ClientHelper.registerFluidRenderType(ModFluids.LUMISENE_FLUID.get(), RenderType.translucent());
