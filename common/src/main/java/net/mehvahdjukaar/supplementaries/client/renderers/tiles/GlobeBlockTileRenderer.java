@@ -27,7 +27,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -118,28 +117,34 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
     }
 
     @Override
-    public void render(GlobeBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
+    public void render(GlobeBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        matrixStackIn.pushPose();
-        matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.mulPose(RotHlpr.rot(tile.getDirection()));
-        matrixStackIn.translate(0, 0.0625, 0);
-        matrixStackIn.mulPose(RotHlpr.X22);
-        matrixStackIn.mulPose(Axis.YP.rotationDegrees(-tile.getRotation(partialTicks)));
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0.5, 0.5);
+        poseStack.mulPose(RotHlpr.rot(tile.getDirection()));
+        poseStack.translate(0, 0.0625, 0);
+        poseStack.mulPose(RotHlpr.X22);
+        poseStack.mulPose(Axis.YP.rotationDegrees(-tile.getRotation(partialTicks)));
 
+PoseStack test = new PoseStack();
+test.mulPose(RotHlpr.X22);
 
-        this.renderGlobe(tile.getRenderData(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn,
+var angles = poseStack.last().pose().getEulerAnglesXYZ(new Vector3f());
+
+var angles2 = test.last().pose().getEulerAnglesXYZ(new Vector3f());
+
+        this.renderGlobe(tile.getRenderData(), poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
                 tile.isSepia(), tile.getLevel(), tile.getBlockPos());
 
-        matrixStackIn.popPose();
+        poseStack.popPose();
     }
 
     public void renderGlobe(Pair<GlobeManager.Model, ResourceLocation> data, PoseStack poseStack, MultiBufferSource buffer,
                             int light, int overlay, boolean isSepia, Level level, BlockPos pos) {
         if (data == null) return;
         poseStack.pushPose();
-        poseStack.mulPose(RotHlpr.X180);
+     //   poseStack.mulPose(RotHlpr.X180);
         ResourceLocation texture = ClientConfigs.Blocks.GLOBE_RANDOM.get() ? data.getSecond() :
                 GlobeManager.Type.EARTH.getTexture();
 
@@ -147,11 +152,12 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
         if (texture == null) {
-            if (pos.getX() % 2 == 0) {
-                builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(ModTextures.GLOBE_TEXTURE));
+            if (true) {
+                builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(
+                      ModTextures.GLOBE_TEXTURE));
 
-                var facing = poseStack.last().transformNormal(
-                        Direction.NORTH.step(), new Vector3f());
+                Vector3f eulerAngles =  poseStack.last().pose().getEulerAnglesXYZ(new Vector3f());
+
 
                 poseStack.last().pose().setRotationYXZ(0, 0, 0);
 
@@ -169,7 +175,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                     //ignore
                 }
                 float radius = 0.8f;
-                addSphereQuad(poseStack, builder, radius, light, facing);
+                addSphereQuad(poseStack, builder, radius, light, eulerAngles);
                 poseStack.popPose();
                 return;
             }
@@ -193,42 +199,48 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         poseStack.popPose();
     }
 
-    private static void addSphereQuad(PoseStack stack, VertexConsumer consumer, float radius, int light, Vector3f dir) {
-        var last = stack.last().pose();
-        var spherePos = last.transformPosition(new Vector3f(0, 0, 0));
-        Vector3f v1 = last.transformPosition(new Vector3f(radius, radius, 0));
+    private static void addSphereQuad(PoseStack stack, VertexConsumer consumer, float radius, int light, Vector3f rot) {
+        var matrix = stack.last().pose();
+        var spherePos = matrix.transformPosition(new Vector3f(0, 0, 0));
+        matrix.translate(0,0,0.08f);
+
+        Vector3f v1 = matrix.transformPosition(new Vector3f(radius, radius, 0));
+        Vector3f centerRel1 = spherePos.sub(v1, new Vector3f());
         consumer.addVertex(v1.x, v1.y, v1.z)
-                .setNormal(dir.x, dir.y, dir.z) //sphere center
+                .setNormal(centerRel1.x, centerRel1.y, centerRel1.z) //sphere center
                 .setColor(-1)
                 .setLight(light);
-        addSpherePos(consumer, spherePos);
+        addExtraVec3f(consumer, rot);
 
-        Vector3f v2 = last.transformPosition(new Vector3f(-radius, radius, 0));
+        Vector3f v2 = matrix.transformPosition(new Vector3f(-radius, radius, 0));
+        Vector3f centerRel2 = spherePos.sub(v2, new Vector3f());
         consumer.addVertex(v2.x, v2.y, v2.z)
-                .setNormal(dir.x, dir.y, dir.z) //sphere center
+                .setNormal(centerRel2.x, centerRel2.y, centerRel2.z) //sphere center
                 .setColor(-1)
                 .setLight(light);
-        addSpherePos(consumer, spherePos);
+        addExtraVec3f(consumer, rot);
 
-        Vector3f v3 = last.transformPosition(new Vector3f(-radius, -radius, 0));
+        Vector3f v3 = matrix.transformPosition(new Vector3f(-radius, -radius, 0));
+        Vector3f centerRel3 = spherePos.sub(v3, new Vector3f());
         consumer.addVertex(v3.x, v3.y, v3.z)
-                .setNormal(dir.x, dir.y, dir.z) //sphere center
+                .setNormal(centerRel3.x, centerRel3.y, centerRel3.z) //sphere center
                 .setColor(-1)
                 .setLight(light);
-        addSpherePos(consumer, spherePos);
+        addExtraVec3f(consumer, rot);
 
-        Vector3f v4 = last.transformPosition(new Vector3f(radius, -radius, 0));
+        Vector3f v4 = matrix.transformPosition(new Vector3f(radius, -radius, 0));
+        Vector3f centerRel4 = spherePos.sub(v4, new Vector3f());
         consumer.addVertex(v4.x, v4.y, v4.z)
-                .setNormal(dir.x, dir.y, dir.z) //sphere center
+                .setNormal(centerRel4.x, centerRel4.y, centerRel4.z) //sphere center
                 .setColor(-1)
                 .setLight(light);
-        addSpherePos(consumer, spherePos);
+        addExtraVec3f(consumer, rot);
 
     }
 
-    private static void addSpherePos(VertexConsumer consumer, Vector3f dir) {
-        consumer.setUv(dir.x, dir.y);
-        var shorts = floatToTwoShorts(dir.z);
+    private static void addExtraVec3f(VertexConsumer consumer, Vector3f vec) {
+        consumer.setUv(vec.x, vec.y);
+        var shorts = floatToTwoShorts(vec.z);
         consumer.setUv1(shorts[0], shorts[1]);
     }
 

@@ -17,54 +17,13 @@ uniform sampler2D Sampler0;
 in vec4 lightMapColor;
 
 in vec3 spherePos;
-in vec3 sphereDir;
+in mat3 sphereRot;
 in float vertexDistance;
-
-in vec4 normal;
-in vec4 normal2;
-in vec4 normal3;
+in vec3 rot;
 
 out vec4 fragColor;
 
 const float Radius = 0.25;
-
-const vec3 originalNorth = vec3(0.0, 0.0, 1.0); // where 'north' currently points
-
-mat3 rotationBetweenVectors(vec3 from, vec3 to) {
-    vec3 v = normalize(cross(from, to));
-    float c = dot(from, to);
-    float k = 1.0 / (1.0 + c);
-
-    mat3 vx = mat3(
-    0.0, -v.z, v.y,
-    v.z, 0.0, -v.x,
-    -v.y, v.x, 0.0
-    );
-
-    return mat3(1.0) + vx + vx * vx * k;
-}
-
-vec3 rebaseRelativeToBase(vec3 baseVec, vec3 vecToRebase) {
-    // Step 1: Normalize the base vector to define new X axis
-    vec3 xAxis = normalize(baseVec);
-
-    // Step 2: Create an arbitrary vector to build a perpendicular Y axis
-    // Pick a vector not parallel to xAxis
-    vec3 arbitrary = abs(xAxis.x) < 0.99 ? vec3(1, 0, 0) : vec3(0, 1, 0);
-
-    // Step 3: Build the Y axis (perpendicular to xAxis)
-    vec3 yAxis = normalize(cross(xAxis, arbitrary));
-
-    // Step 4: Build the Z axis (perpendicular to both X and Y)
-    vec3 zAxis = cross(xAxis, yAxis);
-
-    // Step 5: Express vecToRebase in the new basis
-    return vec3(
-    dot(vecToRebase, xAxis),
-    dot(vecToRebase, yAxis),
-    dot(vecToRebase, zAxis)
-    );
-}
 
 // Returns intersection distance 't' along ray or -1 if no hit
 float intersectSphere(vec3 rayOrigin, vec3 rayDir, vec3 center, float radius) {
@@ -77,73 +36,77 @@ float intersectSphere(vec3 rayOrigin, vec3 rayDir, vec3 center, float radius) {
     return (t >= 0.0) ? t : (-b + sqrt(disc) >= 0.0 ? -b + sqrt(disc) : -1.0);
 }
 
+vec2 cubeMapUV(vec3 direction) {
+    float x = direction.x;
+    float y = direction.y;
+    float z = direction.z;
 
-// Map 3D normalized direction to UV in your 32x16 texture layout
-vec2 cubeMapUV(vec3 dir) {
-    // Absolute values of components
-    vec3 absDir = abs(dir);
+    float abs_x = abs(x);
+    float abs_y = abs(y);
+    float abs_zf = abs(-z); // north = -z
 
-    // Determine major axis face
-    float maxAxis = max(max(absDir.x, absDir.y), absDir.z);
+    float max_axis;
+    float uc, vc;
+    float u, v;
+    vec2 base_uv;
 
-    vec2 uv;
-    vec2 faceUV; // local face UV in [0,1]
-    ivec2 facePos; // position of the face block in the texture grid
-
-    if (maxAxis == absDir.x) {
-        // X major axis
-        if (dir.x > 0.0) {
-            // Positive X face = east
-            facePos = ivec2(2,1); // east
-            // Map yz to uv
-            faceUV = vec2( ( -dir.z / absDir.x + 1.0 ) * 0.5, ( dir.y / absDir.x + 1.0 ) * 0.5 );
+    if (abs_x >= abs_y && abs_x >= abs_zf) {
+        max_axis = abs_x;
+        if (x > 0.0) {
+            // East → leftmost cell in bottom row
+            uc = z;
+            vc = -y;
+            u = 0.5 * (uc / max_axis + 1.0);
+            v = 0.5 * (vc / max_axis + 1.0);
+            base_uv = vec2(2.0 / 4.0, 1.0 / 2.0);
         } else {
-            // Negative X face = west
-            facePos = ivec2(0,1); // west
-            // Map zy to uv (reverse z)
-            faceUV = vec2( ( dir.z / absDir.x + 1.0 ) * 0.5, ( dir.y / absDir.x + 1.0 ) * 0.5 );
+            // West → 3rd cell in bottom row
+            uc = -z;
+            vc = -y;
+            u = 0.5 * (uc / max_axis + 1.0);
+            v = 0.5 * (vc / max_axis + 1.0);
+            base_uv = vec2(0.0 / 4.0, 1.0 / 2.0);
         }
-    } else if (maxAxis == absDir.y) {
-        // Y major axis
-        if (dir.y > 0.0) {
-            // Positive Y face = up
-            facePos = ivec2(1,0); // up
-            // Map xz to uv
-            faceUV = vec2( ( dir.x / absDir.y + 1.0 ) * 0.5, ( -dir.z / absDir.y + 1.0 ) * 0.5 );
+    } else if (abs_y >= abs_x && abs_y >= abs_zf) {
+        max_axis = abs_y;
+        if (y > 0.0) {
+            // Up → 2nd cell in top row
+            uc = x;
+            vc = -z;
+            u = 0.5 * (uc / max_axis + 1.0);
+            v = 0.5 * (vc / max_axis + 1.0);
+            base_uv = vec2(1.0 / 4.0, 0.0 / 2.0);
         } else {
-            // Negative Y face = down
-            facePos = ivec2(2,0); // down
-            // Map xz to uv
-            faceUV = vec2( ( dir.x / absDir.y + 1.0 ) * 0.5, ( dir.z / absDir.y + 1.0 ) * 0.5 );
+            // Down → 3rd cell in top row
+            uc = x;
+            vc = z;
+            u = 0.5 * (uc / max_axis + 1.0);
+            v = 0.5 * (vc / max_axis + 1.0);
+            base_uv = vec2(2.0 / 4.0, 0.0 / 2.0);
         }
     } else {
-        // Z major axis
-        if (dir.z > 0.0) {
-            // Positive Z face = south
-            facePos = ivec2(3,1); // south
-            // Map xy to uv
-            faceUV = vec2( ( -dir.x / absDir.z + 1.0 ) * 0.5, ( dir.y / absDir.z + 1.0 ) * 0.5 );
+        max_axis = abs_zf;
+        if (-z > 0.0) {
+            // North → 2nd cell in bottom row
+            uc = x;
+            vc = -y;
+            u = 0.5 * (uc / max_axis + 1.0);
+            v = 0.5 * (vc / max_axis + 1.0);
+            base_uv = vec2(1.0 / 4.0, 1.0 / 2.0);
         } else {
-            // Negative Z face = north
-            facePos = ivec2(1,1); // north
-            // Map xy to uv
-            faceUV = vec2( ( dir.x / absDir.z + 1.0 ) * 0.5, ( dir.y / absDir.z + 1.0 ) * 0.5 );
+            // South → 4th cell in bottom row
+            uc = -x;
+            vc = -y;
+            u = 0.5 * (uc / max_axis + 1.0);
+            v = 0.5 * (vc / max_axis + 1.0);
+            base_uv = vec2(3.0 / 4.0, 1.0 / 2.0);
         }
     }
 
-    // Convert block coords (in 8x8 blocks) to normalized UV on the whole texture
-    // Each block is 8x8 pixels; total texture is 32x16 pixels (4 blocks wide x 2 blocks tall)
-    float blockWidth = 8.0 / 32.0;
-    float blockHeight = 8.0 / 16.0;
-
-    uv = vec2(
-    facePos.x * blockWidth + faceUV.x * blockWidth,
-    facePos.y * blockHeight + faceUV.y * blockHeight
-    );
-
-    return uv;
+    // Scale u,v from local face space (0–1) to global atlas space
+    vec2 final_uv = base_uv + vec2(u, v) * vec2(1.0 / 4.0, 1.0 / 2.0);
+    return final_uv;
 }
-
 
 void main() {
     // Screen -> NDC
@@ -173,7 +136,7 @@ void main() {
     // Convert normal to world space by inverse rotation of ModelView
     vec3 normal_world = normalize(inverse(mat3(ModelViewMat)) * normal_view);
 
-    vec3 rotatedNormal = rebaseRelativeToBase(normal3.xyz, normal_world);
+    vec3 rotatedNormal = sphereRot *  normal_world;
 
     vec2 uv = cubeMapUV(rotatedNormal);
     vec4 baseColor = texture(Sampler0, uv);

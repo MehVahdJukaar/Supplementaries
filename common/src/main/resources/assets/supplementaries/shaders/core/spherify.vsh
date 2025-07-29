@@ -23,16 +23,15 @@ uniform vec3 Light1_Direction;
 out float vertexDistance;
 
 out vec4 lightMapColor;
-out vec4 normal;
-out vec4 normal2;
-out vec4 normal3;
-
-out vec3 vertexPos;   // position in view space for the fragment
-out vec3 spherePos; // position of the sphere in clip
-out vec3 sphereDir; // position of the sphere in clip
 
 
-vec3 decodeDir(vec2 uv, ivec2 uv1) {
+out vec3 vertexPos;// position in view space for the fragment
+out vec3 spherePos;// position of the sphere in clip
+out mat3 sphereRot;// position of the sphere in clip
+
+out vec3 rot;
+
+vec3 decodeExtraVector(vec2 uv, ivec2 uv1) {
     // Combine the two 16-bit shorts into a 32-bit int
     int high = uv1.x & 0xFFFF;
     int low  = uv1.y & 0xFFFF;
@@ -45,6 +44,21 @@ vec3 decodeDir(vec2 uv, ivec2 uv1) {
     return vec3(uv, z);
 }
 
+mat3 eulerXYZToMatrix(vec3 euler) {
+    float cx = cos(euler.x);
+    float sx = sin(euler.x);
+    float cy = cos(euler.y);
+    float sy = sin(euler.y);
+    float cz = cos(euler.z);
+    float sz = sin(euler.z);
+
+    // Combine the rotations: R = Rz * Ry * Rx
+    return mat3(
+    cy * cz,                      -cy * sz,                     sy,
+    cz * sx * sy + cx * sz,       cx * cz - sx * sy * sz,      -cy * sx,
+    -cx * cz * sy + sx * sz,      cz * sx + cx * sy * sz,       cx * cy
+    );
+}
 
 void main() {
 
@@ -56,12 +70,13 @@ void main() {
 
     vertexPos = posView.xyz;
 
-    spherePos = (ModelViewMat * vec4(decodeDir(UV0, UV1),1)).xyz;
+    vec3 extraVec = decodeExtraVector(UV0, UV1);
+
+    spherePos = (ModelViewMat * vec4(Position + Normal, 1)).xyz;
+
+    rot = extraVec;
 
     //this is the direction of my object
-    sphereDir =  (     ModelViewMat * vec4(Normal, 1)).xyz;
+    sphereRot = eulerXYZToMatrix(extraVec);
 
-    normal = ProjMat * ModelViewMat * vec4(Normal, 1.0);
-    normal2 =   ModelViewMat * vec4(Normal, 1.0);
-    normal3 =    vec4(Normal, 1.0);
 }

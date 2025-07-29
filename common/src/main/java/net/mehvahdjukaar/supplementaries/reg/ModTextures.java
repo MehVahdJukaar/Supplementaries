@@ -32,6 +32,8 @@ public class ModTextures {
 
     //entities
     public static final ResourceLocation GLOBE_TEXTURE = Supplementaries.res("textures/entity/globes/globe_the_world.png");
+    public static final ResourceLocation GLOBE_TEXTURE_SEPIA = Supplementaries.res("textures/entity/globes/globe_the_world_sepia.png");
+    public static final ResourceLocation GLOBE_DEBUG_TEXTURE = Supplementaries.res("textures/entity/globes/globe_debug.png");
     public static final ResourceLocation GLOBE_FLAT_TEXTURE = Supplementaries.res("textures/entity/globes/globe_flat.png");
     public static final ResourceLocation GLOBE_MOON_TEXTURE = Supplementaries.res("textures/entity/globes/globe_moon.png");
     public static final ResourceLocation GLOBE_SUN_TEXTURE = Supplementaries.res("textures/entity/globes/globe_sun.png");
