@@ -32,7 +32,7 @@ import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
-import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
+import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
@@ -191,7 +191,7 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.WIND_VANE.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.CONFETTI_LITTER.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.FIRE_PIT.get(), cutout);
-        ClientHelper.registerRenderType(ModRegistry.BUNTING_BLOCK.get(), cutout);
+        ClientHelper.registerRenderType(ModRegistry.BUNTING_ROPE_BLOCK.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.BOOK_PILE.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.BOOK_PILE_H.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.GLOBE.get(), cutout);
@@ -278,8 +278,8 @@ public class ClientRegistry {
         ItemProperties.register(ModRegistry.GLOBE_ITEM.get(), Supplementaries.res("type"),
                 new GlobeProperty());
 
-        ItemProperties.register(ModRegistry.BUNTING.get(), Supplementaries.res("dye"),
-                (stack, world, entity, s) -> BuntingItem.getColor(stack).getId() / 100f);
+        ItemProperties.register(ModRegistry.BUNTING_OLD.get(), Supplementaries.res("dye"),
+                (stack, world, entity, s) -> BuntingItemOld.getColor(stack).getId() / 100f);
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());

@@ -1,5 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.map.ExpandedMapData;
@@ -8,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
@@ -26,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -36,6 +41,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
+
+    private static final MapCodec<FlagBlock> CODEC = RecordCodecBuilder.mapCodec(i ->i.group(
+            DyeColor.CODEC.fieldOf("color").forGetter(FlagBlock::getColor),
+            BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(FlagBlock::properties)
+    ).apply(i, FlagBlock::new));
+
     protected static final VoxelShape SHAPE = Block.box(4, 0D, 4D, 12.0D, 16.0D, 12.0D);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
@@ -48,6 +59,11 @@ public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
 
         if(PlatHelper.getPlatform().isFabric())
             RegHelper.registerBlockFlammability(this,60,60);
+    }
+
+    @Override
+    protected MapCodec<? extends Block> codec() {
+        return CODEC;
     }
 
     @Override

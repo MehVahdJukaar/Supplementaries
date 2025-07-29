@@ -10,18 +10,14 @@ import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CandleHolderBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
-import net.mehvahdjukaar.supplementaries.common.items.CannonBoatItem;
-import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
-import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
-import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
+import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.BuzzierBeesCompat;
 import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
@@ -137,6 +133,31 @@ public class RegUtils {
         }
         if (CompatHandler.CAVE_ENHANCEMENTS) {
             CaveEnhancementsCompat.registerCandle(baseName);
+        }
+        return map;
+    }
+
+
+    //just ceiling buntings will be returned here
+    public static Map<DyeColor, Supplier<Block>> registerBuntings(String baseName) {
+        Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
+//TODO: fire flammability
+        for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
+            String name = baseName + "_" + color.getName();
+            BlockBehaviour.Properties prop = BlockBehaviour.Properties.of()
+                    .ignitedByLava()
+                    .mapColor(color.getMapColor())
+                    .instabreak()
+                    .noOcclusion()
+                    .sound(SoundType.WOOL);
+            Supplier<Block> wallBlock = regBlock(name+"_wall", () -> new BuntingWallBlock(color, prop));
+
+            Supplier<Block> ceilingBlock = regBlock(name, () -> new BuntingCeilingBlock(color, prop));
+            map.put(color, ceilingBlock);
+
+            regItem(name, () -> new BuntingItem(ceilingBlock.get(), wallBlock.get(),
+                    new Item.Properties(),
+                    Direction.UP));
         }
         return map;
     }

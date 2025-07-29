@@ -54,10 +54,6 @@ public class GlobeManager {
         return id;
     }
 
-    public static ResourceLocation getEarthTexture(boolean isSepia) {
-        return SpecialGlobe.EARTH.getTexture(isSepia);
-    }
-
     public static GlobeRenderData computeRenderData(boolean sheared, @Nullable Component customName) {
         if (sheared) {
             return SpecialGlobe.SHEARED;

@@ -120,26 +120,20 @@ void main() {
 
     // Unproject to view space
     //problem must be somewhere here
-
     mat4 invProj = inverse(ProjMat);
     vec4 viewNear = invProj * clipNear;
     viewNear /= viewNear.w;
     vec4 viewFar  = invProj * clipFar;
     viewFar /= viewFar.w;
 
-    //mega hack to alleviate the translation issue... wont solve it
-    vec4 transl = ProjMat[3];
-    transl[2] = 0;
-    vec3 rayOrigin =  -transl.xyz+vec3(0.0).xyz;
-    vec3 sp =   spherePos;
-
+    vec3 rayOrigin = vec3(0.0).xyz;
     vec3 rayDir = normalize(viewFar.xyz - viewNear.xyz);
 
-    float t = intersectSphere(rayOrigin, rayDir, sp, Radius);
+    float t = intersectSphere(rayOrigin, rayDir, spherePos, Radius);
     if (t < 0.0) discard;
 
     vec3 intersect = rayOrigin + t * rayDir;
-    vec3 normal_view = normalize(intersect - sp);
+    vec3 normal_view = normalize(intersect - spherePos);
 
     // Convert normal to world space by inverse rotation of ModelView
     vec3 normal_world = normalize(inverse(mat3(ModelViewMat)) * normal_view);

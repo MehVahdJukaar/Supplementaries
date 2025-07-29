@@ -4,19 +4,16 @@ import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
-import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
+import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -300,7 +297,7 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
     }
 
     public static BlockState fromRope(BlockState state) {
-        RopeBuntingBlock block = ModRegistry.BUNTING_BLOCK.get();
+        RopeBuntingBlock block = ModRegistry.BUNTING_ROPE_BLOCK.get();
         BlockState s = block.withPropertiesOf(state);
         for (Direction dir : Direction.Plane.HORIZONTAL) {
             s = block.setConnection(dir, s, ((RopeBlock) state.getBlock()).hasConnection(dir, state));
@@ -323,8 +320,8 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         Optional<Direction> closest = findClosestConnection(state, pos, hitVec);
         if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && closest.isPresent()) {
             ItemStack held = tile.getItem(closest.get().get2DDataValue());
-            if (!held.isEmpty() && BuntingItem.getColor(held) != DyeColor.WHITE) {
-                BuntingItem.setColor(held, DyeColor.WHITE);
+            if (!held.isEmpty() && BuntingItemOld.getColor(held) != DyeColor.WHITE) {
+                BuntingItemOld.setColor(held, DyeColor.WHITE);
                 // set again just in case
                 tile.setItem(closest.get().get2DDataValue(), held);
                 tile.setChanged();

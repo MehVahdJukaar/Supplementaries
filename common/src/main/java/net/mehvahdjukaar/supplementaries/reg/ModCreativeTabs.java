@@ -12,7 +12,7 @@ import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
+import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -31,6 +31,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -326,11 +327,11 @@ public class ModCreativeTabs {
 
         if (CommonConfigs.isEnabled(ModConstants.BUNTING_NAME)) {
             e.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(ItemTags.BANNERS),
-                    BuntingItem.getColored(DyeColor.WHITE));
+                    ModRegistry.BUNTING_BLOCKS.get(DyeColor.WHITE).get());
 
             e.addAfter(CreativeModeTabs.COLORED_BLOCKS, i -> i.is(ItemTags.BANNERS),
-                    BlocksColorAPI.SORTED_COLORS.stream().map(BuntingItem::getColored)
-                            .toArray(ItemStack[]::new));
+                    ModRegistry.BUNTING_BLOCKS.values().stream().map(Supplier::get)
+                            .toArray(Block[]::new));
         }
 
         after(e, ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,

@@ -5,12 +5,10 @@ import net.mehvahdjukaar.moonlight.api.block.DynamicRenderedItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
-import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
+import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,7 +16,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -28,7 +25,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,8 +57,8 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         buntings.clear();
         for (Direction d : Direction.Plane.HORIZONTAL) {
             ItemStack stack = this.getItem(d.get2DDataValue());
-            if (stack.getItem() instanceof BuntingItem) {
-                DyeColor color = BuntingItem.getColor(stack);
+            if (stack.getItem() instanceof BuntingItemOld) {
+                DyeColor color = BuntingItemOld.getColor(stack);
                 if (color != null) {
                     this.buntings.put(d, color);
                 }
@@ -128,7 +124,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return stack.getItem() instanceof BuntingItem && getItem(index).isEmpty() &&
+        return stack.getItem() instanceof BuntingItemOld && getItem(index).isEmpty() &&
                 canSupportBunting(getBlockState(), index);
     }
 

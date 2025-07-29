@@ -13,9 +13,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
 import net.mehvahdjukaar.supplementaries.client.renderers.SphereRenderType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
@@ -24,12 +22,10 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import org.joml.Matrix4f;
@@ -126,7 +122,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         poseStack.mulPose(RotHlpr.rot(tile.getDirection()));
         poseStack.translate(0, 0.0625, 0);
         poseStack.mulPose(RotHlpr.X22);
-        poseStack.mulPose(Axis.YP.rotationDegrees(90-tile.getRotation(partialTicks)));
+        poseStack.mulPose(Axis.YP.rotationDegrees(90 - tile.getRotation(partialTicks)));
 
         PoseStack test = new PoseStack();
         test.mulPose(RotHlpr.X22);
@@ -146,7 +142,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         VertexConsumer builder;
 
-        if (globeModel == GlobeManager.Model.ROUND ||(noise && isSepia)) {
+        if (globeModel == GlobeManager.Model.ROUND || (noise && isSepia)) {
             poseStack.mulPose(RotHlpr.Z180);
             builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
             try {
@@ -168,8 +164,13 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
             if (intensity != null) intensity.set(Mth.cos(Mth.PI * c / 4f));
             poseStack.scale(v + 0.5f + 0.01f, 1, 1);
             builder = buffer.getBuffer(NoiseRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
-        } else  {
-            RenderType renderType =   RenderUtil.getEntityCutoutMipmapRenderType(data.getTexture(isSepia));
+        } else if (globeModel == GlobeManager.Model.FLAT) {
+            poseStack.scale(0.01f, 1, 1);
+            globeModel = GlobeManager.DEFAULT_DATA.getModel(isSepia);
+            RenderType renderType = RenderUtil.getEntityCutoutMipmapRenderType(GlobeManager.DEFAULT_DATA.getTexture(isSepia));
+            builder = buffer.getBuffer(renderType);
+        } else {
+            RenderType renderType = RenderUtil.getEntityCutoutMipmapRenderType(data.getTexture(isSepia));
             builder = buffer.getBuffer(renderType);
         }
         ModelPart model = this.models.get(globeModel);

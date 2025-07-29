@@ -34,7 +34,7 @@
             "apply": { "model": "supplementaries:block/rope_down"}
         },
         {
-          "apply": {"model": "supplementaries:block/bunting"}
+          "apply": {"model": "supplementaries:block/buntings/rope_bunting"}
         }
     ]
 }

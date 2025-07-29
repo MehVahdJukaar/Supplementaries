@@ -27,7 +27,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -447,16 +446,18 @@ public class ModRegistry {
                     RopeKnotBlockTile::new, ROPE_KNOT.get()));
 
     //buntings
-    public static final Supplier<Item> BUNTING = regItem(BUNTING_NAME, () -> new BuntingItem(new Item.Properties()
+    public static final Supplier<Item> BUNTING_OLD = regItem(BUNTING_NAME, () -> new BuntingItemOld(new Item.Properties()
             .component(DataComponents.BASE_COLOR, DyeColor.WHITE)));
 
-    public static final Supplier<RopeBuntingBlock> BUNTING_BLOCK = regBlock("rope_buntings", () -> new RopeBuntingBlock(
+    public static final Map<DyeColor, Supplier<Block>> BUNTING_BLOCKS = RegUtils.registerBuntings(BUNTING_NAME);
+
+    public static final Supplier<RopeBuntingBlock> BUNTING_ROPE_BLOCK = regBlock("rope_buntings", () -> new RopeBuntingBlock(
             BlockBehaviour.Properties.ofFullCopy(ROPE.get())
                     .dropsLike(ROPE.get())));
 
     public static final Supplier<BlockEntityType<BuntingBlockTile>> BUNTING_TILE = regTile(
             "rope_buntings", () -> PlatHelper.newBlockEntityType(
-                    BuntingBlockTile::new, BUNTING_BLOCK.get()));
+                    BuntingBlockTile::new, BUNTING_ROPE_BLOCK.get()));
 
     // wicker fence
     public static final Supplier<Block> WICKER_FENCE = regWithItem(WICKER_FENCE_NAME, () -> new WickerFenceBlock(
