@@ -28,6 +28,9 @@
     "minecraft:paper": {
       "burn_time": 25
     },
+    "#supplementaries:bunting": {
+      "burn_time": 25
+    },
     "#supplementaries:presents": {
       "burn_time": 100
     },

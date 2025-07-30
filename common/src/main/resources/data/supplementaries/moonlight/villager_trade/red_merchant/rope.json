@@ -17,11 +17,11 @@
     "max_trades": 12,
     "price": {
       "id": "minecraft:emerald",
-      "Count": 1
+      "count": 1
     },
     "offer": {
       "id": "supplementaries:rope",
-      "Count": 4
+      "count": 4
     }
   }
 }

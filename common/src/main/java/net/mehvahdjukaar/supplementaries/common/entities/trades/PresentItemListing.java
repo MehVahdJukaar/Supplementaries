@@ -59,8 +59,4 @@ public record PresentItemListing(ModItemListing original) implements ModItemList
         return original.getLevel();
     }
 
-    @Override
-    public boolean isValid() {
-        return original.isValid();
-    }
 }

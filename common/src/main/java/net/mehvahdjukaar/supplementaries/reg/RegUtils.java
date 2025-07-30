@@ -141,7 +141,6 @@ public class RegUtils {
     //just ceiling buntings will be returned here
     public static Map<DyeColor, Supplier<Block>> registerBuntings(String baseName) {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
-//TODO: fire flammability
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             BlockBehaviour.Properties prop = BlockBehaviour.Properties.of()
                     .ignitedByLava()
@@ -157,7 +156,7 @@ public class RegUtils {
             map.put(color, ceilingBlock);
             ModRegistry.BUNTING_WALL_BLOCKS.put(color, wallBlock);
 
-            regItem(baseName + "_" + color.getName(), () -> new BuntingItem(ceilingBlock.get(), wallBlock.get(),
+            regItem(baseName + "_" + color.getName(), () -> new BuntingItem(color, ceilingBlock.get(), wallBlock.get(),
                     new Item.Properties(),
                     Direction.UP));
         }

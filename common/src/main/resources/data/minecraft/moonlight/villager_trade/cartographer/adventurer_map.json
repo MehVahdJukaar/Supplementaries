@@ -19,7 +19,7 @@
   "price_max": 11,
   "price_secondary": {
     "id": "minecraft:compass",
-    "Count": 1
+    "count": 1
   },
   "level": 2
 }

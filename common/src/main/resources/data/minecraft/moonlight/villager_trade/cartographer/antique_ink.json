@@ -16,11 +16,11 @@
   "price_multiplier": 0.2,
   "price": {
     "id": "minecraft:emerald",
-    "Count": 8
+    "count": 8
   },
   "offer": {
     "id": "supplementaries:antique_ink",
-    "Count": 1
+    "count": 1
   },
   "level": 5
 }

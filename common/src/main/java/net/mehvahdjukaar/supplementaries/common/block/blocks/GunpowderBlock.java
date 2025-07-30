@@ -97,7 +97,6 @@ public class GunpowderBlock extends LightUpBlock {
             }
         }
         this.SHAPES_CACHE = builder.build();
-        RegHelper.registerBlockFlammability(this, 60, 300);
     }
 
     @Override

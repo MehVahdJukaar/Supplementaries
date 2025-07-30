@@ -8,7 +8,7 @@
   "price": "minecraft:emerald"
   "price_secondary": {
     "id": "minecraft:compass",
-    "Count": 1
+    "count": 1
   },
   "map_marker": "supplementaries:nether_portal"
 }

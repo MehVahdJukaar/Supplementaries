@@ -17,11 +17,11 @@
     "max_trades": 12,
     "price": {
       "id": "minecraft:emerald",
-      "Count": 1
+      "count": 1
     },
     "offer": {
       "id": "suppsquared:copper_lantern",
-      "Count": 1
+      "count": 1
     }
   }
 }

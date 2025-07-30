@@ -15,11 +15,11 @@
   "max_trades": 8,
   "price": {
     "id": "minecraft:emerald",
-    "Count": 6
+    "count": 6
   },
   "offer": {
     "id": "supplementaries:flax_seeds",
-    "Count": 1
+    "count": 1
   },
   "level": 1
 }

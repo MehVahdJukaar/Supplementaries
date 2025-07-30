@@ -18,15 +18,15 @@
     "price_multiplier": 0.2,
     "price": {
       "id": "minecraft:emerald",
-      "Count": 40
+      "count": 40
     },
     "price_secondary": {
       "id": "supplementaries:bomb",
-      "Count": 1
+      "count": 1
     },
     "offer": {
       "id": "supplementaries:bomb_blue",
-      "Count": 1
+      "count": 1
     }
   }
 }

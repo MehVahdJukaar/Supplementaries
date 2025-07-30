@@ -25,11 +25,11 @@
     "max_trades": 3,
     "price": {
       "id": "minecraft:emerald",
-      "Count": 4
+      "count": 4
     },
     "offer": {
       "id": "supplementaries:bomb_spiky",
-      "Count": 1
+      "count": 1
     }
   }
 }

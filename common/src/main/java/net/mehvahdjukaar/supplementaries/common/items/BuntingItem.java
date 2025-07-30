@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -18,10 +19,13 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.List;
 
-public class BuntingItem extends StandingAndWallBlockItem {
+public class BuntingItem extends StandingAndWallBlockItem implements IColored {
 
-    public BuntingItem(Block block, Block wallBlock, Properties properties, Direction attachmentDirection) {
+    private final DyeColor dyeColor;
+
+    public BuntingItem(DyeColor color, Block block, Block wallBlock, Properties properties, Direction attachmentDirection) {
         super(block, wallBlock, properties, attachmentDirection);
+        this.dyeColor = color;
     }
 
     @Override
@@ -52,4 +56,8 @@ public class BuntingItem extends StandingAndWallBlockItem {
         return super.useOn(context);
     }
 
+    @Override
+    public DyeColor getColor() {
+        return dyeColor;
+    }
 }

@@ -88,6 +88,7 @@ public class ModSetup {
     }
 
     private static void registerFlammables() {
+        //guess no need to use forge overrides unless we need the extra param
         //tile entities are not meant to be flammable
         RegHelper.registerBlockFlammability(ModRegistry.ROPE.get(), 60, 100);
         RegHelper.registerBlockFlammability(ModRegistry.FINE_WOOD.get(), 5, 20);
@@ -103,6 +104,15 @@ public class ModSetup {
         RegHelper.registerBlockFlammability(ModRegistry.GUNPOWDER_BLOCK.get(), 200, 0);
         RegHelper.registerBlockFlammability(ModFluids.LUMISENE_BLOCK.get(), 200, 0);
         RegHelper.registerBlockFlammability(ModRegistry.WICKER_FENCE.get(), 30, 60);
+        for(var f : ModRegistry.FLAGS.values()){
+            RegHelper.registerBlockFlammability(f.get(),60,60);
+        }
+        for(var b : ModRegistry.BUNTING_BLOCKS.values()){
+            RegHelper.registerBlockFlammability(b.get(), 60, 100);
+        }
+        for(var b : ModRegistry.BUNTING_WALL_BLOCKS.values()){
+            RegHelper.registerBlockFlammability(b.get(), 60, 100);
+        }
         for (var a : ModRegistry.AWNINGS.values()) {
             RegHelper.registerBlockFlammability(a.get(), 60, 20);
         }

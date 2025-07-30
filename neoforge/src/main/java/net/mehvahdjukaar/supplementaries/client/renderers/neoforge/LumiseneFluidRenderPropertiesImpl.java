@@ -7,8 +7,11 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import org.joml.Vector3f;
 
 public class LumiseneFluidRenderPropertiesImpl extends LumiseneFluidRenderProperties implements IClientFluidTypeExtensions {

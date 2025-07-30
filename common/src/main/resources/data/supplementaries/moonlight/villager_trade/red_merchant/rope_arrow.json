@@ -17,13 +17,13 @@
     "max_trades": 12,
     "price": {
       "id": "minecraft:emerald",
-      "Count": 4
+      "count": 4
     },
     "offer": {
       "id": "supplementaries:rope_arrow",
-      "Count": 1,
-      "tag": {
-        "Damage": 16
+      "count": 1,
+      "components": {
+        "damage": 16
       }
     }
   }

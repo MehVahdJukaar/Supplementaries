@@ -5,9 +5,9 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -209,7 +209,8 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
                                               InteractionHand hand, BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile) {
             Optional<Direction> closest = findClosestConnection(state, pos, hit.getLocation());
-            if (closest.isPresent()) return tile.interactWithPlayerItem(player, hand, stack, closest.get().get2DDataValue());
+            if (closest.isPresent())
+                return tile.interactWithPlayerItem(player, hand, stack, closest.get().get2DDataValue());
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
@@ -320,10 +321,11 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         Optional<Direction> closest = findClosestConnection(state, pos, hitVec);
         if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile && closest.isPresent()) {
             ItemStack held = tile.getItem(closest.get().get2DDataValue());
-            if (!held.isEmpty() && BuntingItemOld.getColor(held) != DyeColor.WHITE) {
-                BuntingItemOld.setColor(held, DyeColor.WHITE);
+            DyeColor color = BlocksColorAPI.getColor(held.getItem());
+            if (!held.isEmpty() && color != DyeColor.WHITE) {
+                ItemStack newItem = held.transmuteCopy(BlocksColorAPI.changeColor(held.getItem(), DyeColor.WHITE));
                 // set again just in case
-                tile.setItem(closest.get().get2DDataValue(), held);
+                tile.setItem(closest.get().get2DDataValue(), newItem);
                 tile.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
                 return true;

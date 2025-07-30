@@ -5,11 +5,11 @@
     "max_trades": 12,
     "price": {
       "id": "minecraft:emerald",
-      "Count": 2
+      "count": 2
     },
     "price_secondary": {
       "id": "minecraft:paper",
-      "Count": 1
+      "count": 1
     },
     "amount": 3
   }

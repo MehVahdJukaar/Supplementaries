@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
+import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -57,11 +58,9 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         buntings.clear();
         for (Direction d : Direction.Plane.HORIZONTAL) {
             ItemStack stack = this.getItem(d.get2DDataValue());
-            if (stack.getItem() instanceof BuntingItemOld) {
-                DyeColor color = BuntingItemOld.getColor(stack);
-                if (color != null) {
-                    this.buntings.put(d, color);
-                }
+            if (stack.getItem() instanceof BuntingItem bi) {
+                DyeColor color = bi.getColor();
+                this.buntings.put(d, color);
             }
         }
         if (buntings.isEmpty()) {
@@ -124,7 +123,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return stack.getItem() instanceof BuntingItemOld && getItem(index).isEmpty() &&
+        return stack.getItem() instanceof BuntingItem && getItem(index).isEmpty() &&
                 canSupportBunting(getBlockState(), index);
     }
 
@@ -183,6 +182,15 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
                 int j = compoundTag.getByte("Slot") & 255;
                 DyeColor dye = DyeColor.byName(nbt.getString("Color"), DyeColor.WHITE);
                 this.getItem(j).set(DataComponents.BASE_COLOR, dye);
+            }
+        }
+
+        //backward compat 2
+        for (int i = 0; i < this.getItems().size(); i++) {
+            var item = this.getItem(i);
+            if (item.is(ModRegistry.BUNTING_OLD.get())) {
+                var color = BuntingItemOld.getColor(item);
+                this.setItem(i, ModRegistry.BUNTING_BLOCKS.get(color).get().asItem().getDefaultInstance());
             }
         }
     }

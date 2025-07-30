@@ -7,12 +7,10 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
-import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -666,7 +664,7 @@ public class ModCreativeTabs {
             if (first instanceof ItemStack) {
                 ItemStack[] entries = Arrays.stream(items).map(s -> (ItemStack) s.get()).toArray(ItemStack[]::new);
                 event.addAfter(tab, targetPred, entries);
-            }else if(first instanceof Collection<?>  ){
+            } else if (first instanceof Collection<?>) {
                 for (Object i : items) {
                     if (!(i instanceof Collection<?> c)) continue;
                     ItemLike[] entries = c.stream().map(s -> (ItemLike) s).toArray(ItemLike[]::new);

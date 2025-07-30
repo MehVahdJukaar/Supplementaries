@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +20,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.List;
 
+@Deprecated(forRemoval = true)
 public class BuntingItemOld extends Item {
     public BuntingItemOld(Properties properties) {
         super(properties);
@@ -32,31 +34,16 @@ public class BuntingItemOld extends Item {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        BlockState state = level.getBlockState(pos);
-        if (state.is(ModRegistry.ROPE.get())) {
-            BlockHitResult hit = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), pos, false);
-            //we must place valid state immediately
-            BlockState s = RopeBuntingBlock.fromRope(state, hit);
-            if (s != null) {
-                level.setBlockAndUpdate(pos, s);
-                var ret = s.useItemOn(context.getItemInHand(), level, context.getPlayer(), context.getHand(), hit);
-                if (!ret.consumesAction()) {
-                    level.setBlockAndUpdate(pos, state);
-                }
-                else return ret.result();
-            }
-        }
-        return super.useOn(context);
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+        var newStack = stack.transmuteCopy(ModRegistry.BUNTING_BLOCKS.get(getColor(stack)).get().asItem());
+        newStack.remove(DataComponents.BASE_COLOR); //remove color component to avoid duplication
+        entity.getSlot(slotId).set(newStack);
     }
 
     @Override
     public String getDescriptionId(ItemStack stack) {
-        var des = super.getDescriptionId(stack);
-        des += "_" + getColor(stack).getName();
-        return des;
+        return "block.supplementaries_bunting_" + getColor(stack).getName();
     }
 
     public static DyeColor getColor(ItemStack item) {
