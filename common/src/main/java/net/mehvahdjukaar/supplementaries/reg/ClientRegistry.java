@@ -491,7 +491,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("extra_rotation"), new AwningModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());
         event.register(Supplementaries.res("book_pile"), BookPileModel::new);
-        event.register(Supplementaries.res("bunting"), BuntingsBakedModel::new);
+        event.register(Supplementaries.res("rope_bunting"), RopeBuntingsBakedModel::new);
         event.register(Supplementaries.res("jar"), new JarModelLoader());
     }
 

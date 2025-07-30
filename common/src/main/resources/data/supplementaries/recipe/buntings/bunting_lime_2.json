@@ -1,0 +1,32 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "bunting"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "bunting"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "000",
+    " 0 "
+  ],
+  "key": {
+    "1": {
+      "tag": "c:strings"
+    },
+    "0": {
+      "item": "minecraft:lime_wool"
+    }
+  },
+  "result": {
+    "id": "supplementaries:bunting_lime",
+    "count": 6
+  }
+}

@@ -49,7 +49,7 @@ dependencies {
 
     modCompileOnly("curse.maven:farmers-delight-398521:5772720")
 
-    modCompileOnly("curse.maven:soul-fire-d-662413:5821523")
+    modCompileOnly("curse.maven:soul-fire-d-662413:6248773")
     modCompileOnly("curse.maven:entity-model-features-844662:6001148")
 
     modCompileOnly("maven.modrinth:immediatelyfast:1.6.1+1.21.1-neoforge")

@@ -1,2 +1,2 @@
-- buntings can be placed on walls and ceilings
-- fixed villager trades having invalid count
+- fixed bunting recipes
+- fixed ceiling bunting collision

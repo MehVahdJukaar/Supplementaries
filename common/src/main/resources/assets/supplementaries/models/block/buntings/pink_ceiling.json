@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:block/buntings/white_ceiling",
+  "textures": {
+    "0": "supplementaries:block/buntings/wall_bunting_pink",
+    "particle": "supplementaries:block/buntings/wall_bunting_pink"
+  }
+}

@@ -2,5 +2,5 @@
     "textures": {
         "particle": "minecraft:block/rope"
     },
-    "loader": "supplementaries:bunting"
+    "loader": "supplementaries:rope_bunting"
 }

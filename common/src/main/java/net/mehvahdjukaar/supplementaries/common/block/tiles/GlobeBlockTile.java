@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
-import net.mehvahdjukaar.supplementaries.client.GlobeManager.Model;
 import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GlobeBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -14,7 +13,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Nameable;
@@ -22,10 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SHEARED_SEPIA_TEXTURE;
-import static net.mehvahdjukaar.supplementaries.reg.ModTextures.GLOBE_SHEARED_TEXTURE;
 
 public class GlobeBlockTile extends BlockEntity implements Nameable {
 
@@ -37,12 +31,15 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     private Component customName = null;
     private float yaw = 0;
     private float prevYaw = 0;
-    private GlobeRenderData renderData = GlobeManager.DEFAULT_DATA;
+    private GlobeRenderData renderData;
 
 
     public GlobeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GLOBE_TILE.get(), pos, state);
         this.sepia = state.is(ModRegistry.GLOBE_SEPIA.get());
+        if (PlatHelper.getPhysicalSide().isClient()) {
+            renderData = GlobeManager.DEFAULT_DATA;
+        }
     }
 
     public int getFaceRot() {

@@ -4,7 +4,7 @@ import re
 import json
 
 COLORS = [
-    "black", "gray", "light_gray", "red", "brown", "white", "orange", "yellow",
+    "black", "gray", "light_gray", "red", "brown", "white", "orange", "yellow", "pink"
     "lime", "green", "cyan", "light_blue", "blue", "magenta", "purple"
 ]
 
@@ -33,7 +33,7 @@ def replace_color_in_data(data, base_color, new_color):
 
 def generate_all_colors_from_file(file_path):
     if not os.path.isfile(file_path) or not file_path.endswith(".json"):
-        print("Provided path is not a valid .json file.")
+        print("Provided path is not a valid .json file." + file_path)
         return
 
     filename = os.path.basename(file_path)

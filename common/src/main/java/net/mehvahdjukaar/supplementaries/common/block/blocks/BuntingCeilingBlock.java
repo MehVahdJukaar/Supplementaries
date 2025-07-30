@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -29,8 +30,8 @@ public class BuntingCeilingBlock extends Block implements IColored {
             BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BuntingWallBlock::properties)
     ).apply(i, BuntingWallBlock::new));
 
-    protected static final VoxelShape SHAPE_Z= Block.box(0.0D, 0.0D, 7.0D, 16.0D, 16.0D, 9.0D);
-    protected static final VoxelShape SHAPE_X = MthUtils.rotateVoxelShape(SHAPE_Z, Direction.SOUTH);
+    protected static final VoxelShape SHAPE_Z = Block.box(0.0D, 0.0D, 7.0D, 16.0D, 16.0D, 9.0D);
+    protected static final VoxelShape SHAPE_X = MthUtils.rotateVoxelShape(SHAPE_Z, Direction.EAST);
 
     private static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 

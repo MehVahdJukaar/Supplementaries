@@ -19,16 +19,13 @@
     "#supplementaries:awnings": {
       "burn_time": 67
     },
-    "supplementaries:bunting": {
-      "burn_time": 25
-    },
     "#supplementaries:flags": {
       "burn_time": 300
     },
     "minecraft:paper": {
       "burn_time": 25
     },
-    "#supplementaries:bunting": {
+    "#supplementaries:buntings": {
       "burn_time": 25
     },
     "#supplementaries:presents": {
