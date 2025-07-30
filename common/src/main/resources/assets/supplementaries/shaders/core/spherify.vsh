@@ -10,7 +10,6 @@ in ivec2 UV1;
 in ivec2 UV2;
 in vec3 Normal;
 
-uniform sampler2D Sampler1;
 uniform sampler2D Sampler2;
 
 uniform mat4 ModelViewMat;
@@ -27,9 +26,7 @@ out vec4 lightMapColor;
 
 out vec3 vertexPos;// position in view space for the fragment
 out vec3 spherePos;// position of the sphere in clip
-out mat3 sphereRot;// position of the sphere in clip
-
-out vec3 rot;
+flat out mat3 sphereRot;// position of the sphere in clip
 
 vec3 decodeExtraVector(vec2 uv, ivec2 uv1) {
     // Combine the two 16-bit shorts into a 32-bit int
@@ -44,19 +41,23 @@ vec3 decodeExtraVector(vec2 uv, ivec2 uv1) {
     return vec3(uv, z);
 }
 
-mat3 eulerXYZToMatrix(vec3 euler) {
-    float cx = cos(euler.x);
-    float sx = sin(euler.x);
-    float cy = cos(euler.y);
-    float sy = sin(euler.y);
-    float cz = cos(euler.z);
-    float sz = sin(euler.z);
+mat3 rotationMatrixFromPitchYaw(vec3 pitchYawRoll) {
+    float pitch = pitchYawRoll.x; // rotation around X
+    float yaw   = pitchYawRoll.y; // rotation around Y
+    float roll  = pitchYawRoll.z; // rotation around Z
 
-    // Combine the rotations: R = Rz * Ry * Rx
+    float cp = cos(pitch);
+    float sp = sin(pitch);
+    float cy = cos(yaw);
+    float sy = sin(yaw);
+    float cr = cos(roll);
+    float sr = sin(roll);
+
+    // Full rotation matrix R = Rz * Ry * Rx
     return mat3(
-    cy * cz,                      -cy * sz,                     sy,
-    cz * sx * sy + cx * sz,       cx * cz - sx * sy * sz,      -cy * sx,
-    -cx * cz * sy + sx * sz,      cz * sx + cx * sy * sz,       cx * cy
+    cr*cy + sr*sp*sy,  sr*cp,   cr*-sy + sr*sp*cy,
+    -sr*cy + cr*sp*sy, cr*cp,   sr*sy + cr*sp*cy,
+    cp*sy,            -sp,      cp*cy
     );
 }
 
@@ -74,9 +75,7 @@ void main() {
 
     spherePos = (ModelViewMat * vec4(Position + Normal, 1)).xyz;
 
-    rot = extraVec;
-
     //this is the direction of my object
-    sphereRot = eulerXYZToMatrix(extraVec);
+    sphereRot = rotationMatrixFromPitchYaw(extraVec);
 
 }

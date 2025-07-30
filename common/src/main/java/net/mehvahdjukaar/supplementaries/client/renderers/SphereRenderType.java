@@ -15,7 +15,7 @@ public abstract class SphereRenderType extends RenderType {
         CompositeState compositeState = CompositeState.builder()
                 .setShaderState(new ShaderStateShard(ClientRegistry.SPHERE_SHADER::get))
                 .setTextureState(new TextureStateShard(resourceLocation, false, false))
-                .setTransparencyState(NO_TRANSPARENCY)
+                .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setLightmapState(LIGHTMAP)
                 .setOverlayState(OVERLAY)
                 .createCompositeState(true);

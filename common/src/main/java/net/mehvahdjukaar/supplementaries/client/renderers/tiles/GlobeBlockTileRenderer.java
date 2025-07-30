@@ -29,6 +29,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.EnumMap;
@@ -124,9 +125,6 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         poseStack.mulPose(RotHlpr.X22);
         poseStack.mulPose(Axis.YP.rotationDegrees(90 - tile.getRotation(partialTicks)));
 
-        PoseStack test = new PoseStack();
-        test.mulPose(RotHlpr.X22);
-
         this.renderGlobe(tile.getRenderData(), poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
                 tile.isSepia(), tile.getLevel());
 
@@ -151,7 +149,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
                         .set(mc.getWindow().getWidth(), mc.getWindow().getHeight());
             } catch (Exception ignored) {
             }
-            addSphereQuad(poseStack, builder, 0.8f, light);
+            addSphereQuad(poseStack, builder, 0.65f, light);
             poseStack.popPose();
             return;
         }
@@ -179,10 +177,43 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         poseStack.popPose();
     }
 
+    public static Vector3f getPitchAndYaw(Matrix4f m) {
+        // Forward vector (Z-)
+        float m02 = m.m02(); // forward.x
+        float m12 = m.m12(); // forward.y
+        float m22 = m.m22(); // forward.z
+
+        // Up vector (Y)
+        float m01 = m.m01(); // up.x
+        float m11 = m.m11(); // up.y
+        float m21 = m.m21(); // up.z
+
+        // Right vector (X)
+        float m00 = m.m00(); // right.x
+        float m10 = m.m10(); // right.y
+        float m20 = m.m20(); // right.z
+
+        float pitch = (float) Math.asin(-m12); // rotation around X
+
+        float yaw, roll;
+
+        if (Math.abs(m12) < 0.999f) {
+            // Standard case
+            yaw  = (float) Math.atan2(m02, m22);  // rotation around Y
+            roll = (float) Math.atan2(m10, m11);  // rotation around Z
+        } else {
+            // Gimbal lock case (pitch ~ ±90°)
+            yaw  = (float) Math.atan2(-m20, m00);
+            roll = 0.0f;
+        }
+
+        return new Vector3f(pitch, yaw, roll);
+    }
+
     private static void addSphereQuad(PoseStack stack, VertexConsumer consumer, float radius, int light) {
         Matrix4f matrix = stack.last().pose();
 
-        Vector3f sphereRot = matrix.getEulerAnglesXYZ(new Vector3f());
+        Vector3f sphereRot = getPitchAndYaw(matrix);
         var spherePos = matrix.transformPosition(new Vector3f(0, 0, 0));
 
         matrix.setRotationYXZ(0, 0, 0);
@@ -191,7 +222,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         Camera cam = mc.gameRenderer.getMainCamera();
 
         matrix.rotate(cam.rotation());
-        matrix.translate(0, 0, 0.08f);
+        //matrix.translate(0, 0, 0.08f);
 
         Vector3f v1 = matrix.transformPosition(new Vector3f(radius, radius, 0));
         Vector3f centerRel1 = spherePos.sub(v1, new Vector3f());

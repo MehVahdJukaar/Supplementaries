@@ -1,2 +1,2 @@
-- improved cannon & present shooting tnt logic, added a tag for modded tnts
-- fixed sacks not saving data to item correctly
+- buntings can be placed on walls and ceilings
+- fixed villager trades having invalid count

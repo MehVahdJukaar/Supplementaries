@@ -17,9 +17,9 @@ uniform sampler2D Sampler0;
 in vec4 lightMapColor;
 
 in vec3 spherePos;
-in mat3 sphereRot;
+flat in mat3 sphereRot;
 in float vertexDistance;
-in vec3 rot;
+in vec3 vertexPos;
 
 out vec4 fragColor;
 
@@ -44,7 +44,7 @@ vec2 cubeMapUV(vec3 direction) {
 
     float abs_x = abs(x);
     float abs_y = abs(y);
-    float abs_zf = abs(-z); // north = -z
+    float abs_zf = abs(-z);// north = -z
 
     float max_axis;
     float uc, vc;
@@ -116,21 +116,25 @@ void main() {
 
     // Clip space points at near and far planes
     vec4 clipNear = vec4(ndc, -1.0, 1.0);
-    vec4 clipFar  = vec4(ndc,  1.0, 1.0);
+    vec4 clipFar  = vec4(ndc, 1.0, 1.0);
 
     // Unproject to view space
     //problem must be somewhere here
+
     mat4 invProj = inverse(ProjMat);
     vec4 viewNear = invProj * clipNear;
     viewNear /= viewNear.w;
     vec4 viewFar  = invProj * clipFar;
     viewFar /= viewFar.w;
 
-    vec3 rayOrigin = vec3(0.0).xyz;
+    vec3 rayOrigin =  viewNear.xyz;
+
     vec3 rayDir = normalize(viewFar.xyz - viewNear.xyz);
 
     float t = intersectSphere(rayOrigin, rayDir, spherePos, Radius);
-    if (t < 0.0) discard;
+    if (t < 0.0){
+        discard;
+    }
 
     vec3 intersect = rayOrigin + t * rayDir;
     vec3 normal_view = normalize(intersect - spherePos);
@@ -143,7 +147,7 @@ void main() {
     vec2 uv = cubeMapUV(rotatedNormal);
     vec4 baseColor = texture(Sampler0, uv);
 
-    baseColor *= minecraft_mix_light(Light0_Direction, Light1_Direction, normal_world, vec4(1.0,1.0,1.0,1.0));
+    baseColor *= minecraft_mix_light(Light0_Direction, Light1_Direction, normal_world, vec4(1.0, 1.0, 1.0, 1.0));
     baseColor *= ColorModulator;
     baseColor *= lightMapColor;
     baseColor = linear_fog(baseColor, vertexDistance, FogStart, FogEnd, FogColor);
@@ -151,7 +155,16 @@ void main() {
     fragColor = baseColor;
     // Optional fog, comment in if you want
 
-
     //distance from sphere = color
-    // fragColor = vec4(1.0 - length(intersect - spherePos) / Radius, 0.0, 0.0, 1.0);
+    //fragColor = fragColor+ vec4(1.0 - length(vertexPos - spherePos) / Radius, 0.0, 0.0, 1.0);
+
+    // Project the intersection point into clip space
+    vec4 clipSpacePos = ProjMat * vec4(intersect, 1.0);
+
+    // Perform perspective divide to get normalized device coordinates (NDC)
+    vec3 ndc2 = clipSpacePos.xyz / clipSpacePos.w;
+    // Convert from NDC z (-1 to 1) to window-space depth (0 to 1)
+    gl_FragDepth = 0.5 * ndc2.z + 0.5;
+
+
 }
