@@ -891,6 +891,8 @@ public class CommonConfigs {
                     .define("slots", 6, 1, 9);
             QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn. Note that this also depends on local difficulty so you wont ever see them on easy and very rarely on normal. Similar logic to equipment")
                     .define("quiver_skeleton_spawn_chance", 0.03d, 0, 1);
+            QUIVER_DEPEND_ON_GLOBAL_DIFFICULTY = builder.comment("If enabled, the quiver skeleton spawn chance will depend on the local difficulty of the world. If disabled, it will always be the same")
+                    .define("quiver_skeleton_spawn_depend_on_global_difficulty", true);
             QUIVER_CURIO_ONLY = builder.comment("Allows quiver to only be used when in offhand or in curio invSlot")
                     .define("only_works_in_curio", false);
             QUIVER_PICKUP = builder.comment("Arrows you pickup will try to go in a quiver if available provided it has some arrow of the same explosionType")
@@ -1024,6 +1026,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
         public static final Supplier<Integer> QUIVER_SLOTS;
         public static final Supplier<Double> QUIVER_SKELETON_SPAWN;
+        public static final Supplier<Boolean> QUIVER_DEPEND_ON_GLOBAL_DIFFICULTY;
         public static final Supplier<Boolean> QUIVER_CURIO_ONLY;
         public static final Supplier<Boolean> QUIVER_PICKUP;
 
