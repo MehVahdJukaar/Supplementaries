@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
@@ -15,6 +17,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BrushableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
@@ -42,6 +45,10 @@ public class SusRecipe extends CustomRecipe {
                 gravel = stack;
             } else if (!stack.isEmpty()) {
                 if (something != null) {
+                    return false;
+                }
+                if (stack.is(ModTags.SUSPICIOUS) || !MiscUtils.isAllowedInShulker(stack, level) ||
+                        (stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof BrushableBlock)) {
                     return false;
                 }
                 something = stack;

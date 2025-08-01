@@ -83,6 +83,7 @@ public class ModTags {
     public static final TagKey<Item> LUNCH_BASKET_BLACKLIST = itemTag("lunch_basket_blacklist");
     public static final TagKey<Item> SOAP_BLACKLIST_ITEM = itemTag("non_cleanable");
     public static final TagKey<Item> WEAPON_PROJECTILE_OVERLAY_BLACKLIST = itemTag("weapon_projectile_overlay_blacklist");
+    public static final TagKey<Item> SUSPICIOUS = cItemTag("suspicious");
 
     public static final TagKey<Item> SHULKER_BOXES = cItemTag("shulker_boxes");
 

@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
+import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;

@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:suspicious_sand",
+    "minecraft:suspicious_gravel",
+    {"id":"supplementaries:suspicious_gravel_bricks","required":false}
+  ]
+}
