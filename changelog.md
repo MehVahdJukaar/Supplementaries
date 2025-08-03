@@ -1,2 +1,1 @@
-- fixed bunting recipes
-- fixed ceiling bunting collision
+- fixed mod loot table injects not working

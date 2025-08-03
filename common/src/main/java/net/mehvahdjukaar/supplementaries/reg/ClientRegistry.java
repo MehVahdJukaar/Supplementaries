@@ -31,6 +31,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -65,8 +66,10 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -174,8 +177,18 @@ public class ClientRegistry {
         ModMapMarkersClient.init();
 
         MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
-        MenuScreens.register(ModMenuTypes.LUNCH_BASKET.get(), (c, i, t) -> new VariableSizeContainerScreen(c, i, t, ModTextures.LUNCH_BASKET_GUI_TEXTURE));
-        MenuScreens.register(ModMenuTypes.SACK.get(), (c, i, t) -> new VariableSizeContainerScreen(c, i, t, ModTextures.SACK_GUI_TEXTURE));
+        MenuScreens.register(ModMenuTypes.LUNCH_BASKET.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
+            @Override
+            public VariableSizeContainerScreen create(VariableSizeContainerMenu m, Inventory inventory, Component component) {
+                return new VariableSizeContainerScreen(m, inventory, component, ModTextures.LUNCH_BASKET_GUI_TEXTURE);
+            }
+        });
+        MenuScreens.register(ModMenuTypes.SACK.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
+            @Override
+            public VariableSizeContainerScreen create(VariableSizeContainerMenu m, Inventory inventory, Component component) {
+                return new VariableSizeContainerScreen(m, inventory, component, ModTextures.SACK_GUI_TEXTURE);
+            }
+        });
         MenuScreens.register(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
         MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
         MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);
