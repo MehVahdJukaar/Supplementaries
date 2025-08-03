@@ -4,28 +4,32 @@ import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContaine
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.BrewingStandScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 
 public class VariableSizeContainerScreen extends AbstractContainerScreen<VariableSizeContainerMenu> {
 
-    public VariableSizeContainerScreen(VariableSizeContainerMenu container, Inventory inventory, Component text) {
+    private final ResourceLocation backgroundTexture;
+
+    public VariableSizeContainerScreen(VariableSizeContainerMenu container, Inventory inventory, Component text,
+                                       ResourceLocation backgroundTexture) {
         super(container, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
+        this.backgroundTexture = backgroundTexture;
+
     }
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         int x = this.leftPos;
         int y = this.topPos;
-        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x, y, 0, 0,
+        graphics.blit(backgroundTexture, x, y, 0, 0,
                 this.imageWidth, this.imageHeight);
         this.renderSlots(graphics);
     }
-
 
     private void renderSlots(GuiGraphics graphics) {
         int k = -1 + this.leftPos;

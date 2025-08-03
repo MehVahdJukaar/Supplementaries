@@ -13,6 +13,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -48,8 +49,8 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
         return inventory;
     }
 
-    public VariableSizeContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id, playerInventory, getContainerFromPacket(playerInventory, packetBuffer),
+    public VariableSizeContainerMenu(MenuType<?>type, int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+        this(type, id, playerInventory, getContainerFromPacket(playerInventory, packetBuffer),
                 packetBuffer.readInt());
     }
 
@@ -66,8 +67,8 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
         throw new UnsupportedOperationException("Cannot find container associated with entity ");
     }
 
-    public VariableSizeContainerMenu(int id, Inventory playerInventory, Container container, int unlockedSlots) {
-        super(ModMenuTypes.VARIABLE_SIZE.get(), id);
+    public VariableSizeContainerMenu(MenuType<?>type, int id, Inventory playerInventory, Container container, int unlockedSlots) {
+        super(type, id);
         //tile container
         this.inventory = container;
         this.unlockedSlots = unlockedSlots;

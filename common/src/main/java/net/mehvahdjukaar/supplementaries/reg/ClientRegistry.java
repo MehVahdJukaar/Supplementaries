@@ -174,7 +174,8 @@ public class ClientRegistry {
         ModMapMarkersClient.init();
 
         MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
-        MenuScreens.register(ModMenuTypes.VARIABLE_SIZE.get(), VariableSizeContainerScreen::new);
+        MenuScreens.register(ModMenuTypes.LUNCH_BASKET.get(), (c, i, t) -> new VariableSizeContainerScreen(c, i, t, ModTextures.LUNCH_BASKET_GUI_TEXTURE));
+        MenuScreens.register(ModMenuTypes.SACK.get(), (c, i, t) -> new VariableSizeContainerScreen(c, i, t, ModTextures.SACK_GUI_TEXTURE));
         MenuScreens.register(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
         MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
         MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);

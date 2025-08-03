@@ -24,8 +24,13 @@ public class ModMenuTypes {
     public static final Supplier<MenuType<NoticeBoardContainerMenu>> NOTICE_BOARD = RegHelper.registerMenuType(
             Supplementaries.res(NOTICE_BOARD_NAME), NoticeBoardContainerMenu::new);
 
-    public static final Supplier<MenuType<VariableSizeContainerMenu>> VARIABLE_SIZE = RegHelper.registerMenuType(
-            Supplementaries.res("variable_size"), VariableSizeContainerMenu::new);
+    public static final Supplier<MenuType<VariableSizeContainerMenu>> LUNCH_BASKET = RegHelper.registerMenuType(
+            Supplementaries.res("lunch_basket"), (integer, inventory, buf) ->
+                    new VariableSizeContainerMenu(ModMenuTypes.LUNCH_BASKET.get(), integer, inventory, buf));
+
+    public static final Supplier<MenuType<VariableSizeContainerMenu>> SACK = RegHelper.registerMenuType(
+            Supplementaries.res("sack"),(integer, inventory, buf) ->
+                    new VariableSizeContainerMenu(ModMenuTypes.SACK.get(), integer, inventory, buf));
 
     public static final Supplier<MenuType<SafeContainerMenu>> SAFE = RegHelper.registerMenuType(
             Supplementaries.res(SAFE_NAME), SafeContainerMenu::new);

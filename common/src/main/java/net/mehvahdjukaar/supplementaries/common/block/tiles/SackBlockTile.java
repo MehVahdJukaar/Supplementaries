@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.SafeBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -63,7 +64,8 @@ public class SackBlockTile extends OpeneableContainerBlockEntity {
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inv) {
         if (inv.player.isSpectator()) return null;
-        return new VariableSizeContainerMenu(id, inv, this, getContainerSize());
+        return new VariableSizeContainerMenu(ModMenuTypes.SACK.get(),
+                id, inv, this, getContainerSize());
     }
 
     public boolean isSlotUnlocked(int ind) {

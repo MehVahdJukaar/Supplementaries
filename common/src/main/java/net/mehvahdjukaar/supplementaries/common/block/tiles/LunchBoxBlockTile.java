@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContaine
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
+import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -66,7 +67,8 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new VariableSizeContainerMenu(id, player, this, getContainerSize());
+        return new VariableSizeContainerMenu(ModMenuTypes.LUNCH_BASKET.get(),
+                id, player, this, getContainerSize());
     }
 
     public boolean isSlotUnlocked(int ind) {

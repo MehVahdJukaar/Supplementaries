@@ -93,14 +93,14 @@ public class VariableSizePreviewRenderer implements PreviewRenderer {
         int rEdgeOffset = 7 + w;
         int bEdgeOffset = 7 + h;
 
-        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x, y, 0, 0, rEdgeOffset, 7);
-        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x + rEdgeOffset, y, 7 + 9 * 18, 0, 7, 7);
+        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x, y, 0, 0, rEdgeOffset, 7);
+        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x + rEdgeOffset, y, 7 + 9 * 18, 0, 7, 7);
 
-        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x, y + 7, 0, 7, rEdgeOffset, h);
-        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x + rEdgeOffset, y + 7, 7 + 9 * 18, 7, 7, h);
+        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x, y + 7, 0, 7, rEdgeOffset, h);
+        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x + rEdgeOffset, y + 7, 7 + 9 * 18, 7, 7, h);
 
-        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x, y + bEdgeOffset, 0, 159, rEdgeOffset, 7);
-        graphics.blit(ModTextures.VARIABLE_SIZE_CONTAINER_TEXTURE, x + rEdgeOffset, y + bEdgeOffset, 7 + 9 * 18, 159,
+        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x, y + bEdgeOffset, 0, 159, rEdgeOffset, 7);
+        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x + rEdgeOffset, y + bEdgeOffset, 7 + 9 * 18, 159,
             7, 7);
     }
 
