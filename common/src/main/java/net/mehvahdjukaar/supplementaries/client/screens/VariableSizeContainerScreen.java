@@ -19,7 +19,11 @@ public class VariableSizeContainerScreen extends AbstractContainerScreen<Variabl
         this.imageWidth = 176;
         this.imageHeight = 166;
         this.backgroundTexture = backgroundTexture;
+    }
 
+    @Deprecated(forRemoval = true)
+    public VariableSizeContainerScreen(VariableSizeContainerMenu container, Inventory inventory, Component text) {
+        this(container, inventory, text, ModTextures.SACK_GUI_TEXTURE);
     }
 
     @Override

@@ -1,1 +1,3 @@
-- fixed mod loot table injects not working
+- added back a method to prevent breaking compat with snowy spirit
+- lunch baskets and sacks can use unique gui textures
+- added shulker box tooltip mod compat for lunch basket

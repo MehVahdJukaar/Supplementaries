@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
@@ -27,14 +28,16 @@ public class VariableSizePreviewRenderer implements PreviewRenderer {
     private static final PreviewRenderer DELEGATE = PreviewRenderer.getModRendererInstance();
 
     private final Supplier<Integer> unlockedSlots;
+    private final ResourceLocation texture;
     private List<ItemStack> items;
     private PreviewType previewType;
     private int[] dims;
 
-    public VariableSizePreviewRenderer(Supplier<Integer> unlockedSlots) {
+    public VariableSizePreviewRenderer(Supplier<Integer> unlockedSlots, ResourceLocation texture) {
         this.unlockedSlots = unlockedSlots;
         this.items = List.of();
         this.initDims();
+        this.texture = texture;
     }
 
     @Override
@@ -93,14 +96,14 @@ public class VariableSizePreviewRenderer implements PreviewRenderer {
         int rEdgeOffset = 7 + w;
         int bEdgeOffset = 7 + h;
 
-        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x, y, 0, 0, rEdgeOffset, 7);
-        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x + rEdgeOffset, y, 7 + 9 * 18, 0, 7, 7);
+        graphics.blit(texture, x, y, 0, 0, rEdgeOffset, 7);
+        graphics.blit(texture, x + rEdgeOffset, y, 7 + 9 * 18, 0, 7, 7);
 
-        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x, y + 7, 0, 7, rEdgeOffset, h);
-        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x + rEdgeOffset, y + 7, 7 + 9 * 18, 7, 7, h);
+        graphics.blit(texture, x, y + 7, 0, 7, rEdgeOffset, h);
+        graphics.blit(texture, x + rEdgeOffset, y + 7, 7 + 9 * 18, 7, 7, h);
 
-        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x, y + bEdgeOffset, 0, 159, rEdgeOffset, 7);
-        graphics.blit(ModTextures.LUNCH_BASKET_GUI_TEXTURE, x + rEdgeOffset, y + bEdgeOffset, 7 + 9 * 18, 159,
+        graphics.blit(texture, x, y + bEdgeOffset, 0, 159, rEdgeOffset, 7);
+        graphics.blit(texture, x + rEdgeOffset, y + bEdgeOffset, 7 + 9 * 18, 159,
             7, 7);
     }
 
