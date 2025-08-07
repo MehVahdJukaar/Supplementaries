@@ -58,7 +58,7 @@ dependencies {
     modImplementation("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("curse.maven:buzzier-bees-355458:4776328")
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
-    modImplementation ("curse.maven:amendments-896746:5692774")
+    modImplementation ("curse.maven:amendments-896746:6858616")
     modImplementation ("curse.maven:appleskin-248787:4770828")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-common:${shulker_box_tooltip_version}") { transitive false }
 }
