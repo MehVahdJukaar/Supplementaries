@@ -46,6 +46,8 @@ import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMa
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -404,7 +406,9 @@ public class ClientRegistry {
         event.register(ModEntities.CANNON_BOAT.get(), CannonBoatRenderer::new);
         event.register(ModEntities.BOMB.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
         event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
-        event.register(ModEntities.THROWABLE_SLIMEBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
+      if(!CompatHandler.AMENDMENTS || !AmendmentsCompat.has3DSlimeballRenderer()){
+          event.register(ModEntities.THROWABLE_SLIMEBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
+      }
         if (ClientConfigs.Items.CANNONBALL_3D.get()) {
             event.register(ModEntities.CANNONBALL.get(), context -> new CannonballRenderer<>(context, 1.615f));
         } else {

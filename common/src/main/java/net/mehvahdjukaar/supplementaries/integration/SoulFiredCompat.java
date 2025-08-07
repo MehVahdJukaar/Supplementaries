@@ -17,7 +17,8 @@ public class SoulFiredCompat {
         var fire = FireManager.fireBuilder(LUMISENE_FIRE_TYPE)
                 .setDamage(1)
                 .setCanRainDouse(false)
-
+              //  .setComponent(Fire.Component.SOURCE_BLOCK, ModFluids.LUMISENE_BLOCK.getId())
+                .removeComponent(Fire.Component.SOURCE_BLOCK) //DUMB above doesnt use it
                 .removeComponent(Fire.Component.WALL_TORCH_BLOCK)
                 .removeComponent(Fire.Component.CAMPFIRE_BLOCK)
                 .removeComponent(Fire.Component.FLAME_PARTICLE)

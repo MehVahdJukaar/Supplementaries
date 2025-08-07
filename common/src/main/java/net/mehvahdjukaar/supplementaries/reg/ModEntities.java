@@ -64,31 +64,40 @@ public class ModEntities {
                     .clientTrackingRange(10)
                     .updateInterval(20));
 
+    //TODO:check update interval and client tracking range
     //brick
     public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME, () ->
             EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
+                    .sized(0.25F, 0.25F)
+                    .clientTrackingRange(6)
+                    .updateInterval(5));
 
     //slimeball
     public static final Supplier<EntityType<SlimeBallEntity>> THROWABLE_SLIMEBALL = regEntity(THROWABLE_SLIMEBALL_NAME, () ->
             EntityType.Builder.<SlimeBallEntity>of(SlimeBallEntity::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F).clientTrackingRange(4).updateInterval(10));
+                    .sized(0.25F, 0.25F)
+                    .clientTrackingRange(6)
+                    .updateInterval(5));
 
     //bomb
     public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME, () ->
             EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F).clientTrackingRange(8).updateInterval(10));
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(8)
+                    .updateInterval(5));
 
-    //bomb
+    //cannonball
     public static final Supplier<EntityType<CannonBallEntity>> CANNONBALL = regEntity(CANNONBALL_NAME, () ->
             EntityType.Builder.<CannonBallEntity>of(CannonBallEntity::new, MobCategory.MISC)
-                    .sized(0.75F, 0.75F).clientTrackingRange(10).updateInterval(10000));
+                    .sized(0.75F, 0.75F)
+                    .clientTrackingRange(10)
+                    .updateInterval(1000));
 
     //rope arrow
     public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = regEntity(ROPE_ARROW_NAME, () ->
             EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
-                    .clientTrackingRange(4)
+                    .clientTrackingRange(6)
                     .updateInterval(20));
 
     //slingshot projectile
@@ -96,7 +105,7 @@ public class ModEntities {
             EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, MobCategory.MISC)
                     .sized(0.5F, 0.5F)
                     .clientTrackingRange(6)
-                    .updateInterval(1)); //STOP GETTING IT OUT OF SYNC!
+                    .updateInterval(1)); //STOP GETTING IT OUT OF SYNC! either 1 or infinity aparently
 
     public static final Supplier<EntityType<CannonBoatEntity>> CANNON_BOAT = regEntity(CANNON_BOAT_NAME, () ->
             EntityType.Builder.<CannonBoatEntity>of(CannonBoatEntity::new, MobCategory.MISC)

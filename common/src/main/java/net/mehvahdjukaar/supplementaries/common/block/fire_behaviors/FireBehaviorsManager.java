@@ -3,7 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.RegistryAccess;
@@ -33,7 +34,7 @@ public class FireBehaviorsManager {
         for (Item i : BuiltInRegistries.ITEM) {
             if (i instanceof BlockItem bi && TntBehavior.isTNTLikeBlock(bi.getBlock().defaultBlockState())) {
                 TrappedPresentBlock.registerBehavior(i, tnt);
-                if(CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() == CommonConfigs.TNTMode.IGNITE) {
+                if (CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() == CommonConfigs.TNTMode.IGNITE) {
                     CannonBlock.registerBehavior(i, tnt);
                 }
             }
@@ -50,8 +51,10 @@ public class FireBehaviorsManager {
         TrappedPresentBlock.registerBehavior(Items.ENDER_PEARL, enderPearl);
         CannonBlock.registerBehavior(Items.ENDER_PEARL, enderPearl);
 
-        TrappedPresentBlock.registerBehavior(Items.FIRE_CHARGE, fireBall);
-        CannonBlock.registerBehavior(Items.FIRE_CHARGE, fireBall);
+        if (!CompatHandler.AMENDMENTS || !AmendmentsCompat.hasThrowableFireCharge()) {
+            TrappedPresentBlock.registerBehavior(Items.FIRE_CHARGE, fireBall);
+            CannonBlock.registerBehavior(Items.FIRE_CHARGE, fireBall);
+        }
 
         CannonBlock.registerBehavior(ModRegistry.CANNONBALL.get(), cannonBall);
 
