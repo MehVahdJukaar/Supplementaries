@@ -43,7 +43,6 @@ public class ClientEventsForge {
         NeoForge.EVENT_BUS.register(ClientEventsForge.class);
     }
 
-    private static boolean hasOptifine;
     private static boolean firstScreenShown;
 
     @SubscribeEvent
