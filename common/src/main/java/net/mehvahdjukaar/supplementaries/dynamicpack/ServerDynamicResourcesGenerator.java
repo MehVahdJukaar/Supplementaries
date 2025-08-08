@@ -121,7 +121,8 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         Recipe<?> recipeTemplate = RPUtils.readRecipe(manager, Supplementaries.res("cannon_boat_oak"));
         WoodType oak = WoodTypeRegistry.OAK_TYPE;
         ModRegistry.CANNON_BOAT_ITEMS.forEach((w, i) -> {
-            if (w != oak) {
+            WoodType bamboo = WoodTypeRegistry.INSTANCE.get(ResourceLocation.withDefaultNamespace("bamboo"));
+            if (w != oak && w != bamboo) {
                 try {
                     var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w,
                             Supplementaries.res("cannon_boat_oak"));

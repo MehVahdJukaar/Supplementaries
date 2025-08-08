@@ -1,1 +1,2 @@
-added back a missing class for compat with snowy spirit
+changed soul fired compat
+changed bamboo raft name & cannon with boat name
