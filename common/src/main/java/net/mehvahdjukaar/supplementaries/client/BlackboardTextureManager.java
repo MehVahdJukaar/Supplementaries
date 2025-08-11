@@ -53,6 +53,10 @@ public class BlackboardTextureManager {
         return textureInstance;
     }
 
+    public static void closeAll() {
+        TEXTURE_CACHE.invalidateAll();
+    }
+
     public static class BlackboardVisuals implements AutoCloseable {
         private static final int WIDTH = 16;
 

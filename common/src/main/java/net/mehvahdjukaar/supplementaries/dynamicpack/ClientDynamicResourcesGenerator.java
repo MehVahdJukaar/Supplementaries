@@ -18,6 +18,7 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
@@ -63,21 +64,17 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
     //-------------resource pack dependant textures-------------
 
     @Override
-    public void regenerateDynamicAssets(ResourceManager manager) {
-        super.regenerateDynamicAssets(manager);
+    public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
         //generateTagTranslations();
 
         //need this here for reasons I forgot
-        GlobeManager.refreshColorsAndTextures(manager);
-        ColorHelper.refreshBubbleColors(manager);
-        ColoredMapHandler.onResourceReload();
+        ColoredMapHandler.clearCache();
         SlimedRenderTypes.clear();
+        BlackboardTextureManager.closeAll();
 
-    }
-
-    @Override
-    public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
         executor.accept((manager, sink) -> {
+            GlobeManager.refreshColorsAndTextures(manager);
+            ColorHelper.refreshBubbleColors(manager);
             addEndermanHead(manager, sink);
             addRopeArrowModel(manager, sink);
             addTatteredBook(manager, sink);
@@ -95,7 +92,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             StaticResource spBlockModel = StaticResource.getOrLog(manager,
                     ResType.BLOCK_MODELS.getPath(Supplementaries.res("way_signs/way_sign_oak")));
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
-                //if (wood.isVanilla()) return;
                 String id = Utils.getID(sign).getPath();
                 //langBuilder.addEntry(sign, wood.getVariantReadableName("way_sign"));
 
@@ -167,7 +163,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
-                //if (wood.isVanilla()) continue;
                 var textureRes = Supplementaries.res("block/way_signs/" + Utils.getID(sign).getPath());
                 if (sink.alreadyHasTextureAtLocation(manager, textureRes)) return;
 
@@ -249,7 +244,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 ResType.ITEM_MODELS.getPath(Supplementaries.res("cannon_boat_oak")));
 
         ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
-
             try {
                 sink.addSimilarJsonResource(manager, itemModel, "cannon_boat_oak", wood.getVariantId("cannon_boat"));
             } catch (Exception ex) {
@@ -263,7 +257,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
-                if (wood.isVanilla()) return;
                 ResourceLocation textureRes = Supplementaries.res("entity/cannon_boat/" + wood.getTexturePath());
                 if (sink.alreadyHasTextureAtLocation(manager, textureRes)) return;
 
@@ -292,7 +285,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.ofPalette(template, palette);
 
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
-                //if (wood.isVanilla()) continue;
                 ResourceLocation textureRes = Supplementaries.res("item/cannon_boat/" + Utils.getID(sled).getPath());
                 if (sink.alreadyHasTextureAtLocation(manager, textureRes)) return;
 

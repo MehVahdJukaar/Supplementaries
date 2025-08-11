@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -141,7 +140,7 @@ public class ColoredMapHandler {
     private static final Map<Pair<BlockAndBiome, Integer>, Integer> GLOBAL_COLOR_CACHE = new Object2IntOpenHashMap<>();
     private static final int[] IND2COLOR_BUFFER = new int[256 * 4];
 
-    public static void onResourceReload() {
+    public static void clearCache() {
         GLOBAL_COLOR_CACHE.clear();
         System.arraycopy(new int[256 * 4], 0, IND2COLOR_BUFFER, 0, 256 * 4);
     }
