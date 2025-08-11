@@ -191,7 +191,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         Level level = level();
         if (!level.isClientSide()) {
             level.broadcastEntityEvent(this, (byte) 67);
-            level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5F, 1.5F);
+            this.playEntityOnFireExtinguishedSound();
         }
         this.active = false;
     }

@@ -55,6 +55,10 @@ public class BlackboardManager {
         return textureInstance;
     }
 
+    public static void closeAll() {
+        TEXTURE_CACHE.invalidateAll();
+    }
+
     public static class Key implements TooltipComponent {
         private final long[] values;
         private final boolean glow;
