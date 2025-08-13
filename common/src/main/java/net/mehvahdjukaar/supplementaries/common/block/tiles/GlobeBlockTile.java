@@ -71,7 +71,16 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     private void updateRenderData() {
-        this.renderData = GlobeManager.computeRenderData(this.sheared, this.customName);
+        if (this.level == null || !this.level.isClientSide) return;
+        if (this.sheared) {
+            this.renderData = Pair.of(Model.SHEARED,
+                    sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
+                            GLOBE_SHEARED_TEXTURE);
+        } else if (this.hasCustomName()) {
+            var customData = GlobeManager.Type.getModelAndTexture(this.getCustomName().getString());
+            if (customData != null) this.renderData = customData;
+            else this.renderData = DEFAULT_DATA;
+        } else this.renderData = DEFAULT_DATA;
     }
 
     @Override
@@ -96,9 +105,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         }
         this.yaw = tag.getFloat("Yaw");
         this.sheared = tag.getBoolean("Sheared");
-        if (level != null && level.isClientSide) {
-            this.updateRenderData();
-        }
+        this.updateRenderData();
     }
 
     @Override
