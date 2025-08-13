@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
@@ -18,27 +16,23 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
+import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.alchemy.Potion;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 
@@ -48,12 +42,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
     public ClientDynamicResourcesGenerator() {
         super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
+        this.dynamicPack.addNamespaces("minecraft");
         this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get());
-    }
-
-    @Override
-    public Collection<String> additionalNamespaces() {
-        return List.of("minecraft");
     }
 
     @Override
@@ -68,9 +58,8 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         //generateTagTranslations();
 
         //need this here for reasons I forgot
-        ColoredMapHandler.clearCache();
         SlimedRenderTypes.clear();
-        BlackboardTextureManager.closeAll();
+        BlackboardManager.closeAll();
 
         executor.accept((manager, sink) -> {
             GlobeManager.refreshColorsAndTextures(manager);
@@ -78,7 +67,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             addEndermanHead(manager, sink);
             addRopeArrowModel(manager, sink);
             addTatteredBook(manager, sink);
-            addGlobeItemModels(manager, sink);
             addSignPostAssets(manager, sink);
         });
     }
@@ -180,29 +168,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         }
     }
 
-    private void addGlobeItemModels(ResourceManager manager, ResourceSink sink) {
-        RPUtils.appendModelOverride(manager, sink, Supplementaries.res("globe"), e -> {
-            int i = 0;
-            for (var text : GlobeManager.TEXTURES) {
-                String name = text.getPath().split("/")[3].split("\\.")[0];
-                e.add(new ItemOverride(Supplementaries.res("item/" + name),
-                        List.of(new ItemOverride.Predicate(Supplementaries.res("type"), i))));
-                i++;
-                sink.addItemModel(Supplementaries.res(name), JsonParser.parseString(
-                        """ 
-                                {
-                                    "parent": "item/generated",
-                                    "textures": {
-                                        "layer0": "supplementaries:item/globes/""" + name + "\"" +
-                                """               
-                                            }
-                                        }
-                                        """));
-            }
-
-        });
-    }
-
     private void addTatteredBook(ResourceManager manager, ResourceSink sink) {
         if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
             RPUtils.appendModelOverride(manager, sink, new ResourceLocation("written_book"), e -> {
@@ -237,20 +202,6 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         }
     }
 
-    private static void generateTagTranslations() {
-        JsonObject jo = new JsonObject();
-        for (var e : ServerDynamicResourcesGenerator.R.entrySet()) {
-            ResourceLocation id = e.getKey();
-            if (id.getNamespace().equals("supplementaries")) {
-                String path = id.getPath();
-                path = path.replace("tags/", "").replace(".json", "");
-                String tr = path.substring(path.lastIndexOf("/") + 1);
-                jo.addProperty("supplementaries:" + path, LangBuilder.getReadableName(tr));
-            }
-        }
-    }
-
-
     /**
      * helper method.
      * recolors the template image with the color grabbed from the given image restrained to its mask, if possible
@@ -274,21 +225,24 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
     @Override
     public void addDynamicTranslations(AfterLanguageLoadEvent lang) {
         ModRegistry.SIGN_POST_ITEMS.forEach((type, item) ->
-                LangBuilder.addDynamicEntry(lang, "item.supplementaries.way_sign", type, item));
+                LangBuilder.addDynamicEntry(lang, "item.supplementaries.sign_post", type, item));
+        if (MiscUtils.FESTIVITY.isAprilsFool()) {
+            lang.addEntry("block.suppsquared.metal_frame", "Galvanized Square Steel Frame");
+            lang.addEntry("block.suppsquared.metal_brace", "Galvanized Square Steel Brace");
+            lang.addEntry("block.suppsquared.metal_cross_brace", "Galvanized Square Steel Cross Brace");
+        }
 
         String bambooSpikes = lang.getEntry("item.supplementaries.bamboo_spikes_tipped.effect");
         if (bambooSpikes == null) return;
         for (var p : BuiltInRegistries.POTION) {
-            Optional<Holder<Potion>> holder = Optional.of(BuiltInRegistries.POTION.wrapAsHolder(p));
-            String key = Potion.getName(holder, "item.supplementaries.bamboo_spikes_tipped.effect.");
-            String arrowName = lang.getEntry(Potion.getName(holder, "item.minecraft.tipped_arrow.effect."));
+            String key = p.getName("item.supplementaries.bamboo_spikes_tipped.effect.");
+            String arrowName = lang.getEntry(p.getName("item.minecraft.tipped_arrow.effect."));
             if (arrowName == null) {
                 lang.addEntry(key, String.format(bambooSpikes, LangBuilder.getReadableName(Utils.getID(p).getPath())));
             } else lang.addEntry(key, String.format(bambooSpikes,
                     LangBuilder.getReadableName(arrowName.toLowerCase(Locale.ROOT)
                             .replace("arrow of ", ""))));
         }
-
 
     }
 
