@@ -368,6 +368,7 @@ public class ModRegistry {
     public static final Supplier<Block> SCONCE = regBlock(SCONCE_NAME, () -> new SconceBlock(
             BlockBehaviour.Properties.of()
                     .noCollission()
+                    .noOcclusion()
                     .pushReaction(PushReaction.DESTROY)
                     .instabreak()
                     .sound(SoundType.LANTERN),

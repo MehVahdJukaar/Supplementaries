@@ -36,12 +36,16 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 @SuppressWarnings("ConstantConditions")
@@ -129,6 +133,11 @@ public class RegUtils {
 
     //candle holders
     public static Map<DyeColor, Supplier<Block>> registerCandleHolders(ResourceLocation baseName) {
+        return registerCandleHolders(baseName, CandleHolderBlock::getParticleOffsets);
+    }
+
+    public static Map<DyeColor, Supplier<Block>> registerCandleHolders(ResourceLocation baseName,
+                                                                       Function<BlockState, List<Vec3>> particleOffsets) {
         Map<DyeColor, Supplier<Block>> map = new Object2ObjectLinkedOpenHashMap<>();
 
         BlockBehaviour.Properties prop = BlockBehaviour.Properties.of()
@@ -139,23 +148,23 @@ public class RegUtils {
                 .sound(SoundType.LANTERN);
 
         Supplier<Block> block = RegHelper.registerBlockWithItem(baseName,
-                () -> new CandleHolderBlock(null, prop));
+                () -> new CandleHolderBlock(null, prop, particleOffsets));
         map.put(null, block);
 
         for (DyeColor color : BlocksColorAPI.SORTED_COLORS) {
             String name = baseName.getPath() + "_" + color.getName();
             Supplier<Block> coloredBlock = RegHelper.registerBlockWithItem(new ResourceLocation(baseName.getNamespace(), name),
-                    () -> new CandleHolderBlock(color, prop)
+                    () -> new CandleHolderBlock(color, prop, particleOffsets)
             );
             map.put(color, coloredBlock);
         }
         ModRegistry.ALL_CANDLE_HOLDERS.addAll(map.values());
 
         if (CompatHandler.BUZZIER_BEES) {
-            BuzzierBeesCompat.registerCandle(baseName);
+            BuzzierBeesCompat.registerCandle(baseName, particleOffsets);
         }
         if (CompatHandler.CAVE_ENHANCEMENTS) {
-            CaveEnhancementsCompat.registerCandle(baseName);
+            CaveEnhancementsCompat.registerCandle(baseName, particleOffsets);
         }
         return map;
     }
