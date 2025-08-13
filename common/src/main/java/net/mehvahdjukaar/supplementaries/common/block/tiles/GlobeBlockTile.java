@@ -73,6 +73,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     private void updateRenderData() {
+        if (this.level == null || !this.level.isClientSide) return;
         if (this.sheared) {
             this.renderData = Pair.of(Model.SHEARED,
                     sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
@@ -106,9 +107,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         this.yaw = compound.getFloat("Yaw");
         this.sheared = compound.getBoolean("Sheared");
         super.load(compound);
-        if(level != null && level.isClientSide){
-            this.updateRenderData();
-        }
+        this.updateRenderData();
     }
 
     @Override
