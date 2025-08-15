@@ -196,18 +196,16 @@ public class SoapWashableHelper {
                 }
             }
 
-            CompoundTag tag = null;
+            BlockEntity oldBe = null;
             if (newColor instanceof EntityBlock) {
-                var be = level.getBlockEntity(pos);
-                if (be != null) {
-                    tag = be.saveWithoutMetadata(level.registryAccess());
-                }
+                oldBe = level.getBlockEntity(pos);
             }
 
             BlockState toPlace = newColor.withPropertiesOf(state);
 
-            level.setBlock(pos, toPlace, 2);
-            if (tag != null) {
+            level.setBlock(pos, toPlace, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+            if (oldBe != null) {
+                CompoundTag tag = oldBe.saveWithoutMetadata(level.getRegistryAccess());
                 var be = level.getBlockEntity(pos);
                 if (be != null) {
                     be.loadWithComponents(tag, level.registryAccess());
