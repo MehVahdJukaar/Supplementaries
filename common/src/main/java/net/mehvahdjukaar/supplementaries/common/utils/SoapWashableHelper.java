@@ -14,13 +14,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.HoneycombItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BannerBlockEntity;
-import net.minecraft.world.level.block.entity.BedBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
@@ -202,18 +199,16 @@ public class SoapWashableHelper {
                 }
             }
 
-            CompoundTag tag = null;
+            BlockEntity oldBe = null;
             if (newColor instanceof EntityBlock) {
-                BlockEntity be = level.getBlockEntity(pos);
-                if (be != null) {
-                    tag = be.saveWithoutMetadata();
-                }
+                oldBe = level.getBlockEntity(pos);
             }
 
             BlockState toPlace = newColor.withPropertiesOf(state);
 
-            level.setBlock(pos, toPlace, 2);
-            if (tag != null) {
+            level.setBlock(pos, toPlace, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+            if (oldBe != null) {
+                CompoundTag tag = oldBe.saveWithoutMetadata();
                 BlockEntity be = level.getBlockEntity(pos);
                 if (be != null) {
                     be.load(tag);
