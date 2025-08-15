@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -160,6 +161,7 @@ public class ClientConfigs {
     public static class Tweaks {
 
 
+
         private static void init() {
         }
 
@@ -175,6 +177,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> COLORED_MAPS;
         public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
         public static final Supplier<Boolean> PROJECTILE_WEAPON_OVERLAY;
+        public static final Supplier<Boolean> ENDERMAN_HEAD_VANILLA;
 
 
         static {
@@ -199,6 +202,9 @@ public class ClientConfigs {
                     .define("mob_head_shaders", true);
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
                     .define("send_chat_on_death", true);
+            ENDERMAN_HEAD_VANILLA = builder.comment("Makes enderman heads use vanilla texture. Enable for texture pack support")
+                            .define("enderman_head_texture_pack_support", true);
+
             builder.push("colored_maps");
             SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
                     .define("slime_effect_overlay", true);
