@@ -44,7 +44,7 @@ dependencies {
     //modImplementation("curse.maven:valkyrien-skies-258371:5212231")
     //modImplementation("curse.maven:fabric-language-kotlin-308769:4718458")
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
-    modImplementation("curse.maven:supplementaries-squared-838411:6280153")
+  //  modImplementation("curse.maven:supplementaries-squared-838411:6280153")
 
 
     modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5684645")

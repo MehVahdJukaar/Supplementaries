@@ -14,8 +14,8 @@ import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.recipe.IRecipeTemplate;
 import net.mehvahdjukaar.moonlight.api.resources.recipe.TemplateRecipeManager;
+import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -69,64 +69,64 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         //recipes
         if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
             executor.accept(this::addSignPostRecipes);
+
+            executor.accept((manager, sink) -> {
+                //sing posts
+                {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
+                    builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
+                    sink.addTag(builder, Registries.ITEM);
+                }
+
+
+                //fabric has it done another way beucase it needs tag before this...
+                if (PlatHelper.getPlatform().isForge()) {
+                    //way signs tag
+                    {
+                        SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
+                        if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
+                            builder.addTag(BiomeTags.IS_OVERWORLD);
+                        }
+                        sink.addTag(builder, Registries.BIOME);
+                    }
+
+                    //cave urns tag
+
+                    {
+                        SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
+
+                        if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
+                            builder.addTag(BiomeTags.IS_OVERWORLD);
+                        }
+                        sink.addTag(builder, Registries.BIOME);
+                    }
+
+                    //wild flax tag
+
+                    {
+                        SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
+
+                        if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
+                            builder.addTag(BiomeTags.IS_OVERWORLD);
+                        }
+                        sink.addTag(builder, Registries.BIOME);
+                    }
+
+                    //ash
+
+                    {
+                        SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
+
+                        if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
+                            builder.add(Biomes.BASALT_DELTAS.location());
+                            builder.addOptionalElement(new ResourceLocation("incendium:volcanic_deltas"));
+                        }
+                        sink.addTag(builder, Registries.BIOME);
+                    }
+                }
+
+            });
         }
-
-        executor.accept((manager, sink) -> {
-            //sing posts
-            {
-                SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("sign_posts"));
-                builder.addEntries(ModRegistry.SIGN_POST_ITEMS.values());
-                sink.addTag(builder, Registries.ITEM);
-            }
-
-
-            //fabric has it done another way beucase it needs tag before this...
-            if (PlatHelper.getPlatform().isForge()) {
-                //way signs tag
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-                    if (CommonConfigs.Building.WAY_SIGN_ENABLED.get() && CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
-                        builder.addTag(BiomeTags.IS_OVERWORLD);
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-
-                //cave urns tag
-
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
-
-                    if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
-                        builder.addTag(BiomeTags.IS_OVERWORLD);
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-
-                //wild flax tag
-
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
-
-                    if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
-                        builder.addTag(BiomeTags.IS_OVERWORLD);
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-
-                //ash
-
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
-
-                    if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
-                        builder.add(Biomes.BASALT_DELTAS.location());
-                        builder.addOptionalElement(new ResourceLocation("incendium:volcanic_deltas"));
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-            }
-
-        });
 
 //        genAllRecipesAdv(Supplementaries.MOD_ID);
     }
@@ -135,7 +135,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
         IRecipeTemplate<?> template = RPUtils.readRecipeAsTemplate(manager,
                 ResType.RECIPES.getPath(Supplementaries.res("sign_post_oak")));
 
-        WoodType oak = WoodTypeRegistry.OAK_TYPE;
+        WoodType oak = VanillaWoodTypes.OAK;
 
         if (signPostTemplate2 == null) {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS,
@@ -156,7 +156,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                     //Check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
                     IRecipeTemplate<?> recipeTemplate = w.getChild("sign") == null ? signPostTemplate2 : template;
 
-                    FinishedRecipe newR = recipeTemplate.createSimilar(WoodTypeRegistry.OAK_TYPE, w, w.mainChild().asItem());
+                    FinishedRecipe newR = recipeTemplate.createSimilar(VanillaWoodTypes.OAK, w, w.mainChild().asItem());
                     if (newR == null) return;
                     newR = ForgeHelper.addRecipeConditions(newR, template.getConditions());
                     sink.addRecipe(newR);

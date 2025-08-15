@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.font.TextFieldHelper;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.SignEditScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -120,11 +121,15 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
                 this.tile.getBlockPos(), this.messages));
     }
 
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
 
     @Override
     protected void init() {
         this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose())
-                .bounds(this.width / 2 - 100, this.height / 4 + 120, 200, 20).build());
+                .bounds(this.width / 2 - 100, this.height / 4 + 144, 200, 20).build());
 
         this.textInputUtil = new TextFieldHelper(
                 () -> this.messages[textHolderIndex][lineIndex],
