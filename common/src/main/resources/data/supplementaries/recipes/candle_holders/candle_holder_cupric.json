@@ -1,14 +1,14 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "1",
-    "2"
+    "C",
+    "N"
   ],
   "key": {
-    "1": {
+    "C": {
       "item": "buzzier_bees:cupric_candle"
     },
-    "2": {
+    "N": {
       "item": "minecraft:iron_ingot"
     }
   },
