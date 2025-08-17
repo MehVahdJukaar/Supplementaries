@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
 import io.netty.buffer.ByteBuf;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.neoforge.ForgeConfigHolder;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -241,9 +243,6 @@ public class SuppPlatformStuffImpl {
         }
     }
 
-    static {
-        SlotReference.REGISTRY.register("cap_slot", CapSlotReference.CODEC);
-    }
 
     public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
         return CropAccessor.callGetGrowthSpeed(state, level, pos);
@@ -267,5 +266,10 @@ public class SuppPlatformStuffImpl {
         public static float callGetGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
             return CropBlock.getGrowthSpeed(state, level, pos);
         }
+    }
+
+    @SuppressWarnings("all")
+    public static void init() {
+        RegHelper.register(Supplementaries.res("mod_cap"), () -> (StreamCodec) CapSlotReference.CODEC, SlotReference.TYPE_REGISTRY_KEY);
     }
 }

@@ -49,6 +49,7 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "ShulkerBoxBlockEntityMixin",
+    "ShulkerSlotMixin",
     "SkeletonMixin",
     "SkellyHorseMixin",
     "SlimeMixin",
@@ -62,6 +63,7 @@
   "client": [
     "AgeableListAccessor",
     "BlockBehaviourPlanterMixin",
+    "BoatRendererMixin",
     "BookViewScreenMixin",
     "CameraMixin",
     "CartographyTableScreenMixin",

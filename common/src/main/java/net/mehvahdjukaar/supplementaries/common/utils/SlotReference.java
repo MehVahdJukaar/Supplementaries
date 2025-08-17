@@ -1,16 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import io.netty.buffer.ByteBuf;
-import net.mehvahdjukaar.moonlight.api.misc.StreamCodecMapRegistry;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.minecraft.Util;
+import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -131,20 +133,24 @@ public interface SlotReference {
         }
     }
 
+    ResourceKey<Registry<StreamCodec<ByteBuf, SlotReference>>> TYPE_REGISTRY_KEY =
+            ResourceKey.createRegistryKey(Supplementaries.res("slot_reference_type"));
 
-    StreamCodecMapRegistry<SlotReference> REGISTRY = Util.make(() -> {
-        StreamCodecMapRegistry<SlotReference> m = new StreamCodecMapRegistry<>("slot_reference");
-        m.register("hand", Hand.CODEC);
-        m.register("inv", Inv.CODEC);
-        m.register("empty", Empty.CODEC);
-        m.register("eq_slot", EqSlot.CODEC);
-        m.register("quiver", Quiver.CODEC);
-        return m;
+    @SuppressWarnings("all")
+    Registry<StreamCodec<ByteBuf, SlotReference>> TYPE_REGISTRY = Util.make(() -> {
+        var reg = RegHelper.registerRegistry(TYPE_REGISTRY_KEY, true);
+        RegHelper.register(Supplementaries.res("hand"), () -> (StreamCodec) Hand.CODEC, TYPE_REGISTRY_KEY);
+        RegHelper.register(Supplementaries.res("inv"), () -> (StreamCodec) Inv.CODEC, TYPE_REGISTRY_KEY);
+        RegHelper.register(Supplementaries.res("empty"), () -> (StreamCodec) Empty.CODEC, TYPE_REGISTRY_KEY);
+        RegHelper.register(Supplementaries.res("eq_slot"), () -> (StreamCodec) EqSlot.CODEC, TYPE_REGISTRY_KEY);
+        RegHelper.register(Supplementaries.res("quiver"), () -> (StreamCodec) Quiver.CODEC, TYPE_REGISTRY_KEY);
+        return reg;
     });
 
-    // i'm so bad with generics
-    StreamCodec<FriendlyByteBuf, SlotReference> STREAM_CODEC = REGISTRY.getStreamCodec()
-            .dispatch(SlotReference::getCodec, c -> (StreamCodec<ByteBuf, SlotReference>) c);
+
+    @SuppressWarnings("all")
+    StreamCodec<RegistryFriendlyByteBuf, SlotReference> STREAM_CODEC = ByteBufCodecs.registry(TYPE_REGISTRY_KEY)
+            .dispatch(o -> (StreamCodec) o.getCodec(), c -> c);
 
 
 }

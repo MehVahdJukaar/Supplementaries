@@ -21,6 +21,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import static net.mehvahdjukaar.supplementaries.client.GlobeManager.DEFAULT_DATA;
+
 public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private final boolean sepia;
@@ -38,7 +40,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         super(ModRegistry.GLOBE_TILE.get(), pos, state);
         this.sepia = state.is(ModRegistry.GLOBE_SEPIA.get());
         if (PlatHelper.getPhysicalSide().isClient()) {
-            renderData = GlobeManager.DEFAULT_DATA;
+            renderData = DEFAULT_DATA;
         }
     }
 
@@ -72,15 +74,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private void updateRenderData() {
         if (this.level == null || !this.level.isClientSide) return;
-        if (this.sheared) {
-            this.renderData = Pair.of(Model.SHEARED,
-                    sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
-                            GLOBE_SHEARED_TEXTURE);
-        } else if (this.hasCustomName()) {
-            var customData = GlobeManager.Type.getModelAndTexture(this.getCustomName().getString());
-            if (customData != null) this.renderData = customData;
-            else this.renderData = DEFAULT_DATA;
-        } else this.renderData = DEFAULT_DATA;
+        this.renderData = GlobeManager.computeRenderData(this.sheared, this.customName);
     }
 
     @Override

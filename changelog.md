@@ -1,2 +1,5 @@
-changed soul fired compat
-changed bamboo raft name & cannon with boat name
+- lunch baskets can be dyed
+- fixed shulker blaklist tag not working properly
+- fixed bunting having more states than needed
+- fixed boat textures for modded boats
+- ported some fixes from 1.20

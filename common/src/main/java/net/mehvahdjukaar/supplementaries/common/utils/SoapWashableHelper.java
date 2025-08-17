@@ -205,7 +205,7 @@ public class SoapWashableHelper {
 
             level.setBlock(pos, toPlace, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
             if (oldBe != null) {
-                CompoundTag tag = oldBe.saveWithoutMetadata(level.getRegistryAccess());
+                CompoundTag tag = oldBe.saveWithoutMetadata(level.registryAccess());
                 var be = level.getBlockEntity(pos);
                 if (be != null) {
                     be.loadWithComponents(tag, level.registryAccess());

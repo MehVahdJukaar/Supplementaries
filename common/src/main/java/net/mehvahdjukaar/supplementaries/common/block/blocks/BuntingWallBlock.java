@@ -19,7 +19,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class BuntingWallBlock extends DirectionalBlock implements IColored {
+public class BuntingWallBlock extends HorizontalDirectionalBlock implements IColored {
     private static final MapCodec<BuntingWallBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             DyeColor.CODEC.fieldOf("color").forGetter(BuntingWallBlock::getColor),
             BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BuntingWallBlock::properties)
@@ -83,7 +83,7 @@ public class BuntingWallBlock extends DirectionalBlock implements IColored {
     }
 
     @Override
-    protected MapCodec<? extends DirectionalBlock> codec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

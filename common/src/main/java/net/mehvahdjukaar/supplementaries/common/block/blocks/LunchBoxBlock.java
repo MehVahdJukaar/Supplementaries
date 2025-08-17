@@ -2,11 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.LunchBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionResult;
@@ -41,6 +43,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
 
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public static final BooleanProperty DYED = ModBlockProperties.DYED;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     private static final VoxelShape SHAPE = box(2, 0, 2, 14, 7, 14);
@@ -50,6 +53,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
         super(properties);
         this.registerDefaultState(this.defaultBlockState()
                 .setValue(FACING, Direction.NORTH)
+                .setValue(DYED, false)
                 .setValue(OPEN, false)
                 .setValue(HANGING, false));
     }
@@ -57,12 +61,15 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(HANGING, FACING, OPEN);
+        builder.add(HANGING, FACING, OPEN, DYED);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
+      ItemStack item =  context.getItemInHand();
+      boolean dyed = item.has(DataComponents.DYED_COLOR);
         return super.getStateForPlacement(context)
+                .setValue(DYED, dyed)
                 .setValue(FACING, context.getHorizontalDirection())
                 .setValue(HANGING, context.getClickedFace() == Direction.DOWN);
     }

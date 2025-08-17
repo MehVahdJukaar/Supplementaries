@@ -72,10 +72,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.lighting.LevelLightEngine;
@@ -127,7 +124,9 @@ public class ClientRegistry {
     public static final ModelResourceLocation ALTIMETER_TEMPLATE = modelRes("item/altimeter_template");
     public static final ModelResourceLocation ALTIMETER_OVERLAY = modelRes("item/altimeter_overlay");
     public static final ModelResourceLocation LUNCH_BOX_ITEM_MODEL = modelRes("item/lunch_basket_gui");
+    public static final ModelResourceLocation LUNCH_BOX_DYED_ITEM_MODEL = modelRes("item/lunch_basket_gui_dyed");
     public static final ModelResourceLocation LUNCH_BOX_OPEN_ITEM_MODEL = modelRes("item/lunch_basket_gui_open");
+    public static final ModelResourceLocation LUNCH_BOX_OPEN_DYED_ITEM_MODEL = modelRes("item/lunch_basket_gui_open_dyed");
 
     public static final ModelResourceLocation BOAT_MODEL = modelRes("block/jar_boat_ship");
     public static final ModelResourceLocation BLACKBOARD_FRAME = modelRes("block/blackboard_frame");
@@ -291,6 +290,9 @@ public class ClientRegistry {
                 (stack, world, entity, s) -> MiscUtils.FESTIVITY.getCandyWrappingIndex());
 
         ItemProperties.register(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
+                (stack, world, entity, s) -> stack.has(DataComponents.DYED_COLOR) ? 1 : 0);
+
+        ItemProperties.register(ModRegistry.LUNCH_BASKET_ITEM.get(), Supplementaries.res("dyed"),
                 (stack, world, entity, s) -> stack.has(DataComponents.DYED_COLOR) ? 1 : 0);
 
         ItemProperties.register(ModRegistry.GLOBE_ITEM.get(), Supplementaries.res("type"),
@@ -563,6 +565,9 @@ public class ClientRegistry {
         event.register((itemStack, i) -> i == 0 ? -1 :
                         DyedItemColor.getOrDefault(itemStack, -6265536),
                 ModRegistry.QUIVER_ITEM.get());
+        event.register((itemStack, i) -> i == 0 ? -1 :
+                        DyedItemColor.getOrDefault(itemStack, DyeColor.RED.getMapColor().col),
+                ModRegistry.LUNCH_BASKET_ITEM.get());
     }
 
     @EventCalled

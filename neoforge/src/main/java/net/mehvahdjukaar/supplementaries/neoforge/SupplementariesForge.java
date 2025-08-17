@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
 import com.mojang.serialization.MapCodec;
+import com.teamabnormals.blueprint.client.renderer.BlueprintBoatRenderer;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -46,6 +47,8 @@ public class SupplementariesForge {
             ClientRegistry.init();
             ClientEventsForge.init();
         });
+
+        SuppPlatformStuffImpl.init();
 
         LOOT_MODIFIERS.register(bus);
     }

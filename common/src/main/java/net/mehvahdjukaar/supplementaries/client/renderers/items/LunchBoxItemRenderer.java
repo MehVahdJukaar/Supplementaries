@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +20,6 @@ public class LunchBoxItemRenderer extends ItemStackRenderer {
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack pose, MultiBufferSource buffer, int combinedLightIn, int combinedOverlayIn) {
-        //render block
         pose.pushPose();
         pose.translate(0.5, 0.5, 0.5);
         Minecraft mc = Minecraft.getInstance();
@@ -31,8 +31,13 @@ public class LunchBoxItemRenderer extends ItemStackRenderer {
                     data.getSelected(), transformType, combinedLightIn, combinedOverlayIn, pose, buffer,
                     mc.level, 0);
         } else {
-            BakedModel model = ClientHelper.getModel(mc.getModelManager(),
-                    (data != null && data.canEatFrom()) ? ClientRegistry.LUNCH_BOX_OPEN_ITEM_MODEL : ClientRegistry.LUNCH_BOX_ITEM_MODEL);
+            boolean dyed = stack.get(DataComponents.DYED_COLOR) != null;
+
+            var modelLoc = (data != null && data.canEatFrom()) ?
+                    (dyed ? ClientRegistry.LUNCH_BOX_OPEN_DYED_ITEM_MODEL : ClientRegistry.LUNCH_BOX_OPEN_ITEM_MODEL) :
+                    (dyed ? ClientRegistry.LUNCH_BOX_DYED_ITEM_MODEL : ClientRegistry.LUNCH_BOX_ITEM_MODEL);
+
+            BakedModel model = ClientHelper.getModel(mc.getModelManager(), modelLoc);
             itemRenderer.render(stack, transformType, false, pose, buffer,
                     combinedLightIn, combinedOverlayIn, model);
         }

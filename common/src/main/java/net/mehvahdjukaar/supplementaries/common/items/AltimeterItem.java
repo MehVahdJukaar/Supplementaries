@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,4 +27,8 @@ public class AltimeterItem extends Item {
         return super.use(level, player, usedHand);
     }
 
+    @Override
+    public boolean isEnabled(FeatureFlagSet enabledFeatures) {
+        return super.isEnabled(enabledFeatures);
+    }
 }

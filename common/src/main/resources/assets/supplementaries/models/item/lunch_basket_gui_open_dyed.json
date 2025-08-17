@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "supplementaries:item/lunch_basket_open",
+    "layer1": "supplementaries:item/lunch_basket_cloth_overlay"
+  }
+}

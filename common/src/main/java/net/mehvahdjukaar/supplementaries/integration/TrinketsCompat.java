@@ -4,6 +4,8 @@ import dev.emi.trinkets.api.SlotType;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketInventory;
 import dev.emi.trinkets.api.TrinketsApi;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.items.KeyItem;
@@ -19,7 +21,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class TrinketsCompat {
 
+    @SuppressWarnings("all")
     public static void init(){
+        RegHelper.register(Supplementaries.res("trinket"), () -> (StreamCodec) CuriosCompat.Curio.CODEC, SlotReference.TYPE_REGISTRY_KEY);
 
     }
 
@@ -89,7 +93,4 @@ public class TrinketsCompat {
         }
     }
 
-    static {
-        SlotReference.REGISTRY.register("trinket", Trinket.CODEC);
-    }
 }

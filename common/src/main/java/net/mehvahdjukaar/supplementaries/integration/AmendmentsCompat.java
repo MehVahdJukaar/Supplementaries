@@ -14,11 +14,11 @@ public class AmendmentsCompat {
     }
 
     public static boolean has3DSlimeballRenderer(){
-        return ClientConfigs.SLIMEBALL_3D.get();
+        return false;// ClientConfigs.SLIMEBALL_3D.get();
     }
 
     public static boolean hasThrowableFireCharge(){
-        return CommonConfigs.THROWABLE_FIRE_CHARGES.get();
+        return false;//CommonConfigs.THROWABLE_FIRE_CHARGES.get();
     }
 }
 

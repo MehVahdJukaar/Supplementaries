@@ -7,12 +7,9 @@ import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesGenerato
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
-import net.mehvahdjukaar.moonlight.api.resources.recipe.IRecipeTemplate;
-import net.mehvahdjukaar.moonlight.api.resources.recipe.TemplateRecipeManager;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -48,91 +45,87 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
 
     @Override
     public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
-        if (CommonConfigs.Building.SIGN_POST_ENABLED.get()) {
+        executor.accept((manager, sink) -> {
+            //R.putAll(manager.listResources("tags", r->true);
 
-            executor.accept((manager, sink) -> {
-                //R.putAll(manager.listResources("tags", r->true);
-                executor.accept(this::addSignPostRecipes);
+            //sing posts
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("way_signs"));
+                builder.addEntries(ModRegistry.WAY_SIGN_ITEMS.values());
+                sink.addTag(builder, Registries.ITEM);
+            }
 
-                //sing posts
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("cannon_boats"));
+                builder.addEntries(ModRegistry.CANNON_BOAT_ITEMS.values());
+                sink.addTag(builder, Registries.ITEM);
+            }
+
+            //recipes
+            if (CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
+                addSignPostRecipes(manager, sink);
+            }
+
+            if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
+                addCannonBoatRecipes(manager, sink);
+            }
+
+            //fabric has it done another way beucase it needs tag before this...
+            if (PlatHelper.getPlatform().isForge()) {
+                //way signs tag
                 {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("way_signs"));
-                    builder.addEntries(ModRegistry.WAY_SIGN_ITEMS.values());
-                    sink.addTag(builder, Registries.ITEM);
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
+                    if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get() && CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
+                        builder.addTag(BiomeTags.IS_OVERWORLD);
+                    }
+                    sink.addTag(builder, Registries.BIOME);
                 }
+
+                //cave urns tag
 
                 {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(Supplementaries.res("cannon_boats"));
-                    builder.addEntries(ModRegistry.CANNON_BOAT_ITEMS.values());
-                    sink.addTag(builder, Registries.ITEM);
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
+
+                    if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
+                        builder.addTag(BiomeTags.IS_OVERWORLD);
+                    }
+                    sink.addTag(builder, Registries.BIOME);
                 }
 
-                //recipes
-                if (CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
-                    addSignPostRecipes(manager, sink);
+                //wild flax tag
+
+                {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
+
+                    if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
+                        builder.addTag(BiomeTags.IS_OVERWORLD);
+                    }
+                    sink.addTag(builder, Registries.BIOME);
                 }
 
-                if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
-                    addCannonBoatRecipes(manager, sink);
+                //ash
+
+                {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
+
+                    if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
+                        builder.add(Biomes.BASALT_DELTAS.location());
+                        builder.addOptionalElement(ResourceLocation.parse("incendium:volcanic_deltas"));
+                    }
+                    sink.addTag(builder, Registries.BIOME);
                 }
-
-                //fabric has it done another way beucase it needs tag before this...
-                if (PlatHelper.getPlatform().isForge()) {
-                    //way signs tag
-                    {
-                        SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-                        if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get() && CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
-                            builder.addTag(BiomeTags.IS_OVERWORLD);
-                        }
-                        sink.addTag(builder, Registries.BIOME);
-                    }
-
-                    //cave urns tag
-
-                    {
-                        SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
-
-                        if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
-                            builder.addTag(BiomeTags.IS_OVERWORLD);
-                        }
-                        sink.addTag(builder, Registries.BIOME);
-                    }
-
-                    //wild flax tag
-
-                    {
-                        SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
-
-                        if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
-                            builder.addTag(BiomeTags.IS_OVERWORLD);
-                        }
-                        sink.addTag(builder, Registries.BIOME);
-                    }
-
-                    //ash
-
-                    {
-                        SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
-
-                        if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
-                            builder.add(Biomes.BASALT_DELTAS.location());
-                            builder.addOptionalElement(ResourceLocation.parse("incendium:volcanic_deltas"));
-                        }
-                        sink.addTag(builder, Registries.BIOME);
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
     private void addCannonBoatRecipes(ResourceManager manager, ResourceSink sink) {
         Recipe<?> recipeTemplate = RPUtils.readRecipe(manager, Supplementaries.res("cannon_boat_oak"));
-        WoodType oak = WoodTypeRegistry.OAK_TYPE;
+        WoodType oak = VanillaWoodTypes.OAK;
         ModRegistry.CANNON_BOAT_ITEMS.forEach((w, i) -> {
             WoodType bamboo = WoodTypeRegistry.INSTANCE.get(ResourceLocation.withDefaultNamespace("bamboo"));
             if (w != oak && w != bamboo) {
                 try {
-                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w,
+                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, VanillaWoodTypes.OAK, w,
                             Supplementaries.res("cannon_boat_oak"));
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     sink.addRecipe(newR);

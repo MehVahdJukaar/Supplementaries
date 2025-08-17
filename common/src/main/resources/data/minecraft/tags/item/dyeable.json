@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:quiver"
+    "supplementaries:quiver",
+    "supplementaries:lunch_basket"
   ]
 }

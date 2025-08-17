@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
-import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
@@ -12,16 +12,20 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
+    @Nullable
+    private DyedItemColor dyeColor = null;
 
     public LunchBoxBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.LUNCH_BASKET_TILE.get(), pos, state, 27);
@@ -91,6 +95,11 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
     }
 
     @Override
+    public void setComponents(DataComponentMap components) {
+        super.setComponents(components);
+    }
+
+    @Override
     protected void applyImplicitComponents(DataComponentInput componentInput) {
         super.applyImplicitComponents(componentInput);
         var content = componentInput.get(ModComponents.LUNCH_BASKET_CONTENT.get());
@@ -99,6 +108,7 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
                 this.setItem(i, content.getStackInSlot(i));
             }
         }
+        this.dyeColor = componentInput.get(DataComponents.DYED_COLOR);
     }
 
     @Override
@@ -109,6 +119,7 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
             content.setStackInSlot(i, this.getItem(i));
         }
         components.set(ModComponents.LUNCH_BASKET_CONTENT.get(), content.toImmutable());
+        if(this.dyeColor != null) components.set(DataComponents.DYED_COLOR, this.dyeColor);
     }
 
     @Override

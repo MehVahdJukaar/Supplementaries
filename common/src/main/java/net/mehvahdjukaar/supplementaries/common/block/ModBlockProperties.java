@@ -58,6 +58,7 @@ public class ModBlockProperties {
     public static final BooleanProperty TWO_FACED = BooleanProperty.create("two_faced");
     public static final BooleanProperty SLANTED = BooleanProperty.create("slanted");
     public static final BooleanProperty FLIP_TILE = BooleanProperty.create("flip_tile");
+    public static final BooleanProperty DYED = BooleanProperty.create("dyed");
     public static final EnumProperty<Rotation> ROTATE_TILE = EnumProperty.create("rotate_tile", Rotation.class);
 
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);

@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.items.KeyItem;
@@ -20,8 +22,9 @@ import java.util.List;
 
 public class CuriosCompat {
 
-    public static void init(){
-
+    @SuppressWarnings("all")
+    public static void init() {
+        RegHelper.register(Supplementaries.res("curio"), () -> (StreamCodec) Curio.CODEC, SlotReference.TYPE_REGISTRY_KEY);
     }
 
     static KeyLockableTile.KeyStatus getKey(Player player, String password) {
@@ -68,7 +71,4 @@ public class CuriosCompat {
         }
     }
 
-    static {
-        SlotReference.REGISTRY.register("curio", Curio.CODEC);
-    }
 }
