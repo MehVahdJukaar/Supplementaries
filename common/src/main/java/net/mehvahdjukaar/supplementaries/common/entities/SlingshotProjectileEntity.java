@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.moonlight.api.entity.ParticleTrailEmitter;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
@@ -55,6 +56,11 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     private float xRotInc;
     private float yRotInc;
     private float particleCooldown = 0;
+
+    private final ParticleTrailEmitter trailEmitter = ParticleTrailEmitter.builder()
+            .spacing(3)
+            .maxParticlesPerTick(5)
+            .build();
 
     private final Supplier<Integer> light = Suppliers.memoize(() -> {
         Item item = this.getItem().getItem();
@@ -351,6 +357,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
             double speed = this.getDeltaMovement().length();
             if (this.tickCount > 1 && speed * this.tickCount > 1.5) {
                 if (this.isNoGravity()) {
+                    //stasis
 
                     Vec3 rot = new Vec3(0.325, 0, 0).yRot(this.tickCount * 0.32f);
 
@@ -364,15 +371,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     movement = movement.scale(0.25);
                     this.level().addParticle(ModParticles.STASIS_PARTICLE.get(), px, py, pz, movement.x, movement.y, movement.z);
                 } else {
-                    //TODO: make these properly equally spaced
-                    double interval = 3 / (speed * 0.95 + 0.05);
-                    if (this.particleCooldown > interval) {
-                        this.particleCooldown -= interval;
-                        double x = getX();
-                        double y = getEyeY();
-                        double z = getZ();
-                        this.level().addParticle(ModParticles.SLINGSHOT_PARTICLE.get(), x, y, z, 0, 0.01, 0);
-                    }
+                    trailEmitter.tick(this, (p, v) -> {
+                        this.level().addParticle(ModParticles.SLINGSHOT_PARTICLE.get(),
+                                p.x, p.y, p.z, 0, 0.01, 0);
+                    });
                 }
             }
         }

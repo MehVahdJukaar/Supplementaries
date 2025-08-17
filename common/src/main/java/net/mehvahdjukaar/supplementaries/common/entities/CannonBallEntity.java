@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.moonlight.api.entity.ParticleTrailEmitter;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -110,8 +111,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         double dx = getX() - xo;
         double dy = getY() - yo;
         double dz = getZ() - zo;
-
-
+        //TODO: use trail emitter here
         for (int k = 0; k < 2; k++) {
             if (random.nextFloat() < speed.length() * 0.35) {
                 // random circular vector

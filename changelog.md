@@ -3,3 +3,4 @@
 - fixed bunting having more states than needed
 - fixed boat textures for modded boats
 - ported some fixes from 1.20
+- bombs and slingshot will now emit particles that are equally spaced

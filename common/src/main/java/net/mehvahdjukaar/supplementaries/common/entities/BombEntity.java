@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.moonlight.api.entity.ParticleTrailEmitter;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
@@ -19,7 +20,6 @@ import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -30,7 +30,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -38,7 +37,6 @@ import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -50,6 +48,13 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     private boolean active = true;
     private int changeTimer = -1;
     private boolean superCharged = false;
+
+    private final ParticleTrailEmitter trailEmitter = ParticleTrailEmitter.builder()
+            .spacing(0.25)
+            .maxParticlesPerTick(20)
+            .minParticlesPerTick(1)
+            .build();
+
 
     public BombEntity(EntityType<? extends BombEntity> type, Level world) {
         super(type, world);
@@ -152,22 +157,14 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     @Override
     public void spawnTrailParticles() {
-        Vec3 newPos = this.position();
-        if (this.active && this.tickCount > 1) {
+        trailEmitter.tick(this, (p, v) -> {
+            this.level().addParticle(ParticleTypes.SMOKE,
+                    p.x,
+                    0.25 + p.y,
+                    p.z,
+                    0, 0.02, 0);
+        });
 
-            double dx = newPos.x - xo;
-            double dy = newPos.y - yo;
-            double dz = newPos.z - zo;
-            int s = 4;
-            for (int i = 0; i < s; ++i) {
-                double j = i / (double) s;
-                this.level().addParticle(ParticleTypes.SMOKE,
-                        xo - dx * j,
-                        0.25 + yo - dy * j,
-                        zo - dz * j,
-                        0, 0.02, 0);
-            }
-        }
     }
 
     public void turnOff() {
