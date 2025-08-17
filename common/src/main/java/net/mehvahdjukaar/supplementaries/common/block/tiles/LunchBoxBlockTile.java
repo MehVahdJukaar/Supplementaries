@@ -11,10 +11,13 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -95,8 +98,29 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
     }
 
     @Override
-    public void setComponents(DataComponentMap components) {
-        super.setComponents(components);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        if (dyeColor != null)
+            DyedItemColor.CODEC.encode(dyeColor, registries.createSerializationContext(NbtOps.INSTANCE), tag);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        var d = DyedItemColor.CODEC.decode(registries.createSerializationContext(NbtOps.INSTANCE), tag);
+        if(d.isSuccess()){
+            dyeColor = d.getOrThrow().getFirst();
+        }
+    }
+
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -119,12 +143,21 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
             content.setStackInSlot(i, this.getItem(i));
         }
         components.set(ModComponents.LUNCH_BASKET_CONTENT.get(), content.toImmutable());
-        if(this.dyeColor != null) components.set(DataComponents.DYED_COLOR, this.dyeColor);
+        if (this.dyeColor != null) components.set(DataComponents.DYED_COLOR, this.dyeColor);
     }
 
     @Override
     public void removeComponentsFromTag(CompoundTag tag) {
         super.removeComponentsFromTag(tag);
         tag.remove("Items");
+    }
+
+    @Nullable
+    public DyedItemColor getDyedColor() {
+        return dyeColor;
+    }
+
+    public void setDyedColor(DyedItemColor o) {
+        this.dyeColor = o;
     }
 }

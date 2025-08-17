@@ -131,7 +131,7 @@ public class ClientRegistry {
     public static final ModelResourceLocation BOAT_MODEL = modelRes("block/jar_boat_ship");
     public static final ModelResourceLocation BLACKBOARD_FRAME = modelRes("block/blackboard_frame");
     public static final Supplier<Map<WoodType, ModelResourceLocation>> WAY_SIGN_MODELS = Suppliers.memoize(() ->
-            WoodTypeRegistry.getTypes().stream().collect(Collectors.toMap(Function.identity(),
+            WoodTypeRegistry.INSTANCE.getValues().stream().collect(Collectors.toMap(Function.identity(),
                     w -> modelRes("block/way_signs/" + w.getVariantId("way_sign"))))
     );
 
@@ -486,6 +486,8 @@ public class ClientRegistry {
         event.register(BOAT_MODEL);
         event.register(LUNCH_BOX_ITEM_MODEL);
         event.register(LUNCH_BOX_OPEN_ITEM_MODEL);
+        event.register(LUNCH_BOX_DYED_ITEM_MODEL);
+        event.register(LUNCH_BOX_OPEN_DYED_ITEM_MODEL);
         event.register(ALTIMETER_TEMPLATE);
         event.register(ALTIMETER_OVERLAY);
 
@@ -556,6 +558,7 @@ public class ClientRegistry {
         event.register(new GunpowderBlockColor(), ModRegistry.GUNPOWDER_BLOCK.get());
         event.register(new FlowerBoxColor(), ModRegistry.FLOWER_BOX.get());
         event.register(new FluidColor(false), ModRegistry.GOBLET.get(), ModRegistry.JAR.get());
+        event.register(new LunchBasketColor(), ModRegistry.LUNCH_BASKET.get());
     }
 
     @EventCalled

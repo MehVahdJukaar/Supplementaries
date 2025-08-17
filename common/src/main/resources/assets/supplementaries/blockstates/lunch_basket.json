@@ -1,64 +1,127 @@
 {
   "variants": {
-    "hanging=false,facing=north,open=false": {
+    "dyed=false,hanging=false,facing=north,open=false": {
       "model": "supplementaries:block/lunch_basket"
     },
-    "hanging=false,facing=east,open=false": {
+    "dyed=false,hanging=false,facing=east,open=false": {
       "model": "supplementaries:block/lunch_basket",
       "y": 90
     },
-    "hanging=false,facing=south,open=false": {
+    "dyed=false,hanging=false,facing=south,open=false": {
       "model": "supplementaries:block/lunch_basket",
       "y": 180
     },
-    "hanging=false,facing=west,open=false": {
+    "dyed=false,hanging=false,facing=west,open=false": {
       "model": "supplementaries:block/lunch_basket",
       "y": 270
     },
-    "hanging=true,facing=north,open=false": {
+    "dyed=false,hanging=true,facing=north,open=false": {
       "model": "supplementaries:block/lunch_basket_hanging"
     },
-    "hanging=true,facing=east,open=false": {
+    "dyed=false,hanging=true,facing=east,open=false": {
       "model": "supplementaries:block/lunch_basket_hanging",
       "y": 90
     },
-    "hanging=true,facing=south,open=false": {
+    "dyed=false,hanging=true,facing=south,open=false": {
       "model": "supplementaries:block/lunch_basket_hanging",
       "y": 180
     },
-    "hanging=true,facing=west,open=false": {
+    "dyed=false,hanging=true,facing=west,open=false": {
       "model": "supplementaries:block/lunch_basket_hanging",
       "y": 270
     },
 
-    "hanging=false,facing=north,open=true": {
+    "dyed=false,hanging=false,facing=north,open=true": {
       "model": "supplementaries:block/lunch_basket_open"
     },
-    "hanging=false,facing=east,open=true": {
+    "dyed=false,hanging=false,facing=east,open=true": {
       "model": "supplementaries:block/lunch_basket_open",
       "y": 90
     },
-    "hanging=false,facing=south,open=true": {
+    "dyed=false,hanging=false,facing=south,open=true": {
       "model": "supplementaries:block/lunch_basket_open",
       "y": 180
     },
-    "hanging=false,facing=west,open=true": {
+    "dyed=false,hanging=false,facing=west,open=true": {
       "model": "supplementaries:block/lunch_basket_open",
       "y": 270
     },
-    "hanging=true,facing=north,open=true": {
+    "dyed=false,hanging=true,facing=north,open=true": {
       "model": "supplementaries:block/lunch_basket_hanging_open"
     },
-    "hanging=true,facing=east,open=true": {
+    "dyed=false,hanging=true,facing=east,open=true": {
       "model": "supplementaries:block/lunch_basket_hanging_open",
       "y": 90
     },
-    "hanging=true,facing=south,open=true": {
+    "dyed=false,hanging=true,facing=south,open=true": {
       "model": "supplementaries:block/lunch_basket_hanging_open",
       "y": 180
     },
-    "hanging=true,facing=west,open=true": {
+    "dyed=false,hanging=true,facing=west,open=true": {
       "model": "supplementaries:block/lunch_basket_hanging_open",
+      "y": 270
+    },
+
+
+    "dyed=true,hanging=false,facing=north,open=false": {
+      "model": "supplementaries:block/lunch_basket_dyed"
+    },
+    "dyed=true,hanging=false,facing=east,open=false": {
+      "model": "supplementaries:block/lunch_basket_dyed",
+      "y": 90
+    },
+    "dyed=true,hanging=false,facing=south,open=false": {
+      "model": "supplementaries:block/lunch_basket_dyed",
+      "y": 180
+    },
+    "dyed=true,hanging=false,facing=west,open=false": {
+      "model": "supplementaries:block/lunch_basket_dyed",
+      "y": 270
+    },
+    "dyed=true,hanging=true,facing=north,open=false": {
+      "model": "supplementaries:block/lunch_basket_hanging_dyed"
+    },
+    "dyed=true,hanging=true,facing=east,open=false": {
+      "model": "supplementaries:block/lunch_basket_hanging_dyed",
+      "y": 90
+    },
+    "dyed=true,hanging=true,facing=south,open=false": {
+      "model": "supplementaries:block/lunch_basket_hanging_dyed",
+      "y": 180
+    },
+    "dyed=true,hanging=true,facing=west,open=false": {
+      "model": "supplementaries:block/lunch_basket_hanging_dyed",
+      "y": 270
+    },
+
+    "dyed=true,hanging=false,facing=north,open=true": {
+      "model": "supplementaries:block/lunch_basket_open_dyed"
+    },
+    "dyed=true,hanging=false,facing=east,open=true": {
+      "model": "supplementaries:block/lunch_basket_open_dyed",
+      "y": 90
+    },
+    "dyed=true,hanging=false,facing=south,open=true": {
+      "model": "supplementaries:block/lunch_basket_open_dyed",
+      "y": 180
+    },
+    "dyed=true,hanging=false,facing=west,open=true": {
+      "model": "supplementaries:block/lunch_basket_open_dyed",
+      "y": 270
+    },
+    "dyed=true,hanging=true,facing=north,open=true": {
+      "model": "supplementaries:block/lunch_basket_hanging_open_dyed"
+    },
+    "dyed=true,hanging=true,facing=east,open=true": {
+      "model": "supplementaries:block/lunch_basket_hanging_open_dyed",
+      "y": 90
+    },
+    "dyed=true,hanging=true,facing=south,open=true": {
+      "model": "supplementaries:block/lunch_basket_hanging_open_dyed",
+      "y": 180
+    },
+    "dyed=true,hanging=true,facing=west,open=true": {
+      "model": "supplementaries:block/lunch_basket_hanging_open_dyed",
       "y": 270
     }
   }

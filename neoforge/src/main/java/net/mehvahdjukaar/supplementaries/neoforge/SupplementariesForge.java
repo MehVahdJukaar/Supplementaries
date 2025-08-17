@@ -61,7 +61,6 @@ public class SupplementariesForge {
     @SubscribeEvent
     public void setup(FMLCommonSetupEvent event) {
         VillagerScareStuff.setup();
-
     }
 
     public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");

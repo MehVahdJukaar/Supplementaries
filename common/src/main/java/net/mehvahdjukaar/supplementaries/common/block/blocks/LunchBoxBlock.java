@@ -1,11 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.LunchBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class LunchBoxBlock extends WaterBlock implements EntityBlock {
+public class LunchBoxBlock extends WaterBlock implements EntityBlock, IWashable {
 
     public static final BooleanProperty HANGING = BlockStateProperties.HANGING;
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
@@ -66,8 +67,8 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-      ItemStack item =  context.getItemInHand();
-      boolean dyed = item.has(DataComponents.DYED_COLOR);
+        ItemStack item = context.getItemInHand();
+        boolean dyed = item.has(DataComponents.DYED_COLOR);
         return super.getStateForPlacement(context)
                 .setValue(DYED, dyed)
                 .setValue(FACING, context.getHorizontalDirection())
@@ -116,7 +117,7 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof LunchBoxBlockTile tile) {
-           ItemStack lunchBox = Utils.saveTileToItem(tile);
+            ItemStack lunchBox = Utils.saveTileToItem(tile);
             //TODO: 1.21: use loot tables copy nbt stuff
             return Collections.singletonList(lunchBox);
         }
@@ -158,4 +159,15 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
         return worldIn.getBlockEntity(pos) instanceof MenuProvider menuProvider ? menuProvider : null;
     }
 
+    @Override
+    public boolean tryWash(Level level, BlockPos blockPos, BlockState blockState, Vec3 vec3) {
+        if (blockState.getValue(DYED)) {
+            if (level.getBlockEntity(blockPos) instanceof LunchBoxBlockTile te) {
+                te.setDyedColor(null);
+            }
+            level.setBlockAndUpdate(blockPos, blockState.setValue(DYED, false));
+            return true;
+        }
+        return false;
+    }
 }

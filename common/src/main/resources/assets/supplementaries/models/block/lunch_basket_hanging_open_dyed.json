@@ -1,0 +1,12 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "supplementaries:block/lunch_basket_hanging_dyed",
+	"textures": {
+		"1": "supplementaries:block/lunch_basket_top",
+		"2": "supplementaries:block/lunch_basket_bottom",
+		"3": "supplementaries:block/lunch_basket_side_overlay",
+		"4": "supplementaries:block/lunch_basket_top_overlay_open",
+		"color": "supplementaries:block/lunch_basket_cloth",
+		"particle": "supplementaries:block/lunch_basket_side"
+	}
+}
