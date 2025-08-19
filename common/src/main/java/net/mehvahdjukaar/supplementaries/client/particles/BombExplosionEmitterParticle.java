@@ -50,6 +50,7 @@ public class BombExplosionEmitterParticle extends NoRenderParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double radius, double ySpeed, double zSpeed) {
+            if (radius <= 0) return null;
             return new BombExplosionEmitterParticle(worldIn, x, y, z, radius);
         }
     }

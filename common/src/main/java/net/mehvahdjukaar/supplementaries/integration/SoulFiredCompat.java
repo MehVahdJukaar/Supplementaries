@@ -27,11 +27,6 @@ public class SoulFiredCompat {
                 .removeComponent(Fire.Component.LANTERN_BLOCK)
                 .removeComponent(Fire.Component.TORCH_BLOCK)
                 .removeComponent(Fire.Component.TORCH_ITEM);
-        try {
-            fire.setComponent(Fire.Component.SOURCE_BLOCK, ModFluids.LUMISENE_BLOCK.getId());
-        } catch (Exception e) {
-            Supplementaries.LOGGER.error("Some error from soul fired: ", e);
-        }
 
 
         FireManager.registerFire(fire.build());

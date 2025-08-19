@@ -195,7 +195,7 @@
       "supplementaries:block/fizzle"
     ]
   },
-  "item.bomb": {
+  "explosion.bomb": {
     "subtitle": "subtitles.supplementaries.bomb",
     "sounds": [
       "supplementaries:item/bomb_explosion_0",

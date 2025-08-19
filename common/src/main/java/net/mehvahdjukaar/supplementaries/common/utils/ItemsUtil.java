@@ -39,6 +39,7 @@ public class ItemsUtil {
 
     //placeable item stuff
 
+    //TODO: move to lib
     @Nullable
     public static BlockState getPlacementState(BlockPlaceContext context, Block block) {
         return BlockPlacerItem.get().mimicGetPlacementState(context, block);
@@ -80,28 +81,6 @@ public class ItemsUtil {
         return InteractionResult.PASS;
     }
 
-
-    public static void addStackToExisting(Player player, ItemStack stack, boolean avoidHands) {
-        var inv = player.getInventory();
-        boolean added = false;
-        for (int j = 0; j < inv.items.size(); j++) {
-            if (inv.getItem(j).is(stack.getItem()) && inv.add(j, stack)) {
-                added = true;
-                break;
-            }
-        }
-        if (avoidHands && !added) {
-            for (int j = 0; j < inv.items.size(); j++) {
-                if (inv.getItem(j).isEmpty() && j != inv.selected && inv.add(j, stack)) {
-                    added = true;
-                    break;
-                }
-            }
-        }
-        if (!added && inv.add(stack)) {
-            player.drop(stack, false);
-        }
-    }
 
     public static boolean tryInteractingWithContainerItem(ItemStack containerStack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean inSlot) {
         if (action != ClickAction.PRIMARY) {

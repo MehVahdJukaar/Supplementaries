@@ -1,6 +1,11 @@
-- lunch baskets can be dyed
+- lunch baskets can be dyed all colors like a leather item
 - fixed shulker blaklist tag not working properly
 - fixed bunting having more states than needed
 - fixed boat textures for modded boats
 - ported some fixes from 1.20
 - bombs and slingshot will now emit particles that are equally spaced
+- fixed bomb particles being too small
+- improved sacks tag
+- fixed a bug with soul fire compat
+- fixed cage stack size
+- candle holder recipes use 1 ingot instead of 3

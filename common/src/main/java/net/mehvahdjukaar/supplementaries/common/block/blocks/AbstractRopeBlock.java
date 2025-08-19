@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
@@ -261,7 +262,7 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
                     if (RopeHelper.removeRopeDown(pos.below(), level, this)) {
                         level.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (!player.getAbilities().instabuild) {
-                            ItemsUtil.addStackToExisting(player, new ItemStack(this), true);
+                            Utils.addStackToExisting(player, new ItemStack(this), true);
                         }
                         return ItemInteractionResult.sidedSuccess(level.isClientSide);
                     }

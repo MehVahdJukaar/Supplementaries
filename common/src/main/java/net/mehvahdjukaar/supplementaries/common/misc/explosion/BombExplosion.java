@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.misc.explosion;
 
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -16,8 +18,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.world.level.Explosion.getIndirectSourceEntityInternal;
 
@@ -30,10 +32,18 @@ public class BombExplosion {
 
         DamageSource damageSource = getBombDamageSource(source);
         ExplosionDamageCalculator damageCalculator = new BombExplosionDamageCalculator(type);
+        NetworkHelper.sendToAllClientPlayersTrackingEntity(source,
+                new ClientBoundParticlePacket(new Vec3(x, y, z), ClientBoundParticlePacket.Kind.BOMB_EXPLOSION,
+                        (int) type.getRadius()));
+
+        //TODO: finish
+        //   ParticleUtil.spawnParticleInASphere(level, x,y,z, ()-> ModParticles.BOMB_CHARGE.get(), 20,1,1,1
+        //           );
+
         return level.explode(source, damageSource, damageCalculator, x, y, z,
                 (float) type.getRadius(), false, interaction,
                 ModParticles.BOMB_EXPLOSION_PARTICLE.get(),
-                ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(),
+                ModParticles.BOMB_EXPLOSION_PARTICLE.get(),
                 ModSounds.BOMB_EXPLOSION.getHolder());
     }
 

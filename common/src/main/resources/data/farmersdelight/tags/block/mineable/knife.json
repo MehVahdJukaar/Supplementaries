@@ -1,6 +1,6 @@
 {
   "values": [
-    "supplementaries:sack",
+    "#supplementaries:sack",
     "#supplementaries:flags"
   ]
 }

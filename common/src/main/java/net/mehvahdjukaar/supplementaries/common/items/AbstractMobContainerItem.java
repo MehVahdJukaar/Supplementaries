@@ -94,11 +94,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     public void playReleaseSound(Level world, Vec3 v) {
     }
 
-    @ForgeOverride
-    public int getMaxStackSize(ItemStack stack) {
-        return this.isFull(stack) ? 1 : 64;
-    }
-
     public boolean isFull(ItemStack stack) {
         return stack.has(ModComponents.MOB_HOLDER_CONTENT.get());
     }

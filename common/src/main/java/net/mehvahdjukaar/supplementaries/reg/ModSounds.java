@@ -21,7 +21,7 @@ public class ModSounds {
     public static final Supplier<SoundEvent> TOM = regSound("block.turntable.cat");
     public static final Supplier<SoundEvent> CLOCK_TICK_1 = regSound("block.clock.tick_1");
     public static final Supplier<SoundEvent> CLOCK_TICK_2 = regSound("block.clock.tick_2");
-    public static final RegSupplier<SoundEvent> BOMB_EXPLOSION = regSound("item.bomb");
+    public static final RegSupplier<SoundEvent> BOMB_EXPLOSION = regSound("explosion.bomb");
     public static final RegSupplier<SoundEvent> PANCAKE_MUSIC = regSound("music_disc.pancake");
     public static final RegSupplier<SoundEvent> PIRATE_MUSIC = regSound("music_disc.heave_ho");
     public static final Supplier<SoundEvent> GUNPOWDER_IGNITE = regSound("block.gunpowder.ignite");

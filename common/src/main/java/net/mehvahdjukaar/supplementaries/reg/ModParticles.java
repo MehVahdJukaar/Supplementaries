@@ -40,6 +40,8 @@ public class ModParticles {
     public static final Supplier<SimpleParticleType> ASH_PARTICLE = reg("ash");
     public static final Supplier<SimpleParticleType> BUBBLE_BLOCK_PARTICLE = reg("bubble_block");
     public static final Supplier<SimpleParticleType> SUGAR_PARTICLE = reg("sugar");
+    //TODO: finish
+    public static final Supplier<SimpleParticleType> BOMB_CHARGE = reg("bomb_charge");
     public static final Supplier<ParticleType<CannonFireParticle.Options>> CANNON_FIRE_PARTICLE =
             RegHelper.registerParticle(Supplementaries.res("cannon_fire"),
                     CannonFireParticle.Options.CODEC, CannonFireParticle.Options.STREAM_CODEC);

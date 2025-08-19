@@ -5,7 +5,7 @@
     {"id":"#minecraft:ceiling_hanging_signs","required":false},
     {"id":"#minecraft:lanterns","required":false},
     {"id":"supplementaries:rope","required":false},
-    {"id":"supplementaries:sack","required":false},
+    {"id":"#supplementaries:sack","required":false},
     {"id":"amendments:hanging_flower_pot","required":false},
     {"id":"supplementaries:rope_chandelier","required":false},
     {"id":"supplementaries:rope_soul_chandelier","required":false},

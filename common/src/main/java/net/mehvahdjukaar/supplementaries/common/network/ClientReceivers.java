@@ -40,6 +40,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.chat.Component;
@@ -107,6 +108,14 @@ public class ClientReceivers {
             //bubble blow
             final RandomSource ran = l.random;
             switch (message.type) {
+                case BOMB_EXPLOSION -> {
+                    Integer radius = message.extraData;
+                    if(radius != null) {
+                        l.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(),
+                                message.pos.x,  message.pos.y,  message.pos.z,
+                                radius, 0.0, 0.0);
+                    }
+                }
                 case BUBBLE_BLOW -> {
                     ParticleUtil.spawnParticlesOnBlockFaces(l, BlockPos.containing(message.pos),
                             ModParticles.SUDS_PARTICLE.get(),

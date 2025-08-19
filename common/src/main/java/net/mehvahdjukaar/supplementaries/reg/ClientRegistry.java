@@ -369,6 +369,7 @@ public class ClientRegistry {
         event.register(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
         event.register(ModParticles.SUGAR_PARTICLE.get(), SugarParticle.Factory::new);
         event.register(ModParticles.CANNON_FIRE_PARTICLE.get(), CannonFireParticle.Factory::new);
+        event.register(ModParticles.BOMB_CHARGE.get(), BombChargeParticle.Factory::new);
     }
 
     public static class ColoredSplashingParticle extends SplashParticle.Provider {
