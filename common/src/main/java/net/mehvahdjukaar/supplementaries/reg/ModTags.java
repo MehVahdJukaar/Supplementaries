@@ -34,6 +34,7 @@ public class ModTags {
     public static final TagKey<Block> FAUCET_CONNECTION_BLACKLIST = blockTag("faucet_connection_blacklist");
     public static final TagKey<Block> FAUCET_CONNECTION_WHITELIST = blockTag("faucet_connection_whitelist");
     public static final TagKey<Block> ROTATION_BLACKLIST = blockTag("un_rotatable");
+    public static final TagKey<Block> ROPE_PUSH_BLACKLIST = blockTag("un_moveable_by_ropes");
     public static final TagKey<Block> BOMB_BREAKABLE = blockTag("bomb_breakable");
     public static final TagKey<Block> BRICK_BREAKABLE_GLASS = blockTag("brick_breakable_recursive");
     public static final TagKey<Block> BRICK_BREAKABLE_POTS = blockTag("brick_breakable");

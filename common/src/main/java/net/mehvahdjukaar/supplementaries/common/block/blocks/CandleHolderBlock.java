@@ -120,9 +120,9 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     }
 
     @Nullable
-    private final DyeColor color;
-    private final Supplier<ParticleType<? extends ParticleOptions>> particle;
-    private final Function<BlockState, List<Vec3>> particleOffsets;
+    public final DyeColor color;
+    public final Supplier<ParticleType<? extends ParticleOptions>> particle;
+    public final Function<BlockState, List<Vec3>> particleOffsets;
 
     @Deprecated(forRemoval = true)
     public CandleHolderBlock(DyeColor color, Properties properties) {

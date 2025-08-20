@@ -13,18 +13,14 @@ import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonHeadBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -107,7 +103,7 @@ public class BlockUtil {
     public static Optional<BlockState> getRotatedState(Direction dir, boolean ccw, BlockPos targetPos, Level world, BlockState state) {
 
         // is block blacklisted?
-        if (isBlacklisted(state)) return Optional.empty();
+        if (isRotationBlacklisted(state)) return Optional.empty();
 
         Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
         Block block = state.getBlock();
@@ -189,7 +185,7 @@ public class BlockUtil {
     }
 
 
-    private static boolean isBlacklisted(BlockState state) {
+    private static boolean isRotationBlacklisted(BlockState state) {
         // double blocks
         if (state.getBlock() instanceof BedBlock) return true;
         if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
