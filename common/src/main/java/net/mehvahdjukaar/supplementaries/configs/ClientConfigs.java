@@ -175,6 +175,7 @@ public class ClientConfigs {
         public static final Supplier<Integer> TOOLTIP_IMAGE_SIZE;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
         public static final Supplier<Boolean> DEATH_CHAT;
+        public static final Supplier<Boolean> SLIME_OVERLAY;
         public static final Supplier<Boolean> TALL_GRASS_COLOR_CHANGE;
         public static final Supplier<Boolean> COLORED_MAPS;
         public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
@@ -187,6 +188,8 @@ public class ClientConfigs {
 
             builder.comment("Game tweaks")
                     .push("tweaks");
+            SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
+                    .define("overlay", true);
             CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
                     .define("clock_right_click", true);
             PROJECTILE_WEAPON_OVERLAY = builder.comment("Adds an overlay to projectile weapons in gui displaying currently selected ammo")
