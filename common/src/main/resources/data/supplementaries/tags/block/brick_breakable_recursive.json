@@ -2,9 +2,17 @@
   "replace": false,
   "values": [
     {"id":"minecraft:glass","required":false},
+    {"id":"minecraft:ice","required":false},
+    {"id":"oreganized:grooved_ice","required":false},
     {"id":"minecraft:glass_pane","required":false},
     {"id":"#c:glass_panes","required":false},
     {"id":"#c:glass_blocks","required":false},
-    {"id":"#c:glass","required":false}
+    {"id":"#c:glass","required":false},
+    {"id":"#clayworks:glass_doors","required":false},
+    {"id":"clayworks:glass_door","required":false},
+    {"id":"#clayworks:stained_glass_doors","required":false},
+    {"id":"#clayworks:glass_trapdoors","required":false},
+    {"id":"clayworks:glass_trapdoor","required":false},
+    {"id":"#clayworks:stained_glass_trapdoors","required":false}
   ]
 }
