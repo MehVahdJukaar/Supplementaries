@@ -1,7 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -43,7 +45,7 @@ public class RopeHelper {
         } else maxDist--;
         if (isCorrectRope(ropeBlock, state, moveDir)) {
             return addRope(pos.relative(moveDir), level, player, hand, ropeBlock, moveDir, canPush, maxDist);
-        } else if (state.is(ModRegistry.PULLEY_BLOCK.get()) && level.getBlockEntity(pos) instanceof PulleyBlockTile te) {
+        } else if (state.getBlock() instanceof PulleyBlock && level.getBlockEntity(pos) instanceof PulleyBlockTile te) {
             return te.rotateIndirect(player, hand, ropeBlock, moveDir, false);
         } else {
             return tryPlaceAndMove(player, hand, level, pos, ropeBlock, moveDir, canPush);
@@ -66,8 +68,10 @@ public class RopeHelper {
             //checks if block below this is hollow
             BlockPos downPos = pos.relative(moveDir);
             //try move block down
-            if (!canPush || !(world.getBlockState(downPos).canBeReplaced()
-                    && tryMove(pos, downPos, world))) return false;
+            if (!canPush) return false;
+            if (!(world.getBlockState(downPos).canBeReplaced() && tryMove(pos, downPos, world))) {
+                return false;
+            }
             context = new BlockPlaceContext(world, player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), moveDir.getOpposite(), pos, false));
         }
 
@@ -91,18 +95,22 @@ public class RopeHelper {
         return false;
     }
 
-    public static boolean isPushableByRopes(BlockState state, Level level, BlockPos pos, Direction moveDir, boolean allowDestroy) {
+    public static boolean isPushableByRopes(BlockState state, Level level, BlockPos pos, Direction moveDir) {
         //hardcoded stuff from vanilla
         if (state.getBlock() instanceof PulleyBlock) return false; //could be in the tag but easier for addons like this
         if (state.is(ModTags.ROPE_PUSH_BLACKLIST)) return false;
-
+        //TODO
+//Break grass with particles
+        //break torches
+        //dont break doors
+        //push and pull lanters. check for can survive after push
         PushReaction push = state.getPistonPushReaction();
         //  (
         //   ((push == PushReaction.NORMAL || (toPos.getY() < fromPos.getY() && push == PushReaction.PUSH_ONLY))
         //             && state.canSurvive(level, toPos)) || (state.is(ModTags.ROPE_HANG_TAG))
         // )
-        return PistonBaseBlock.isPushable(state, level, pos, moveDir, allowDestroy, moveDir);
-
+        boolean couldBreak = !state.isSolid();
+        return PistonBaseBlock.isPushable(state, level, pos, moveDir, couldBreak, moveDir);
     }
 
     public static boolean removeRopeDown(BlockPos pos, Level level, Block ropeBlock) {
@@ -137,14 +145,12 @@ public class RopeHelper {
     @SuppressWarnings("ConstantConditions")
     private static boolean tryMove(BlockPos fromPos, BlockPos toPos, Level level) {
         BlockState state = level.getBlockState(fromPos);
-        BlockPos subtract = toPos.subtract(fromPos);
-        Direction dir = Direction.getNearest(subtract.getX(), subtract.getY(), subtract.getZ());
+        Direction dir = MiscUtils.getMoveDirection(fromPos , toPos);
 
-        if (!isPushableByRopes(state, level, fromPos, dir, false)) return false;
+        if (!isPushableByRopes(state, level, fromPos, dir)) return false;
 
         BlockEntity tile = level.getBlockEntity(fromPos);
         if (tile != null) {
-            //moves everything if quark is not enabled. bad :/ install quark guys
             if (CompatHandler.QUARK && !QuarkCompat.canMoveBlockEntity(state)) {
                 return false;
             } else {
@@ -152,10 +158,10 @@ public class RopeHelper {
             }
         }
 
-        //gets refreshTextures state for new position
+        //gets clear state for new position
 
-        Fluid fluidState = level.getFluidState(toPos).getType();
-        boolean waterFluid = fluidState == Fluids.WATER;
+        FluidState targetFluid = level.getFluidState(toPos);
+        boolean waterFluid = targetFluid.is(Fluids.WATER);
         boolean canHoldWater = false;
         if (state.hasProperty(BlockStateProperties.WATERLOGGED)) {
             canHoldWater = state.is(ModTags.WATER_HOLDER);
@@ -163,11 +169,12 @@ public class RopeHelper {
         } else if (state.getBlock() instanceof AbstractCauldronBlock) {
             if (waterFluid && state.is(Blocks.CAULDRON) || state.is(Blocks.WATER_CAULDRON)) {
                 state = Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
-            }
-            if (fluidState == Fluids.LAVA && state.is(Blocks.CAULDRON) || state.is(Blocks.LAVA_CAULDRON)) {
+            } else if (targetFluid.is(Fluids.LAVA) && state.is(Blocks.CAULDRON) || state.is(Blocks.LAVA_CAULDRON)) {
                 state = Blocks.LAVA_CAULDRON.defaultBlockState();
+            } else if (CompatHandler.AMENDMENTS) {
+                //TODO:this isnt correct actually it needs to set tile after
+                state = AmendmentsCompat.fillCauldronWithFluid(level, toPos, state, targetFluid);
             }
-            //TODO: amendmnts here
         }
 
 
@@ -175,7 +182,7 @@ public class RopeHelper {
         boolean leaveWater = (fromFluid.getType() == Fluids.WATER && fromFluid.isSource()) && !canHoldWater;
         level.setBlockAndUpdate(fromPos, leaveWater ? Blocks.WATER.defaultBlockState() : Blocks.AIR.defaultBlockState());
 
-        //refreshTextures existing block block to new position
+        //clear existing block to new position
         BlockState newState = Block.updateFromNeighbourShapes(state, level, toPos);
         level.setBlockAndUpdate(toPos, newState);
         if (tile != null) {
@@ -185,6 +192,7 @@ public class RopeHelper {
                 te.loadWithComponents(tag, level.registryAccess());
             }
         }
+
         //world.notifyNeighborsOfStateChange(toPos, state.getBlock());
         level.neighborChanged(toPos, state.getBlock(), toPos);
         return true;

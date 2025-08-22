@@ -100,16 +100,20 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        if (dyeColor != null)
-            DyedItemColor.CODEC.encode(dyeColor, registries.createSerializationContext(NbtOps.INSTANCE), tag);
+        if (dyeColor != null) {
+            var t = DyedItemColor.CODEC.encodeStart(registries.createSerializationContext(NbtOps.INSTANCE), dyeColor)
+                    .getOrThrow();
+            tag.put("Color", t);
+        }
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        var d = DyedItemColor.CODEC.decode(registries.createSerializationContext(NbtOps.INSTANCE), tag);
-        if(d.isSuccess()){
-            dyeColor = d.getOrThrow().getFirst();
+        var t = tag.get("Color");
+        if (t != null) {
+            dyeColor = DyedItemColor.CODEC.decode(registries.createSerializationContext(NbtOps.INSTANCE), t)
+                    .getOrThrow().getFirst();
         }
     }
 

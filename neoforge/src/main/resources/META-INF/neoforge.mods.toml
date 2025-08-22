@@ -51,6 +51,13 @@ issueTrackerURL = "${mod_github}/issues"
     ordering = "NONE"
     side = "BOTH"
 
+[[dependencies.${mod_id}]]
+    modId = "amendments"
+    type = "optional"
+    versionRange = "[1.21-2.0.0,]"
+    ordering = "NONE"
+    side = "BOTH"
+
 ["lithium:options"]
     block.moving_block_shapes = false
     mixin.block.moving_block_shapes = false

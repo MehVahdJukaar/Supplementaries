@@ -51,6 +51,7 @@
     "moonlight": ">=${moonlight_version_range}"
   },
   "breaks": {
+    "amendments": "<1.21-2.0.0",
     "farmersdelight": "<1.21.1-2.2.0",
     "particular": "<=1.1.1"
   },

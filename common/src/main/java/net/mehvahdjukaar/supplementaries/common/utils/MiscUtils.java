@@ -48,6 +48,14 @@ public class MiscUtils {
         return opt.orElse(null);
     }
 
+    public static Direction getMoveDirection(BlockPos fromPos, BlockPos toPos) {
+        return Direction.getNearest(
+                toPos.getX() - fromPos.getX(),
+                toPos.getY() - fromPos.getY(),
+                toPos.getZ() - fromPos.getZ()
+        );
+    }
+
     public enum Festivity {
         NONE,
         HALLOWEEN,

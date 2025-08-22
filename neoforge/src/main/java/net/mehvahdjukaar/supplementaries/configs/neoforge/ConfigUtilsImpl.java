@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.configs.neoforge;
 
-import net.mehvahdjukaar.moonlight.api.resources.recipe.neoforge.ResourceConditionsBridge;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.neoforge.configured.ModConfigSelectScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.BucketItem;
-import net.neoforged.neoforge.common.Tags;
 
 public class ConfigUtilsImpl {
 

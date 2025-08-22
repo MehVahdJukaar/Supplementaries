@@ -10,6 +10,8 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 accessible field net/minecraft/client/renderer/GameRenderer effectActive Z
 accessible class net/minecraft/world/item/BrushItem$DustParticlesDelta
 
+accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
+
 accessible method net/minecraft/world/item/context/UseOnContext getHitResult ()Lnet/minecraft/world/phys/BlockHitResult;
 
 #dispenser minecart

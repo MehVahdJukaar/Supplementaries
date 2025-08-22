@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.integration;
 import it.crystalnest.soul_fire_d.api.Fire;
 import it.crystalnest.soul_fire_d.api.FireManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
-import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
@@ -13,11 +11,11 @@ public class SoulFiredCompat {
 
     public static void setup() {
 
-        //why arent these null by default? seems bad api
+        //why aren't these null by default? seems bad api
         var fire = FireManager.fireBuilder(LUMISENE_FIRE_TYPE)
                 .setDamage(1)
                 .setCanRainDouse(false)
-              //  .setComponent(Fire.Component.SOURCE_BLOCK, ModFluids.LUMISENE_BLOCK.getId())
+                //  .setComponent(Fire.Component.SOURCE_BLOCK, ModFluids.LUMISENE_BLOCK.getId())
                 .removeComponent(Fire.Component.SOURCE_BLOCK) //DUMB above doesnt use it
                 .removeComponent(Fire.Component.WALL_TORCH_BLOCK)
                 .removeComponent(Fire.Component.CAMPFIRE_BLOCK)
