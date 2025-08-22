@@ -14,6 +14,7 @@ public interface ISlimeable {
     void supp$setSlimedTicks(int slimed, boolean sync);
 
     static float getAlpha(LivingEntity le, float partialTicks) {
+        if (!ClientConfigs.Tweaks.SLIME_OVERLAY.get()) return 0;
         float slimeTicks = ((ISlimeable) le).supp$getSlimedTicks() - partialTicks;
         float maxFade = 70;
         return slimeTicks > maxFade ? 1 : Mth.clamp(slimeTicks / maxFade, 0, 1);
@@ -22,7 +23,7 @@ public interface ISlimeable {
     static void tickEntity(LivingEntity entity) {
         ISlimeable slimed = (ISlimeable) entity;
         int t = slimed.supp$getSlimedTicks();
-        if (t > 0 && ClientConfigs.Tweaks.SLIME_OVERLAY.get()) {
+        if (t > 0) {
             if (entity.isUnderWater()) {
                 slimed.supp$setSlimedTicks(0, true);
             } else slimed.supp$setSlimedTicks(t - 1, false);
