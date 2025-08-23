@@ -77,6 +77,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             addEndermanHead(manager, sink);
             addRopeArrowModel(manager, sink);
             addTatteredBook(manager, sink);
+            addMissingFlagPatterns(manager, sink);
             //addGlobeItemModels(manager, sink);
 
             MojangNeedsToAddMoreCopper.run(manager, sink);
@@ -85,6 +86,36 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
         executor.accept(this::addSignPostAssets);
 
         executor.accept(this::generateBoatTextures);
+    }
+
+    private void addMissingFlagPatterns(ResourceManager manager, ResourceSink sink) {
+
+        var textures = manager.listResources("textures/entity/banner", resourceLocation ->
+                resourceLocation.getPath().endsWith(".png") && !resourceLocation.getPath()
+                        .replace("textures/entity/banner/", "").contains("/"));
+        TextureCollager collager = TextureCollager.builder(64, 64, 32, 16)
+                .copyFrom(3, 13, 16, 16)
+                .to(6, 2, 12, 12)
+                .bilinearScaling()
+                .build();
+        for (ResourceLocation id : textures.keySet()) {
+            String namespace = id.getNamespace();
+            if (namespace.equals("minecraft")) continue;
+            String name = id.getPath().replace("textures/entity/banner/", "");
+            ResourceLocation newPath = Supplementaries.res("entity/banner/flags/"
+                    + id.getNamespace() + "/" + name);
+            sink.addTextureIfNotPresent(manager, newPath.toString(), () -> {
+                try (TextureImage oldText = TextureImage.open(manager, id.withPath(p -> p.replace("textures/", "")))) {
+                    TextureImage newImage = TextureOps.createScaled(oldText, 0.5f, 0.25f);
+                    newImage.clear();
+                    collager.apply(oldText, newImage);
+                    return newImage;
+
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
     }
 
     private void addSignPostAssets(ResourceManager manager, ResourceSink sink) {

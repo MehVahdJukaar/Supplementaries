@@ -9,7 +9,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
@@ -29,7 +28,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.Collections;
 import java.util.List;
@@ -72,15 +70,17 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
             shift = At.Shift.AFTER),
             cancellable = true)
     private void supp$unluckyLightning(BlockPos pos, CallbackInfoReturnable<BlockPos> cir,
-                                  @Local(ordinal = 1) BlockPos blockPos) {
+                                       @Local(ordinal = 1) BlockPos blockPos) {
 
         if (this.random.nextFloat() < 0.5 && CommonConfigs.Tweaks.BAD_LUCK_LIGHTNING.get()) {
             AABB aabb = (AABB.encapsulatingFullBlocks(blockPos, new BlockPos(blockPos.getX(), this.getMaxBuildHeight(), blockPos.getZ()))).inflate(16.0);
             List<LivingEntity> l = this.getEntitiesOfClass(LivingEntity.class, aabb, (e) ->
-                    e != null && e.isAlive() && this.canSeeSky(e.blockPosition())
-                            && (e.hasEffect(MobEffects.UNLUCK) || e.getItemInHand(InteractionHand.MAIN_HAND)
-                            .is(ModTags.CAUSES_LIGHTNING_WHEN_HELD) ||
-                            e.getItemInHand(InteractionHand.OFF_HAND).is(ModTags.CAUSES_LIGHTNING_WHEN_HELD));
+                    e != null && e.isAlive() && this.canSeeSky(e.blockPosition()) && (
+                            e.hasEffect(MobEffects.UNLUCK) ||
+                            e.getItemInHand(InteractionHand.MAIN_HAND).is(ModTags.CAUSES_LIGHTNING_WHEN_HELD) ||
+                            e.getItemInHand(InteractionHand.OFF_HAND).is(ModTags.CAUSES_LIGHTNING_WHEN_HELD)
+                    )
+            );
             if (!l.isEmpty()) {
                 Collections.shuffle(l);
                 cir.setReturnValue(l.get(this.random.nextInt(l.size())).blockPosition());

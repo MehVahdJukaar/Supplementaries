@@ -150,7 +150,7 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                     //Check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
                     Recipe<?> recipeTemplate = w.getChild("sign") == null ? recipe2 : recipe;
 
-                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, WoodTypeRegistry.OAK_TYPE, w,
+                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, VanillaWoodTypes.OAK, w,
                             Supplementaries.res("way_sign_oak"));
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     sink.addRecipe(newR);

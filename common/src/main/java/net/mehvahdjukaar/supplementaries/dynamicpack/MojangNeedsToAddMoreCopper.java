@@ -104,9 +104,10 @@ public class MojangNeedsToAddMoreCopper {
                 ResourceLocation relPath = r.getKey().withPath(p -> p.replace("textures/", "").replace(".png", ""));
                 try (TextureImage toRecolor = TextureImage.open(manager, relPath)) {
                     Respriter resp = Respriter.of(toRecolor);
-                    var recolored = resp.recolor(textures);
-                    sink.addAndCloseTexture(relPath, recolored);
-                } catch (Exception e) {
+                    try (TextureImage recolored = resp.recolor(textures)) {
+                        sink.addTexture(relPath, recolored);
+                    }
+                } catch (Exception ignored) {
 
                 }
             }
