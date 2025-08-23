@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:lumisene_bottle","required":false}
+  ]
+}

@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "minecraft:diamond",
     {"id":"#minecraft:shulker_boxes","required":false},
     {"id":"supplementaries:safe","required":false},
     {"id":"#supplementaries:sacks","required":false}

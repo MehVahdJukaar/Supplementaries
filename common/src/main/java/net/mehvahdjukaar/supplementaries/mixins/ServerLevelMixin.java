@@ -3,12 +3,15 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.ILevelEventRedirect;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -75,7 +78,9 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
             AABB aabb = (AABB.encapsulatingFullBlocks(blockPos, new BlockPos(blockPos.getX(), this.getMaxBuildHeight(), blockPos.getZ()))).inflate(16.0);
             List<LivingEntity> l = this.getEntitiesOfClass(LivingEntity.class, aabb, (e) ->
                     e != null && e.isAlive() && this.canSeeSky(e.blockPosition())
-                            && e.hasEffect(MobEffects.UNLUCK));
+                            && (e.hasEffect(MobEffects.UNLUCK) || e.getItemInHand(InteractionHand.MAIN_HAND)
+                            .is(ModTags.CAUSES_LIGHTNING_WHEN_HELD) ||
+                            e.getItemInHand(InteractionHand.OFF_HAND).is(ModTags.CAUSES_LIGHTNING_WHEN_HELD));
             if (!l.isEmpty()) {
                 Collections.shuffle(l);
                 cir.setReturnValue(l.get(this.random.nextInt(l.size())).blockPosition());

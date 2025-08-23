@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:lightning_rod","required":false},
+    {"id":"minecraft:waxed_lightning_rod","required":false},
+    {"id":"minecraft:exposed_lightning_rod","required":false},
+    {"id":"minecraft:waxed_exposed_lightning_rod","required":false},
+    {"id":"minecraft:weathered_lightning_rod","required":false},
+    {"id":"minecraft:waxed_weathered_lightning_rod","required":false},
+    {"id":"minecraft:oxidised_lightning_rod","required":false},
+    {"id":"minecraft:waxed_oxidised_lightning_rod","required":false}
+  ]
+}

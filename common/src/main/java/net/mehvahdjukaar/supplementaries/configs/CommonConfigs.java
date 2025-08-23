@@ -1206,7 +1206,7 @@ public class CommonConfigs {
             BAD_LUCK_CAT = PlatHelper.getPlatform().isFabric() ? FALSE :
                     builder.comment("Hit a void cat, get the unluck")
                             .define("cat_unluck", true);
-            BAD_LUCK_LIGHTNING = builder.comment("If you have unluck you are more likely to get hit by a lighting")
+            BAD_LUCK_LIGHTNING = builder.comment("If you have unluck you are more likely to get hit by a lighting. Holding a lightning rod also causes this")
                     .define("lightning_unluck", true);
             builder.pop();
 

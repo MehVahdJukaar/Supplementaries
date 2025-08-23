@@ -9,6 +9,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
@@ -85,6 +86,7 @@ public class ModTags {
     public static final TagKey<Item> SOAP_BLACKLIST_ITEM = itemTag("non_cleanable");
     public static final TagKey<Item> WEAPON_PROJECTILE_OVERLAY_BLACKLIST = itemTag("weapon_projectile_overlay_blacklist");
     public static final TagKey<Item> SUSPICIOUS = cItemTag("suspicious");
+    public static final TagKey<Item> CAUSES_LIGHTNING_WHEN_HELD = itemTag("causes_lightning_when_held");
 
     public static final TagKey<Item> SHULKER_BOXES = cItemTag("shulker_boxes");
 
