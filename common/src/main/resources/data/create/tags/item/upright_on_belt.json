@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:lumisene_bottle","required":false}
+    {"id":"supplementaries:lumisene_bottle","required":false},
+    {"id":"supplementaries:antique_ink","required":false},
+    {"id":"supplementaries:lumisene_bucket","required":false}
   ]
 }
