@@ -4,10 +4,11 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.components.SafeOwner;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.core.BlockPos;
@@ -152,6 +153,8 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
         }
         ItemsUtil.addShulkerLikeTooltips(stack, tooltipComponents);
 
+        if (!MiscUtils.showsHints(tooltipFlag)) return;
+        tooltipComponents.add(KeyLockableTile.KEY_LOCKABLE_TOOLTIP);
     }
 
     //overrides creative drop

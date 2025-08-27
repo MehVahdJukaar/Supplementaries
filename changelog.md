@@ -1,2 +1,2 @@
-- fixed a broken tag
-- lunch basket will be set on cooldown when eating an item with cooldown
+- added more missing tags
+- added some code to auto generate missing flag patterns

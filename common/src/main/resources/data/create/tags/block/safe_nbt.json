@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:blackboard","required":false},
+    {"id":"#supplementaries:flags","required":false},
+    {"id":"supplementaries:speaker_block","required":false},
+    {"id":"#supplementaries:globes","required":false},
+    {"id":"supplementaries:lock_block","required":false},
+    {"id":"supplementaries:netherite_door","required":false},
+    {"id":"supplementaries:netherite_trapdoor","required":false}
+  ]
+}

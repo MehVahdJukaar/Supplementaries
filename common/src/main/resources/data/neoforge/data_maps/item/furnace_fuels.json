@@ -51,6 +51,9 @@
     },
     "supplementaries:clock_block": {
       "burn_time": 300
+    },
+    "supplementaries:lumisene_bucket": {
+      "burn_time": 1000
     }
   }
 }
