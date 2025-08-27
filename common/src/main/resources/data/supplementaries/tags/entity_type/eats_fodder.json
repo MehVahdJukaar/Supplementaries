@@ -13,7 +13,10 @@
     {"id":"naturalist:zebra","required":false},
 	{"id":"lovely_snails:snail","required":false},
     {"id":"creatures_from_the_snow:reindeer","required":false},
-    {"id":"creatures_from_the_snow:giraffe","required":false}
+    {"id":"creatures_from_the_snow:giraffe","required":false},
+    {"id":"goated:geep","required":false},
+    {"id":"buzzier_bees:moobloom","required":false},
+    {"id":"friendsandfoes:moobloom","required":false}
   ]
 }
 
