@@ -130,9 +130,18 @@ public class CompatHandler {
         if (INFERNALEXP) InfernalExpCompat.init();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
         if (COMPUTERCRAFT) CCCompat.init();
-        if (CURIOS) CuriosCompat.init();
-        if (TRINKETS) TrinketsCompat.init();
+        if (isClassPresent("top.theillusivec4.curios.api.CuriosApi")) CuriosCompat.init();
+        if (isClassPresent("dev.emi.trinkets.api.TrinketsApi")) TrinketsCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
+    }
+
+    private static boolean isClassPresent(String s) {
+        try {
+            Class.forName(s);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     public static void addItemsToTabs(RegHelper.ItemToTabEvent event) {

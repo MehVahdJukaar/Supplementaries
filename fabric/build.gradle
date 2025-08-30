@@ -35,20 +35,19 @@ dependencies {
         modImplementation("curse.maven:selene-499980:6818414")
     }
 
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
     }
-    modImplementation("curse.maven:yacl-667299:4574163")
+    modCompileOnly("curse.maven:yacl-667299:4574163")
 
     modCompileOnly("curse.maven:modmenu-308702:3920481") {
         exclude module: "fabric-api"
     }
 
-    modImplementation("curse.maven:yacl-667299:4574163")
 
     modCompileOnly("curse.maven:irisshaders-455508:5726473")
     modCompileOnly("curse.maven:the-bumblezone-fabric-363949:5889007")
-    modImplementation("curse.maven:goated-805646:5935888")
+    modCompileOnly("curse.maven:goated-805646:5935888")
     modCompileOnly("maven.modrinth:sodium:mc1.21-0.6.0-beta.2-fabric")
     //modImplementation("curse.maven:resourceful-lib-570073:5793501") //v2.1.29 | Chipped, Handcrafted, Cozy
     //modImplementation("curse.maven:midnightlib-488090:5687799")
@@ -66,13 +65,14 @@ dependencies {
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:motion-capture-mod-mocap-656300:5769049")
     modCompileOnly("curse.maven:cc-tweaked-282001:5714511")
-    modImplementation("curse.maven:jei-238222:5846878")
+    modCompileOnly("curse.maven:jei-238222:5846878")
     modCompileOnly("curse.maven:amendments-896746:5791204")
     modCompileOnly("curse.maven:jei-fabric-waystones-410902:4950461")
     modCompileOnly("curse.maven:jei-fabric-waystones-owo-lib-532610:4749199")
+    modCompileOnly("curse.maven:owo-lib-532610:6297839")
     modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
     modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
-    modImplementation "dev.emi:trinkets:${project.trinkets_version}"
+    modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
     //modImplementation("curse.maven:biome-makeover-412182:4572458")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")

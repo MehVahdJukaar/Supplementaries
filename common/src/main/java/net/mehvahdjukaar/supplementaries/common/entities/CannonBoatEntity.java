@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.entity.IControllableVehicle;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
@@ -26,6 +27,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
@@ -72,7 +74,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
                 .defaultBlockState().setValue(CannonBlock.FACING, Direction.UP));
         this.cannon.setLevel(level);
         this.cannon.setRenderYaw(this, 0);
-        this.setWoodType(WoodTypeRegistry.OAK_TYPE);
+        this.setWoodType(VanillaWoodTypes.OAK);
     }
 
     public CannonBoatEntity(Level level, double x, double y, double z, WoodType type) {
@@ -92,7 +94,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(DATA_WOOD_TYPE, WoodTypeRegistry.OAK_TYPE);
+        builder.define(DATA_WOOD_TYPE, VanillaWoodTypes.OAK);
         builder.define(BANNER_ITEM, ItemStack.EMPTY);
     }
 
@@ -143,7 +145,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         String woodTypeId = compound.getString("WoodType");
-        this.setWoodType(WoodTypeRegistry.getValue(woodTypeId));
+        this.setWoodType(WoodTypeRegistry.INSTANCE.get(ResourceLocation.parse(woodTypeId)));
         if (compound.contains("Cannon")) {
             var cannonTag = compound.getCompound("Cannon");
             this.cannon.loadWithComponents(cannonTag, this.registryAccess());
