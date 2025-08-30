@@ -34,8 +34,8 @@ public class CompatHandler {
     public static final boolean OREGANIZED = isLoaded("oreganized");
     public static final boolean CREATE = isLoaded("create") && PlatHelper.getPlatform().isForge();
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
-    public static final boolean CURIOS = isLoaded("curios");
-    public static final boolean TRINKETS = isLoaded("trinkets");
+    public static final boolean CURIOS = isLoaded("curios") || isClassPresent("top.theillusivec4.curios.api.CuriosApi");
+    public static final boolean TRINKETS = isLoaded("trinkets") || isClassPresent("dev.emi.trinkets.api.TrinketsApi");
     public static final boolean FARMERS_DELIGHT;
     public static final boolean INFERNALEXP = isLoaded("infernalexp");
     public static final boolean ENVIRONMENTAL = isLoaded("environmental");
@@ -130,8 +130,8 @@ public class CompatHandler {
         if (INFERNALEXP) InfernalExpCompat.init();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
         if (COMPUTERCRAFT) CCCompat.init();
-        if (isClassPresent("top.theillusivec4.curios.api.CuriosApi")) CuriosCompat.init();
-        if (isClassPresent("dev.emi.trinkets.api.TrinketsApi")) TrinketsCompat.init();
+        if (CURIOS) CuriosCompat.init();
+        if (TRINKETS) TrinketsCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

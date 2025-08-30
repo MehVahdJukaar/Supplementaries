@@ -1,2 +1,2 @@
-- added more missing tags
-- added some code to auto generate missing flag patterns
+- fixed some tags and some recipes
+- added some new textures
