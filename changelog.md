@@ -1,2 +1,1 @@
-- fixed some tags and some recipes
-- added some new textures
+fixed issue with trinkets

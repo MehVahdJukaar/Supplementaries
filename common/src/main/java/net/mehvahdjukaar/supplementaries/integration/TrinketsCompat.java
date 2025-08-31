@@ -23,7 +23,7 @@ public class TrinketsCompat {
 
     @SuppressWarnings("all")
     public static void init(){
-        RegHelper.register(Supplementaries.res("trinket"), () -> (StreamCodec) CuriosCompat.Curio.CODEC, SlotReference.TYPE_REGISTRY_KEY);
+        RegHelper.register(Supplementaries.res("trinket"), () -> (StreamCodec) Trinket.CODEC, SlotReference.TYPE_REGISTRY_KEY);
 
     }
 
