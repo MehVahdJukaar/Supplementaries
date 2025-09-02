@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.configs;
 import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
+import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicResourcePack;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -1310,8 +1312,6 @@ builder.pop();
             JAR_TAB = PlatHelper.getPlatform().isFabric() ? FALSE : builder.gameRestart().comment("Creates a creative tab full of filled jars")
                     .define("jar_tab", false);
 
-            DEBUG_RESOURCES = builder.comment("Save generated resources to disk in a 'debug' folder in your game directory. Mainly for debug purposes but can be used to generate assets in all wood types for your mods :0")
-                    .define("debug_save_dynamic_pack", false);
             SANITY_CHECKS_MESSAGES = builder.comment("Disable startup messages and sanity check that the mod performs to inform of possible detected crashes that might occur due to issues")
                     .define("sanity_checks_messages", true);
             RED_MERCHANT_SPAWN_MULTIPLIER = builder.comment("slightly increase this or decrease this number to tweak the red merchant spawn chance. Won't spawn at 0 and will spawn twice as often on 2")
@@ -1324,7 +1324,6 @@ builder.pop();
         public static final Supplier<Boolean> JAR_TAB;
         public static final Supplier<Boolean> CREATIVE_TAB;
         public static final Supplier<Boolean> DISPENSERS;
-        public static final Supplier<Boolean> DEBUG_RESOURCES;
         public static final Supplier<Boolean> SANITY_CHECKS_MESSAGES;
     }
 

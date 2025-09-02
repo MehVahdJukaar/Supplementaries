@@ -3,10 +3,7 @@ package net.mehvahdjukaar.supplementaries.dynamicpack;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
-import net.mehvahdjukaar.moonlight.api.resources.pack.DynServerResourcesGenerator;
-import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicDataPack;
-import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
-import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
+import net.mehvahdjukaar.moonlight.api.resources.pack.*;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
@@ -21,32 +18,30 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.biome.Biomes;
-import org.apache.logging.log4j.Logger;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator {
+public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
-    public static final ServerDynamicResourcesGenerator INSTANCE = new ServerDynamicResourcesGenerator();
-
-    public ServerDynamicResourcesGenerator() {
-        super(new DynamicDataPack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get());
+    public ModServerDynamicResources() {
+        super(Supplementaries.res("generated_pack"), PackGenerationStrategy.CACHED_ZIPPED);
     }
 
     @Override
-    public Logger getLogger() {
-        return Supplementaries.LOGGER;
+    protected Collection<String> gatherSupportedNamespaces() {
+        return List.of();
     }
 
-    public static final Map<ResourceLocation, Resource> R = new HashMap<>();
+    public static final Map<ResourceLocation, Resource> TAG_TRANSLATION_HACK = new HashMap<>();
 
     @Override
     public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
         executor.accept((manager, sink) -> {
-            //R.putAll(manager.listResources("tags", r->true);
+            //TAG_TRANSLATION_HACK.putAll(manager.listResources("tags", r->true);
 
             //sing posts
             {
@@ -129,7 +124,6 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                             Supplementaries.res("cannon_boat_oak"));
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     sink.addRecipe(newR);
-                    sink.markNotClearable(newR.id());
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to generate recipe for cannon boat {}:", i, e);
                 }
@@ -154,7 +148,6 @@ public class ServerDynamicResourcesGenerator extends DynServerResourcesGenerator
                             Supplementaries.res("way_sign_oak"));
                     //newR = ForgeHelper.addRecipeConditions(newR, recipe);
                     sink.addRecipe(newR);
-                    sink.markNotClearable(newR.id());
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
                 }

@@ -2,13 +2,12 @@ package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
-import net.mehvahdjukaar.moonlight.api.resources.pack.DynClientResourcesGenerator;
-import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicTexturePack;
+import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicClientResourceProvider;
+import net.mehvahdjukaar.moonlight.api.resources.pack.PackGenerationStrategy;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.textures.*;
@@ -31,7 +30,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -41,25 +39,16 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 
-public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator {
+public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
-    public static final ClientDynamicResourcesGenerator INSTANCE = new ClientDynamicResourcesGenerator();
-
-    public ClientDynamicResourcesGenerator() {
-        super(new DynamicTexturePack(Supplementaries.res("generated_pack")));
-        this.dynamicPack.setGenerateDebugResources(PlatHelper.isDev() || CommonConfigs.General.DEBUG_RESOURCES.get());
+    public ModClientDynamicResources() {
+        super(Supplementaries.res("generated_pack"), PackGenerationStrategy.CACHED_ZIPPED);
     }
 
     @Override
-    public Collection<String> additionalNamespaces() {
+    protected Collection<String> gatherSupportedNamespaces() {
         return List.of("minecraft");
     }
-
-    @Override
-    public Logger getLogger() {
-        return Supplementaries.LOGGER;
-    }
-
     //-------------resource pack dependant textures-------------
 
     @Override
@@ -104,7 +93,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             String name = id.getPath().replace("textures/entity/banner/", "");
             ResourceLocation newPath = Supplementaries.res("entity/banner/flags/"
                     + id.getNamespace() + "/" + name);
-            sink.addTextureIfNotPresent(manager, newPath.toString(), () -> {
+            sink.addTextureIfNotPresent(manager, newPath, () -> {
                 try (TextureImage oldText = TextureImage.open(manager, id.withPath(p -> p.replace("textures/", "")))) {
                     TextureImage newImage = TextureOps.createScaled(oldText, 0.5f, 0.25f);
                     newImage.clear();
@@ -157,13 +146,13 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                                     Supplementaries.res("item/way_signs/scribbles_template"))) {
                                 TextureOps.applyOverlay(newImage, scribbles);
                             } catch (Exception ex) {
-                                getLogger().error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
+                                Supplementaries.LOGGER.error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
                             }
                             sink.addTexture(textureRes, newImage);
                         }
 
                     } catch (Exception ex) {
-                        getLogger().error("Could not find sign texture for wood explosionType {}. Using plank texture : {}", wood, ex);
+                        Supplementaries.LOGGER.error("Could not find sign texture for wood explosionType {}. Using plank texture : {}", wood, ex);
                     }
                 } else {
                     //if it failed use plank one
@@ -174,12 +163,12 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                             sink.addTexture(textureRes, newImage);
                         }
                     } catch (Exception ex) {
-                        getLogger().error("Failed to generate Sign Post item texture for for {} : {}", sign, ex);
+                        Supplementaries.LOGGER.error("Failed to generate Sign Post item texture for for {} : {}", sign, ex);
                     }
                 }
             });
         } catch (Exception ex) {
-            getLogger().error("Could not generate any Sign Post item texture : ", ex);
+            Supplementaries.LOGGER.error("Could not generate any Sign Post item texture : ", ex);
         }
 
         //sign posts block textures
@@ -200,11 +189,11 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                         sink.addTexture(textureRes, newImage);
                     }
                 } catch (Exception ex) {
-                    getLogger().error("Failed to generate Way Sign block texture for for {} : {}", sign, ex);
+                    Supplementaries.LOGGER.error("Failed to generate Way Sign block texture for for {} : {}", sign, ex);
                 }
             });
         } catch (Exception ex) {
-            getLogger().error("Could not generate any Way Sign block texture : ", ex);
+            Supplementaries.LOGGER.error("Could not generate any Way Sign block texture : ", ex);
         }
     }
 
@@ -257,10 +246,10 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
     private void addEndermanHead(ResourceManager manager, ResourceSink sink) {
         if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get() && ClientConfigs.Tweaks.ENDERMAN_HEAD_VANILLA.get()) {
-            try (var text = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman"));
-                 var eyeText = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman_eyes"))) {
-                sink.addTexture(Supplementaries.res("entity/enderman_head"), text, false);
-                sink.addTexture(Supplementaries.res("entity/enderman_head_eyes"), eyeText, false);
+            try (TextureImage text = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman"));
+                 TextureImage eyeText = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman_eyes"))) {
+                sink.addTexture(Supplementaries.res("entity/enderman_head"), text);
+                sink.addTexture(Supplementaries.res("entity/enderman_head_eyes"), eyeText);
             } catch (Exception ignored) {
             }
         }
@@ -274,7 +263,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             try {
                 sink.addSimilarJsonResource(manager, itemModel, "cannon_boat_oak", wood.getVariantId("cannon_boat"));
             } catch (Exception ex) {
-                getLogger().error("Failed to generate Cannon Boat item model for {} : {}", sled, ex);
+                Supplementaries.LOGGER.error("Failed to generate Cannon Boat item model for {} : {}", sled, ex);
             }
         });
 
@@ -285,7 +274,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
             //unfortunately theres no programmatic way to get all boat textures of a given boat. also because entities might be for multiple wod types. we can only generate them from scratc
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
-                String textureRes = "entity/cannon_boat/" + wood.getTexturePath();
+                ResourceLocation textureRes = Supplementaries.res("entity/cannon_boat/" + wood.getTexturePath());
 
                 sink.addTextureIfNotPresent(manager, textureRes, () -> {
                     try (TextureImage plankTexture = TextureImage.open(manager,
@@ -297,12 +286,12 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
-                }, false);
+                });
 
 
             });
         } catch (Exception ex) {
-            getLogger().error("Could not generate any sled entity texture : ", ex);
+            Supplementaries.LOGGER.error("Could not generate any sled entity texture : ", ex);
         }
 
         //item textures
@@ -313,14 +302,12 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.ofPalette(template, palette);
 
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, boat) -> {
-                String textureRes = "item/cannon_boat/" + Utils.getID(boat).getPath();
-
+                ResourceLocation textureRes = Supplementaries.res("item/cannon_boat/" + Utils.getID(boat).getPath());
                 sink.addTextureIfNotPresent(manager, textureRes, () ->
-                                createBoatTexture(manager, wood, boat, respriter),
-                        false);
+                        createBoatTexture(manager, wood, boat, respriter));
             });
         } catch (Exception ex) {
-            getLogger().error("Could not generate any Cannon Boat item texture : ", ex);
+            Supplementaries.LOGGER.error("Could not generate any Cannon Boat item texture : ", ex);
         }
     }
 
@@ -335,7 +322,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 newImage = respriter.recolor(targetPalette);
 
             } catch (Exception ex) {
-                getLogger().warn("Could not find boat texture for wood type {}. Using plank texture : {}", wood, ex);
+                Supplementaries.LOGGER.warn("Could not find boat texture for wood type {}. Using plank texture : {}", wood, ex);
             }
         }
         //if it failed use plank one
@@ -346,7 +333,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
                 newImage = respriter.recolor(targetPalette);
 
             } catch (Exception ex) {
-                getLogger().error("Failed to generate Cannon Boat item texture for for {} : {}", cannonBoat, ex);
+                Supplementaries.LOGGER.error("Failed to generate Cannon Boat item texture for for {} : {}", cannonBoat, ex);
             }
         }
         return newImage;
@@ -354,7 +341,7 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
 
     private static void generateTagTranslations() {
         JsonObject jo = new JsonObject();
-        for (var e : ServerDynamicResourcesGenerator.R.entrySet()) {
+        for (var e : ModServerDynamicResources.TAG_TRANSLATION_HACK.entrySet()) {
             ResourceLocation id = e.getKey();
             if (id.getNamespace().equals("supplementaries")) {
                 String path = id.getPath();

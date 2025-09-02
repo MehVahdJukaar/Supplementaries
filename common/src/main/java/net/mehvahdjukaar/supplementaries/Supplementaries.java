@@ -24,8 +24,8 @@ import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.dynamicpack.ClientDynamicResourcesGenerator;
-import net.mehvahdjukaar.supplementaries.dynamicpack.ServerDynamicResourcesGenerator;
+import net.mehvahdjukaar.supplementaries.dynamicpack.ModClientDynamicResources;
+import net.mehvahdjukaar.supplementaries.dynamicpack.ModServerDynamicResources;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
@@ -89,7 +89,7 @@ public class Supplementaries {
 
         //init
         var k = SlotReference.TYPE_REGISTRY_KEY;
-        ServerDynamicResourcesGenerator.INSTANCE.register();
+        RegHelper.registerDynamicResourceProvider(new ModServerDynamicResources());
 
         PlatHelper.addServerReloadListener(SongsManager::new, res("flute_songs"));
         PlatHelper.addServerReloadListener(HourglassTimesManager::new, res("hourglass_data"));
@@ -97,7 +97,7 @@ public class Supplementaries {
         PlatHelper.addServerReloadListener(CapturedMobHandler::new, res("catchable_mobs_properties"));
 
         if (PlatHelper.getPhysicalSide().isClient()) {
-            ClientDynamicResourcesGenerator.INSTANCE.register();
+            RegHelper.registerDynamicResourceProvider(new ModClientDynamicResources());
             try {
                 ClientHelper.registerOptionalTexturePack(res("darker_ropes"), false);
             } catch (Exception e) {

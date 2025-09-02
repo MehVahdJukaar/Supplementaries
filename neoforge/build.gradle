@@ -101,7 +101,7 @@ dependencies {
 
     if (isMyPc) {
         modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
-        modImplementation("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
+        modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
     } else {
         modImplementation("curse.maven:selene-499980:6818413")
     }
@@ -112,14 +112,14 @@ dependencies {
     //modRuntimeOnly("curse.maven:spark-361579:4738952")
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
 
-    modImplementation("curse.maven:jei-238222:5846880")
-    modImplementation("curse.maven:configured-457570:5873783")
-    modImplementation("curse.maven:amendments-896746:6905701")
-    modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140")
-    modRuntimeOnly("curse.maven:regions-unexplored-659110:5579932")
+    modCompileOnly("curse.maven:jei-238222:5846880")
+    modCompileOnly("curse.maven:configured-457570:5873783")
+    modCompileOnly("curse.maven:amendments-896746:6905701")
+    //modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140")
+   // modRuntimeOnly("curse.maven:regions-unexplored-659110:5579932")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
-    modImplementation("curse.maven:forgified-fabric-api-889079:6289153")
+    //modImplementation("curse.maven:forgified-fabric-api-889079:6289153")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:5714512")
     modCompileOnly("curse.maven:curios-309927:5296876")
@@ -143,22 +143,22 @@ dependencies {
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
     //modImplementation("curse.maven:legendary-tooltips-532127:5591027")
-    modImplementation("curse.maven:prism-lib-638111:5625115")
-    modImplementation("curse.maven:iceberg-520110:5804224")
+   // modImplementation("curse.maven:prism-lib-638111:5625115")
+   // modImplementation("curse.maven:iceberg-520110:5804224")
     modCompileOnly("curse.maven:balm-531761:4757228")
     modCompileOnly("curse.maven:buzzier-bees-355458:5229011")
     modCompileOnly("curse.maven:blueprint-382216:5292242")
     modCompileOnly("curse.maven:flan-forge-493246:3902633")
     modCompileOnly("curse.maven:additional-banners-230137:3901622")
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
-    modImplementation("curse.maven:the-bumblezone-forge-362479:5889009")
+    modCompileOnly("curse.maven:the-bumblezone-forge-362479:5889009")
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modCompileOnly("curse.maven:decorative-blocks-362528:5010279")
     modCompileOnly("curse.maven:map-atlases-forge-519759:4902239")
     //- Only For TESTING - can be commented out or enabled
-    modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140") // v4.0.0.2 | BOP, Regions-Unexplored
-    modRuntimeOnly("curse.maven:glitchcore-955399:5660740") // v2.1.0.0 | BOP
-    modRuntimeOnly("curse.maven:biomes-o-plenty-220318:6501142")
+ //   modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140") // v4.0.0.2 | BOP, Regions-Unexplored
+ //   modRuntimeOnly("curse.maven:glitchcore-955399:5660740") // v2.1.0.0 | BOP
+  //  modRuntimeOnly("curse.maven:biomes-o-plenty-220318:6501142")
 
     modCompileOnly("curse.maven:terrablender-563928:4590487")
     modCompileOnly("curse.maven:tetra-289712:4414851")
@@ -170,25 +170,25 @@ dependencies {
     modCompileOnly("curse.maven:custom-villager-trades-forge-463402:4906130")
     modCompileOnly("curse.maven:emi-580555:5704405")
 
-    modImplementation("curse.maven:create-328085:6271847")
-    modImplementation("curse.maven:forge-config-api-port-fabric-547434:5982385")
+    modCompileOnly("curse.maven:create-328085:6271847")
+    modCompileOnly("curse.maven:forge-config-api-port-fabric-547434:5982385")
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
-    modImplementation ("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")
-    modImplementation("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")
-    modImplementation("com.tterrag.registrate:Registrate:${registrate_version}")
-    modImplementation("net.createmod.ponder:Ponder-NeoForge-${ponder_version}")
+    modCompileOnly ("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")
+    modCompileOnly("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")
+    modCompileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
+    modCompileOnly("net.createmod.ponder:Ponder-NeoForge-${ponder_version}")
 
     // modImplementation("curse.maven:skinned-lanterns-414154:3970173")
     //modImplementation("curse.maven:alexs-mobs-426558:4959531")
     modCompileOnly("curse.maven:citadel-331936:4786380")
    // modImplementation("curse.maven:immediatelyfast-686911:5861162")
-    modImplementation("maven.modrinth:immediatelyfast:1.6.1+1.21.1-neoforge")
+    modCompileOnly("maven.modrinth:immediatelyfast:1.6.1+1.21.1-neoforge")
 
     modCompileOnly("curse.maven:cyanide-541676:4824162")
-    modImplementation("curse.maven:embeddium-908741:5681729")
+    modCompileOnly("curse.maven:embeddium-908741:5681729")
     modCompileOnly("maven.modrinth:sodium:mc1.21-0.6.0-beta.2-neoforge")
-    modImplementation("curse.maven:resourceful-lib-570073:5793500") //v2.1.29 | Chipped, Handcrafted, Cozy
-    modImplementation("curse.maven:athena-841890:5629395") //v2.1.29 | Chipped, Handcrafted, Cozy
+    modCompileOnly("curse.maven:resourceful-lib-570073:5793500") //v2.1.29 | Chipped, Handcrafted, Cozy
+    modCompileOnly("curse.maven:athena-841890:5629395") //v2.1.29 | Chipped, Handcrafted, Cozy
 
     modCompileOnly("curse.maven:integrated-stronghold-815548:5178479")
     modCompileOnly("curse.maven:integrated-api-817709:5241489")
