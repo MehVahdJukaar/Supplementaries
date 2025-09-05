@@ -187,9 +187,13 @@ public class ServerEvents {
         CurseLootFunction.rebuild();
 
         if (!client) {
-            var server = PlatHelper.getCurrentServer();
+          MinecraftServer  server = PlatHelper.getCurrentServer();
             if (server != null) {
-                FaucetBehaviorsManager.RELOAD_INSTANCE.onReloadWithLevel(server.overworld());
+                ServerLevel overworld = server.overworld();
+                if(overworld == null) {
+                    throw new IllegalStateException("Overworld is null during common tag update. What? How?");
+                }
+                FaucetBehaviorsManager.RELOAD_INSTANCE.onReloadWithLevel(overworld);
             }
         }
     }
