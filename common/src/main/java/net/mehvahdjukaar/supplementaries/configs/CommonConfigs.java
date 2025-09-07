@@ -748,8 +748,10 @@ public class CommonConfigs {
                     .define("use_without_slow", true);
             QUIVER_SLOTS = builder.comment("Arrow stacks that can fit inside a quiver. Requires reboot")
                     .define("slots", 6, 1, 9);
-            QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn. Note that this also depends on local difficulty so you wont ever see them on easy and very rarely on normal. Similar logic to equipment")
+            QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn.")
                     .define("quiver_skeleton_spawn_chance", 0.025d, 0, 1);
+            QUIVER_SKELETON_SPAWN_LOCAL_DIFFICULTY = builder.comment("If the chance for a skeleton to spawn with a quiver will be affected by local difficulty. If true, you wont ever see them on easy and very rarely on normal. Similar logic to equipment")
+                    .define("quiver_skeleton_spawn_affected_by_local_difficulty", true);
             QUIVER_CURIO_ONLY = builder.comment("Allows quiver to only be used when in offhand or in curio slot")
                     .define("only_works_in_curio", false);
             QUIVER_PICKUP = builder.comment("Arrows you pickup will try to go in a quiver if available provided it has some arrow of the same type")
@@ -858,6 +860,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
         public static final Supplier<Integer> QUIVER_SLOTS;
         public static final Supplier<Double> QUIVER_SKELETON_SPAWN;
+        public static final Supplier<Double> QUIVER_SKELETON_SPAWN_LOCAL_DIFFICULTY;
         public static final Supplier<Boolean> QUIVER_CURIO_ONLY;
         public static final Supplier<Boolean> QUIVER_PICKUP;
 
