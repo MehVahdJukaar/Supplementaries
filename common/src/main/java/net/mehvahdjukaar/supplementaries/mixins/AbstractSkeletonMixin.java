@@ -33,8 +33,8 @@ public abstract class AbstractSkeletonMixin extends Monster {
     @Inject(method = "finalizeSpawn", at = @At("TAIL"))
     public void supp$finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, SpawnGroupData spawnData, CompoundTag dataTag, CallbackInfoReturnable<SpawnGroupData> cir) {
         if (this.getType() == EntityType.SKELETON || this.getType() == EntityType.STRAY && CommonConfigs.Tools.QUIVER_ENABLED.get()) {
-            float chance = CommonConfigs.Tools.QUIVER_SKELETON_SPAWN.get();
-            if (CommonConfigs.Tools.QUIVER_SKELETON_SPAWN_LOCAL_DIFFICULTY)
+            double chance = CommonConfigs.Tools.QUIVER_SKELETON_SPAWN.get();
+            if (CommonConfigs.Tools.QUIVER_SKELETON_SPAWN_LOCAL_DIFFICULTY.get())
                 chance *= difficulty.getSpecialMultiplier();
             if (random.nextFloat() < chance) {
                 ((IQuiverEntity) this).supplementaries$setQuiver(

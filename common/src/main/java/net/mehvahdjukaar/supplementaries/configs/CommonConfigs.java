@@ -1013,7 +1013,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
         public static final Supplier<Integer> QUIVER_SLOTS;
         public static final Supplier<Double> QUIVER_SKELETON_SPAWN;
-        public static final Supplier<Double> QUIVER_SKELETON_SPAWN_LOCAL_DIFFICULTY;
+        public static final Supplier<Boolean> QUIVER_SKELETON_SPAWN_LOCAL_DIFFICULTY;
         public static final Supplier<Boolean> QUIVER_CURIO_ONLY;
         public static final Supplier<Boolean> QUIVER_PICKUP;
 
