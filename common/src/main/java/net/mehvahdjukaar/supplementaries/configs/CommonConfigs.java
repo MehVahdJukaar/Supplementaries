@@ -1267,7 +1267,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SUS_RECIPES;
         public static final Supplier<Boolean> SLIMED_EFFECT;
         public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
-        public static final Supplier<Boolean> SLIME_OVERLAY;
         public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
         public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;

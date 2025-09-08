@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,41 +62,79 @@ public class LunchBoxItemImpl {
             }
             return stackView;
         }
-
+        // try adding. returns remainder
         @Override
         public ItemStack tryAdding(ItemStack toInsert, boolean onlyOnExisting) {
             if (toInsert.isEmpty() || !toInsert.getItem().canFitInsideContainerItems()) {
                 return toInsert;
             }
             if (!this.canAcceptItem(toInsert)) return toInsert;
+
+            // Ensure the items list exists
             if (!tag.contains(TAG_ITEMS)) {
                 tag.put(TAG_ITEMS, new ListTag());
             }
-            ListTag listTag = tag.getList(TAG_ITEMS, 10);
-            int ind = 0;
-            for (var c : listTag) {
-                if (c instanceof CompoundTag t) {
-                    var st = ItemStack.of(t);
-                    if (ItemStack.isSameItemSameTags(st, toInsert) && st.getCount() != st.getMaxStackSize()) {
-                        int missing = st.getMaxStackSize() - st.getCount();
-                        int j = Math.min(missing, toInsert.getCount());
-                        toInsert.shrink(j);
-                        st.grow(j);
-                        st.save(t);
-                        return toInsert;
-                    } else if (st.isEmpty()) {
-                        listTag.set(ind, toInsert.save(new CompoundTag()));
-                        return ItemStack.EMPTY;
+            ListTag listTag = tag.getList(TAG_ITEMS, 10); // 10 = CompoundTag
+
+            // PHASE 1: merge into existing partial stacks of the same item (and same tags)
+            for (int i = 0; i < listTag.size() && !toInsert.isEmpty(); i++) {
+                Tag raw = listTag.get(i);
+                if (!(raw instanceof CompoundTag t)) continue;
+
+                ItemStack st = ItemStack.of(t);
+                if (st.isEmpty()) continue; // handled in Phase 2
+
+                if (ItemStack.isSameItemSameTags(st, toInsert)) {
+                    int max = st.getMaxStackSize();
+                    if (st.getCount() < max) {
+                        int missing = max - st.getCount();
+                        int move = Math.min(missing, toInsert.getCount());
+                        if (move > 0) {
+                            st.grow(move);
+                            toInsert.shrink(move);
+                            st.save(t); // write back to the same slot
+                        }
                     }
                 }
-                ind++;
             }
-            if (listTag.size() < stackView.size()) {
-                listTag.add(toInsert.save(new CompoundTag()));
-                return ItemStack.EMPTY;
+
+            // If we only merge into existing stacks, stop here.
+            if (onlyOnExisting || toInsert.isEmpty()) {
+                return toInsert;
             }
+
+            // PHASE 2: fill already-present EMPTY slots (represented by empty ItemStacks)
+            for (int i = 0; i < listTag.size() && !toInsert.isEmpty(); i++) {
+                Tag raw = listTag.get(i);
+                if (!(raw instanceof CompoundTag t)) continue;
+
+                ItemStack st = ItemStack.of(t);
+                if (!st.isEmpty()) continue;
+
+                int move = Math.min(toInsert.getCount(), toInsert.getMaxStackSize());
+                if (move <= 0) break;
+
+                ItemStack slice = toInsert.copy();
+                slice.setCount(move);
+                listTag.set(i, slice.save(new CompoundTag())); // overwrite empty slot
+                toInsert.shrink(move);
+            }
+
+            // PHASE 3: append new slots if capacity allows
+            while (!toInsert.isEmpty() && listTag.size() < stackView.size()) {
+                int move = Math.min(toInsert.getCount(), toInsert.getMaxStackSize());
+                if (move <= 0) break;
+
+                ItemStack slice = toInsert.copy();
+                slice.setCount(move);
+                listTag.add(slice.save(new CompoundTag()));
+                toInsert.shrink(move);
+            }
+
+            // Whatever couldn't fit is returned as remainder
             return toInsert;
         }
+
 
 
         @Override
