@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.client.tooltip;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerPatternTooltip;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -48,6 +50,7 @@ public class BannerPatternTooltipComponent implements ClientTooltipComponent {
 
             int width = contents.width();
             int height = contents.height();
+             
             RenderUtil.blitSpriteSection(graphics, x, y, size, size,
                     1f / width, (1f / height) * 12, (int) (20f / 64 * width), (int) (20f / 64 * height), sprite);
 

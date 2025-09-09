@@ -1,0 +1,20 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "key"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "key"
+    }
+  ],
+  "entities": [
+    "player"
+  ],
+  "slots": [
+	"legs/key"
+  ]
+}

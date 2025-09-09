@@ -1,4 +1,16 @@
 {
+	"fabric:load_conditions": [
+		{
+			"condition": "supplementaries:flag",
+			"flag": "quiver"
+		}
+	],
+	"neoforge:conditions": [
+		{
+			"type": "supplementaries:flag",
+			"flag": "quiver"
+		}
+	],
 	"icon": "supplementaries:gui/slots/quiver",
 	"replace": false,
 	"amount": 1
