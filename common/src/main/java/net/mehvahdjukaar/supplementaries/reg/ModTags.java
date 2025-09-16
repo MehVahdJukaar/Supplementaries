@@ -104,6 +104,7 @@ public class ModTags {
     public static final TagKey<EntityType<?>> ROTATABLE = entityTag("rotatable");
     public static final TagKey<EntityType<?>> URN_SPAWN = entityTag("urn_spawn");
     public static final TagKey<EntityType<?>> AWNING_BLACKLIST = entityTag("cant_bounce_off_awnings");
+    public static final TagKey<EntityType<?>> CAN_SLIME = entityTag("can_slime");
 
     //features
     public static final TagKey<Structure> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:slime","required":false},
+    {"id":"c:slimes","required":false},
+    {"id":"#tinkers-construct:slimes","required":false}
+  ]
+}
+
