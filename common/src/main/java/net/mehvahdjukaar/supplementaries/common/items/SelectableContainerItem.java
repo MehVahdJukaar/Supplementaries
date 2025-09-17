@@ -64,14 +64,19 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
+                ItemStack taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
+                ItemStack remaining = mutable.tryAdding(taken);
+                //
+                old
                 D data = this.getData(quiver);
                 var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
                 ItemStack remaining = data.tryAdding(taken);
+                //end old
                 if (!remaining.equals(taken)) {
                     this.playInsertSound(pPlayer);
                     didStuff.set(true);
                 }
-                pSlot.set(remaining);
+                pSlot.safeInsert(remaining);
             }
             return didStuff.get();
         }
