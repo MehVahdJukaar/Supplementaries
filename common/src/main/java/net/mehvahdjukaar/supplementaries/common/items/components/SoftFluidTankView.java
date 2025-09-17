@@ -1,20 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.items.components;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.game.ServerboundSetCreativeModeSlotPacket;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -27,54 +22,18 @@ import java.util.function.Consumer;
 // immutable view of a SoftFluidTank
 public class SoftFluidTankView implements TooltipProvider {
 
-    public static final Codec<SoftFluidTankView> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            SoftFluidStack.CODEC.fieldOf("fluid").forGetter(t -> t.inner.getFluid()),
-            Codec.INT.fieldOf("capacity").forGetter(SoftFluidTankView::getCapacity)
-    ).apply(instance, SoftFluidTankView::new));
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<SoftFluid>> SF =
-            new StreamCodec<>() {
-                final StreamCodec<RegistryFriendlyByteBuf, Holder<SoftFluid>> inner = ByteBufCodecs.holderRegistry(SoftFluidRegistry.KEY);
-
-                @Override
-                public Holder<SoftFluid> decode(RegistryFriendlyByteBuf object) {
-                    return inner.decode(object);
-                }
-
-                @Override
-                public void encode(RegistryFriendlyByteBuf object, Holder<SoftFluid> object2) {
-                    try {
-                        inner.encode(object, object2);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        inner.encode(object, object2);
-                    }
-                }
-            };
-    public static final StreamCodec<RegistryFriendlyByteBuf, SoftFluidStack> SFS = StreamCodec.composite(SF,
-            SoftFluidStack::getHolder, ByteBufCodecs.VAR_INT, SoftFluidStack::getCount,
-            DataComponentPatch.STREAM_CODEC, (s) -> s.getComponents().asPatch(), SoftFluidStack::of);
-
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, SoftFluidTankView> STREAM_CODEC = StreamCodec.composite(
-            SFS, t -> t.inner.getFluid(),
-            ByteBufCodecs.INT, SoftFluidTankView::getCapacity,
-            SoftFluidTankView::new
-    );
+    public static final Codec<SoftFluidTankView> CODEC = SoftFluidTank.CODEC.xmap(SoftFluidTankView::new, SoftFluidTankView::toMutable);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SoftFluidTankView> STREAM_CODEC =
+            SoftFluidTank.STREAM_CODEC.map(SoftFluidTankView::new, SoftFluidTankView::toMutable);
 
     private final SoftFluidTank inner;
-
-    private SoftFluidTankView(SoftFluidStack fluid, int capacity) {
-        this.inner = SoftFluidTank.create(fluid, capacity);
-    }
 
     private SoftFluidTankView(SoftFluidTank tank) {
         this.inner = tank.makeCopy();
     }
 
     public static SoftFluidTankView of(SoftFluidTank tank) {
-            return new SoftFluidTankView(tank.makeCopy());
+        return new SoftFluidTankView(tank.makeCopy());
     }
 
     public SoftFluid getFluid() {

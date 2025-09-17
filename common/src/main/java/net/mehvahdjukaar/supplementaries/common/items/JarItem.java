@@ -1,10 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.moonlight.api.client.ICustomItemRendererProvider;
-import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.JarItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.components.SoftFluidTankView;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
@@ -39,9 +36,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
-import java.util.function.Supplier;
 
-public class JarItem extends AbstractMobContainerItem   {
+public class JarItem extends AbstractMobContainerItem {
 
     protected final MutableComponent HINT = Component.translatable("message.supplementaries.jar").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
 
@@ -110,15 +106,18 @@ public class JarItem extends AbstractMobContainerItem   {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        if (!stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
-            if (!MiscUtils.showsHints(tooltipFlag)) return;
-            tooltipComponents.add(HINT);
-        } else {
-            ItemsUtil.addShulkerLikeTooltips(stack, tooltipComponents);
 
-            SoftFluidTankView tank = stack.get(ModComponents.SOFT_FLUID_CONTENT.get());
-            if(tank != null){
-                tank.addToTooltip(context, tooltipComponents::add, tooltipFlag);
+        int len = tooltipComponents.size();
+        ItemsUtil.addShulkerLikeTooltips(stack, tooltipComponents);
+
+        SoftFluidTankView tank = stack.get(ModComponents.SOFT_FLUID_CONTENT.get());
+        if (tank != null) {
+            tank.addToTooltip(context, tooltipComponents::add, tooltipFlag);
+        }
+
+        if (len == tooltipComponents.size() && !stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
+            if (MiscUtils.showsHints(tooltipFlag)) {
+                tooltipComponents.add(HINT);
             }
         }
     }
@@ -127,9 +126,9 @@ public class JarItem extends AbstractMobContainerItem   {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
-        if ( entity instanceof Player player) {
+        if (entity instanceof Player player) {
             SoftFluidTankView view = stack.get(ModComponents.SOFT_FLUID_CONTENT.get());
-            if(view != null) {
+            if (view != null) {
                 SoftFluidTank ft = view.toMutable();
                 if (ft.containsFood()) {
                     if (ft.tryDrinkUpFluid(player, world)) {

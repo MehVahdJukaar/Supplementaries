@@ -1,1 +1,3 @@
-fixed issue with trinkets
+- fixed jars tooltips not working
+- fixed a bug with quiver and rope arrows deleting some items when in containers that allow stack sizes more than 64
+- magma cubes wont slime anymore
