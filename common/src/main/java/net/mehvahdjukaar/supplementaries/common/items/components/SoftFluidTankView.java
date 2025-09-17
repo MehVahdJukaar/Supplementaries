@@ -33,8 +33,8 @@ public class SoftFluidTankView implements TooltipProvider {
     ).apply(instance, SoftFluidTankView::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<SoftFluid>> SF =
-            new StreamCodec<RegistryFriendlyByteBuf, Holder<SoftFluid>>() {
-                StreamCodec<RegistryFriendlyByteBuf, Holder<SoftFluid>> inner = ByteBufCodecs.holderRegistry(SoftFluidRegistry.KEY);
+            new StreamCodec<>() {
+                final StreamCodec<RegistryFriendlyByteBuf, Holder<SoftFluid>> inner = ByteBufCodecs.holderRegistry(SoftFluidRegistry.KEY);
 
                 @Override
                 public Holder<SoftFluid> decode(RegistryFriendlyByteBuf object) {
@@ -43,10 +43,10 @@ public class SoftFluidTankView implements TooltipProvider {
 
                 @Override
                 public void encode(RegistryFriendlyByteBuf object, Holder<SoftFluid> object2) {
-                    try{
+                    try {
                         inner.encode(object, object2);
 
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                         inner.encode(object, object2);
                     }
@@ -61,7 +61,7 @@ public class SoftFluidTankView implements TooltipProvider {
             SFS, t -> t.inner.getFluid(),
             ByteBufCodecs.INT, SoftFluidTankView::getCapacity,
             SoftFluidTankView::new
-    ); //server tank: 44351 client: 44365 44370 stack: 44366
+    );
 
     private final SoftFluidTank inner;
 

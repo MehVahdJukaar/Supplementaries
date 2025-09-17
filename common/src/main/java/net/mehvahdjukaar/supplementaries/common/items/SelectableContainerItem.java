@@ -66,13 +66,13 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
-                var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
+                ItemStack taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
                 ItemStack remaining = mutable.tryAdding(taken);
                 if (!remaining.equals(taken)) {
                     this.playInsertSound(pPlayer);
                     didStuff = true;
                 }
-                pSlot.set(remaining);
+                pSlot.safeInsert(remaining);
             }
             if (didStuff) {
                 myStack.set(this.getComponentType(), mutable.toImmutable());

@@ -16,7 +16,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
@@ -53,8 +52,13 @@ public class RopeArrowItem extends ArrowItem {
         return stack.getOrDefault(ModComponents.CHARGES.get(), 0);
     }
 
-    public static void addRopes(ItemStack stack, int ropes) {
-        stack.set(ModComponents.CHARGES.get(), Math.min(getRopeCapacity(), getRopes(stack) + ropes));
+    //return remaining
+    public static int addRopes(ItemStack stack, int ropes) {
+        int current = getRopes(stack);
+        int newCharges = Math.min(getRopeCapacity(), current + ropes);
+        int remaining = ropes - (newCharges - current);
+        stack.set(ModComponents.CHARGES.get(), newCharges);
+        return remaining;
     }
 
     public static int getRopeCapacity() {
@@ -109,11 +113,19 @@ public class RopeArrowItem extends ArrowItem {
                 int missingRope = (int) (ropeArrow.getMaxDamage() - ropes);
                 if (missingRope != 0) {
                     ItemStack ropeTaken = pSlot.safeTake(itemstack.getCount(), missingRope, pPlayer);
-                    int ropeWeCanAdd = Math.min(missingRope, ropeTaken.getCount());
-                    addRopes(ropeArrow, ropeWeCanAdd);
+                    int remainingRopes = addRopes(ropeArrow, ropeTaken.getCount());
+
                     this.playInsertSound(pPlayer);
+
+                    ItemStack remaining = ropeTaken.copy();
+                    remaining.setCount(remainingRopes);
+                    if (!remaining.isEmpty()) {
+                        ItemStack rest = pSlot.safeInsert(remaining);
+                        if (!rest.isEmpty()) {
+                            pPlayer.drop(rest, false);
+                        }
+                    }
                     return true;
-                    //pSlot.set(remaining);
                 }
             }
         }
