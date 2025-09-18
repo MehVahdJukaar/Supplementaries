@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockPredicate;
+import net.mehvahdjukaar.supplementaries.dynamicpack.GenMode;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.MapAtlasCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
@@ -1300,6 +1301,8 @@ builder.pop();
 
             builder.comment("General settings")
                     .push("general");
+            DYNAMIC_ASSETS_GEN_MODE = builder.define("dynamic_assets_generation_mode", GenMode.CACHED);
+
             CREATIVE_TAB = builder.comment("Enable Creative Tab").define("creative_tab", false);
 
             DISPENSERS = builder.comment("Set to false to disable custom dispenser behaviors (i.e: filling jars) if for some reason they are causing trouble")
@@ -1320,6 +1323,7 @@ builder.pop();
 
         public static final Supplier<Boolean> JAR_TAB;
         public static final Supplier<Boolean> CREATIVE_TAB;
+        public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
         public static final Supplier<Boolean> DISPENSERS;
         public static final Supplier<Boolean> SANITY_CHECKS_MESSAGES;
     }

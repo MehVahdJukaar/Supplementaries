@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
+import net.mehvahdjukaar.supplementaries.dynamicpack.GenMode;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -239,12 +240,14 @@ public class ClientConfigs {
         public static final Supplier<Double> TEST2;
         public static final Supplier<Double> TEST3;
         public static final Supplier<Boolean> UNFUNNY;
+        public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
 
         static {
             ConfigBuilder builder = builderReference.get();
 
             builder.comment("General settings")
                     .push("general");
+            DYNAMIC_ASSETS_GEN_MODE = builder.define("dynamic_assets_generation_mode", GenMode.CACHED);
             NO_OPTIFINE_WARN = builder.comment("Disables Optifine warn screen")
                     .define("no_optifine_warn_screen", false);
             NO_AMENDMENTS_WARN = builder.comment("Disables Amendments suggestion screen")

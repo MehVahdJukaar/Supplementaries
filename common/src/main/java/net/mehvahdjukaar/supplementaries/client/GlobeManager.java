@@ -11,9 +11,6 @@ import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -151,6 +148,9 @@ public class GlobeManager {
             Supplementaries.LOGGER.error("Could not find any globe palette in textures/entity/globes/palettes");
         }
 
+        if (SEPIA_COLORS.isEmpty())
+            throw new RuntimeException("Could not find sepia globe palette in textures/entity/globes/palettes");
+
         recomputeCache();
 
         refreshTextures();
@@ -169,7 +169,8 @@ public class GlobeManager {
         SHEARED(Component.literal("sheared"), GLOBE_SHEARED_TEXTURE, GLOBE_SHEARED_SEPIA_TEXTURE,
                 Model.SHEARED),
         ROUND(Component.translatable("globe.supplementaries.round"), GLOBE_EARTH_TEXTURE, GLOBE_EARTH_TEXTURE_SEPIA,
-                Model.ROUND, "round", "sphere", "spherical"),;
+                Model.ROUND, "round", "sphere", "spherical"),
+        ;
 
         SpecialGlobe(Component tr, ResourceLocation texture, ResourceLocation textureSepia, String... key) {
             this(tr, texture, textureSepia, Model.GLOBE, key);
@@ -191,7 +192,7 @@ public class GlobeManager {
         private final Model model;
 
         public @NotNull ResourceLocation getTexture(boolean sepia) {
-            if(this == ROUND){
+            if (this == ROUND) {
                 return DEFAULT_DATA.getTexture(sepia);
             }
             return sepia ? this.textureSepia : this.texture;
@@ -229,7 +230,7 @@ public class GlobeManager {
         TEXTURES.clear();
         Set<ResourceLocation> allTextures = new HashSet<>();
         NAME_CACHE.values().forEach(o -> {
-            if(o == DEFAULT_DATA || o == SpecialGlobe.ROUND) return; //skip default data
+            if (o == DEFAULT_DATA || o == SpecialGlobe.ROUND) return; //skip default data
             ResourceLocation t1 = o.getTexture(false);
             allTextures.add(t1);
             ResourceLocation t2 = o.getTexture(true);
@@ -246,7 +247,7 @@ public class GlobeManager {
     }
 
 
-    private record SimpleData(Model model,@NotNull ResourceLocation texture) implements GlobeRenderData {
+    private record SimpleData(Model model, @NotNull ResourceLocation texture) implements GlobeRenderData {
 
         public static SimpleData of(Model model, @NotNull ResourceLocation texture) {
             return new SimpleData(model, texture);
@@ -276,7 +277,7 @@ public class GlobeManager {
                 return SpecialGlobe.EARTH.getTexture(sepia);
             }
             Level level = Minecraft.getInstance().level;
-            if(level == null){
+            if (level == null) {
                 return GLOBE_EARTH_TEXTURE;
             }
             return getTextureInstance(level, sepia).textureLocation;

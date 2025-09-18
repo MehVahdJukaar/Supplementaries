@@ -1,3 +1,3 @@
-- fixed jars tooltips not working
-- fixed a bug with quiver and rope arrows deleting some items when in containers that allow stack sizes more than 64
-- magma cubes wont slime anymore
+- fixed sepia colors and bubble colors not refreshing on every reload, causing a crash ,fixes #1674
+- fixed modded flags being added with wrong extension
+- all assets that should be pre generated are pre generated

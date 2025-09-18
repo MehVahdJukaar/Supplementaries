@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
     public ModServerDynamicResources() {
-        super(Supplementaries.res("generated_pack"), PackGenerationStrategy.CACHED_ZIPPED);
+        super(Supplementaries.res("generated_pack"), CommonConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
     }
 
     @Override

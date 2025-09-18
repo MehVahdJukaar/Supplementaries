@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
+import net.mehvahdjukaar.moonlight.api.misc.IProgressTracker;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
@@ -42,7 +43,7 @@ import java.util.function.Consumer;
 public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
     public ModClientDynamicResources() {
-        super(Supplementaries.res("generated_pack"), PackGenerationStrategy.CACHED_ZIPPED);
+        super(Supplementaries.res("generated_pack"), ClientConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
     }
 
     @Override
@@ -51,18 +52,25 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
     }
     //-------------resource pack dependant textures-------------
 
-    @Override
-    public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
-        //generateTagTranslations();
 
+    @Override
+    public void reload(ResourceManager manager, IProgressTracker reporter) {
         //need this here for reasons I forgot
         ColoredMapHandler.clearCache();
         SlimedRenderTypes.clear();
         BlackboardTextureManager.closeAll();
 
+        super.reload(manager, reporter);
+
+        GlobeManager.refreshColorsAndTextures(manager);
+        ColorHelper.refreshBubbleColors(manager);
+    }
+
+    @Override
+    public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {
+        //generateTagTranslations();
         executor.accept((manager, sink) -> {
-            GlobeManager.refreshColorsAndTextures(manager);
-            ColorHelper.refreshBubbleColors(manager);
+
             addEndermanHead(manager, sink);
             addRopeArrowModel(manager, sink);
             addTatteredBook(manager, sink);
@@ -73,7 +81,6 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         });
 
         executor.accept(this::addSignPostAssets);
-
         executor.accept(this::generateBoatTextures);
     }
 
@@ -92,7 +99,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             if (namespace.equals("minecraft")) continue;
             String name = id.getPath().replace("textures/entity/banner/", "");
             ResourceLocation newPath = Supplementaries.res("entity/banner/flags/"
-                    + id.getNamespace() + "/" + name);
+                    + id.getNamespace() + "/" + name.substring(0, name.length() - 4));
             sink.addTextureIfNotPresent(manager, newPath, () -> {
                 try (TextureImage oldText = TextureImage.open(manager, id.withPath(p -> p.replace("textures/", "")))) {
                     TextureImage newImage = TextureOps.createScaled(oldText, 0.5f, 0.25f);
