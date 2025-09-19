@@ -1,3 +1,2 @@
-fixed a lunch box issue on fabric
-added more configs for quiver
-some random backports
+fixed a dupe with faucets
+added a faucet blacklist tag
