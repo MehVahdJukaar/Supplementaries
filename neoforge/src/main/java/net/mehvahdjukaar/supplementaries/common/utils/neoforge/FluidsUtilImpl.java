@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.utils.neoforge;
 
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.neoforge.SoftFluidStackImpl;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -13,6 +12,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("ConstantConditions")
 public class FluidsUtilImpl {
@@ -52,18 +52,25 @@ public class FluidsUtilImpl {
         return FluidUtil.getFluidHandler(level, pos, dir).isPresent();
     }
 
-    @org.jetbrains.annotations.Contract
-    public static SoftFluidStack getFluidInTank(Level level, BlockPos pos, Direction dir, BlockEntity source) {
+    @Nullable
+    public static FluidOffer getFluidInTank(Level level, BlockPos pos, Direction dir, BlockEntity source) {
         var opt = FluidUtil.getFluidHandler(level, pos, dir);
         if (opt.isPresent()) {
-            FluidStack fluidInTank = opt.get().drain(1000, IFluidHandler.FluidAction.SIMULATE);
-            if (!fluidInTank.isEmpty()) {
-                if (!Utils.getID(source.getBlockState().getBlock()).getPath().equals("fluid_interface")) {
-                    return SoftFluidStackImpl.fromForgeFluid(fluidInTank);
+            //simulate all possible amounts
+            for (int i = 4; i > 0; i--) {
+                int toDrain = i * 250;
+                FluidStack fluidInTank = opt.get().drain(toDrain, IFluidHandler.FluidAction.SIMULATE);
+                if (!fluidInTank.isEmpty()) {
+                    SoftFluidStack forgeFluid = SoftFluidStackImpl.fromForgeFluid(fluidInTank);
+                    if (!forgeFluid.isEmpty()) {
+                        //TODO: technically here we could try all lower amounts too to find the min but its probably not worth it
+                        return FluidOffer.of(forgeFluid.getHolder(), i, i);
+                    }
                 }
             }
+
         }
-        return SoftFluidStack.empty();
+        return null;
     }
 
 }

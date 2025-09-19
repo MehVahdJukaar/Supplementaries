@@ -55,6 +55,7 @@ public class ModTags {
     public static final TagKey<Block> PLANTER_OFFSET_BLACKLIST = blockTag("ignores_planter_offset");
     public static final TagKey<Block> SOAP_BLACKLIST_BLOCK = blockTag("non_cleanable");
     public static final TagKey<Block> CANNON_TNTS = blockTag("cannon_tnts");
+    public static final TagKey<Block> FAUCET_CANT_INTERACT = blockTag("faucet_cant_interact");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");

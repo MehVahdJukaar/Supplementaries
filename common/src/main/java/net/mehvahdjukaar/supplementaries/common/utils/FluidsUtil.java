@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 public class FluidsUtil {
 
@@ -28,9 +29,10 @@ public class FluidsUtil {
         throw new AssertionError();
     }
 
+    @Nullable
     @Contract
     @ExpectPlatform
-    public static SoftFluidStack getFluidInTank(Level level, BlockPos pos, Direction dir, BlockEntity source) {
+    public static FluidOffer getFluidInTank(Level level, BlockPos pos, Direction dir, BlockEntity source) {
         throw new AssertionError();
     }
 }
