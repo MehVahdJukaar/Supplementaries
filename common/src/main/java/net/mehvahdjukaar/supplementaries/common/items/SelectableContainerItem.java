@@ -116,6 +116,8 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
         ItemStack myStack = player.getItemInHand(hand);
+        if (!myStack.is(this)) return super.use(pLevel, player, hand);
+
         var data = myStack.get(this.getComponentType());
         if (data == null) return InteractionResultHolder.fail(myStack);
         var mutable = data.toMutable();
