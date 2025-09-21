@@ -156,7 +156,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
     private static void putVertex(BakedQuadBuilder builder, float x, float y, float u, float v, int color) {
 
         Vector3f posV = new Vector3f(x, y, 1 - 5 / 16f);
-        //I hate this. Forge seems to have some rounding errors with numbers close to 0 that arent 0 resulting in incorrect shading
+        //I hate this. Forge seems to have some rounding errors with numbers close to 0 that aren't 0 resulting in incorrect shading
         posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
         builder.addVertex(posV.x, posV.y, posV.z);
         builder.setColor(color);

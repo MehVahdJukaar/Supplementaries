@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@OptionalMixin(value = "io.izzel.arclight.common.mixin.core.world.entity.monster.CreeperMixin", classLoaded = true)
+@OptionalMixin(value = "io.izzel.arclight.common.mixin.core.world.entity.monster.CreeperMixin")
 @Mixin(Creeper.class)
 public abstract class CompatCreeperArclightMixin extends Monster implements IPartyCreeper {
 

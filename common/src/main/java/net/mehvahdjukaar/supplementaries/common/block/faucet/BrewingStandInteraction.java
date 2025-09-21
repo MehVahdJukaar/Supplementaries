@@ -55,7 +55,7 @@ class BrewingStandInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
             for (int i = 0; i < 3; i++) {
                 if (needToPlace <= 0) break;
                 ItemStack stack = brewingStand.getItem(i);
-                var filled = offer.fluid().toItem(stack, true);
+                var filled = offer.fluid().toItem(stack);
                 if (filled != null) {
                     ItemStack filledItem = filled.getFirst();
                     brewingStand.setItem(i, ItemStack.EMPTY);

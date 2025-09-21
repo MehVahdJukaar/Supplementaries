@@ -87,10 +87,10 @@ public class GlobeTextureGenerator {
             //border
             if (y == SIDE) {
                 return switch (f) {
-                    default -> new Pos(SIDE, x);
                     case F2 -> new Pos(x, y - 1);
                     case F3 -> new Pos(2 * SIDE - 1, (3 * SIDE) - x - 1);
                     case F4 -> new Pos((5 * SIDE) - x - 1, 0);
+                    default -> new Pos(SIDE, x);
                 };
             }
             if (y == 0) {
@@ -110,10 +110,10 @@ public class GlobeTextureGenerator {
             //border
             if (y == (2 * SIDE) - 1) {
                 return switch (f) {
-                    default -> new Pos(2 * SIDE, SIDE - x - 1);
                     case F2 -> new Pos(SIDE + x, 0);
                     case F3 -> new Pos(3 * SIDE - 1, x - (2 * SIDE));
                     case F4 -> new Pos((6 * SIDE) - x - 1, SIDE - 1);
+                    default -> new Pos(2 * SIDE, SIDE - x - 1);
                 };
             }
             if (y == SIDE - 1) {

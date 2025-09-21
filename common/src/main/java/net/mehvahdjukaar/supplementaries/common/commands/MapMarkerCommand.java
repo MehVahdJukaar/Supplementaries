@@ -19,7 +19,7 @@ public class MapMarkerCommand {
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext context) {
         return Commands.literal("add_marker")
                 .requires(cs -> cs.hasPermission(2))
-                .then(Commands.argument("marker", ResourceArgument.resource(context, MapDataRegistry.REGISTRY_KEY))
+                .then(Commands.argument("marker", ResourceArgument.resource(context, MapDataRegistry.MAP_DECORATION_REGISTRY_KEY))
                         .executes(MapMarkerCommand::addMapMarker)
                 );
     }
@@ -29,7 +29,7 @@ public class MapMarkerCommand {
         CommandSourceStack source = context.getSource();
         ServerLevel level = source.getLevel();
 
-        var decoration = ResourceArgument.getResource(context, "marker", MapDataRegistry.REGISTRY_KEY);
+        var decoration = ResourceArgument.getResource(context, "marker", MapDataRegistry.MAP_DECORATION_REGISTRY_KEY);
         var p = source.getPlayer();
         if (p != null) {
             ItemStack stack = p.getMainHandItem();

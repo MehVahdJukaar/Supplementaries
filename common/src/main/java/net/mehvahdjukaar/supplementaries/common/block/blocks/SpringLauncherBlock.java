@@ -83,11 +83,11 @@ public class SpringLauncherBlock extends Block {
         if (state.getValue(EXTENDED)) {
             return switch (state.getValue(FACING)) {
                 case DOWN -> PISTON_BASE_DOWN_AABB;
-                default -> PISTON_BASE_UP_AABB;
                 case NORTH -> PISTON_BASE_NORTH_AABB;
                 case SOUTH -> PISTON_BASE_SOUTH_AABB;
                 case WEST -> PISTON_BASE_WEST_AABB;
                 case EAST -> PISTON_BASE_EAST_AABB;
+                default -> PISTON_BASE_UP_AABB;
             };
         } else {
             return Shapes.block();

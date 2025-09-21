@@ -75,9 +75,6 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
         return supplementaries$quiverSlotForHUD;
     }
 
-    ;
-
-
     @Override
     public void supplementaries$setQuiver(@NotNull ItemStack quiver) {
         this.supplementaries$quiverForRenderer = quiver;

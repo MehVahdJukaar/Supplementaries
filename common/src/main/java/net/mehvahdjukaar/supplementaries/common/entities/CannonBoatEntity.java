@@ -125,7 +125,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @Override
     protected float getSinglePassengerXOffset() {
-        return 0.15F + (isBamboo ? 0.125f : 0.125f);
+        return 0.15F + (0.125f);
     }
 
     @Override

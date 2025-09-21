@@ -130,7 +130,7 @@ public class ModEntities {
 
 
     public static <T extends Entity> Supplier<EntityType<T>> regEntity(String name, Supplier<EntityType.Builder<T>> builder) {
-        return RegHelper.registerEntityType(Supplementaries.res(name), () -> builder.get().build(name));
+        return RegHelper.registerEntityType(Supplementaries.res(name), builder.get());
     }
 
     public static <T extends Entity> Supplier<EntityType<T>> regEntity(

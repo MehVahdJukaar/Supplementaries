@@ -54,7 +54,7 @@ public class ColoredMapHandler {
     public static void init() {
     }
 
-    protected static int DITHERING = 1;
+    protected static final int DITHERING = 1;
 
     public static final CustomMapData.Type<Patch, ColorData> COLOR_DATA =
             MapDataRegistry.registerCustomMapSavedData(Supplementaries.res("color_data"), ColorData::new,

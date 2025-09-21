@@ -29,9 +29,9 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
 
-    public static MapCodec<SlidyBlock> CODEC = simpleCodec(SlidyBlock::new);
+    public static final MapCodec<SlidyBlock> CODEC = simpleCodec(SlidyBlock::new);
 
-    public static BooleanProperty ON_PRESSURE_PLATE = ModBlockProperties.ON_PRESSURE_PLATE;
+    public static final BooleanProperty ON_PRESSURE_PLATE = ModBlockProperties.ON_PRESSURE_PLATE;
 
     public SlidyBlock(Properties properties) {
         super(properties);

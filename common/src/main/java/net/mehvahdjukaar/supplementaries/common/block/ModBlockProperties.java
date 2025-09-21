@@ -204,7 +204,7 @@ public class ModBlockProperties {
             if (holder == null) return Pair.of(NONE, null);
             SoftFluidStack s = holder.getFirst();
             var cat = holder.getSecond();
-            if (cat.isEmpty() || cat.getAmount() != 1) return Pair.of(NONE, null);
+            if (cat.isEmpty() || cat.getCapacity() != 1) return Pair.of(NONE, null);
             Topping t = fromFluid(s);
             if (t != NONE) {
                 return Pair.of(t, cat.getEmptyContainer());

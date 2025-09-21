@@ -2,17 +2,13 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import com.google.common.base.Suppliers;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalHolder;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
@@ -73,7 +69,7 @@ public class CompatObjects {
 
     public static final Supplier<MobEffect> STUNNED_EFFECT = make("oreganized:stunned", Registries.MOB_EFFECT);
 
-    public static final OptionalHolder<Enchantment> END_VEIL = OptionalHolder.of (
+    public static final OptionalHolder<Enchantment> END_VEIL = OptionalHolder.of(
             "betterend:end_veil", Registries.ENCHANTMENT);
 
 

@@ -88,9 +88,6 @@ public class PickleData {
                         return false;
                     } else return true;
                 }
-                default -> {
-                    return false;
-                }
                 case FIRST_ON -> {
                     this.oldShadowSize = renderer.shadowRadius;
                     this.state = State.ON;
@@ -109,6 +106,9 @@ public class PickleData {
                     renderer.getModel().hat.visible = true;
                     this.state = State.OFF;
                     return true;
+                }
+                default -> {
+                    return false;
                 }
             }
         }

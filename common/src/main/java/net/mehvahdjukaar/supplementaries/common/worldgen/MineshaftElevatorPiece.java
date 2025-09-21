@@ -75,10 +75,10 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
             int yOffset = floor * 4;
 
             BoundingBox boundingBox = switch (direction) {
-                default -> new BoundingBox(-1, -yOffset, -4, 3, height - yOffset, 0);
                 case SOUTH -> new BoundingBox(-1, -yOffset, 0, 3, height - yOffset, 4);
                 case WEST -> new BoundingBox(-4, -yOffset, -1, 0, height - yOffset, 3);
                 case EAST -> new BoundingBox(0, -yOffset, -1, 4, height - yOffset, 3);
+                default -> new BoundingBox(-1, -yOffset, -4, 3, height - yOffset, 0);
             };
 
             boundingBox.move(x, y, z);

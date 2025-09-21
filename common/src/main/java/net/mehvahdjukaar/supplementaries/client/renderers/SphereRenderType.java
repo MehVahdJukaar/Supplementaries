@@ -13,7 +13,7 @@ public abstract class SphereRenderType extends RenderType {
 
     public static final Function<ResourceLocation, RenderType> RENDER_TYPE = Util.memoize((resourceLocation) -> {
         CompositeState compositeState = CompositeState.builder()
-                .setShaderState(new ShaderStateShard(ClientRegistry.SPHERE_SHADER::get))
+                .setShaderState(new ShaderStateShard(ClientRegistry.SPHERE_SHADER))
                 .setTextureState(new TextureStateShard(resourceLocation, false, false))
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                 .setLightmapState(LIGHTMAP)

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
+import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.screens.SignPostScreen;
@@ -58,8 +59,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public static final ModelDataKey<Sign> SIGN_UP_KEY = ModBlockProperties.SIGN_UP;
     public static final ModelDataKey<Sign> SIGN_DOWN_KEY = ModBlockProperties.SIGN_DOWN;
 
-    private final Sign signUp = new Sign(false, true, 0, WoodTypeRegistry.OAK_TYPE);
-    private final Sign signDown = new Sign(false, false, 0, WoodTypeRegistry.OAK_TYPE);
+    private final Sign signUp = new Sign(false, true, 0, VanillaWoodTypes.OAK);
+    private final Sign signDown = new Sign(false, false, 0, VanillaWoodTypes.OAK);
     private boolean isWaxed = false;
     private float zRenderOffset = 0;
 

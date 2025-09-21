@@ -56,23 +56,23 @@ public abstract class ExplorationMapFunctionMixin extends LootItemConditionalFun
 
     @Shadow
     @Final
-    TagKey<Structure> destination;
+    public TagKey<Structure> destination;
 
     @Shadow
     @Final
-    Holder<MapDecorationType> mapDecoration;
+    public Holder<MapDecorationType> mapDecoration;
 
     @Shadow
     @Final
-    int searchRadius;
+    public int searchRadius;
 
     @Shadow
     @Final
-    boolean skipKnownStructures;
+    public boolean skipKnownStructures;
 
     @Shadow
     @Final
-    byte zoom;
+    public byte zoom;
 
     protected ExplorationMapFunctionMixin(List<LootItemCondition> predicates) {
         super(predicates);

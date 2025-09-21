@@ -29,7 +29,7 @@ public class ClientConfigs {
 
     public static final ModConfigHolder CONFIG_HOLDER;
 
-    static WeakReference<ConfigBuilder> builderReference;
+    static final WeakReference<ConfigBuilder> builderReference;
 
     static {
         if (!PlatHelper.getPhysicalSide().isClient()) {

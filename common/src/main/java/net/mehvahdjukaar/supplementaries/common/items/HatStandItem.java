@@ -30,9 +30,7 @@ public class HatStandItem extends Item {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Direction direction = context.getClickedFace();
-        if (direction == Direction.DOWN) {
-            return InteractionResult.FAIL;
-        } else {
+        if (direction != Direction.DOWN) {
             Level level = context.getLevel();
             BlockPlaceContext placeContext = new BlockPlaceContext(context);
             BlockPos blockpos = placeContext.getClickedPos();
@@ -62,8 +60,8 @@ public class HatStandItem extends Item {
                     return InteractionResult.SUCCESS;
                 }
             }
-            return InteractionResult.FAIL;
 
         }
+        return InteractionResult.FAIL;
     }
 }

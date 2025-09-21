@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -76,13 +75,13 @@ public class AdventurerMapsHandler {
         //adds custom decoration
         if (decoration == null) {
             var type =
-                    MapDataRegistry.getAssociatedType(structure);
-            decoration = Utils.getID(type);
+                    MapDataRegistry.getDecorationFoStructure(level, structure);
+            decoration = type.unwrapKey().get().location();
             if (color == 0) {
-                color = type.getDefaultMapColor();
+                color = type.value().getDefaultMapColor();
             }
         }
-        MapHelper.addTargetDecorationToItem(stack, pos, decoration, color);
+        MapHelper.addTargetDecorationToItem(level, stack, pos, decoration, color);
 
         if (name != null) {
             stack.set(DataComponents.ITEM_NAME, Component.translatable(name));

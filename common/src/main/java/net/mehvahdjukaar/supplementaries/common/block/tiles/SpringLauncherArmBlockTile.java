@@ -150,13 +150,13 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
         double dy = 0;
         double dz = 0;
         switch (this.getDirection()) {
-            default -> dy = 0;
             case UP -> dy = aabb.maxY - boundingBox.minY;
             case DOWN -> dy = aabb.minY - boundingBox.maxY;
             case NORTH -> dz = aabb.minZ - boundingBox.maxZ;
             case SOUTH -> dz = aabb.maxZ - boundingBox.minZ;
             case WEST -> dx = aabb.minX - boundingBox.maxX;
             case EAST -> dx = aabb.maxX - boundingBox.minX;
+            default -> dy = 0;
         }
         entity.move(MoverType.PISTON, new Vec3(dx, dy, dz));
     }

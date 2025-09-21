@@ -1,12 +1,10 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
+import net.mehvahdjukaar.moonlight.api.fluids.*;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
@@ -16,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -61,7 +60,7 @@ public class ModCreativeTabs {
 
     private static boolean isRunningSetup = false;
 
-    public static void setup() {
+    public static void populateItemsVisibility() {
         isRunningSetup = true;
         List<Item> all = new ArrayList<>(BuiltInRegistries.ITEM.entrySet().stream().filter(e -> e.getKey().location().getNamespace()
                 .equals(Supplementaries.MOD_ID)).map(Map.Entry::getValue).toList());
@@ -783,10 +782,11 @@ public class ModCreativeTabs {
         List<ItemStack> items = new ArrayList<>();
         items.add(ModRegistry.JAR_ITEM.get().getDefaultInstance());
         JarBlockTile tempTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
-        SoftFluidTank fluidHolder = SoftFluidTank.create(tempTile.getMaxStackSize());
+        RegistryAccess registries = Utils.hackyGetRegistryAccess();
+        SoftFluidTank fluidHolder = SoftFluidTank.create(tempTile.getMaxStackSize(), registries);
         if (CommonConfigs.Functional.JAR_LIQUIDS.get()) {
-            for (var h : SoftFluidRegistry.getHolders()) {
-                var s = h.value();
+            for (var h : SoftFluidRegistry.get(registries).holders().toList()) {
+                SoftFluid s = h.value();
                 if (!s.isEnabled()) continue;
                 if (MLBuiltinSoftFluids.POTION.is(h) || MLBuiltinSoftFluids.EMPTY.is(h)) continue;
                 fluidHolder.clear();
@@ -796,7 +796,7 @@ public class ModCreativeTabs {
             }
 
             for (var potion : BuiltInRegistries.POTION.holders().toList()) {
-                SoftFluidStack fluidStack = SoftFluidStack.of(MLBuiltinSoftFluids.POTION.getHolderUnsafe(), 100);
+                SoftFluidStack fluidStack = SoftFluidStack.of(MLBuiltinSoftFluids.POTION.getHolder(registries), 100);
                 fluidStack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
                 fluidHolder.setFluid(fluidStack);
                 fluidHolder.capCapacity();

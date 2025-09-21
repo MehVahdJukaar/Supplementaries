@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public class CageBlockTile extends BlockEntity implements IMobContainerProvider {
 
     @NotNull
-    public MobContainer mobContainer;
+    public final MobContainer mobContainer;
 
     public CageBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.CAGE_TILE.get(), pos, state);

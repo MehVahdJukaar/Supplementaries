@@ -15,7 +15,6 @@ import net.minecraft.world.level.block.state.BlockState;
 public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
 
     private final Player player;
-    private final SoundManager soundManager;
     private int ropeTicks;
     private boolean stopToggle = false;
 
@@ -29,7 +28,7 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
         this.delay = 1; //wait a second before starting
         this.volume = 0.0F;
         this.ropeTicks = 0;
-        this.soundManager = Minecraft.getInstance().getSoundManager();
+        SoundManager soundManager = Minecraft.getInstance().getSoundManager();
     }
 
     @Override

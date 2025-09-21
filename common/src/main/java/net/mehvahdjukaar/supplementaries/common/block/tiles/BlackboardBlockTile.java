@@ -158,7 +158,7 @@ public class BlackboardBlockTile extends BlockEntity implements
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         var c = this.saveWithoutMetadata(registries);
         if(c.isEmpty()){
-            //Dumb otherwise forge wont even load the packet...
+            //Dumb otherwise forge won't even load the packet...
             c.putBoolean("Empty", true);
         }
         return c;

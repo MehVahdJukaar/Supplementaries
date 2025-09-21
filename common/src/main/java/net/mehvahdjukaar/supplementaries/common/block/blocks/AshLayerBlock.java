@@ -92,7 +92,7 @@ public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushab
             level.removeBlock(pos, false);
         }
 
-        //same as brush but dif sound and partiles
+        //same as brush but dif sound and particles
         spawnBrushParticles(level, hit, ModParticles.ASH_PARTICLE.get(), particlesDir, arm);
         level.playSound(livingEntity, pos, SoundEvents.BRUSH_SAND, SoundSource.BLOCKS);
 
@@ -263,7 +263,7 @@ public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushab
             boolean ret = true;
             if (RECURSION_HACK.get()) return true;
             RECURSION_HACK.set(true);
-            //directional placing context, called from the block entity, will override replacinb clicked caling this again
+            //directional placing context, called from the block entity, will override replacing clicked caling this again
             if (useContext.replacingClickedOnBlock()) {
                 ret = useContext.getClickedFace() == Direction.UP;
             }

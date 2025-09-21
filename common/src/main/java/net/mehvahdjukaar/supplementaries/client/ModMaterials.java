@@ -87,7 +87,7 @@ public class ModMaterials {
         }
     }
 
-    public static Function<ResourceLocation, ModelResourceLocation> TO_STANDALONE_MODEL = Util.memoize(
+    public static final Function<ResourceLocation, ModelResourceLocation> TO_STANDALONE_MODEL = Util.memoize(
             RenderUtil::getStandaloneModelLocation
     );
 

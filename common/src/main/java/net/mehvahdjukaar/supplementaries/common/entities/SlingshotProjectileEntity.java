@@ -50,7 +50,7 @@ import java.util.function.Supplier;
 
 public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
     private static final EntityDataAccessor<Byte> LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
-    protected int MAX_AGE = 700;
+    protected static final int MAX_AGE = 700;
 
     //these are used on both sides...need to be synced on creation. Could use only clientside tbh
     private float xRotInc;

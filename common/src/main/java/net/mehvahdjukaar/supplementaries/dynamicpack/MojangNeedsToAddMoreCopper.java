@@ -43,10 +43,10 @@ public class MojangNeedsToAddMoreCopper {
                 ResourceLocation relPat = r.getKey().withPath(p -> p.replace("textures/", "").replace(".png", ""));
                 try (TextureImage toRecolor = TextureImage.open(manager, relPat)) {
                     Respriter resp = Respriter.of(toRecolor);
-                    var recolored = resp.recolor(textures.get(random.nextInt(textures.size())));
-                    sink.addAndCloseTexture(relPat, recolored);
-                } catch (Exception e) {
-
+                    try(TextureImage recolored = resp.recolor(textures.get(random.nextInt(textures.size())))) {
+                        sink.addTexture(relPat, recolored);
+                    }
+                } catch (Exception ignored) {
                 }
             }
 
@@ -68,9 +68,10 @@ public class MojangNeedsToAddMoreCopper {
                 ResourceLocation relPat = r.getKey().withPath(p -> p.replace("textures/", "").replace(".png", ""));
                 try (TextureImage toRecolor = TextureImage.open(manager, relPat)) {
                     Respriter resp = Respriter.of(toRecolor);
-                    var recolored = resp.recolor(textures.get(random.nextInt(textures.size())));
-                    sink.addAndCloseTexture(relPat, recolored);
-                } catch (Exception e) {
+                   try(TextureImage recolored = resp.recolor(textures.get(random.nextInt(textures.size())))){
+                        sink.addTexture(relPat, recolored);
+                    }
+                } catch (Exception ignored) {
 
                 }
             }
@@ -94,7 +95,7 @@ public class MojangNeedsToAddMoreCopper {
         }
 
 
-        try (TextureImage c0 = TextureImage.open(manager, RPUtils.findFirstItemTextureLocation(manager, Items.COPPER_INGOT));
+        try (TextureImage c0 = TextureImage.open(manager, RPUtils.findFirstItemTextureLocation(manager, Items.COPPER_INGOT))
         ) {
             List<Palette> textures =
                     Palette.fromAnimatedImage(c0);
@@ -135,7 +136,7 @@ public class MojangNeedsToAddMoreCopper {
                     ll.put(id, pr + existing);
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

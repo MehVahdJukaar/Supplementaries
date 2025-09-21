@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetItemSource;
@@ -58,10 +58,11 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     public static final int COOLDOWN_PER_BOTTLE = 20;
 
     private int transferCooldown = 0;
-    public final SoftFluidTank tempFluidHolder = SoftFluidTank.create(5);
+    public final SoftFluidTank tempFluidHolder;
 
     public FaucetBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.FAUCET_TILE.get(), pos, state);
+        this.tempFluidHolder = SoftFluidTank.create(5, Utils.hackyGetRegistryAccess());
     }
 
 
@@ -109,7 +110,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         Direction dir = state.getValue(FaucetBlock.FACING);
         BlockPos behind = pos.relative(dir.getOpposite());
         BlockState backState = level.getBlockState(behind);
-        if (backState.isAir() || backState.is(ModTags.FAUCED_CANT_INTERACT)) return 0;
+        if (backState.isAir() || backState.is(ModTags.FAUCET_CANT_INTERACT)) return 0;
         Integer filledAmount = runInteractions(BLOCK_INTERACTIONS, level, dir, behind, backState, justVisual);
         if (filledAmount != null) return filledAmount;
 

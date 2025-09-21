@@ -141,7 +141,7 @@ public class RegistryCommand {
         Stream<MutableComponent> stream = filtered.stream().sorted().skip(PAGE_SIZE * (actualPage - 1L))
                 .limit(PAGE_SIZE).map(Component::literal)
                 .map((t) -> t.withStyle(ChatFormatting.DARK_GREEN))
-                .map((t) -> Component.translatable("\n - ").append(t));
+                .map((t) -> Component.literal("\n - ").append(t));
         Objects.requireNonNull(tagElements);
         stream.forEach(tagElements::append);
         return header.append("\n").append(tagElements);

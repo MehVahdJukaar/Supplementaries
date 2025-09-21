@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.WeatheredHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -33,9 +34,9 @@ public abstract class CartographyTableMixin extends AbstractContainerMenu {
     @Inject(method = "quickMoveStack",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z",
-                    ordinal = 0),  locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
+                    ordinal = 0), cancellable = true)
     public void supp$getItem(Player player, int index, CallbackInfoReturnable<ItemStack> cir,
-                        ItemStack itemStack, Slot slot, ItemStack itemStack2) {
+                             @Local(ordinal = 0) ItemStack itemStack, @Local Slot slot, @Local(ordinal = 1) ItemStack itemStack2) {
 
         if (itemStack2.is(ModRegistry.ANTIQUE_INK.get())) {
             if (!this.moveItemStackTo(itemStack2, 1, 2, false)) {
@@ -61,9 +62,9 @@ public abstract class CartographyTableMixin extends AbstractContainerMenu {
 
     @Inject(method = "method_17382",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z",
-                    ordinal = 0), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
+                    ordinal = 0), cancellable = true)
     public void supp$getItem(ItemStack mapStack, ItemStack firstSlotStack, ItemStack resultSlotStack, Level level,
-                        BlockPos blockPos, CallbackInfo ci, MapItemSavedData mapItemSavedData) {
+                             BlockPos blockPos, CallbackInfo ci, @Local MapItemSavedData mapItemSavedData) {
         if (firstSlotStack.is(ModRegistry.ANTIQUE_INK.get()) && !mapItemSavedData.locked && !AntiqueInkItem.hasAntiqueInk(mapStack)) {
 
             ItemStack newMap = mapStack.copyWithCount(1);

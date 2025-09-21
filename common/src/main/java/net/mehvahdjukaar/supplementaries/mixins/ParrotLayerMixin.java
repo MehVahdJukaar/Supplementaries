@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -30,10 +31,10 @@ public abstract class ParrotLayerMixin<T extends Player> {
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getString(Ljava/lang/String;)Ljava/lang/String;",
-                    shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+                    shift = At.Shift.BEFORE), cancellable = true)
     private void supp$renderParty(PoseStack matrixStack, MultiBufferSource buffer, int packedLight, T livingEntity,
-                             float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch,
-                             boolean leftShoulder, CallbackInfo ci, CompoundTag compoundTag) {
+                                  float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch,
+                                  boolean leftShoulder, CallbackInfo ci, @Local CompoundTag compoundTag) {
         if (compoundTag.getBoolean("record_playing")) {
             EntityType.byString(compoundTag.getString("id")).filter((entityType) ->
                     entityType == EntityType.PARROT).ifPresent((entityType) -> {

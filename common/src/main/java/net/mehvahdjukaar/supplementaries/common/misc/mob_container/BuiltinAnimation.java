@@ -56,7 +56,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
 
     private static class FloatingAnim<M extends Entity> extends BuiltinAnimation<M> {
 
-        FloatingAnim(M entity){};
+        FloatingAnim(M entity){}
 
         @Override
         public void tick(M mob, Level world, BlockPos pos) {
@@ -68,7 +68,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
 
     private static class SlimeAnim<M extends Slime> extends BuiltinAnimation<M> {
 
-        SlimeAnim(M slime){};
+        SlimeAnim(M slime){}
 
         @Override
         public void tick(M mob, Level world, BlockPos pos) {

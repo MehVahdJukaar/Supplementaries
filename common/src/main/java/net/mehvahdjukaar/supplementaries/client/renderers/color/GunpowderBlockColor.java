@@ -32,7 +32,7 @@ public class GunpowderBlockColor implements BlockColor {
             int greenInt = Mth.clamp(Mth.floor(green * 255), 0, 255);
             int blueInt = Mth.clamp(Mth.floor(blue * 255), 0, 255);
             COLORS[i] = FastColor.ARGB32.color(0, redInt, greenInt, blueInt);
-            ;
+
             //if(i==0) COLORS[i] = 0xffffff;
             // return 6579300;
         }

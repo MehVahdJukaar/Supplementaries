@@ -14,7 +14,7 @@ public abstract class NoiseRenderType extends RenderType {
 
     public static final Function<ResourceLocation, RenderType> RENDER_TYPE = Util.memoize((resourceLocation) -> {
         CompositeState compositeState = RenderType.CompositeState.builder()
-                .setShaderState(new ShaderStateShard(ClientRegistry.NOISE_SHADER::get))
+                .setShaderState(new ShaderStateShard(ClientRegistry.NOISE_SHADER))
                 .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
                 .setTransparencyState(NO_TRANSPARENCY)
                 .setLightmapState(LIGHTMAP)

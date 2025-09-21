@@ -26,38 +26,38 @@ public class ProjectileStats {
     public static final float ARROW_DISPENSER_INACCURACY = 6;
 
 
-    public static float DISPENSER_INACCURACY = 6;
+    public static final float DISPENSER_INACCURACY = 6;
     // calculated from snowball speed
-    public static float DISPENSER_SPEED_SCALE = 1.1f / 1.5f;
+    public static final float DISPENSER_SPEED_SCALE = 1.1f / 1.5f;
 
-    public static float CANNON_SPEED_MULT = 1;
-    public static float CANON_INACCURACY = 0;
+    public static final float CANNON_SPEED_MULT = 1;
+    public static final float CANON_INACCURACY = 0;
 
-    public static float PRESENT_SPEED_MULT = 0.25f;
-    public static float PRESENT_INACCURACY = 1;
+    public static final float PRESENT_SPEED_MULT = 0.25f;
+    public static final float PRESENT_INACCURACY = 1;
 
     // same as snowballs. actually a bit slower
-    public static float SLIMEBALL_GRAVITY = 0.03f;
-    public static float SLIMEBALL_SPEED = 1.25f;
-    public static float SLIMEBALL_DISPENSER_SPEED = SLIMEBALL_SPEED * DISPENSER_SPEED_SCALE;
-    public static float SLIMEBALL_DISPENSER_INACCURACY = 6;
+    public static final float SLIMEBALL_GRAVITY = 0.03f;
+    public static final float SLIMEBALL_SPEED = 1.25f;
+    public static final float SLIMEBALL_DISPENSER_SPEED = SLIMEBALL_SPEED * DISPENSER_SPEED_SCALE;
+    public static final float SLIMEBALL_DISPENSER_INACCURACY = 6;
 
-    public static float BOMB_GRAVITY = 0.04f;
-    public static float BOMB_SPEED = 1.25f;
-    public static float BOMB_DISPENSER_SPEED = BOMB_SPEED * DISPENSER_SPEED_SCALE;
-    public static float BOMB_DISPENSER_INACCURACY = 6;
+    public static final float BOMB_GRAVITY = 0.04f;
+    public static final float BOMB_SPEED = 1.25f;
+    public static final float BOMB_DISPENSER_SPEED = BOMB_SPEED * DISPENSER_SPEED_SCALE;
+    public static final float BOMB_DISPENSER_INACCURACY = 6;
 
-    public static float BRICKS_GRAVITY = 0.05f;
-    public static float BRICKS_SPEED = 1;
-    public static float BRICKS_DISPENSER_SPEED = BRICKS_SPEED * DISPENSER_SPEED_SCALE;
-    public static float BRICKS_DISPENSER_INACCURACY = 7.5f;
+    public static final float BRICKS_GRAVITY = 0.05f;
+    public static final float BRICKS_SPEED = 1;
+    public static final float BRICKS_DISPENSER_SPEED = BRICKS_SPEED * DISPENSER_SPEED_SCALE;
+    public static final float BRICKS_DISPENSER_INACCURACY = 7.5f;
 
-    public static float CANNONBALL_GRAVITY = 0.035f;
-    public static float CANNONBALL_SPEED = 0.9f;
+    public static final float CANNONBALL_GRAVITY = 0.035f;
+    public static final float CANNONBALL_SPEED = 0.9f;
 
     // todo: check thee last
-    public static float SLINGSHOT_GRAVITY = 0.03f;
-    public static float SLINGSHOT_SPEED = 0.9f;
+    public static final float SLINGSHOT_GRAVITY = 0.03f;
+    public static final float SLINGSHOT_SPEED = 0.9f;
 
     public static final float FIREBALL_SPEED = 1;
 

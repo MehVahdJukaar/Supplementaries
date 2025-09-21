@@ -121,7 +121,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
 
     public abstract static class Mut<T extends SelectableContainerContent<?>> {
 
-        protected NonNullList<ItemStack> stacks;
+        protected final NonNullList<ItemStack> stacks;
         protected int selectedSlot;
 
         protected Mut(SelectableContainerContent<?> original) {
