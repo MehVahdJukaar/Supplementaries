@@ -46,6 +46,7 @@ import java.util.UUID;
 
 public class CannonBlockTile extends OpeneableContainerBlockEntity implements IOnePlayerInteractable {
 
+    public Object ccHack = null;
 
     //no list = normal behavior. empty list = cant break anything
     //not using a tag as this is meant to be edited with commands immediately without a tag being there
