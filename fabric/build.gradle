@@ -32,7 +32,7 @@ dependencies {
     if (isMyPc) {
         modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
     } else {
-        modImplementation("curse.maven:selene-499980:6939533")
+        modImplementation("curse.maven:selene-499980:7007382")
     }
 
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
