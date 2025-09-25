@@ -27,13 +27,17 @@ public class CCCompatImpl {
                         if (t.ccHack == null) t.ccHack = new SpeakerPeripheral(t);
                         return (IPeripheral) t.ccHack;
                     }
+                    return null;
+                }
+                , ModRegistry.SPEAKER_BLOCK.get());
+        PeripheralLookup.get().registerForBlocks((world, pos, state, blockEntity, context) -> {
                     if (blockEntity instanceof CannonBlockTile t) {
                         if (t.ccHack == null) t.ccHack = new CannonPeripheral(t);
                         return (IPeripheral) t.ccHack;
                     }
                     return null;
                 }
-                , ModRegistry.SPEAKER_BLOCK.get());
+                , ModRegistry.CANNON.get());
     }
 
     public static int getPages(ItemStack itemstack) {
@@ -157,25 +161,28 @@ public class CCCompatImpl {
         }
 
         @LuaFunction
-        public void setYaw(float value) {
-            tile.setYaw(acc, value);
+        public void setYaw(double value) {
+            tile.setYaw(acc, (float) value);
+            acc.updateClients();
         }
         @LuaFunction
         public float getYaw() {
             return tile.getYaw();
         }
         @LuaFunction
-        public void setPitch(float value) {
-            tile.setPitch(acc, value);
+        public void setPitch(double value) {
+            tile.setPitch(acc, (float) value);
+            acc.updateClients();
         }
         @LuaFunction
         public float getPitch() {
             return tile.getPitch();
         }
         @LuaFunction
-        public void setPower(byte power) {
-            power = (byte) Math.min(Math.max(power, 0), 4); // todo improve when there is a system similar to pitch/yaw restraints for power
+        public void setPower(int inPower) {
+            byte power = (byte) Math.min(Math.max(inPower, 1), 4); // todo improve when there is a system similar to pitch/yaw restraints for power
             tile.setPowerLevel(power);
+            acc.updateClients();
         }
         @LuaFunction
         public byte getPower() {
