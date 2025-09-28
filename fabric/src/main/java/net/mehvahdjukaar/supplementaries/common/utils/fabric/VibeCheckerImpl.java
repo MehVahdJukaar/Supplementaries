@@ -37,7 +37,7 @@ public class VibeCheckerImpl {
         // I've got a better idea
         //time is up, 2 years and counting and endless reports
         //if (PlatHelper.isModLoaded("indium"))
-            unfixSodiumDeps();
+          //  unfixSodiumDeps();
        // else fixSodiumDeps();
         if (PlatHelper.getPhysicalSide().isClient()) vibeCheckModels();
     }
