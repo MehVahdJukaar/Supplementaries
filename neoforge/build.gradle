@@ -103,7 +103,7 @@ dependencies {
         modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
         modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
     } else {
-        modImplementation("curse.maven:selene-499980:6818413")
+        modImplementation("curse.maven:selene-499980:7007381")
     }
 
     modCompileOnly("curse.maven:farmers-delight-398521:5772720")
