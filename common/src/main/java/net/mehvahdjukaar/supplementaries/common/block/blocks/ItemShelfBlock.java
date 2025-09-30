@@ -38,8 +38,6 @@ import java.util.List;
 
 public class ItemShelfBlock extends WaterBlock implements EntityBlock {
 
-    public static final List<Block> ITEM_SHELF_BLOCKS = new ArrayList<>();
-
     protected static final VoxelShape SHAPE_NORTH = Block.box(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
     protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
@@ -50,7 +48,6 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
     public ItemShelfBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
-        ITEM_SHELF_BLOCKS.add(this);
     }
 
     @ForgeOverride

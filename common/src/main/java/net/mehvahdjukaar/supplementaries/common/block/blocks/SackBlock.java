@@ -56,7 +56,6 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
             instance -> instance.group(ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter(coloredFallingBlock -> coloredFallingBlock.dustColor), propertiesCodec())
                     .apply(instance, SackBlock::new)
     );
-    public static final List<Block> SACK_BLOCKS = new ArrayList<>();
 
     public static final VoxelShape SHAPE_CLOSED = Shapes.or(Block.box(2, 0, 2, 14, 12, 14),
             Block.box(6, 12, 6, 10, 13, 10), Block.box(5, 13, 5, 11, 16, 11));
@@ -71,7 +70,6 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
     public SackBlock(ColorRGBA color, Properties properties) {
         super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false).setValue(WATERLOGGED, false));
-        SACK_BLOCKS.add(this);
     }
 
     @SuppressWarnings("all")

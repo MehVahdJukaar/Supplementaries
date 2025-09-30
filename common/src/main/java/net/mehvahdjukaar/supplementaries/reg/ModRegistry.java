@@ -336,7 +336,7 @@ public class ModRegistry {
     ));
     public static final Supplier<BlockEntityType<SackBlockTile>> SACK_TILE = regTile(
             SACK_NAME, () -> PlatHelper.newBlockEntityType(
-                    SackBlockTile::new, SackBlock.SACK_BLOCKS.toArray(Block[]::new)));
+                    SackBlockTile::new, SACK.get()));
 
     public static final Supplier<Item> SACK_ITEM = regItem(SACK_NAME, () -> new SackItem(SACK.get(),
             new Item.Properties().stacksTo(1)
@@ -528,7 +528,7 @@ public class ModRegistry {
 
     public static final Supplier<BlockEntityType<ItemShelfBlockTile>> ITEM_SHELF_TILE = regTile(
             ITEM_SHELF_NAME, () -> PlatHelper.newBlockEntityType(
-                    ItemShelfBlockTile::new, ItemShelfBlock.ITEM_SHELF_BLOCKS.toArray(Block[]::new)));
+                    ItemShelfBlockTile::new, ITEM_SHELF.get()));
 
     //doormat
     public static final Supplier<Block> DOORMAT = regWithItem(DOORMAT_NAME, () -> new DoormatBlock(
