@@ -55,14 +55,15 @@ public class FluidsUtilImpl {
         var opt = FluidUtil.getFluidHandler(level, pos, dir);
         if (opt.isPresent()) {
             //simulate all possible amounts
-            for (int i = 4; i > 0; i--) {
+            for (int i = 1; i <= 4; i++){
                 int toDrain = i * 250;
                 FluidStack fluidInTank = opt.resolve().get().drain(toDrain, IFluidHandler.FluidAction.SIMULATE);
                 if (!fluidInTank.isEmpty()) {
                     SoftFluidStack forgeFluid = SoftFluidStackImpl.fromForgeFluid(fluidInTank);
                     if (!forgeFluid.isEmpty()) {
+                        int actualAmount = fluidInTank.getAmount() / 250;
                         //TODO: technically here we could try all lower amounts too to find the min but its probably not worth it
-                        return FluidOffer.of(forgeFluid.getHolder(), i, i);
+                        return FluidOffer.of(forgeFluid.getHolder(), actualAmount, actualAmount);
                     }
                 }
             }
