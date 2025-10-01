@@ -1,3 +1,1 @@
-- fixed sepia colors and bubble colors not refreshing on every reload, causing a crash ,fixes #1674
-- fixed modded flags being added with wrong extension
-- all assets that should be pre generated are pre generated
+actually fixed a fluid dupe
