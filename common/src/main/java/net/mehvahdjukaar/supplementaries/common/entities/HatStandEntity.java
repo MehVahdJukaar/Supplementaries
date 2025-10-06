@@ -83,7 +83,7 @@ public class HatStandEntity extends LivingEntity {
             swingAnimation = null;
             skibidiAnimation = null;
         }
-        tickOffset = level.random.nextInt(100);
+        tickOffset = this.random.nextInt(100);
         this.originalYRot = null;
     }
 
