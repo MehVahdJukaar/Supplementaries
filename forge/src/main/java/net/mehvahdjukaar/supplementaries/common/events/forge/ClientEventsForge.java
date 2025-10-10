@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAntiqueInk;
@@ -145,23 +146,12 @@ public class ClientEventsForge {
 
     //TODO: add to fabric
 
-    private static double wobble; // from 0 to 1
 
     @SubscribeEvent
     public static void onCameraSetup(ViewportEvent.ComputeCameraAngles event) {
-        Player p = Minecraft.getInstance().player;
-        if (p != null && !Minecraft.getInstance().isPaused()) {
-            boolean isOnRope = ClientEvents.isIsOnRope();
-            if (isOnRope || wobble != 0) {
-                double period = ClientConfigs.Blocks.ROPE_WOBBLE_PERIOD.get();
-                double newWobble = (((p.tickCount + event.getPartialTick()) / period) % 1);
-                if (!isOnRope && newWobble < wobble) {
-                    wobble = 0;
-                } else {
-                    wobble = newWobble;
-                }
-                event.setRoll((float) (event.getRoll() + Mth.sin((float) (wobble * 2 * Math.PI)) * ClientConfigs.Blocks.ROPE_WOBBLE_AMPLITUDE.get()));
-            }
+        double wobble = ClientEvents.getRopeWobble(event.getPartialTick());
+        if (wobble != 0) {
+            event.setRoll((float) (event.getRoll() + wobble));
         }
     }
 

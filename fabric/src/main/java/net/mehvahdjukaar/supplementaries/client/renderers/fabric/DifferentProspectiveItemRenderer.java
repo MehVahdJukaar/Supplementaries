@@ -39,7 +39,7 @@ public class DifferentProspectiveItemRenderer implements BuiltinItemRendererRegi
             } else {
                 model = ClientHelper.getModel(itemRenderer.getItemModelShaper().getModelManager(), model3d);
             }
-            Preconditions.checkNotNull(model, "Model not found for item: " + stack + " " + (gui ? model2d : model3d));
+            Preconditions.checkNotNull(model, "Model not found for item: " + stack + " " + (isFirst ? model2d : model3d));
             RenderType rendertype = ItemBlockRenderTypes.getRenderType(stack, true);
             VertexConsumer vertexconsumer = ItemRenderer.getFoilBufferDirect(buffer, rendertype, true, stack.hasFoil());
             itemRenderer.renderModelLists(model, stack, light, overlay, matrixStack, vertexconsumer);
