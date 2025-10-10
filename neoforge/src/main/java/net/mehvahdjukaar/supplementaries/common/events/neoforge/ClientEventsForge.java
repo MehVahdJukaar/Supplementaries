@@ -4,9 +4,9 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
-import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
@@ -17,18 +17,13 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.event.sound.PlaySoundSourceEvent;
@@ -131,23 +126,12 @@ public class ClientEventsForge {
 
     //TODO: add to fabric
 
-    private static double wobble; // from 0 to 1
 
     @SubscribeEvent
     public static void onCameraSetup(ViewportEvent.ComputeCameraAngles event) {
-        Player p = Minecraft.getInstance().player;
-        if (p != null && !Minecraft.getInstance().isPaused()) {
-            boolean isOnRope = ClientEvents.isIsOnRope();
-            if (isOnRope || wobble != 0) {
-                double period = ClientConfigs.Blocks.ROPE_WOBBLE_PERIOD.get();
-                double newWobble = (((p.tickCount + event.getPartialTick()) / period) % 1);
-                if (!isOnRope && newWobble < wobble) {
-                    wobble = 0;
-                } else {
-                    wobble = newWobble;
-                }
-                event.setRoll((float) (event.getRoll() + Mth.sin((float) (wobble * 2 * Math.PI)) * ClientConfigs.Blocks.ROPE_WOBBLE_AMPLITUDE.get()));
-            }
+        double wobble = ClientEvents.getRopeWobble(event.getPartialTick());
+        if (wobble != 0) {
+            event.setRoll((float) (event.getRoll() + wobble));
         }
     }
 

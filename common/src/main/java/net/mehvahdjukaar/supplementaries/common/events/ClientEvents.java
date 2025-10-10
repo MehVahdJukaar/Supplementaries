@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
-import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.NativeImage;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
@@ -29,32 +27,26 @@ import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket
 import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -64,8 +56,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 
 public class ClientEvents {
@@ -249,14 +239,28 @@ public class ClientEvents {
         if (p == null) return;
 
         checkIfOnRope(p);
-      MobHeadShadersManager.INSTANCE. applyMobHeadShaders(p, minecraft);
+        MobHeadShadersManager.INSTANCE.applyMobHeadShaders(p, minecraft);
         CannonController.onClientTick(minecraft);
     }
 
     private static boolean isOnRope;
+    private static double wobble; // from 0 to 1
 
-    public static boolean isIsOnRope() {
-        return isOnRope;
+    public static double getRopeWobble(double partialTicks) {
+        Player p = Minecraft.getInstance().player;
+        if (p != null && !Minecraft.getInstance().isPaused() && !p.isSpectator()) {
+            if (isOnRope || wobble != 0) {
+                double period = ClientConfigs.Blocks.ROPE_WOBBLE_PERIOD.get();
+                double newWobble = (((p.tickCount + partialTicks) / period) % 1);
+                if (!isOnRope && newWobble < wobble) {
+                    wobble = 0;
+                } else {
+                    wobble = newWobble;
+                }
+                return Mth.sin((float) (wobble * 2 * Math.PI)) * ClientConfigs.Blocks.ROPE_WOBBLE_AMPLITUDE.get();
+            }
+        }
+        return 0;
     }
 
     private static void checkIfOnRope(Player p) {

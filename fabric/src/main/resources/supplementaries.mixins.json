@@ -5,25 +5,25 @@
   "compatibilityLevel": "JAVA_17",
   "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinPlugin",
   "client": [
-    "compat.CompatIFMapAtlasTextureMixin",
-    "compat.CompatIFMapTextureMixin2",
     "GuiMixin",
     "ItemInHandRendererMixin",
     "LevelRendererMixin",
     "MC263524FixMixin",
     "MinecraftInputMixin",
     "MouseScrollMixin",
-    "SkullBlockRendererMixin"
+    "SkullBlockRendererMixin",
+    "compat.CompatIFMapAtlasTextureMixin",
+    "compat.CompatIFMapTextureMixin2"
   ],
   "mixins": [
     "BiomeAccessor",
-    "compat.CompatFarmersDelightTomatoMixin",
-    "compat.CompatSodiumFluidRendererMixin",
     "CropBlockMixin",
     "FireBlockAccessor",
     "MobMixin",
     "RedstoneWireBlockMixin",
-    "SugarCaneBlockMixin"
+    "SugarCaneBlockMixin",
+    "compat.CompatFarmersDelightTomatoMixin",
+    "compat.CompatSodiumFluidRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
