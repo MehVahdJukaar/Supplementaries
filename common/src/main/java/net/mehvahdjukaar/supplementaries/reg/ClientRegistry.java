@@ -470,6 +470,7 @@ public class ClientRegistry {
         event.register(ModRegistry.JAR_ITEM.get(), new JarItemRenderer());
         event.register(ModRegistry.BLACKBOARD_ITEM.get(), new BlackboardItemRenderer());
         event.register(ModRegistry.ENDERMAN_SKULL_ITEM.get(), new EndermanHeadItemRenderer());
+        event.register(ModRegistry.BUBBLE_BLOCK_ITEM.get(), new BubbleBlockItemRenderer());
         event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new LunchBoxItemRenderer());
         for (var f : ModRegistry.FLAGS.values()) {
             var renderer = new FlagItemRenderer();
