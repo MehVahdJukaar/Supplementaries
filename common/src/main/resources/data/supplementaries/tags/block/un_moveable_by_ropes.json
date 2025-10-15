@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    {"id":"#c:relocation_not_supported","required":false}
+    {"id":"#c:relocation_not_supported","required":false},
+    {"id":"#c:double_blocks","required":false},
+    {"id":"#minecraft:doors","required":false}
   ]
 }

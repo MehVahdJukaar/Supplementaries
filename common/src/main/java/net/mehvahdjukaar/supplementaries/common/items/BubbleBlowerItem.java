@@ -69,7 +69,6 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     }
 
     //bubble block
-    @SuppressWarnings("UnsafePlatformOnlyCall")
     private InteractionResultHolder<ItemStack> deployBubbleBlock(ItemStack stack, Level level, Player player, InteractionHand hand) {
         double reachDistance = player.getAttributeBaseValue(Attributes.BLOCK_INTERACTION_RANGE);
         if (!player.isCreative()) reachDistance = Math.min(2, reachDistance);
@@ -185,7 +184,6 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     }
 
 
-    @SuppressWarnings("UnsafePlatformOnlyCall")
     @Override
     public void onUseTick(Level level, LivingEntity entity, ItemStack stack, int remainingUseDuration) {
         int charges = this.getCharges(stack);

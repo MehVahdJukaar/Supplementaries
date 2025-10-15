@@ -1,3 +1,5 @@
 - fixed recent issues
 - fixed a crash with quiver when other mods would hijack the consume arrow code, leaving the quiver looping forever truing to decrement arrows it didnt have
+- fixed ropes not being able to pull up block entities
+- fixed lanterns not being placeable below ropes due to broken tag
 - 
