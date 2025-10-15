@@ -4,3 +4,6 @@
 - fixed lanterns not being placeable below ropes due to broken tag
 - rewrote rope logic, improving what they can push and not push. for example they will be able to push and pull stuff that pistons cant like lanterns and wont be able to touch stuff that would be broken like torches
 - fixed rope screen shake in spectator
+- placeable books wont drop in creative
+- temporairly disabled quark compat
+- fixed sack screen having no tooltips
