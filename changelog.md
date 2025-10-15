@@ -1,1 +1,3 @@
-actually fixed a fluid dupe
+- fixed recent issues
+- fixed a crash with quiver when other mods would hijack the consume arrow code, leaving the quiver looping forever truing to decrement arrows it didnt have
+- 

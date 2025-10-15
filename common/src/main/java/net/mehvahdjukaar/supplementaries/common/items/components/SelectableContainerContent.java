@@ -333,19 +333,23 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         }
 
         public void consumeSelected(int toDecrement) {
-            for (int i = this.selectedSlot; i < this.selectedSlot + this.stacks.size(); i = (i + 1) % this.stacks.size()) {
+            int size = this.stacks.size();
+            if (toDecrement <= 0 || size == 0) return;
+
+            for (int j = 0; j < size; j++) {
+                int i = (this.selectedSlot + j) % size;
                 ItemStack s = this.stacks.get(i);
                 if (!s.isEmpty()) {
                     int decrement = Math.min(toDecrement, s.getCount());
                     s.shrink(decrement);
-                    if(s.isEmpty()){
+                    if (s.isEmpty()) {
                         this.setStackInSlot(i, ItemStack.EMPTY);
                     }
                     toDecrement -= decrement;
                     if (toDecrement <= 0) return;
                 }
             }
-            Supplementaries.error();
+            Supplementaries.error("Failed to consume from SelectableContainerContent, not enough items");
         }
     }
 

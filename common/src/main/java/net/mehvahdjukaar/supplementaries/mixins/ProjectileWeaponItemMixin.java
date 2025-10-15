@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Predicate;
 
-@Mixin(ProjectileWeaponItem.class)
+@Mixin(value = ProjectileWeaponItem.class, priority = 1400)
 public abstract class ProjectileWeaponItemMixin {
 
     @Inject(method = "getHeldProjectile",

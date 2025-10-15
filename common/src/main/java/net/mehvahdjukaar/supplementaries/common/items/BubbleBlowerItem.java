@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.misc.FabricOverride;
@@ -179,6 +177,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
 
     @ForgeOverride
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        if (slotChanged) return true;
         int oldCharges = getCharges(oldStack);
         int newCharges = getCharges(newStack);
         if (oldCharges != newCharges) return false;
