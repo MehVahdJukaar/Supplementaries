@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.minecraft.core.BlockPos;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -54,6 +55,16 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
         this.horizontal = horizontal;
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(WATERLOGGED, false).setValue(BOOKS, 1));
+    }
+
+    @Override
+    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
+        if(player.isCreative()){
+            player.awardStat(Stats.BLOCK_MINED.get(this));
+            player.causeFoodExhaustion(0.005F);
+            return;
+        }
+        super.playerDestroy(level, player, pos, state, blockEntity, tool);
     }
 
     @Override

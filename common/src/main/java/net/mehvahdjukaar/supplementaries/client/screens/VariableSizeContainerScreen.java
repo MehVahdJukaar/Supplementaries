@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContaine
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.FurnaceScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,6 +22,7 @@ public class VariableSizeContainerScreen extends AbstractContainerScreen<Variabl
         this.backgroundTexture = backgroundTexture;
     }
 
+    //for SS
     @Deprecated(forRemoval = true)
     public VariableSizeContainerScreen(VariableSizeContainerMenu container, Inventory inventory, Component text) {
         this(container, inventory, text, ModTextures.SACK_GUI_TEXTURE);
@@ -33,6 +35,12 @@ public class VariableSizeContainerScreen extends AbstractContainerScreen<Variabl
         graphics.blit(backgroundTexture, x, y, 0, 0,
                 this.imageWidth, this.imageHeight);
         this.renderSlots(graphics);
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     private void renderSlots(GuiGraphics graphics) {
@@ -56,7 +64,7 @@ public class VariableSizeContainerScreen extends AbstractContainerScreen<Variabl
             xp = 8 + (18 * 9) / 2 - (dimx * 18) / 2;
             for (int j = 0; j < dimx; ++j) {
                 graphics.blitSprite(ModTextures.SLOT_SPRITE, k + xp + j * 18, l + yp + 18 * h,
-                        18,18);
+                        18, 18);
             }
             size -= dims[0];
         }
