@@ -19,8 +19,7 @@
       "flag": "placeable_books"
     }
   ],
-
-  "item": "quark:tome",
+  "item": "quark:ancient_tome",
   "enchant_power": 0.5,
   "horizontal": false,
   "book_visuals": "supplementaries:tome"
