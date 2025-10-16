@@ -472,8 +472,8 @@ public class ClientRegistry {
         event.register(ModRegistry.ENDERMAN_SKULL_ITEM.get(), new EndermanHeadItemRenderer());
         event.register(ModRegistry.BUBBLE_BLOCK_ITEM.get(), new BubbleBlockItemRenderer());
         event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new LunchBoxItemRenderer());
+        var renderer = new FlagItemRenderer();
         for (var f : ModRegistry.FLAGS.values()) {
-            var renderer = new FlagItemRenderer();
             event.register(f.get(), renderer);
         }
     }

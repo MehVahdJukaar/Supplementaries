@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class EndermanHeadItemRenderer extends ItemStackRenderer {
 
-
     private EndermanSkullBlockTile dummyTile;
 
     public EndermanHeadItemRenderer() {

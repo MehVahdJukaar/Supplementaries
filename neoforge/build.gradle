@@ -112,7 +112,7 @@ dependencies {
     //modRuntimeOnly("curse.maven:spark-361579:4738952")
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
 
-    modCompileOnly("curse.maven:jei-238222:5846880")
+    modImplementation("curse.maven:jei-238222:7057366")
     modCompileOnly("curse.maven:configured-457570:5873783")
     modCompileOnly("curse.maven:amendments-896746:6905701")
     //modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140")

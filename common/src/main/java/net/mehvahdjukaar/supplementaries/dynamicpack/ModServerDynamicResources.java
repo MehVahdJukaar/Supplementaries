@@ -114,16 +114,13 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
     }
 
     private void addCannonBoatRecipes(ResourceManager manager, ResourceSink sink) {
-        Recipe<?> recipeTemplate = RPUtils.readRecipe(manager, Supplementaries.res("cannon_boat_oak"));
         WoodType oak = VanillaWoodTypes.OAK;
         ModRegistry.CANNON_BOAT_ITEMS.forEach((w, i) -> {
-            WoodType bamboo = WoodTypeRegistry.INSTANCE.get(ResourceLocation.withDefaultNamespace("bamboo"));
+            WoodType bamboo = VanillaWoodTypes.BAMBOO;
             if (w != oak && w != bamboo) {
                 try {
-                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, VanillaWoodTypes.OAK, w,
-                            Supplementaries.res("cannon_boat_oak"));
-                    //newR = ForgeHelper.addRecipeConditions(newR, recipe);
-                    sink.addRecipe(newR);
+                    sink.addBlockTypeSwapRecipe(manager, Supplementaries.res("cannon_boat_oak"),
+                            VanillaWoodTypes.OAK, w, Supplementaries.res("cannon_boat_oak"));
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to generate recipe for cannon boat {}:", i, e);
                 }
@@ -133,21 +130,17 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
 
     private void addSignPostRecipes(ResourceManager manager, ResourceSink sink) {
-        Recipe<?> recipe = RPUtils.readRecipe(manager, Supplementaries.res("way_sign_oak"));
-        Recipe<?> recipe2 = RPUtils.readRecipe(manager, Supplementaries.res("way_sign_mod_template"));
-
         WoodType oak = VanillaWoodTypes.OAK;
 
         ModRegistry.WAY_SIGN_ITEMS.forEach((w, i) -> {
             if (w != oak) {
                 try {
                     //Check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
-                    Recipe<?> recipeTemplate = w.getChild("sign") == null ? recipe2 : recipe;
+                    ResourceLocation recipeTemplate = w.getChild("sign") == null ?
+                            Supplementaries.res("way_sign_oak"): Supplementaries.res("way_sign_mod_template");
 
-                    var newR = RPUtils.makeSimilarRecipe(recipeTemplate, VanillaWoodTypes.OAK, w,
+                    sink.addBlockTypeSwapRecipe(manager, recipeTemplate, VanillaWoodTypes.OAK, w,
                             Supplementaries.res("way_sign_oak"));
-                    //newR = ForgeHelper.addRecipeConditions(newR, recipe);
-                    sink.addRecipe(newR);
                 } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
                 }

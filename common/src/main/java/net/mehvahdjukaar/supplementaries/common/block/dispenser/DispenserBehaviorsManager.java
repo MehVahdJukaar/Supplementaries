@@ -102,15 +102,11 @@ public class DispenserBehaviorsManager {
             );
         }
 
-        if (CommonConfigs.Tweaks.SLIMED_EFFECT.get()) {
+        if (CommonConfigs.Tweaks.THROWABLE_SLIMEBALLS.get()) {
             BuiltInRegistries.ITEM.getTagOrEmpty(ModTags.SLIMEBALLS).iterator().forEachRemaining(h ->
                     event.register(new ThrowableSlimeballBehavior(h.value()))
             );
         }
-
-
-        event.register(new ThrowableSlimeballBehavior(Items.SLIME_BALL));
-
 
         //bomb
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) {
