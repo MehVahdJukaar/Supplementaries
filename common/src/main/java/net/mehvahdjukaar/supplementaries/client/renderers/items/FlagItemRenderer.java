@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.LazyModelPart;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -32,12 +33,10 @@ import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlock
 public class FlagItemRenderer extends ItemStackRenderer {
 
     private final BlockState state = ModRegistry.FLAGS.get(DyeColor.BLACK).get().defaultBlockState();
-    private final ModelPart flag;
+    private final LazyModelPart flag = LazyModelPart.of(ModelLayers.BANNER, "flag");
 
     public FlagItemRenderer() {
         super();
-        flag = Minecraft.getInstance().getEntityModels().bakeLayer(ModelLayers.BANNER)
-                .getChild("flag");
     }
 
     @Override
@@ -59,7 +58,7 @@ public class FlagItemRenderer extends ItemStackRenderer {
 
         if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
             matrixStackIn.mulPose(Axis.YP.rotationDegrees(100));
-            renderBanner(flag, 0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns);
+            renderBanner(flag.get(), 0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns);
 
         } else {
             matrixStackIn.mulPose(RotHlpr.Y90);

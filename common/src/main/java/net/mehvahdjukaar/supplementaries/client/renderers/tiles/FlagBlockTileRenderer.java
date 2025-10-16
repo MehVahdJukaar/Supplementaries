@@ -45,7 +45,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     }
 
     public static void renderBanner(ModelPart flagModel,
-            float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<Holder<BannerPattern>, DyeColor>> list) {
+                                    float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<Holder<BannerPattern>, DyeColor>> list) {
         matrixStack.pushPose();
         matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
         matrixStack.mulPose(Axis.YP.rotationDegrees(0.05f * ang));
