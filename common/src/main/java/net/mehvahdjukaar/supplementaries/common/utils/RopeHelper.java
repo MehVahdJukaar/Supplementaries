@@ -77,7 +77,7 @@ public class RopeHelper {
                 } else {
                     tile.setRemoved();
                 }
-                tileTag = tile.saveWithoutMetadata(level.registryAccess());
+                tileTag = tile.saveWithoutMetadata();
             }
         }
 
@@ -129,7 +129,7 @@ public class RopeHelper {
         if (tileTag != null) {
             BlockEntity te = level.getBlockEntity(targetPos);
             if (te != null) {
-                te.loadWithComponents(tileTag, level.registryAccess());
+                te.load(tileTag);
             }
         }
 
