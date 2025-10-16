@@ -4,11 +4,13 @@ package net.mehvahdjukaar.supplementaries.client.renderers.items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.LazyModelPart;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.DyeColor;
@@ -22,7 +24,8 @@ import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlock
 
 public class FlagItemRenderer extends ItemStackRenderer {
 
-    private static final BlockState state = ModRegistry.FLAGS.get(DyeColor.BLACK).get().defaultBlockState();
+    private final BlockState state = ModRegistry.FLAGS.get(DyeColor.BLACK).get().defaultBlockState();
+    private final LazyModelPart bannerModel = LazyModelPart.of(ModelLayers.BANNER, "flag");
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -33,7 +36,7 @@ public class FlagItemRenderer extends ItemStackRenderer {
             DyeColor color = ((FlagItem) stack.getItem()).getColor();
 
             if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
-                renderBanner(0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
+                renderBanner(bannerModel.get(), 0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
                 return;
             }
 

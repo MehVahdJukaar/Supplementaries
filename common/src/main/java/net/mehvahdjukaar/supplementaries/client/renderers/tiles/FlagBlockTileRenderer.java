@@ -29,17 +29,15 @@ import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 
-import java.util.List;
-
 import static net.mehvahdjukaar.supplementaries.client.ModMaterials.FLAG_BASE_MATERIAL;
 
 public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
-    private static ModelPart flag;
+    private final ModelPart bannerModel;
 
     public FlagBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart modelpart = context.bakeLayer(ModelLayers.BANNER);
-        flag = modelpart.getChild("flag");
+        bannerModel = modelpart.getChild("flag");
     }
 
     @ForgeOverride
@@ -54,17 +52,17 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         return 128;
     }
 
-    public static void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay,
+    public static void renderBanner(ModelPart bannerModel, float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay,
                               BannerPatternLayers patterns, DyeColor baseColor) {
         matrixStack.pushPose();
         matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
         matrixStack.mulPose(Axis.YP.rotationDegrees(0.05f * ang));
-        flag.xRot = (float) (0.5 * Math.PI);
-        flag.yRot = (float) (1 * Math.PI);
-        flag.zRot = (float) (0.5 * Math.PI);
-        flag.y = -12;
-        flag.x = 1.5f;
-        BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, flag, ModelBakery.BANNER_BASE,
+        bannerModel.xRot = (float) (0.5 * Math.PI);
+        bannerModel.yRot = (float) (1 * Math.PI);
+        bannerModel.zRot = (float) (0.5 * Math.PI);
+        bannerModel.y = -12;
+        bannerModel.x = 1.5f;
+        BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, bannerModel, ModelBakery.BANNER_BASE,
                 true, baseColor, patterns);
         matrixStack.popPose();
     }
@@ -102,7 +100,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         DyeColor color = tile.getColor();
         if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
             float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
-            renderBanner(ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
+            renderBanner(bannerModel, ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
         } else {
 
             int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
