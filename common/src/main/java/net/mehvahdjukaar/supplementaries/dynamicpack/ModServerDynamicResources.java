@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
-import net.mehvahdjukaar.moonlight.api.resources.pack.*;
+import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicServerResourceProvider;
+import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
+import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -16,7 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.biome.Biomes;
 
 import java.util.Collection;
@@ -137,7 +136,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
                 try {
                     //Check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
                     ResourceLocation recipeTemplate = w.getChild("sign") == null ?
-                            Supplementaries.res("way_sign_oak"): Supplementaries.res("way_sign_mod_template");
+                            Supplementaries.res("way_sign_oak") : Supplementaries.res("way_sign_mod_template");
 
                     sink.addBlockTypeSwapRecipe(manager, recipeTemplate, VanillaWoodTypes.OAK, w,
                             Supplementaries.res("way_sign_oak"));
