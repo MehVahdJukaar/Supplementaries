@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.api;
 
 public interface IAntiqueTextProvider {
 
-    boolean hasAntiqueInk();
+    boolean supp$hasAntiqueInk();
 
-    void setAntiqueInk(boolean hasInk);
+    void supp$setAntiqueInk(boolean hasInk);
 }

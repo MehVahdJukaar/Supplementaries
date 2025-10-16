@@ -22,11 +22,11 @@ public abstract class WrittenBookAccessMixin implements IAntiqueTextProvider {
     }
 
     @Override
-    public boolean hasAntiqueInk() {
+    public boolean supp$hasAntiqueInk() {
         return supplementaries$antiqueInk;
     }
 
     @Override
-    public void setAntiqueInk(boolean hasInk) {
+    public void supp$setAntiqueInk(boolean hasInk) {
     }
 }
