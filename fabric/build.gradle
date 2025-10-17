@@ -58,14 +58,12 @@ dependencies {
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
     //modCompileOnly("com.jozufozu.flywheel:flywheel-fabric-$flywheel_fabric_version")
     modCompileOnly ("dev.engine-room.flywheel:flywheel-fabric-${flywheel_fabric_version}")
-    modRuntimeOnly "curse.maven:clutter-no-more-1339454:6998067"
     modRuntimeOnly "curse.maven:forge-config-api-port-fabric-547434:6798213"
 
 
     modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5887378")
 
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
-    modCompileOnly("curse.maven:motion-capture-mod-mocap-656300:5769049")
     modCompileOnly("curse.maven:cc-tweaked-282001:5714511")
     modCompileOnly("curse.maven:jei-238222:5846878")
     modCompileOnly("curse.maven:amendments-896746:5791204")
@@ -90,7 +88,6 @@ dependencies {
   //  modCompileOnly("curse.maven:create-328085:4835191")
 
     modCompileOnly("org.embeddedt:embeddium-fabric-1.20.1:0.3.1-git.b3f920f+mc1.20.1")
-    modCompileOnly("maven.modrinth:flashback:0.11.0") // Get latest version from releases
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-fabric:${shulker_box_tooltip_version}") { transitive false }
 
 //    modImplementation("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
