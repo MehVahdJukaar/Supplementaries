@@ -71,7 +71,7 @@ dependencies {
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
     modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")
-    modCompileOnly("com.jozufozu.flywheel:flywheel-fabric-$flywheel_fabric_version")
+    //modCompileOnly("com.jozufozu.flywheel:flywheel-fabric-$flywheel_fabric_version")
     //modImplementation("curse.maven:selene-499980:5651442")
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
 
