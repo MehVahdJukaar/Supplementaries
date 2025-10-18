@@ -236,9 +236,9 @@ public class SpecialRecipeDisplays {
         if (CommonConfigs.Tweaks.SUS_RECIPES.get()) {
             blocks.put(Blocks.SAND, Blocks.SUSPICIOUS_SAND);
             blocks.put(Blocks.GRAVEL, Blocks.SUSPICIOUS_GRAVEL);
-        }
-        if (CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()) {
-            blocks.put(ModRegistry.GRAVEL_BRICKS.get(), ModRegistry.SUS_GRAVEL_BRICKS.get());
+            if (CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()) {
+                blocks.put(ModRegistry.GRAVEL_BRICKS.get(), ModRegistry.SUS_GRAVEL_BRICKS.get());
+            }
         }
 
         ItemStack content = Items.GOLD_INGOT.getDefaultInstance();
