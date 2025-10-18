@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlockSetAPI;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
@@ -19,6 +20,8 @@ import net.mehvahdjukaar.supplementaries.integration.CaveEnhancementsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.food.FoodProperties;
@@ -49,8 +52,10 @@ public class RegUtils {
     protected static final BlockBehaviour.StatePredicate NEVER = (state, reader, pos) -> false;
 
     public static void initDynamicRegistry() {
-        BlockSetAPI.addDynamicItemRegistration(RegUtils::registerSignPostItems, WoodType.class);
-        BlockSetAPI.addDynamicItemRegistration(RegUtils::registerCannonBoatItems, WoodType.class);
+        BlockSetAPI.addDynamicRegistration(Supplementaries.MOD_ID, RegUtils::registerSignPostItems,
+                BuiltInRegistries.ITEM);
+        BlockSetAPI.addDynamicRegistration(Supplementaries.MOD_ID, RegUtils::registerCannonBoatItems,
+                BuiltInRegistries.ITEM);
     }
 
     public static void registerAdditionalPlacements() {
@@ -230,8 +235,8 @@ public class RegUtils {
     }
 
     //sign posts
-    private static void registerSignPostItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
-        for (WoodType wood : woodTypes) {
+    private static void registerSignPostItems(Registrator<Item> event) {
+        for (WoodType wood : WoodTypeRegistry.INSTANCE) {
             String name = wood.getVariantId(ModConstants.WAY_SIGN_NAME);
             SignPostItem item = new SignPostItem(ModRegistry.WAY_SIGN_WALL.get(),
                     new Item.Properties().stacksTo(16), wood);
@@ -241,8 +246,8 @@ public class RegUtils {
         }
     }
 
-    private static void registerCannonBoatItems(Registrator<Item> event, Collection<WoodType> woodTypes) {
-        for (WoodType wood : woodTypes) {
+    private static void registerCannonBoatItems(Registrator<Item> event) {
+        for (WoodType wood : WoodTypeRegistry.INSTANCE) {
             if (wood.getChild("boat") != null) {
                 String name = wood.getVariantId(ModConstants.CANNON_BOAT_NAME);
                 CannonBoatItem item = new CannonBoatItem(new Item.Properties().stacksTo(1), wood);

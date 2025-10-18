@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
@@ -21,6 +22,7 @@ import net.minecraft.world.item.HoneyBottleItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -199,8 +201,8 @@ public class ModBlockProperties {
         }
 
         @NotNull
-        public static Pair<Topping, Item> fromFluidItem(Item item) {
-            var holder = SoftFluidStack.fromItem(item.getDefaultInstance());
+        public static Pair<Topping, Item> fromFluidItem(ItemStack item, HolderLookup.Provider ra) {
+            var holder = SoftFluidStack.fromItem(item, ra);
             if (holder == null) return Pair.of(NONE, null);
             SoftFluidStack s = holder.getFirst();
             var cat = holder.getSecond();
@@ -232,20 +234,19 @@ public class ModBlockProperties {
 
         //topping and empty item
         @NotNull
-        public static Pair<Topping, Item> fromItem(Item item) {
-            var ff = fromFluidItem(item);
+        public static Pair<Topping, Item> fromItem(ItemStack item, HolderLookup.Provider ra) {
+            var ff = fromFluidItem(item, ra);
             if (ff.getFirst() != NONE) return ff;
-            var holder = item.builtInRegistryHolder();
             Topping t;
-            if (item == Items.SWEET_BERRIES) t = JAM;
-            else if (holder.is(ModTags.SYRUP)) t = SYRUP;
+            if (item.is(Items.SWEET_BERRIES)) t = JAM;
+            else if (item.is(ModTags.SYRUP)) t = SYRUP;
 
-            else if (item instanceof HoneyBottleItem) t = HONEY;
-            else if (item == Items.COCOA_BEANS && BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty()) {
+            else if (item.getItem() instanceof HoneyBottleItem) t = HONEY;
+            else if (item.is(Items.COCOA_BEANS) && BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty()) {
                 t = CHOCOLATE;
-            } else if (holder.is(ModTags.CHOCOLATE_BARS)) t = CHOCOLATE;
+            } else if (item.is(ModTags.CHOCOLATE_BARS)) t = CHOCOLATE;
             else t = NONE;
-            return Pair.of(t, ForgeHelper.getCraftingRemainingItem(item.getDefaultInstance()).map(ItemStack::getItem)
+            return Pair.of(t, ForgeHelper.getCraftingRemainingItem(item).map(ItemStack::getItem)
                     .orElse(Items.AIR));
         }
     }

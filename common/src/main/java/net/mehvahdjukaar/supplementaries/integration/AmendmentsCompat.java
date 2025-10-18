@@ -29,7 +29,7 @@ public class AmendmentsCompat {
     }
 
     public static BlockState fillCauldronWithFluid(Level level, BlockPos pos, BlockState state, FluidState fluidState) {
-        SoftFluidStack fluidStack = SoftFluidStack.fromFluid(fluidState);
+        SoftFluidStack fluidStack = SoftFluidStack.fromFluid(fluidState, level.registryAccess());
         if (state.getBlock() == Blocks.CAULDRON) {
             return CauldronConversion.getNewState(pos, level, fluidStack);
         } else if (state.getBlock() instanceof ModCauldronBlock mc) {

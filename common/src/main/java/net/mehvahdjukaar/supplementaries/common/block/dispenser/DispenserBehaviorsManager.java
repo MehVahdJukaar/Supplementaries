@@ -17,6 +17,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.dispenser.OptionalDispenseItemBehavior;
@@ -130,13 +131,14 @@ public class DispenserBehaviorsManager {
         boolean pancake = CommonConfigs.isEnabled(ModConstants.PANCAKE_NAME);
         boolean sack = CommonConfigs.Functional.SACK_ENABLED.get();
 
+        HolderLookup.Provider ra = event.getRegistryAccess();
         if (axe || jar || key) {
             for (Item i : BuiltInRegistries.ITEM) {
                 try {
                     if (jar && BucketHelper.isFishBucket(i)) {
                         event.register(new FishBucketJarBehavior(i));
                     }
-                    if (pancake && ModBlockProperties.Topping.fromItem(i)
+                    if (pancake && ModBlockProperties.Topping.fromItem(i.getDefaultInstance(), ra)
                             .getFirst() != ModBlockProperties.Topping.NONE) {
                         event.register(new PancakeBehavior(i));
                     }

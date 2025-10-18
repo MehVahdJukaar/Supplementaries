@@ -21,14 +21,14 @@ class PancakeBehavior extends DispenserHelper.AdditionalDispenserBehavior {
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
         //this.setSuccessful(false);
-        ServerLevel world = source.level();
+        ServerLevel level = source.level();
         BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
-        BlockState state = world.getBlockState(blockpos);
+        BlockState state = level.getBlockState(blockpos);
         if (state.getBlock() instanceof PancakeBlock) {
-            var t = ModBlockProperties.Topping.fromItem(stack.getItem());
+            var t = ModBlockProperties.Topping.fromItem(stack, level.registryAccess());
             ModBlockProperties.Topping topping = t.getFirst();
             if (topping != ModBlockProperties.Topping.NONE) {
-                if (PancakeBlock.setTopping(state, world, blockpos, topping)) {
+                if (PancakeBlock.setTopping(state, level, blockpos, topping)) {
                     return InteractionResultHolder.consume(t.getSecond().getDefaultInstance());
                 }
             }

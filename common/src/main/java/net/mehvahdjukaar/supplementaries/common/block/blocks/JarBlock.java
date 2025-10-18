@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -136,6 +137,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        Preconditions.checkArgument(pState.is(this), "Invalid blockstate for block "+this+ " HOW? who passed it?");
         return new JarBlockTile(pPos, pState);
     }
 

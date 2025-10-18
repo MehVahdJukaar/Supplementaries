@@ -23,7 +23,9 @@ import java.util.function.Consumer;
 // immutable view of a SoftFluidTank
 public class SoftFluidTankView implements TooltipProvider {
 
-    public static final Codec<SoftFluidTankView> CODEC = SoftFluidTank.CODEC.xmap(SoftFluidTankView::new, SoftFluidTankView::toMutable);
+    public static final Codec<SoftFluidTankView> CODEC = SoftFluidTank.CODEC.xmap(
+            SoftFluidTankView::new, SoftFluidTankView::toMutable);
+
     public static final StreamCodec<RegistryFriendlyByteBuf, SoftFluidTankView> STREAM_CODEC =
             SoftFluidTank.STREAM_CODEC.map(SoftFluidTankView::new, SoftFluidTankView::toMutable);
 

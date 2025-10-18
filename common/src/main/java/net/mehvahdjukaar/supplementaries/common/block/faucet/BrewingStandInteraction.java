@@ -19,7 +19,7 @@ class BrewingStandInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
             for (int i = 0; i < 3; i++) {
                 ItemStack stack = brewingStand.getItem(i);
                 //simulate draining
-                var opt = SoftFluidStack.fromItem(stack);
+                var opt = SoftFluidStack.fromItem(stack, level.registryAccess());
                 if (opt != null) {
                     return FluidOffer.of(opt.getFirst());
                 }
@@ -34,7 +34,7 @@ class BrewingStandInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
             for (int i = 0; i < 3; i++) {
                 ItemStack stack = brewingStand.getItem(i);
                 //simulate draining
-                var opt = SoftFluidStack.fromItem(stack);
+                var opt = SoftFluidStack.fromItem(stack, level.registryAccess());
                 if (opt != null) {
                     ItemStack remainder = (stack.getItem().hasCraftingRemainingItem() ?
                             Items.GLASS_BOTTLE.getDefaultInstance() :

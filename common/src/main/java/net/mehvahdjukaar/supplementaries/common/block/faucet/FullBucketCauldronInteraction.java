@@ -16,7 +16,7 @@ record FullBucketCauldronInteraction(BlockState fullCauldron,
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState source) {
         if (source.is(fullCauldron.getBlock())) {
-            var pair = SoftFluidStack.fromItem(filleBucket.copy());
+            var pair = SoftFluidStack.fromItem(filleBucket.copy(), level.registryAccess());
             if (pair != null) {
                 var stack = pair.getFirst();
                 int amount;
@@ -39,7 +39,7 @@ record FullBucketCauldronInteraction(BlockState fullCauldron,
     @Override
     public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.is(Blocks.CAULDRON) || (state.is(fullCauldron.getBlock()) && state.hasProperty(LayeredCauldronBlock.LEVEL))) {
-            var pair = SoftFluidStack.fromItem(filleBucket.copy());
+            var pair = SoftFluidStack.fromItem(filleBucket.copy(), level.registryAccess());
 
             if (pair != null) {
                 SoftFluidStack fluidStack = pair.getFirst();
