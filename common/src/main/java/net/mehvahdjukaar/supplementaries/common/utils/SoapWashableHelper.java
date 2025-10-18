@@ -82,11 +82,24 @@ public class SoapWashableHelper {
         }
 
         if (toPlace == null) {
-            toPlace = tryParse(state);
+            toPlace = tryParseWax(state);
+        }
+
+        BlockEntity oldBe = null;
+        if (b instanceof EntityBlock) {
+            oldBe = level.getBlockEntity(pos);
         }
 
         if (toPlace != null) {
             level.setBlock(pos, toPlace, 11);
+
+            if (oldBe != null) {
+                CompoundTag tag = oldBe.saveWithoutMetadata(level.registryAccess());
+                var be = level.getBlockEntity(pos);
+                if (be != null) {
+                    be.loadWithComponents(tag, level.registryAccess());
+                }
+            }
             return true;
         }
         return false;
@@ -133,7 +146,7 @@ public class SoapWashableHelper {
     }
 
 
-    private static BlockState tryParse(BlockState oldState) {
+    private static BlockState tryParseWax(BlockState oldState) {
         ResourceLocation r = Utils.getID(oldState.getBlock());
         //hardcoding goes brr. This is needed, and I can't just use forge event since I only want to react to axe scrape, not stripping
         String name = r.getPath();
