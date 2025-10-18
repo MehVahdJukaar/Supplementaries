@@ -115,8 +115,8 @@ dependencies {
     implementation 'org.jetbrains:annotations:22.0.0'
 
 
-    modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
-    //modImplementation("curse.maven:selene-499980:5854670")
+    //modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
+    modImplementation("curse.maven:selene-499980:7119907")
     modCompileOnly("curse.maven:farmers-delight-398521:5051242")
 
     //modRuntimeOnly("curse.maven:modernfix-790626:4599348")
@@ -151,7 +151,7 @@ dependencies {
     modCompileOnly("curse.maven:goated-805646:4802277")
     modCompileOnly("curse.maven:enchanted-book-redesign-348076:4693221")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
-    modCompileOnly("curse.maven:supplementaries-squared-838411:5130385")
+    modCompileOnly("curse.maven:supplementaries-squared-838411:7117685")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
     modCompileOnly("curse.maven:legendary-tooltips-532127:5591027")
