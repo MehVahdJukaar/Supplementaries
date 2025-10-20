@@ -18,7 +18,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -34,7 +33,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -112,11 +110,16 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     }
 
     //default offsets
-    public static List<Vec3> getParticleOffsets(BlockState state) {
+    public static List<Vec3> getDefaultParticleOffsets(BlockState state) {
         Direction direction = state.getValue(FACING);
         AttachFace face = state.getValue(FACE);
         int candles = state.getValue(CANDLES);
         return PARTICLE_OFFSETS.get(direction).get(face).get(candles);
+    }
+
+    @Deprecated(forRemoval = true)
+    public static List<Vec3> getParticleOffsets(BlockState state) {
+        return getDefaultParticleOffsets(state);
     }
 
     @Nullable
@@ -126,13 +129,13 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
 
     @Deprecated(forRemoval = true)
     public CandleHolderBlock(DyeColor color, Properties properties) {
-        this(color, properties, () -> ParticleTypes.SMALL_FLAME, CandleHolderBlock::getParticleOffsets);
+        this(color, properties, () -> ParticleTypes.SMALL_FLAME, CandleHolderBlock::getDefaultParticleOffsets);
     }
 
     @Deprecated(forRemoval = true)
     public CandleHolderBlock(@Nullable DyeColor color, Properties properties,
                              Supplier<ParticleType<? extends ParticleOptions>> particle) {
-        this(color, properties, particle, CandleHolderBlock::getParticleOffsets);
+        this(color, properties, particle, CandleHolderBlock::getDefaultParticleOffsets);
     }
 
     public CandleHolderBlock(DyeColor color, Properties properties, Function<BlockState, List<Vec3>> particleOffsets) {
