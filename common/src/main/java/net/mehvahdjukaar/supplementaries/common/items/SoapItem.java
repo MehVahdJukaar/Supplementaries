@@ -3,11 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EnvironmentalCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.client.player.LocalPlayer;
@@ -52,8 +53,9 @@ public class SoapItem extends Item {
         VibeChecker.assertSameLevel(level, player);
         ItemStack stack = player.getItemInHand(hand);
         // clean self
-        if (player instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
-            s.supp$setSlimedTicks(0, true);
+        SlimedData slimedData = ModRegistry.SLIMED_DATA.getOrCreate(player);
+        if (slimedData.isSlimed()) {
+            slimedData.clear(player);
             playEffectsAndConsume(stack, player, player);
             return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
         }
@@ -101,20 +103,20 @@ public class SoapItem extends Item {
         Level level = player.level();
         boolean success = false;
 
-        if (target instanceof ISlimeable s && s.supp$getSlimedTicks() != 0) {
-            s.supp$setSlimedTicks(0, true);
+        if (target instanceof LivingEntity le && ModRegistry.SLIMED_DATA.getOrCreate(le).isSlimed()) {
+            ModRegistry.SLIMED_DATA.getOrCreate(le).clear(le);
             success = true;
         } else if (target instanceof Sheep s && s.getColor() != DyeColor.WHITE) {
             s.setColor(DyeColor.WHITE);
             success = true;
         } else if (target instanceof WitherSkeleton s) {
 
-           var wither  = s.convertTo(EntityType.SKELETON, true);
-           if(wither != null) {
-               wither.absRotateTo(target.getYRot(), target.getXRot());
-               target = wither;
-               success = true;
-           }
+            var wither = s.convertTo(EntityType.SKELETON, true);
+            if (wither != null) {
+                wither.absRotateTo(target.getYRot(), target.getXRot());
+                target = wither;
+                success = true;
+            }
         } else if (target instanceof Slime s) {
             s.hurt(level.damageSources().playerAttack(player), 2);
             success = true;

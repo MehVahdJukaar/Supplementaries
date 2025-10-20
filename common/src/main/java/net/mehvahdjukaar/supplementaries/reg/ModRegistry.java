@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ModStairBlock;
+import net.mehvahdjukaar.moonlight.api.misc.IAttachmentType;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
+import net.mehvahdjukaar.moonlight.api.misc.WorldSavedDataType;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
@@ -10,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
+import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
@@ -18,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction
 import net.mehvahdjukaar.supplementaries.common.items.loot.SetChargesFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.OverencumberedEffect;
+import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
@@ -27,6 +31,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -70,6 +75,19 @@ public class ModRegistry {
     public static final Supplier<LootItemFunctionType<SetChargesFunction>> SET_CHARGES_FUNCTION = RegHelper.register(res("set_charges"),
             () -> new LootItemFunctionType<>(SetChargesFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
 
+    //data
+    public static final WorldSavedDataType<GlobeData> GLOBE_DATA = RegHelper.registerWorldSavedData(
+            res("globe_data"), GlobeData::fromLevel, GlobeData.CODEC, GlobeData.STREAM_CODEC
+    );
+
+    public static final IAttachmentType<SlimedData, LivingEntity> SLIMED_DATA = RegHelper.registerDataAttachment(
+            res("slimed_data"),
+            () -> RegHelper.AttachmentBuilder.create(SlimedData::new)
+                    .syncWith(SlimedData.STREAM_CODEC)
+                    .persistent(SlimedData.CODEC),
+            LivingEntity.class
+    );
+
     //effects
     public static final RegSupplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
             res("overencumbered"), OverencumberedEffect::new);
@@ -111,7 +129,7 @@ public class ModRegistry {
                     .component(ModComponents.CHARGES.get(), 0)
                     .component(ModComponents.MAX_CHARGES.get(), CommonConfigs.Tools.BUBBLE_BLOWER_MAX_CHARGES.get())
                     .stacksTo(1)
-            ));
+    ));
 
     //slingshot
     public static final Supplier<Item> SLINGSHOT_ITEM = regItem(SLINGSHOT_NAME, () -> new SlingshotItem(new Item.Properties()
@@ -450,7 +468,7 @@ public class ModRegistry {
     public static final Supplier<Item> BUNTING_OLD = regItem(BUNTING_NAME, () -> new BuntingItemOld(new Item.Properties()
             .component(DataComponents.BASE_COLOR, DyeColor.WHITE)));
 
-    public static final Map<DyeColor, Supplier<Block>> BUNTING_WALL_BLOCKS = new Object2ObjectLinkedOpenHashMap<>() ;
+    public static final Map<DyeColor, Supplier<Block>> BUNTING_WALL_BLOCKS = new Object2ObjectLinkedOpenHashMap<>();
     public static final Map<DyeColor, Supplier<Block>> BUNTING_BLOCKS = RegUtils.registerBuntings(BUNTING_NAME);
 
     public static final Supplier<RopeBuntingBlock> BUNTING_ROPE_BLOCK = regBlock("rope_buntings", () -> new RopeBuntingBlock(

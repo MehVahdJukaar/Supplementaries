@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.supplementaries.client.IModelPartExtension;
 import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EMFCompat;
 import net.mehvahdjukaar.supplementaries.mixins.AgeableListAccessor;
@@ -30,7 +30,7 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
                        float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks,
                        float netHeadYaw, float headPitch) {
 
-        float alpha = ISlimeable.getAlpha(entity, partialTicks);
+        float alpha = SlimedData.getAlpha(entity, partialTicks);
 
         if (alpha == 0) return;
 

@@ -115,7 +115,7 @@ public class RegUtils {
 
     //candle holders
     public static Map<DyeColor, Supplier<Block>> registerCandleHolders(ResourceLocation baseName) {
-        return registerCandleHolders(baseName, CandleHolderBlock::getParticleOffsets);
+        return registerCandleHolders(baseName, CandleHolderBlock::getDefaultParticleOffsets);
     }
 
     public static Map<DyeColor, Supplier<Block>> registerCandleHolders(ResourceLocation baseName,

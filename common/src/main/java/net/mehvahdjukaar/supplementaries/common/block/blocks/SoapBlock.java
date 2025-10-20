@@ -1,12 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -82,10 +84,12 @@ public class SoapBlock extends Block {
                 }
             }
         }
-        if (!level.isClientSide && entity instanceof ISlimeable s && s.supp$getSlimedTicks() != 0 &&
-                rand.nextFloat() < slipChance) {
-            s.supp$setSlimedTicks(0, true);
-            level.blockEvent(pPos, state.getBlock(), 0, 0);
+        if (!level.isClientSide && entity instanceof LivingEntity le) {
+            SlimedData data = ModRegistry.SLIMED_DATA.getOrCreate(le);
+            if (data != null && rand.nextFloat() < slipChance) {
+                data.clear((LivingEntity) entity);
+                level.blockEvent(pPos, state.getBlock(), 0, 0);
+            }
         }
     }
 /*

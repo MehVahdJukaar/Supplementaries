@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -23,7 +23,7 @@ public class SlimedOverlayHud implements LayeredDraw.Layer {
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
         float partialTicks = deltaTracker.getGameTimeDeltaPartialTick(false);
-        float alpha = ISlimeable.getAlpha(mc.player, partialTicks);
+        float alpha = SlimedData.getAlpha(mc.player, partialTicks);
         if (alpha > 0) {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();

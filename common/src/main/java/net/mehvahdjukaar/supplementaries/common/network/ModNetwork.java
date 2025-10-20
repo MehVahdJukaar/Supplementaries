@@ -12,7 +12,6 @@ public class ModNetwork {
     private static void registerMessages(NetworkHelper.RegisterMessagesEvent event) {
 
         event.registerClientBound(ClientBoundPlaySpeakerMessagePacket.CODEC);
-        event.registerClientBound(ClientBoundSyncGlobeDataPacket.CODEC);
         event.registerClientBound(ClientBoundSendLoginPacket.CODEC);
         event.registerClientBound(ClientBoundSyncTradesPacket.CODEC);
         event.registerClientBound(ClientBoundSendKnockbackPacket.CODEC);

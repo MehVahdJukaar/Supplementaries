@@ -3,18 +3,12 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import dev.architectury.injectables.annotations.PlatformOnly;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
-import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncSlimedMessage;
+import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -29,43 +23,16 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements ISlimeable {
-
-    @Unique
-    int supp$slimedTicks = 0;
+public abstract class LivingEntityMixin extends Entity {
 
     protected LivingEntityMixin(EntityType<?> entityTypeIn, Level worldIn) {
         super(entityTypeIn, worldIn);
-    }
-
-    @Override
-    public int supp$getSlimedTicks() {
-        return supp$slimedTicks;
-    }
-
-    @Override
-    public void supp$setSlimedTicks(int newSlimedTicks, boolean sync) {
-        int old = this.supp$getSlimedTicks();
-        this.supp$slimedTicks = newSlimedTicks;
-        if (sync && !this.level().isClientSide) {
-            // players need manual syncing when player first connects
-            if (!(((Object) this) instanceof ServerPlayer p) || p.connection != null) {
-                NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(this,
-                        new ClientBoundSyncSlimedMessage(this.getId(), this.supp$getSlimedTicks()));
-                if (newSlimedTicks > old) {
-                    //send packet
-                    level().playSound(null, this.getX(), this.getY(), this.getZ(),
-                            ModSounds.SLIME_SPLAT.get(), this.getSoundSource(), 1, 1);
-                }
-            }
-        }
     }
 
     @Shadow
@@ -84,7 +51,9 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
             original -= 0.1f;
         }
         // yes they stack
-        if (this.supp$getSlimedTicks() > 0) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        SlimedData data = ModRegistry.SLIMED_DATA.getOrCreate(self);
+        if (data.isSlimed()) {
             var mode = CommonConfigs.Tweaks.HINDERS_JUMP.get();
             if (mode.isOn(this.level())) {
                 original -= 0.1f;
@@ -125,20 +94,9 @@ public abstract class LivingEntityMixin extends Entity implements ISlimeable {
     // yes thiscould be called with forge event instead. doesn't make much difference really. needed for fabric and couldn't be another make a fabric only mixin
     @Inject(method = "tick", at = @At("HEAD"))
     private void suppl$slimeTick(CallbackInfo ci) {
-        ISlimeable.tickEntity((LivingEntity) (Object) this);
+        LivingEntity le = (LivingEntity) (Object) this;
+        SlimedData data = ModRegistry.SLIMED_DATA.getOrCreate(le);
+        data.tick(le);
     }
 
-    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void suppl$readSlimedTicks(net.minecraft.nbt.CompoundTag compound, CallbackInfo ci) {
-            if (compound.contains("supplementaries:slimed_ticks")) {
-            this.supp$setSlimedTicks(compound.getInt("supplementaries:slimed_ticks"), true);
-        }
-    }
-
-    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void suppl$writeSlimedTicks(net.minecraft.nbt.CompoundTag compound, CallbackInfo ci) {
-        if (this.supp$getSlimedTicks() > 0) {
-            compound.putInt("supplementaries:slimed_ticks", this.supp$getSlimedTicks());
-        }
-    }
 }
