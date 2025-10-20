@@ -26,7 +26,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class CannonController {
 
-    protected static boolean isOnCannonBoat = false;
     protected static CannonAccess access;
 
     private static CameraType lastCameraType;
@@ -125,7 +124,6 @@ public class CannonController {
         CannonBlockTile cannonTile = access.getInternalCannon();
         if (!cannonTile.isFiring()) {
 
-
             // find hit result
             Vec3 lookDir2 = new Vec3(camera.getLookVector());
             float maxRange = 128;
@@ -134,13 +132,6 @@ public class CannonController {
 
             hit = level.clip(new ClipContext(actualCameraPos, endPos,
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
-
-            Vec3 targetVector = hit.getLocation().subtract(centerCannonPos);
-            //rotate so we can work in 2d
-            Vec2 target = new Vec2((float) Mth.length(targetVector.x, targetVector.z), (float) targetVector.y);
-            target = target.add(target.normalized().scale(0.05f)); //so we hopefully hit the block we are looking at
-
-            float wantedCannonYaw = Mth.PI + (float) Mth.atan2(-targetVector.x, targetVector.z);
 
             var comp = CannonUtils.computeTrajectory(access, hit.getLocation(), shootingMode);
 
@@ -175,7 +166,7 @@ public class CannonController {
             pitchIncrease += (float) (pitchAdd * scale);
             if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
 
-            if (isOnCannonBoat) {
+            if (access.shouldRotatePlayerFaceWhenManeuvering()) {
                 //make player face camera while maneuvering
                 LocalPlayer player = Minecraft.getInstance().player;
                 player.turn(Mth.wrapDegrees((lastCameraYaw + yawAdd) - player.yHeadRot),
@@ -188,19 +179,19 @@ public class CannonController {
         return false;
     }
 
-    public static void onKeyJump() {
+    private static void onKeyJump() {
         if (trajectory != null && trajectory.gravity() != 0) {
             shootingMode = shootingMode.cycle();
             needsToUpdateServer = true;
         }
     }
 
-    public static void onKeyInventory() {
+    private static void onKeyInventory() {
         //Disabled, too buggy
         access.sendOpenGuiRequest();
     }
 
-    public static void onKeyShift() {
+    private static void onKeyShift() {
         stopControllingAndSync();
     }
 
@@ -226,7 +217,7 @@ public class CannonController {
 
     public static void onInputUpdate(Input input) {
         // resets input
-        if (!isOnCannonBoat) {
+        if (access.impedePlayerMovementWhenManeuvering()) {
             input.down = false;
             input.up = false;
             input.left = false;
@@ -241,7 +232,6 @@ public class CannonController {
     public static void onClientTick(Minecraft mc) {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
-        isOnCannonBoat = player.getVehicle() instanceof CannonAccess;
         if (!isActive()) return;
         if (access.stillValid(player)) {
             if (needsToUpdateServer) {
@@ -277,7 +267,7 @@ public class CannonController {
     }
 
     public static boolean rendersXpBar() {
-        return isActive() || isOnCannonBoat;
+        return isActive() || access.rendersXpWhenManeuvering();
     }
 }
 

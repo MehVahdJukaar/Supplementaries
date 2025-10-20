@@ -85,7 +85,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     public final CannonAccess selfAccess = CannonAccess.block(this);
 
-
     public void tick(CannonAccess access) {
         this.prevYaw = this.yaw;
         this.prevPitch = this.pitch;

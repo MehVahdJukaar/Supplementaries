@@ -443,4 +443,19 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         Vec3 shootForce = this.getCannonGlobalFacing(1).scale(power * scale);
         return new Vec3(-shootForce.x, 0, -shootForce.z);
     }
+
+    @Override
+    public boolean shouldRotatePlayerFaceWhenManeuvering() {
+        return true;
+    }
+
+    @Override
+    public boolean rendersXpWhenManeuvering() {
+        return true;
+    }
+
+    @Override
+    public boolean impedePlayerMovementWhenManeuvering() {
+        return false;
+    }
 }

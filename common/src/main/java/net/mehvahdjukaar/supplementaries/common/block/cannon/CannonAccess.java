@@ -1,28 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector4f;
 
 //used to access a cannon position and rotation, be it in a block or an entity
 public interface CannonAccess {
@@ -60,6 +49,18 @@ public interface CannonAccess {
     Restraint getPitchAndYawRestrains();
 
     Vec3 getCannonGlobalVelocity();
+
+    default boolean shouldRotatePlayerFaceWhenManeuvering() {
+        return false;
+    }
+
+    default boolean rendersXpWhenManeuvering() {
+        return false;
+    }
+
+    default boolean impedePlayerMovementWhenManeuvering() {
+        return true;
+    }
 
     class Block implements CannonAccess {
         private final CannonBlockTile cannon;
@@ -175,7 +176,6 @@ public interface CannonAccess {
 
     record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {
     }
-
 
 
     Vec3 getCannonRecoil();
