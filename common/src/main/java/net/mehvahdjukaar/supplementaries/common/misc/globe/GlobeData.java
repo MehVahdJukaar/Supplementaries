@@ -38,12 +38,12 @@ public class GlobeData extends WorldSavedData {
         this.globePixels = flattenedPixels;
         this.seed = seed;
     }
-    public static GlobeData fromLevel(ServerLevel level) {
-        return GlobeData.fromSeed(level.getSeed());
+    public static GlobeData createFromLevel(ServerLevel level) {
+        return GlobeData.createFromSeed(level.getSeed());
     }
 
     //generate new from seed
-    public static GlobeData fromSeed(long seed) {
+    public static GlobeData createFromSeed(long seed) {
         byte[][] generate = GlobeTextureGenerator.generate(seed);
         byte[] flattened = new byte[TEXTURE_W * TEXTURE_H];
         for (int x = 0; x < TEXTURE_W; x++) {
@@ -58,6 +58,14 @@ public class GlobeData extends WorldSavedData {
         return this.globePixels[x * TEXTURE_H + y];
     }
 
+    public int getTextureHeight() {
+        return TEXTURE_H;
+    }
+
+    public int getTextureWidth() {
+        return TEXTURE_W;
+    }
+
     @Override
     public WorldSavedDataType<GlobeData> getType() {
         return ModRegistry.GLOBE_DATA;
@@ -68,8 +76,8 @@ public class GlobeData extends WorldSavedData {
     }
 
 
-    public static void changeDataWithSeed(ServerLevel level, long seed) {
-        GlobeData generate = GlobeData.fromSeed(seed);
+    public static void recreateAndAssignFromSeed(ServerLevel level, long seed) {
+        GlobeData generate = GlobeData.createFromSeed(seed);
         ModRegistry.GLOBE_DATA.setData(level, generate);
         generate.sync();
     }

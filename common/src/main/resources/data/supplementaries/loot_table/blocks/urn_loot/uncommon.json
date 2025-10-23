@@ -19,6 +19,23 @@
               "add": false
             }
           ],
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "ash"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "ash"
+                }
+              ]
+            }
+          ],
           "name": "supplementaries:ash"
         },
         {
@@ -67,6 +84,23 @@
               "add": false
             }
           ],
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "flax"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "flax"
+                }
+              ]
+            }
+          ],
           "name": "supplementaries:flax_seeds"
         },
         {
@@ -97,6 +131,23 @@
                 "max": 3.0
               },
               "add": false
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "antique_ink"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "antique_ink"
+                }
+              ]
             }
           ],
           "name": "supplementaries:antique_ink"

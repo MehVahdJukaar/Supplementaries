@@ -208,26 +208,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
             return l;
         }
         //hax
-        ResourceKey<LootTable> tableKey = this.getLootTable();
-        if (tableKey == BuiltInLootTables.EMPTY) {
-            return super.getDrops(state, builder);
-        } else {
-            float oldLuck = builder.luck;
-            ItemStack stack = builder.getOptionalParameter(LootContextParams.TOOL);
-            int f = stack == null ? 0 : getFortuneLevel(stack, builder.getLevel());
-            builder.withLuck(oldLuck + 0.25f * f);
-            var lootContext = builder.withParameter(LootContextParams.BLOCK_STATE, state).create(LootContextParamSets.BLOCK);
-            ServerLevel serverlevel = lootContext.getLevel();
-            LootTable loottable = serverlevel.getServer().reloadableRegistries().getLootTable(tableKey);
-            List<ItemStack> selectedLoot;
-            do {
-                selectedLoot = loottable.getRandomItems(lootContext);
-                if (selectedLoot.isEmpty()) break;
-                //remove disabled stuff. hacky
-                selectedLoot = selectedLoot.stream().filter(e -> !ModCreativeTabs.isHidden(e.getItem())).toList();
-            } while (selectedLoot.isEmpty());
-            return selectedLoot;
-        }
+        return super.getDrops(state, builder);
     }
 
     private static int getFortuneLevel(ItemStack stack, Level level) {

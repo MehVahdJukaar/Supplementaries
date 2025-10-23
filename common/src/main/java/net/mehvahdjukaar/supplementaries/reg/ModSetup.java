@@ -45,7 +45,6 @@ public class ModSetup {
             FlowerPotHandler::setup,
             ModSetup::registerFlammables,
             CauldronBehaviorsManager::registerBehaviors,
-            ModCreativeTabs::populateItemsVisibility,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkExplosion.Shape.CREEPER)
     );
 

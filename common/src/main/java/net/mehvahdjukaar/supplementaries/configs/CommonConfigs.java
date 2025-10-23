@@ -26,6 +26,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EnchantingTableBlock;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -1309,9 +1311,6 @@ builder.pop();
                     .gameRestart()
                     .define("dispensers", true);
 
-            JAR_TAB = PlatHelper.getPlatform().isFabric() ? FALSE : builder.gameRestart().comment("Creates a creative tab full of filled jars")
-                    .define("jar_tab", false);
-
             SANITY_CHECKS_MESSAGES = builder.comment("Disable startup messages and sanity check that the mod performs to inform of possible detected crashes that might occur due to issues")
                     .define("sanity_checks_messages", true);
             RED_MERCHANT_SPAWN_MULTIPLIER = builder.comment("slightly increase this or decrease this number to tweak the red merchant spawn chance. Won't spawn at 0 and will spawn twice as often on 2")
@@ -1321,7 +1320,6 @@ builder.pop();
 
         public static final Supplier<Double> RED_MERCHANT_SPAWN_MULTIPLIER;
 
-        public static final Supplier<Boolean> JAR_TAB;
         public static final Supplier<Boolean> CREATIVE_TAB;
         public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
         public static final Supplier<Boolean> DISPENSERS;

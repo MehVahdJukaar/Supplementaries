@@ -189,6 +189,23 @@
                             "add": false
                         }
                     ],
+                    "conditions": [
+                        {
+                            "condition": "moonlight:load_conditions",
+                            "fabric:load_conditions": [
+                                {
+                                    "condition": "supplementaries:flag",
+                                    "flag": "bomb"
+                                }
+                            ],
+                            "neoforge:conditions": [
+                                {
+                                    "type": "supplementaries:flag",
+                                    "flag": "bomb"
+                                }
+                            ]
+                        }
+                    ],
                     "name": "supplementaries:bomb"
                 },
                 {

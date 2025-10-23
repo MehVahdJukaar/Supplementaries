@@ -54,10 +54,6 @@ public interface CannonAccess {
         return false;
     }
 
-    default boolean rendersXpWhenManeuvering() {
-        return false;
-    }
-
     default boolean impedePlayerMovementWhenManeuvering() {
         return true;
     }

@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
+import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,9 +31,10 @@ public abstract class SlimeMixin extends LivingEntity {
     public void supp$applySlimedEffect(LivingEntity livingEntity, CallbackInfo ci) {
         if (!CommonConfigs.Tweaks.SLIMED_EFFECT.get()) return;
         if (this.getType().is(ModTags.CAN_SLIME)) {
+            SlimedData slimedData = ModRegistry.SLIMED_DATA.getOrCreate(livingEntity);
             double chance = this.getSize() * CommonConfigs.Tweaks.SLIMED_PER_SIZE.get();
-            if (livingEntity.getRandom().nextDouble() < chance && livingEntity instanceof ISlimeable s) {
-                s.supp$setSlimedTicks(CommonConfigs.Tweaks.SLIME_DURATION.get(), true);
+            if (livingEntity.getRandom().nextDouble() < chance) {
+                slimedData.setSlimedTicks(livingEntity, CommonConfigs.Tweaks.SLIME_DURATION.get());
             }
         }
 

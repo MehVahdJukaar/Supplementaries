@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -60,6 +61,12 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
         Optional<Holder<Potion>> holder = potion.potion();
         return holder.isEmpty() || !holder.get().is(alternativeMode ?
                 ModTags.TIPPED_SPIKES_POTION_BLACKLIST : ModTags.TIPPED_SPIKES_FINITE_POTION_BLACKLIST);
+    }
+
+    public static ItemStack createItemStack(Holder<Potion> pot) {
+        ItemStack stack = ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get().getDefaultInstance();
+        stack.set(DataComponents.POTION_CONTENTS, new PotionContents(pot));
+        return stack;
     }
 
     public static @NotNull PotionContents getPotion(ItemStack stack) {

@@ -47,8 +47,7 @@ public class ClientEventsFabric {
         });
 
         ClientPreAttackCallback.EVENT.register((minecraft, localPlayer, i) -> {
-            if (CannonController.isActive()) {
-                CannonController.onPlayerAttack();
+            if (CannonController.onPlayerAttack()) {
                 return true;
             }
             return false;

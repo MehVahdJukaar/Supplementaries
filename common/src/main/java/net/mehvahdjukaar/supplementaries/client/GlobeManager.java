@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
@@ -87,19 +88,19 @@ public class GlobeManager {
         }
 
         private void updateTexture(Level world) {
-            var data = GlobeData.get(world);
-            if (data == null) return;
-            byte[][] pixels = data.getPixels();
+            GlobeData data = ModRegistry.GLOBE_DATA.getData(world);
 
             for (int i = 0; i < 16; ++i) {
                 for (int j = 0; j < 32; ++j) {
                     this.texture.getPixels().setPixelRGBA(j, i, -13061505);
                 }
             }
-            for (int y = 0; y < pixels.length; y++) {
-                for (int x = 0; x < pixels[y].length; x++) {
-                    this.texture.getPixels().setPixelRGBA(y, x,
-                            getRGBA(pixels[y][x], this.dimensionId, this.sepiaColored));
+            int width = data.getTextureWidth();
+            int height = data.getTextureHeight();
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    this.texture.getPixels().setPixelRGBA(x, y,
+                            getRGBA(data.getPixel(x,y), this.dimensionId, this.sepiaColored));
                 }
             }
             RenderUtil.setDynamicTexturesToUseMipmap(true);

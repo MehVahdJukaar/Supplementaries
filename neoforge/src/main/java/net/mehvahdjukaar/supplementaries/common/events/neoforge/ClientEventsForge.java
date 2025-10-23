@@ -18,8 +18,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -85,25 +83,19 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
-        if (SelectableContainerItemHud.getInstance().onMouseScrolled(event.getScrollDeltaY())) {
-            event.setCanceled(true);
-        }
-        if (CannonController.isActive()) {
-            CannonController.onMouseScrolled(event.getScrollDeltaY());
+        if (ClientEvents.onMouseScrolled(event.getScrollDeltaY())) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
-        if (CannonController.isActive()) {
+        if (event.isAttack() && CannonController.onPlayerAttack()) {
             event.setCanceled(true);
             event.setSwingHand(false);
-            if (event.isAttack()) {
-                CannonController.onPlayerAttack();
-            } else if (event.isUseItem()) {
-                CannonController.onPlayerUse();
-            }
+        } else if (event.isUseItem() && CannonController.onPlayerUse()) {
+            event.setCanceled(true);
+            event.setSwingHand(false);
         }
     }
 
@@ -114,9 +106,15 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onRenderGuiOverlayPre(RenderGuiLayerEvent.Pre event) {
-        if (CannonController.isActive()) {
+        if (CannonController.cancelsXPBar()) {
             var overlay = event.getName();
-            if (overlay == (VanillaGuiLayers.EXPERIENCE_BAR) || overlay == (VanillaGuiLayers.HOTBAR)) {
+            if (overlay == (VanillaGuiLayers.EXPERIENCE_BAR)) {
+                event.setCanceled(true);
+            }
+        }
+        if (CannonController.cancelsHotBar()) {
+            var overlay = event.getName();
+            if (overlay == (VanillaGuiLayers.HOTBAR)) {
                 event.setCanceled(true);
             }
         }

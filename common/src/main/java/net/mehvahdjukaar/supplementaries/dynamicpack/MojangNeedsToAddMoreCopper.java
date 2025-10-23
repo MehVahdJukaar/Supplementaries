@@ -123,6 +123,7 @@ public class MojangNeedsToAddMoreCopper {
         if (!MiscUtils.FESTIVITY.isAprilsFool()) return;
         Random random = new Random();
         try {
+            @Deprecated(forRemoval = true)
             Field f = lang.getClass().getDeclaredField("languageLines");
             f.setAccessible(true);
             Map<String, String> ll = (Map<String, String>) f.get(lang);

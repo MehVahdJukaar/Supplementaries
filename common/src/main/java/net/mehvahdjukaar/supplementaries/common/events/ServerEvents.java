@@ -15,14 +15,12 @@ import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsMana
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
-import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
@@ -124,10 +122,6 @@ public class ServerEvents {
 
     @EventCalled
     public static void onPlayerLoggedIn(ServerPlayer player) {
-        if (player instanceof ISlimeable s) {
-            //needs to happen here after connection
-            s.supp$setSlimedTicks(s.supp$getSlimedTicks(), true);
-        }
 
         VibeChecker.checkVibe(player);
     }
@@ -184,7 +178,6 @@ public class ServerEvents {
     @EventCalled
     public static void onDataSyncToPlayer(ServerPlayer player, boolean joined) {
         CapturedMobHandler.sendDataToClient(player);
-        GlobeData.sendDataToClient(player);
         HourglassTimesManager.sendDataToClient(player);
         MapLightHandler.sendDataToClient(player);
         PlaceableBookManager.onDataSync(player, joined);
@@ -226,7 +219,7 @@ public class ServerEvents {
 
         //refresh quiver for remote players
         if (player instanceof IQuiverPlayer q) {
-            var oldSlot = q.supplementaries$getQuiverSlot();
+            SlotReference oldSlot = q.supplementaries$getQuiverSlot();
             SlotReference newSlot = QuiverItem.findActiveQuiverSlot(player);
             if (!oldSlot.get(player).equals(newSlot.get(player))) {
                 q.supplementaries$setQuiverSlot(newSlot);

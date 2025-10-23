@@ -450,11 +450,6 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     }
 
     @Override
-    public boolean rendersXpWhenManeuvering() {
-        return true;
-    }
-
-    @Override
     public boolean impedePlayerMovementWhenManeuvering() {
         return false;
     }

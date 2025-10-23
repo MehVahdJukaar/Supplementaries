@@ -313,7 +313,7 @@ public class SpecialRecipeDisplays {
         Ingredient spikeIngredient = Ingredient.of(spikes);
         Ingredient potionIngredient = Ingredient.of(lingeringPotion);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, spikeIngredient, potionIngredient);
-        ItemStack output = ModCreativeTabs.makeSpikeItem(potionType);
+        ItemStack output = BambooSpikesTippedItem.createItemStack(potionType);
         ResourceLocation id = Supplementaries.res(Potion.getName(Optional.of(potionType), "tipped_spikes_display."));
 
         var recipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);

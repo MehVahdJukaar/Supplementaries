@@ -3,8 +3,10 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
+import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -141,9 +143,10 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
                 return;
             }
         }
-        if (entity instanceof ISlimeable s && entity instanceof LivingEntity le  && le.attackable()) {
+        if (entity instanceof LivingEntity le  && le.attackable()) {
             //sets on both but also sends packet just because lmao
-            s.supp$setSlimedTicks(CommonConfigs.Tweaks.SLIME_DURATION.get(), true);
+            SlimedData slimedData = ModRegistry.SLIMED_DATA.getOrCreate(le);
+            slimedData.setSlimedTicks(le, CommonConfigs.Tweaks.SLIME_DURATION.get());
         }
         else if (entity instanceof EndCrystal) {
             entity.hurt(this.damageSources().thrown(this, this.getOwner()), 0);

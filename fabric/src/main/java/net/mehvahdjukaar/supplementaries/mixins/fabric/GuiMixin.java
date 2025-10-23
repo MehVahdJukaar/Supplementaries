@@ -14,11 +14,16 @@ public class GuiMixin {
 
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
     public void supp$cannonCancelXPBar(GuiGraphics guiGraphics, int x, CallbackInfo ci) {
-        if (CannonController.rendersXpBar()) ci.cancel();
+        if (CannonController.cancelsXPBar()) ci.cancel();
+    }
+
+    @Inject(method = "renderExperienceLevel", at = @At("HEAD"), cancellable = true)
+    public void vista$cancelXPLevel(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+        if (CannonController.cancelsXPBar()) ci.cancel();
     }
 
     @Inject(method = "renderHotbarAndDecorations", at = @At("HEAD"), cancellable = true)
     public void supp$cannonCancelHotbar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (CannonController.isActive()) ci.cancel();
+        if (CannonController.cancelsHotBar()) ci.cancel();
     }
 }

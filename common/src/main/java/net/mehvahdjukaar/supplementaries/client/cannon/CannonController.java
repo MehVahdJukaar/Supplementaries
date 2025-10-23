@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -18,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
@@ -57,7 +57,7 @@ public class CannonController {
             lastCameraType = mc.options.getCameraType();
         } //if not it means we entered from manouver mode gui
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
-        MutableComponent message = Component.translatable("message.supplementaries.cannon_maneuver",
+        MutableComponent message = Component.translatable("message.supplementaries.cannon.maneuver",
                 mc.options.keyShift.getTranslatedKeyMessage(),
                 mc.options.keyAttack.getTranslatedKeyMessage());
         mc.gui.setOverlayMessage(message, false);
@@ -195,24 +195,31 @@ public class CannonController {
         stopControllingAndSync();
     }
 
-    public static void onMouseScrolled(double scrollDelta) {
+    public static boolean onMouseScrolled(double scrollDelta) {
+        if (!isActive()) return false;
+
         if (scrollDelta != 0) {
             CannonBlockTile tile = access.getInternalCannon();
             byte newPower = (byte) (1 + Math.floorMod((int) (tile.getPowerLevel() - 1 + scrollDelta), 4));
             tile.setPowerLevel(newPower);
             needsToUpdateServer = true;
         }
+        return true;
     }
 
 
-    public static void onPlayerAttack() {
+    public static boolean onPlayerAttack() {
+        if (!isActive()) return false;
         if (access != null && access.getInternalCannon().readyToFire()) {
             access.syncToServer(true, false);
         }
+        return true;
     }
 
-    public static void onPlayerUse() {
+    public static boolean onPlayerUse() {
+        if (!isActive()) return false;
         showsTrajectory = !showsTrajectory;
+        return true;
     }
 
     public static void onInputUpdate(Input input) {
@@ -266,8 +273,12 @@ public class CannonController {
         return false;
     }
 
-    public static boolean rendersXpBar() {
-        return isActive() || access.rendersXpWhenManeuvering();
+    public static boolean cancelsXPBar() {
+        return isActive() || Minecraft.getInstance().player.getVehicle() instanceof CannonBoatEntity;
+    }
+
+    public static boolean cancelsHotBar() {
+        return isActive();
     }
 }
 

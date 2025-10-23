@@ -23,7 +23,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.IFluteParrot;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
-import net.mehvahdjukaar.supplementaries.common.entities.ISlimeable;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
@@ -506,15 +505,6 @@ public class ClientReceivers {
                         le.setDeltaMovement(knockback);
                     }
                 }
-            }
-        });
-    }
-
-    public static void handleSyncSlimed(ClientBoundSyncSlimedMessage message) {
-        withLevelDo(l -> {
-            Entity e = l.getEntity(message.id());
-            if (e instanceof ISlimeable s) {
-                s.supp$setSlimedTicks(message.duration(), false);
             }
         });
     }
