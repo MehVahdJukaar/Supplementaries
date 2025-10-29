@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow"
+    id "com.github.johnrengelman.shadow" version "7.1.2"
 }
 
 architectury {
@@ -19,6 +19,60 @@ configurations {
     developmentFabric.extendsFrom common
 }
 
+processResources {
+    filesMatching("fabric.mod.json") {
+        expand rootProject.ext.replaceProperties + [project: project]
+    }
+}
+
+shadowJar {
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "dev-shadow"
+}
+
+remapJar {
+    exclude '**/example/**'
+
+    injectAccessWidener = true
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier = null
+    archiveClassifier = 'fabric'
+}
+
+jar {
+    archiveClassifier = "dev"
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+
+    archiveClassifier = "fabric-sources"
+}
+
+remapSourcesJar{
+    archiveClassifier = "fabric-sources"
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = rootProject.mod_id + "-" + project.name
+            from components.java
+        }
+    }
+}
+
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
@@ -35,7 +89,7 @@ dependencies {
         modImplementation("curse.maven:selene-499980:7007382")
     }
 
-    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
     }
     modCompileOnly("curse.maven:yacl-667299:4574163")
@@ -48,6 +102,7 @@ dependencies {
     modCompileOnly("curse.maven:irisshaders-455508:5726473")
     modCompileOnly("curse.maven:the-bumblezone-fabric-363949:5889007")
     modCompileOnly("curse.maven:goated-805646:5935888")
+    modImplementation("curse.maven:inmis-369254:6952335")
     modCompileOnly("maven.modrinth:sodium:mc1.21-0.6.0-beta.2-fabric")
     //modImplementation("curse.maven:resourceful-lib-570073:5793501") //v2.1.29 | Chipped, Handcrafted, Cozy
     //modImplementation("curse.maven:midnightlib-488090:5687799")
@@ -85,69 +140,11 @@ dependencies {
 
     modCompileOnly("curse.maven:immediatelyfast-686911:6285506")
     //modImplementation("curse.maven:spectrum-556967:5080474")
-  //  modCompileOnly("curse.maven:create-328085:4835191")
+    //  modCompileOnly("curse.maven:create-328085:4835191")
 
     modCompileOnly("org.embeddedt:embeddium-fabric-1.20.1:0.3.1-git.b3f920f+mc1.20.1")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-fabric:${shulker_box_tooltip_version}") { transitive false }
 
 //    modImplementation("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
-}
-
-
-processResources {
-    filesMatching("fabric.mod.json") {
-        expand rootProject.ext.replaceProperties + [project: project]
-    }
-}
-
-
-shadowJar {
-    exclude "architectury.common.json"
-
-    configurations = [project.configurations.shadowCommon]
-    archiveClassifier = "dev-shadow"
-
-    zip64 true
-}
-
-remapJar {
-    injectAccessWidener = true
-    input.set shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier = "fabric"
-}
-
-jar {
-    archiveClassifier = "dev"
-}
-
-sourcesJar {
-    def commonSources = project(":common").sourcesJar
-    dependsOn commonSources
-    from commonSources.archiveFile.map { zipTree(it) }
-}
-
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
-}
-
-publishing {
-    publications {
-        mavenFabric(MavenPublication) {
-            artifactId = rootProject.mod_id + "-" + project.name
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        maven {
-            url = "https://www.cursemaven.com"
-            allowInsecureProtocol = true
-        }
-    }
 }

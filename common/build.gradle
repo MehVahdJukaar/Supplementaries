@@ -15,12 +15,9 @@ dependencies {
     implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}"))
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
+    modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
 
-    if (isMyPc) {
-        modImplementation("net.mehvahdjukaar:moonlight:${moonlight_version}")
-    } else {
-        modImplementation("curse.maven:selene-499980:7007381")
-    }
+    //modImplementation("curse.maven:selene-499980:7007381")
 
     modCompileOnly("curse.maven:irisshaders-455508:5726473")
 
