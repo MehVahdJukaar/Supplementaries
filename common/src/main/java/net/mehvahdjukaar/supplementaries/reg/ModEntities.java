@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.monster.Pillager;
 
 import java.util.function.Supplier;
 
@@ -22,6 +23,7 @@ public class ModEntities {
     @EventCalled
     public static void registerEntityAttributes(RegHelper.AttributeEvent event) {
         event.register(ModEntities.RED_MERCHANT.get(), Mob.createMobAttributes());
+        event.register(ModEntities.PLUNDERER.get(), PlundererEntity.createAttributes());
         event.register(ModEntities.HAT_STAND.get(), LivingEntity.createLivingAttributes());
     }
 
@@ -42,6 +44,14 @@ public class ModEntities {
     public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
             RedMerchantEntity::new, MobCategory.CREATURE, 0.6F, 1.95F, 10, true, 3);
 
+    //plunderer
+    public static final Supplier<EntityType<PlundererEntity>> PLUNDERER = regEntity(PLUNDERER_NAME,
+            () -> EntityType.Builder.of(PlundererEntity::new, MobCategory.MONSTER)
+                    .canSpawnFarFromPlayer()
+                    .sized(0.6F, 1.95F)
+                    .passengerAttachments(2.0F)
+                    .ridingOffset(-0.6F)
+                    .clientTrackingRange(8));
 
     //urn
     public static final Supplier<EntityType<FallingUrnEntity>> FALLING_URN = regEntity(FALLING_URN_NAME, () ->

@@ -39,7 +39,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.HasCustomInventoryScreen;
 import net.minecraft.world.entity.SlotAccess;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
@@ -115,7 +114,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
         super.onSyncedDataUpdated(dataAccessor);
         if (dataAccessor == DATA_WOOD_TYPE) {
-            this.isBamboo = getWoodType().getId().toString().equals("minecraft:bamboo");
+            this.isBamboo = VanillaWoodTypes.BAMBOO == this.entityData.get(dataAccessor);
         }
     }
 
@@ -145,7 +144,8 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     protected void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         String woodTypeId = compound.getString("WoodType");
-        this.setWoodType(WoodTypeRegistry.INSTANCE.get(ResourceLocation.parse(woodTypeId)));
+        WoodType type = WoodTypeRegistry.INSTANCE.get(ResourceLocation.parse(woodTypeId));
+        if (type != null) this.setWoodType(type);
         if (compound.contains("Cannon")) {
             var cannonTag = compound.getCompound("Cannon");
             this.cannon.loadWithComponents(cannonTag, this.registryAccess());
@@ -366,7 +366,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @Override
     protected void clampRotation(Entity entityToUpdate) {
-        if(entityToUpdate instanceof AbstractIllager)return;
+        if (entityToUpdate instanceof AbstractIllager) return;
         super.clampRotation(entityToUpdate);
     }
 

@@ -58,6 +58,7 @@ import net.minecraft.world.entity.monster.Pillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -113,6 +114,7 @@ public class ServerEvents {
     @EventCalled
     public static InteractionResultHolder<ItemStack> onUseItem(Player player, Level level, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+
         if (!player.isSpectator()) {
             return InteractEventsHandler.onItemUse(player, level, hand, stack);
         }

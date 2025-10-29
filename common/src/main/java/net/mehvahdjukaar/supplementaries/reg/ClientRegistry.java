@@ -102,6 +102,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation GLOBE_BASE_MODEL = loc("globe");
     public static final ModelLayerLocation GLOBE_SPECIAL_MODEL = loc("globe_special");
     public static final ModelLayerLocation RED_MERCHANT_MODEL = loc("red_merchant");
+    public static final ModelLayerLocation PLUNDERER_MODEL = loc("plunderer");
     public static final ModelLayerLocation HAT_STAND_MODEL = loc("hat_stand");
     public static final ModelLayerLocation CANNONBALL_MODEL = loc("cannonball");
     public static final ModelLayerLocation HAT_STAND_MODEL_ARMOR = loc("hat_stand_armor");
@@ -409,14 +410,15 @@ public class ClientRegistry {
         event.register(ModEntities.CANNON_BOAT.get(), CannonBoatRenderer::new);
         event.register(ModEntities.BOMB.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
         event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
-      if(!CompatHandler.AMENDMENTS || !AmendmentsCompat.has3DSlimeballRenderer()){
-          event.register(ModEntities.THROWABLE_SLIMEBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
-      }
+        if (!CompatHandler.AMENDMENTS || !AmendmentsCompat.has3DSlimeballRenderer()) {
+            event.register(ModEntities.THROWABLE_SLIMEBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
+        }
         if (ClientConfigs.Items.CANNONBALL_3D.get()) {
             event.register(ModEntities.CANNONBALL.get(), context -> new CannonballRenderer<>(context, 1.615f));
         } else {
             event.register(ModEntities.CANNONBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1.615f));
         }
+        event.register(ModEntities.PLUNDERER.get(), PlundererRenderer::new);
         event.register(ModEntities.SLINGSHOT_PROJECTILE.get(), SlingshotProjectileRenderer::new);
         event.register(ModEntities.DISPENSER_MINECART.get(), c -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
         event.register(ModEntities.RED_MERCHANT.get(), RedMerchantRenderer::new);
@@ -450,6 +452,7 @@ public class ClientRegistry {
         event.register(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
         event.register(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
         event.register(ModRegistry.ENDERMAN_SKULL_TILE.get(), EndermanSkullBlockTileRenderer::new);
+        event.register(ModRegistry.SPIDER_SKULL_TILE.get(), SpiderSkullBlockTileRenderer::new);
         event.register(ModRegistry.CANNON_TILE.get(), CannonBlockTileRenderer::new);
         event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
         event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), SlidyBlockRenderer::new);
@@ -582,6 +585,7 @@ public class ClientRegistry {
         event.register(GLOBE_BASE_MODEL, GlobeBlockTileRenderer::createBaseMesh);
         event.register(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
+        event.register(PLUNDERER_MODEL, PlundererRenderer::createMesh);
         event.register(HAT_STAND_MODEL, HatStandModel::createMesh);
         event.register(CANNONBALL_MODEL, CannonballRenderer::createMesh);
         event.register(HAT_STAND_MODEL_ARMOR, HatStandModel::createArmorMesh);

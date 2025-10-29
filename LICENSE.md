@@ -41,6 +41,7 @@ The Licensee may incorporate part of this Software code into their own projects 
 - The Licensee's project does not "Compete" with the Software.
 - "Assets" are exempt from this clause and require explicit permission unless they are part of a project that is a dependency of the Software.
 
+
 ### 2.3. Modification
 The Software may be modified for private use or to contribute to its development.
 

@@ -145,6 +145,10 @@ public class ModCreativeTabs {
                 ModConstants.ENDERMAN_HEAD_NAME,
                 ModRegistry.ENDERMAN_SKULL_ITEM);
 
+        adder.after(Items.CREEPER_HEAD, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.SPIDER_HEAD_NAME,
+                ModRegistry.SPIDER_SKULL_ITEM);
+
         adder.before(Items.BOOKSHELF, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.TIMBER_FRAME_NAME,
                 ModRegistry.TIMBER_FRAME, ModRegistry.TIMBER_BRACE, ModRegistry.TIMBER_CROSS_BRACE);

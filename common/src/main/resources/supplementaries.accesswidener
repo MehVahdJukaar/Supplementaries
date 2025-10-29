@@ -10,7 +10,12 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 accessible field net/minecraft/client/renderer/GameRenderer effectActive Z
 accessible class net/minecraft/world/item/BrushItem$DustParticlesDelta
 
+#plunderer boat stuff
+accessible field net/minecraft/world/entity/vehicle/Boat deltaRotation F
+accessible method net/minecraft/world/entity/vehicle/Boat controlBoat ()V
+
 accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
+accessible class net/minecraft/world/item/ItemCooldowns$CooldownInstance
 
 accessible method net/minecraft/world/item/context/UseOnContext getHitResult ()Lnet/minecraft/world/phys/BlockHitResult;
 

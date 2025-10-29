@@ -38,6 +38,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -1198,6 +1199,26 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<EndermanSkullBlockTile>> ENDERMAN_SKULL_TILE = regTile(
             ENDERMAN_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
                     EndermanSkullBlockTile::new, ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get()));
+
+    //spider head
+    public static final SkullBlock.Type SPIDER_TYPE = () -> "supplementaries_spider_skull";
+
+    public static final Supplier<SkullBlock> SPIDER_SKULL_BLOCK = regBlock(SPIDER_HEAD_NAME, () ->
+            new SkullBlock(SPIDER_TYPE, BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+                                .instrument(NoteBlockInstrument.CUSTOM_HEAD))
+    );
+    public static final Supplier<WallSkullBlock> SPIDER_SKULL_BLOCK_WALL = regBlock("spider_wall_head", () ->
+            new WallSkullBlock(SPIDER_TYPE, BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+                    .instrument(NoteBlockInstrument.CUSTOM_HEAD))
+    );
+    public static final Supplier<Item> SPIDER_SKULL_ITEM = regItem(SPIDER_HEAD_NAME, () ->
+            new StandingAndWallBlockItem(SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get(),
+                    new Item.Properties().rarity(Rarity.UNCOMMON), Direction.UP ));
+
+    public static final Supplier<BlockEntityType<SkullBlockEntity>> SPIDER_SKULL_TILE = regTile(
+            SPIDER_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
+                    SkullBlockEntity::new, SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get()));
+
 
     //ash basalt
     public static final Supplier<Block> ASHEN_BASALT = regBlock("ashen_basalt", () ->

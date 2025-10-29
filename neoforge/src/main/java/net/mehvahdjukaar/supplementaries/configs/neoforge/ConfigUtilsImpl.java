@@ -4,6 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.neoforge.configured.ModConfigSelectScreen;
 import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.common.Tags;
 
 public class ConfigUtilsImpl {
 

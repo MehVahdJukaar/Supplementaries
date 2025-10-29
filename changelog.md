@@ -1,1 +1,1 @@
-- misc fixes
+- many small internal improvements and misc fixes

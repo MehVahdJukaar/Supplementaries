@@ -37,6 +37,7 @@ public class ModSetup {
         PlatHelper.addCommonSetup(ModSetup::asyncSetup);
         PlatHelper.addReloadableCommonSetup(ModSetup::tagDependantSetup);
 
+
     }
 
     private static final List<Runnable> MOD_SETUP_WORK = List.of(

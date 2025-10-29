@@ -26,8 +26,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EnchantingTableBlock;
-import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.ref.WeakReference;
@@ -759,6 +757,13 @@ public class CommonConfigs {
             CANNONBALL_RADIUS = builder.comment("Radius of the 'explosion' when a cannonball hits a block. Set to 0 to disable")
                     .define("break_radius", 1.1, 0, 10);
             builder.pop();
+
+
+            builder.push("plunderer");
+            PLUNDERER_ENABLED = feature(builder);
+
+            builder.pop();
+
             PIRATE_DISC_ENABLED = feature(builder, ModConstants.PIRATE_DISC_NAME);
             builder.pop();
 
@@ -870,6 +875,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> CANNON_COOLDOWN;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
         public static final Supplier<Double> CANNONBALL_RADIUS;
+        public static final Supplier<Boolean> PLUNDERER_ENABLED;
         public static final Supplier<Double> CANNONBALL_POWER_SCALING;
         public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
     }
@@ -1240,7 +1246,7 @@ public class CommonConfigs {
 
             COMPASS_CLICK = builder.comment("Allow to right click with a compass to display current coordinates in numerical form")
                     .define("compass_right_click", false);
-builder.pop();
+            builder.pop();
 
             builder.pop();
         }

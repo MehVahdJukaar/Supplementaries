@@ -48,8 +48,9 @@ public class ModTextures {
     public static final ResourceLocation CANNONBALL_TEXTURE = Supplementaries.res("textures/entity/cannonball.png");
     public static final ResourceLocation ROPE_ARROW = Supplementaries.res("textures/entity/rope_arrow.png");
     public static final ResourceLocation RED_MERCHANT = Supplementaries.res("textures/entity/misc/red_merchant.png");
-    public static final ResourceLocation ORANGE_MERCHANT = Supplementaries.res("textures/entity/misc/orange_merchant.png");
     public static final ResourceLocation RED_MERCHANT_CHRISTMAS = Supplementaries.res("textures/entity/misc/christmas_merchant.png");
+    public static final ResourceLocation ORANGE_MERCHANT = Supplementaries.res("textures/entity/misc/orange_merchant.png");
+    public static final ResourceLocation PLUNDERER = Supplementaries.res("textures/entity/plunderer.png");
     public static final ResourceLocation STATUE = Supplementaries.res("textures/entity/statue.png");
     public static final ResourceLocation HAT_STAND = Supplementaries.res("textures/entity/hat_stand.png");
 
