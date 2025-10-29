@@ -366,7 +366,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @Override
     protected void clampRotation(Entity entityToUpdate) {
-        if (entityToUpdate instanceof AbstractIllager) return;
+      //  if (entityToUpdate instanceof AbstractIllager) return;
         super.clampRotation(entityToUpdate);
     }
 

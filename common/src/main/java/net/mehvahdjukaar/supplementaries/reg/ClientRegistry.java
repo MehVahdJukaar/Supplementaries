@@ -25,6 +25,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleM
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.HatStandModel;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.PlundererModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
@@ -585,7 +586,7 @@ public class ClientRegistry {
         event.register(GLOBE_BASE_MODEL, GlobeBlockTileRenderer::createBaseMesh);
         event.register(GLOBE_SPECIAL_MODEL, GlobeBlockTileRenderer::createSpecialMesh);
         event.register(RED_MERCHANT_MODEL, RedMerchantRenderer::createMesh);
-        event.register(PLUNDERER_MODEL, PlundererRenderer::createMesh);
+        event.register(PLUNDERER_MODEL, PlundererModel::createMesh);
         event.register(HAT_STAND_MODEL, HatStandModel::createMesh);
         event.register(CANNONBALL_MODEL, CannonballRenderer::createMesh);
         event.register(HAT_STAND_MODEL_ARMOR, HatStandModel::createArmorMesh);

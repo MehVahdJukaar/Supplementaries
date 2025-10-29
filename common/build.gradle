@@ -10,18 +10,15 @@ dependencies {
 
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
 
     implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}"))
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
-    modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    modApi("net.mehvahdjukaar:moonlight:${moonlight_version}")
 
-    //modImplementation("curse.maven:selene-499980:7007381")
 
     modCompileOnly("curse.maven:irisshaders-455508:5726473")
-
-
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-common:1.19.2-0.1.14")

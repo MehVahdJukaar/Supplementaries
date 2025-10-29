@@ -86,7 +86,7 @@ dependencies {
     neoForge "net.neoforged:neoforge:${neo_version}"
 
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
-    shadowBundle project(path: ':common', configuration: 'transformProductionNeoForge')
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 
 
     implementation 'org.jetbrains:annotations:22.0.0'
@@ -96,7 +96,7 @@ dependencies {
 
 
     //modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
-    modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    modApi("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     //modImplementation("curse.maven:selene-499980:7007381")
 
     modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")

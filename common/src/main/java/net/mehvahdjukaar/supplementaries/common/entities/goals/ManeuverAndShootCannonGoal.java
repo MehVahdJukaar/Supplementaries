@@ -25,8 +25,8 @@ public class ManeuverAndShootCannonGoal extends Goal {
     private int seeTime;
     private CannonAccess access;
 
-    public ManeuverAndShootCannonGoal(Mob rangedAttackMob, int attackIntervalMin, int attackIntervalMax) {
-        this.mob = rangedAttackMob;
+    public ManeuverAndShootCannonGoal(Mob mob, int attackIntervalMin, int attackIntervalMax) {
+        this.mob = mob;
         this.attackIntervalMin = attackIntervalMin;
         this.attackIntervalMax = attackIntervalMax;
         this.setFlags(EnumSet.of(Flag.MOVE,Flag.LOOK));

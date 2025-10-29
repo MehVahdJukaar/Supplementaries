@@ -1,10 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.supplementaries.common.entities.goals.BoatAwareMoveController;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.BoatAwarePathNavigation;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -23,25 +23,25 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Vindicator;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.providers.EnchantmentProvider;
 import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.Nullable;
 
 public class PlundererEntity extends AbstractIllager implements InventoryCarrier {
@@ -55,10 +55,21 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     }
 
     @Override
+    protected PathNavigation createNavigation(Level level) {
+        return new BoatAwarePathNavigation(this, level);
+    }
+
+    @Override
+    public float getPathfindingMalus(PathType pathType) {
+        return super.getPathfindingMalus(pathType);
+    }
+
+    @Override
     protected void registerGoals() {
         // super.registerGoals();
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+       // this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, false));
+        this.goalSelector.addGoal(4, new ManeuverAndShootCannonGoal(this, 20, 40));
 
         //     this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1, 20));
         //  this.goalSelector.addGoal(2, new Raider.HoldGroundAttackGoal(this, 10.0F));
@@ -99,7 +110,8 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
 
     @Override
     public AbstractIllager.IllagerArmPose getArmPose() {
-        return this.isAggressive() ? AbstractIllager.IllagerArmPose.ATTACKING : AbstractIllager.IllagerArmPose.NEUTRAL;
+        return  IllagerArmPose.CROSSED;
+       // return this.isAggressive() ? AbstractIllager.IllagerArmPose.ATTACKING : AbstractIllager.IllagerArmPose.NEUTRAL;
     }
 
     @Override

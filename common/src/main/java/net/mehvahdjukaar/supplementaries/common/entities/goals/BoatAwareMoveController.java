@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.PathType;
+import org.jetbrains.annotations.Nullable;
 
 public class BoatAwareMoveController extends MoveControl {
 
@@ -32,11 +33,19 @@ public class BoatAwareMoveController extends MoveControl {
         return true;
     }
 
+    @Nullable
+    private Boat getBoat() {
+        Entity vehicle = this.mob.getVehicle();
+        if (vehicle instanceof Boat boat) {
+            return boat;
+        }
+        return null;
+    }
 
     @Override
     public void tick() {
-        Entity vehicle = this.mob.getVehicle();
-        if (!(vehicle instanceof Boat boat)) {
+        Boat boat = getBoat();
+        if (boat == null) {
             super.tick();
             return;
         }

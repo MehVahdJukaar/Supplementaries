@@ -19,47 +19,47 @@ allprojects {
     archivesBaseName = mod_id
 
     repositories {
-        // Moonlight
-        maven { url = "https://registry.somethingcatchy.net/repository/maven-releases/" }
-        // Local + Standard
+        // Standard repositories
         mavenLocal()
         mavenCentral()
 
-        // Local mod folder
+        // Flat directory for local mods
         flatDir { dirs "mods" }
 
-        // Releases / General mod deps
+        // Our publishing repo
+        maven { url = "https://registry.somethingcatchy.net/repository/maven-releases/" }
+
+        maven { url = "https://api.modrinth.com/maven" }
+        maven { url = "https://www.cursemaven.com" }
         maven { url = "https://jitpack.io" }
+
         maven { url = "https://maven.neoforged.net" }
         maven { url = "https://maven.architectury.dev" }
-        maven { url = "https://api.modrinth.com/maven" }
-        maven { url = "https://maven.su5ed.dev/releases" }
-        maven { url = "https://maven.ladysnake.org/releases" }
-        maven { url = "https://maven.createmod.net" } // Ponder, Flywheel
+        maven { url = "https://maven.parchmentmc.org" }
+
+        maven { url = "https://maven.createmod.net" } // Create Mod, Ponder, Flywheel
         maven { url = "https://maven.blamejared.com" } // JEI, Vazkii's Mods
-        maven { url = "https://maven.tterrag.com/" } // Flywheel
-        maven { url = "https://harleyoconnor.com/maven" } // Dynamic Trees
+        maven { url = "https://maven.ladysnake.org/releases" } // Ladysnake mods
+        maven { url = "https://maven.tterrag.com/" } // Flywheel, EnderIO
+        maven { url = "https://mvn.devos.one/releases/" } // Registrate, Porting Lib (releases)
+        maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Porting Lib (snapshots)
+        maven { url = "https://maven.terraformersmc.com/" } // TerraformersMC mods
+        maven { url = "https://maven.saps.dev/releases" } // FTB Mods
+
         maven { url = "https://maven.theillusivec4.top/" } // Curios API
         maven { url = "https://maven.squiddev.cc" } // CC: Tweaked
-        maven { url = "https://maven.saps.dev/releases" } // FTB Mods
-        maven { url = "https://maven.parchmentmc.org" }
-        maven { url = "https://www.cursemaven.com"}
-        maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven" }  // NeoForge config api port, needed by Ponder
+        maven { url = "https://maven.su5ed.dev/releases" } // SU5ED mods
+        maven { url = "https://harleyoconnor.com/maven" } // Dynamic Trees
         maven { url = "https://maven.misterpemodder.com/libs-release/" } // ShulkerBoxTooltip
         maven { url = "https://maven.firstdarkdev.xyz/snapshots" } // FirstDarkDev (snapshots)
+        maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven" } // NeoForge config API port
 
-        // Registrate, Porting Lib, etc.
-        maven { url = "https://mvn.devos.one/releases/" }
-        maven { url = "https://mvn.devos.one/snapshots/" }
-
-        // Special scoped maven
         maven { // Reach Entity Attributes
             url = "https://maven.jamieswhiteshirt.com/libs-release"
             content { includeGroup("com.jamieswhiteshirt") }
         }
 
     }
-
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(rootProject.java_version.toInteger())
