@@ -1,5 +1,9 @@
 {
   "replace": false,
   "values": [
+    {
+      "id": "c:arrows",
+      "required": false
+    }
   ]
 }

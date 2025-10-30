@@ -33,12 +33,12 @@ public class AntiqueInkProvider implements IAntiqueTextProvider, ICapabilitySeri
     }
 
     @Override
-    public boolean hasAntiqueInk() {
+    public boolean supp$hasAntiqueInk() {
         return this.hasAntiqueInk;
     }
 
     @Override
-    public void setAntiqueInk(boolean hasInk) {
+    public void supp$setAntiqueInk(boolean hasInk) {
         this.hasAntiqueInk = hasInk;
     }
 }

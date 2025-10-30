@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
@@ -240,6 +241,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
         public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
+        public static final Supplier<Boolean> UNFUNNY;
         public static final Supplier<Boolean> NO_OPTIFINE_WARN;
         public static final Supplier<Boolean> NO_AMENDMENTS_WARN;
         public static final Supplier<Boolean> NO_INCOMPATIBLE_MODS;
@@ -269,6 +271,8 @@ public class ClientConfigs {
                     .define("placeable_tooltips", true);
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                     .define("custom_configured_screen", true);
+            UNFUNNY=builder.comment("I am very boring")
+                    .define("unfunny", false);
             TEST1 = builder.comment("ignore this").define("test1", 0d, -10, 10);
             TEST2 = builder.comment("ignore this").define("test2", 0d, -10, 10);
             TEST3 = builder.comment("ignore this").define("test3", 0d, -10, 10);

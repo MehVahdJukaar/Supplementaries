@@ -23,12 +23,12 @@ public abstract class FontRendererMixin implements IAntiqueTextProvider {
     private boolean supplementaries$antique = false;
 
     @Override
-    public boolean hasAntiqueInk() {
+    public boolean supp$hasAntiqueInk() {
         return supplementaries$antique;
     }
 
     @Override
-    public void setAntiqueInk(boolean hasInk) {
+    public void supp$setAntiqueInk(boolean hasInk) {
         supplementaries$antique = hasInk;
     }
 

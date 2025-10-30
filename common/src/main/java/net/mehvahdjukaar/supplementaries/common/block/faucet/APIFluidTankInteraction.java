@@ -12,9 +12,7 @@ class APIFluidTankInteraction implements FaucetSource.Tile, FaucetTarget.Tile {
 
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockEntity source) {
-        SoftFluidStack fluidInTank = FluidsUtil.getFluidInTank(level, pos, dir, source);
-        if (fluidInTank.isEmpty()) return null;
-        return FluidOffer.of(fluidInTank.copy());
+        return FluidsUtil.getFluidInTank(level, pos, dir, source);
     }
 
     @Override

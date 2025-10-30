@@ -217,7 +217,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     public boolean hasAntiqueInk() {
-        return textHolder.hasAntiqueInk();
+        return textHolder.supp$hasAntiqueInk();
     }
 
     public float getFontScale() {

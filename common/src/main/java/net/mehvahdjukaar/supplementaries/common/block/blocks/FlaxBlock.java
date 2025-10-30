@@ -166,7 +166,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
-        Preconditions.checkArgument( state.is(this), "Some mod passed a block that is not this own to the use method. This is bad!");
+        Preconditions.checkArgument(state.is(this), "Some mod passed a block that is not this own to the use method. This is bad!");
         InteractionResult old = super.use(state, world, pos, player, hand, rayTraceResult);
         if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             var ev = ForgeHelper.onRightClickBlock(player, hand, pos.below(), rayTraceResult);

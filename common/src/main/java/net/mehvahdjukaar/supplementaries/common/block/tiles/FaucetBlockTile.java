@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -112,7 +113,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         Direction dir = state.getValue(FaucetBlock.FACING);
         BlockPos behind = pos.relative(dir.getOpposite());
         BlockState backState = level.getBlockState(behind);
-        if (backState.isAir()) return 0;
+        if (backState.isAir() || backState.is(ModTags.FAUCET_CANT_INTERACT)) return 0;
         Integer filledAmount = runInteractions(BLOCK_INTERACTIONS, level, dir, behind, backState, justVisual);
         if (filledAmount != null) return filledAmount;
 

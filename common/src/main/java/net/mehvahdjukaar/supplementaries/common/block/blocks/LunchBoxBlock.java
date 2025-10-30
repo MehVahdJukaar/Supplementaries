@@ -141,7 +141,8 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock {
         var data = LunchBoxItem.getLunchBoxData(itemstack);
         if (data != null) {
             for (int inx = 0; inx < tile.getContainerSize(); inx++) {
-                data.tryAdding(tile.getItem(inx));
+                ItemStack food = tile.getItem(inx);
+                data.tryAdding(food);
             }
         } else Supplementaries.error();
         if (tile.hasCustomName()) {

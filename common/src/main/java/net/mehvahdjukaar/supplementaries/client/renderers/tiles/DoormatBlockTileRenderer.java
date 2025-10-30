@@ -55,7 +55,7 @@ public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBloc
         var prop = TextUtil.renderProperties(textHolder.getColor(), textHolder.hasGlowingText(),
                 ClientConfigs.getSignColorMult(),
                 combinedLightIn,
-                textHolder.hasAntiqueInk() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY,
+                textHolder.supp$hasAntiqueInk() ? Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT) : Style.EMPTY,
                 Direction.UP.step(), lod::isVeryNear);
 
         TextUtils.renderTextHolderLines(textHolder, LINE_SEPARATION, font, poseStack, bufferIn, prop);

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
@@ -87,6 +88,9 @@ public class MiscUtils {
         }
 
         private static Festivity get() {
+            if (PlatHelper.getPhysicalSide().isClient() && ClientConfigs.General.UNFUNNY.get()) {
+                return NONE;
+            }
             Calendar calendar = Calendar.getInstance();
             int month = calendar.get(Calendar.MONTH);
             int date = calendar.get(Calendar.DATE);
@@ -162,14 +166,14 @@ public class MiscUtils {
     }
 
     // vanilla is wont allow to tick a block that already has a scheduled tick, even if at an earlier time
-    public static void scheduleTickOverridingExisting(ServerLevel level, BlockPos pos,  Block block, int delay){
-        var tick = new ScheduledTick<>(block, pos, level.getGameTime() + (long)delay, level.nextSubTickCount());
+    public static void scheduleTickOverridingExisting(ServerLevel level, BlockPos pos, Block block, int delay) {
+        var tick = new ScheduledTick<>(block, pos, level.getGameTime() + (long) delay, level.nextSubTickCount());
 
         long l = ChunkPos.asLong(tick.pos());
 
-       var container = level.getBlockTicks().allContainers.get(l);
-       container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
-       container.schedule(tick);
+        var container = level.getBlockTicks().allContainers.get(l);
+        container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
+        container.schedule(tick);
     }
 
 }

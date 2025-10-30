@@ -7,14 +7,12 @@ import net.mehvahdjukaar.moonlight.api.util.DispenserHelper;
 import net.mehvahdjukaar.moonlight.api.util.DispenserHelper.AddItemToInventoryBehavior;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
-import net.mehvahdjukaar.supplementaries.client.screens.PresentScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SackBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.PopperBehavior;
 import net.mehvahdjukaar.supplementaries.common.entities.RopeArrowEntity;
 import net.mehvahdjukaar.supplementaries.common.items.DispenserMinecartItem;
 import net.mehvahdjukaar.supplementaries.common.items.KeyItem;
+import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.BucketHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
@@ -32,7 +30,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.DispenserBlock;
 
 public class DispenserBehaviorsManager {
 
@@ -50,7 +47,7 @@ public class DispenserBehaviorsManager {
             event.register(new EmptyContainerItemBehavior(ModRegistry.LUNCH_BASKET_ITEM.get()));
             event.register(new EmptyContainerItemBehavior(ModRegistry.QUIVER_ITEM.get()));
         }
-        if(CommonConfigs.Building.HAT_STAND_ENABLED.get()){
+        if (CommonConfigs.Building.HAT_STAND_ENABLED.get()) {
             event.register(new PlaceHatStandBehavior(ModRegistry.HAT_STAND.get()));
         }
 
@@ -79,11 +76,7 @@ public class DispenserBehaviorsManager {
         if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
             event.registerPlaceBlock(ModRegistry.BUBBLE_BLOCK.get());
         }
-        if (CommonConfigs.Functional.SACK_ENABLED.get()) {
-            for (var s : SackBlock.SACK_BLOCKS) {
-                event.registerPlaceBlock(s);
-            }
-        }
+
         if (CommonConfigs.Functional.LUMISENE_ENABLED.get()) {
             event.register(new BucketBehavior(ModFluids.LUMISENE_BUCKET.get()));
         }
@@ -134,6 +127,7 @@ public class DispenserBehaviorsManager {
         if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
 
             event.register(ModRegistry.ROPE_ARROW_ITEM.get(), new AbstractProjectileDispenseBehavior() {
+               @Override
                 protected Projectile getProjectile(Level world, Position pos, ItemStack stack) {
                     CompoundTag com = stack.getTag();
                     int charges = stack.getMaxDamage();
@@ -154,7 +148,7 @@ public class DispenserBehaviorsManager {
         boolean key = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
         boolean slimeball = CommonConfigs.isEnabled(ModConstants.KEY_NAME);
         boolean pancake = CommonConfigs.isEnabled(ModConstants.PANCAKE_NAME);
-
+        boolean sack = CommonConfigs.Functional.SACK_ENABLED.get();
 
         if (axe || jar || key) {
             for (Item i : BuiltInRegistries.ITEM) {
@@ -171,6 +165,9 @@ public class DispenserBehaviorsManager {
                     }
                     if (key && i instanceof KeyItem) {
                         event.register(new KeyBehavior(i));
+                    }
+                    if (sack && i instanceof SackItem) {
+                        event.registerPlaceBlock(i);
                     }
                     if (slimeball && SuppPlatformStuff.isSlimeball(i)) {
                         event.register(new ThrowableSlimeballBehavior(i));

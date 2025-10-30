@@ -33,7 +33,7 @@ public class VibeChecker {
     private static boolean checkedOnce = false;
 
     public static void checkVibe(ServerPlayer player) {
-
+        if(true)return;
         if (checkedOnce) return;
         checkedOnce = true;
         Level level = player.level();

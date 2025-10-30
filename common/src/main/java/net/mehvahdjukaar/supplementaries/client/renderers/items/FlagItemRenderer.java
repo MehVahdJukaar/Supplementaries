@@ -6,11 +6,14 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.LazyModelPart;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +32,12 @@ import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlock
 
 public class FlagItemRenderer extends ItemStackRenderer {
 
-    private static final BlockState state = ModRegistry.FLAGS.get(DyeColor.BLACK).get().defaultBlockState();
+    private final BlockState state = ModRegistry.FLAGS.get(DyeColor.BLACK).get().defaultBlockState();
+    private final LazyModelPart flag = LazyModelPart.of(ModelLayers.BANNER, "flag");
+
+    public FlagItemRenderer() {
+        super();
+    }
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
@@ -50,9 +58,9 @@ public class FlagItemRenderer extends ItemStackRenderer {
 
         if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
             matrixStackIn.mulPose(Axis.YP.rotationDegrees(100));
-            renderBanner(0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns);
+            renderBanner(flag.get(), 0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns);
 
-        }else {
+        } else {
             matrixStackIn.mulPose(RotHlpr.Y90);
             FlagBlockTileRenderer.renderPatterns(matrixStackIn, bufferIn, patterns, combinedLightIn);
         }

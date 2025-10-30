@@ -1,6 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -25,10 +28,15 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Creeper;
@@ -117,9 +125,23 @@ public class ClientEvents {
     }
 
     private static boolean isOnRope;
+    private static double wobble; // from 0 to 1
 
-    public static boolean isIsOnRope() {
-        return isOnRope;
+    public static double getRopeWobble(double partialTicks) {
+        Player p = Minecraft.getInstance().player;
+        if (p != null && !Minecraft.getInstance().isPaused() && !p.isSpectator()) {
+            if (isOnRope || wobble != 0) {
+                double period = ClientConfigs.Blocks.ROPE_WOBBLE_PERIOD.get();
+                double newWobble = (((p.tickCount + partialTicks) / period) % 1);
+                if (!isOnRope && newWobble < wobble) {
+                    wobble = 0;
+                } else {
+                    wobble = newWobble;
+                }
+                return Mth.sin((float) (wobble * 2 * Math.PI)) * ClientConfigs.Blocks.ROPE_WOBBLE_AMPLITUDE.get();
+            }
+        }
+        return 0;
     }
 
     private static void checkIfOnRope(Player p) {

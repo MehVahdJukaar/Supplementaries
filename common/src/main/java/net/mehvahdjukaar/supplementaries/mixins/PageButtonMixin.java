@@ -16,20 +16,20 @@ public abstract class PageButtonMixin implements IAntiqueTextProvider {
     private boolean supplementaries$antiqueInk;
 
     @Override
-    public boolean hasAntiqueInk() {
+    public boolean supp$hasAntiqueInk() {
         return supplementaries$antiqueInk;
     }
 
     @Override
-    public void setAntiqueInk(boolean hasInk) {
+    public void supp$setAntiqueInk(boolean hasInk) {
         this.supplementaries$antiqueInk = hasInk;
     }
 
     @ModifyArg(method = "renderWidget", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
     ResourceLocation setTatteredBookTexture(ResourceLocation res) {
-        if(supplementaries$antiqueInk){
-           return ModTextures.TATTERED_BOOK_GUI_TEXTURE;
+        if (supplementaries$antiqueInk) {
+            return ModTextures.TATTERED_BOOK_GUI_TEXTURE;
         }
         return res;
     }

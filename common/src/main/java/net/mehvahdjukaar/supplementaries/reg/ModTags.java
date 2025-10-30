@@ -53,6 +53,8 @@ public class ModTags {
     public static final TagKey<Block> TURN_TABLE_CANT_SHUFFLE = blockTag("turn_table_cant_shuffle");
     public static final TagKey<Block> SOAP_BLACKLIST_BLOCK = blockTag("non_cleanable");
     public static final TagKey<Block> CANNON_TNTS = blockTag("cannon_tnts");
+    public static final TagKey<Block> FAUCET_CANT_INTERACT = blockTag("faucet_cant_interact");
+    public static final TagKey<Block> ROPE_PUSH_BLACKLIST = blockTag("un_movable_by_ropes");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");

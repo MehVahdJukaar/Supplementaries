@@ -65,7 +65,7 @@ public abstract class ZombieHorseMixin extends AbstractHorse implements IConvert
 
     @Override
     public void readAdditionalSaveData(CompoundTag compoundNBT) {
-        this.addAdditionalSaveData(compoundNBT);
+        super.readAdditionalSaveData(compoundNBT);
         this.supplementaries$conversionTime = compoundNBT.getInt("ConversionTime");
     }
 

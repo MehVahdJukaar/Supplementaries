@@ -51,7 +51,6 @@ dependencies {
     modImplementation("curse.maven:soul-fire-d-662413:5448803")
     modCompileOnly("curse.maven:blueprint-382216:5292242")
     modCompileOnly("curse.maven:environmental-388992:6060255")
-    //modImplementation("curse.maven:selene-common:499980:5854670")
     modImplementation ("net.mehvahdjukaar:moonlight:${moonlight_version}")
     modImplementation("curse.maven:immediatelyfast-686911:4937545")
     modImplementation("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge")
@@ -69,9 +68,5 @@ publishing {
             artifactId = rootProject.mod_id
             from components.java
         }
-    }
-
-    repositories {
-        // Add repositories to publish to here.
     }
 }
