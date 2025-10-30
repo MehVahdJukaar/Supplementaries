@@ -198,7 +198,7 @@ public class RoadSignStructure extends Structure {
     private static final Set<Holder<Biome>> VALID_BIOMES = new WeakHashSet<>();
 
     public static void recomputeValidStructureCache(RegistryAccess access) {
-        for (var s : access.registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(ModTags.WAY_SIGN_DESTINATIONS)) {
+        for (var s : access.registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(ModTags.ROAD_SIGN_DESTINATIONS)) {
             VALID_BIOMES.addAll(s.value().biomes().stream().toList());
         }
     }

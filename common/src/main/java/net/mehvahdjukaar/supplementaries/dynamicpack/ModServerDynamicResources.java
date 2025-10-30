@@ -27,7 +27,13 @@ import java.util.function.Consumer;
 public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
     public ModServerDynamicResources() {
-        super(Supplementaries.res("generated_pack"), CommonConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
+        super(Supplementaries.res("generated_pack"),
+                CommonConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
+    }
+
+    @Override
+    public boolean needsToRegenerate() {
+        return super.needsToRegenerate() || PlatHelper.isDev();
     }
 
     @Override
@@ -64,26 +70,26 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
                 addCannonBoatRecipes(manager, sink);
             }
 
-            //fabric has it done another way beucase it needs tag before this...
+            //way signs tag
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_ROAD_SIGNS);
+                if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OVERWORLD);
+                }
+                sink.addTag(builder, Registries.BIOME);
+            }
+
+            //galleons
+            {
+                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_GALLEONS);
+                if (CommonConfigs.Functional.GALLEONS_ENABLED.get()) {
+                    builder.addTag(BiomeTags.IS_OCEAN);
+                }
+                sink.addTag(builder, Registries.BIOME);
+            }
+
+            //fabric has it done another way beucase it needs tag before this... for features only
             if (PlatHelper.getPlatform().isForge()) {
-                //way signs tag
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_ROAD_SIGNS);
-                    if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get()) {
-                        builder.addTag(BiomeTags.IS_OVERWORLD);
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-
-                //galleons
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_GALLEONS);
-                    if (CommonConfigs.Functional.GALLEONS_ENABLED.get()) {
-                        builder.addTag(BiomeTags.IS_OCEAN);
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-
                 //cave urns tag
 
                 {

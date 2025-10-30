@@ -32,7 +32,7 @@ public class GalleonStructure extends Structure {
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Climate.ParameterPoint.CODEC.optionalFieldOf("biome_point").forGetter(structure -> structure.biomePoint),
-                    Codec.BOOL.fieldOf("require_sea_level").forGetter(structure -> structure.requireSeaLevel),
+                    Codec.BOOL.optionalFieldOf("require_sea_level", true).forGetter(structure -> structure.requireSeaLevel),
                     DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
                     LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
             ).apply(instance, GalleonStructure::new));

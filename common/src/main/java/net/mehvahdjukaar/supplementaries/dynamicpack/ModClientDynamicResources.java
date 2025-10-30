@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.dynamicpack;
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.misc.IProgressTracker;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.RPUtils;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
@@ -52,6 +53,10 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
     }
     //-------------resource pack dependant textures-------------
 
+    @Override
+    public boolean needsToRegenerate() {
+        return super.needsToRegenerate() || PlatHelper.isDev();
+    }
 
     @Override
     public void reload(ResourceManager manager, IProgressTracker reporter) {

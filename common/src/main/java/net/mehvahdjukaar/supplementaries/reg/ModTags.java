@@ -108,7 +108,7 @@ public class ModTags {
     public static final TagKey<EntityType<?>> BOATS = cEntityTag("boats");
 
     //features
-    public static final TagKey<Structure> WAY_SIGN_DESTINATIONS = structureTag("way_sign_destinations");
+    public static final TagKey<Structure> ROAD_SIGN_DESTINATIONS = structureTag("road_sign_destinations");
     public static final TagKey<Structure> ADVENTURE_MAP_DESTINATIONS = structureTag("adventure_map_destinations");
 
     public static final TagKey<Potion> QUIVER_POTION_BLACKLIST = potionTag("quiver_blacklist");
