@@ -5,8 +5,17 @@
       "condition": "supplementaries:flag"
     },
     {
-      "modid": "quark",
-      "condition": "fabric:mod_loaded"
+      "condition": "fabric:or",
+      "values": [
+        {
+          "modid": "quark",
+          "condition": "fabric:mod_loaded"
+        },
+        {
+          "flag": "gold_bars",
+          "condition": "supplementaries:flag"
+        }
+      ]
     }
   ],
   "neoforge:conditions": [
@@ -15,8 +24,17 @@
       "flag": "iron_gate"
     },
     {
-      "type": "neoforge:mod_loaded",
-      "modid": "quark"
+      "type": "neoforge:or",
+      "values": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_bars"
+        },
+        {
+          "type": "neoforge:mod_loaded",
+          "modid": "quark"
+        }
+      ]
     }
   ],
   "type": "minecraft:crafting_shaped",

@@ -95,8 +95,8 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "tick", at = @At("TAIL"))
     private void suppl$slimeTick(CallbackInfo ci) {
         LivingEntity le = (LivingEntity) (Object) this;
-        SlimedData data = ModRegistry.SLIMED_DATA.getOrCreate(le);
-        data.tick(le);
+        SlimedData data = ModRegistry.SLIMED_DATA.getOrNull(le);
+        if (data != null) data.tick(le);
     }
 
 }

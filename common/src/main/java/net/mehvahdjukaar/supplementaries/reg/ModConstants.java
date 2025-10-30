@@ -92,6 +92,7 @@ public final class ModConstants {
     public static final String GOLD_TRAPDOOR_NAME = "gold_trapdoor";
     public static final String NETHERITE_DOOR_NAME = "netherite_door";
     public static final String NETHERITE_TRAPDOOR_NAME = "netherite_trapdoor";
+    public static final String GOLD_BARS_NAME = "gold_bars";
     public static final String IRON_GATE_NAME = "iron_gate";
     public static final String GOLD_GATE_NAME = "gold_gate";
     public static final String CHECKER_BLOCK_NAME = "checker_block";

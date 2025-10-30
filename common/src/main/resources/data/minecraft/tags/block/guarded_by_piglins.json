@@ -2,6 +2,7 @@
   "replace": false,
   "values": [
     "#supplementaries:sacks",
+    "supplementaries:gold_bars",
     "supplementaries:gold_door",
     "supplementaries:gold_trapdoor",
     "supplementaries:gold_gate"

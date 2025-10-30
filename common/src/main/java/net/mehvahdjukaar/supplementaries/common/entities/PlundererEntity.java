@@ -66,6 +66,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
 
     @Override
     protected void registerGoals() {
+        //TODO: add dismount boat goal
         // super.registerGoals();
        // this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, false));
@@ -110,8 +111,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
 
     @Override
     public AbstractIllager.IllagerArmPose getArmPose() {
-        return  IllagerArmPose.CROSSED;
-       // return this.isAggressive() ? AbstractIllager.IllagerArmPose.ATTACKING : AbstractIllager.IllagerArmPose.NEUTRAL;
+        return this.isAggressive() ? AbstractIllager.IllagerArmPose.ATTACKING : IllagerArmPose.CROSSED;
     }
 
     @Override

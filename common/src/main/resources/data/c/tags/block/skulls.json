@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:enderman_head"
+    "supplementaries:enderman_head",
+    "supplementaries:spider_head"
   ]
 }

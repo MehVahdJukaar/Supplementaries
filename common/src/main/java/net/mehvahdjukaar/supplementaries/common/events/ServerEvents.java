@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.moonlight.core.fluid.SoftFluidInternal;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -33,7 +32,6 @@ import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModSetup;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -42,23 +40,20 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Evoker;
-import net.minecraft.world.entity.monster.Pillager;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -211,6 +206,21 @@ public class ServerEvents {
             if (entity instanceof AbstractIllager pillager) {
                 pillager.goalSelector.addGoal(2,
                         new ManeuverAndShootCannonGoal(pillager, 20, 40));
+            }
+        }
+    }
+
+
+    @EventCalled
+    public static void onLivingDeath(LivingEntity entity, DamageSource source) {
+        Entity sourceEntity = source.getEntity();
+        if (sourceEntity instanceof Creeper creeper && creeper.canDropMobsSkull()) {
+            if (entity instanceof EnderMan && CommonConfigs.Redstone.ENDERMAN_HEAD_DROP.get()) {
+                creeper.increaseDroppedSkulls();
+                entity.spawnAtLocation(ModRegistry.ENDERMAN_SKULL_ITEM.get());
+            } else if (entity instanceof Spider && CommonConfigs.Building.SPIDER_HEAD_ENABLED.get()) {
+                creeper.increaseDroppedSkulls();
+                entity.spawnAtLocation(ModRegistry.SPIDER_SKULL_ITEM.get());
             }
         }
     }

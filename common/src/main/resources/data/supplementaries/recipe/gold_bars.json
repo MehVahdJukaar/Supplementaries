@@ -1,0 +1,29 @@
+{
+  "fabric:load_conditions": [
+    {
+      "flag": "gold_bars",
+      "condition": "supplementaries:flag"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "gold_bars"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "111",
+    "111"
+  ],
+  "key": {
+    "1": {
+      "tag": "c:nuggets/gold"
+    }
+  },
+  "result": {
+    "id": "supplementaries:gold_bars",
+    "count": 16
+  }
+}

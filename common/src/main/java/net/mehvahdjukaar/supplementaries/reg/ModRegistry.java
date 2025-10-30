@@ -772,6 +772,12 @@ public class ModRegistry {
             "key_lockable_tile", () -> PlatHelper.newBlockEntityType(
                     KeyLockableTile::new, NETHERITE_DOOR.get(), NETHERITE_TRAPDOOR.get(), LOCK_BLOCK.get()));
 
+    //gate bars
+    public static final Supplier<Block> GOLD_BARS = regWithItem(GOLD_BARS_NAME, () -> new IronBarsBlock(
+            BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS)
+                    .sound(SoundType.METAL)
+    ));
+
     //iron gate
     public static final Supplier<Block> IRON_GATE = regWithItem(IRON_GATE_NAME, () -> new IronGateBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS), false

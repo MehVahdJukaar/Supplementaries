@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -7,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -17,13 +17,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -556,9 +558,16 @@ public class ModCreativeTabs {
                 ModConstants.IRON_GATE_NAME,
                 ModRegistry.IRON_GATE);
 
-        adder.afterML("quark:gold_bars", CreativeModeTabs.BUILDING_BLOCKS,
-                ModConstants.IRON_GATE_NAME,
-                ModRegistry.GOLD_GATE);
+        boolean goldBarsOn = CommonConfigs.Building.GOLD_BARS_ENABLED.get();
+        if (CompatHandler.QUARK && goldBarsOn) {
+            adder.afterML("quark:gold_bars", CreativeModeTabs.BUILDING_BLOCKS,
+                    ModConstants.IRON_GATE_NAME,
+                    ModRegistry.GOLD_GATE);
+        } else if (!goldBarsOn) {
+            adder.after(ModRegistry.GOLD_BARS.get().asItem(), CreativeModeTabs.BUILDING_BLOCKS,
+                    ModConstants.IRON_GATE_NAME,
+                    ModRegistry.GOLD_GATE);
+        }
 
         adder.before(Items.COAL_BLOCK, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.SOAP_NAME,
@@ -581,7 +590,7 @@ public class ModCreativeTabs {
     public static final class TabAdder {
         private final RegHelper.ItemToTabEvent event;
 
-        private final Set<ItemStack> uniqueStacksAdded = new HashSet<>();
+        private final List<ItemStack> uniqueStacksAdded = new ArrayList<>();
 
         public TabAdder(RegHelper.ItemToTabEvent event) {
             this.event = event;
@@ -590,7 +599,7 @@ public class ModCreativeTabs {
         private void before(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemStack... items) {
             ResourceKey<CreativeModeTab> tabKey = getTabKey(tab);
             for (ItemStack stack : items) {
-                if (uniqueStacksAdded.add(stack)) {
+                if (isUnique(stack)) {
                     event.addBefore(tabKey, target, stack);
                 }
             }
@@ -604,7 +613,7 @@ public class ModCreativeTabs {
         private void after(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemStack... items) {
             ResourceKey<CreativeModeTab> tabKey = getTabKey(tab);
             for (ItemStack stack : items) {
-                if (uniqueStacksAdded.add(stack)) {
+                if (isUnique(stack)) {
                     event.addAfter(tabKey, target, stack);
                 }
             }
@@ -619,7 +628,7 @@ public class ModCreativeTabs {
             ResourceKey<CreativeModeTab> tabKey = getTabKey(tab);
             for (ItemLike item : items) {
                 ItemStack stack = item.asItem().getDefaultInstance();
-                if (uniqueStacksAdded.add(stack)) {
+                if (isUnique(stack)) {
                     event.add(tabKey, stack);
                 }
             }
@@ -630,14 +639,29 @@ public class ModCreativeTabs {
             return MOD_TAB == null ? tab : (ResourceKey<CreativeModeTab>) MOD_TAB.getKey();
         }
 
+        private boolean isUnique(ItemStack stack) {
+            Preconditions.checkNotNull(stack);
+            Preconditions.checkNotNull(stack.getItem());
+            if (MOD_TAB == null) return true;
+            for (var s : uniqueStacksAdded) {
+                if (s.getItem() == stack.getItem()) {
+                    if (ItemStack.isSameItemSameComponents(s, stack)) {
+                        return false;
+                    }
+                }
+            }
+            uniqueStacksAdded.add(stack);
+            return true;
+        }
+
         private void after(TagKey<Item> target,
                            ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
             after(i -> i.is(target), tab, key, items);
         }
 
-        private void after(Item target,
+        private void after(ItemLike target,
                            ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
-            after(i -> i.is(target), tab, key, items);
+            after(i -> i.is(target.asItem()), tab, key, items);
         }
 
         private void after(Predicate<ItemStack> targetPred,
@@ -660,9 +684,9 @@ public class ModCreativeTabs {
             }
         }
 
-        private void before(Item target,
+        private void before(ItemLike target,
                             ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
-            before(i -> i.is(target), tab, key, items);
+            before(i -> i.is(target.asItem()), tab, key, items);
         }
 
         private void before(Predicate<ItemStack> targetPred,
@@ -681,7 +705,7 @@ public class ModCreativeTabs {
         private void add(ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
             if (CommonConfigs.isEnabled(key)) {
                 ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
-               add(tab, entries);
+                add(tab, entries);
             }
         }
 
@@ -760,8 +784,6 @@ public class ModCreativeTabs {
         }
         return items.toArray(ItemStack[]::new);
     }
-
-
 
 
 }

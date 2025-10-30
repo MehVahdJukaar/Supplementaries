@@ -320,6 +320,10 @@ public class CommonConfigs {
 
             builder.push("building");
 
+            builder.push("spider_head");
+            SPIDER_HEAD_ENABLED = feature(builder);
+            builder.pop();
+
             builder.push("blackboard");
             BLACKBOARD_ENABLED = feature(builder);
             BLACKBOARD_COLOR = builder.comment("Enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
@@ -356,6 +360,10 @@ public class CommonConfigs {
                     .define("double_opening", true);
             CONSISTENT_GATE = builder.comment("Makes iron (ang gold) gates behave like their door counterpart so for example iron gates will only be openable by redstone")
                     .define("door-like_gates", false);
+            builder.pop();
+
+            builder.push("gold_bars");
+            GOLD_BARS_ENABLED = feature(builder);
             builder.pop();
 
             builder.push("item_shelf");
@@ -500,9 +508,12 @@ public class CommonConfigs {
             builder.pop();
         }
 
+        public static final Supplier<Boolean> SPIDER_HEAD_ENABLED;
         public static final Supplier<Boolean> BLACKBOARD_ENABLED;
         public static final Supplier<Boolean> BLACKBOARD_COLOR;
         public static final Supplier<BlackboardBlock.UseMode> BLACKBOARD_MODE;
+
+        public static final Supplier<Boolean> GOLD_BARS_ENABLED;
 
         public static final Supplier<Boolean> IRON_GATE_ENABLED;
         public static final Supplier<Boolean> DOUBLE_IRON_GATE;

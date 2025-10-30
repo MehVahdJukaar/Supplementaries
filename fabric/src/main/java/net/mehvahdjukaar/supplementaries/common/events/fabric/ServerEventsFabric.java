@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -43,6 +44,7 @@ public class ServerEventsFabric {
         ServerLifecycleEvents.SERVER_STARTING.register(s -> {
             ServerEvents.beforeServerStart(s.registryAccess());
         });
+        ServerLivingEntityEvents.AFTER_DEATH.register(ServerEvents::onLivingDeath);
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (var p : server.getPlayerList().getPlayers()) {
                 ServerEvents.serverPlayerTick(p);
