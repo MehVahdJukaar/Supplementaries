@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicClientResourceProvider;
-import net.mehvahdjukaar.moonlight.api.resources.pack.PackGenerationStrategy;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.textures.*;
@@ -23,6 +22,7 @@ import net.mehvahdjukaar.supplementaries.common.items.CannonBoatItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.core.Holder;
@@ -76,12 +76,22 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             addTatteredBook(manager, sink);
             addMissingFlagPatterns(manager, sink);
             //addGlobeItemModels(manager, sink);
+            moveGates(manager, sink);
 
             MojangNeedsToAddMoreCopper.run(manager, sink);
         });
 
         executor.accept(this::addSignPostAssets);
         executor.accept(this::generateBoatTextures);
+    }
+
+    private void moveGates(ResourceManager manager, ResourceSink sink) {
+        if (CompatHandler.QUARK && !CommonConfigs.Building.GOLD_BARS_ENABLED.get()) {
+            sink.copyResource(manager, ResType.BLOCK_TEXTURES.getPath(Supplementaries.res("gold_gate_bottom_old")),
+                    ResType.BLOCK_TEXTURES.getPath(Supplementaries.res("gold_gate_bottom")), false);
+            sink.copyResource(manager, ResType.BLOCK_TEXTURES.getPath(Supplementaries.res("gold_gate_top_old")),
+                    ResType.BLOCK_TEXTURES.getPath(Supplementaries.res("gold_gate_top")), false);
+        }
     }
 
     private void addMissingFlagPatterns(ResourceManager manager, ResourceSink sink) {
