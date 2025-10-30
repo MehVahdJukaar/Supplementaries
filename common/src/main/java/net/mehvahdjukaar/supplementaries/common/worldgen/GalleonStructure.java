@@ -117,7 +117,8 @@ public class GalleonStructure extends Structure {
         int x = chunkPos.getMiddleBlockX();
         int z = chunkPos.getMiddleBlockZ();
         // Grab height of land. Will stop at first non-air block.
-        int y = generator.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor, randomState);
+        int y = generator.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor, randomState)
+                + 1;
 
         int seaLevel = context.chunkGenerator().getSeaLevel();
         if (this.requireSeaLevel && y != seaLevel) return Optional.empty();
