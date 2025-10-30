@@ -39,7 +39,7 @@ public class EndermanSkullWallBlock extends WallSkullBlock {
                     Direction.WEST, Block.box(8.0, 4.0, 4.0, 16.0, 12.0 + 6, 12.0)));
 
     public EndermanSkullWallBlock(Properties properties) {
-        super(EndermanSkullBlock.TYPE, properties);
+        super(ModRegistry.ENDERMAN_SKULL_TYPE, properties);
         this.registerDefaultState(this.defaultBlockState().setValue(WATCHED, false).setValue(POWER, 0));
     }
 

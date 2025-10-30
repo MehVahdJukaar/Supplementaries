@@ -1189,6 +1189,7 @@ public class ModRegistry {
             BUBBLE_BLOCK_NAME, () -> PlatHelper.newBlockEntityType(
                     BubbleBlockTile::new, BUBBLE_BLOCK.get()));
 
+
     //enderman skull
     public static final Supplier<EndermanSkullBlock> ENDERMAN_SKULL_BLOCK = regBlock(ENDERMAN_HEAD_NAME, () ->
             new EndermanSkullBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WITHER_SKELETON_SKULL)
@@ -1207,19 +1208,18 @@ public class ModRegistry {
                     EndermanSkullBlockTile::new, ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get()));
 
     //spider head
-    public static final SkullBlock.Type SPIDER_TYPE = () -> "supplementaries_spider_skull";
 
     public static final Supplier<SkullBlock> SPIDER_SKULL_BLOCK = regBlock(SPIDER_HEAD_NAME, () ->
-            new SkullBlock(SPIDER_TYPE, BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
-                                .instrument(NoteBlockInstrument.CUSTOM_HEAD))
+            new SpiderSkullBlock( BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+                    .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<WallSkullBlock> SPIDER_SKULL_BLOCK_WALL = regBlock("spider_wall_head", () ->
-            new WallSkullBlock(SPIDER_TYPE, BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+            new SpiderWallSkullBlock( BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
                     .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<Item> SPIDER_SKULL_ITEM = regItem(SPIDER_HEAD_NAME, () ->
             new StandingAndWallBlockItem(SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get(),
-                    new Item.Properties().rarity(Rarity.UNCOMMON), Direction.UP ));
+                    new Item.Properties().rarity(Rarity.UNCOMMON), Direction.UP));
 
     public static final Supplier<BlockEntityType<SkullBlockEntity>> SPIDER_SKULL_TILE = regTile(
             SPIDER_HEAD_NAME, () -> PlatHelper.newBlockEntityType(

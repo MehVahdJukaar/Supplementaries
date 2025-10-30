@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.WallSkullBlock;
@@ -32,7 +33,6 @@ public class SpiderSkullBlockTileRenderer implements BlockEntityRenderer<SkullBl
     public void render(SkullBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
         float f = 0;
-
         /*
         BlockState blockState = blockEntity.getBlockState();
         boolean wall = blockState.getBlock() instanceof WallSkullBlock;
