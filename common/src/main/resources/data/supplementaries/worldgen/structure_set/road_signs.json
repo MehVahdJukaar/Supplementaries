@@ -1,0 +1,23 @@
+{
+  "structures": [
+    {
+      "structure": "supplementaries:road_sign",
+      "weight": 1
+    }
+  ],
+  "placement": {
+
+    "type": "minecraft:random_spread",
+
+    "salt": 431041527,
+
+    "spacing": 19,
+
+    "separation": 10,
+
+    "exclusion_zone": {
+      "chunk_count": 10,
+      "other_set": "minecraft:villages"
+    }
+  }
+}

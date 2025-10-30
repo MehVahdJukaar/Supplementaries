@@ -1,0 +1,11 @@
+{
+  "type": "supplementaries:road_sign",
+  "biomes": "#supplementaries:has_road_signs",
+  "terrain_adaptation": "beard_thin",
+  "step": "strongholds",
+  "spawn_overrides": {},
+
+  "start_pool": "supplementaries:road_sign/start_pool",
+  "min_y": 40,
+  "max_y": 105
+}

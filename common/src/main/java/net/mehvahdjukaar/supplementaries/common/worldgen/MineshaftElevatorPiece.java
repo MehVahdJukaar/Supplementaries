@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModWorldgen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -43,7 +43,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
     private final boolean hasChain;
 
     public MineshaftElevatorPiece(StructurePieceSerializationContext context, CompoundTag compoundTag) {
-        super(ModWorldgenRegistry.MINESHAFT_ELEVATOR.get(), compoundTag);
+        super(ModWorldgen.MINESHAFT_ELEVATOR_PIECE.get(), compoundTag);
         this.direction = Direction.from2DDataValue(compoundTag.getInt("D"));
         this.floor = compoundTag.getByte("F");
         this.hasChain = compoundTag.getBoolean("C");
@@ -52,7 +52,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
 
     public MineshaftElevatorPiece(int depth, BoundingBox boundingBox, @Nullable Direction direction,
                                   byte floor, boolean hasChain, MineshaftStructure.Type type) {
-        super(ModWorldgenRegistry.MINESHAFT_ELEVATOR.get(), depth, type, boundingBox);
+        super(ModWorldgen.MINESHAFT_ELEVATOR_PIECE.get(), depth, type, boundingBox);
         this.direction = direction;
         this.floor = floor;
         this.hasChain = hasChain;

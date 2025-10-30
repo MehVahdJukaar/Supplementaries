@@ -28,7 +28,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.IEntityInterceptFakeLevel;
-import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
+import net.mehvahdjukaar.supplementaries.common.worldgen.RoadSignStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -159,7 +159,7 @@ public class ServerEvents {
             CapturedMobCache.clear();
         }
         WeatheredMapRecipe.onWorldUnload();
-        WaySignStructure.clearCache();
+        RoadSignStructure.clearCache();
         EndermanSkullBlockTile.clearCache();
         ColoredMapHandler.clearIdCache();
     }

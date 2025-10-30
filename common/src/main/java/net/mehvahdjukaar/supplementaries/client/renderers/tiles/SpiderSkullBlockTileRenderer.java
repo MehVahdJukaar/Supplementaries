@@ -33,6 +33,7 @@ public class SpiderSkullBlockTileRenderer implements BlockEntityRenderer<SkullBl
 
         float f = 0;
 
+        /*
         BlockState blockState = blockEntity.getBlockState();
         boolean wall = blockState.getBlock() instanceof WallSkullBlock;
         Direction direction = wall ? blockState.getValue(WallSkullBlock.FACING) : null;
@@ -51,6 +52,8 @@ public class SpiderSkullBlockTileRenderer implements BlockEntityRenderer<SkullBl
         renderSkull(direction, rotation, f, poseStack, bufferSource, LightTexture.FULL_SKY, model, renderType);
 
         poseStack.popPose();
+
+         */
     }
 
 }

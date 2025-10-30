@@ -3,10 +3,7 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature;
-import net.mehvahdjukaar.supplementaries.common.worldgen.MineshaftElevatorPiece;
-import net.mehvahdjukaar.supplementaries.common.worldgen.RoadSignFeature;
-import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
+import net.mehvahdjukaar.supplementaries.common.worldgen.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.structure.StructureType;
@@ -14,20 +11,23 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 
 import java.util.function.Supplier;
 
-public class ModWorldgenRegistry {
+public class ModWorldgen {
 
     public static void init() {
     }
 
     //structure pieces
 
-    public static final Supplier<StructurePieceType> MINESHAFT_ELEVATOR = RegHelper.register(
+    public static final Supplier<StructurePieceType> MINESHAFT_ELEVATOR_PIECE = RegHelper.register(
             Supplementaries.res("mineshaft_elevator"), () -> MineshaftElevatorPiece::new, Registries.STRUCTURE_PIECE);
 
     //structure types
 
-    public static final Supplier<StructureType<WaySignStructure>> WAY_SIGN = RegHelper.registerStructure(
-            Supplementaries.res("way_sign"), WaySignStructure.Type::new);
+    public static final Supplier<StructureType<RoadSignStructure>> ROAD_SIGN_STRUCTURE = RegHelper.registerStructure(
+            Supplementaries.res("road_sign"), RoadSignStructure.Type::new);
+
+    public static final Supplier<StructureType<GalleonStructure>> GALLEON_STRUCTURE = RegHelper.registerStructure(
+            Supplementaries.res("galleon"), GalleonStructure.Type::new);
 
     //feature types
 

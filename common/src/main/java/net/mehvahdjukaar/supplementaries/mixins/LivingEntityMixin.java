@@ -94,9 +94,11 @@ public abstract class LivingEntityMixin extends Entity {
     // yes thiscould be called with forge event instead. doesn't make much difference really. needed for fabric and couldn't be another make a fabric only mixin
     @Inject(method = "tick", at = @At("TAIL"))
     private void suppl$slimeTick(CallbackInfo ci) {
-        LivingEntity le = (LivingEntity) (Object) this;
-        SlimedData data = ModRegistry.SLIMED_DATA.getOrNull(le);
-        if (data != null) data.tick(le);
+        if (CommonConfigs.Tweaks.SLIMED_EFFECT.get()) {
+            LivingEntity le = (LivingEntity) (Object) this;
+            SlimedData data = ModRegistry.SLIMED_DATA.getOrNull(le);
+            if (data != null) data.tick(le);
+        }
     }
 
 }

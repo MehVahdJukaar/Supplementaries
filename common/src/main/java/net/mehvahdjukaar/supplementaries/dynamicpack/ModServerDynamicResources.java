@@ -68,9 +68,18 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
             if (PlatHelper.getPlatform().isForge()) {
                 //way signs tag
                 {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WAY_SIGNS);
-                    if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get() && CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_ROAD_SIGNS);
+                    if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get()) {
                         builder.addTag(BiomeTags.IS_OVERWORLD);
+                    }
+                    sink.addTag(builder, Registries.BIOME);
+                }
+
+                //galleons
+                {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_GALLEONS);
+                    if (CommonConfigs.Functional.GALLEONS_ENABLED.get()) {
+                        builder.addTag(BiomeTags.IS_OCEAN);
                     }
                     sink.addTag(builder, Registries.BIOME);
                 }
@@ -80,7 +89,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
                 {
                     SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
 
-                    if (CommonConfigs.Functional.URN_PILE_ENABLED.get() && CommonConfigs.Functional.URN_ENABLED.get()) {
+                    if (CommonConfigs.Functional.URN_PILE_ENABLED.get()) {
                         builder.addTag(BiomeTags.IS_OVERWORLD);
                     }
                     sink.addTag(builder, Registries.BIOME);

@@ -15,7 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBo
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
-import net.mehvahdjukaar.supplementaries.common.worldgen.WaySignStructure;
+import net.mehvahdjukaar.supplementaries.common.worldgen.RoadSignStructure;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.component.FireworkExplosion;
@@ -148,7 +148,7 @@ public class ModSetup {
 
 
         if (!client) {
-            WaySignStructure.recomputeValidStructureCache(registryAccess);
+            RoadSignStructure.recomputeValidStructureCache(registryAccess);
 
             try {
                 SoftFluidRegistry.get(registryAccess).get(MLBuiltinSoftFluids.EMPTY.getID());

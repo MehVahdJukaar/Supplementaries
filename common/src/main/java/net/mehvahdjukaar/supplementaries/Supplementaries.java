@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries;
 
 import net.mehvahdjukaar.moonlight.api.events.IFireConsumeBlockEvent;
 import net.mehvahdjukaar.moonlight.api.events.MoonlightEventsHelper;
-import net.mehvahdjukaar.moonlight.api.fluids.FluidContainerList;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -29,7 +28,6 @@ import net.mehvahdjukaar.supplementaries.dynamicpack.ModClientDynamicResources;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ModServerDynamicResources;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.FarmBlock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -77,7 +75,7 @@ public class Supplementaries {
         ModEnchantments.init();
         ModCommands.init();
         ModVillagerTrades.init();
-        ModWorldgenRegistry.init();
+        ModWorldgen.init();
         ModMapMarkers.init();
         ModCreativeTabs.init();
         LootTablesInjects.init();

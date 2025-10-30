@@ -9,7 +9,6 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
@@ -121,7 +120,8 @@ public class ModTags {
 
 
     //biomes
-    public static final TagKey<Biome> HAS_WAY_SIGNS = biomeTag("has_way_signs");
+    public static final TagKey<Biome> HAS_ROAD_SIGNS = biomeTag("has_road_signs");
+    public static final TagKey<Biome> HAS_GALLEONS = biomeTag("has_galleons");
     public static final TagKey<Biome> HAS_CAVE_URNS = biomeTag("has_cave_urns");
     public static final TagKey<Biome> HAS_WILD_FLAX = biomeTag("has_wild_flax");
     public static final TagKey<Biome> HAS_BASALT_ASH = biomeTag("has_basalt_ash");

@@ -547,6 +547,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FD_PLANTER;
 
         public static final Supplier<Boolean> WAY_SIGN_ENABLED;
+
         public static final Supplier<Boolean> ROAD_SIGN_DISTANCE_TEXT;
         public static final Supplier<Boolean> ROAD_SIGN_ENABLED;
 
@@ -772,7 +773,7 @@ public class CommonConfigs {
 
             builder.push("plunderer");
             PLUNDERER_ENABLED = feature(builder);
-
+            GALLEONS_ENABLED = feature(builder, ModConstants.GALLEON_NAME);
             builder.pop();
 
             PIRATE_DISC_ENABLED = feature(builder, ModConstants.PIRATE_DISC_NAME);
@@ -887,6 +888,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
         public static final Supplier<Double> CANNONBALL_RADIUS;
         public static final Supplier<Boolean> PLUNDERER_ENABLED;
+        public static final Supplier<Boolean> GALLEONS_ENABLED;
         public static final Supplier<Double> CANNONBALL_POWER_SCALING;
         public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
     }

@@ -13,6 +13,7 @@
     "minecraft:desert_pyramid",
     "minecraft:pillager_outpost",
     "minecraft:igloo",
-    "minecraft:end_city"
+    "minecraft:end_city",
+    "supplementaries:galleon"
   ]
 }

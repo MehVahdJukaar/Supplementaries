@@ -9,7 +9,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntRBTreeSet;
 import net.mehvahdjukaar.moonlight.api.misc.WeakHashSet;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.mehvahdjukaar.supplementaries.reg.ModWorldgenRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModWorldgen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
-import net.minecraft.world.level.levelgen.heightproviders.HeightProvider;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
@@ -36,23 +35,23 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSetting
 import java.util.Optional;
 import java.util.Set;
 
-public class WaySignStructure extends Structure {
+public class RoadSignStructure extends Structure {
 
 
-    public static final MapCodec<WaySignStructure> CODEC = RecordCodecBuilder.<WaySignStructure>mapCodec(instance ->
-            instance.group(WaySignStructure.settingsCodec(instance),
+    public static final MapCodec<RoadSignStructure> CODEC = RecordCodecBuilder.<RoadSignStructure>mapCodec(instance ->
+            instance.group(RoadSignStructure.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
                     Codec.INT.fieldOf("min_y").forGetter(structure -> structure.minY),
                     Codec.INT.fieldOf("max_y").forGetter(structure -> structure.maxY),
                     DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
                     LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
-            ).apply(instance, WaySignStructure::new));
+            ).apply(instance, RoadSignStructure::new));
 
 
-    public static class Type implements StructureType<WaySignStructure> {
+    public static class Type implements StructureType<RoadSignStructure> {
         @Override
-        public MapCodec<WaySignStructure> codec() {
+        public MapCodec<RoadSignStructure> codec() {
             return CODEC;
         }
     }
@@ -64,11 +63,11 @@ public class WaySignStructure extends Structure {
     private final DimensionPadding dimensionPadding;
     private final LiquidSettings liquidSettings;
 
-    public WaySignStructure(Structure.StructureSettings config,
-                            Holder<StructureTemplatePool> startPool,
-                            Optional<ResourceLocation> startJigsawName,
-                            int minY, int maxY,DimensionPadding dimensionPadding,
-                            LiquidSettings liquidSettings) {
+    public RoadSignStructure(Structure.StructureSettings config,
+                             Holder<StructureTemplatePool> startPool,
+                             Optional<ResourceLocation> startJigsawName,
+                             int minY, int maxY, DimensionPadding dimensionPadding,
+                             LiquidSettings liquidSettings) {
         super(config);
         this.startPool = startPool;
         this.startJigsawName = startJigsawName;
@@ -80,13 +79,13 @@ public class WaySignStructure extends Structure {
 
     @Override
     public StructureType<?> type() {
-        return ModWorldgenRegistry.WAY_SIGN.get();
+        return ModWorldgen.ROAD_SIGN_STRUCTURE.get();
     }
 
     @Override
     public Optional<Structure.GenerationStub> findGenerationPoint(Structure.GenerationContext context) {
 
-        Optional<BlockPos> suitablePosition = getSuitablePosition(context, this);
+        Optional<BlockPos> suitablePosition = getSuitablePosition(context);
         // Check if the spot is valid for our structure. This is just as another method for cleanness.
         // Returning an empty optional tells the game to skip this spot as it will not generate the structure.
         if (suitablePosition.isEmpty()) {
@@ -117,7 +116,7 @@ public class WaySignStructure extends Structure {
     /**
      * gets spawning position or empty if not suitable
      */
-    private static Optional<BlockPos> getSuitablePosition(Structure.GenerationContext context, WaySignStructure structure) {
+    private Optional<BlockPos> getSuitablePosition(Structure.GenerationContext context) {
 
         ChunkPos chunkPos = context.chunkPos();
         ChunkGenerator generator = context.chunkGenerator();
@@ -143,8 +142,8 @@ public class WaySignStructure extends Structure {
         // Grab height of land. Will stop at first non-air block.
         int y = generator.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor, randomState);
 
-        if (y < structure.minY || y > structure.maxY) return Optional.empty();
-        if (y > 105 || y < generator.getSeaLevel()) return Optional.empty();
+        if (y < this.minY || y > this.maxY) return Optional.empty();
+        if (y < generator.getSeaLevel()) return Optional.empty();
 
         IntList list = new IntArrayList();
         //I could remove this but it makes for nicer generation

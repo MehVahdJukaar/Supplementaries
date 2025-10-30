@@ -21,6 +21,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -553,6 +554,10 @@ public class ModCreativeTabs {
         adder.add(CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.WICKER_FENCE_NAME,
                 ModRegistry.WICKER_FENCE);
+
+        adder.after(Items.IRON_BARS, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.GOLD_BARS_NAME,
+                ModRegistry.GOLD_BARS);
 
         adder.after(Items.IRON_BARS, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.IRON_GATE_NAME,

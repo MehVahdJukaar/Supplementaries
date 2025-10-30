@@ -1,7 +1,7 @@
 {
   "structures": [
     {
-      "structure": "supplementaries:way_sign",
+      "structure": "supplementaries:galleon",
       "weight": 1
     }
   ],
@@ -9,7 +9,7 @@
 
     "type": "minecraft:random_spread",
 
-    "salt": 431041527,
+    "salt": 271043157,
 
     "spacing": 19,
 
