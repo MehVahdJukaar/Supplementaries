@@ -6,6 +6,30 @@ loom {
     accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
 }
 
+
+
+publishing {
+    publications {
+        mavenCommon(MavenPublication) {
+            artifactId = rootProject.mod_id
+            from components.java
+        }
+    }
+
+    repositories {
+        // Add repositories to publish to here.
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
+
+    it.options.compilerArgs << "-Xmaxerrs" << "4000"
+
+}
+
+
 dependencies {
 
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
@@ -57,26 +81,5 @@ dependencies {
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-common:${shulker_box_tooltip_version}") { transitive false }
     modCompileOnly("curse.maven:blueprint-382216:5292242")
     modCompileOnly("curse.maven:environmental-388992:6060255")
-
-}
-
-publishing {
-    publications {
-        mavenCommon(MavenPublication) {
-            artifactId = rootProject.mod_id
-            from components.java
-        }
-    }
-
-    repositories {
-        // Add repositories to publish to here.
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
-    it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
-
-    it.options.compilerArgs << "-Xmaxerrs" << "4000"
 
 }

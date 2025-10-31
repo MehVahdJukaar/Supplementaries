@@ -82,6 +82,14 @@ publishing {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
+tasks.withType(JavaCompile).configureEach {
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
+
+    it.options.compilerArgs << "-Xmaxerrs" << "4000"
+
+}
+
 dependencies {
     neoForge "net.neoforged:neoforge:${neo_version}"
 
@@ -95,7 +103,6 @@ dependencies {
     implementation(include("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}"))
 
 
-    //modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     modApi("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     //modImplementation("curse.maven:selene-499980:7007381")
 
@@ -194,13 +201,5 @@ dependencies {
     //modCompileOnly("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
-
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
-    it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
-
-    it.options.compilerArgs << "-Xmaxerrs" << "4000"
 
 }
