@@ -473,7 +473,12 @@ public class ClientRegistry {
         event.register(ModRegistry.CAGE_ITEM.get(), new CageItemRenderer());
         event.register(ModRegistry.JAR_ITEM.get(), new JarItemRenderer());
         event.register(ModRegistry.BLACKBOARD_ITEM.get(), new BlackboardItemRenderer());
-        event.register(ModRegistry.ENDERMAN_SKULL_ITEM.get(), new EndermanHeadItemRenderer());
+        event.register(ModRegistry.ENDERMAN_SKULL_ITEM.get(), new TileDelegateItemRenderer(
+                ModRegistry.ENDERMAN_SKULL_TILE, ModRegistry.ENDERMAN_SKULL_BLOCK
+        ));
+        event.register(ModRegistry.SPIDER_SKULL_ITEM.get(), new TileDelegateItemRenderer(
+                ModRegistry.SPIDER_SKULL_TILE, ModRegistry.SPIDER_SKULL_BLOCK
+        ));
         event.register(ModRegistry.BUBBLE_BLOCK_ITEM.get(), new BubbleBlockItemRenderer());
         event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new LunchBoxItemRenderer());
         var renderer = new FlagItemRenderer();

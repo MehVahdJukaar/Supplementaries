@@ -1,36 +1,40 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 
+import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.ItemStackRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+
+import java.util.function.Supplier;
 
 
-public class EndermanHeadItemRenderer extends ItemStackRenderer {
+public class TileDelegateItemRenderer extends ItemStackRenderer {
 
-    private EndermanSkullBlockTile dummyTile;
+    private final Supplier<BlockEntity> dummyTile;
 
-    public EndermanHeadItemRenderer() {
+    public TileDelegateItemRenderer(Supplier<? extends BlockEntityType<?>> tileSupp, Supplier<? extends Block> blockSupplier) {
         super();
+        this.dummyTile = Suppliers.memoize(() -> tileSupp.get()
+                .create(BlockPos.ZERO, blockSupplier.get().defaultBlockState()));
     }
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType,
                              PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlayIn) {
-
-        if (dummyTile == null) {
-            dummyTile = new EndermanSkullBlockTile(BlockPos.ZERO, ModRegistry.ENDERMAN_SKULL_BLOCK.get().defaultBlockState());
-        }
+        poseStack.pushPose();
         poseStack.translate(1, 0, 1);
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
-        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(dummyTile, poseStack, bufferSource, packedLight, combinedOverlayIn);
+        Minecraft.getInstance().getBlockEntityRenderDispatcher()
+                .renderItem(dummyTile.get(), poseStack, bufferSource, packedLight, combinedOverlayIn);
+        poseStack.popPose();
     }
 }
