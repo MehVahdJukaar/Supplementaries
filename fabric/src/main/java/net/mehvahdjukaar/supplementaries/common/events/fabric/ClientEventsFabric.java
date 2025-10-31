@@ -85,7 +85,7 @@ public class ClientEventsFabric {
     private static boolean wasInventoryDown = true;
 
     private static void onRenderHud(GuiGraphics graphics, float partialTicks) {
-        SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
+        SelectableContainerItemHud.getInstance().render(graphics, partialTicks);
         SlimedOverlayHudImpl.INSTANCE.render(graphics, partialTicks);
         CannonChargeHudImpl.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge

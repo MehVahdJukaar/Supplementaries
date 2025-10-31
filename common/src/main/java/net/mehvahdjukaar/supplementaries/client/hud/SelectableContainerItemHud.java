@@ -29,6 +29,7 @@ public abstract class SelectableContainerItemHud {
 
     //deadlock prevention
     private static class Holder {
+        //this can't never ever be null
         private static final SelectableContainerItemHud INSTANCE = makeInstance();
     }
 
@@ -165,6 +166,11 @@ public abstract class SelectableContainerItemHud {
         ItemStack stack = stackSlot.get(Minecraft.getInstance().player);
         if (!stack.is(itemUsed)) return null;
         return itemUsed.getData(stack);
+    }
+
+    public void render(GuiGraphics graphics, float partialTicks) {
+        var w = this.mc.getWindow();
+        this.render(graphics, partialTicks, w.getGuiScaledWidth(), w.getGuiScaledHeight());
     }
 
     public void render(GuiGraphics graphics, float partialTicks, int screenWidth, int screenHeight) {

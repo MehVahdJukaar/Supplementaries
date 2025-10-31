@@ -23,7 +23,6 @@ public class SelectableContainerItemHudImpl extends SelectableContainerItemHud i
         return new SelectableContainerItemHudImpl();
     }
 
-
     @Override
     public void drawHighlight(GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow) {
         int l;
