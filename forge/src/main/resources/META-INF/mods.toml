@@ -19,38 +19,38 @@ issueTrackerURL = "${mod_github}/issues"
     credits = "${mod_credits}"
     description = '''${mod_description}'''
     modUrl = "${mod_homepage}"
-    updateJSONURL = "${update_url}"
+    updateJSONURL = "https://api.modrinth.com/updates/${mod_id}/forge_updates.json"
     itemIcon = "supplementaries:globe" #catalogue icon
 
-[[dependencies.supplementaries]]
+[[dependencies.${mod_id}]]
     modId = "forge"
     mandatory = true
     versionRange = "${neo_version_range}"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.supplementaries]]
+[[dependencies.${mod_id}]]
     modId = "minecraft"
     mandatory = true
     versionRange = "[${minecraft_min_version},${minecraft_max_version})"
     ordering = "NONE"
     side = "CLIENT"
 
-[[dependencies.supplementaries]]
+[[dependencies.${mod_id}]]
     modId = "moonlight"
     mandatory = true
     versionRange = "[${required_moonlight_version},]"
     ordering = "NONE"
     side = "BOTH"
 
-[[dependencies.supplementaries]]
+[[dependencies.${mod_id}]]
     modId = "quark"
     mandatory = false
     versionRange = "[1.19-3.4-404,]"
     ordering = "AFTER"
     side = "BOTH"
 
-[[dependencies.supplementaries]]
+[[dependencies.${mod_id}]]
     modId = "create"
     mandatory = false
     versionRange = "[6.0.0,]"
