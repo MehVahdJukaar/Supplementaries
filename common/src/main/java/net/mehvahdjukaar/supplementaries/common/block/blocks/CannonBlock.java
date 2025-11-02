@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
@@ -44,6 +45,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -76,11 +78,13 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     protected static final VoxelShape SHAPE_WEST = Block.box(0.0, 0.0, 0.0, 2.0, 16.0, 16.0);
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final EnumProperty<Rotation> ROTATE_TILE = ModBlockProperties.ROTATE_TILE;
 
     public CannonBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.UP)
+                .setValue(ROTATE_TILE, Rotation.NONE)
                 .setValue(POWERED, false));
     }
 
@@ -125,7 +129,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING, POWERED);
+        builder.add(FACING, POWERED, ROTATE_TILE);
     }
 
     @Override
@@ -152,7 +156,8 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)))
+                .setValue(ROTATE_TILE, state.getValue(ROTATE_TILE).getRotated(rot));
     }
 
     @Override

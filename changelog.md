@@ -1,1 +1,3 @@
-- many small internal improvements and misc fixes
+- fixed a crash with custom creative tab
+- rope rotation fix
+- cannon rotation fix

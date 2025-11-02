@@ -31,6 +31,7 @@ public class GalleonStructure extends Structure {
             instance.group(GalleonStructure.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
+                    Codec.INT.optionalFieldOf("y_offset",0).forGetter(structure -> structure.yOffset),
                     Climate.ParameterPoint.CODEC.optionalFieldOf("biome_point").forGetter(structure -> structure.biomePoint),
                     Codec.BOOL.optionalFieldOf("require_sea_level", true).forGetter(structure -> structure.requireSeaLevel),
                     DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
@@ -47,6 +48,7 @@ public class GalleonStructure extends Structure {
 
     private final Holder<StructureTemplatePool> startPool;
     private final Optional<ResourceLocation> startJigsawName;
+    private final int yOffset;
     private final Optional<Climate.ParameterPoint> biomePoint;
     private final boolean requireSeaLevel;
     private final DimensionPadding dimensionPadding;
@@ -55,6 +57,7 @@ public class GalleonStructure extends Structure {
     public GalleonStructure(StructureSettings config,
                             Holder<StructureTemplatePool> startPool,
                             Optional<ResourceLocation> startJigsawName,
+                            int yOffset,
                             Optional<Climate.ParameterPoint> biomePoint,
                             boolean requireSeaLevel,
                             DimensionPadding dimensionPadding,
@@ -62,6 +65,7 @@ public class GalleonStructure extends Structure {
         super(config);
         this.startPool = startPool;
         this.startJigsawName = startJigsawName;
+        this.yOffset = yOffset;
         this.biomePoint = biomePoint;
         this.requireSeaLevel = requireSeaLevel;
         this.dimensionPadding = dimensionPadding;
@@ -88,14 +92,14 @@ public class GalleonStructure extends Structure {
                 context, // Used for JigsawPlacement to get all the proper behaviors done.
                 this.startPool, // The starting pool to use to create the structure layout from
                 this.startJigsawName, // Can be used to only spawn from one Jigsaw block. But we don't need to worry about this.
-                3, // How deep a branch of pieces can go away from center piece. (5 means branches cannot be longer than 5 pieces from center piece)
+                10, // How deep a branch of pieces can go away from center piece. (5 means branches cannot be longer than 5 pieces from center piece)
                 blockPos, // Where to spawn the structure.
                 false, // "useExpansionHack" This is for legacy villages to generate properly. You should keep this false always.
                 Optional.empty(), // Adds the terrain height's y value to the passed in blockpos's y value. (This uses WORLD_SURFACE_WG heightmap which stops at top water too)
                 // Here, blockpos's y value is 60 which means the structure spawn 60 blocks above terrain height.
                 // Set this to false for structure to be place only at the passed in blockpos's Y value instead.
                 // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
-                32,
+                60,
                 PoolAliasLookup.EMPTY, // Optional thing that allows swapping a template pool with another per structure json instance. We don't need this but see vanilla JigsawStructure class for how to wire it up if you want it.
                 this.dimensionPadding, // Optional thing to prevent generating too close to the bottom or top of the dimension.
                 this.liquidSettings);  // Optional thing to control whether the structure will be waterlogged when replacing pre-existing water in the world.
@@ -117,8 +121,7 @@ public class GalleonStructure extends Structure {
         int x = chunkPos.getMiddleBlockX();
         int z = chunkPos.getMiddleBlockZ();
         // Grab height of land. Will stop at first non-air block.
-        int y = generator.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor, randomState)
-                + 1;
+        int y = generator.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor, randomState) + 1;
 
         int seaLevel = context.chunkGenerator().getSeaLevel();
         if (this.requireSeaLevel && y != seaLevel) return Optional.empty();
@@ -127,7 +130,7 @@ public class GalleonStructure extends Structure {
         if (this.biomePoint.isPresent() && !containsPoint(this.biomePoint.get(), paramAtPos)) return Optional.empty();
 
 
-        return Optional.of(new BlockPos(x, y, z));
+        return Optional.of(new BlockPos(x, y - yOffset, z));
     }
 
     private static boolean containsPoint(Climate.ParameterPoint cube, Climate.TargetPoint point) {

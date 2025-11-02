@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
@@ -36,6 +37,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
@@ -168,6 +170,16 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
             this.trajectoryData = IBallisticBehavior.Data.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
                     .getOrThrow();
         }
+
+        //structure block rotation decoding
+        BlockState state = this.getBlockState();
+        if (state.hasProperty(ModBlockProperties.ROTATE_TILE) && level != null) {
+            Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
+            if (rot != Rotation.NONE) {
+                this.setGlobalYaw(this.selfAccess, this.yaw + (rot.ordinal() * 90));
+                level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
+            }
+        }
     }
 
     @Nullable
@@ -259,7 +271,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     private void recomputeTrajectoryData() {
-        if (level.isClientSide) return;
+        if (level == null || level.isClientSide) return;
         if (trajectoryFor != getProjectile().getItem()) {
             computeTrajectoryData();
         }
@@ -319,7 +331,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     // sets both prev and current yaw. Only makes sense to be called from render thread
     public void setRenderYaw(CannonAccess access, float relativeYaw) {
-        setYaw(access, relativeYaw );
+        setYaw(access, relativeYaw);
         this.prevYaw = this.yaw;
     }
 

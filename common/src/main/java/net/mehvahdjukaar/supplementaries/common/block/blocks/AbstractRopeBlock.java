@@ -302,26 +302,30 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
 
     @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
+        final boolean east = hasConnection(Direction.EAST, state);
+        final boolean south = hasConnection(Direction.SOUTH, state);
+        final boolean west = hasConnection(Direction.WEST, state);
+        final boolean north = hasConnection(Direction.NORTH, state);
         return switch (rotation) {
             case CLOCKWISE_180 -> {
-                state = setConnection(Direction.NORTH, state, hasConnection(Direction.SOUTH, state));
-                state = setConnection(Direction.EAST, state, hasConnection(Direction.WEST, state));
-                state = setConnection(Direction.SOUTH, state, hasConnection(Direction.NORTH, state));
-                state = setConnection(Direction.WEST, state, hasConnection(Direction.EAST, state));
+                state = setConnection(Direction.NORTH, state, south);
+                state = setConnection(Direction.EAST, state, west);
+                state = setConnection(Direction.SOUTH, state, north);
+                state = setConnection(Direction.WEST, state, east);
                 yield state;
             }
             case COUNTERCLOCKWISE_90 -> {
-                state = setConnection(Direction.NORTH, state, hasConnection(Direction.EAST, state));
-                state = setConnection(Direction.EAST, state, hasConnection(Direction.SOUTH, state));
-                state = setConnection(Direction.SOUTH, state, hasConnection(Direction.WEST, state));
-                state = setConnection(Direction.WEST, state, hasConnection(Direction.NORTH, state));
+                state = setConnection(Direction.NORTH, state, east);
+                state = setConnection(Direction.EAST, state, south);
+                state = setConnection(Direction.SOUTH, state, west);
+                state = setConnection(Direction.WEST, state, north);
                 yield state;
             }
             case CLOCKWISE_90 -> {
-                state = setConnection(Direction.NORTH, state, hasConnection(Direction.WEST, state));
-                state = setConnection(Direction.EAST, state, hasConnection(Direction.NORTH, state));
-                state = setConnection(Direction.SOUTH, state, hasConnection(Direction.EAST, state));
-                state = setConnection(Direction.WEST, state, hasConnection(Direction.SOUTH, state));
+                state = setConnection(Direction.NORTH, state, west);
+                state = setConnection(Direction.EAST, state, north);
+                state = setConnection(Direction.SOUTH, state, east);
+                state = setConnection(Direction.WEST, state, south);
                 yield state;
             }
             default -> state;

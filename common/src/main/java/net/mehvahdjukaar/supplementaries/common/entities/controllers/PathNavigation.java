@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities.controllers;
 
-package net.minecraft.world.entity.ai.navigation;
-
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 import java.util.stream.Collectors;
