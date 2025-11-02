@@ -14,10 +14,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class SelectableContainerItemHudImpl extends SelectableContainerItemHud {
 
-    public static final SelectableContainerItemHudImpl INSTANCE = new SelectableContainerItemHudImpl();
-
     public static SelectableContainerItemHud makeInstance() {
-        return INSTANCE;
+        return new SelectableContainerItemHudImpl();
     }
 
     public SelectableContainerItemHudImpl() {

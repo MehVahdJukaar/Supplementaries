@@ -187,7 +187,7 @@ public class ServerEvents {
 
 
     @EventCalled
-    public static void onEntityLoad(Entity entity, ServerLevel serverLevel) {
+    public static void onAddExtraGoals(Entity entity, ServerLevel serverLevel) {
         if (CommonConfigs.Functional.FODDER_ENABLED.get()) {
             if (entity instanceof Animal animal) {
                 EntityType<?> type = entity.getType();

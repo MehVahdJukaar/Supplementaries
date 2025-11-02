@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.events.neoforge;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
@@ -156,7 +155,7 @@ public class ServerEventsForge {
     public static void onEntityJoin(EntityJoinLevelEvent event) {
         var level = event.getLevel();
         if (level instanceof ServerLevel serverLevel) {
-            ServerEvents.onEntityLoad(event.getEntity(), serverLevel);
+            ServerEvents.onAddExtraGoals(event.getEntity(), serverLevel);
         } else {
             ClientEvents.onEntityLoad(event.getEntity(), event.getLevel());
         }

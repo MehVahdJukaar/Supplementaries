@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.entities.goals;
+package net.mehvahdjukaar.supplementaries.common.entities.controllers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;

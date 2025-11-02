@@ -78,7 +78,7 @@ public class ClientEventsFabric {
     }
 
     private static void onRenderHud(GuiGraphics graphics, DeltaTracker partialTicks) {
-        SelectableContainerItemHudImpl.INSTANCE.render(graphics, partialTicks);
+        SelectableContainerItemHud.getInstance().render(graphics, partialTicks);
         SlimedOverlayHud.INSTANCE.render(graphics, partialTicks);
         CannonChargeHud.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge
