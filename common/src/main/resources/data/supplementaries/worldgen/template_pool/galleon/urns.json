@@ -1,0 +1,14 @@
+{
+  "name": "supplementaries:galleon/urns",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "feature": "supplementaries:cave_urns",
+        "projection": "rigid",
+        "element_type": "minecraft:feature_pool_element"
+      }
+    }
+  ]
+}

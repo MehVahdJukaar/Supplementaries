@@ -17,7 +17,6 @@
         "projection": "rigid",
         "element_type": "minecraft:feature_pool_element"
       }
-
     }
   ]
 }

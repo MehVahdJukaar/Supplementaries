@@ -14,10 +14,7 @@
       ]
     }
   },
-  "start_height": {
-    "absolute": 0
-  },
-  "start_pool": "minecraft:pillager_outpost/base_plates",
+  "start_pool": "supplementaries:galleon/start_pool",
   "step": "surface_structures",
   "require_sea_level": true
 }

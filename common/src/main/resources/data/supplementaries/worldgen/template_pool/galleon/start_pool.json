@@ -1,13 +1,12 @@
 {
-  "name": "supplementaries:road_sign/start_pool",
+  "name": "supplementaries:galleon/start_pool",
   "fallback": "minecraft:empty",
   "elements": [
     {
       "weight": 1,
       "element": {
         "element_type": "minecraft:single_pool_element",
-        //location of the nbt files
-        "location": "supplementaries:road_sign",
+        "location": "supplementaries:galleon/galleon",
         "processors": "minecraft:empty",
         "projection": "rigid"
       }
