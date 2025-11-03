@@ -1,0 +1,8 @@
+{
+  "asset_id": "supplementaries:coast",
+  "decal": false,
+  "description": {
+    "translate": "trim_pattern.supplementaries.coast"
+  },
+  "template_item": "supplementaries:coast_armor_trim_smithing_template"
+}

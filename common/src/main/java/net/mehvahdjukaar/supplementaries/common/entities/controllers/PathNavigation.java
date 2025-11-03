@@ -113,21 +113,11 @@ public abstract class PathNavigation {
         }
     }
 
-    /**
-     * Returns path to given coordinates, delegating to createPath(BlockPos,...).
-     *
-     * [SPECULATIVE]
-     */
     @Nullable
     public final Path createPath(double x, double y, double z, int accuracy) {
         return this.createPath(BlockPos.containing(x, y, z), accuracy);
     }
 
-    /**
-     * Returns a path to one of the elements of the provided stream or null.
-     *
-     * [SPECULATIVE]
-     */
     @Nullable
     public Path createPath(Stream<BlockPos> targets, int accuracy) {
         return this.createPath((Set<BlockPos>)targets.collect(Collectors.toSet()), 8, false, accuracy);
@@ -138,11 +128,6 @@ public abstract class PathNavigation {
         return this.createPath(positions, 8, false, distance);
     }
 
-    /**
-     * Returns path to given BlockPos.
-     *
-     * [SPECULATIVE]
-     */
     @Nullable
     public Path createPath(BlockPos pos, int accuracy) {
         return this.createPath(ImmutableSet.of(pos), 8, false, accuracy);
@@ -153,24 +138,11 @@ public abstract class PathNavigation {
         return this.createPath(ImmutableSet.of(pos), 8, false, regionOffset, accuracy);
     }
 
-    /**
-     * Returns a path to the given entity or null.
-     *
-     * [SPECULATIVE]
-     */
     @Nullable
     public Path createPath(Entity entity, int accuracy) {
         return this.createPath(ImmutableSet.of(entity.blockPosition()), 16, true, accuracy);
     }
 
-    /**
-     * Returns a path to one of the given targets or null.
-     *
-     * Delegates to the overload that accepts followRange and performs pathfinder search
-     * in a local region centered on the mob.
-     *
-     * [SPECULATIVE]
-     */
     @Nullable
     protected Path createPath(Set<BlockPos> targets, int regionOffset, boolean offsetUpward, int accuracy) {
         return this.createPath(targets, regionOffset, offsetUpward, accuracy, (float)this.mob.getAttributeValue(Attributes.FOLLOW_RANGE));
@@ -182,8 +154,6 @@ public abstract class PathNavigation {
      * Constructs a PathNavigationRegion centered on the mob and asks pathFinder to find a route.
      * If a path is returned the navigation stores the final target and reachRange and resets
      * the stuck-timeout trackers.
-     *
-     * [SPECULATIVE: describes path caching/region behaviour]
      */
     @Nullable
     protected Path createPath(Set<BlockPos> targets, int regionOffset, boolean offsetUpward, int accuracy, float followRange) {
@@ -287,8 +257,6 @@ public abstract class PathNavigation {
     /**
      * Given the candidate 3D position, returns a Y value grounded to the floor if necessary
      * so that move control will move the mob to a sensible ground Y coordinate.
-     *
-     * [SPECULATIVE]
      */
     protected double getGroundY(Vec3 vec) {
         BlockPos blockPos = BlockPos.containing(vec);
@@ -316,29 +284,45 @@ public abstract class PathNavigation {
         this.doStuckDetection(currentPosition);
     }
 
+    //should I target next node. Should advance basically
+
+    /**
+     * If you can go directly to the next node — advance.
+     *
+     * Otherwise, if the path after the next node brings you back toward the mob (or you're already extremely close to next),
+     * advance only if the next-after node is either closer or the directions to next and second-next are opposed
+     * (path doubles back). Otherwise, do not advance.
+     */
     private boolean shouldTargetNextNodeInDirection(Vec3 currentPosition) {
         if (this.path.getNextNodeIndex() + 1 >= this.path.getNodeCount()) {
+            //is at end of path
             return false;
         } else {
-            Vec3 currentNodeCenter = Vec3.atBottomCenterOf(this.path.getNextNodePos());
-            if (!currentPosition.closerThan(currentNodeCenter, 2.0)) {
+            Vec3 nextNodePos = Vec3.atBottomCenterOf(this.path.getNextNodePos());
+            if (!currentPosition.closerThan(nextNodePos, 2.0)) {
+                //I am too close to the next node. Guess I'm not moving at all?
+                //weird considering there's already distance check before this
                 return false;
             } else if (this.canMoveDirectly(currentPosition, this.path.getNextEntityPos(this.mob))) {
+                //if path is clear means I can walk to next node correctly. target it.
                 return true;
             } else {
-                Vec3 nextNodeCenter = Vec3.atBottomCenterOf(this.path.getNodePos(this.path.getNextNodeIndex() + 1));
-                Vec3 toCurrent = currentNodeCenter.subtract(currentPosition);
-                Vec3 toNext = nextNodeCenter.subtract(currentPosition);
-                double distCurrentSqr = toCurrent.lengthSqr();
+                //i cant move directly towards my next goal. whats going on? IDK TBH
+                Vec3 secondNextNodePos = Vec3.atBottomCenterOf(this.path.getNodePos(this.path.getNextNodeIndex() + 1));
+                Vec3 toNext = nextNodePos.subtract(currentPosition);
+                Vec3 toSecondNext = secondNextNodePos.subtract(currentPosition);
                 double distNextSqr = toNext.lengthSqr();
-                boolean nextIsCloser = distNextSqr < distCurrentSqr;
-                boolean currentIsVeryClose = distCurrentSqr < 0.5;
-                if (!nextIsCloser && !currentIsVeryClose) {
+                double distSecondNextSqr = toSecondNext.lengthSqr();
+                boolean secondNextIsCloser = distSecondNextSqr < distNextSqr;
+                boolean currentIsVeryClose = distNextSqr < 0.5;
+                if (!secondNextIsCloser && !currentIsVeryClose) {
+                    //if second next is further away from my pos than the previous and I'm not very close
                     return false;
                 } else {
-                    Vec3 dirCurrent = toCurrent.normalize();
-                    Vec3 dirNext = toNext.normalize();
-                    return dirNext.dot(dirCurrent) < 0.0;
+                    Vec3 dirToNext = toNext.normalize();
+                    Vec3 dirToSecondNext = toSecondNext.normalize();
+                    //if they point opposite directions
+                    return dirToSecondNext.dot(dirToNext) < 0.0;
                 }
             }
         }
@@ -349,8 +333,6 @@ public abstract class PathNavigation {
      * and also enforces a per-node timeout that can cancel navigation if the mob spends too long near a node.
      *
      * @param currentPosition the current position of the mob (usually obtained from getTempMobPos())
-     *
-     * [SPECULATIVE]
      */
     protected void doStuckDetection(Vec3 currentPosition) {
         if (this.tickCount - this.lastStuckCheckTick > STUCK_CHECK_INTERVAL) {
@@ -399,11 +381,6 @@ public abstract class PathNavigation {
         this.isStuck = false;
     }
 
-    /**
-     * Returns true if there is no active path or if the active path is completed.
-     *
-     * [SPECULATIVE]
-     */
     public boolean isDone() {
         return this.path == null || this.path.isDone();
     }
@@ -412,11 +389,6 @@ public abstract class PathNavigation {
         return !this.isDone();
     }
 
-    /**
-     * Cancels the current navigation and clears the path reference.
-     *
-     * [SPECULATIVE]
-     */
     public void stop() {
         this.path = null;
     }
