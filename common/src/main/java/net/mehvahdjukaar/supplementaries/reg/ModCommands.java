@@ -35,6 +35,7 @@ public class ModCommands {
                         .then(OpenConfiguredCommand.register(context))
                         .then(IUsedToRollTheDice.register(context))
                         .then(AddCageMobCommand.register(context))
+                        .then(DebugRenderersCommand.register(context))
                         .then(RecordSongCommand.register(context))
                         .then(ChangeDimensionCommand.register(context))
                         .then(Commands.literal("map")

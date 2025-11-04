@@ -18,6 +18,7 @@
     "CatSitOnBlockGoalMixin",
     "ComparatorBlockMixin",
     "CreeperMixin",
+    "DebugPacketsMixin",
     "EntityMixin",
     "EvokerMixin",
     "ExplorationMapFunctionMixin",

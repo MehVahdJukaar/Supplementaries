@@ -37,6 +37,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
@@ -346,6 +347,13 @@ public class ClientReceivers {
             String text = ob + hours + br + ":" + ob + String.format("%02d", minutes) + br + postfix;
             p.displayClientMessage(Component.literal(text), true);
         });
+    }
+
+    public static void handleDebugNav(ClientBoundDebugPathfindingPacket packet) {
+        Minecraft.getInstance()
+                .debugRenderer
+                .pathfindingRenderer
+                .addPath(packet.entityId(), packet.path(), packet.maxNodeDistance());
     }
 
 

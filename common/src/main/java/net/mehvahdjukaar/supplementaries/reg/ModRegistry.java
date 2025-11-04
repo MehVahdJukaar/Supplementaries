@@ -104,7 +104,7 @@ public class ModRegistry {
     //        PlatHelper.newSpawnEgg(ModEntities.RED_MERCHANT, 0x7A090F, 0xF4f1e0, new Item.Properties()));
 
     public static final Supplier<Item> PLUNDERER_SPAWN_EGG_ITEM = regItem(PLUNDERER_NAME + "_spawn_egg", () ->
-            PlatHelper.newSpawnEgg(ModEntities.PLUNDERER, 0x7A090F, 0xF4f1e0, new Item.Properties()));
+            PlatHelper.newSpawnEgg(ModEntities.PLUNDERER, 0x989898, 0x4d2f29, new Item.Properties()));
 
 
     //dispenser minecart
