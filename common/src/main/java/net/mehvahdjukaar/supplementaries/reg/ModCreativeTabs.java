@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.levelgen.Heightmap;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -143,6 +143,10 @@ public class ModCreativeTabs {
         adder.after(Items.FLOWER_POT, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.FLOWER_BOX_NAME,
                 ModRegistry.FLOWER_BOX);
+
+        adder.after(ItemTags.TRIM_TEMPLATES, CreativeModeTabs.INGREDIENTS,
+                ModConstants.GALLEON_NAME,
+                ModRegistry.BLAST_TRIM_TEMPLATE);
 
         adder.before(Items.DRAGON_HEAD, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.ENDERMAN_HEAD_NAME,
@@ -455,6 +459,10 @@ public class ModCreativeTabs {
         //        ModConstants.RED_MERCHANT_NAME,
         //        ModRegistry.RED_MERCHANT_SPAWN_EGG_ITEM);
 
+        adder.add(CreativeModeTabs.SPAWN_EGGS,
+                ModConstants.PLUNDERER_NAME,
+                ModRegistry.PLUNDERER_SPAWN_EGG_ITEM);
+
         adder.before(Items.BRICKS, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.ASH_BRICKS_NAME,
                 ModRegistry.ASH_BRICKS_BLOCKS.values().toArray(Supplier[]::new));
@@ -563,12 +571,11 @@ public class ModCreativeTabs {
                 ModConstants.IRON_GATE_NAME,
                 ModRegistry.IRON_GATE);
 
-        boolean goldBarsOn = CommonConfigs.Building.GOLD_BARS_ENABLED.get();
-        if (CompatHandler.QUARK && goldBarsOn) {
+        if (CompatHandler.QUARK && QuarkCompat.isGoldBarsOn()) {
             adder.afterML("quark:gold_bars", CreativeModeTabs.BUILDING_BLOCKS,
                     ModConstants.IRON_GATE_NAME,
                     ModRegistry.GOLD_GATE);
-        } else if (!goldBarsOn) {
+        } else if (CommonConfigs.Building.GOLD_BARS_ENABLED.get()) {
             adder.after(ModRegistry.GOLD_BARS.get().asItem(), CreativeModeTabs.BUILDING_BLOCKS,
                     ModConstants.IRON_GATE_NAME,
                     ModRegistry.GOLD_GATE);

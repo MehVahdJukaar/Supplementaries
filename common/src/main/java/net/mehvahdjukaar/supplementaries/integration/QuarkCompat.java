@@ -259,4 +259,9 @@ public class QuarkCompat {
             DoubleDoorOpeningModule.enableFenceGates = oldFenceValue;
         }
     }
+
+    //TODO:
+    public static boolean isGoldBarsOn() {
+        return true;
+    }
 }

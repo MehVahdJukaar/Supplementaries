@@ -29,12 +29,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.armortrim.TrimPattern;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -100,6 +102,9 @@ public class ModRegistry {
     //red merchant
     //public static final Supplier<Item> RED_MERCHANT_SPAWN_EGG_ITEM = regItem(RED_MERCHANT_NAME + "_spawn_egg", () ->
     //        PlatHelper.newSpawnEgg(ModEntities.RED_MERCHANT, 0x7A090F, 0xF4f1e0, new Item.Properties()));
+
+    public static final Supplier<Item> PLUNDERER_SPAWN_EGG_ITEM = regItem(PLUNDERER_NAME + "_spawn_egg", () ->
+            PlatHelper.newSpawnEgg(ModEntities.PLUNDERER, 0x7A090F, 0xF4f1e0, new Item.Properties()));
 
 
     //dispenser minecart
@@ -205,6 +210,11 @@ public class ModRegistry {
 
     public static final Supplier<Item> SLICE_MAP = regItem(SLICE_MAP_NAME, () -> new EmptySliceMapItem(new Item.Properties()));
 
+    //trim
+    public static final ResourceKey<TrimPattern> BLAST_TRIM = ResourceKey.create(Registries.TRIM_PATTERN, res("blast"));
+
+    public static final Supplier<Item> BLAST_TRIM_TEMPLATE = regItem("blast_armor_trim_smithing_template",
+            () -> SmithingTemplateItem.createArmorTrimTemplate(BLAST_TRIM));
 
     //blocks
 
@@ -1208,13 +1218,12 @@ public class ModRegistry {
                     EndermanSkullBlockTile::new, ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get()));
 
     //spider head
-
     public static final Supplier<SkullBlock> SPIDER_SKULL_BLOCK = regBlock(SPIDER_HEAD_NAME, () ->
-            new SpiderSkullBlock( BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+            new SpiderSkullBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
                     .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<WallSkullBlock> SPIDER_SKULL_BLOCK_WALL = regBlock("spider_wall_head", () ->
-            new SpiderWallSkullBlock( BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+            new SpiderWallSkullBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
                     .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<Item> SPIDER_SKULL_ITEM = regItem(SPIDER_HEAD_NAME, () ->
@@ -1223,7 +1232,7 @@ public class ModRegistry {
 
     public static final Supplier<BlockEntityType<SkullBlockEntity>> SPIDER_SKULL_TILE = regTile(
             SPIDER_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
-                    SkullBlockEntity::new, SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get()));
+                    SpiderSkullBlockTile::new, SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get()));
 
 
     //ash basalt

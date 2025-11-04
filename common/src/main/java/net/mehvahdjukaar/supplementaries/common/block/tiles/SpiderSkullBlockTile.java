@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import dev.architectury.injectables.annotations.PlatformOnly;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -14,5 +15,12 @@ public class SpiderSkullBlockTile extends SkullBlockEntity {
     @Override
     public BlockEntityType<?> getType() {
         return ModRegistry.SPIDER_SKULL_TILE.get();
+    }
+
+    //thanks mojank
+    @PlatformOnly(value = PlatformOnly.FABRIC)
+    @Override
+    public boolean isValidBlockState(BlockState blockState) {
+        return this.getType().isValid(blockState);
     }
 }
