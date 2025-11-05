@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatAwareMoveController;
+import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatMoveController;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatPathNavigation;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
 import net.minecraft.core.BlockPos;
@@ -18,6 +18,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -32,7 +33,11 @@ import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.item.*;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.providers.EnchantmentProvider;
 import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders;
@@ -46,15 +51,27 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     private static final int INVENTORY_SIZE = 5;
     private static final int SLOT_OFFSET = 300;
     private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
+    private final BoatPathNavigation boatNavigation;
+    private final BoatMoveController boatController;
 
     public PlundererEntity(EntityType<? extends PlundererEntity> entityType, Level level) {
         super(entityType, level);
-        this.moveControl = new BoatAwareMoveController(this);
+        this.boatController = new BoatMoveController(this);
+        this.boatNavigation = new BoatPathNavigation(this, level);
     }
 
     @Override
-    protected PathNavigation createNavigation(Level level) {
-        return new BoatPathNavigation(this, level);
+    public PathNavigation getNavigation() {
+        return isControllingBoat() ? boatNavigation : super.getNavigation();
+    }
+
+    @Override
+    public MoveControl getMoveControl() {
+        return isControllingBoat() ? boatController : super.getMoveControl();
+    }
+
+    private boolean isControllingBoat() {
+        return this.getControlledVehicle() instanceof Boat;
     }
 
     @Override
@@ -66,7 +83,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     protected void registerGoals() {
         //TODO: add dismount boat goal
         // super.registerGoals();
-       // this.goalSelector.addGoal(0, new FloatGoal(this));
+        // this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, false));
         this.goalSelector.addGoal(4, new ManeuverAndShootCannonGoal(this, 20, 40));
 

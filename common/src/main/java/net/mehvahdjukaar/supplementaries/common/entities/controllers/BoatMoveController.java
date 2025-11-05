@@ -12,10 +12,10 @@ import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.Nullable;
 
-public class BoatAwareMoveController extends MoveControl {
+public class BoatMoveController extends MoveControl {
 
 
-    public BoatAwareMoveController(Mob mob) {
+    public BoatMoveController(Mob mob) {
         super(mob);
 
     }

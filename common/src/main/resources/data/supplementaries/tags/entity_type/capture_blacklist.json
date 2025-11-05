@@ -5,7 +5,8 @@
     {"id":"alexsmobs:bone_serpent","required":false},
     {"id":"alexsmobs:void_worm","required":false},
     {"id":"alexsmobs:anaconda","required":false},
-    {"id":"alexsmobs:murmur","required":false}
+    {"id":"alexsmobs:murmur","required":false},
+    {"id":"#c:capturing_not_supported","required":false}
   ]
 }
 

@@ -103,7 +103,9 @@ dependencies {
     implementation(include("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}"))
 
 
-    modApi("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    modApi("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}"){
+        transitive = false
+    }
     //modImplementation("curse.maven:selene-499980:7007381")
 
     modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
