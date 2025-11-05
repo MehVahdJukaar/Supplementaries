@@ -1,8 +1,8 @@
 {
   "advancements.adventure.globe.description": "地球儀をとてつもない速度で回転させる",
   "advancements.adventure.globe.title": "俺を振り回してるぜベイベー",
-  "advancements.adventure.way_sign.description": "村を見つけたいなら道標に従おう！",
-  "advancements.adventure.way_sign.title": "どこからどう見ても道標",
+  "advancements.adventure.road_sign.description": "村を見つけたいなら道標に従おう！",
+  "advancements.adventure.road_sign.title": "どこからどう見ても道標",
   "advancements.husbandry.soap.description": "石鹸を食べる（絶対に真似しないでください）",
   "advancements.husbandry.soap.title": "キ〇ワイプおいしい！",
   "advancements.husbandry.sus_stew.description": "怪しげなシチューを飲む",
@@ -34,6 +34,8 @@
   "block.supplementaries.banner.dragon.yellow": "黄色のドラゴン模様",
   "item.supplementaries.dragon_banner_pattern.desc": "ドラゴン模様",
   "item.supplementaries.dragon_banner_pattern": "旗の模様",
+  "trim_pattern.supplementaries.blast": "突風の装飾",
+  "item.supplementaries.blast_armor_trim_smithing_template": "鍛冶型",
   "block.supplementaries.ash": "灰",
   "block.supplementaries.ash_bricks": "灰レンガ",
   "block.supplementaries.ash_bricks_slab": "灰レンガのハーフブロック",
@@ -226,6 +228,7 @@
   "block.supplementaries.timber_brace": "補強された梁",
   "block.supplementaries.timber_cross_brace": "交差補強された梁",
   "block.supplementaries.timber_frame": "梁",
+  "block.supplementaries.gold_bars": "金格子",
   "block.supplementaries.trapped_present": "トラッププレゼント",
   "block.supplementaries.trapped_present_black": "黒色のトラッププレゼント",
   "block.supplementaries.trapped_present_blue": "青色のトラッププレゼント",
@@ -249,6 +252,7 @@
   "block.supplementaries.wicker_fence": "枝編みフェンス",
   "block.supplementaries.wild_flax": "野生の亜麻",
   "block.supplementaries.wind_vane": "風向計",
+  "block.supplementaries.spider_head": "クモの頭",
 
   "commands.supplementaries.registry.copy_elements_names": "クリックしてすべての項目名をクリップボードにコピー",
   "commands.supplementaries.registry.element": "%s：%s",
@@ -685,11 +689,11 @@
   
   "tag.worldgen.supplementaries.biome.has_basalt_ash": "Has Basalt Ash",
   "tag.worldgen.supplementaries.biome.has_cave_urns": "Has Cave Urns",
-  "tag.worldgen.supplementaries.biome.has_way_signs": "Has Way Signs",
+  "tag.worldgen.supplementaries.biome.has_road_signs": "Has Road Signs",
   "tag.worldgen.supplementaries.biome.has_wild_flax": "Has Wild Flax",
 
   "tag.worldgen.supplementaries.structure.adventure_map_destinations": "Adventure Map Destinations",
-  "tag.worldgen.supplementaries.structure.way_sign_destinations": "Way Sign Destinations",
+  "tag.worldgen.supplementaries.structure.road_sign_destinations": "Way Sign Destinations",
 
   "trinkets.slot.chest.quiver": "矢筒",
   "trinkets.slot.legs.key": "鍵",
