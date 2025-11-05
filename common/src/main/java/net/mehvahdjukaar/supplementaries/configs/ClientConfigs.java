@@ -236,11 +236,9 @@ public class ClientConfigs {
         public static final Supplier<Boolean> NO_AMENDMENTS_WARN;
         public static final Supplier<Boolean> NO_INCOMPATIBLE_MODS;
 
-        public static final Supplier<Double> TEST1;
-        public static final Supplier<Double> TEST2;
-        public static final Supplier<Double> TEST3;
         public static final Supplier<Boolean> UNFUNNY;
         public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
+        public static final Supplier<Boolean> DEBUG_RENDERS;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -264,10 +262,12 @@ public class ClientConfigs {
                     .define("placeable_tooltips", true);
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                     .define("custom_configured_screen", true);
-            TEST1 = builder.comment("ignore this").define("test1", 0d, -10, 10);
-            TEST2 = builder.comment("ignore this").define("test2", 0d, -10, 10);
-            TEST3 = builder.comment("ignore this").define("test3", 0d, -10, 10);
             UNFUNNY = builder.comment("unfunny").define("I am very boring", false);
+
+
+            DEBUG_RENDERS = builder.comment("Enables some debug renderers. Require the use of the /supp debug command to enable their data being sent")
+                    .define("debug_renderers", PlatHelper.isDev());
+
             builder.pop();
         }
     }

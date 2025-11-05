@@ -349,14 +349,6 @@ public class ClientReceivers {
         });
     }
 
-    public static void handleDebugNav(ClientBoundDebugPathfindingPacket packet) {
-        Minecraft.getInstance()
-                .debugRenderer
-                .pathfindingRenderer
-                .addPath(packet.entityId(), packet.path(), packet.maxNodeDistance());
-    }
-
-
     //triangle distribution?
     private double r(RandomSource random, double a) {
         return a * (random.nextFloat() + random.nextFloat() - 1);

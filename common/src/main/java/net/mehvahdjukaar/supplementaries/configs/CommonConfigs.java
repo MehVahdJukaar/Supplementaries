@@ -1334,6 +1334,7 @@ public class CommonConfigs {
                     .define("sanity_checks_messages", true);
             RED_MERCHANT_SPAWN_MULTIPLIER = builder.comment("slightly increase this or decrease this number to tweak the red merchant spawn chance. Won't spawn at 0 and will spawn twice as often on 2")
                     .define("red_merchant_spawn_multiplier", 1d, 0, 10);
+
             builder.pop();
         }
 

@@ -1,8 +1,8 @@
 {
   "advancements.adventure.globe.description": "Spin a globe at ludicrous speed",
   "advancements.adventure.globe.title": "You Spin Me Right Round Baby",
-  "advancements.adventure.way_sign.description": "Follow me to find a village",
-  "advancements.adventure.way_sign.title": "This Must be a Sign!",
+  "advancements.adventure.road_sign.description": "Follow me to find a village",
+  "advancements.adventure.road_sign.title": "This Must be a Sign!",
   "advancements.husbandry.soap.description": "Eat a bar of soap. Don't try this at home",
   "advancements.husbandry.soap.title": "Tide Pod Challenge",
   "advancements.husbandry.sus_stew.description": "Drink a suspicious stew",
@@ -689,11 +689,11 @@
 
   "tag.worldgen.supplementaries.biome.has_basalt_ash": "Has Basalt Ash",
   "tag.worldgen.supplementaries.biome.has_cave_urns": "Has Cave Urns",
-  "tag.worldgen.supplementaries.biome.has_way_signs": "Has Way Signs",
+  "tag.worldgen.supplementaries.biome.has_road_signs": "Has Road Signs",
   "tag.worldgen.supplementaries.biome.has_wild_flax": "Has Wild Flax",
 
   "tag.worldgen.supplementaries.structure.adventure_map_destinations": "Adventure Map Destinations",
-  "tag.worldgen.supplementaries.structure.way_sign_destinations": "Way Sign Destinations",
+  "tag.worldgen.supplementaries.structure.road_sign_destinations": "Way Sign Destinations",
 
   "trinkets.slot.chest.quiver": "Quiver",
   "trinkets.slot.legs.key": "Key",

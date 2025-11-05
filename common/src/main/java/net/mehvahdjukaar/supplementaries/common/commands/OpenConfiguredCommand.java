@@ -16,7 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class OpenConfiguredCommand implements Command<CommandSourceStack> {
 
     public static ArgumentBuilder<CommandSourceStack, ?> register(CommandBuildContext dispatcher) {
-        return Commands.literal("configs")
+        return Commands.literal("open")
                 .requires(cs -> cs.hasPermission(0))
                 .executes(new OpenConfiguredCommand());
     }

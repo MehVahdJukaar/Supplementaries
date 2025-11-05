@@ -70,6 +70,7 @@
     "CartographyTableScreenMixin",
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
+    "DebugRendererMixin",
     "FontRendererMixin",
     "GameRendererMixin",
     "IronGolemRendererMixin",

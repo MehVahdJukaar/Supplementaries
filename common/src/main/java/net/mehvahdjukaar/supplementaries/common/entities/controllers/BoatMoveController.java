@@ -22,13 +22,9 @@ public class BoatMoveController extends MoveControl {
 
     private boolean isWalkableWithBoat(float relativeX, float relativeZ) {
         PathNavigation pathNavigation = this.mob.getNavigation();
-        if (pathNavigation != null) {
-            NodeEvaluator nodeEvaluator = pathNavigation.getNodeEvaluator();
-            if (nodeEvaluator != null
-                    && nodeEvaluator.getPathType(this.mob, BlockPos.containing(this.mob.getX() + relativeX, this.mob.getBlockY(), this.mob.getZ() + relativeZ))
-                    != PathType.WALKABLE) {
-                return false;
-            }
+        NodeEvaluator nodeEvaluator = pathNavigation.getNodeEvaluator();
+        if (nodeEvaluator.getPathType(this.mob, BlockPos.containing(this.mob.getX() + relativeX, this.mob.getBlockY(), this.mob.getZ() + relativeZ)) != PathType.WALKABLE) {
+            return false;
         }
         return true;
     }

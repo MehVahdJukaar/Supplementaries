@@ -5,6 +5,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -22,8 +23,9 @@ public class BoatPathNavigation extends PathNavigation {
 
     @Override
     protected PathFinder createPathFinder(int maxVisitedNodes) {
-        this.nodeEvaluator = new WalkNodeEvaluator();
+        this.nodeEvaluator = new BoatNodeEvaluator();
         this.nodeEvaluator.setCanPassDoors(true);
+        this.nodeEvaluator.setCanFloat(true);
         return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
     }
 
@@ -76,7 +78,6 @@ public class BoatPathNavigation extends PathNavigation {
         return true;
     }
 
-
     //idk tbh. same as ground path nav
     @Override
     public Path createPath(Entity entity, int accuracy) {
@@ -110,7 +111,7 @@ public class BoatPathNavigation extends PathNavigation {
             }
 
             //in ground. go above
-            if (!levelChunk.getBlockState(pos).getFluidState().is(FluidTags.WATER)) {
+            if (!levelChunk.getFluidState(pos).is(FluidTags.WATER)) {
                 return super.createPath(pos, accuracy);
             } else {
                 BlockPos blockPos = pos.above();
@@ -125,4 +126,11 @@ public class BoatPathNavigation extends PathNavigation {
         }
     }
 
+
+    //where can i stay without falling i guess?
+    @Override
+    public boolean isStableDestination(BlockPos pos) {
+        return super.isStableDestination(pos) ||
+                level.getFluidState(pos).is(FluidTags.WATER);
+    }
 }

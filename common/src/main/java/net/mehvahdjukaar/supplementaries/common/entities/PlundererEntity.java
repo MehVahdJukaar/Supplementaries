@@ -51,32 +51,35 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     private static final int INVENTORY_SIZE = 5;
     private static final int SLOT_OFFSET = 300;
     private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
-    private final BoatPathNavigation boatNavigation;
+    private BoatPathNavigation boatNavigation;
+    private PathNavigation defaultNavigation;
     private final BoatMoveController boatController;
+    private final MoveControl defaultController;
 
     public PlundererEntity(EntityType<? extends PlundererEntity> entityType, Level level) {
         super(entityType, level);
         this.boatController = new BoatMoveController(this);
+        this.defaultController = moveControl;
+    }
+
+    //got to do this since the accessors aren't used consistently...
+    @Override
+    protected void customServerAiStep() {
+        if (this.getControlledVehicle() instanceof Boat) {
+            this.moveControl = boatController;
+            this.navigation = boatNavigation;
+        } else {
+            this.moveControl = defaultController;
+            this.navigation = defaultNavigation;
+        }
+        super.customServerAiStep();
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
         this.boatNavigation = new BoatPathNavigation(this, level);
-    }
-
-    @Override
-    public PathNavigation getNavigation() {
-        return isControllingBoat() ? boatNavigation : super.getNavigation();
-    }
-
-    @Override
-    public MoveControl getMoveControl() {
-        return isControllingBoat() ? boatController : super.getMoveControl();
-    }
-
-    private boolean isControllingBoat() {
-        return this.getControlledVehicle() instanceof Boat;
-    }
-
-    @Override
-    public float getPathfindingMalus(PathType pathType) {
-        return super.getPathfindingMalus(pathType);
+        this.defaultNavigation = super.createNavigation(level);
+        return this.defaultNavigation;
     }
 
     @Override
