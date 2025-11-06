@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
+import net.mehvahdjukaar.supplementaries.mixins.EntityAccessor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -28,7 +29,7 @@ public class BoardBoatGoal extends Goal {
 
     private Boat getFreeBoat() {
         List<? extends Boat> list = mob.level().getEntitiesOfClass(
-                Boat.class, this.mob.getBoundingBox().inflate(8.0), BoardBoatGoal::hasFreeSeat);
+                Boat.class, this.mob.getBoundingBox().inflate(8.0), this::hasFreeSeat);
 
         Boat nearest = null;
         double nearestDistance = Double.MAX_VALUE;
@@ -42,8 +43,10 @@ public class BoardBoatGoal extends Goal {
         return nearest;
     }
 
-    private static boolean hasFreeSeat(Boat boat) {
-
+    private boolean hasFreeSeat(Boat boat) {
+        if (boat instanceof EntityAccessor ea && this.mob instanceof EntityAccessor em) {
+            return ea.invokeCanAddPassenger(this.mob) && em.invokeCanRide(boat);
+        }
         return true;
     }
 

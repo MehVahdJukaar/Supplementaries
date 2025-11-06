@@ -19,6 +19,7 @@
     "ComparatorBlockMixin",
     "CreeperMixin",
     "DebugPacketsMixin",
+    "EntityAccessor",
     "EntityMixin",
     "EvokerMixin",
     "ExplorationMapFunctionMixin",

@@ -110,7 +110,7 @@ public class GalleonStructure extends Structure {
                 // Here, blockpos's y value is 60 which means the structure spawn 60 blocks above terrain height.
                 // Set this to false for structure to be place only at the passed in blockpos's Y value instead.
                 // Definitely keep this false when placing structures in the nether as otherwise, heightmap placing will put the structure on the Bedrock roof.
-                60,
+                64,
                 PoolAliasLookup.EMPTY, // Optional thing that allows swapping a template pool with another per structure json instance. We don't need this but see vanilla JigsawStructure class for how to wire it up if you want it.
                 this.dimensionPadding, // Optional thing to prevent generating too close to the bottom or top of the dimension.
                 this.liquidSettings);  // Optional thing to control whether the structure will be waterlogged when replacing pre-existing water in the world.

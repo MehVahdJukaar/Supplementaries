@@ -5,7 +5,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "supplementaries:blue_bomb",
+          "name": "supplementaries:bomb_blue",
           "weight": 1,
           "functions": [
             {
@@ -21,7 +21,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "supplementaries:diamond_axe",
+          "name": "minecraft:diamond_axe",
           "weight": 1,
           "functions": [
             {
@@ -309,7 +309,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bottle_o_enchanting",
+          "name": "minecraft:experience_bottle",
           "weight": 1,
           "functions": [
             {

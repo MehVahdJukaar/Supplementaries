@@ -3,11 +3,10 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatMoveController;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatPathNavigation;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.BoardBoatGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.DismountBoatGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.AbandonShipGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.IAmTheCaptainGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderGetter;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
@@ -15,7 +14,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.Unit;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
@@ -40,7 +38,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
@@ -50,15 +47,13 @@ import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProvider
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.block.entity.BannerPattern;
-import net.minecraft.world.level.block.entity.BannerPatternLayers;
-import net.minecraft.world.level.block.entity.BannerPatterns;
 import org.jetbrains.annotations.Nullable;
 
 public class PlundererEntity extends AbstractIllager implements InventoryCarrier {
     private static final int INVENTORY_SIZE = 5;
     private static final int SLOT_OFFSET = 300;
     private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
+
     private BoatPathNavigation boatNavigation;
     private PathNavigation defaultNavigation;
     private final BoatMoveController boatController;
@@ -99,8 +94,9 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
                 16, 20 * 15)); //max 15 sec
         this.goalSelector.addGoal(2, new Raider.HoldGroundAttackGoal(this, 10.0F));
         this.goalSelector.addGoal(2, new BoardBoatGoal(this, 1, 200));
-        this.goalSelector.addGoal(3, new DismountBoatGoal(this, 15));
+        this.goalSelector.addGoal(3, new AbandonShipGoal(this, 15));
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0, false));
+        this.goalSelector.addGoal(6, new IAmTheCaptainGoal(this));
 
         //TODO: go to boat,leave boat, switch to captain, soot cannon
         //this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1, 20));
