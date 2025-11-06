@@ -1,8 +1,8 @@
 {
-  "asset_id": "supplementaries:coast",
+  "asset_id": "supplementaries:blast",
   "decal": false,
   "description": {
-    "translate": "trim_pattern.supplementaries.coast"
+    "translate": "trim_pattern.supplementaries.blast"
   },
-  "template_item": "supplementaries:coast_armor_trim_smithing_template"
+  "template_item": "supplementaries:blast_armor_trim_smithing_template"
 }

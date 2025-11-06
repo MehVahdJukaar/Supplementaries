@@ -1,8 +1,8 @@
 {
   "advancements.adventure.globe.description": "Spin a globe at ludicrous speed",
   "advancements.adventure.globe.title": "You Spin Me Right Round Baby",
-  "advancements.adventure.way_sign.description": "Follow me to find a village",
-  "advancements.adventure.way_sign.title": "This Must be a Sign!",
+  "advancements.adventure.road_sign.description": "Follow me to find a village",
+  "advancements.adventure.road_sign.title": "This Must be a Sign!",
   "advancements.husbandry.soap.description": "Eat a bar of soap. Don't try this at home",
   "advancements.husbandry.soap.title": "Tide Pod Challenge",
   "advancements.husbandry.sus_stew.description": "Drink a suspicious stew",
@@ -34,6 +34,8 @@
   "block.supplementaries.banner.dragon.yellow": "Yellow Dragon Charge",
   "item.supplementaries.dragon_banner_pattern.desc": "Dragon Charge",
   "item.supplementaries.dragon_banner_pattern": "Banner Pattern",
+  "trim_pattern.supplementaries.blast": "Blast Armor Trim",
+  "item.supplementaries.blast_armor_trim_smithing_template": "Smithing Template",
   "block.supplementaries.ash": "Ash",
   "block.supplementaries.ash_bricks": "Ash Bricks",
   "block.supplementaries.ash_bricks_slab": "Ash Brick Slab",
@@ -114,6 +116,7 @@
   "block.supplementaries.fine_wood_slab": "Fine Wood Slab",
   "block.supplementaries.fine_wood_stairs": "Fine Wood Stairs",
   "block.supplementaries.fire_pit": "Fire Pit",
+  "block.supplementaries.ominous_flag": "Ominous Flag",
   "block.supplementaries.flag": "Flag",
   "block.supplementaries.flag_black": "Black Flag",
   "block.supplementaries.flag_blue": "Blue Flag",
@@ -226,6 +229,7 @@
   "block.supplementaries.timber_brace": "Timber Brace",
   "block.supplementaries.timber_cross_brace": "Timber Cross Brace",
   "block.supplementaries.timber_frame": "Timber Frame",
+  "block.supplementaries.gold_bars": "Gold Bars",
   "block.supplementaries.trapped_present": "Trapped Present",
   "block.supplementaries.trapped_present_black": "Trapped Black Present",
   "block.supplementaries.trapped_present_blue": "Trapped Blue Present",
@@ -249,6 +253,7 @@
   "block.supplementaries.wicker_fence": "Wicker Fence",
   "block.supplementaries.wild_flax": "Wild Flax",
   "block.supplementaries.wind_vane": "Wind Vane",
+  "block.supplementaries.spider_head": "Spider Head",
 
   "commands.supplementaries.registry.copy_elements_names": "Click to copy all entry names to clipboard",
   "commands.supplementaries.registry.element": "%s : %s",
@@ -685,11 +690,11 @@
 
   "tag.worldgen.supplementaries.biome.has_basalt_ash": "Has Basalt Ash",
   "tag.worldgen.supplementaries.biome.has_cave_urns": "Has Cave Urns",
-  "tag.worldgen.supplementaries.biome.has_way_signs": "Has Way Signs",
+  "tag.worldgen.supplementaries.biome.has_road_signs": "Has Road Signs",
   "tag.worldgen.supplementaries.biome.has_wild_flax": "Has Wild Flax",
 
   "tag.worldgen.supplementaries.structure.adventure_map_destinations": "Adventure Map Destinations",
-  "tag.worldgen.supplementaries.structure.way_sign_destinations": "Way Sign Destinations",
+  "tag.worldgen.supplementaries.structure.road_sign_destinations": "Way Sign Destinations",
 
   "trinkets.slot.chest.quiver": "Quiver",
   "trinkets.slot.legs.key": "Key",

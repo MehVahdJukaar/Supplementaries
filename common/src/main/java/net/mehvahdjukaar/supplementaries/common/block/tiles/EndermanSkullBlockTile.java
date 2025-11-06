@@ -50,6 +50,7 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
         return ModRegistry.ENDERMAN_SKULL_TILE.get();
     }
 
+    //thanks mojank
     @PlatformOnly(value = PlatformOnly.FABRIC)
     @Override
     public boolean isValidBlockState(BlockState blockState) {

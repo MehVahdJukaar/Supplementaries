@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.pathfinder.NodeEvaluator;
 import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class BoatMoveController extends MoveControl {
@@ -22,13 +23,9 @@ public class BoatMoveController extends MoveControl {
 
     private boolean isWalkableWithBoat(float relativeX, float relativeZ) {
         PathNavigation pathNavigation = this.mob.getNavigation();
-        if (pathNavigation != null) {
-            NodeEvaluator nodeEvaluator = pathNavigation.getNodeEvaluator();
-            if (nodeEvaluator != null
-                    && nodeEvaluator.getPathType(this.mob, BlockPos.containing(this.mob.getX() + relativeX, this.mob.getBlockY(), this.mob.getZ() + relativeZ))
-                    != PathType.WALKABLE) {
-                return false;
-            }
+        NodeEvaluator nodeEvaluator = pathNavigation.getNodeEvaluator();
+        if (nodeEvaluator.getPathType(this.mob, BlockPos.containing(this.mob.getX() + relativeX, this.mob.getBlockY(), this.mob.getZ() + relativeZ)) != PathType.WALKABLE) {
+            return false;
         }
         return true;
     }
@@ -88,7 +85,6 @@ public class BoatMoveController extends MoveControl {
             }
 
             float angle = (float) (Mth.atan2(distZ, distX) * Mth.RAD_TO_DEG) - 90.0F;
-            //this.mob.setSpeed((float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED)));
 
             controlBoat(boat, angle);
 
@@ -101,39 +97,44 @@ public class BoatMoveController extends MoveControl {
         if (!boat.isVehicle()) return;
         float amount = 0.0F;
 
-        /*
-        if (boat.inputLeft) {
-            boat.deltaRotation--;
-        }
-
-        if (boat.inputRight) {
-            boat.deltaRotation++;
-        }
-
-        //when just input right or input left
-        if (boat.inputRight != boat.inputLeft && !boat.inputUp && !boat.inputDown) {
-            amount += 0.005F;
-        }*/
 
         boat.setYRot(this.rotlerp(boat.getYRot(), wantedAngle, 90.0F));
         // boat.setYRot(boat.getYRot() + boat.deltaRotation);
-        if (true) {
-            amount += 0.04F;
+        double speed = this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED); //for player its 1 *0.1
+        float moveAmount = (float) (speed / (0.1f) * 0.04f);
+        //same as player
+        float scalar = 0.25f; //arbitrary slow down
+        amount += (moveAmount* scalar);
+
+
+        Vec3 oldMovement = boat.getDeltaMovement();
+        Vec3 newDirection = new Vec3(
+                Mth.sin(-boat.getYRot() * Mth.DEG_TO_RAD) * amount,
+                0.0,
+                Mth.cos(boat.getYRot() * Mth.DEG_TO_RAD) * amount);
+
+        boat.setDeltaMovement(oldMovement.add(newDirection));
+
+        //paddle state
+        Vec3 oldDir = oldMovement.normalize();
+        Vec3 newDir = newDirection.normalize();
+
+        double dot = oldDir.dot(newDir);
+
+        if (Math.abs(dot) > 0.7) {
+            boat.setPaddleState(true, true);
         }
 
-        //  if (boat.inputDown) {
-        //     amount -= 0.005F;
-        // }
+        Vec3 aH = new Vec3(oldDir.x, 0, oldDir.z).normalize();
+        Vec3 bH = new Vec3(newDir.x, 0, newDir.z).normalize();
+        double side = aH.cross(bH).dot(new Vec3(0, 1, 0));
 
-        boat.setDeltaMovement(
-                boat.getDeltaMovement().add(
-                        Mth.sin(-boat.getYRot() * Mth.DEG_TO_RAD) * amount,
-                        0.0,
-                        Mth.cos(boat.getYRot() * Mth.DEG_TO_RAD) * amount)
-        );
+        if (side > 0) {
+            boat.setPaddleState(true, false);
 
-        //TODO: allow them to rotate only too with look controller
-        boat.setPaddleState(true, true);
+        } else {
+            boat.setPaddleState(false, true);
+        }
     }
 
 }

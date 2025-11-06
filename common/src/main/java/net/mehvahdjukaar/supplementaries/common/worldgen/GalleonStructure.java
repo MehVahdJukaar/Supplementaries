@@ -4,13 +4,24 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModWorldgen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Unit;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
+import net.minecraft.world.level.block.entity.BannerPatterns;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
@@ -31,7 +42,7 @@ public class GalleonStructure extends Structure {
             instance.group(GalleonStructure.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
-                    Codec.INT.optionalFieldOf("y_offset",0).forGetter(structure -> structure.yOffset),
+                    Codec.INT.optionalFieldOf("y_offset", 0).forGetter(structure -> structure.yOffset),
                     Climate.ParameterPoint.CODEC.optionalFieldOf("biome_point").forGetter(structure -> structure.biomePoint),
                     Codec.BOOL.optionalFieldOf("require_sea_level", true).forGetter(structure -> structure.requireSeaLevel),
                     DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
@@ -130,7 +141,7 @@ public class GalleonStructure extends Structure {
         if (this.biomePoint.isPresent() && !containsPoint(this.biomePoint.get(), paramAtPos)) return Optional.empty();
 
 
-        return Optional.of(new BlockPos(x, y - yOffset, z));
+        return Optional.of(new BlockPos(x, y + yOffset, z));
     }
 
     private static boolean containsPoint(Climate.ParameterPoint cube, Climate.TargetPoint point) {
@@ -151,6 +162,27 @@ public class GalleonStructure extends Structure {
 
                 cube.depth().min() <= point.depth() &&
                 cube.depth().max() >= point.depth();
+    }
+
+
+    private static final Component OMINOUS_FLAG_PATTERN_NAME = Component.translatable("block.supplementaries.ominous_flag").withStyle(ChatFormatting.GOLD);
+
+    public static ItemStack getGalleonFlag(HolderGetter<BannerPattern> patternRegistry) {
+        ItemStack itemStack = new ItemStack(ModRegistry.FLAGS.get(DyeColor.WHITE).get());
+        BannerPatternLayers bannerPatternLayers = new BannerPatternLayers.Builder()
+                .addIfRegistered(patternRegistry, BannerPatterns.RHOMBUS_MIDDLE, DyeColor.GREEN)
+                .addIfRegistered(patternRegistry, BannerPatterns.STRIPE_LEFT, DyeColor.GRAY)
+                .addIfRegistered(patternRegistry, BannerPatterns.TRIANGLES_TOP, DyeColor.GRAY)
+                .addIfRegistered(patternRegistry, BannerPatterns.TRIANGLES_BOTTOM, DyeColor.GRAY)
+                .addIfRegistered(patternRegistry, BannerPatterns.STRAIGHT_CROSS, DyeColor.BLACK)
+                .addIfRegistered(patternRegistry, BannerPatterns.HALF_VERTICAL_MIRROR, DyeColor.GRAY)
+                .addIfRegistered(patternRegistry, BannerPatterns.BORDER, DyeColor.BLACK)
+                .build();
+
+        itemStack.set(DataComponents.BANNER_PATTERNS, bannerPatternLayers);
+        itemStack.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
+        itemStack.set(DataComponents.ITEM_NAME, OMINOUS_FLAG_PATTERN_NAME);
+        return itemStack;
     }
 
 }

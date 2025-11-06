@@ -1,0 +1,7 @@
+{
+    "parent": "block/iron_bars_post",
+    "textures": {
+        "particle": "supplementaries:block/gold_bars",
+        "bars": "supplementaries:block/gold_bars"
+    }
+}

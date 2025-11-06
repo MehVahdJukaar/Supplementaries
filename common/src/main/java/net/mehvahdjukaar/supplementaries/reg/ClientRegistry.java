@@ -246,6 +246,7 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.TIMBER_CROSS_BRACE.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.IRON_GATE.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.GOLD_GATE.get(), cutout);
+        ClientHelper.registerRenderType(ModRegistry.GOLD_BARS.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.GUNPOWDER_BLOCK.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.CANNON.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.ROPE_KNOT.get(), cutout);

@@ -2,8 +2,12 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatMoveController;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatPathNavigation;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.BoardBoatGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.DismountBoatGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
@@ -11,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.SimpleContainer;
@@ -19,13 +24,14 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -34,7 +40,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.vehicle.Boat;
-import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
@@ -44,53 +50,63 @@ import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProvider
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
+import net.minecraft.world.level.block.entity.BannerPatterns;
 import org.jetbrains.annotations.Nullable;
 
 public class PlundererEntity extends AbstractIllager implements InventoryCarrier {
     private static final int INVENTORY_SIZE = 5;
     private static final int SLOT_OFFSET = 300;
     private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
-    private final BoatPathNavigation boatNavigation;
+    private BoatPathNavigation boatNavigation;
+    private PathNavigation defaultNavigation;
     private final BoatMoveController boatController;
+    private final MoveControl defaultController;
+
 
     public PlundererEntity(EntityType<? extends PlundererEntity> entityType, Level level) {
         super(entityType, level);
         this.boatController = new BoatMoveController(this);
+        this.defaultController = moveControl;
+    }
+
+    //got to do this since the accessors aren't used consistently...
+    @Override
+    protected void customServerAiStep() {
+        if (this.getControlledVehicle() instanceof Boat) {
+            this.moveControl = boatController;
+            this.navigation = boatNavigation;
+        } else {
+            this.moveControl = defaultController;
+            this.navigation = defaultNavigation;
+        }
+        super.customServerAiStep();
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
         this.boatNavigation = new BoatPathNavigation(this, level);
-    }
-
-    @Override
-    public PathNavigation getNavigation() {
-        return isControllingBoat() ? boatNavigation : super.getNavigation();
-    }
-
-    @Override
-    public MoveControl getMoveControl() {
-        return isControllingBoat() ? boatController : super.getMoveControl();
-    }
-
-    private boolean isControllingBoat() {
-        return this.getControlledVehicle() instanceof Boat;
-    }
-
-    @Override
-    public float getPathfindingMalus(PathType pathType) {
-        return super.getPathfindingMalus(pathType);
+        this.defaultNavigation = super.createNavigation(level);
+        return this.defaultNavigation;
     }
 
     @Override
     protected void registerGoals() {
-        //TODO: add dismount boat goal
-        // super.registerGoals();
-        // this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0, false));
-        this.goalSelector.addGoal(4, new ManeuverAndShootCannonGoal(this, 20, 40));
+        super.registerGoals();
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new ManeuverAndShootCannonGoal(this, 20, 40,
+                16, 20 * 15)); //max 15 sec
+        this.goalSelector.addGoal(2, new Raider.HoldGroundAttackGoal(this, 10.0F));
+        this.goalSelector.addGoal(2, new BoardBoatGoal(this, 1, 200));
+        this.goalSelector.addGoal(3, new DismountBoatGoal(this, 15));
+        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0, false));
 
-        //     this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1, 20));
-        //  this.goalSelector.addGoal(2, new Raider.HoldGroundAttackGoal(this, 10.0F));
-        // this.goalSelector.addGoal(3, new RangedCrossbowAttackGoal<>(this, 1.0, 8.0F));
-        //  this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6));
+        //TODO: go to boat,leave boat, switch to captain, soot cannon
+        //this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1, 20));
+        //this.goalSelector.addGoal(3, new RangedCrossbowAttackGoal<>(this, 1.0, 8.0F));
+
+        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6));
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 15.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 15.0F));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, Raider.class).setAlertOthers());
@@ -100,7 +116,6 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-
         return Monster.createMonsterAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.35F)
                 .add(Attributes.MAX_HEALTH, 24.0)
@@ -167,6 +182,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
             ItemStack itemStack = this.getMainHandItem();
             if (itemStack.is(Items.GOLDEN_SWORD)) {
                 //TODO: proper ench provider
+                //TODO: confetti villagers
                 EnchantmentHelper.enchantItemFromProvider(itemStack, level.registryAccess(),
                         VanillaEnchantmentProviders.RAID_VINDICATOR_POST_WAVE_5, difficulty, random);
             }
@@ -191,26 +207,6 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     @Override
     public SimpleContainer getInventory() {
         return this.inventory;
-    }
-
-    @Override
-    protected void pickUpItem(ItemEntity itemEntity) {
-        ItemStack itemStack = itemEntity.getItem();
-        if (itemStack.getItem() instanceof BannerItem) {
-            super.pickUpItem(itemEntity);
-        } else if (this.wantsItem(itemStack)) {
-            this.onItemPickup(itemEntity);
-            ItemStack itemStack2 = this.inventory.addItem(itemStack);
-            if (itemStack2.isEmpty()) {
-                itemEntity.discard();
-            } else {
-                itemStack.setCount(itemStack2.getCount());
-            }
-        }
-    }
-
-    private boolean wantsItem(ItemStack item) {
-        return this.hasActiveRaid() && item.is(Items.WHITE_BANNER);
     }
 
     @Override
@@ -247,4 +243,8 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     public SoundEvent getCelebrateSound() {
         return SoundEvents.PILLAGER_CELEBRATE;
     }
+
+
+
+
 }

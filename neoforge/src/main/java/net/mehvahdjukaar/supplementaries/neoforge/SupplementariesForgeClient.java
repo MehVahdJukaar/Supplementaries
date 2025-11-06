@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.Quiver
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SpiderSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.client.model.SkullModel;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -49,6 +50,10 @@ public class SupplementariesForgeClient {
                 new SkullModel(event.getEntityModelSet().bakeLayer(ModelLayers.SKELETON_SKULL)));
         SkullBlockRenderer.SKIN_BY_TYPE.put(EndermanSkullBlock.TYPE,
                 Supplementaries.res("textures/entity/enderman_head.png"));
+        event.registerSkullModel(SpiderSkullBlock.TYPE,
+                new SkullModel(event.getEntityModelSet().bakeLayer(ModelLayers.SKELETON_SKULL)));
+        SkullBlockRenderer.SKIN_BY_TYPE.put(SpiderSkullBlock.TYPE,
+                Supplementaries.res("textures/entity/spider_head.png"));
     }
 
 

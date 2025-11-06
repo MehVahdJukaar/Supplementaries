@@ -9,7 +9,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structures": "supplementaries:way_sign"
+                "structures": "supplementaries:road_sign"
               }
             }
           }
@@ -21,7 +21,7 @@
   "display": {
     "announce_to_chat": true,
     "description": {
-      "translate": "advancements.adventure.way_sign.description"
+      "translate": "advancements.adventure.road_sign.description"
     },
     "frame": "task",
     "hidden": false,
@@ -30,7 +30,7 @@
     },
     "show_toast": true,
     "title": {
-      "translate": "advancements.adventure.way_sign.title"
+      "translate": "advancements.adventure.road_sign.title"
     }
   },
   "requirements": [
@@ -41,7 +41,7 @@
   "conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "way_sign"
+      "flag": "road_signs"
     }
   ]
 }
