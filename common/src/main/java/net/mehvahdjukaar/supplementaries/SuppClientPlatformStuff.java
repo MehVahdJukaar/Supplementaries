@@ -6,6 +6,8 @@ import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
+import net.minecraft.world.level.storage.loot.functions.EnchantRandomlyFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 
 public class SuppClientPlatformStuff {

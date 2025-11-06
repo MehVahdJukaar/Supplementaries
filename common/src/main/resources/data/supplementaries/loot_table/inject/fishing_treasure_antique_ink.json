@@ -12,8 +12,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "supplementaries:antique_ink",
-          "quality": 1
+          "name": "supplementaries:antique_ink"
         }
       ]
     }

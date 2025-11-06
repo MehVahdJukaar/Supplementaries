@@ -154,16 +154,16 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                 .setValue(POWERED, context.getLevel().hasNeighborSignal(context.getClickedPos()));
     }
 
-        @Override
-        public BlockState rotate(BlockState state, Rotation rot) {
-            return state.setValue(FACING, rot.rotate(state.getValue(FACING)))
-                    .setValue(ROTATE_TILE, state.getValue(ROTATE_TILE).getRotated(rot));
-        }
+    @Override
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)))
+                .setValue(ROTATE_TILE, state.getValue(ROTATE_TILE).getRotated(rot));
+    }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)))
-                .setValue(ROTATE_TILE, state.getValue(ROTATE_TILE).getRotated(Rotation.CLOCKWISE_180));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+              //  .setValue(ROTATE_TILE, mirrorIn.ro(Rotation.CLOCKWISE_180)); //todo: bug here
     }
 
     @Override

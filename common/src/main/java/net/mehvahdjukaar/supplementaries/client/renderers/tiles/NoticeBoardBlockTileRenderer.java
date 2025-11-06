@@ -10,7 +10,6 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestMapDataPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -31,6 +30,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.util.FastColor;
@@ -84,9 +84,9 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             Direction dir = tile.getDirection();
 
             float yaw = -dir.toYRot();
-            Vec3 cameraPos = camera.getPosition();
             BlockPos pos = tile.getBlockPos();
-            if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, 0)) return;
+            LOD lod = LOD.at(tile);
+            if (lod.isPlaneCulled( dir, 0,0)) return;
 
             int frontLight = this.getFrontLight(level, pos, dir);
 
@@ -97,8 +97,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
 
 
             renderNoticeBoardContent(mapRenderer, font, itemRenderer, tile, poseStack, buffer, frontLight, overlay,
-                    stack, dir,
-                    new LOD(cameraPos, pos));
+                    stack, dir, lod);
 
 
             poseStack.popPose();
@@ -206,15 +205,15 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
         Material pattern = tile.getCachedPattern();
         if (pattern != null) {
             VertexConsumer builder = pattern.buffer(buffer, RenderType::entityNoOutline);
-            int i =  tile.getDyeColor().getTextColor();
+            int i = tile.getDyeColor().getTextColor();
             float scale = 0.5f;//so its more similar to text. idk why its needed
-            int b = (int) (scale* (FastColor.ARGB32.blue(i)));
-            int g = (int) (scale*(FastColor.ARGB32.green(i)));
-            int r = (int) (scale*(FastColor.ARGB32.red(i)));
+            int b = (int) (scale * (FastColor.ARGB32.blue(i)));
+            int g = (int) (scale * (FastColor.ARGB32.green(i)));
+            int r = (int) (scale * (FastColor.ARGB32.red(i)));
             int lu = VertexUtil.lightU(frontLight);
             int lv = VertexUtil.lightV(frontLight);
-            poseStack.translate(0,0,0.008f);
-            VertexUtil.addQuad(builder, poseStack, -0.4375F, -0.4375F,  0.4375F, 0.4375F,
+            poseStack.translate(0, 0, 0.008f);
+            VertexUtil.addQuad(builder, poseStack, -0.4375F, -0.4375F, 0.4375F, 0.4375F,
                     0.15625f, 0.0625f, 0.5f + 0.09375f, 1 - 0.0625f, r, g, b, 255, lu, lv);
 
         } else if (!tile.isNormalItem()) {
@@ -230,10 +229,10 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
     private static void updateAndCacheLines(Font font, NoticeBoardBlockTile tile, String page, TextUtil.RenderProperties textProperties) {
         float paperWidth = 1 - (2 * PAPER_X_MARGIN);
         float paperHeight = 1 - (2 * PAPER_Y_MARGIN);
-        var text = TextUtil.parseText(page);
-        if(text instanceof MutableComponent mc){
+        FormattedText text = TextUtil.parseText(page, tile.getLevel().registryAccess());
+        if (text instanceof MutableComponent mc) {
             text = mc.setStyle(textProperties.style());
-        }else{
+        } else {
             text = Component.literal(page).setStyle(textProperties.style());
         }
         var p = TextUtil.fitLinesToBox(font,

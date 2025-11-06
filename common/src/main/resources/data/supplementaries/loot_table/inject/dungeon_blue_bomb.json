@@ -12,8 +12,7 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "supplementaries:bomb_blue",
-          "quality": 1
+          "name": "supplementaries:bomb_blue"
         }
       ]
     }

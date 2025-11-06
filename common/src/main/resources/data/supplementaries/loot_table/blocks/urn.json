@@ -34,7 +34,7 @@
       "entries": [
         {
           "type": "minecraft:loot_table",
-          "value": "supplementaries:blocks/urn_loot/urn_loot"
+          "value": "supplementaries:loot/urn_loot/urn_loot"
         }
       ],
       "conditions": [
