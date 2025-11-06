@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
@@ -21,6 +22,8 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
@@ -47,6 +50,12 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
     }
 
+    @ForgeOverride
+    public AABB getRenderBoundingBox(BlockEntity tile) {
+        return new AABB(tile.getBlockPos()).inflate(0.1);
+    }
+
+
     @Override
     public int getViewDistance() {
         return 32;
@@ -65,20 +74,19 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         if (up || down) {
 
             BlockPos pos = tile.getBlockPos();
-            Vec3 cameraPos = camera.getPosition();
 
             //don't render signs from far away
-            LOD lod = new LOD(cameraPos, pos);
+            LOD lod = LOD.at(tile);
 
             if (!lod.isNear()) return;
-
-            float relAngle = LOD.getRelativeAngle(cameraPos, pos);
 
             poseStack.pushPose();
             poseStack.translate(0.5, 0.5, 0.5);
 
+            Vec3 offsetFromCenter = new Vec3(0,0,2/16f);
+
             if (up) {
-                if (LOD.isOutOfFocus(relAngle, signUp.yaw() + 90, 2)) {
+                if (lod.isPlaneCulled(signUp.getNormal(),offsetFromCenter, 0)) {
                     var v = new Vector3f(1, 0, 0);
                     v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
                     var textProperties = tile.getTextHolder(0).computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
@@ -88,7 +96,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             }
 
             if (down) {
-                if (LOD.isOutOfFocus(relAngle, signDown.yaw() + 90, 2)) {
+                if (lod.isPlaneCulled(signDown.getNormal(), offsetFromCenter,0 )) {
 
                     Vector3f normalVector = new Vector3f(1, 0, 0);
                     normalVector.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
@@ -113,7 +121,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
         matrixStackIn.mulPose(Axis.YP.rotationDegrees(sign.yaw() - 90));
 
-        float zOffset = tile.getOffset() - 0.5f + 1/16f;
+        float zOffset = tile.getOffset() - 0.5f + 1 / 16f;
         matrixStackIn.translate(-0.03125 * o, 0.28125, zOffset + 0.005);
         matrixStackIn.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
@@ -157,7 +165,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         posestack.mulPose(Axis.YP.rotationDegrees(sign.yaw() - 90));
 
         //null offset needs to be the same as wall facing one
-        float z = -10/16f;
+        float z = -10 / 16f;
         if (zOffset != null) {
             z += zOffset;
         }

@@ -176,7 +176,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (state.hasProperty(ModBlockProperties.ROTATE_TILE) && level != null) {
             Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
             if (rot != Rotation.NONE) {
-                this.setGlobalYaw(this.selfAccess, this.yaw + (rot.ordinal() * 90));
+                this.setGlobalYaw(this.selfAccess, this.yaw - (rot.ordinal() * 90));
                 level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
             }
         }

@@ -20,6 +20,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -38,13 +39,13 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
     }
 
     @ForgeOverride
-    public AABB getRenderBoundingBox(BuntingBlockTile tile) {
+    public AABB getRenderBoundingBox(BlockEntity tile) {
         return new AABB(tile.getBlockPos());
     }
 
     @Override
     public boolean shouldRender(BuntingBlockTile blockEntity, Vec3 cameraPos) {
-        return blockEntity.shouldRenderFancy(cameraPos);
+        return blockEntity.shouldRenderFancy();
     }
 
     @Override

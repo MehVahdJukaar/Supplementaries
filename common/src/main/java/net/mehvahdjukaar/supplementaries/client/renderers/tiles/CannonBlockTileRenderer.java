@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
@@ -15,6 +16,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -31,6 +34,11 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         this.pivot = legs.getChild("head_pivot");
         this.head = pivot.getChild("head");
         this.model = model;
+    }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox(BlockEntity tile) {
+        return new AABB(tile.getBlockPos()).inflate(0.2);
     }
 
     @Override

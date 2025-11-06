@@ -203,6 +203,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         private boolean active;
         private boolean left;
         private float yaw;
+        private Vec3 signNormal;
         private WoodType woodType;
 
         private Sign(boolean active, boolean left, float yaw, WoodType woodType) {
@@ -244,10 +245,11 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
         private void setYaw(float yaw) {
             this.yaw = Mth.wrapDegrees(yaw - (this.left ? 180 : 0));
+            this.signNormal = new Vec3(0,0,1).yRot(this.yaw * Mth.DEG_TO_RAD);
         }
 
         private void rotateBy(float angle, boolean constrainAngle) {
-            this.yaw = Mth.wrapDegrees(this.yaw + angle);
+            this.setYaw(Mth.wrapDegrees(this.yaw + angle));
             if (constrainAngle) this.yaw -= this.yaw % 22.5f;
         }
 
@@ -275,6 +277,10 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             return yaw;
         }
 
+        public Vec3 getNormal() {
+            return signNormal;
+        }
+
         public WoodType woodType() {
             return woodType;
         }
@@ -294,9 +300,9 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
             sign.active = true;
             sign.woodType = woodType;
             if (this.getBlockState().hasProperty(HorizontalDirectionalBlock.FACING)) {
-                sign.yaw = 90 - this.getBlockState().getValue(HorizontalDirectionalBlock.FACING).toYRot();
+                sign.setYaw(90 - this.getBlockState().getValue(HorizontalDirectionalBlock.FACING).toYRot());
             } else {
-                sign.yaw = 90 + r * -22.5f;
+                sign.setYaw(90 + r * -22.5f);
             }
             this.framed = framed;
             return true;

@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
@@ -26,6 +27,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
@@ -38,6 +41,11 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         Minecraft minecraft = Minecraft.getInstance();
         this.itemRenderer = minecraft.getItemRenderer();
         this.entityRenderer = minecraft.getEntityRenderDispatcher();
+    }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox(BlockEntity tile) {
+        return new AABB(tile.getBlockPos()).expandTowards(0,1,0);
     }
 
     protected boolean canRenderName(ItemStack item, PedestalBlockTile tile, PedestalBlockTile.DisplayType type) {
