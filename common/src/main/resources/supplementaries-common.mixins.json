@@ -25,6 +25,7 @@
     "ExplosionMixin",
     "FallingBlockEntityMixin",
     "FireBlockMixin",
+    "GoalUtilsMixin",
     "GrindstoneInputSlotMixin",
     "GrindstoneMenuMixin",
     "GrindstoneTestSlotMixin",

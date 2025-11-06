@@ -2,17 +2,16 @@ package net.mehvahdjukaar.supplementaries.common.entities.controllers;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.level.pathfinder.PathFinder;
-import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.minecraft.world.phys.Vec3;
 
 public class BoatPathNavigation extends PathNavigation {
@@ -27,6 +26,28 @@ public class BoatPathNavigation extends PathNavigation {
         this.nodeEvaluator.setCanPassDoors(true);
         this.nodeEvaluator.setCanFloat(true);
         return new PathFinder(this.nodeEvaluator, maxVisitedNodes);
+    }
+
+    @Override
+    protected void followThePath() {
+        Entity vehicle = this.mob.getControlledVehicle();
+        if (vehicle != null) {
+            Vec3 vec3 = this.getTempMobPos();
+            //just because we need to change max distance to waypoint. same as super except this
+            this.maxDistanceToWaypoint = vehicle.getBbWidth() > 0.75F ? vehicle.getBbWidth() / 2.0F : 0.75F - vehicle.getBbWidth() / 2.0F;
+            this.maxDistanceToWaypoint *= 1.2f; //make even bigger for boats
+            Vec3i vec3i = this.path.getNextNodePos();
+            double d = Math.abs(this.mob.getX() - (vec3i.getX() + 0.5));
+            double e = Math.abs(this.mob.getY() - vec3i.getY());
+            double f = Math.abs(this.mob.getZ() - (vec3i.getZ() + 0.5));
+            boolean bl = d < this.maxDistanceToWaypoint && f < this.maxDistanceToWaypoint && e < 1.0;
+            if (bl || this.canCutCorner(this.path.getNextNode().type) && this.shouldTargetNextNodeInDirection(vec3)) {
+                this.path.advance();
+            }
+            this.doStuckDetection(vec3);
+        } else {
+            super.followThePath();
+        }
     }
 
     @Override
@@ -132,5 +153,6 @@ public class BoatPathNavigation extends PathNavigation {
     public boolean isStableDestination(BlockPos pos) {
         return super.isStableDestination(pos) ||
                 level.getFluidState(pos).is(FluidTags.WATER);
+
     }
 }

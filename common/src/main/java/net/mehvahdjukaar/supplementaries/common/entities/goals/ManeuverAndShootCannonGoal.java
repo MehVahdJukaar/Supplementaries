@@ -4,10 +4,7 @@ import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
-import net.minecraft.world.entity.vehicle.Boat;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -18,18 +15,24 @@ public class ManeuverAndShootCannonGoal extends Goal {
     private final Mob mob;
     private final int attackIntervalMin;
     private final int attackIntervalMax;
+    private final int minRangeSQ;
+    private final int maxGoalTickTime;
 
+    private int goalTime;
     @Nullable
     private LivingEntity target;
     private int attackDelay;
     private int seeTime;
     private CannonAccess access;
 
-    public ManeuverAndShootCannonGoal(Mob mob, int attackIntervalMin, int attackIntervalMax) {
+    public ManeuverAndShootCannonGoal(Mob mob, int attackIntervalMin, int attackIntervalMax, int minRange,
+                                      int maxDuration) {
         this.mob = mob;
         this.attackIntervalMin = attackIntervalMin;
         this.attackIntervalMax = attackIntervalMax;
-        this.setFlags(EnumSet.of(Flag.MOVE,Flag.LOOK));
+        this.minRangeSQ = minRange * minRange;
+        this.maxGoalTickTime = maxDuration;
+        this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
     @Override
@@ -38,6 +41,8 @@ public class ManeuverAndShootCannonGoal extends Goal {
         if (livingEntity != null && livingEntity.isAlive() &&
                 mob.getControlledVehicle() instanceof CannonAccess ac &&
                 ac.getInternalCannon().hasFuelAndProjectiles()) {
+            double distanceSq = this.mob.distanceToSqr(livingEntity);
+            if (distanceSq < minRangeSQ || this.mob.getNavigation().isStuck()) return false;
             this.access = ac;
             this.target = livingEntity;
             return true;
@@ -47,7 +52,7 @@ public class ManeuverAndShootCannonGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return this.canUse() || this.target.isAlive() && !this.mob.getNavigation().isDone();
+        return super.canContinueToUse() && this.goalTime < this.maxGoalTickTime;
     }
 
     @Override
@@ -56,6 +61,7 @@ public class ManeuverAndShootCannonGoal extends Goal {
         this.access = null;
         this.seeTime = 0;
         this.attackDelay = 0;
+        this.goalTime = 0;
     }
 
     @Override
@@ -65,6 +71,9 @@ public class ManeuverAndShootCannonGoal extends Goal {
 
     @Override
     public void tick() {
+        this.goalTime++;
+        //TODO: use this in boat goal, check if they can reach
+        //TODO: strife around so cannon faces them
         boolean hasLineOfSight = this.mob.getSensing().hasLineOfSight(this.target);
         if (hasLineOfSight) {
             ++this.seeTime;

@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.PathNavigationRegion;
@@ -29,6 +30,9 @@ import java.util.Set;
 //cloned from WalkNodeEvaluator. adjusted for variable malus that doesnt ask the mob to handle water internally and stuff
 public class BoatNodeEvaluator extends NodeEvaluator {
 
+    private static final float ON_LAND_MALUS = 1000.0F;
+
+
     public static final double SPACE_BETWEEN_WALL_POSTS = 0.5;
     private static final double DEFAULT_MOB_JUMP_HEIGHT = 1.125;
     private final Long2ObjectMap<PathType> pathTypesByPosCacheByMob = new Long2ObjectOpenHashMap<>();
@@ -46,12 +50,16 @@ public class BoatNodeEvaluator extends NodeEvaluator {
         return this.mob.canStandOnFluid(fluidState);
     }
 
-
     private float getPathfindingMalus(PathType type) {
-        if (type == PathType.WATER || type == PathType.WATER_BORDER) {
-            return 4;//favours water
+        return this.getPathfindingMalus(type, this.mob);
+    }
+
+    public float getPathfindingMalus(PathType type, Mob mob) {
+        if (type == PathType.WATER) {
+            return 0;//favours water
         }
-        return this.mob.getPathfindingMalus(type);
+        float malus = mob.getPathfindingMalus(type);
+        return malus == -1 ? -1 : malus + ON_LAND_MALUS; //-1 is sentinel for ignore node. Stay on water as ma
     }
 
     //like WalkNodeEvaluator.getFloorLevel
@@ -78,6 +86,13 @@ public class BoatNodeEvaluator extends NodeEvaluator {
     public void prepare(PathNavigationRegion level, Mob mob) {
         super.prepare(level, mob);
         mob.onPathfindingStart();
+
+        Entity vehicle = mob.getVehicle();
+        if (vehicle != null) {
+            this.entityWidth = Mth.floor(vehicle.getBbWidth() + 1.0F);
+            this.entityHeight = Mth.floor(vehicle.getBbHeight() + 1.0F);
+            this.entityDepth = Mth.floor(vehicle.getBbWidth() + 1.0F);
+        }
     }
 
     @Override
@@ -162,7 +177,7 @@ public class BoatNodeEvaluator extends NodeEvaluator {
         int j = 0;
         PathType pathType = this.getCachedPathType(node.x, node.y + 1, node.z);
         PathType pathType2 = this.getCachedPathType(node.x, node.y, node.z);
-        if (this.mob.getPathfindingMalus(pathType) >= 0.0F && pathType2 != PathType.STICKY_HONEY) {
+        if (getPathfindingMalus(pathType) >= 0.0F && pathType2 != PathType.STICKY_HONEY) {
             j = Mth.floor(Math.max(1.0F, this.mob.maxUpStep()));
         }
 
@@ -255,7 +270,7 @@ public class BoatNodeEvaluator extends NodeEvaluator {
             return null;
         } else {
             PathType pathType2 = this.getCachedPathType(x, y, z);
-            float f = this.mob.getPathfindingMalus(pathType2);
+            float f = getPathfindingMalus(pathType2);
             if (f >= 0.0F) {
                 node = this.getNodeAndUpdateCostToMax(x, y, z, pathType2, f);
             }
@@ -350,7 +365,7 @@ public class BoatNodeEvaluator extends NodeEvaluator {
                 return node;
             }
 
-            node = this.getNodeAndUpdateCostToMax(x, y, z, pathType, this.mob.getPathfindingMalus(pathType));
+            node = this.getNodeAndUpdateCostToMax(x, y, z, pathType, getPathfindingMalus(pathType));
             y--;
         }
 
@@ -364,7 +379,7 @@ public class BoatNodeEvaluator extends NodeEvaluator {
             }
 
             PathType pathType = this.getCachedPathType(x, i, z);
-            float f = this.mob.getPathfindingMalus(pathType);
+            float f = getPathfindingMalus(pathType);
             if (pathType != PathType.OPEN) {
                 if (f >= 0.0F) {
                     return this.getNodeAndUpdateCostToMax(x, i, z, pathType, f);

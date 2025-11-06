@@ -14,6 +14,7 @@ accessible method net/minecraft/world/level/pathfinder/Path setDebug ([Lnet/mine
 #plunderer boat stuff
 accessible field net/minecraft/world/entity/vehicle/Boat deltaRotation F
 accessible method net/minecraft/world/entity/vehicle/Boat controlBoat ()V
+accessible method net/minecraft/world/entity/ai/navigation/PathNavigation shouldTargetNextNodeInDirection (Lnet/minecraft/world/phys/Vec3;)Z
 
 accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
 accessible class net/minecraft/world/item/ItemCooldowns$CooldownInstance

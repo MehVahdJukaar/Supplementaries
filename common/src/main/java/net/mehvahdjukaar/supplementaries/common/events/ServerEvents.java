@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsMana
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.PlundererEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
@@ -203,9 +204,10 @@ public class ServerEvents {
                     new EvokerRedMerchantWololooSpellGoal((Evoker) entity));
         }
         if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
-            if (entity instanceof AbstractIllager pillager) {
-                pillager.goalSelector.addGoal(2,
-                        new ManeuverAndShootCannonGoal(pillager, 20, 40));
+            if (entity instanceof AbstractIllager pillager && !(entity instanceof PlundererEntity)) {
+                pillager.goalSelector.addGoal(1,
+                        new ManeuverAndShootCannonGoal(pillager, 20, 40,
+                                16, 20*15)); //10 seconds max
             }
         }
     }
