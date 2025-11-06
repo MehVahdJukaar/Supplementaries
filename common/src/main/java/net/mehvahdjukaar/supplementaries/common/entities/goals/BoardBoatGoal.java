@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -22,6 +23,7 @@ public class BoardBoatGoal extends Goal {
         this.speedModifier = speedMod;
         this.tryInterval = tryInterval;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        //high priority when in water or when is water
     }
 
     private Boat getFreeBoat() {
@@ -48,8 +50,10 @@ public class BoardBoatGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        int interval = this.mob.isInWater() ? tryInterval / 2 : tryInterval;
-        if (this.mob.getVehicle() == null && this.mob.getRandom().nextInt(interval) == 0) {
+        LivingEntity target = this.mob.getTarget();
+        boolean selfOrTargetInWater = this.mob.isInWater() || (target != null && target.isInWater());
+        if (target != null && !selfOrTargetInWater) return false;
+        if (this.mob.getVehicle() == null && this.mob.getRandom().nextInt(tryInterval) == 0) {
             this.boat = getFreeBoat();
             return boat != null;
         }
@@ -82,8 +86,8 @@ public class BoardBoatGoal extends Goal {
         if (this.mob.closerThan(this.boat, this.boat.getBbWidth() / 2 + this.mob.getBbWidth() / 2)) {
             this.mob.startRiding(this.boat);
             this.boat = null;
-        } else {
-            //  this.mob.getNavigation().moveTo(this.boat, this.speedModifier);
+        } else if (this.goalTick % 40 == 0) {
+            this.mob.getNavigation().moveTo(this.boat, this.speedModifier);
         }
     }
 }

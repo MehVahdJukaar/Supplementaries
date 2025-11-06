@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.common.worldgen.GalleonStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
@@ -270,6 +271,13 @@ public class ModCreativeTabs {
             event.addAfter(CreativeModeTabs.COLORED_BLOCKS, i -> i.is(ItemTags.BANNERS),
                     ModRegistry.BUNTING_BLOCKS.values().stream().map(Supplier::get)
                             .toArray(Block[]::new));
+        }
+
+        if (CommonConfigs.Functional.GALLEONS_ENABLED.get()) {
+            adder.after(ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                    ModConstants.FLAG_NAME,
+                    () -> GalleonStructure.getGalleonFlag(event.getParameters().holders()
+                            .lookup(Registries.BANNER_PATTERN).get()));
         }
 
         adder.after(ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,

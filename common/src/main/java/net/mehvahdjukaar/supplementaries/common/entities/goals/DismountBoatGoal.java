@@ -29,7 +29,7 @@ public class DismountBoatGoal extends Goal {
     private boolean isOnEdge() {
         PathNavigation nav = this.mob.getNavigation();
         boolean isOnEdge = nav.isStuck() || (!nav.isDone() && nav.getPath()
-                .getNextNode().type != PathType.WATER);
+                .getNextNode().type != PathType.WATER) || !this.mob.getVehicle().isInWater();
         return isOnEdge;
     }
 

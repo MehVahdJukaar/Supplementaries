@@ -207,7 +207,7 @@ public class ServerEvents {
             if (entity instanceof AbstractIllager pillager && !(entity instanceof PlundererEntity)) {
                 pillager.goalSelector.addGoal(1,
                         new ManeuverAndShootCannonGoal(pillager, 20, 40,
-                                16, 20*15)); //10 seconds max
+                                16, 20 * 15)); //10 seconds max
             }
         }
     }

@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
@@ -71,7 +69,8 @@ public class WrenchItem extends Item {
 
             boolean shiftDown = player.isShiftKeyDown(); //^ (dir == Direction.DOWN)
 
-            Optional<Direction> success = BlockUtil.tryRotatingBlockAndConnected(dir, shiftDown, pos, level, context.getClickLocation());
+            Optional<Direction> success = BlockUtil.tryRotatingBlockAndConnected(dir, shiftDown, pos, level,
+                    context.getClickLocation(), player);
             if (success.isPresent()) {
                 dir = success.get();
 

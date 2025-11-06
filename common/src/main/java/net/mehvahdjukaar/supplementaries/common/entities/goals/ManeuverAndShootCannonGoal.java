@@ -5,6 +5,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.Skeleton;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -71,6 +72,7 @@ public class ManeuverAndShootCannonGoal extends Goal {
 
     @Override
     public void tick() {
+
         this.goalTime++;
         //TODO: use this in boat goal, check if they can reach
         //TODO: strife around so cannon faces them

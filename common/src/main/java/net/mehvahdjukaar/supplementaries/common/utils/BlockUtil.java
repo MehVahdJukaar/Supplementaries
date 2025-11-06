@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -41,7 +43,8 @@ public class BlockUtil {
      *
      * @return Optional face on which it was rotated
      */
-    public static Optional<Direction> tryRotatingBlockAndConnected(Direction face, boolean ccw, BlockPos targetPos, Level level, Vec3 hit) {
+    public static Optional<Direction> tryRotatingBlockAndConnected(Direction face, boolean ccw, BlockPos targetPos,
+                                                                   Level level, Vec3 hit, @Nullable Player player) {
         BlockState state = level.getBlockState(targetPos);
         if (state.getBlock() instanceof IRotatable rotatable) {
             return rotatable.rotateOverAxis(state, level, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, face, hit);
@@ -49,22 +52,25 @@ public class BlockUtil {
         Optional<Direction> special = tryRotatingSpecial(face, ccw, targetPos, level, state, hit);
         if (special.isPresent()) return special;
 
-        var ret = tryRotatingBlock(face, ccw, targetPos, level, state, hit);
+        var ret = tryRotatingBlock(face, ccw, targetPos, level, state, hit, player);
 
         //try again using up direction if previously failed. Doing this cause many people dont even realize you have to click on the axis you want to rotate
         if (ret.isEmpty()) {
-            ret = tryRotatingBlock(Direction.UP, ccw, targetPos, level, level.getBlockState(targetPos), hit);
+            ret = tryRotatingBlock(Direction.UP, ccw, targetPos, level, level.getBlockState(targetPos), hit, player);
         }
         return ret;
     }
 
-    public static Optional<Direction> tryRotatingBlock(Direction face, boolean ccw, BlockPos targetPos, Level level, Vec3 hit) {
-        return tryRotatingBlock(face, ccw, targetPos, level, level.getBlockState(targetPos), hit);
+    public static Optional<Direction> tryRotatingBlock(Direction face, boolean ccw, BlockPos targetPos, Level level, Vec3 hit,
+                                                       @Nullable Player player) {
+        return tryRotatingBlock(face, ccw, targetPos, level, level.getBlockState(targetPos), hit,player);
     }
 
     // can be called on both sides
     // returns the direction onto which the block was actually rotated
-    public static Optional<Direction> tryRotatingBlock(Direction dir, boolean ccw, BlockPos targetPos, Level level, BlockState state, Vec3 hit) {
+    public static Optional<Direction> tryRotatingBlock(Direction dir, boolean ccw, BlockPos targetPos,
+                                                       Level level, BlockState state, Vec3 hit,
+                                                       @Nullable Player player) {
 
         // container shuffle stuff
         if (!level.isClientSide && CommonConfigs.Redstone.TURN_TABLE_SHUFFLE.get() &&
@@ -79,7 +85,7 @@ public class BlockUtil {
         if (state.getBlock() instanceof IRotatable rotatable) {
             return rotatable.rotateOverAxis(state, level, targetPos, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir, hit);
         }
-        Optional<BlockState> optional = getRotatedState(dir, ccw, targetPos, level, state);
+        Optional<BlockState> optional = getRotatedState(dir, ccw, targetPos, level, state, player);
         if (optional.isPresent()) {
             BlockState rotated = optional.get();
 
@@ -100,10 +106,13 @@ public class BlockUtil {
         return Optional.empty();
     }
 
-    public static Optional<BlockState> getRotatedState(Direction dir, boolean ccw, BlockPos targetPos, Level world, BlockState state) {
+    public static Optional<BlockState> getRotatedState(Direction dir, boolean ccw, BlockPos targetPos, Level world,
+                                                       BlockState state, @Nullable Player player) {
 
         // is block blacklisted?
-        if (isRotationBlacklisted(state)) return Optional.empty();
+        if (isRotationBlacklisted(state, player)) {
+            return Optional.empty();
+        }
 
         Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
         Block block = state.getBlock();
@@ -185,7 +194,11 @@ public class BlockUtil {
     }
 
 
-    private static boolean isRotationBlacklisted(BlockState state) {
+    private static boolean isRotationBlacklisted(BlockState state, @Nullable Player player) {
+        if (player != null && player.isCreative() && state.is(ModTags.ROTATION_CREATIVE_WHITELIST)) {
+            return false;
+        }
+
         // double blocks
         if (state.getBlock() instanceof BedBlock) return true;
         if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
@@ -261,7 +274,6 @@ public class BlockUtil {
             c.setChanged();
         }
     }
-
 
 
     //TODO: add rotation vertical slabs & doors
