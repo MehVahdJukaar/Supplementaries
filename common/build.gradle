@@ -39,7 +39,7 @@ dependencies {
     implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}"))
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
-    modApi("net.mehvahdjukaar:moonlight:${moonlight_version}")
+    modImplementation("net.mehvahdjukaar:moonlight:${moonlight_version}")
 
 
     modCompileOnly("curse.maven:irisshaders-455508:5726473")

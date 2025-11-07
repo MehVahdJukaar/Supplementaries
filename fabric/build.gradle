@@ -83,7 +83,7 @@ dependencies {
 
     include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")))
 
-    modApi("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
+    modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
 
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
