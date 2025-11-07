@@ -703,8 +703,8 @@
 
   "wood_type.domum_ornamentum.cactus": "緑色のサボテンの",
   "wood_type.domum_ornamentum.cactus_extra": "サボテンの",
-  "wood_type.twilightforest.dark": "ダークウッド",
-  "wood_type.twilightforest.sorting": "分類の木",
-  "wood_type.twilightforest.time": "刻の木",
-  "wood_type.twilightforest.trans": "変化の木"
+  "wood_type.twilightforest.dark": "ダークウッドの",
+  "wood_type.twilightforest.sorting": "分類の木の",
+  "wood_type.twilightforest.time": "刻の木の",
+  "wood_type.twilightforest.trans": "変化の木の"
 }
