@@ -600,7 +600,7 @@ public class ModRegistry {
             BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER).isRedstoneConductor((s, l, p) -> false)
     ));
 
-    //piston launcher vehicle
+    //piston launcher base
     public static final Supplier<Block> SPRING_LAUNCHER = regWithItem(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
                     .strength(4f, 5f)

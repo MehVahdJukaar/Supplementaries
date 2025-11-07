@@ -152,7 +152,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
                         .texOffs(0, 18).addBox(-6.0F, -6.0F, -6.5F, 12.0F, 12.0F, 13.0F, new CubeDeformation(-0.3125F)),
                 PartPose.ZERO);
 
-        PartDefinition base = partdefinition.addOrReplaceChild("vehicle", CubeListBuilder.create()
+        PartDefinition base = partdefinition.addOrReplaceChild("base", CubeListBuilder.create()
                         .texOffs(0, 0)
                         .addBox(-8.0F, 6.0F, -8.0F, 16.0F, 2.0F, 16.0F),
                 PartPose.ZERO);

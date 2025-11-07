@@ -29,7 +29,7 @@ import java.util.Collection;
 //TODO. check
 //this is still a mess
 public class BucketHelper {
-    //bucket item mob name (not id). Many mods don't extend the vehicle BucketItem class nor the IBucketable interface... whyy
+    //bucket item mob name (not id). Many mods don't extend the base BucketItem class nor the IBucketable interface... whyy
     private static final BiMap<Item, EntityType<?>> BUCKET_TO_MOB_MAP = HashBiMap.create();
 
 

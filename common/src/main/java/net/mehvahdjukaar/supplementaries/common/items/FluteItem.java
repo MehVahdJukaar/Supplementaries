@@ -165,7 +165,7 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
     @Override
     public void spawnNoteParticle(Level level, LivingEntity entity, int note) {
         if (!ClientConfigs.Items.FLUTE_PARTICLES.get()) return;
-        //default vehicle
+        //default base
         Vec3 bx = new Vec3(1, 0, 0);
         Vec3 by = new Vec3(0, 1, 0);
         Vec3 bz = new Vec3(0, 0, 1);
@@ -184,7 +184,7 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
 
         armVec = armVec.yRot((float) (-Math.PI / 2f * mirror)).add(0, 0.15, 0.1);
 
-        //new vector is rotated on y axis relative to the rotated vehicle
+        //new vector is rotated on y axis relative to the rotated base
         Vec3 newV = bx.scale(armVec.x)
                 .add(by.scale(armVec.y))
                 .add(bz.scale(armVec.z));
