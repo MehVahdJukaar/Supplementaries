@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.common.utils.FluidsUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

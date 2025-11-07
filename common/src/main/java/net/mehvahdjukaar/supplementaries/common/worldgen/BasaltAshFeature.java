@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.mehvahdjukaar.moonlight.api.trades.ItemListingManager;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.WickerFenceBlock;
 import net.mehvahdjukaar.supplementaries.common.worldgen.BasaltAshFeature.Config;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ExtraCodecs;

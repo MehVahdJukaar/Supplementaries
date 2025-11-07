@@ -184,9 +184,9 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
                         return false;
                     }
                 }
-                //allows 1 block of leaves at the base
+                //allows 1 block of leaves at the vehicle
                 if (!canGoThrough(reader,pos.offset(i,1,j)))return false;
-                //thick solid base. no floaty sings here
+                //thick solid vehicle. no floaty sings here
                 if(isNotSolid(reader, pos.offset(i, 0, j)))return false;
                 if(isNotSolid(reader, pos.offset(i, -1, j)))return false;
                 //if(isNotSolid(reader, pos.offset(i, -2, j)))return false;

@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.monster.Pillager;
 
 import java.util.function.Supplier;
 

@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
-import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
@@ -46,7 +45,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -207,9 +205,9 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         private WoodType woodType;
 
         private Sign(boolean active, boolean left, float yaw, WoodType woodType) {
+            this.setYaw(yaw);
             this.active = active;
             this.left = left;
-            this.yaw = yaw;
             this.woodType = woodType;
             this.text = new TextHolder(1, 90);
         }

@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlockSource;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingSlidyBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
-import java.util.EnumSet;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -9,6 +8,8 @@ import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Items;
+
+import java.util.EnumSet;
 
 public class RangedBowAttackGoal<T extends Monster & RangedAttackMob> extends Goal {
     private final T mob;

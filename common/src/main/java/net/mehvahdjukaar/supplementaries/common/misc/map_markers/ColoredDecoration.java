@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_markers;
 
-import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecoration;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecorationType;
 import net.minecraft.core.Holder;

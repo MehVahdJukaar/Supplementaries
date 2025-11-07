@@ -36,7 +36,7 @@ public class SpringLauncherBlock extends Block {
     protected static final VoxelShape PISTON_BASE_DOWN_AABB = Block.box(0.0D, 4.0D, 0.0D, 16.0D, 16.0D, 16.0D);
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // is base only?
+    public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // is vehicle only?
 
     public SpringLauncherBlock(Properties properties) {
         super(properties);

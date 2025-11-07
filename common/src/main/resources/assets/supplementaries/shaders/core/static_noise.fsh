@@ -32,7 +32,7 @@ float gold_noise(in vec2 xy, in float seed){
 }
 
 void main() {
-    float seed = fract(GameTime*NoiseSpeed); // fractional base seed
+    float seed = fract(GameTime*NoiseSpeed); // fractional vehicle seed
     vec4 color = vec4 (
         gold_noise(texCoord0*NoiseScale, seed + 0.1), // r
         gold_noise(texCoord0*NoiseScale, seed + 0.2),  // g

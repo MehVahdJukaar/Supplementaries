@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
 import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;

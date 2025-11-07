@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
 import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SugarBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;

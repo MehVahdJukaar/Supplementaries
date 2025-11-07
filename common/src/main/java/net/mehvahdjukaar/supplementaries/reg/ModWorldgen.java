@@ -33,11 +33,13 @@ public class ModWorldgen {
 
     //feature spawned by the structure
     public static final Supplier<Feature<RoadSignFeature.Config>> ROAD_SIGN_FEATURE = RegHelper.registerFeature(
-            Supplementaries.res("road_sign_feature"), () -> new RoadSignFeature(RoadSignFeature.Config.CODEC));
+            Supplementaries.res("road_sign"), () -> new RoadSignFeature(RoadSignFeature.Config.CODEC));
 
     public static final Supplier<Feature<BasaltAshFeature.Config>> BASALT_ASH_FEATURE = RegHelper.registerFeature(
             Supplementaries.res("surface_scan_random_patch"), () -> new BasaltAshFeature(BasaltAshFeature.Config.CODEC));
 
+    public static final Supplier<Feature<SpawnEntityWithPassengersFeature.Config>> ENTITY_WITH_PASSENGERS_FEATURE = RegHelper.registerFeature(
+            Supplementaries.res("spawn_entity_with_passengers"), () -> new SpawnEntityWithPassengersFeature(SpawnEntityWithPassengersFeature.Config.CODEC));
 
 
 }

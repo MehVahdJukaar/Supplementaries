@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
-import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
-
 public class ProjectileStats {
 
     // same as ender pearl & egg

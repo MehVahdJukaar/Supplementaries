@@ -1,12 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-
 /*
 public class WindVaneInstance extends BlockEntityInstance<WindVaneBlockTile> implements DynamicInstance {
 

@@ -18,7 +18,6 @@ import net.minecraft.world.item.component.TooltipProvider;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public record FluteTargets(Set<Pet> pets) implements TooltipProvider {
 

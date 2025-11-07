@@ -2,10 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.HangingEntityItem;
 import net.minecraft.world.item.Item;

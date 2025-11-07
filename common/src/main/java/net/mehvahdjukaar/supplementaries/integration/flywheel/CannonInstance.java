@@ -1,16 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.flywheel;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
-import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CannonBlockTileRenderer;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Mth;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 /*
 public class CannonInstance extends BlockEntityInstance<CannonBlockTile> implements DynamicInstance {
 
@@ -19,7 +8,7 @@ public class CannonInstance extends BlockEntityInstance<CannonBlockTile> impleme
     private final ModelData head;
     private final ModelData headOverlay;
     private final ModelData legs;
-    private final ModelData base;
+    private final ModelData vehicle;
     private final PoseStack stack;
 
     public CannonInstance(MaterialManager materialManager, CannonBlockTile tile) {
@@ -35,7 +24,7 @@ public class CannonInstance extends BlockEntityInstance<CannonBlockTile> impleme
         this.stack.translate(0.5, 0.5, 0.5);
 
         this.legs = this.makeLegsInstance().setTransform(this.stack);
-        this.base = this.makeBaseInstance().setTransform(this.stack);
+        this.vehicle = this.makeBaseInstance().setTransform(this.stack);
         this.stack.pushPose();
         this.stack.translate(0, -1 / 16f, 0);
         this.head = this.makeHeadInstance().setTransform(this.stack);
@@ -51,7 +40,7 @@ public class CannonInstance extends BlockEntityInstance<CannonBlockTile> impleme
 
         Quaternionf rotation = blockEntity.getBlockState().getValue(CannonBlock.FACING).getOpposite().getRotation();
         this.stack.mulPose(rotation);
-        this.base.setTransform(this.stack);
+        this.vehicle.setTransform(this.stack);
 
 
         float yawRad = blockEntity.getYaw(partialTick) * Mth.DEG_TO_RAD;
@@ -99,14 +88,14 @@ public class CannonInstance extends BlockEntityInstance<CannonBlockTile> impleme
     @Override
     public void remove() {
         this.legs.delete();
-        this.base.delete();
+        this.vehicle.delete();
         this.head.delete();
         this.headOverlay.delete();
     }
 
     @Override
     public void updateLight() {
-        this.relight(this.pos, this.legs, this.base, this.head, this.headOverlay);
+        this.relight(this.pos, this.legs, this.vehicle, this.head, this.headOverlay);
     }
 
     private ModelData makeLegsInstance() {
@@ -146,7 +135,7 @@ public class CannonInstance extends BlockEntityInstance<CannonBlockTile> impleme
     }
 
     private ModelPart makeBase() {
-        return ModelPart.builder("base", 64, 64)
+        return ModelPart.builder("vehicle", 64, 64)
                 .sprite(this.texture)
                 .cuboid()
                 .textureOffset(0, 0)

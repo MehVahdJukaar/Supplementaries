@@ -6,7 +6,6 @@ import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.LunchBoxBlockTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 
 public final class LunchBasketPreviewProvider extends BlockEntityPreviewProvider {

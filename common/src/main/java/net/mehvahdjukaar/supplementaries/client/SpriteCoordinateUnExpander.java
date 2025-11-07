@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import org.joml.Vector3f;
 
 public class SpriteCoordinateUnExpander implements VertexConsumer {
     private final VertexConsumer delegate;

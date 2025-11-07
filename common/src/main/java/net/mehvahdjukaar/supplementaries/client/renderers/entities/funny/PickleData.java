@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.PicklePacket;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;

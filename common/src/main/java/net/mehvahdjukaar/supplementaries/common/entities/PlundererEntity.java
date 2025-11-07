@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatMoveController;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatPathNavigation;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.BoardBoatGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.AbandonShipGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.BoardBoatGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.IAmTheCaptainGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
 import net.minecraft.core.BlockPos;

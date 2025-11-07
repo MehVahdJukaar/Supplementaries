@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.FluidTags;
-import org.jetbrains.annotations.Nullable;
 
 public class SugarParticle extends TerrainParticle {
 

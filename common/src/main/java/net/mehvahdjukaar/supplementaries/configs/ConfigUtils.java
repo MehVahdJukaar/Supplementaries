@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.configs;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestConfigReloadPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.level.ServerPlayer;

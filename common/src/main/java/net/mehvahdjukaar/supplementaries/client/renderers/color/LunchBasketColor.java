@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.color;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.LunchBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.color.block.BlockColor;

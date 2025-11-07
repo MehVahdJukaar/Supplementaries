@@ -5,36 +5,84 @@
     {
       "weight": 1,
       "element": {
-        "element_type": "minecraft:single_pool_element",
-        "location": "supplementaries:galleon/boat_0",
-        "processors": "minecraft:empty",
+        "element_type": "minecraft:feature_pool_element",
+        "feature": {
+          "placement": [
+          ],
+          "feature": {
+            "config": {
+              "vehicle": "minecraft:boat",
+              "boat_type": "dark_oak",
+              "passengers": [
+                "supplementaries:plunderer",
+                "minecraft:pillager"
+              ]
+            },
+            "type": "supplementaries:spawn_entity_with_passengers"
+          }
+        },
         "projection": "rigid"
       }
     },
     {
       "weight": 1,
       "element": {
-        "element_type": "minecraft:single_pool_element",
-        "location": "supplementaries:galleon/boat_1",
-        "processors": "minecraft:empty",
+        "element_type": "minecraft:feature_pool_element",
+        "feature": {
+          "placement": [
+          ],
+          "feature": {
+            "config": {
+              "vehicle": "minecraft:boat",
+              "boat_type": "dark_oak",
+              "passengers": [
+                "supplementaries:plunderer"
+              ]
+            },
+            "type": "supplementaries:spawn_entity_with_passengers"
+          }
+        },
         "projection": "rigid"
       }
     },
     {
       "weight": 1,
       "element": {
-        "element_type": "minecraft:single_pool_element",
-        "location": "supplementaries:galleon/boat_2",
-        "processors": "minecraft:empty",
+        "element_type": "minecraft:feature_pool_element",
+        "feature": {
+          "placement": [
+          ],
+          "feature": {
+            "config": {
+              "vehicle": "supplementaries:cannon_boat",
+              "boat_type": "dark_oak",
+              "passengers": [
+                "supplementaries:plunderer"
+              ]
+            },
+            "type": "supplementaries:spawn_entity_with_passengers"
+          }
+        },
         "projection": "rigid"
       }
     },
     {
       "weight": 1,
       "element": {
-        "element_type": "minecraft:single_pool_element",
-        "location": "supplementaries:galleon/boat_3",
-        "processors": "minecraft:empty",
+        "element_type": "minecraft:feature_pool_element",
+        "feature": {
+          "placement": [
+          ],
+          "feature": {
+            "config": {
+              "vehicle": "minecraft:boat",
+              "boat_type": "dark_oak",
+              "passengers": [
+              ]
+            },
+            "type": "supplementaries:spawn_entity_with_passengers"
+          }
+        },
         "projection": "rigid"
       }
     },

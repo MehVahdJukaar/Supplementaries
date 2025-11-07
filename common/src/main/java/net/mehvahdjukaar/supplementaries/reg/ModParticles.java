@@ -1,11 +1,9 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 
 import java.util.function.Supplier;

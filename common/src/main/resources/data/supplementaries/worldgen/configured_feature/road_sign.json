@@ -47,5 +47,5 @@
       "log_chance": 0.25
     }
   },
-  "type": "supplementaries:road_sign_feature"
+  "type": "supplementaries:road_sign"
 }

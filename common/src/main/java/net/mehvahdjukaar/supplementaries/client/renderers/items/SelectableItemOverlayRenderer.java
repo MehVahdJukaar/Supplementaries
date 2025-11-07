@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.items;
 
 import net.mehvahdjukaar.moonlight.api.item.IItemDecoratorRenderer;
-import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.minecraft.world.level.block.entity.BannerPatterns;
-
 public final class ModConstants {
     public static final String STASIS_NAME = "stasis";
 
