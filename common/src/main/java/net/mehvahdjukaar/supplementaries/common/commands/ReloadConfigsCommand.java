@@ -22,7 +22,7 @@ public class ReloadConfigsCommand implements Command<CommandSourceStack> {
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         //TODO: figure out server/client side
         CommonConfigs.CONFIG_HOLDER.sendSyncedConfigsToAllPlayers();
-        context.getSource().sendSuccess(()->Component.translatable("message.supplementaries.command.configs_reloaded"), false);
+        context.getSource().sendSuccess(()->Component.translatable("commands.supplementaries.configs_reloaded"), false);
         return 0;
     }
 }

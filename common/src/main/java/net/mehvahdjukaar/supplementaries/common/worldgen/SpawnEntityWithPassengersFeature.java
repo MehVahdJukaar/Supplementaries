@@ -31,7 +31,7 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
         WorldGenLevel level = context.level();
         ServerLevel serverLevel = level.getLevel();
 
-        Entity boat = config.base.create(serverLevel);
+        Entity boat = config.vehicle.create(serverLevel);
         if (boat == null) return false;
         if (boat instanceof Boat b && config.boatType.isPresent()) {
             b.setVariant(config.boatType.get());
@@ -55,10 +55,10 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
         return true;
     }
 
-    public record Config(EntityType<?> base, List<EntityType<?>> passengers,
+    public record Config(EntityType<?> vehicle, List<EntityType<?>> passengers,
                          Optional<Boat.Type> boatType) implements FeatureConfiguration {
         public static final Codec<Config> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("base").forGetter(Config::base),
+                BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("vehicle").forGetter(Config::vehicle),
                 BuiltInRegistries.ENTITY_TYPE.byNameCodec().listOf().fieldOf("passengers").forGetter(Config::passengers),
                 Boat.Type.CODEC.optionalFieldOf("boat_type").forGetter(Config::boatType)
         ).apply(instance, Config::new));

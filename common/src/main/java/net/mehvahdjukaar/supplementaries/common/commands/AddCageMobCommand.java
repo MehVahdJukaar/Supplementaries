@@ -12,6 +12,7 @@ import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.synchronization.SuggestionProviders;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 
 public class AddCageMobCommand implements Command<CommandSourceStack> {
@@ -29,6 +30,8 @@ public class AddCageMobCommand implements Command<CommandSourceStack> {
         Holder.Reference<EntityType<?>> id = ResourceArgument.getSummonableEntityType(context, "entity");
 
         CapturedMobHandler.getInstance(context.getSource().getLevel()).addCommandMob(id.key().location().toString());
+        context.getSource().sendSuccess(() ->
+                Component.translatable("commands.supplementaries.cage", id.key().location()), false);
         return 0;
     }
 }

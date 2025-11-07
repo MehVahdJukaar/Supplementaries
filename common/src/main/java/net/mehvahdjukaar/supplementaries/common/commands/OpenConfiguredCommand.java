@@ -27,7 +27,7 @@ public class OpenConfiguredCommand implements Command<CommandSourceStack> {
                 NetworkHelper.sendToClientPlayer(serverPlayer, new ClientBoundOpenConfigsPacket());
             }
         } else {
-            context.getSource().sendSuccess(()->Component.translatable("message.supplementaries.command.configs"), false);
+            context.getSource().sendSuccess(()->Component.translatable("commands.supplementaries.configs"), false);
         }
         return 0;
     }

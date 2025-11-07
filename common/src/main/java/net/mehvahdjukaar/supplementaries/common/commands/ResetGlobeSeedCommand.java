@@ -23,7 +23,7 @@ public class ResetGlobeSeedCommand implements Command<CommandSourceStack> {
     public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         ServerLevel level = context.getSource().getLevel();
         GlobeData.recreateAndAssignFromSeed(level, level.getSeed());
-        context.getSource().sendSuccess(() -> Component.translatable("message.supplementaries.command.globe_reset"), false);
+        context.getSource().sendSuccess(() -> Component.translatable("commands.supplementaries.globe_reset"), false);
         return 0;
     }
 }

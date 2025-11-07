@@ -10,11 +10,13 @@ accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 accessible field net/minecraft/client/renderer/GameRenderer effectActive Z
 accessible class net/minecraft/world/item/BrushItem$DustParticlesDelta
 
-accessible method net/minecraft/world/level/pathfinder/Path setDebug ([Lnet/minecraft/world/level/pathfinder/Node;[Lnet/minecraft/world/level/pathfinder/Node;Ljava/util/Set;)V
 #plunderer boat stuff
 accessible field net/minecraft/world/entity/vehicle/Boat deltaRotation F
 accessible method net/minecraft/world/entity/vehicle/Boat controlBoat ()V
 accessible method net/minecraft/world/entity/ai/navigation/PathNavigation shouldTargetNextNodeInDirection (Lnet/minecraft/world/phys/Vec3;)Z
+
+
+
 
 accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
 accessible class net/minecraft/world/item/ItemCooldowns$CooldownInstance

@@ -63,7 +63,7 @@ public class BlockUtil {
 
     public static Optional<Direction> tryRotatingBlock(Direction face, boolean ccw, BlockPos targetPos, Level level, Vec3 hit,
                                                        @Nullable Player player) {
-        return tryRotatingBlock(face, ccw, targetPos, level, level.getBlockState(targetPos), hit,player);
+        return tryRotatingBlock(face, ccw, targetPos, level, level.getBlockState(targetPos), hit, player);
     }
 
     // can be called on both sides
@@ -199,6 +199,11 @@ public class BlockUtil {
             return false;
         }
 
+        if (state.getBlock() instanceof GameMasterBlock) {
+            if (player == null || !player.canUseGameMasterBlocks()) {
+                return true;
+            }
+        }
         // double blocks
         if (state.getBlock() instanceof BedBlock) return true;
         if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
