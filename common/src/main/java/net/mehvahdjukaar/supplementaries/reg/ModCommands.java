@@ -34,18 +34,9 @@ public class ModCommands {
                                 .then(OpenConfiguredCommand.register(context))
                                 .then(ReloadConfigsCommand.register(context))
                         )
-                        .then(RegistryCommand.register())
-                        .then(IUsedToRollTheDice.register(context))
                         .then(AddCageMobCommand.register(context))
-                        .then(DebugRenderersCommand.register(context))
                         .then(RecordSongCommand.register(context))
-                        .then(ChangeDimensionCommand.register(context))
-                        .then(Commands.literal("map")
-                                .requires((p) -> p.hasPermission(2))
-                                .then(MapMarkerCommand.register(context))
-                                .then(StructureMapCommand.register(context))
-                        )
-
+                        .then(StructureMapCommand.register(context))
         );
 
         dispatcher.register(Commands.literal("supp").redirect(node));

@@ -4,6 +4,10 @@ package net.mehvahdjukaar.supplementaries.common.worldgen;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import it.unimi.dsi.fastutil.longs.LongSet;
+import net.mehvahdjukaar.moonlight.api.worldgen.ISpawnBoxStructure;
+import net.mehvahdjukaar.moonlight.api.worldgen.SpawnBoxSettings;
+import net.mehvahdjukaar.supplementaries.common.items.WrenchItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModWorldgen;
 import net.minecraft.ChatFormatting;
@@ -13,12 +17,17 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.Unit;
+import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BannerPatterns;
@@ -26,19 +35,30 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
+import net.minecraft.world.level.levelgen.structure.structures.RuinedPortalPiece;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
-public class GalleonStructure extends Structure {
+public class GalleonStructure extends Structure implements ISpawnBoxStructure {
 
-    public static final MapCodec<GalleonStructure> CODEC = RecordCodecBuilder.<GalleonStructure>mapCodec(instance ->
+    public static final MapCodec<GalleonStructure> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(GalleonStructure.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),
@@ -46,7 +66,8 @@ public class GalleonStructure extends Structure {
                     Climate.ParameterPoint.CODEC.optionalFieldOf("biome_point").forGetter(structure -> structure.biomePoint),
                     Codec.BOOL.optionalFieldOf("require_sea_level", true).forGetter(structure -> structure.requireSeaLevel),
                     DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
-                    LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
+                    LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings),
+                    SpawnBoxSettings.CODEC.optionalFieldOf("spawn_boxes", SpawnBoxSettings.EMPTY).forGetter(structure -> structure.spawnBoxSettings)
             ).apply(instance, GalleonStructure::new));
 
 
@@ -65,6 +86,8 @@ public class GalleonStructure extends Structure {
     private final DimensionPadding dimensionPadding;
     private final LiquidSettings liquidSettings;
 
+    private final SpawnBoxSettings spawnBoxSettings;
+
     public GalleonStructure(StructureSettings config,
                             Holder<StructureTemplatePool> startPool,
                             Optional<ResourceLocation> startJigsawName,
@@ -72,7 +95,8 @@ public class GalleonStructure extends Structure {
                             Optional<Climate.ParameterPoint> biomePoint,
                             boolean requireSeaLevel,
                             DimensionPadding dimensionPadding,
-                            LiquidSettings liquidSettings) {
+                            LiquidSettings liquidSettings,
+                            SpawnBoxSettings spawnBoxSettings) {
         super(config);
         this.startPool = startPool;
         this.startJigsawName = startJigsawName;
@@ -81,11 +105,18 @@ public class GalleonStructure extends Structure {
         this.requireSeaLevel = requireSeaLevel;
         this.dimensionPadding = dimensionPadding;
         this.liquidSettings = liquidSettings;
+        this.spawnBoxSettings = spawnBoxSettings;
     }
 
     @Override
     public StructureType<?> type() {
         return ModWorldgen.GALLEON_STRUCTURE.get();
+    }
+
+
+    @Override
+    public @NotNull SpawnBoxSettings ml$getSpawnBoxSettings() {
+        return spawnBoxSettings;
     }
 
     @Override
@@ -184,5 +215,6 @@ public class GalleonStructure extends Structure {
         itemStack.set(DataComponents.ITEM_NAME, OMINOUS_FLAG_PATTERN_NAME);
         return itemStack;
     }
+
 
 }

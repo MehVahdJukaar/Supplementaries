@@ -58,7 +58,7 @@ public class RecordSongCommandImpl {
 
         String savedName = SongsManager.stopRecording(context.getSource().getLevel(), name, speedup);
 
-        context.getSource().sendSuccess(() -> Component.translatable("message.supplementaries.command.record.stop", savedName), false);
+        context.getSource().sendSuccess(() -> Component.translatable("commands.supplementaries.record.stop", savedName), false);
 
         return 0;
     }
@@ -68,7 +68,7 @@ public class RecordSongCommandImpl {
         SongsManager.Source source = context.getArgument("source", SongsManager.Source.class);
         SongsManager.startRecording(source, whitelist);
 
-        context.getSource().sendSuccess(() -> Component.translatable("message.supplementaries.command.record.start"), false);
+        context.getSource().sendSuccess(() -> Component.translatable("commands.supplementaries.record.start"), false);
 
         return 0;
     }

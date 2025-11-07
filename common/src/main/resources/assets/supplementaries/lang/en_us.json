@@ -255,14 +255,6 @@
   "block.supplementaries.wind_vane": "Wind Vane",
   "block.supplementaries.spider_head": "Spider Head",
 
-  "commands.supplementaries.registry.copy_elements_names": "Click to copy all entry names to clipboard",
-  "commands.supplementaries.registry.element": "%s : %s",
-  "commands.supplementaries.registry.elements_count": "Entries: %s",
-  "commands.supplementaries.registry.error.unknown_registry": "Unknown registry '%s'",
-  "commands.supplementaries.registry.page_info": "%s <page %s / %s>",
-  "commands.supplementaries.registry.registry_key": "%s",
-  "commands.supplementaries.registry.dump.success": "Dumped registry content to %s",
-
   "config.jade.plugin_supplementaries.hat_stand": "Hat Stand",
   "create.display_source.fill_level.fluid_amount": "Fluid Amount",
 
@@ -464,13 +456,15 @@
   "message.supplementaries.cannon.maneuver": "Press %1$s to Dismount, %2$s to Fire",
   "message.supplementaries.cannon_boat": "Press %1$s to Dismount, %2$s to Fire, %3$s to Maneuver",
   "message.supplementaries.cartographers_quill": "Unknown",
-  "message.supplementaries.command.configs": "Install Configured to access configs",
-  "message.supplementaries.command.configs_reloaded": "Configs reloaded",
-  "message.supplementaries.command.dice": "Rolled D%1$d: %2$d",
-  "message.supplementaries.command.globe_changed": "Globe seed changed",
-  "message.supplementaries.command.globe_reset": "Globe seed reset",
-  "message.supplementaries.command.record.start": "Noteblocks recording started",
-  "message.supplementaries.command.record.stop": "Noteblocks recording stopped: saved song at recorded_songs/%s",
+
+  "commands.supplementaries.configs": "Install Configured to access configs",
+  "commands.supplementaries.cage": "Added %s to temporary Cage and Jars catchable list",
+  "commands.supplementaries.configs_reloaded": "Supplementaries Configs reloaded!",
+  "commands.supplementaries.globe_changed": "Globe seed changed",
+  "commands.supplementaries.globe_reset": "Globe seed reset",
+  "commands.supplementaries.record.start": "Noteblocks recording started",
+  "commands.supplementaries.record.stop": "Noteblocks recording stopped: saved song at recorded_songs/%s",
+
   "message.supplementaries.compass": "X: %d, Z: %d",
   "message.supplementaries.death_marker": "Last Death",
   "message.supplementaries.door.locked": "This door is locked",

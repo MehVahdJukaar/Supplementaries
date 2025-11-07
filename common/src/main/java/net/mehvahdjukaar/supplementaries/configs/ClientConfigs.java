@@ -236,7 +236,6 @@ public class ClientConfigs {
 
         public static final Supplier<Boolean> UNFUNNY;
         public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
-        public static final Supplier<Boolean> DEBUG_RENDERS;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -263,8 +262,6 @@ public class ClientConfigs {
             UNFUNNY = builder.comment("unfunny").define("I am very boring", false);
 
 
-            DEBUG_RENDERS = builder.comment("Enables some debug renderers. Require the use of the /supp debug command to enable their data being sent")
-                    .define("debug_renderers", PlatHelper.isDev());
 
             builder.pop();
         }
