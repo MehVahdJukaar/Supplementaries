@@ -29,6 +29,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -49,7 +50,6 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
 
     public boolean handleAction(Player player, ItemStack stack) {
         Item item = stack.getItem();
-
         //clear ownership with tripwire
         boolean cleared = false;
         if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
