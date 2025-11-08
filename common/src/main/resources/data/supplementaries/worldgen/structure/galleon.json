@@ -1,28 +1,27 @@
 {
   "type": "supplementaries:galleon",
   "biomes": "#supplementaries:has_galleons",
-  "spawn_aabb": {
-  },
   "spawn_boxes": [
     {
       "category": "monster",
-      "name": "pirate",
+      "name": "galleon_enemies",
       "spawns": [
         {
           "type": "minecraft:pillager",
-          "maxCount": 4,
+          "maxCount": 1,
           "minCount": 1,
           "weight": 4
         },
         {
           "type": "supplementaries:plunderer",
-          "maxCount": 3,
+          "maxCount": 1,
           "minCount": 1,
           "weight": 7
         }
       ]
     }
   ],
+  "spawn_overrides": {},
   "y_offset": -3,
   "start_pool": "supplementaries:galleon/start_pool",
   "step": "surface_structures",

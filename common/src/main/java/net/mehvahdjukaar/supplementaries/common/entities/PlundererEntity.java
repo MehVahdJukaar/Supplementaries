@@ -45,6 +45,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.providers.EnchantmentProvider;
 import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
@@ -138,6 +139,16 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     @Override
     public AbstractIllager.IllagerArmPose getArmPose() {
         return this.isAggressive() ? AbstractIllager.IllagerArmPose.ATTACKING : IllagerArmPose.CROSSED;
+    }
+
+    @Override
+    public boolean checkSpawnObstruction(LevelReader level) {
+        return super.checkSpawnObstruction(level);
+    }
+
+    @Override
+    public boolean checkSpawnRules(LevelAccessor level, MobSpawnType reason) {
+        return super.checkSpawnRules(level, reason);
     }
 
     @Override

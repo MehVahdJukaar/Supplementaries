@@ -292,7 +292,7 @@ static ReleaseType parseReleaseType(String s) {
     }
 }
 
-tasks.register('buildAndpublishAll') {
+tasks.register('buildAndPublishAll') {
     dependsOn ':clean'
     dependsOn ':build'
     dependsOn ':neoforge:curseforge'
@@ -306,7 +306,7 @@ tasks.register('buildAndpublishAll') {
 }
 
 
-tasks.register('buildAndpublishAll2') {
+tasks.register('buildAndPublishAll2') {
     dependsOn ':clean'
     dependsOn ':build'
     dependsOn ':neoforge:publishCurseforge'
