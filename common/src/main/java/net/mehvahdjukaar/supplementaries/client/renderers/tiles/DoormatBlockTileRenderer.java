@@ -22,11 +22,9 @@ public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBloc
     public static final int LINE_SEPARATION = 15;
 
     private final Font font;
-    private final Camera camera;
 
     public DoormatBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         font = context.getFont();
-        camera = Minecraft.getInstance().gameRenderer.getMainCamera();
     }
 
     @Override
@@ -38,7 +36,7 @@ public class DoormatBlockTileRenderer implements BlockEntityRenderer<DoormatBloc
     public void render(DoormatBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
 
-        LOD lod = new LOD(camera, tile.getBlockPos());
+        LOD lod = LOD.at(tile);
         if (!lod.isNear()) return;
 
         poseStack.pushPose();

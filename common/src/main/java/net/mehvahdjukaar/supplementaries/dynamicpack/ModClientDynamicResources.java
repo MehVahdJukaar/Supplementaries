@@ -76,7 +76,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         //generateTagTranslations();
         executor.accept((manager, sink) -> {
 
-            addEndermanHead(manager, sink);
+            addHeads(manager, sink);
             addRopeArrowModel(manager, sink);
             addTatteredBook(manager, sink);
             addMissingFlagPatterns(manager, sink);
@@ -266,12 +266,20 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         }
     }
 
-    private void addEndermanHead(ResourceManager manager, ResourceSink sink) {
-        if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get() && ClientConfigs.Tweaks.ENDERMAN_HEAD_VANILLA.get()) {
+    private void addHeads(ResourceManager manager, ResourceSink sink) {
+        if (CommonConfigs.Redstone.ENDERMAN_HEAD_ENABLED.get() && ClientConfigs.Tweaks.HEAD_VANILLA.get()) {
             try (TextureImage text = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman"));
                  TextureImage eyeText = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/enderman/enderman_eyes"))) {
                 sink.addTexture(Supplementaries.res("entity/enderman_head"), text);
                 sink.addTexture(Supplementaries.res("entity/enderman_head_eyes"), eyeText);
+            } catch (Exception ignored) {
+            }
+        }
+        if (CommonConfigs.Building.SPIDER_HEAD_ENABLED.get() && ClientConfigs.Tweaks.HEAD_VANILLA.get()) {
+            try (TextureImage text = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/spider/spider"));
+                 TextureImage eyeText = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/spider_eyes"))) {
+                sink.addTexture(Supplementaries.res("entity/spider_head"), text);
+                sink.addTexture(Supplementaries.res("entity/spider_head_eyes"), eyeText);
             } catch (Exception ignored) {
             }
         }

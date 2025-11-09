@@ -111,6 +111,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation JAR_MODEL = loc("jar");
     public static final ModelLayerLocation PICKLE_MODEL = loc("pickle");
     public static final ModelLayerLocation ENDERMAN_HEAD_MODEL = loc("enderman_head");
+    public static final ModelLayerLocation SPIDER_HEAD_MODEL = loc("spider_head");
     public static final ModelLayerLocation PARTY_CREEPER_MODEL = loc("party_creeper");
     public static final ModelLayerLocation CANNON_MODEL = loc("cannon");
     public static final ModelLayerLocation WIND_VANE_MODEL = loc("wind_vane");
@@ -600,6 +601,7 @@ public class ClientRegistry {
         event.register(JAR_MODEL, JarredHeadLayer::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
         event.register(ENDERMAN_HEAD_MODEL, EndermanSkullModel::createMesh);
+        event.register(SPIDER_HEAD_MODEL, SpiderSkullBlockTileRenderer::createMesh);
         event.register(PARTY_CREEPER_MODEL, PartyHatLayer::createMesh);
         event.register(CANNON_MODEL, CannonBlockTileRenderer::createMesh);
         event.register(WIND_VANE_MODEL, WindVaneBlockTileRenderer::createMesh);
