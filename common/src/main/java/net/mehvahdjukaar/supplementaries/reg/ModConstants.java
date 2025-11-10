@@ -147,5 +147,6 @@ public final class ModConstants {
     public static final String LAPIS_BRICKS_NAME = "lapis_bricks";
     public static final String ENDERMAN_HEAD_NAME = "enderman_head";
     public static final String SPIDER_HEAD_NAME = "spider_head";
+    public static final String BARNACLES_NAME = "barnacles";
     public static final String PIRATE_DISC_NAME = "music_disc_heave_ho";
 }

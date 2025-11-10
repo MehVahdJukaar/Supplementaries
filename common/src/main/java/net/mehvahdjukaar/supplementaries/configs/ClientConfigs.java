@@ -176,7 +176,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> COLORED_MAPS;
         public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
         public static final Supplier<Boolean> PROJECTILE_WEAPON_OVERLAY;
-        public static final Supplier<Boolean> ENDERMAN_HEAD_VANILLA;
+        public static final Supplier<Boolean> HEAD_VANILLA;
 
 
         static {
@@ -201,8 +201,8 @@ public class ClientConfigs {
                     .define("mob_head_shaders", true);
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
                     .define("send_chat_on_death", true);
-            ENDERMAN_HEAD_VANILLA = builder.comment("Makes enderman heads use vanilla texture. Enable for texture pack support")
-                            .define("enderman_head_texture_pack_support", true);
+            HEAD_VANILLA = builder.comment("Makes enderman and spider heads use vanilla texture. Enable for texture pack support")
+                            .define("enderman_and_spider_head_texture_pack_support", true);
 
             builder.push("colored_maps");
             SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")

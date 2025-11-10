@@ -1234,6 +1234,15 @@ public class ModRegistry {
             SPIDER_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
                     SpiderSkullBlockTile::new, SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get()));
 
+    public static final Supplier<Block> BARNACLES = regWithItem(BARNACLES_NAME, () -> new BarnaclesBlock(
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_LIGHT_GRAY)
+                    .strength(0.4f)
+                    .sound(SoundType.CORAL_BLOCK)
+                    .noOcclusion()
+                    .noCollission()
+                    .pushReaction(PushReaction.DESTROY)
+    ));
 
     //ash basalt
     public static final Supplier<Block> ASHEN_BASALT = regBlock("ashen_basalt", () ->

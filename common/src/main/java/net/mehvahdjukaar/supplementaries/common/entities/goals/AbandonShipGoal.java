@@ -23,11 +23,12 @@ public class AbandonShipGoal extends Goal {
     public boolean canUse() {
         if (this.mob.getVehicle() instanceof Boat b) {
             LivingEntity captain = b.getControllingPassenger();
-            if (captain != null && captain != this.mob && captain.getType().is(ModTags.CAN_STEER_BOAT)){
+            if (captain != null && captain != this.mob && captain.getType().is(ModTags.CAN_STEER_BOAT)) {
                 //my captain my captain
                 return false;
             }
-            if (b.isInWater()) return true;
+            if (b.onGround()) return false;
+            if (!b.isInWater()) return true;
             PathNavigation nav = this.mob.getNavigation();
             //arrg, abandon ship!
             return nav.isStuck() || (!nav.isDone() && nav.getPath().getNextNode().type != PathType.WATER);

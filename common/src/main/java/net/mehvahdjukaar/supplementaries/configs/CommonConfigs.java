@@ -324,6 +324,10 @@ public class CommonConfigs {
             SPIDER_HEAD_ENABLED = feature(builder);
             builder.pop();
 
+            builder.push(ModConstants.BARNACLES_NAME);
+            BARNACLES_ENABLED = feature(builder);
+            builder.pop();
+
             builder.push("blackboard");
             BLACKBOARD_ENABLED = feature(builder);
             BLACKBOARD_COLOR = builder.comment("Enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
@@ -509,6 +513,7 @@ public class CommonConfigs {
         }
 
         public static final Supplier<Boolean> SPIDER_HEAD_ENABLED;
+        public static final Supplier<Boolean> BARNACLES_ENABLED;
         public static final Supplier<Boolean> BLACKBOARD_ENABLED;
         public static final Supplier<Boolean> BLACKBOARD_COLOR;
         public static final Supplier<BlackboardBlock.UseMode> BLACKBOARD_MODE;
