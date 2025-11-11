@@ -12,6 +12,7 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.multipart.MultiPart;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.WallSkullBlock;
 import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
 import org.jetbrains.annotations.Nullable;
 
 import static net.minecraft.client.renderer.blockentity.SkullBlockRenderer.renderSkull;
@@ -51,7 +53,6 @@ public class SpiderSkullBlockTileRenderer implements BlockEntityRenderer<SkullBl
 
         renderType = RenderType.eyes(ModTextures.SPIDER_HEAD_EYES);
         renderSkull(direction, rotation, f, poseStack, bufferSource, LightTexture.FULL_SKY, model, renderType);
-
         poseStack.popPose();
     }
 
@@ -59,9 +60,9 @@ public class SpiderSkullBlockTileRenderer implements BlockEntityRenderer<SkullBl
     public static LayerDefinition createMesh() {
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
-        PartPose partPose = PartPose.offset(0.0F, -13.0F, 0.0F);
+        PartPose partPose = PartPose.offset(0.0F, -0.0F, 0.0F);
         partDefinition.addOrReplaceChild("head", CubeListBuilder.create()
-                .texOffs(28, 0)
+                .texOffs(32, 4)
                 .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F), partPose);
         return LayerDefinition.create(meshDefinition, 64, 32);
     }

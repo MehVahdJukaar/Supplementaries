@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.neoforge.LumiseneFluidRenderPropertiesImpl;
 import net.mehvahdjukaar.supplementaries.common.items.neoforge.LumiseneBucketItem;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
+import net.minecraft.client.resources.model.MultiPartBakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Mob;

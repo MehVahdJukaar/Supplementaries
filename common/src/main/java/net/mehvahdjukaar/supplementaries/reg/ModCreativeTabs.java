@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.worldgen.GalleonStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.minecraft.client.renderer.block.model.multipart.MultiPart;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -156,6 +157,10 @@ public class ModCreativeTabs {
         adder.after(Items.CREEPER_HEAD, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.SPIDER_HEAD_NAME,
                 ModRegistry.SPIDER_SKULL_ITEM);
+
+        adder.after(Items.COAL, CreativeModeTabs.NATURAL_BLOCKS,
+                ModConstants.BARNACLES_NAME,
+                ModRegistry.BARNACLES);
 
         adder.before(Items.BOOKSHELF, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.TIMBER_FRAME_NAME,
