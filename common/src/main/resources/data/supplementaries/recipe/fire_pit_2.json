@@ -32,7 +32,7 @@
   ],
   "key": {
     "2": {
-      "item": "supplementaries:coal"
+      "tag": "minecraft:coals"
     },
     "1": {
       "tag": "c:ingots/copper"
