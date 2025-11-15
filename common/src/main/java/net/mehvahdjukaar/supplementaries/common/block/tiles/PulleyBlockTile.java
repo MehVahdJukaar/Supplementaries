@@ -55,12 +55,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.pulley_block");
-    }
-
-    @Override
-    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory) {
         return new PulleyContainerMenu(i, inventory, this);
     }
 

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.serialization.MapCodec;
+import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -9,10 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -45,10 +43,11 @@ public class BarnaclesBlock extends MultifaceBlock implements BonemealableBlock,
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         super.animateTick(state, level, pos, random);
-        if (state.getValue(WATERLOGGED) && random.nextInt(10) == 0) {
+        if (state.getValue(WATERLOGGED) && random.nextInt(100) == 0) {
             Direction[] directions = MultifaceBlock.availableFaces(state).toArray(Direction[]::new);
             Direction dir = directions[random.nextInt(directions.length)];
-            ParticleUtils.spawnParticleOnFace(level, pos, dir, ParticleTypes.BUBBLE, Vec3.ZERO, 0.1f);
+            //TODO: custom smaller growing longer lasting particles?
+            ParticleUtils.spawnParticleOnFace(level, pos, dir, ParticleTypes.BUBBLE, new Vec3(0,0.1,0), 0.44f);
         }
     }
 

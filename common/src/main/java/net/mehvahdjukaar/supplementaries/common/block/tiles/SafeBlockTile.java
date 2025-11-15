@@ -193,11 +193,6 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
     }
 
     @Override
-    protected Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.safe");
-    }
-
-    @Override
     protected void playOpenSound(BlockState state) {
         Vec3i vec3i = state.getValue(SafeBlock.FACING).getNormal();
         double d0 = (double) this.worldPosition.getX() + 0.5D + vec3i.getX() / 2.0D;

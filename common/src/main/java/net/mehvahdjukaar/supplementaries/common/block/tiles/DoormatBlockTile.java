@@ -60,11 +60,6 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
         if (isWaxed) tag.putBoolean("Waxed", isWaxed);
     }
 
-    @Override
-    protected Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.doormat");
-    }
-
     public Direction getDirection() {
         return this.getBlockState().getValue(DoormatBlock.FACING);
     }
@@ -110,9 +105,4 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
         return false;
     }
 
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return null;
-    }
 }

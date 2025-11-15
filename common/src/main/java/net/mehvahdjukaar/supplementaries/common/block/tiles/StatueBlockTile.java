@@ -130,11 +130,6 @@ public class StatueBlockTile extends ItemDisplayTile {
         return true;
     }
 
-    @Override
-    public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.statue");
-    }
-
     public Direction getDirection() {
         return this.getBlockState().getValue(NoticeBoardBlock.FACING);
     }

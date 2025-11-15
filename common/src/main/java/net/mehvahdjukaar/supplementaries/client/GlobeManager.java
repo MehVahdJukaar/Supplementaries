@@ -89,6 +89,7 @@ public class GlobeManager {
 
         private void updateTexture(Level world) {
             GlobeData data = ModRegistry.GLOBE_DATA.getData(world);
+            if (data == null) return;
 
             for (int i = 0; i < 16; ++i) {
                 for (int j = 0; j < 32; ++j) {
@@ -100,7 +101,7 @@ public class GlobeManager {
             for (int y = 0; y < height; y++) {
                 for (int x = 0; x < width; x++) {
                     this.texture.getPixels().setPixelRGBA(x, y,
-                            getRGBA(data.getPixel(x,y), this.dimensionId, this.sepiaColored));
+                            getRGBA(data.getPixel(x, y), this.dimensionId, this.sepiaColored));
                 }
             }
             RenderUtil.setDynamicTexturesToUseMipmap(true);

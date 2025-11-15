@@ -113,11 +113,6 @@ public class HourGlassBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.hourglass");
-    }
-
-    @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         return this.isEmpty() && !HourglassTimesManager.getInstance(level)
                 .getData(stack.getItem()).isEmpty();

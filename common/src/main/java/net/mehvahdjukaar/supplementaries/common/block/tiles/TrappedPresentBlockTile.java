@@ -125,12 +125,6 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
 
     }
 
-
-    @Override
-    public Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.trapped_present");
-    }
-
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inv) {
         if (inv.player.isSpectator()) return null;

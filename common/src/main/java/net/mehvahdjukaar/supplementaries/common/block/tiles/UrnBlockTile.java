@@ -24,11 +24,6 @@ public class UrnBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.urn");
-    }
-
-    @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
     }
@@ -41,12 +36,6 @@ public class UrnBlockTile extends ItemDisplayTile {
     @Override
     public boolean canOpen(Player player) {
         return false;
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return null;
     }
 
     // no client update

@@ -83,11 +83,6 @@ public class PedestalBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.pedestal");
-    }
-
-    @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return true;
     }

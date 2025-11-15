@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.worldgen.GalleonStructure;
@@ -168,7 +169,7 @@ public class ModCreativeTabs {
 
         if (CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
             for (var v : ModRegistry.WAY_SIGN_ITEMS.entrySet()) {
-                var w = v.getKey();
+                WoodType w = v.getKey();
                 event.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> {
                     if (i.is(ItemTags.HANGING_SIGNS)) {
                         var b = w.getBlockOfThis("hanging_sign");

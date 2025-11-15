@@ -175,11 +175,6 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         return enchantPower;
     }
 
-    @Override
-    protected Component getDefaultName() {
-        return Component.translatable("block.supplementaries.book_pile");
-    }
-
     //only client
     public static class BookVisualData {
         private final float yAngle;
@@ -281,9 +276,4 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         return false;
     }
 
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return null;
-    }
 }

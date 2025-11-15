@@ -111,11 +111,6 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
         this.flowerStates[n] = state;
     }
 
-    @Override
-    public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.flower_box");
-    }
-
     public float getYaw() {
         return -this.getDirection().getOpposite().toYRot();
     }
@@ -142,9 +137,4 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
         return SoundEvents.CROP_PLANTED;
     }
 
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return null;
-    }
 }

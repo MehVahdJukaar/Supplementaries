@@ -6,6 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
@@ -27,6 +28,11 @@ public abstract class OpeneableContainerBlockEntity extends RandomizableContaine
     protected OpeneableContainerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state, int size) {
         super(blockEntityType, pos, state);
         this.items = NonNullList.withSize(size, ItemStack.EMPTY);
+    }
+
+    @Override
+    protected Component getDefaultName() {
+        return this.getBlockState().getBlock().getName();
     }
 
     @Override
