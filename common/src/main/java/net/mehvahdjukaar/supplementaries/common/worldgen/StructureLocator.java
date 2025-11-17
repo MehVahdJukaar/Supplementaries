@@ -5,7 +5,6 @@ import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -39,36 +38,40 @@ public class StructureLocator {
     private static final Comparator<Vector2i> COMPARATOR = (o1, o2) -> Float.compare(o1.lengthSquared(), o2.lengthSquared());
 
     @Nullable
-    public static LocatedStruct findNearestRandomMapFeature(
+    public static LocatedStruct findNearestMapFeature(
             ServerLevel level, @NotNull HolderSet<Structure> targets, BlockPos pos,
-            int maximumChunkDistance, boolean newlyGenerated) {
-        boolean rand = CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAPS_RANDOM.get();
+            int maximumChunkDistance, boolean newlyGenerated, int maxSearches, boolean exitEarly) {
+
         var found = findNearestMapFeatures(level, targets, pos, maximumChunkDistance,
-                newlyGenerated, 1, rand, !rand);
+                newlyGenerated, 1, maxSearches, exitEarly);
+
         if (!found.isEmpty()) return found.get(0);
         return null;
     }
 
     public static List<LocatedStruct> findNearestMapFeatures(
             ServerLevel level, @NotNull TagKey<Structure> tagKey, BlockPos pos,
-            int maximumChunkDistance, boolean newlyGenerated, int requiredCount, int maxSearches) {
+            int maximumChunkDistance, boolean newlyGenerated, int requiredCount,
+            int maxSearches, boolean exitEarly) {
+        HolderSet<Structure> targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
+                .getTag(tagKey).orElse(null);
 
-        HolderSet<Structure> targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey).orElse(null);
-        if (targets == null) return List.of();
-        if(targets.size() > maxSearches){
-            var list = new ArrayList<>(targets.stream().toList());
-            Collections.shuffle(list);
-            targets = HolderSet.direct(list.subList(0, maxSearches));
-        }
-        return findNearestMapFeatures(level, targets, pos, maximumChunkDistance, newlyGenerated, requiredCount,
-                false, false);
+        return findNearestMapFeatures(level, targets, pos, maximumChunkDistance, newlyGenerated,
+                requiredCount, maxSearches, exitEarly);
     }
 
 
     public static List<LocatedStruct> findNearestMapFeatures(
             ServerLevel level, HolderSet<Structure> taggedStructures, BlockPos pos,
             int maximumChunkDistance, boolean newlyGenerated, int requiredCount,
-            boolean selectRandom, boolean exitEarly) {
+            int maxSearches, boolean exitEarly) {
+
+        if (taggedStructures == null) return List.of();
+        if (taggedStructures.size() > maxSearches) {
+            var list = new ArrayList<>(taggedStructures.stream().toList());
+            Collections.shuffle(list);
+            taggedStructures = HolderSet.direct(list.subList(0, maxSearches));
+        }
 
         List<LocatedStruct> foundStructures = new ArrayList<>();
 
@@ -85,17 +88,11 @@ public class StructureLocator {
         ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
         double maxDist = Double.MAX_VALUE;
 
-        //for adventure maps
-        if (selectRandom) {
-            Holder<Structure> selected = selectedTargets.get(level.random.nextInt(selectedTargets.size()));
-            selectedTargets = List.of(selected);
-            Supplementaries.LOGGER.info("Searching for structure {} from pos {}", selected.unwrapKey().get(), pos);
-        } else {
-            selectedTargets = new ArrayList<>(selectedTargets);
-            Collections.shuffle(selectedTargets);
-            Supplementaries.LOGGER.info("Searching for closest structure among {} from pos {}",
-                    Arrays.toString(selectedTargets.stream().map(e -> e.unwrapKey().get()).toArray()), pos);
-        }
+
+        selectedTargets = new ArrayList<>(selectedTargets);
+        Collections.shuffle(selectedTargets);
+        Supplementaries.LOGGER.info("Searching for closest structure among {} from pos {}",
+                Arrays.toString(selectedTargets.stream().map(e -> e.unwrapKey().get()).toArray()), pos);
 
         //structures that can generate
         Map<StructurePlacement, Set<Holder<Structure>>> reachableTargetsMap = new Object2ObjectArrayMap<>();
@@ -151,8 +148,7 @@ public class StructureLocator {
                 int outerRing = (k + 1) * maxSpacing;
                 int innerRing = k * maxSpacing;
 
-                //less precision after 2k blocks
-                boolean lessPrecision = innerRing * 16 > 2000;
+
 
                 //<> madness
                 //groups and orders all possible feature chunks ordered by RELATIVE ChunkPos. TreeMap is RB tree for fast additions
@@ -168,20 +164,23 @@ public class StructureLocator {
                             //converts chunkpos to relative pos, so they are ordered by distance already
                             var v = new Vector2i(c.x - chunkX, c.z - chunkZ);
                             if (possiblePositions.containsKey(v)) {
-                                int aaa = 1;
+                                Supplementaries.error();
                             }
                             var ll = possiblePositions.computeIfAbsent(v,
                                     o -> new ArrayList<>());
 
                             if (ll.contains(p)) {
+                                Supplementaries.error();
                                 //TODO: this should never be called... fix
-                                int aaa = 1;
                             } else ll.add(p);
                         });
                     }
                 }
 
                 //checks this first structure batch
+                //less precision after 2k blocks
+                boolean lessPrecision = innerRing * 16 > 2000;
+                int earlyStopAt = (exitEarly || lessPrecision) ? requiredCount : Integer.MAX_VALUE;
 
                 for (var e : possiblePositions.entrySet()) {
                     var vec2i = e.getKey();
@@ -189,7 +188,8 @@ public class StructureLocator {
                     ChunkPos chunkPos = new ChunkPos(vec2i.x() + chunkX, vec2i.y() + chunkZ);
                     var structuresThatCanSpawnAtChunkPos = e.getValue();
                     for (var pp : structuresThatCanSpawnAtChunkPos) {
-                        foundStructures.addAll(getStructuresAtChunkPos(pp.getSecond(), level, manager, newlyGenerated, pp.getFirst(), chunkPos));
+                        foundStructures.addAll(getStructuresAtChunkPos(pp.getSecond(), level, manager,
+                                newlyGenerated, pp.getFirst(), chunkPos, earlyStopAt));
                     }
                     // after each it checks if criteria is met
                     if (foundStructures.size() >= requiredCount) {
@@ -239,7 +239,7 @@ public class StructureLocator {
     //like getStructuresGeneratingAt but gathers all possible structures at a chunk not just one
     private static Set<LocatedStruct> getStructuresAtChunkPos(
             Set<Holder<Structure>> targets, LevelReader level, StructureManager structureManager,
-            boolean skipKnown, RandomSpreadStructurePlacement placement, ChunkPos chunkpos) {
+            boolean skipKnown, RandomSpreadStructurePlacement placement, ChunkPos chunkpos, int stopAt) {
 
         Set<LocatedStruct> foundStructures = new HashSet<>();
         //the target set usually contains 1 structure since it's very unlikely that 2 structures have the same placement
@@ -261,6 +261,9 @@ public class StructureLocator {
                                 holder,
                                 structurestart));
                     }
+                }
+                if (foundStructures.size() >= stopAt) {
+                    break;
                 }
             }
         }

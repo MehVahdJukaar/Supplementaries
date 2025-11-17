@@ -24,9 +24,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class AdventurerMapsHandler {
 
-    public static final int SEARCH_RADIUS = 150;
-
-
     public static ItemStack createMapOrQuill(ServerLevel serverLevel, BlockPos pos, @Nullable HolderSet<Structure> targets,
                                              int radius, boolean skipKnown,
                                              int zoom, @Nullable ResourceLocation mapMarker,
@@ -54,9 +51,9 @@ public class AdventurerMapsHandler {
             return item;
         }
 
-
-        var found = StructureLocator.findNearestRandomMapFeature(
-                serverLevel, targets, pos, radius, skipKnown);
+        int maxSearches = CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAPS_MAX_SEARCHES.get();
+        var found = StructureLocator.findNearestMapFeature(
+                serverLevel, targets, pos, radius, skipKnown, maxSearches, false);
 
         if (found != null) {
             BlockPos toPos = found.pos();
@@ -93,7 +90,9 @@ public class AdventurerMapsHandler {
     public static ItemStack createCustomMapForTrade(Level level, BlockPos pos, HolderSet<Structure> destinations,
                                                     @Nullable String mapName, int mapColor, @Nullable ResourceLocation mapMarker) {
         if (level instanceof ServerLevel serverLevel) {
-            return createMapOrQuill(serverLevel, pos, destinations, SEARCH_RADIUS, true, 2, mapMarker, mapName, mapColor);
+            return createMapOrQuill(serverLevel, pos, destinations,
+                    CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAX_SEARCH_RADIUS.get(),
+                    true, 2, mapMarker, mapName, mapColor);
         }
         return ItemStack.EMPTY;
     }

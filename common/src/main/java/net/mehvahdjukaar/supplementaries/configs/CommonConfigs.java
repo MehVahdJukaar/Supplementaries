@@ -441,6 +441,12 @@ public class CommonConfigs {
             ROAD_SIGN_ENABLED = feature(builder.worldReload().comment("Entirely disables them from spawning"));
             ROAD_SIGN_DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text", true);
+            ROAD_SIGN_MAX_SEARCH_RADIUS = builder.comment("Maximum distance in chunks that road signs will search for structures")
+                    .define("max_search_radius", 200, 0, 1000);
+            ROAD_SIGN_EXIT_EARLY = builder.comment("Speeds up way sign feature searching by making the search stop at the first found structure. This means that way signs won't point to the nearest structure anymore")
+                    .define("exit_search_early", true);
+            ROAD_SIGN_MAX_SEARCHES = builder.comment("Maximum number of structure types from the tag that road signs will attept to look for every time. Decrease to speed up search at the cost of making them not point to the nearest structure out of all. Also if made too low and in cases it were to pick a structure that only spawns very rarely, this would actually slow down the search")
+                    .define("max_structures_searches", 7, 1, 100);
             builder.pop();
 
             builder.pop();
@@ -555,6 +561,9 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> ROAD_SIGN_DISTANCE_TEXT;
         public static final Supplier<Boolean> ROAD_SIGN_ENABLED;
+        public static final Supplier<Integer> ROAD_SIGN_MAX_SEARCH_RADIUS;
+        public static final Supplier<Integer> ROAD_SIGN_MAX_SEARCHES;
+        public static final Supplier<Boolean> ROAD_SIGN_EXIT_EARLY;
 
         public static final Supplier<Boolean> GLOBE_ENABLED;
         public static final Supplier<Boolean> GLOBE_COORDINATES;
@@ -1181,11 +1190,14 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("map_tweaks");
+            builder.push("random_adventurer_maps");
             RANDOM_ADVENTURER_MAPS = feature(builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
-                            "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)"),
-                    "random_adventurer_maps");
-            RANDOM_ADVENTURER_MAPS_RANDOM = builder.comment("Select a random structure to look for instead of iterating through all of the ones in the tag returning the closest. Turning on will make ones that have diff structures (aka all different ruined portals) show up more. On could take much more time to compute")
-                    .define("random_adventurer_maps_select_random_structure", true);
+                            "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)"));
+            RANDOM_ADVENTURER_MAX_SEARCH_RADIUS = builder.comment("Maximum number of structure types from the tag that road signs will attempt to look for every time. Decrease to speed up search at the cost of making them not point to the nearest structure out of all. Also if made too low and in cases it were to pick a structure that only spawns very rarely, this would actually slow down the search")
+                    .define("max_search_radius", 100, 1, 1000);
+            RANDOM_ADVENTURER_MAPS_MAX_SEARCHES = builder.comment("Select a random structure to look for instead of iterating through all of the ones in the tag returning the closest. Turning on will make ones that have diff structures (aka all different ruined portals) show up more. On could take much more time to compute")
+                    .define("max_structures_searches", 1, 1, 1000);
+            builder.pop();
             MAP_MARKERS = builder.comment("Enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
                     .define("block_map_markers", true);
             DEATH_MARKER = builder.comment("Shows a death marker on your map when you die. Requires a recovery compass in player inventory or similar")
@@ -1285,7 +1297,8 @@ public class CommonConfigs {
         public static final Supplier<Integer> BOTTLING_COST;
         public static final Supplier<String> BOTTLING_TARGET;
         public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
-        public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS_RANDOM;
+        public static final Supplier<Integer> RANDOM_ADVENTURER_MAPS_MAX_SEARCHES;
+        public static final Supplier<Integer> RANDOM_ADVENTURER_MAX_SEARCH_RADIUS;
         public static final Supplier<Boolean> MAP_MARKERS;
         public static final Supplier<DeathMarkerMode> DEATH_MARKER;
         public static final Supplier<Boolean> QUARK_QUILL;
