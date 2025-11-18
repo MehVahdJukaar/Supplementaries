@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
@@ -38,7 +39,8 @@ public record RandomAdventurerMapListing(Item emerald, int priceMin, int priceMa
 
         if (entity.level() instanceof ServerLevel serverLevel) {
             ItemStack result = AdventurerMapsHandler.createMapOrQuill(serverLevel, entity.blockPosition(), null,
-                    AdventurerMapsHandler.SEARCH_RADIUS, true, 2, null, "filled_map.adventure", 0x78151a);
+                    CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAX_SEARCH_RADIUS.get(),
+                    true, 2, null, "filled_map.adventure", 0x78151a);
             if (result.isEmpty()) return null;
             int x = 6;
             int xp = (int) ((x * 12) / (float) maxTrades);

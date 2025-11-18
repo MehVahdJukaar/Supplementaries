@@ -69,11 +69,6 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.textHolder = new TextHolder(1, 90);
     }
 
-    @Override
-    public Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.notice_board");
-    }
-
     //refreshTextures blockState and plays sound. server side
     @Override
     public void updateTileOnInventoryChanged() {
@@ -190,8 +185,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-        return new NoticeBoardContainerMenu(id, inventory, this);
+    public AbstractContainerMenu createMenu(int id, Inventory player) {
+        return new NoticeBoardContainerMenu(id, player, this);
     }
 
     @Override

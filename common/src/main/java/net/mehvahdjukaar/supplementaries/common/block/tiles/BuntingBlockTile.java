@@ -116,11 +116,6 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     }
 
     @Override
-    public Component getDefaultName() {
-        return Component.translatable("item.supplementaries.bunting");
-    }
-
-    @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         return stack.getItem() instanceof BuntingItem && getItem(index).isEmpty() &&
                 canSupportBunting(getBlockState(), index);
@@ -135,13 +130,6 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     public boolean canOpen(Player player) {
         return false;
     }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        return null;
-    }
-
 
     public boolean rotateBuntings(BlockState state, Rotation rotation) {
         Map<Direction, ItemStack> newMap = new HashMap<>();

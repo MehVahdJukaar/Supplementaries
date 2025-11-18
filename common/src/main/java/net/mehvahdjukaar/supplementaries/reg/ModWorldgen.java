@@ -41,6 +41,9 @@ public class ModWorldgen {
     public static final Supplier<Feature<SpawnEntityWithPassengersFeature.Config>> ENTITY_WITH_PASSENGERS_FEATURE = RegHelper.registerFeature(
             Supplementaries.res("spawn_entity_with_passengers"), () -> new SpawnEntityWithPassengersFeature(SpawnEntityWithPassengersFeature.Config.CODEC));
 
+    public static final Supplier<Feature<UnderwaterMultifaceGrowthFeature.Config>> BARNACLES_GROWTH = RegHelper.registerFeature(
+            Supplementaries.res("underwater_multiface_growth"), () -> new UnderwaterMultifaceGrowthFeature());
+
 
 }
 

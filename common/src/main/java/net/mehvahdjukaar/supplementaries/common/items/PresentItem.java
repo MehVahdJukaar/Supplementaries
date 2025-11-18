@@ -29,6 +29,11 @@ public class PresentItem extends BlockItem implements IColored {
     }
 
     @Override
+    public boolean canFitInsideContainerItems() {
+        return false;
+    }
+
+    @Override
     public DyeColor getColor() {
         return ((AbstractPresentBlock) this.getBlock()).getColor();
     }

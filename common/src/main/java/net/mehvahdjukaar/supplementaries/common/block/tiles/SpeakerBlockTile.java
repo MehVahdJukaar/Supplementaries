@@ -65,7 +65,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOnePlaye
     }
 
     public Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.speaker_block");
+        return this.getBlockState().getBlock().getName();
     }
 
     public double getVolume() {

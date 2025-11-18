@@ -1,0 +1,44 @@
+{
+    "loader": "supplementaries:random_rotation",
+    "model": {
+        "ambientocclusion": false,
+        "textures": {
+            "particle": "supplementaries:block/barnacles",
+            "1": "supplementaries:block/barnacles"
+        },
+        "elements": [
+            {
+                "from": [
+                    0,
+                    0,
+                    0.1
+                ],
+                "to": [
+                    16,
+                    16,
+                    0.1
+                ],
+                "faces": {
+                    "north": {
+                        "uv": [
+                            16,
+                            0,
+                            0,
+                            16
+                        ],
+                        "texture": "#1"
+                    },
+                    "south": {
+                        "uv": [
+                            0,
+                            0,
+                            16,
+                            16
+                        ],
+                        "texture": "#1"
+                    }
+                }
+            }
+        ]
+    }
+}

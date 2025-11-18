@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.worldgen.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -42,7 +43,8 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
             tile.threadResult = CompletableFuture.supplyAsync(() -> StructureLocator.findNearestMapFeatures(
                     (ServerLevel) level, ModTags.ROAD_SIGN_DESTINATIONS, pos, 250,
-                    false, 2, 8),
+                    false, 2, CommonConfigs.Building.ROAD_SIGN_MAX_SEARCHES.get(),
+                            CommonConfigs.Building.ROAD_SIGN_EXIT_EARLY.get()),
                     EXECUTORS).exceptionally(exception -> {
                 throwError(pos, exception);
                 return null; // Handle exception by returning null

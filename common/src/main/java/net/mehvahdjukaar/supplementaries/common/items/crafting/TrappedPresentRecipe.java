@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -72,6 +73,7 @@ public class TrappedPresentRecipe extends CustomRecipe {
         }
         ItemStack result = itemstack.transmuteCopy(ModRegistry.TRAPPED_PRESENTS.get(dyecolor).get(), 1);
         result.remove(ModComponents.ADDRESS.get());
+        result.remove(DataComponents.MAX_STACK_SIZE);
 
         return result;
     }

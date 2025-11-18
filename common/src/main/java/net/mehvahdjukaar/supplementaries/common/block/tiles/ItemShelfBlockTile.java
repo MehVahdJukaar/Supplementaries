@@ -16,11 +16,6 @@ public class ItemShelfBlockTile extends ItemDisplayTile {
         super(ModRegistry.ITEM_SHELF_TILE.get(), pos, state);
     }
 
-    @Override
-    public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.item_shelf");
-    }
-
     public float getYaw() {
         return -this.getDirection().getOpposite().toYRot();
     }

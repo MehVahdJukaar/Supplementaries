@@ -44,11 +44,6 @@ public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
     }
 
     @Override
-    public Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.lunch_basket");
-    }
-
-    @Override
     protected void playOpenSound(BlockState state) {
         double d0 = (double) this.worldPosition.getX() + 0.5D;
         double d1 = (double) this.worldPosition.getY() + 1;

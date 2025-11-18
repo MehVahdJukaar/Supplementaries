@@ -4,12 +4,14 @@ import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.worldgen.GalleonStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.minecraft.client.renderer.block.model.multipart.MultiPart;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -157,13 +159,17 @@ public class ModCreativeTabs {
                 ModConstants.SPIDER_HEAD_NAME,
                 ModRegistry.SPIDER_SKULL_ITEM);
 
+        adder.after(Items.COAL, CreativeModeTabs.NATURAL_BLOCKS,
+                ModConstants.BARNACLES_NAME,
+                ModRegistry.BARNACLES);
+
         adder.before(Items.BOOKSHELF, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.TIMBER_FRAME_NAME,
                 ModRegistry.TIMBER_FRAME, ModRegistry.TIMBER_BRACE, ModRegistry.TIMBER_CROSS_BRACE);
 
         if (CommonConfigs.Building.WAY_SIGN_ENABLED.get()) {
             for (var v : ModRegistry.WAY_SIGN_ITEMS.entrySet()) {
-                var w = v.getKey();
+                WoodType w = v.getKey();
                 event.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> {
                     if (i.is(ItemTags.HANGING_SIGNS)) {
                         var b = w.getBlockOfThis("hanging_sign");

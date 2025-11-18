@@ -241,11 +241,6 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
-    public Component getDefaultName() {
-        return Component.translatable("block.supplementaries.jar");
-    }
-
-    @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         return canPlaceItem(index, stack);
     }

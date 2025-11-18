@@ -1,10 +1,7 @@
-import me.modmuss50.mpp.ReleaseType
-
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT" apply false
     id "dev.architectury.loom" version "1.11-SNAPSHOT" apply false
     id "io.github.juuxel.loom-quiltflower" version "1.7.1" apply false
-    id "me.modmuss50.mod-publish-plugin" version "0.8.4"
     id "com.matthewprenger.cursegradle" version "1.+"
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -79,7 +76,6 @@ architectury {
 subprojects {
     apply plugin: "dev.architectury.loom"
     apply plugin: "io.github.juuxel.loom-quiltflower"
-    apply plugin: "me.modmuss50.mod-publish-plugin"
     apply plugin: "com.matthewprenger.cursegradle"
     apply plugin: "com.modrinth.minotaur"
 
@@ -118,48 +114,6 @@ subprojects {
     def mcVersions = listGameVersions(minecraft_min_version, minecraft_version)
     def cfToken = providers.environmentVariable("CURSEFORGE_TOKEN")
     def mrToken = providers.environmentVariable("MODRINTH_TOKEN")
-
-    publishMods {
-        file = remapJar.archiveFile
-        type = parseReleaseType(release_type)
-        changelog = changelogText
-        displayName = file.map { it.asFile.name }
-
-        if (cfToken.isPresent()) {
-            curseforge {
-                accessToken = cfToken
-                projectId = cf_project_id
-                clientRequired = true
-                serverRequired = true
-                minecraftVersions.addAll(mcVersions)
-                javaVersions.add(JavaVersion.toVersion(java_version))
-                modLoaders.add(modLoader)
-                if (modLoader == "fabric") {
-                    requires {
-                        slug = "fabric-api"
-                    }
-                } else {
-                }
-            }
-        }
-
-        if (mrToken.isPresent()) {
-            modrinth {
-                accessToken = mrToken
-                projectId = mr_project_id
-                modLoaders.add(modLoader)
-                minecraftVersions.addAll(mcVersions)
-                if (modLoader == "fabric") {
-                    requires {
-                        slug = "fabric-api"
-                    }
-                } else {
-
-                }
-            }
-        }
-    }
-
 
     if (mrToken.isPresent()) {
         modrinth {
@@ -281,17 +235,6 @@ static def listGameVersions(String minVersion, String maxVersion) {
     return versions
 }
 
-static ReleaseType parseReleaseType(String s) {
-    switch (s.toLowerCase()) {
-        case "alpha":
-            return ReleaseType.ALPHA
-        case "beta":
-            return ReleaseType.BETA
-        default:
-            return ReleaseType.STABLE
-    }
-}
-
 tasks.register('buildAndPublishAll') {
     dependsOn ':clean'
     dependsOn ':build'
@@ -299,20 +242,6 @@ tasks.register('buildAndPublishAll') {
     dependsOn ':neoforge:modrinth'
     dependsOn ':fabric:curseforge'
     dependsOn ':fabric:modrinth'
-    dependsOn ':publish'
-
-    group = 'build'
-    description = 'Runs clean, build, and publish neoforge and fabric'
-}
-
-
-tasks.register('buildAndPublishAll2') {
-    dependsOn ':clean'
-    dependsOn ':build'
-    dependsOn ':neoforge:publishCurseforge'
-    dependsOn ':neoforge:publishModrinth'
-    dependsOn ':fabric:publishCurseforge'
-    dependsOn ':fabric:publishModrinth'
     dependsOn ':publish'
 
     group = 'build'

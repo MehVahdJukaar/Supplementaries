@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
@@ -139,11 +140,6 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     }
 
     @Override
-    public Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.present");
-    }
-
-    @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.recipient = "";
@@ -173,6 +169,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
         PresentAddress address = PresentAddress.of(this.recipient, this.sender, this.description);
         if (address != null) {
             components.set(ModComponents.ADDRESS.get(), address);
+            components.set(DataComponents.MAX_STACK_SIZE, 1);
         }
     }
 

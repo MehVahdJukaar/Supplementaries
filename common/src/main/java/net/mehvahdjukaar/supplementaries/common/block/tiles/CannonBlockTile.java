@@ -341,12 +341,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     @Override
-    protected Component getDefaultName() {
-        return Component.translatable("gui.supplementaries.cannon");
-    }
-
-
-    @Override
     protected void updateBlockState(BlockState state, boolean b) {
     }
 

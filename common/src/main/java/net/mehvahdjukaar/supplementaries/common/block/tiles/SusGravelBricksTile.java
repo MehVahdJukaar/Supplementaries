@@ -77,7 +77,7 @@ public class SusGravelBricksTile extends RandomizableContainerBlockEntity {
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("block.supplementaries.suspicious_gravel_bricks");
+        return getBlockState().getBlock().getName();
     }
 
     @Override
