@@ -15,7 +15,7 @@
       "capacity": "BUCKET"
     }
   ],
-  "color": "#8e3f26",
+  "color": "#bd6e2a",
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
   "still_texture": "moonlight:block/soft_fluids/honey_liquid",
   "food": {
