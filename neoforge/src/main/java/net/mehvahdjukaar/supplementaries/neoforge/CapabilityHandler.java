@@ -2,21 +2,22 @@ package net.mehvahdjukaar.supplementaries.neoforge;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
+import net.mehvahdjukaar.moonlight.api.fluids.neoforge.SoftFluidStackImpl;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.neoforge.FluidHandlerItemCap;
 import net.minecraft.core.Direction;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.*;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.event.level.LevelEvent;
+import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -124,6 +125,13 @@ public class CapabilityHandler {
                 (sidedContainer, side) -> side == null ? new InvWrapper(sidedContainer) :
                         new SidedInvWrapper(sidedContainer, side));
 
+
+        event.registerItem(Capabilities.FluidHandler.ITEM, (stack, ctx) ->
+                new FluidBucketWrapper(stack), ModFluids.LUMISENE_BUCKET.get());
+
+        event.registerItem(Capabilities.FluidHandler.ITEM, (stack, ctx) ->
+                new FluidHandlerItemCap(stack, 250),
+                ModFluids.LUMISENE_BOTTLE.get());
 
         //if compat handler computer craft add cap to speaker block
 
