@@ -12,10 +12,13 @@ import org.jetbrains.annotations.Nullable;
 public class LunchBasketColor implements BlockColor {
     @Override
     public int getColor(BlockState blockState, @Nullable BlockAndTintGetter blockAndTintGetter, @Nullable BlockPos blockPos, int i) {
+        if (blockAndTintGetter == null) {
+            return 0;
+        }
         LunchBoxBlockTile be = ModRegistry.LUNCH_BASKET_TILE.get().getBlockEntity(blockAndTintGetter, blockPos);
         if (be != null) {
-             DyedItemColor dc = be.getDyedColor();
-            if(dc != null){
+            DyedItemColor dc = be.getDyedColor();
+            if (dc != null) {
                 return dc.rgb();
             }
         }

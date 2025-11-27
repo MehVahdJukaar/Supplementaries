@@ -7,6 +7,7 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class GunpowderBlockColor implements BlockColor {
 
@@ -39,7 +40,7 @@ public class GunpowderBlockColor implements BlockColor {
     }
 
     @Override
-    public int getColor(BlockState state, BlockAndTintGetter reader, BlockPos pos, int color) {
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter reader,@Nullable BlockPos pos, int color) {
         return COLORS[state.getValue(GunpowderBlock.BURNING)];
     }
 
