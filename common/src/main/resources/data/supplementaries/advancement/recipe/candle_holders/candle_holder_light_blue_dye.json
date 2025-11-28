@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "candle_holder"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "candle_holder"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tag_c_dyes_light_blue_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:dyes/light_blue"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_supplementaries_candle_holder_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "supplementaries:candle_holder"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:candle_holders/candle_holder_light_blue_dye"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tag_c_dyes_light_blue_1",
+      "has_item_supplementaries_candle_holder_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:candle_holders/candle_holder_light_blue_dye"
+    ]
+  }
+}

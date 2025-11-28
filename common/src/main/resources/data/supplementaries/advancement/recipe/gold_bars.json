@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "gold_bars"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "flag": "gold_bars",
+      "condition": "supplementaries:flag"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tag_c_ingots_gold_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/gold"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:gold_bars"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tag_c_ingots_gold_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:gold_bars"
+    ]
+  }
+}

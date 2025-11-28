@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "hourglass"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "hourglass"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_glass_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:glass"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_c_ingots_gold_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/gold"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:hourglass"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_glass_1",
+      "has_tag_c_ingots_gold_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:hourglass"
+    ]
+  }
+}

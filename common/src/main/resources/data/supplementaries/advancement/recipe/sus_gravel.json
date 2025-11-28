@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "sus_recipes"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "sus_recipes"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_gravel_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:gravel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:sus_gravel"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_gravel_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:sus_gravel"
+    ]
+  }
+}

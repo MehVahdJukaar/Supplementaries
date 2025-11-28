@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "daub"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "daub"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_clay_ball_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:clay_ball"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_supplementaries_straw_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#supplementaries:straw"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:daub"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_clay_ball_1",
+      "has_tag_supplementaries_straw_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:daub"
+    ]
+  }
+}

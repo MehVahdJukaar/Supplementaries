@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "lapis_bricks"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "lapis_bricks"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_supplementaries_lapis_bricks_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "supplementaries:lapis_bricks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:stonecutting/lapis_brick_stairs_from_bricks"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_supplementaries_lapis_bricks_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:stonecutting/lapis_brick_stairs_from_bricks"
+    ]
+  }
+}

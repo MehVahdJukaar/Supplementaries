@@ -1,0 +1,58 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cannonball"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:storage_blocks/lead"
+      }
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "cannonball"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "fabric:tag_empty",
+        "tag": "c:storage_blocks/lead"
+      }
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tag_c_storage_blocks_lead_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:storage_blocks/lead"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:cannonball_2"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tag_c_storage_blocks_lead_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:cannonball_2"
+    ]
+  }
+}

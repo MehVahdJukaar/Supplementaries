@@ -1,0 +1,69 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "supplementaries:altimeters"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "slice_map"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "fabric:tag_empty",
+        "tag": "supplementaries:altimeters"
+      }
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "slice_map"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tag_supplementaries_altimeters_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#supplementaries:altimeters"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_map_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:map"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:slice_map"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tag_supplementaries_altimeters_1",
+      "has_item_minecraft_map_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:slice_map"
+    ]
+  }
+}

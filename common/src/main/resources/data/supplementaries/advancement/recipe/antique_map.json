@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "antique_ink"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "antique_ink"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_supplementaries_antique_ink_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "supplementaries:antique_ink"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:antique_map"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_supplementaries_antique_ink_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:antique_map"
+    ]
+  }
+}

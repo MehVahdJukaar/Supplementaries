@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "speaker_block"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "speaker_block"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tag_minecraft_planks_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:planks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_emerald_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:emerald"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:speaker_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tag_minecraft_planks_1",
+      "has_item_minecraft_emerald_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:speaker_block"
+    ]
+  }
+}

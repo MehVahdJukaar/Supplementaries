@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_oak_sign_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:oak_sign"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:way_sign_oak/minecraft/warped"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_oak_sign_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:way_sign_oak/minecraft/warped"
+    ]
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "dragon_banner_pattern"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "dragon_banner_pattern"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_paper_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:paper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_dragon_head_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:dragon_head"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:dragon_banner_pattern"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_paper_1",
+      "has_item_minecraft_dragon_head_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:dragon_banner_pattern"
+    ]
+  }
+}

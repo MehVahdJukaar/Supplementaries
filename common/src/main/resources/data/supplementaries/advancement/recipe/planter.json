@@ -1,0 +1,104 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "planter"
+    },
+    {
+      "type": "neoforge:or",
+      "values": [
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "neoforge:mod_loaded",
+            "modid": "farmersdelight"
+          }
+        },
+        {
+          "type": "neoforge:not",
+          "value": {
+            "type": "supplementaries:flag",
+            "flag": "rich_soil_planter"
+          }
+        }
+      ]
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "planter"
+    },
+    {
+      "condition": "fabric:or",
+      "values": [
+        {
+          "condition": "fabric:not",
+          "value": {
+            "modid": "farmersdelight",
+            "condition": "fabric:mod_loaded"
+          }
+        },
+        {
+          "condition": "fabric:not",
+          "value": {
+            "flag": "rich_soil_planter",
+            "condition": "supplementaries:flag"
+          }
+        }
+      ]
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_brick_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_bone_meal_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:bone_meal"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_dirt_3": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:dirt"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:planter"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_brick_1",
+      "has_item_minecraft_bone_meal_2",
+      "has_item_minecraft_dirt_3"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:planter"
+    ]
+  }
+}

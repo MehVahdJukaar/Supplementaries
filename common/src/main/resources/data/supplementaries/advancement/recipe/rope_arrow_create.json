@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "rope_arrow"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "rope_arrow"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_arrow_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:arrow"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:rope_arrow_create"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_arrow_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:rope_arrow_create"
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sack"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "farmersdelight"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "sack"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_farmersdelight_canvas_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "farmersdelight:canvas"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_string_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:string"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:sack_3"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_farmersdelight_canvas_1",
+      "has_item_minecraft_string_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:sack_3"
+    ]
+  }
+}

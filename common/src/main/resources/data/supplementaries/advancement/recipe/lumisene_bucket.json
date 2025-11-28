@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "lumisene"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "lumisene"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_glow_berries_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:glow_berries"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_bucket_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:bucket"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:lumisene_bucket"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_glow_berries_1",
+      "has_item_minecraft_bucket_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:lumisene_bucket"
+    ]
+  }
+}

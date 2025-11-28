@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "dispenser_minecart"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "dispenser_minecart"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_dispenser_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:dispenser"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_minecart_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:minecart"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:dispenser_minecart"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_dispenser_1",
+      "has_item_minecraft_minecart_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:dispenser_minecart"
+    ]
+  }
+}

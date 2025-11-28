@@ -1,0 +1,52 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "present"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "present"
+    },
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "create"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_create_cardboard_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "create:cardboard"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:present_2"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_create_cardboard_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:present_2"
+    ]
+  }
+}

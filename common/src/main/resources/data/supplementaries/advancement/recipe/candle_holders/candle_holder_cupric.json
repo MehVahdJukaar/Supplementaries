@@ -1,0 +1,71 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "candle_holder"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "buzzier_bees"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "caverns_and_chasms"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "candle_holder"
+    },
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "buzzier_bees"
+    },
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "caverns_and_chasms"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_buzzier_bees_cupric_candle_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "buzzier_bees:cupric_candle"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_c_ingots_iron_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/iron"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:candle_holders/candle_holder_cupric"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_buzzier_bees_cupric_candle_1",
+      "has_tag_c_ingots_iron_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:candle_holders/candle_holder_cupric"
+    ]
+  }
+}

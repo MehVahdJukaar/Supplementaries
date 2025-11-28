@@ -1,0 +1,83 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "supplementaries:flag",
+        "flag": "flax"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "farmersdelight"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sack"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "supplementaries:flag",
+        "flag": "flax"
+      }
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "fabric:mod_loaded",
+        "modid": "farmersdelight"
+      }
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "sack"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_wheat_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:wheat"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_c_strings_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:strings"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:sack_2"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_wheat_1",
+      "has_tag_c_strings_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:sack_2"
+    ]
+  }
+}

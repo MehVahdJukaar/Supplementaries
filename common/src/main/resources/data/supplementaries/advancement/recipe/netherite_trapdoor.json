@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "netherite_trapdoor"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "netherite_trapdoor"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_supplementaries_gold_trapdoor_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "supplementaries:gold_trapdoor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_netherite_scrap_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:netherite_scrap"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:netherite_trapdoor"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_supplementaries_gold_trapdoor_1",
+      "has_item_minecraft_netherite_scrap_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:netherite_trapdoor"
+    ]
+  }
+}

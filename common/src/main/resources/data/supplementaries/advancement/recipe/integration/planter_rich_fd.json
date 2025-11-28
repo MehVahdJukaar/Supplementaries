@@ -1,0 +1,82 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "planter"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "rich_soil_planter"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "planter"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "rich_soil_planter"
+    },
+    {
+      "modid": "farmersdelight",
+      "condition": "fabric:mod_loaded"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_brick_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_bone_meal_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:bone_meal"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_farmersdelight_rich_soil_3": {
+      "conditions": {
+        "items": [
+          {
+            "items": "farmersdelight:rich_soil"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:integration/planter_rich_fd"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_brick_1",
+      "has_item_minecraft_bone_meal_2",
+      "has_item_farmersdelight_rich_soil_3"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:integration/planter_rich_fd"
+    ]
+  }
+}

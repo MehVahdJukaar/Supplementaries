@@ -1,0 +1,63 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "infernalexp"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "infernalexp"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "sconce"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_infernalexp_glow_torch_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "infernalexp:glow_torch"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_c_nuggets_iron_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:nuggets/iron"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:sconce_glow"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_infernalexp_glow_torch_1",
+      "has_tag_c_nuggets_iron_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:sconce_glow"
+    ]
+  }
+}

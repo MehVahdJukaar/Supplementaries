@@ -1,0 +1,74 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "oreganized"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "modid": "oreganized",
+      "condition": "fabric:mod_loaded"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_oreganized_shrapnel_bomb_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "oreganized:shrapnel_bomb"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_c_ingots_iron_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/iron"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_c_strings_3": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:strings"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:spiky_bomb"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_oreganized_shrapnel_bomb_1",
+      "has_tag_c_ingots_iron_2",
+      "has_tag_c_strings_3"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:spiky_bomb"
+    ]
+  }
+}

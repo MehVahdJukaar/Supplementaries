@@ -1,0 +1,58 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "supplementaries:flag",
+        "flag": "flax"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "rope"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "supplementaries:flag",
+        "flag": "flax"
+      }
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "rope"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tag_c_strings_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:strings"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:rope_2"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tag_c_strings_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:rope_2"
+    ]
+  }
+}

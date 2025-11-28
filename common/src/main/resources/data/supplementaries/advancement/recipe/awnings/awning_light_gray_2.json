@@ -1,0 +1,69 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "supplementaries:flag",
+        "flag": "flax"
+      }
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "awning"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "supplementaries:flag",
+        "flag": "flax"
+      }
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_light_gray_carpet_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:light_gray_carpet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_c_rods_wooden_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:rods/wooden"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:awnings/awning_light_gray_2"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_light_gray_carpet_1",
+      "has_tag_c_rods_wooden_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:awnings/awning_light_gray_2"
+    ]
+  }
+}

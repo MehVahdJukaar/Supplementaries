@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "jar"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "jar"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_supplementaries_jar_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "supplementaries:jar"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_minecraft_boats_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:boats"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:boat_jar"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_supplementaries_jar_1",
+      "has_tag_minecraft_boats_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:boat_jar"
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "ash_bricks"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_supplementaries_ash_bricks_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "supplementaries:ash_bricks"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:ash_brick_wall"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_supplementaries_ash_bricks_1"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:ash_brick_wall"
+    ]
+  }
+}

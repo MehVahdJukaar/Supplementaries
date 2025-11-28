@@ -1,0 +1,77 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "spring_launcher"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "spring_launcher"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tag_c_ingots_iron_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/iron"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_slime_block_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:slime_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_sticky_piston_3": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:sticky_piston"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_gunpowder_4": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:gunpowder"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:spring_launcher"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tag_c_ingots_iron_1",
+      "has_item_minecraft_slime_block_2",
+      "has_item_minecraft_sticky_piston_3",
+      "has_item_minecraft_gunpowder_4"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:spring_launcher"
+    ]
+  }
+}

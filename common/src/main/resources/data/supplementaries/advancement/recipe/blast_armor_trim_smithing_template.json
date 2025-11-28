@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_diamond_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:diamond"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_cobblestone_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:cobblestone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_supplementaries_blast_armor_trim_smithing_template_3": {
+      "conditions": {
+        "items": [
+          {
+            "items": "supplementaries:blast_armor_trim_smithing_template"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:blast_armor_trim_smithing_template"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_diamond_1",
+      "has_item_minecraft_cobblestone_2",
+      "has_item_supplementaries_blast_armor_trim_smithing_template_3"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:blast_armor_trim_smithing_template"
+    ]
+  }
+}

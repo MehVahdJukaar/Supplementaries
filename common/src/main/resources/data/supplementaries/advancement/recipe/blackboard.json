@@ -1,0 +1,66 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "blackboard"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "blackboard"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_tag_minecraft_wooden_slabs_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#minecraft:wooden_slabs"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_blackstone_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:blackstone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_supplementaries_blackboard_white_3": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#supplementaries:blackboard_white"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:blackboard"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tag_minecraft_wooden_slabs_1",
+      "has_item_minecraft_blackstone_2",
+      "has_tag_supplementaries_blackboard_white_3"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:blackboard"
+    ]
+  }
+}

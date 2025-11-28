@@ -1,0 +1,94 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/lead"
+      }
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "oreganized"
+      }
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "fabric:tag_empty",
+        "tag": "c:ingots/lead"
+      }
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "modid": "oreganized",
+        "condition": "fabric:mod_loaded"
+      }
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "bomb"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_tnt_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:tnt"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_c_ingots_lead_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/lead"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_tag_c_strings_3": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:strings"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:spiky_bomb_2"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_tnt_1",
+      "has_tag_c_ingots_lead_2",
+      "has_tag_c_strings_3"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:spiky_bomb_2"
+    ]
+  }
+}

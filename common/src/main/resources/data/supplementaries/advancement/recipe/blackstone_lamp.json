@@ -1,0 +1,55 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "blackstone_lamp"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "blackstone_lamp"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_item_minecraft_blackstone_1": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:blackstone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_item_minecraft_shroomlight_2": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:shroomlight"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:blackstone_lamp"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_item_minecraft_blackstone_1",
+      "has_item_minecraft_shroomlight_2"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:blackstone_lamp"
+    ]
+  }
+}
