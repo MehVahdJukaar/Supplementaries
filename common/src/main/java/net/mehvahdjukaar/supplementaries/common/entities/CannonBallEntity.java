@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -39,6 +40,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -176,25 +178,9 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             BlockPos pos = result.getBlockPos();
             CannonballWhitelist wl = this.getItem().get(ModComponents.CANNONBALL_WHITELIST.get());
             Set<Block> whitelist = wl != null ? wl.blocks(): null;
-            CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
-                    loc.x(), loc.y(), loc.z(), pos, maxAmount, (float) radius, whitelist);
-            exp.explode();
-            exp.finalizeExplosion(true);
-
-
-            float exploded = exp.getExploded();
-
-            if (exploded != 0) {
-                double speedUsed = exploded / maxAmount;
-                double factor = 1 - speedUsed;
-                if (factor <= 0 || factor > 1) {
-                    Supplementaries.error();
-                }
-                this.setDeltaMovement(movement.scale(factor));
-                Message message = ClientBoundCannonballExplosionPacket.cannonball(exp, this);
-
-                NetworkHelper.sendToAllClientPlayersInDefaultRange((ServerLevel) this.level(), pos, message);
-            }
+            //similar to level explode
+            Float exploded = explodeWithCannonball(level(), loc, pos, maxAmount, (float) radius, whitelist, movement);
+            if (exploded == null) return;
             this.hasImpulse = true;
 
             if (this.getDeltaMovement().lengthSqr() < (0.2 * 0.2) || exploded == 0) {
@@ -211,6 +197,29 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
                 }
             }
         }
+    }
+
+    private @Nullable Float explodeWithCannonball(Level level, Vec3 loc, BlockPos pos, float maxAmount, float radius, Set<Block> whitelist, Vec3 movement) {
+        CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
+                loc.x(), loc.y(), loc.z(), pos, maxAmount, radius, whitelist);
+        if (ForgeHelper.fireOnExplosionStart(level, exp)) return null;
+        exp.explode();
+        exp.finalizeExplosion(true);
+
+        float exploded = exp.getExploded();
+
+        if (exploded != 0) {
+            double speedUsed = exploded / maxAmount;
+            double factor = 1 - speedUsed;
+            if (factor <= 0 || factor > 1) {
+                Supplementaries.error();
+            }
+            this.setDeltaMovement(movement.scale(factor));
+            Message message = ClientBoundCannonballExplosionPacket.cannonball(exp, this);
+
+            NetworkHelper.sendToAllClientPlayersInDefaultRange((ServerLevel) this.level(), pos, message);
+        }
+        return exploded;
     }
 
     private boolean maybeBounce(BlockHitResult hit) {

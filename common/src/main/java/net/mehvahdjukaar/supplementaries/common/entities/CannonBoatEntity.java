@@ -439,7 +439,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     public @NotNull Vec3 getCannonRecoil() {
         float power = this.cannon.getFirePower();
         float scale = 1;
-        Vec3 shootForce = this.getCannonGlobalFacing(1).scale(power * scale);
+        Vec3 shootForce = this.getCannonGlobalFacing(1).scale(-power * scale);
         return new Vec3(-shootForce.x, 0, -shootForce.z);
     }
 
