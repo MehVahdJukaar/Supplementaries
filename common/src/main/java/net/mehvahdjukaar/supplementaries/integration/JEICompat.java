@@ -9,16 +9,13 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.RecipeSpecialDisplayOutput;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.SpecialRecipeDisplays;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-
-import java.util.List;
 
 @JeiPlugin
 public class JEICompat implements IModPlugin {
@@ -33,8 +30,9 @@ public class JEICompat implements IModPlugin {
     @Override
     public void registerRecipes(IRecipeRegistration registry) {
         if (!CompatHandler.REI && !CompatHandler.EMI) {
-            SpecialRecipeDisplays.registerCraftingRecipes(r -> registry.addRecipes(RecipeTypes.CRAFTING,
-                    (List<RecipeHolder<CraftingRecipe>>) (List) r));
+
+            SpecialRecipeDisplays.registerCraftingRecipes(RecipeSpecialDisplayOutput.of(
+                    (r -> registry.addRecipes(RecipeTypes.CRAFTING, r))));
         }
     }
 

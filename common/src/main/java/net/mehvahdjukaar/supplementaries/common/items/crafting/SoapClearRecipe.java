@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.common.utils.SoapWashableHelper;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -73,7 +74,11 @@ public class SoapClearRecipe extends CustomRecipe {
 
         ItemStack result;
         Item i = toRecolor.getItem();
-        if (toRecolor.has(DataComponents.DYED_COLOR)) {
+        if (toRecolor.has(ModComponents.CONFETTI_COLORS.get())) {
+            result = toRecolor.copy();
+            result.remove(ModComponents.CONFETTI_COLORS.get());
+            return result;
+        } else if (toRecolor.has(DataComponents.DYED_COLOR)) {
             result = toRecolor.copy();
             ItemStack def = toRecolor.getItem().getDefaultInstance();
             if (def.has(DataComponents.DYED_COLOR)) {

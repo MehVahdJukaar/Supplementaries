@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
-import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
+import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -33,10 +33,10 @@ import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.level.block.entity.BannerPatterns;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class SpecialRecipeDisplays {
 
+    //TODO: hide when their recipes are hidden
 
     private static List<RecipeHolder<? extends CraftingRecipe>> createAntiqueMapRecipe() {
         List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
@@ -235,7 +235,7 @@ public class SpecialRecipeDisplays {
         List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
 
         String group = "sus_crafting";
-        Map<Block,Block> blocks = new HashMap<>();
+        Map<Block, Block> blocks = new HashMap<>();
         if (CommonConfigs.Tweaks.SUS_RECIPES.get()) {
             blocks.put(Blocks.SAND, Blocks.SUSPICIOUS_SAND);
             blocks.put(Blocks.GRAVEL, Blocks.SUSPICIOUS_GRAVEL);
@@ -329,7 +329,7 @@ public class SpecialRecipeDisplays {
             ItemStack fullFlag = new ItemStack(ModRegistry.FLAGS.get(color).get());
 
             BannerPatternLayers patterns = new BannerPatternLayers(
-                    List.of(new BannerPatternLayers.Layer(HolderReference.of(BannerPatterns.BASE).getHolderUnsafe(),
+                    List.of(new BannerPatternLayers.Layer(HolderRef.of(BannerPatterns.BASE).getHolder(Utils.hackyGetRegistryAccess()),
                             color == DyeColor.WHITE ? DyeColor.BLACK : DyeColor.WHITE))
             );
 
@@ -414,57 +414,61 @@ public class SpecialRecipeDisplays {
     }
 
 
-    public static void registerCraftingRecipes(Consumer<List<RecipeHolder<? extends CraftingRecipe>>> registry) {
+    public static void registerCraftingRecipes(RecipeSpecialDisplayOutput<CraftingRecipe> registry) {
         for (var c : RecipeBookCategories.AGGREGATE_CATEGORIES.get(RecipeBookCategories.CRAFTING_SEARCH)) {
             registerRecipes(c, registry);
         }
     }
 
-    public static void registerRecipes(RecipeBookCategories category, Consumer<List<RecipeHolder<? extends CraftingRecipe>>> registry) {
+    public static void registerRecipes(RecipeBookCategories category, RecipeSpecialDisplayOutput<CraftingRecipe> registry) {
 
         if (category == RecipeBookCategories.CRAFTING_MISC) {
+
+            //these config checks aren't even needed anymore
             if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get()) {
-                registry.accept(createTippedBambooSpikesRecipes());
+                registry.add("bamboo_spikes_tipped", createTippedBambooSpikesRecipes());
             }
             if (CommonConfigs.Building.FLAG_ENABLED.get()) {
-                registry.accept(createFlagFromBanner());
+                registry.add("flags/flag_from_banner", createFlagFromBanner());
             }
             if (CommonConfigs.Functional.SAFE_ENABLED.get()) {
-                registry.accept(createSafeRecipe());
+                registry.add("safe", createSafeRecipe());
             }
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-                registry.accept(createAntiqueMapRecipe());
-                registry.accept(createAntiqueBookRecipe());
+                registry.add("antique_map", createAntiqueMapRecipe());
+                registry.add("antique_book", createAntiqueBookRecipe());
             }
             if (CommonConfigs.Functional.SACK_ENABLED.get() && CompatHandler.SUPPSQUARED) {
-                registry.accept(makeSackColoringRecipes());
+                registry.add("suppsquared:sack_dye", makeSackColoringRecipes());
             }
             if (CommonConfigs.Tweaks.ITEM_LORE.get()) {
-                registry.accept(createItemLoreRecipe());
-                registry.accept(createRemoveLoreRecipe());
+                registry.add("item_lore", createItemLoreRecipe());
+                registry.add("item_lore_clear", createRemoveLoreRecipe());
             }
             if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
-                registry.accept(createSoapCleanRecipe());
+                registry.add("soap/clear", createSoapCleanRecipe());
             }
             if (CommonConfigs.Functional.PRESENT_ENABLED.get()) {
-                registry.accept(makePresentColoringRecipes());
+                registry.add("present_dye", makePresentColoringRecipes());
                 if (CommonConfigs.Functional.TRAPPED_PRESENT_ENABLED.get()) {
-                    registry.accept(makeTrappedPresentRecipes());
+                    registry.add("trapped_present", makeTrappedPresentRecipes());
                 }
             }
-            registry.accept(createSusRecipe());
+            if (CommonConfigs.Tweaks.SUS_RECIPES.get()) {
+                registry.add("sus_crafting", createSusRecipe());
+            }
 
         } else if (category == RecipeBookCategories.CRAFTING_BUILDING_BLOCKS) {
             if (CommonConfigs.Building.BLACKBOARD_ENABLED.get()) {
-                registry.accept(createBlackboardDuplicate());
+                registry.add("blackboard_duplicate", createBlackboardDuplicate());
             }
         } else if (category == RecipeBookCategories.CRAFTING_EQUIPMENT) {
             if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
-                registry.accept(createRopeArrowCreateRecipe());
-                registry.accept(createRopeArrowAddRecipe());
+                registry.add("rope_arrow_create", createRopeArrowCreateRecipe());
+                registry.add("rope_arrow_add", createRopeArrowAddRecipe());
             }
             if (CommonConfigs.Tools.BUBBLE_BLOWER_ENABLED.get()) {
-                registry.accept(createBubbleBlowerChargeRecipe());
+                registry.add("bubble_blower_charge", createBubbleBlowerChargeRecipe());
             }
         }
     }

@@ -11,6 +11,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.TextWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.RecipeSpecialDisplayOutput;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.SpecialRecipeDisplays;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.resources.ResourceLocation;
@@ -28,15 +29,16 @@ public class EMICompat implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
-        SpecialRecipeDisplays.registerCraftingRecipes(recipes -> recipes.stream().map(rh -> {
-                    var r = rh.value();
-                    return new EmiCraftingRecipe(
-                            r.getIngredients().stream().map(EmiIngredient::of).toList(),
-                            EmiStack.of(r.getResultItem(null)),
-                            rh.id(),
-                            r instanceof ShapelessRecipe);
-                }
-        ).forEach(registry::addRecipe));
+        SpecialRecipeDisplays.registerCraftingRecipes(RecipeSpecialDisplayOutput.of(
+                recipes -> recipes.stream().map(rh -> {
+                            var r = rh.value();
+                            return new EmiCraftingRecipe(
+                                    r.getIngredients().stream().map(EmiIngredient::of).toList(),
+                                    EmiStack.of(r.getResultItem(null)),
+                                    rh.id(),
+                                    r instanceof ShapelessRecipe);
+                        }
+                ).forEach(registry::addRecipe)));
 
         registry.addRecipe(
                 EmiWorldInteractionRecipe.builder()
