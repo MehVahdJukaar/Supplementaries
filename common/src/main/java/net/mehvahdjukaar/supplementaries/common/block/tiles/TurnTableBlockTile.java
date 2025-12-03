@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
+import net.mehvahdjukaar.supplementaries.common.block.IAnalogRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -23,7 +24,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 
-//TODO: improve this
 public class TurnTableBlockTile extends BlockEntity {
     private int cooldown = 5;
     private boolean canRotate = true;
@@ -53,33 +53,51 @@ public class TurnTableBlockTile extends BlockEntity {
     public static void tick(Level level, BlockPos pos, BlockState state, TurnTableBlockTile tile) {
         tile.catTimer = Math.max(tile.catTimer - 1, 0);
         // cd > 0
+        Direction dir = state.getValue(TurnTableBlock.FACING);
+        boolean ccw = state.getValue(TurnTableBlock.INVERTED) ^ (state.getValue(TurnTableBlock.FACING) == Direction.DOWN);
+        BlockPos targetPos = pos.relative(dir);
+        BlockState above = level.getBlockState(targetPos);
+        boolean rotateAnalog = above.getBlock() instanceof IAnalogRotatable ar &&
+                ar.canRotateAnalog(above, level, targetPos, dir);
         if (tile.cooldown == 0) {
-            Direction dir = state.getValue(TurnTableBlock.FACING);
-            boolean ccw = state.getValue(TurnTableBlock.INVERTED) ^ (state.getValue(TurnTableBlock.FACING) == Direction.DOWN);
-            BlockPos targetPos = pos.relative(dir);
-            boolean success = BlockUtil.tryRotatingBlock(dir, ccw, targetPos, level, null, null).isPresent();
-            if (success) {
-                //play particle with block event
-                level.blockEvent(pos, state.getBlock(), 0, 0);
-                level.gameEvent(null, GameEvent.BLOCK_CHANGE, targetPos);
-                level.playSound(null, targetPos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
-
-                if (dir == Direction.UP) {
-                    tile.tryRotatingMinecartsAbove(level, pos, ccw);
+            if (rotateAnalog) {
+                tile.canRotate = true;
+            } else {
+                boolean rotSuccess = tile.performRotation(level, pos, state, dir, ccw, targetPos);
+                tile.cooldown = TurnTableBlock.getPeriod(state);
+                // if it didn't rotate last block that means that block is immovable
+                int power = state.getValue(TurnTableBlock.POWER);
+                tile.canRotate = (rotSuccess && power != 0);
+                //change blockstate after rotation if is powered off
+                if (power == 0) {
+                    level.setBlock(pos, state.setValue(TurnTableBlock.ROTATING, false), 3);
                 }
-            }
-
-            tile.cooldown = TurnTableBlock.getPeriod(state);
-            // if it didn't rotate last block that means that block is immovable
-            int power = state.getValue(TurnTableBlock.POWER);
-            tile.canRotate = (success && power != 0);
-            //change blockstate after rotation if is powered off
-            if (power == 0) {
-                level.setBlock(pos, state.setValue(TurnTableBlock.ROTATING, false), 3);
             }
         } else if (tile.canRotate) {
             tile.cooldown--;
         }
+        if (tile.canRotate) {
+            if (rotateAnalog) {
+                int power = state.getValue(TurnTableBlock.POWER);
+                ((IAnalogRotatable) above.getBlock()).rotateAnalog(above, level, targetPos, dir, ccw, power);
+            }
+        }
+    }
+
+    private boolean performRotation(Level level, BlockPos pos, BlockState state, Direction dir, boolean ccw, BlockPos targetPos) {
+        boolean success = BlockUtil.tryRotatingBlock(dir, ccw, targetPos, level, null, null).isPresent();
+        if (success) {
+            //play particle with block event
+            level.blockEvent(pos, state.getBlock(), 0, 0);
+            level.gameEvent(null, GameEvent.BLOCK_CHANGE, targetPos);
+            level.playSound(null, targetPos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
+
+            if (dir == Direction.UP) {
+                this.tryRotatingMinecartsAbove(level, pos, ccw);
+            }
+        }
+
+        return success;
     }
 
     private void tryRotatingMinecartsAbove(Level level, BlockPos pos, boolean ccw) {
@@ -117,9 +135,6 @@ public class TurnTableBlockTile extends BlockEntity {
             default -> Direction.Axis.Y;
         };
     }
-
-    //TODO: this makes block instantly rotate when condition becomes true
-
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {

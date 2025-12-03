@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
+import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class SpeakerBlockTile extends BlockEntity implements Nameable, IOnePlayerInteractable, IScreenProvider {
+public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserInteractable, IScreenProvider {
     private Component message = Component.empty();
     private Component filteredMessage = Component.empty();
     private Mode mode = Mode.CHAT;
@@ -179,9 +179,9 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOnePlaye
     }
 
     public boolean tryAcceptingClientText(ServerPlayer player, FilteredText filteredText) {
-        if (this.isEditingPlayer(worldPosition, player)) {
+        if (this.canBeUsedBy(worldPosition, player)) {
             this.acceptClientMessages(player, filteredText);
-            this.setPlayerWhoMayEdit(null);
+            this.setCurrentUser(null);
             return true;
         } else {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable speaker block",
@@ -201,12 +201,12 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOnePlaye
     }
 
     @Override
-    public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
+    public void setCurrentUser(UUID playerWhoMayEdit) {
         this.playerWhoMayEdit = playerWhoMayEdit;
     }
 
     @Override
-    public UUID getPlayerWhoMayEdit() {
+    public UUID getCurrentUser() {
         return playerWhoMayEdit;
     }
 

@@ -9,29 +9,31 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-import static net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonBehavior.aimCannonAndShoot;
+import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonBoatBehavior.aimCannonAndShoot;
 
-public class ManeuverAndShootCannonGoal extends Goal {
+//copied from skeleton soot goal
+public class UseCannonBoatGoal extends Goal {
     private final Mob mob;
     private final int attackIntervalMin;
     private final int attackIntervalMax;
     private final int minRangeSQ;
-    private final int maxGoalTickTime;
 
-    private int goalTime;
+    private final int maxUseTime;
+
+    private int time;
     @Nullable
     private LivingEntity target;
     private int attackDelay;
     private int seeTime;
     private CannonAccess access;
 
-    public ManeuverAndShootCannonGoal(Mob mob, int attackIntervalMin, int attackIntervalMax, int minRange,
-                                      int maxDuration) {
+    public UseCannonBoatGoal(Mob mob, int attackIntervalMin, int attackIntervalMax, int minRange,
+                             int maxDuration) {
         this.mob = mob;
         this.attackIntervalMin = attackIntervalMin;
         this.attackIntervalMax = attackIntervalMax;
         this.minRangeSQ = minRange * minRange;
-        this.maxGoalTickTime = maxDuration;
+        this.maxUseTime = maxDuration;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
     }
 
@@ -52,7 +54,7 @@ public class ManeuverAndShootCannonGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return super.canContinueToUse() && this.goalTime < this.maxGoalTickTime;
+        return super.canContinueToUse() && this.time < this.maxUseTime;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class ManeuverAndShootCannonGoal extends Goal {
         this.access = null;
         this.seeTime = 0;
         this.attackDelay = 0;
-        this.goalTime = 0;
+        this.time = 0;
     }
 
     @Override
@@ -72,7 +74,7 @@ public class ManeuverAndShootCannonGoal extends Goal {
     @Override
     public void tick() {
 
-        this.goalTime++;
+        this.time++;
         //TODO: use this in boat goal, check if they can reach
         //TODO: strife around so cannon faces them
         boolean hasLineOfSight = this.mob.getSensing().hasLineOfSight(this.target);

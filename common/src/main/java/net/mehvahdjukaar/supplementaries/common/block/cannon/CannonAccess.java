@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
@@ -43,7 +45,31 @@ public interface CannonAccess {
     default Vec3 getCannonGlobalFacing(float partialTicks) {
         CannonBlockTile cannon = this.getInternalCannon();
         return Vec3.directionFromRotation(cannon.getPitch(partialTicks),
-                cannon.getYaw(partialTicks) - this.getCannonGlobalYawOffset(partialTicks)).scale(-1);
+                cannon.getYaw(partialTicks) - this.getCannonGlobalYawOffset(partialTicks));
+    }
+
+    default void setCannonGlobalFacing(Vec3 direction) {
+        setCannonGlobalFacing(direction, false);
+    }
+
+    //shouldn't these be in cannon tile
+    default void setCannonGlobalFacing(Vec3 direction, boolean ignoreIfInvalid) {
+        CannonBlockTile cannon = this.getInternalCannon();
+        float yaw = (float) (MthUtils.getYaw(direction) + this.getCannonGlobalYawOffset(0));
+        float pitch = (float) MthUtils.getPitch(direction);
+        float oldYaw = cannon.getYaw(0);
+        float oldPitch = cannon.getPitch(0);
+        cannon.setYaw(this, yaw);
+        cannon.setPitch(this, pitch);
+        if (!ignoreIfInvalid) { //very ugly
+            float newYaw = cannon.getYaw(0);
+            float newPitch = cannon.getPitch(0);
+            if (newYaw != yaw || newPitch != pitch) {
+                //revert
+                cannon.setYaw(this, oldYaw);
+                cannon.setPitch(this, oldPitch);
+            }
+        }
     }
 
     Restraint getPitchAndYawRestrains();
@@ -129,16 +155,14 @@ public interface CannonAccess {
 
         @Override
         public void openCannonGui(ServerPlayer player) {
-            this.cannon.tryOpeningEditGui(player, this.cannon.getBlockPos(),
-                    player.getMainHandItem(), Direction.UP);
+            Utils.openGuiIfPossible(this.cannon, player, player.getMainHandItem(), Direction.UP);
         }
 
         @Override
         public boolean stillValid(Player player) {
             Level level = player.level();
-            float maxDist = 7;
             return !cannon.isRemoved() && level.getBlockEntity(cannon.getBlockPos()) == cannon &&
-                    cannon.getBlockPos().distToCenterSqr(player.position()) < maxDist * maxDist;
+                    cannon.isCloseEnoughToUse(player, cannon.getBlockPos());
         }
 
         public Restraint getPitchAndYawRestrains() {

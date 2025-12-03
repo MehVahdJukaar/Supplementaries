@@ -15,7 +15,7 @@ public class MimicBlockColor implements BlockColor {
         return col(state, world, pos, tint);
     }
 
-    public static int col(BlockState state, BlockAndTintGetter level, BlockPos pos, int tint) {
+    public static int col(BlockState state, @Nullable BlockAndTintGetter level,@Nullable BlockPos pos, int tint) {
         if (level != null && pos != null) {
             if (level.getBlockEntity(pos) instanceof IBlockHolder tile) {
                 BlockState mimic = tile.getHeldBlock();

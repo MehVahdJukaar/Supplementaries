@@ -269,13 +269,13 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.setChanged();
     }
 
-    public ItemInteractionResult interact(Player player, InteractionHand handIn, BlockPos pos,
-                                          BlockState state, BlockHitResult hit, ItemStack stack) {
+    public ItemInteractionResult interact(Player player, InteractionHand handIn, BlockHitResult hit, ItemStack stack) {
         Level level = player.level();
 
+        BlockState state = this.getBlockState();
         if (player.isShiftKeyDown() && !this.isEmpty() && player.getItemInHand(handIn).isEmpty()) {
             ItemStack it = this.removeItemNoUpdate(0);
-            BlockPos newPos = pos.offset(state.getValue(NoticeBoardBlock.FACING).getNormal());
+            BlockPos newPos = worldPosition.offset(state.getValue(NoticeBoardBlock.FACING).getNormal());
             ItemEntity drop = new ItemEntity(level, newPos.getX() + 0.5, newPos.getY() + 0.5, newPos.getZ() + 0.5, it);
             drop.setDefaultPickUpDelay();
             level.addFreshEntity(drop);
@@ -291,7 +291,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 return res;
             }
         }
-        ItemInteractionResult r = this.textHolderInteract(0, level, pos, state, player, handIn, stack, face);
+        ItemInteractionResult r = this.textHolderInteract(this,0, player, handIn, stack, face);
         if (r != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return r;
 
 
@@ -299,18 +299,18 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (player instanceof ServerPlayer sp) {
-            this.tryOpeningEditGui(sp, pos, player.getItemInHand(handIn), face);
+            this.tryOpeningTextEditGui(this, sp, player.getItemInHand(handIn), face);
         }
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override
-    public void setPlayerWhoMayEdit(@Nullable UUID uuid) {
+    public void setCurrentUser(@Nullable UUID uuid) {
         this.playerWhoMayEdit = uuid;
     }
 
     @Override
-    public UUID getPlayerWhoMayEdit() {
+    public UUID getCurrentUser() {
         return playerWhoMayEdit;
     }
 

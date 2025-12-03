@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.supplementaries.client.screens.DoormatScreen;
@@ -12,13 +11,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider, IOnePlayerInteractable, IScreenProvider {
+public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProvider, IScreenProvider {
     public static final int MAX_LINES = 3;
 
     public final TextHolder textHolder;
@@ -85,12 +81,12 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     }
 
     @Override
-    public void setPlayerWhoMayEdit(@Nullable UUID playerWhoMayEdit) {
+    public void setCurrentUser(@Nullable UUID playerWhoMayEdit) {
         this.playerWhoMayEdit = playerWhoMayEdit;
     }
 
     @Override
-    public UUID getPlayerWhoMayEdit() {
+    public UUID getCurrentUser() {
         return playerWhoMayEdit;
     }
 

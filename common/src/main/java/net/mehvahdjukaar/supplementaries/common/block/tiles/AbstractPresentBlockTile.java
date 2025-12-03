@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.IWeakContainer;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -13,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEntity implements IWeakContainer {
+public abstract class AbstractPresentBlockTile extends OpenableContainerBlockTile implements IWeakContainer {
 
     protected AbstractPresentBlockTile(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
         super(blockEntityType, pos, state, 1);

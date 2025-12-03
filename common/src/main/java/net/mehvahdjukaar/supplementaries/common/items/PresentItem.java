@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.block.IColored;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.PresentAddress;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -26,6 +27,16 @@ public class PresentItem extends BlockItem implements IColored {
         if (address != null) {
             address.addToTooltip(context, tooltipComponents::add, tooltipFlag);
         }
+    }
+
+    @ForgeOverride
+    public int getMaxStackSize(ItemStack stack) {
+        return stack.has(ModComponents.ADDRESS.get()) ? 1 : this.getDefaultMaxStackSize();
+    }
+
+    @ForgeOverride
+    public boolean canFitInsideContainerItems(ItemStack stack) {
+        return !stack.has(ModComponents.ADDRESS.get());
     }
 
     @Override

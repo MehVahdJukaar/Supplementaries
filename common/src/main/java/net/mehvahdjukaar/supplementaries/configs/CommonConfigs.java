@@ -339,6 +339,8 @@ public class CommonConfigs {
 
             builder.push(ModConstants.GRAVEL_BRICKS_NAME);
             GRAVEL_BRICKS_ENABLED = feature(builder);
+            GRAVEL_BRICKS_BREAKING = builder.comment("Allows gravel bricks to break when fallen upon or when an entity walks on them with enough falling speed")
+                    .define("allow_breaking", true);
             builder.pop();
 
 
@@ -445,8 +447,8 @@ public class CommonConfigs {
                     .define("max_search_radius", 200, 0, 1000);
             ROAD_SIGN_EXIT_EARLY = builder.comment("Speeds up way sign feature searching by making the search stop at the first found structure. This means that way signs won't point to the nearest structure anymore")
                     .define("exit_search_early", true);
-            ROAD_SIGN_MAX_SEARCHES = builder.comment("Maximum number of structure types from the tag that road signs will attept to look for every time. Decrease to speed up search at the cost of making them not point to the nearest structure out of all. Also if made too low and in cases it were to pick a structure that only spawns very rarely, this would actually slow down the search")
-                    .define("max_structures_searches", 7, 1, 100);
+            ROAD_SIGN_MAX_SEARCHES = builder.comment("Maximum number of structure types from the tag that road signs will attempt to look for every time. Decreasing might speed up search at the cost of making them not point to the nearest structure out of all. Also if made too low and in cases it were to pick a structure that only spawns very rarely, this would actually slow down the search instead of speeding it up")
+                    .define("max_structures_searches", 12, 1, 100);
             builder.pop();
 
             builder.pop();
@@ -583,6 +585,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
 
         public static final Supplier<Boolean> GRAVEL_BRICKS_ENABLED;
+        public static final Supplier<Boolean> GRAVEL_BRICKS_BREAKING;
         public static final Supplier<Boolean> SLIDY_BLOCK_ENABLED;
         public static final Supplier<Double> SLIDY_BLOCK_SPEED;
 
@@ -719,7 +722,7 @@ public class CommonConfigs {
             SACK_PENALTY = builder.comment("Penalize the player with slowness effect when carrying too many sacks")
                     .define("sack_penalty", true);
             SACK_INCREMENT = builder.comment("Maximum number of sacks after which the overencumbered effect will be applied. Each multiple of this number will increase the effect strength by one")
-                    .define("sack_increment", 2, 0, 50);
+                    .define("sack_increment", 2, 1, 50);
             SACK_SLOTS = builder.comment("How many slots should a sack have")
                     .define("slots", 9, 1, 27);
             builder.pop();
@@ -1195,7 +1198,7 @@ public class CommonConfigs {
                             "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)"));
             RANDOM_ADVENTURER_MAX_SEARCH_RADIUS = builder.comment("Maximum number of structure types from the tag that road signs will attempt to look for every time. Decrease to speed up search at the cost of making them not point to the nearest structure out of all. Also if made too low and in cases it were to pick a structure that only spawns very rarely, this would actually slow down the search")
                     .define("max_search_radius", 100, 1, 1000);
-            RANDOM_ADVENTURER_MAPS_MAX_SEARCHES = builder.comment("Select a random structure to look for instead of iterating through all of the ones in the tag returning the closest. Turning on will make ones that have diff structures (aka all different ruined portals) show up more. On could take much more time to compute")
+            RANDOM_ADVENTURER_MAPS_MAX_SEARCHES = builder.comment("Select a random structure to look for instead of iterating through all of the ones in the tag returning the closest. Turning on will make ones that have diff structures (aka all different ruined portals) show up more. Increasing the number past 1 will allow x random structures to be picked instead. this can possibly speed up search as it decreases chances to find far away ones")
                     .define("max_structures_searches", 1, 1, 1000);
             builder.pop();
             MAP_MARKERS = builder.comment("Enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")

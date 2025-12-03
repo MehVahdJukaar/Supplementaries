@@ -40,7 +40,7 @@ issueTrackerURL = "${mod_github}/issues"
     modId = "moonlight"
     type = "required"
     referralUrl = "https://www.curseforge.com/minecraft/mc-mods/selene"
-    versionRange = "[${moonlight_version_range},]"
+    versionRange = "[${moonlight_min_version},]"
     ordering = "NONE"
     side = "BOTH"
 

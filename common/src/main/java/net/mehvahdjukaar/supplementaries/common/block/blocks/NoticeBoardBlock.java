@@ -67,7 +67,7 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile) {
-            return tile.interact(player, hand, pos, state, hitResult, stack);
+            return tile.interact(player, hand, hitResult, stack);
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }

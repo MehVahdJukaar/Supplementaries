@@ -5,14 +5,25 @@ import net.minecraft.client.model.IllagerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class PlundererModel extends IllagerModel<PlundererEntity> {
     private final ModelPart skirt;
+    private final ModelPart rightArm;
+    private final ModelPart leftArm;
+    private final ModelPart head;
 
     public PlundererModel(ModelPart root) {
         super(root);
         this.getHat().visible = true;
         this.skirt = root.getChild("body").getChild("skirt");
+        this.rightArm = root.getChild("right_arm");
+        this.leftArm = root.getChild("left_arm");
+        this.head = root.getChild("head");
     }
 
     @Override
@@ -20,6 +31,23 @@ public class PlundererModel extends IllagerModel<PlundererEntity> {
         super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
 
         this.skirt.visible = !entity.isPassenger();
+    }
+
+    @Override
+    public void setupAnim(PlundererEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+        if (entity.isUsingSpyglass()) {
+            boolean rightHanded = entity.getMainArm() == HumanoidArm.RIGHT;
+            boolean useHand = entity.getUsedItemHand() == InteractionHand.MAIN_HAND;
+            if (useHand == rightHanded) {
+                this.rightArm.xRot = Mth.clamp(this.head.xRot - 1.9198622F - (entity.isCrouching() ? 0.2617994F : 0.0F), -2.4F, 3.3F);
+                this.rightArm.yRot = this.head.yRot - 0.2617994F;
+            } else {
+                this.leftArm.xRot = Mth.clamp(this.head.xRot - 1.9198622F - (entity.isCrouching() ? 0.2617994F : 0.0F), -2.4F, 3.3F);
+                this.leftArm.yRot = this.head.yRot + 0.2617994F;
+            }
+        }
     }
 
     public static LayerDefinition createMesh() {

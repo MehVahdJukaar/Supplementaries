@@ -243,7 +243,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
         private void setYaw(float yaw) {
             this.yaw = Mth.wrapDegrees(yaw - (this.left ? 180 : 0));
-            this.signNormal = new Vec3(0,0,1).yRot(this.yaw * Mth.DEG_TO_RAD);
+            this.signNormal = new Vec3(0, 0, 1).yRot(this.yaw * Mth.DEG_TO_RAD);
         }
 
         private void rotateBy(float angle, boolean constrainAngle) {
@@ -351,7 +351,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 if (success) return ItemInteractionResult.CONSUME;
             }
         }
-        return this.textHolderInteract(ind ? 0 : 1, level, pos, state, player, handIn, itemstack, hit.getDirection());
+        return this.textHolderInteract(this, ind ? 0 : 1, player, handIn, itemstack, hit.getDirection());
     }
 
     private static BlockPos getCompassTrackedPos(ServerLevel level, ItemStack itemstack) {
@@ -389,12 +389,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
-    public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
+    public void setCurrentUser(UUID playerWhoMayEdit) {
         this.playerWhoMayEdit = playerWhoMayEdit;
     }
 
     @Override
-    public UUID getPlayerWhoMayEdit() {
+    public UUID getCurrentUser() {
         return playerWhoMayEdit;
     }
 

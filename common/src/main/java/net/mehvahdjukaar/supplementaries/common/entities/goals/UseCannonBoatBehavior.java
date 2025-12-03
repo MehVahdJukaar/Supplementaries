@@ -18,13 +18,13 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.phys.Vec3;
 
-public class ManeuverAndShootCannonBehavior extends Behavior<LivingEntity> {
+public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
 
     private int attackDelay;
     private CannonAccess access;
 
 
-    public ManeuverAndShootCannonBehavior() {
+    public UseCannonBoatBehavior() {
         super(ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus.VALUE_PRESENT, MemoryModuleType.LAST_WOKEN, MemoryStatus.REGISTERED));
     }
 

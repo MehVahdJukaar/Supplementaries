@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.LunchBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
@@ -16,7 +17,6 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,7 +26,7 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class LunchBoxBlockTile extends OpeneableContainerBlockEntity {
+public class LunchBoxBlockTile extends OpenableContainerBlockTile {
     @Nullable
     private DyedItemColor dyeColor = null;
 

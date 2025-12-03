@@ -2,12 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatMoveController;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatPathNavigation;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.AbandonShipGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.BoardBoatGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.IAmTheCaptainGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.controllers.LookControlWithSpyglass;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -21,10 +22,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -40,7 +40,6 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.providers.EnchantmentProvider;
 import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders;
@@ -50,9 +49,12 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
-public class PlundererEntity extends AbstractIllager implements InventoryCarrier {
+public class PlundererEntity extends AbstractIllager implements InventoryCarrier, ISpyglassMob {
     private static final int INVENTORY_SIZE = 5;
     private static final int SLOT_OFFSET = 300;
+    protected static final EntityDataAccessor<Boolean> USING_SPYGLASS =
+            SynchedEntityData.defineId(PlundererEntity.class, EntityDataSerializers.BOOLEAN);
+
     private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
 
     private BoatPathNavigation boatNavigation;
@@ -60,14 +62,63 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     private final BoatMoveController boatController;
     private final MoveControl defaultController;
 
+    private BlockPos lastKnownCannonPos = null;
 
     public PlundererEntity(EntityType<? extends PlundererEntity> entityType, Level level) {
         super(entityType, level);
         this.boatController = new BoatMoveController(this);
         this.defaultController = moveControl;
+        this.lookControl = new LookControlWithSpyglass<>(this);
     }
 
+
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        //don't remove when has target that's a player
+        if (this.getTarget() instanceof Player) {
+            return false;
+        }
+        return super.removeWhenFarAway(distanceToClosestPlayer);
+    }
+
+    public void setLastKnownCannonPos(BlockPos lastKnownCannonPos) {
+        this.lastKnownCannonPos = lastKnownCannonPos;
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new UseCannonBoatGoal(this, 20, 40,
+                16, 20 * 15)); //max 15 sec
+
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, Raider.class)
+                .setAlertOthers());
+
+        this.goalSelector.addGoal(2, new Raider.HoldGroundAttackGoal(this, 10.0F));
+        this.goalSelector.addGoal(2, new BoardBoatGoal(this, 1, 200));
+
+        this.targetSelector.addGoal(2, new PlundererNearestAttackableTargetGoal<>(this, Player.class, true));
+
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, IronGolem.class, true));
+
+
+        this.goalSelector.addGoal(3, new AbandonShipGoal(this, 15));
+
+        this.goalSelector.addGoal(3, new UseCannonBlockGoal(this, 1, 20));
+
+        this.goalSelector.addGoal(4, new MeleeAttackGoalWhenInRange(this, 1.0, false));
+        this.goalSelector.addGoal(6, new IAmTheCaptainGoal(this));
+        //TODO: go to boat,leave boat, switch to captain, soot cannon
+        //this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1, 20));
+
+        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6));
+        this.goalSelector.addGoal(9, new PlundererLookAtPlayerGoal(this, Player.class, 1.0F));
+        this.goalSelector.addGoal(10, new PlundererLookAtPlayerGoal(this, Mob.class));
+    }
     //got to do this since the accessors aren't used consistently...
+
     @Override
     protected void customServerAiStep() {
         if (this.getControlledVehicle() instanceof Boat) {
@@ -88,28 +139,9 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     }
 
     @Override
-    protected void registerGoals() {
-        super.registerGoals();
-        this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new ManeuverAndShootCannonGoal(this, 20, 40,
-                16, 20 * 15)); //max 15 sec
-        this.goalSelector.addGoal(2, new Raider.HoldGroundAttackGoal(this, 10.0F));
-        this.goalSelector.addGoal(2, new BoardBoatGoal(this, 1, 200));
-        this.goalSelector.addGoal(3, new AbandonShipGoal(this, 15));
-        this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.0, false));
-        this.goalSelector.addGoal(6, new IAmTheCaptainGoal(this));
-
-        //TODO: go to boat,leave boat, switch to captain, soot cannon
-        //this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1, 20));
-        //this.goalSelector.addGoal(3, new RangedCrossbowAttackGoal<>(this, 1.0, 8.0F));
-
-        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6));
-        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 15.0F, 1.0F));
-        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 15.0F));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, Raider.class).setAlertOthers());
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, AbstractVillager.class, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, IronGolem.class, true));
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(USING_SPYGLASS, false);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -120,24 +152,19 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
                 .add(Attributes.FOLLOW_RANGE, 32.0);
     }
 
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
+    public boolean isUsingSpyglass() {
+        return this.entityData.get(USING_SPYGLASS);
     }
 
-    @Override
-    public boolean canFireProjectileWeapon(ProjectileWeaponItem projectileWeapon) {
-        return projectileWeapon == Items.CROSSBOW;
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
-        this.writeInventoryToTag(compound, this.registryAccess());
+    public void setUsingSpyglass(boolean using) {
+        this.entityData.set(USING_SPYGLASS, using);
     }
 
     @Override
     public AbstractIllager.IllagerArmPose getArmPose() {
+        if (this.isUsingSpyglass()) {
+            return IllagerArmPose.NEUTRAL;
+        }
         return this.isAggressive() ? AbstractIllager.IllagerArmPose.ATTACKING : IllagerArmPose.CROSSED;
     }
 
@@ -152,9 +179,17 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     }
 
     @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        RegistryAccess ra = this.registryAccess();
+        this.writeInventoryToTag(compound, ra);
+    }
+
+    @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
-        this.readInventoryFromTag(compound, this.registryAccess());
+        RegistryAccess ra = this.registryAccess();
+        this.readInventoryFromTag(compound, ra);
         this.setCanPickUpLoot(true);
     }
 
@@ -212,6 +247,11 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     }
 
     @Override
+    public SoundEvent getCelebrateSound() {
+        return SoundEvents.PILLAGER_CELEBRATE;
+    }
+
+    @Override
     public SimpleContainer getInventory() {
         return this.inventory;
     }
@@ -245,13 +285,6 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
             }
         }
     }
-
-    @Override
-    public SoundEvent getCelebrateSound() {
-        return SoundEvents.PILLAGER_CELEBRATE;
-    }
-
-
 
 
 }

@@ -68,10 +68,9 @@ public class EatFodderGoal extends MoveToBlockGoal {
         return this.blockPos != BlockPos.ZERO && this.isValidTarget(this.mob.level(), this.blockPos) || this.findNearestBlock();
     }
 
-
     @Override
     protected int nextStartTick(PathfinderMob pCreature) {
-        return 800 + pCreature.getRandom().nextInt(400);
+        return pCreature.getRandom().nextIntBetweenInclusive(800, 1200);
     }
 
     @Override
@@ -152,7 +151,6 @@ public class EatFodderGoal extends MoveToBlockGoal {
                 //so it stops
                 this.nextStartTick = this.nextStartTick(this.mob);
                 this.tryTicks = 800;
-
             }
 
             ++this.ticksSinceReachedGoal;

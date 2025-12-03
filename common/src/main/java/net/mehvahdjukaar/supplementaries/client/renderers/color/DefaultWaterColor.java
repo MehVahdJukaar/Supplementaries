@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class DefaultWaterColor implements ItemColor, BlockColor {
 
@@ -17,7 +18,7 @@ public class DefaultWaterColor implements ItemColor, BlockColor {
     }
 
     @Override
-    public int getColor(BlockState state, BlockAndTintGetter reader, BlockPos pos, int tint) {
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter reader,@Nullable BlockPos pos, int tint) {
         if (tint != 1) return -1;
         return reader != null && pos != null ? BiomeColors.getAverageWaterColor(reader, pos) : -1;
     }

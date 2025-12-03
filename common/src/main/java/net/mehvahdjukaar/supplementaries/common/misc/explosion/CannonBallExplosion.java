@@ -4,6 +4,7 @@ import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Multisets;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.minecraft.Util;
@@ -59,6 +60,7 @@ public class CannonBallExplosion extends Explosion {
     @Override
     public void explode() {
         Vec3 center = new Vec3(this.x, this.y, this.z);
+
         Set<BlockPos> visited = new HashSet<>();
         Queue<BlockPos> toVisit = new ArrayDeque<>();
         AtomicReference<Float> explosionBudget = new AtomicReference<>(maxExplodedAmount); // Global budget
@@ -70,6 +72,10 @@ public class CannonBallExplosion extends Explosion {
             visit(currentPos, center, explosionBudget, this.getToBlow(), visited, toVisit);
         }
         this.explosionAmountLeft = explosionBudget.get();
+
+        //is this needed? idk if it's even correct or heck even misused
+        ForgeHelper.fireOnExplosionDetonate(this.level, this, new ArrayList<>(), this.radius * 2f);
+
     }
 
     public float getExploded() {
@@ -95,9 +101,10 @@ public class CannonBallExplosion extends Explosion {
         boolean canPropagateExplosion = false;
         if (!blockState.isAir()) {
             if (whitelist != null && !whitelist.contains(blockState.getBlock())) return;
-            Optional<Float> optional = damageCalculator.getBlockExplosionResistance(this, level, pos, blockState, fluidState);
-            if (optional.isPresent()) {
-                float resistance = (optional.get() + 0.3F) * 0.3F;
+            Optional<Float> expRes = damageCalculator.getBlockExplosionResistance(this, level, pos, blockState, fluidState);
+            if (expRes.isPresent()) {
+                //arbitrary scale for resistance
+                float resistance = (expRes.get() + 0.3F) * 0.3F;
 
                 float newB = explosionBudget.get() - resistance;
                 if (newB > 0.0F && damageCalculator.shouldBlockExplode(this, level, pos, blockState, 1)) {

@@ -207,7 +207,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return Utils.getTicker(pBlockEntityType, ModRegistry.TURN_TABLE_TILE.get(), !pLevel.isClientSide ? TurnTableBlockTile::tick : null);
+        return Utils.getTicker(pBlockEntityType, ModRegistry.TURN_TABLE_TILE.get(), TurnTableBlockTile::tick); //needed on both for smooth rot on analog
     }
 
     @Override

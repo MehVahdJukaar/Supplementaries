@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
+import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.IWaxable;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -27,7 +27,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,7 +37,7 @@ import java.util.UUID;
 import static net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock.colorToByte;
 
 public class BlackboardBlockTile extends BlockEntity implements
-        IOnePlayerInteractable, IScreenProvider, IWaxable, IGlowable, IExtraModelDataProvider {
+        IOneUserInteractable, IScreenProvider, IWaxable, IGlowable, IExtraModelDataProvider {
 
     public static final ModelDataKey<BlackboardData> BLACKBOARD_KEY = ModBlockProperties.BLACKBOARD;
 
@@ -63,12 +62,6 @@ public class BlackboardBlockTile extends BlockEntity implements
         if (this.level == null || this.level.isClientSide) return;
         this.level.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
         super.setChanged();
-    }
-
-    @Override
-    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack, Direction hitFace) {
-        if (isWaxed()) return false;
-        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack, hitFace);
     }
 
     @Override
@@ -155,7 +148,7 @@ public class BlackboardBlockTile extends BlockEntity implements
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         var c = this.saveWithoutMetadata(registries);
-        if(c.isEmpty()){
+        if (c.isEmpty()) {
             //Dumb otherwise forge won't even load the packet...
             c.putBoolean("Empty", true);
         }
@@ -192,17 +185,17 @@ public class BlackboardBlockTile extends BlockEntity implements
     }
 
     @Override
-    public UUID getPlayerWhoMayEdit() {
+    public UUID getCurrentUser() {
         return playerWhoMayEdit;
     }
 
     @Override
-    public void setPlayerWhoMayEdit(UUID playerWhoMayEdit) {
+    public void setCurrentUser(UUID playerWhoMayEdit) {
         this.playerWhoMayEdit = playerWhoMayEdit;
     }
 
     public boolean tryAcceptingClientPixels(ServerPlayer player, byte[][] pixels) {
-        if (!this.isEditingPlayer(worldPosition, player) || this.isWaxed()) {
+        if (!this.canBeUsedBy(worldPosition, player) || this.isWaxed()) {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
         }
@@ -224,7 +217,7 @@ public class BlackboardBlockTile extends BlockEntity implements
             level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
                     SoundSource.BLOCKS, 1, 1);
 
-            this.setPlayerWhoMayEdit(null);
+            this.setCurrentUser(null);
             this.setPixels(pixels);
             return true;
         }

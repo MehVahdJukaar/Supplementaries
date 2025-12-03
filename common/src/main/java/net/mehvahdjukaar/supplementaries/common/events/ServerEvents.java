@@ -17,7 +17,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTi
 import net.mehvahdjukaar.supplementaries.common.entities.PlundererEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.ManeuverAndShootCannonGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonBoatGoal;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
@@ -206,7 +206,7 @@ public class ServerEvents {
         if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
             if (entity instanceof AbstractIllager pillager && !(entity instanceof PlundererEntity)) {
                 pillager.goalSelector.addGoal(1,
-                        new ManeuverAndShootCannonGoal(pillager, 20, 40,
+                        new UseCannonBoatGoal(pillager, 20, 40,
                                 16, 20 * 15)); //10 seconds max
             }
         }

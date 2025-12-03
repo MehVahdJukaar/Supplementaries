@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.Entity;
@@ -25,7 +26,7 @@ public class GravelBricksBlock extends Block {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        if(context instanceof EntityCollisionContext ec && ec.getEntity() instanceof Player){
+        if (context instanceof EntityCollisionContext ec && ec.getEntity() instanceof Player) {
             return SHAPE_HACK;
         }
         return Shapes.block();
@@ -35,10 +36,10 @@ public class GravelBricksBlock extends Block {
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         super.fallOn(level, state, pos, entity, fallDistance);
         if (!level.isClientSide && !entity.isSteppingCarefully() && fallDistance > 3
-        && hasEnergyToBreak(entity)) {
+                && hasEnergyToBreak(entity)) {
             level.destroyBlock(pos, false, entity);
             if (level.getBlockEntity(pos) instanceof Container tile) {
-               // Containers.dropContents(level, pos, tile);
+                // Containers.dropContents(level, pos, tile);
             }
         }
     }
@@ -46,19 +47,22 @@ public class GravelBricksBlock extends Block {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-      if(!level.isClientSide) {
-          // gg. we cant keep velocity into account. unless we want to have player authoritative over it as its velocity isnt synced all the times
-          if (entity.yo <entity.getY() && hasEnergyToBreak(entity)) {
-              level.destroyBlock(pos, false, entity);
-              if (level.getBlockEntity(pos) instanceof Container tile) {
-                //  Containers.dropContents(level, pos, tile);
-              }
-          }
-      }
+        if (!level.isClientSide) {
+            // gg. we cant keep velocity into account. unless we want to have player authoritative over it as its velocity isnt synced all the times
+            if (entity.yo < entity.getY() && hasEnergyToBreak(entity)) {
+                level.destroyBlock(pos, false, entity);
+                if (level.getBlockEntity(pos) instanceof Container tile) {
+                    //  Containers.dropContents(level, pos, tile);
+                }
+            }
+        }
         super.entityInside(state, level, pos, entity);
     }
 
     private static boolean hasEnergyToBreak(Entity entity) {
-       return entity.getBoundingBox().getSize() > 0.5 && (entity instanceof LivingEntity || entity instanceof FallingBlockEntity);
+        if (!CommonConfigs.Building.GRAVEL_BRICKS_BREAKING.get()) {
+            return false;
+        }
+        return entity.getBoundingBox().getSize() > 0.5 && (entity instanceof LivingEntity || entity instanceof FallingBlockEntity);
     }
 }

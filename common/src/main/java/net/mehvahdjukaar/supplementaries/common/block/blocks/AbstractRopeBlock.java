@@ -216,7 +216,6 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
     }
 
     private static boolean findConnectedPulley(Level world, BlockPos pos, Player player, int it, Rotation rot) {
-        if (it > 64) return false;
         BlockState state = world.getBlockState(pos);
         Block b = state.getBlock();
         if (b instanceof AbstractRopeBlock) {

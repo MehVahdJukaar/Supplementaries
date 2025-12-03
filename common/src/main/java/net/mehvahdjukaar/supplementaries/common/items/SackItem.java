@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -8,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.component.DataComponents;
@@ -70,6 +72,11 @@ public class SackItem extends BlockItem {
     @Override
     public boolean canFitInsideContainerItems() {
         return false;
+    }
+
+    @ForgeOverride
+    public boolean canFitInsideContainerItems(ItemStack stack) {
+        return !stack.has(DataComponents.CONTAINER);
     }
 
     @Override

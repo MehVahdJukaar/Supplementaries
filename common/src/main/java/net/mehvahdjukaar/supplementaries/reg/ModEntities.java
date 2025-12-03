@@ -2,12 +2,14 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 
 import java.util.function.Supplier;
 
@@ -122,6 +124,11 @@ public class ModEntities {
                     .eyeHeight(0.5625F)
                     .clientTrackingRange(10)
     );
+
+    //simply used to iterate over nearby poi more quickly. We don't actually occupy these
+    public static final RegSupplier<? extends PoiType> USABLE_CANNON = RegHelper.registerPOI(
+            Supplementaries.res("cannon"), 1, 1, ModRegistry.CANNON);
+
 
     //firefly
 

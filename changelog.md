@@ -1,3 +1,11 @@
-- fixed a crash with custom creative tab
-- rope rotation fix
-- cannon rotation fix
+- sign recipe
+- fixed lumisene bucket and bottle not having forge cap
+- present stack more than 1
+- improved gui interactions
+- turn table analog rotation of cannons
+- fire pit loot
+- more config for structure location
+- fixed some missing textures
+- vista and canon turn table rotation
+- todo: soul fired, fix sawmill and improve recipe gen, dynamic pack assets use res manager that doesnt included texture packs for  masked stuff
+- todo. confetti popper dispensers, config saving, rotation for cannons

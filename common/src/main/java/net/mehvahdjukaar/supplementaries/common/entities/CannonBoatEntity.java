@@ -416,14 +416,14 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     protected void addPassenger(Entity passenger) {
         super.addPassenger(passenger);
         if (passenger instanceof Player player) {
-            this.cannon.setPlayerWhoMayEdit(player.getUUID());
+            this.cannon.setCurrentUser(player.getUUID());
         }
     }
 
     @Override
     protected void removePassenger(Entity passenger) {
         super.removePassenger(passenger);
-        this.cannon.setPlayerWhoMayEdit(null);
+        this.cannon.setCurrentUser(null);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
-import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
+import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
+import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonAnimationPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -24,10 +23,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -46,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.UUID;
 
-public class CannonBlockTile extends OpeneableContainerBlockEntity implements IOnePlayerInteractable {
+public class CannonBlockTile extends OpenableContainerBlockTile implements IOneUserInteractable {
 
     public Object ccHack = null;
 
@@ -73,7 +70,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     //not saved
     @Nullable
-    private UUID controllingPlayer = null;
+    private UUID controllingEntity = null;
 
     public CannonBlockTile(BlockPos pos, BlockState blockState) {
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
@@ -176,7 +173,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         if (state.hasProperty(ModBlockProperties.ROTATE_TILE) && level != null) {
             Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
             if (rot != Rotation.NONE) {
-                this.setGlobalYaw(this.selfAccess, this.yaw + (rot.ordinal() * 90));
+                this.setYaw(this.selfAccess, this.yaw + (rot.ordinal() * 90));
                 level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
             }
         }
@@ -323,12 +320,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         this.yaw = MthUtils.clampDegrees(relativeYaw, r.minYaw(), r.maxYaw());
     }
 
-    public void setGlobalYaw(CannonAccess access, float relativeYaw) {
-        //calculateyaw here
-        float yawOffset = access.getCannonGlobalYawOffset(1);
-        setYaw(access, relativeYaw);
-    }
-
     // sets both prev and current yaw. Only makes sense to be called from render thread
     public void setRenderYaw(CannonAccess access, float relativeYaw) {
         setYaw(access, relativeYaw);
@@ -373,20 +364,6 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
         return new int[]{side.getAxis().isHorizontal() ? 1 : 0};
     }
 
-    @Override
-    public boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack, Direction face) {
-        if (player.isSecondaryUseActive()) {
-            //same as super but sends custom packet
-            if (!this.isOtherPlayerEditing(pos, player)) {
-                // open gui (edit sign with empty hand)
-                this.setPlayerWhoMayEdit(player.getUUID());
-                NetworkHelper.sendToClientPlayer(player, new ClientBoundControlCannonPacket(TileOrEntityTarget.of(this)));
-            }
-            return true;
-        }
-        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack, face);
-    }
-
     public void ignite(@Nullable Entity entityWhoIgnited, CannonAccess access) {
         //do nothing if its already ignited
         if (this.fuseTimer > 0) return;
@@ -411,7 +388,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
 
     protected boolean shootProjectile(ServerLevel serverLevel, CannonAccess access) {
-        Vec3 facing = access.getCannonGlobalFacing(1);
+        Vec3 facing = access.getCannonGlobalFacing(1).scale(-1);
         ItemStack projectile = this.getProjectile().copy();
 
         if (projectile.getItem() instanceof CannonBallItem && breakWhitelist != null) {
@@ -429,7 +406,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
 
     @Nullable
     protected Player getPlayerWhoFired() {
-        UUID uuid = this.controllingPlayer;
+        UUID uuid = this.controllingEntity;
         if (uuid == null && playerWhoIgnitedUUID != null) {
             uuid = playerWhoIgnitedUUID;
         }
@@ -438,15 +415,15 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     @Override
-    public void setPlayerWhoMayEdit(@Nullable UUID uuid) {
-        this.controllingPlayer = uuid;
+    public void setCurrentUser(@Nullable UUID uuid) {
+        this.controllingEntity = uuid;
     }
 
+    @Nullable
     @Override
-    public UUID getPlayerWhoMayEdit() {
-        return controllingPlayer;
+    public UUID getCurrentUser() {
+        return controllingEntity;
     }
-
 
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inv) {

@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.reg.neoforge;
 
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.event.level.ExplosionEvent;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;

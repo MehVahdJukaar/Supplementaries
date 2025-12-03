@@ -289,7 +289,7 @@ public class StructureLocator {
                     ChunkPos chunkpos = placement.getPotentialStructureChunk(seed, px, pz);
 
 
-                    return getStructuresAtChunkPos(targets, level, featureManager, newChunk, placement, chunkpos);
+                    return getStructuresAtChunkPos(targets, level, featureManager, newChunk, placement, chunkpos, Integer.MAX_VALUE);
                 }
             }
         }

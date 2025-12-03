@@ -77,6 +77,10 @@ public class ModTextures {
     public static final ResourceLocation CANNON_GUI_TEXTURE = Supplementaries.res("textures/gui/cannon_gui.png");
     public static final ResourceLocation RED_MERCHANT_GUI_TEXTURE = Supplementaries.res("textures/gui/red_merchant.png");
     public static final ResourceLocation TATTERED_BOOK_GUI_TEXTURE = Supplementaries.res("textures/gui/tattered_book.png");
+    public static final ResourceLocation TATTERED_PAGE_FORWARD_HIGHLIGHTED_SPRITE = Supplementaries.res("book/page_forward_highlighted");
+    public static final ResourceLocation TATTERED_PAGE_FORWARD_SPRITE = Supplementaries.res("book/page_forward");
+    public static final ResourceLocation TATTERED_PAGE_BACKWARD_HIGHLIGHTED_SPRITE = Supplementaries.res("book/page_backward_highlighted");
+    public static final ResourceLocation TATTERED_PAGE_BACKWARD_SPRITE = Supplementaries.res("book/page_backward");
 
     //slots
     public static final ResourceLocation QUIVER_TOOLTIP_BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("container/bundle/background");

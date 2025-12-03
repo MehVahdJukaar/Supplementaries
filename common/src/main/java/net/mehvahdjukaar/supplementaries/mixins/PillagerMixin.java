@@ -16,8 +16,8 @@ public class PillagerMixin {
     at = @At(value = "NEW", target = "(Lnet/minecraft/world/entity/Mob;Ljava/lang/Class;Z)Lnet/minecraft/world/entity/ai/goal/target/NearestAttackableTargetGoal;"))
     private NearestAttackableTargetGoal<?> supplementaries$increasePillagerTargetingRangeDumb(Mob mob, Class targetType,
                                                                                  boolean mustSee,
-                                                                                 Operation<NearestAttackableTargetGoal> original) {
+                                                                                 Operation<NearestAttackableTargetGoal<?>> original) {
         var originalGoal = original.call(mob, targetType, mustSee);
-        return new PillagerNearestAttackableTargetGoal(mob, targetType, mustSee);
+        return new PillagerNearestAttackableTargetGoal<>(mob, targetType, mustSee);
     }
 }

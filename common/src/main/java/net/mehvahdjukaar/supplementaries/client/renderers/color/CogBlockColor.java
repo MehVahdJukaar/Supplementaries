@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class CogBlockColor implements BlockColor {
 
@@ -22,7 +23,7 @@ public class CogBlockColor implements BlockColor {
     }
 
     @Override
-    public int getColor(BlockState state, BlockAndTintGetter reader, BlockPos pos, int color) {
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter reader, @Nullable BlockPos pos, int color) {
         if (color != 1) return -1;
         return COLORS[state.getValue(CogBlock.POWER)];
     }

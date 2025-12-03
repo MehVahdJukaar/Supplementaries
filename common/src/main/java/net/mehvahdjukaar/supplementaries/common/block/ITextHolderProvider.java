@@ -1,8 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
-import net.mehvahdjukaar.moonlight.api.block.IOnePlayerInteractable;
+import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.IWaxable;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +23,7 @@ import java.util.List;
 
 
 //replicates what SignBlock does + more
-public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, IWaxable {
+public interface ITextHolderProvider extends IOneUserInteractable, IWashable, IWaxable {
 
     TextHolder getTextHolder(int ind);
 
@@ -62,12 +63,12 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
     }
 
     default boolean tryAcceptingClientText(BlockPos pos, ServerPlayer player, List<List<FilteredText>> filteredText) {
-        if (!this.isWaxed() && this.isEditingPlayer(pos, player)) {
+        if (!this.isWaxed() && this.canBeUsedBy(pos, player)) {
             for (int i = 0; i < filteredText.size(); i++) {
                 var holder = this.getTextHolder(i);
                 holder.acceptClientMessages(player, filteredText.get(i));
             }
-            this.setPlayerWhoMayEdit(null);
+            this.setCurrentUser(null);
             return true;
         } else {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable sign",
@@ -76,8 +77,7 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
         return false;
     }
 
-    @Override
-    default boolean tryOpeningEditGui(ServerPlayer player, BlockPos pos, ItemStack stack, Direction face) {
+    default boolean tryOpeningTextEditGui(BlockEntity be, ServerPlayer player, ItemStack stack, Direction face) {
         if (this.isWaxed()) return false;
         boolean filtering = player.isTextFilteringEnabled();
         for (int i = 0; i < this.textHoldersCount(); i++) {
@@ -85,12 +85,15 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
                 return false;
             }
         }
-        return IOnePlayerInteractable.super.tryOpeningEditGui(player, pos, stack, face);
+        return Utils.openGuiIfPossible(be, player, stack, face);
     }
 
     //calls all interfaces methods
-    default ItemInteractionResult textHolderInteract(int index, Level level, BlockPos pos, BlockState state,
+    default ItemInteractionResult textHolderInteract(BlockEntity be, int index,
                                                      Player player, InteractionHand hand, ItemStack stack, Direction face) {
+        Level level = be.getLevel();
+        BlockPos pos = be.getBlockPos();
+        BlockState state = be.getBlockState();
 
         ItemInteractionResult result = this.getTextHolder(index).playerInteract(level, pos, player, hand, stack);
         if (result == ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) {
@@ -106,7 +109,7 @@ public interface ITextHolderProvider extends IOnePlayerInteractable, IWashable, 
             return result;
         }
         if (player instanceof ServerPlayer serverPlayer &&
-                this.tryOpeningEditGui(serverPlayer, pos, stack, face)) {
+                this.tryOpeningTextEditGui(be, serverPlayer, stack, face)) {
             return ItemInteractionResult.CONSUME;
         }
         return ItemInteractionResult.SUCCESS;
