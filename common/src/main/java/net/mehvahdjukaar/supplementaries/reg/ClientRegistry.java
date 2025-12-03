@@ -367,7 +367,9 @@ public class ClientRegistry {
         event.register(ModParticles.SLINGSHOT_PARTICLE.get(), SlingshotParticle.Factory::new);
         event.register(ModParticles.STASIS_PARTICLE.get(), StasisParticle.Factory::new);
         event.register(ModParticles.CONFETTI_PARTICLE.get(), ConfettiParticle.Factory::new);
+        event.register(ModParticles.CONFETTI_PARTICLE_DYED.get(), ConfettiParticle.DyeFactory::new);
         event.register(ModParticles.STREAMER_PARTICLE.get(), StreamerParticle.Factory::new);
+        event.register(ModParticles.STREAMER_PARTICLE_DYED.get(), StreamerParticle.DyeFactory::new);
         event.register(ModParticles.WIND_STREAM.get(), WindTrailParticle.Factory::new);
         event.register(ModParticles.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
         event.register(ModParticles.ROTATION_TRAIL_EMITTER.get(), RotationTrailEmitter.Factory::new);

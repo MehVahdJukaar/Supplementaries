@@ -58,8 +58,8 @@ public class FeatherBlock extends Block {
             }
             double amount = Math.min(6, height * 0.8);
             NetworkHelper.sendToAllClientPlayersInDefaultRange((ServerLevel) world, pos,
-                    new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER, (int) amount,
-                            new Vec3(0, height, 0)));
+                    new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER,
+                            new Vec3(0, height, 0), (int) amount));
         }
     }
 
@@ -88,8 +88,8 @@ public class FeatherBlock extends Block {
                     double dy = 0.001;
 
                     NetworkHelper.sendToAllClientPlayersInParticleRange((ServerLevel) level, blockPos,
-                            new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER, 1,
-                                    new Vec3(0, dy, 0)));
+                            new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER,
+                                    new Vec3(0, dy, 0), 1));
                 }
             }
         }

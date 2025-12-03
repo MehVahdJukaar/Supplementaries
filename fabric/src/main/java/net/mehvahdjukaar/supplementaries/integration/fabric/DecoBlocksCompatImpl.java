@@ -85,13 +85,13 @@ public class DecoBlocksCompatImpl {
 
     public static void tryConvertingRopeChandelier(BlockState facingState, LevelAccessor world, BlockPos facingPos) {
         Block b = facingState.getBlock();
-        if (b == CompatObjects.CHANDELIER.get()) {
+        if (CompatObjects.CHANDELIER.is(b)) {
             world.setBlock(facingPos, CHANDELIER_ROPE.get().defaultBlockState(), 3);
-        } else if (b == CompatObjects.SOUL_CHANDELIER.get()) {
+        } else if (CompatObjects.SOUL_CHANDELIER.is(b)) {
             world.setBlock(facingPos, SOUL_CHANDELIER_ROPE.get().defaultBlockState(), 3);
-        } else if (b == CompatObjects.ENDER_CHANDELIER.get()) {
+        } else if (CompatObjects.ENDER_CHANDELIER.is(b)) {
             world.setBlock(facingPos, ENDER_CHANDELIER_ROPE.get().defaultBlockState(), 3);
-        } else if (b == CompatObjects.GLOW_CHANDELIER.get()) {
+        } else if ( CompatObjects.GLOW_CHANDELIER.is(b)) {
             world.setBlock(facingPos, GLOW_CHANDELIER_ROPE.get().defaultBlockState(), 3);
         }
     }

@@ -37,8 +37,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -105,10 +106,10 @@ public class ClientReceivers {
             final RandomSource ran = l.random;
             switch (message.type) {
                 case BOMB_EXPLOSION -> {
-                    Integer radius = message.extraData;
-                    if(radius != null) {
+                    Integer radius = message.getFirstExtraData();
+                    if (radius != null) {
                         l.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(),
-                                message.pos.x,  message.pos.y,  message.pos.z,
+                                message.pos.x, message.pos.y, message.pos.z,
                                 radius, 0.0, 0.0);
                     }
                 }
@@ -133,8 +134,8 @@ public class ClientReceivers {
                             UniformInt.of(3, 5), 0);
                 }
                 case BUBBLE_CLEAN_ENTITY -> {
-                    if (message.extraData != null) {
-                        var e = l.getEntity(message.extraData);
+                    if (message.getFirstExtraData() != null) {
+                        var e = l.getEntity(message.getFirstExtraData());
                         if (e != null) {
                             ParticleUtil.spawnParticleOnBoundingBox(e.getBoundingBox(), l,
                                     ModParticles.SUDS_PARTICLE.get(), UniformInt.of(2, 4), 0.01f);
@@ -142,7 +143,7 @@ public class ClientReceivers {
                     }
                 }
                 case BUBBLE_EAT -> {
-                    var entity = l.getEntity(message.extraData);
+                    var entity = l.getEntity(message.getFirstExtraData());
 
                     Vec3 v = message.dir.normalize();
                     double x = entity.getX() + v.x;
@@ -177,8 +178,8 @@ public class ClientReceivers {
                     }
                 }
                 case FLINT_BLOCK_IGNITE -> {
-                    if (message.extraData != null && message.pos != null) {
-                        boolean isIronMoving = message.extraData == 1;
+                    if (message.getFirstExtraData() != null && message.pos != null) {
+                        boolean isIronMoving = message.getFirstExtraData() == 1;
                         BlockPos pos = BlockPos.containing(message.pos);
 
                         for (var ironDir : Direction.values()) {
@@ -200,7 +201,7 @@ public class ClientReceivers {
                     spawnConfettiParticles(message, l, ran);
                 }
                 case CONFETTI_EXPLOSION -> {
-                    int radius = message.extraData;
+                    int radius = message.getFirstExtraData();
                     ParticleUtil.spawnParticleInASphere(l, message.pos.x, message.pos.y + 1, message.pos.z,
                             () -> ran.nextInt(6) == 0 ?
                                     ModParticles.STREAMER_PARTICLE.get() :
@@ -213,7 +214,7 @@ public class ClientReceivers {
                             SoundSource.HOSTILE, 4, ran.nextFloat() * 0.2F + 0.5F, false);
                 }
                 case FEATHER -> {
-                    int amount = message.extraData == null ? 1 : message.extraData;
+                    int amount = message.getFirstExtraData() == null ? 1 : message.getFirstExtraData();
                     double dy = Mth.clamp((0.03 * message.dir.y / 7f), 0.03, 0.055);
                     for (int i = 0; i < amount; i++) {
                         l.addParticle(ModParticles.FEATHER_PARTICLE.get(),
@@ -230,7 +231,7 @@ public class ClientReceivers {
                     if (ClientConfigs.Items.WRENCH_PARTICLES.get()) {
                         l.addParticle(ModParticles.ROTATION_TRAIL_EMITTER.get(),
                                 message.pos.x(), message.pos.y(), message.pos.z(),
-                                message.extraData,
+                                message.getFirstExtraData(),
                                 0.71, -1);
                     }
                 }
@@ -255,22 +256,35 @@ public class ClientReceivers {
 
     public static void spawnConfettiParticles(ClientBoundParticlePacket message, Level l, RandomSource ran) {
         float spread = 0.1f;
-        var dir = message.dir;
-        var pos = message.pos;
-        float scale = message.extraData != null ? (message.extraData + 1) * 0.8f : 1;
+        Vec3 dir = message.dir;
+        Vec3 pos = message.pos;
+        float scale = (float) dir.length();
         for (int j = 0; j < 60; ++j) {
 
-            Vector3f facingDir = randomizeVector(ran, dir, spread)
+            Vector3f facingDir = randomizeVector(ran, dir, spread) //normalized here
                     .mul(scale * Mth.nextFloat(ran, 0.3f, 0.7f));
-            SimpleParticleType p = ran.nextInt(6) == 0 ?
-                    ModParticles.STREAMER_PARTICLE.get() :
-                    ModParticles.CONFETTI_PARTICLE.get();
+            ParticleOptions p = makeConfettiParticle(ran, message.getExtraData());
             l.addParticle(p, pos.x, pos.y, pos.z,
                     facingDir.x, facingDir.y, facingDir.z);
         }
 
         l.playLocalSound(message.pos.x, message.pos.y, message.pos.z, ModSounds.CONFETTI_POPPER.get(),
                 SoundSource.PLAYERS, 1.0f, ran.nextFloat() * 0.2F + 0.8F, false);
+    }
+
+    private static ParticleOptions makeConfettiParticle(RandomSource ran, List<Integer> colors) {
+
+        boolean streamer = ran.nextInt(6) == 0;
+        if (colors.isEmpty()) {
+            return streamer ?
+                    ModParticles.STREAMER_PARTICLE.get() :
+                    ModParticles.CONFETTI_PARTICLE.get();
+        } else {
+            int pickedColor = colors.get(ran.nextInt(colors.size()));
+            return streamer ?
+                    ColorParticleOption.create(ModParticles.STREAMER_PARTICLE_DYED.get(), pickedColor) :
+                    ColorParticleOption.create(ModParticles.CONFETTI_PARTICLE_DYED.get(), pickedColor);
+        }
     }
 
     public static void handleSetSlidingBlockEntityPacket(ClientBoundSetSlidingBlockEntityPacket m) {

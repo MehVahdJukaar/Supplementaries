@@ -51,7 +51,7 @@ public abstract class CompatCreeperArclightMixin extends Monster implements IPar
     public boolean supp$checkPartyCreeper(Level instance, Entity source, double x, double y, double z, float radius, boolean fire, Level.ExplosionInteraction explosionInteraction) {
         if (supplementaries$festive) {
             ClientBoundParticlePacket packet = new ClientBoundParticlePacket(new Vec3(x, y + this.getBbHeight() / 2, z), ClientBoundParticlePacket.Kind.CONFETTI_EXPLOSION,
-                    (int) radius, null);
+                    null, (int) radius);
 
             NetworkHelper.sendToAllClientPlayersTrackingEntity(this, packet);
             return false;

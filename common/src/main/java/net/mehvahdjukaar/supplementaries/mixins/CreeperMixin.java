@@ -49,7 +49,7 @@ public abstract class CreeperMixin extends Monster implements IPartyCreeper {
     public boolean supp$checkPartyCreeper(Level instance, Entity source, double x, double y, double z, float radius, Level.ExplosionInteraction explosionInteraction) {
         if (supplementaries$festive) {
             ClientBoundParticlePacket packet = new ClientBoundParticlePacket(new Vec3(x, y + this.getBbHeight() / 2, z), ClientBoundParticlePacket.Kind.CONFETTI_EXPLOSION,
-                    (int) radius, null);
+                    (int) radius);
 
             NetworkHelper.sendToAllClientPlayersTrackingEntity(this, packet);
             return false;

@@ -5,6 +5,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise;
@@ -71,6 +72,22 @@ public class StreamerParticle extends DirectionOrientedBillboardParticle {
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             var p = new StreamerParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
             p.pickSprite(sprite);
+            return p;
+        }
+    }
+
+    public static class DyeFactory implements ParticleProvider<ColorParticleOption> {
+        private final SpriteSet sprite;
+
+        public DyeFactory(SpriteSet spriteSet) {
+            this.sprite = spriteSet;
+        }
+
+        @Override
+        public Particle createParticle(ColorParticleOption opt, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            var p = new StreamerParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
+            p.pickSprite(sprite);
+            p.setColor(opt.getRed(), opt.getGreen(), opt.getBlue());
             return p;
         }
     }

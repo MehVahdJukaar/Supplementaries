@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.common.items.PresentItem;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -31,7 +32,7 @@ public class PresentDyeRecipe extends CustomRecipe {
                 if (itemstack.getItem() instanceof PresentItem) {
                     ++i;
                 } else {
-                    if (!ForgeHelper.isDye(itemstack)) {
+                    if (!itemstack.is(ModTags.DYES)) {
                         return false;
                     }
 

@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class RecipeSpecialDisplayOutput<T extends Recipe<?>> {
 
@@ -20,10 +21,10 @@ public class RecipeSpecialDisplayOutput<T extends Recipe<?>> {
         this.consumer = consumer;
     }
 
-    public boolean add(String originalJson, List<RecipeHolder<? extends T>> recipes) {
+    public boolean add(String originalJson, Supplier<List<RecipeHolder<? extends T>>> recipes) {
         ResourceLocation id = originalJson.contains(":") ? ResourceLocation.tryParse(originalJson) : Supplementaries.res(originalJson);
         if (manager.byKey(id).isEmpty()) return false;
-        consumer.accept((List) recipes);
+        consumer.accept((List) recipes.get());
         return true;
     }
 

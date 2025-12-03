@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
@@ -27,7 +28,7 @@ public class ConfettiParticle extends TextureSheetParticle {
 
     private static PerlinSimplexNoise noise(int seed) {
         return new PerlinSimplexNoise(new LegacyRandomSource(seed),
-                List.of(-4 -3, -2, -1, 0, 1, 2));
+                List.of(-4 - 3, -2, -1, 0, 1, 2));
     }
 
     private final int particleRandom;
@@ -56,7 +57,7 @@ public class ConfettiParticle extends TextureSheetParticle {
         //longer
         this.lifetime = random.nextInt(400, 700);
 
-        this.quadSize *=1.25f;
+        this.quadSize *= 1.25f;
         /*
         int col =  ColorHelper.getRandomBrightColor(this.random);
 
@@ -158,8 +159,22 @@ public class ConfettiParticle extends TextureSheetParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-
             return new ConfettiParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
+        }
+    }
+
+    public static class DyeFactory implements ParticleProvider<ColorParticleOption> {
+        private final SpriteSet sprite;
+
+        public DyeFactory(SpriteSet spriteSet) {
+            this.sprite = spriteSet;
+        }
+
+        @Override
+        public Particle createParticle(ColorParticleOption opt, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            var p = new ConfettiParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed, sprite);
+            p.setColor(opt.getRed(), opt.getGreen(), opt.getBlue());
+            return p;
         }
     }
 

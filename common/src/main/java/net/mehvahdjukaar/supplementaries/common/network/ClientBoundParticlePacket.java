@@ -9,6 +9,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class ClientBoundParticlePacket implements Message {
 
@@ -19,15 +25,14 @@ public class ClientBoundParticlePacket implements Message {
     public final Kind type;
     @Nullable
     public final Vec3 pos;
-    @Nullable
-    public final Integer extraData;
+    private final int[] extraData;
     @Nullable
     public final Vec3 dir;
 
     public ClientBoundParticlePacket(RegistryFriendlyByteBuf buffer) {
         this.type = buffer.readEnum(Kind.class);
         if (buffer.readBoolean()) {
-            this.extraData = buffer.readInt();
+            this.extraData = new int[]{buffer.readInt()};
         } else this.extraData = null;
         if (buffer.readBoolean()) {
             this.pos = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
@@ -50,14 +55,14 @@ public class ClientBoundParticlePacket implements Message {
     }
 
     public ClientBoundParticlePacket(Vec3 pos, Kind type, Integer extraData) {
-        this(pos, type, extraData, null);
+        this(pos, type, null, extraData);
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, Kind type, Integer extraData, @Nullable Vec3 direction) {
+    public ClientBoundParticlePacket(Vec3 pos, Kind type, @Nullable Vec3 direction,  int ...extraData) {
         this.pos = pos;
         this.type = type;
-        this.extraData = extraData;
         this.dir = direction;
+        this.extraData = extraData;
     }
 
     public ClientBoundParticlePacket(Entity entity, Kind type) {
@@ -65,7 +70,7 @@ public class ClientBoundParticlePacket implements Message {
     }
 
     public ClientBoundParticlePacket(Entity entity, Kind type, Vec3 dir) {
-        this.extraData = entity.getId();
+        this.extraData = new int[]{entity.getId()};
         this.type = type;
         this.pos = null;
         this.dir = dir;
@@ -74,12 +79,7 @@ public class ClientBoundParticlePacket implements Message {
     @Override
     public void write(RegistryFriendlyByteBuf buffer) {
         buffer.writeEnum(this.type);
-        if (extraData != null) {
-            buffer.writeBoolean(true);
-            buffer.writeInt(extraData);
-        } else {
-            buffer.writeBoolean(false);
-        }
+            buffer.writeVarIntArray(this.extraData);
         if (pos != null) {
             buffer.writeBoolean(true);
             buffer.writeDouble(this.pos.x);
@@ -106,6 +106,17 @@ public class ClientBoundParticlePacket implements Message {
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return CODEC.type();
+    }
+
+    public List<Integer> getExtraData() {
+        return Arrays.stream(extraData).boxed().collect(Collectors.toList());
+    }
+
+    public Integer getFirstExtraData() {
+        if (extraData != null && extraData.length > 0) {
+            return extraData[0];
+        }
+        return null;
     }
 
     public enum Kind {

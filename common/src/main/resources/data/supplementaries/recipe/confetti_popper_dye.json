@@ -1,0 +1,19 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "confetti_popper"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "confetti_popper"
+    }
+  ],
+  "type": "supplementaries:confetti_dye",
+  "ingredient": {
+    "item": "supplementaries:confetti_popper"
+  },
+  "max_dyes": 4
+}
