@@ -615,5 +615,49 @@
         "pitch": 0.65
       }
     ]
+  },
+   "entity.plunderer.ambient": {
+    "sounds": [
+      "entity/plunderer/idle1",
+      "entity/plunderer/idle2",
+      "entity/plunderer/idle3",
+      "entity/plunderer/idle4"
+    ],
+    "subtitle": "subtitles.entity.plunderer.ambient"
+  },
+  "entity.plunderer.celebrate": {
+    "sounds": [
+      "entity/plunderer/celebrate1",
+      "entity/plunderer/celebrate2",
+      "entity/plunderer/celebrate3",
+      "entity/plunderer/celebrate4"
+    ],
+    "subtitle": "subtitles.entity.plunderer.celebrate"
+  },
+  "entity.plunderer.death": {
+    "sounds": [
+      "entity/plunderer/death1",
+      "entity/plunderer/death2"
+    ],
+    "subtitle": "subtitles.entity.plunderer.death"
+  },
+  "entity.plunderer.hurt": {
+    "sounds": [
+      "entity/plunderer/hurt1",
+      "entity/plunderer/hurt2",
+      "entity/plunderer/hurt3",
+      "entity/plunderer/hurt4"
+    ],
+    "subtitle": "subtitles.entity.plunderer.hurt"
+  },
+    "entity.parrot.imitate.plunderer": {
+    "sounds": [
+      {
+        "name": "entity.plunderer.ambient",
+        "pitch": 1.8,
+        "type": "event",
+        "volume": 0.4
+      }
+    ]
   }
 }
