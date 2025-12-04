@@ -35,234 +35,261 @@ import java.util.function.Consumer;
 
 public class StructureLocator {
 
-    private static final Comparator<Vector2i> COMPARATOR = (o1, o2) -> Float.compare(o1.lengthSquared(), o2.lengthSquared());
+    private static final Comparator<Vector2i> DISTANCE_COMPARATOR =
+            (vec1, vec2) -> Float.compare(vec1.lengthSquared(), vec2.lengthSquared());
 
     @Nullable
-    public static LocatedStruct findNearestMapFeature(
-            ServerLevel level, @NotNull HolderSet<Structure> targets, BlockPos pos,
-            int maximumChunkDistance, boolean newlyGenerated, int maxSearches, boolean exitEarly) {
+    public static LocatedStructure findNearestStructure(
+            ServerLevel level, @NotNull HolderSet<Structure> targetStructures, BlockPos searchCenter,
+            int maximumChunkSearchRadius, boolean findNewlyGeneratedOnly, int maxStructuresToConsider,
+            boolean stopSearchWhenFound) {
 
-        var found = findNearestMapFeatures(level, targets, pos, maximumChunkDistance,
-                newlyGenerated, 1, maxSearches, exitEarly);
+        var foundStructures = findNearestStructures(level, targetStructures, searchCenter,
+                maximumChunkSearchRadius, findNewlyGeneratedOnly, 1, maxStructuresToConsider,
+                stopSearchWhenFound);
 
-        if (!found.isEmpty()) return found.get(0);
+        if (!foundStructures.isEmpty()) return foundStructures.get(0);
         return null;
     }
 
-    public static List<LocatedStruct> findNearestMapFeatures(
-            ServerLevel level, @NotNull TagKey<Structure> tagKey, BlockPos pos,
-            int maximumChunkDistance, boolean newlyGenerated, int requiredCount,
-            int maxSearches, boolean exitEarly) {
-        HolderSet<Structure> targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
-                .getTag(tagKey).orElse(null);
+    public static List<LocatedStructure> findNearestStructures(
+            ServerLevel level, @NotNull TagKey<Structure> structureTag, BlockPos searchCenter,
+            int maximumChunkSearchRadius, boolean findNewlyGeneratedOnly, int requiredStructureCount,
+            int maxStructuresToConsider, boolean stopSearchWhenFound) {
 
-        return findNearestMapFeatures(level, targets, pos, maximumChunkDistance, newlyGenerated,
-                requiredCount, maxSearches, exitEarly);
+        HolderSet<Structure> targetStructures = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
+                .getTag(structureTag).orElse(null);
+
+        return findNearestStructures(level, targetStructures, searchCenter, maximumChunkSearchRadius,
+                findNewlyGeneratedOnly, requiredStructureCount, maxStructuresToConsider,
+                stopSearchWhenFound);
     }
 
 
-    public static List<LocatedStruct> findNearestMapFeatures(
-            ServerLevel level, HolderSet<Structure> taggedStructures, BlockPos pos,
-            int maximumChunkDistance, boolean newlyGenerated, int requiredCount,
-            int maxSearches, boolean exitEarly) {
+    public static List<LocatedStructure> findNearestStructures(
+            ServerLevel level, HolderSet<Structure> targetStructureSet, BlockPos searchCenter,
+            int maximumChunkSearchRadius, boolean findNewlyGeneratedOnly, int requiredStructureCount,
+            int maxStructuresToConsider, boolean stopSearchWhenFound) {
 
-        if (taggedStructures == null) return List.of();
-        if (taggedStructures.size() > maxSearches) {
-            var list = new ArrayList<>(taggedStructures.stream().toList());
-            Collections.shuffle(list);
-            taggedStructures = HolderSet.direct(list.subList(0, maxSearches));
+        if (targetStructureSet == null) return List.of();
+
+        // Limit the number of structures to consider for performance
+        if (targetStructureSet.size() > maxStructuresToConsider) {
+            var structureList = new ArrayList<>(targetStructureSet.stream().toList());
+            Collections.shuffle(structureList);
+            targetStructureSet = HolderSet.direct(structureList.subList(0, maxStructuresToConsider));
         }
 
-        List<LocatedStruct> foundStructures = new ArrayList<>();
+        List<LocatedStructure> foundStructures = new ArrayList<>();
 
         if (!level.getServer().getWorldData().worldGenOptions().generateStructures()) {
             return foundStructures;
         }
-        if (taggedStructures.size() == 0) {
-            Supplementaries.LOGGER.error("Found empty target structures for structure map. Its likely some mod broke some vanilla tag. Check your logs!");
+        if (targetStructureSet.size() == 0) {
+            Supplementaries.LOGGER.error("Found empty target structures for structure map. It's likely some mod broke some vanilla tag. Check your logs!");
             return foundStructures;
         }
 
-        List<Holder<Structure>> selectedTargets = taggedStructures.stream().toList();
+        List<Holder<Structure>> selectedStructures = targetStructureSet.stream().toList();
 
         ChunkGenerator chunkGenerator = level.getChunkSource().getGenerator();
-        double maxDist = Double.MAX_VALUE;
+        double closestDistanceSquared = Double.MAX_VALUE;
 
+        // Shuffle to avoid bias
+        selectedStructures = new ArrayList<>(selectedStructures);
+        Collections.shuffle(selectedStructures);
+        Supplementaries.LOGGER.info("Searching for closest structure among {} from position {}",
+                Arrays.toString(selectedStructures.stream()
+                        .map(e -> e.unwrapKey().get()).toArray()), searchCenter);
 
-        selectedTargets = new ArrayList<>(selectedTargets);
-        Collections.shuffle(selectedTargets);
-        Supplementaries.LOGGER.info("Searching for closest structure among {} from pos {}",
-                Arrays.toString(selectedTargets.stream().map(e -> e.unwrapKey().get()).toArray()), pos);
-
-        //structures that can generate
-        Map<StructurePlacement, Set<Holder<Structure>>> reachableTargetsMap = new Object2ObjectArrayMap<>();
+        // Group structures by their placement type
+        Map<StructurePlacement, Set<Holder<Structure>>> structuresByPlacement = new Object2ObjectArrayMap<>();
         ChunkGeneratorStructureState structureState = level.getChunkSource().getGeneratorState();
 
-        for (var holder : selectedTargets) {
-            //if it can't generate in these biomes it won't return anything here so previous biome check isnt needed
-            for (StructurePlacement structureplacement : structureState.getPlacementsForStructure(holder)) {
-                reachableTargetsMap.computeIfAbsent(structureplacement, (placement) -> new ObjectArraySet<>()).add(holder);
+        for (var structureHolder : selectedStructures) {
+            // Structures that can generate in current dimension/biomes
+            for (StructurePlacement placement : structureState.getPlacementsForStructure(structureHolder)) {
+                structuresByPlacement.computeIfAbsent(placement,
+                        p -> new ObjectArraySet<>()).add(structureHolder);
             }
         }
-        if (reachableTargetsMap.isEmpty()) return foundStructures;
+        if (structuresByPlacement.isEmpty()) return foundStructures;
 
-        List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>> list = new ArrayList<>(reachableTargetsMap.size());
+        List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>> randomSpreadStructures =
+                new ArrayList<>(structuresByPlacement.size());
 
-        int maxSpacing = 1;
+        int maximumStructureSpacing = 1;
 
-        StructureManager structuremanager = level.structureManager();
+        StructureManager structureManager = level.structureManager();
 
-        //strongholds
-        for (Map.Entry<StructurePlacement, Set<Holder<Structure>>> entry : reachableTargetsMap.entrySet()) {
+        // Handle concentric ring structures (strongholds)
+        for (Map.Entry<StructurePlacement, Set<Holder<Structure>>> entry : structuresByPlacement.entrySet()) {
             StructurePlacement placement = entry.getKey();
-            if (placement instanceof ConcentricRingsStructurePlacement concentricringsstructureplacement) {
-                //calling this for concentric ring (stronghold) features. Other ones use custom method
-                var foundPair = chunkGenerator.getNearestGeneratedStructure(entry.getValue(), level,
-                        structuremanager, pos, newlyGenerated, concentricringsstructureplacement);
-                if (foundPair != null) {
-                    double d1 = pos.distSqr(foundPair.getFirst());
-                    if (d1 < maxDist) {
-                        maxDist = d1;
-                        foundStructures.add(new LocatedStruct(foundPair));
+            if (placement instanceof ConcentricRingsStructurePlacement ringsPlacement) {
+                // Use built-in method for concentric ring structures
+                var foundStructurePair = chunkGenerator.getNearestGeneratedStructure(
+                        entry.getValue(), level, structureManager, searchCenter,
+                        findNewlyGeneratedOnly, ringsPlacement);
+                if (foundStructurePair != null) {
+                    double distanceSquared = searchCenter.distSqr(foundStructurePair.getFirst());
+                    if (distanceSquared < closestDistanceSquared) {
+                        closestDistanceSquared = distanceSquared;
+                        foundStructures.add(new LocatedStructure(foundStructurePair));
                     }
                 }
             } else if (placement instanceof RandomSpreadStructurePlacement randomPlacement) {
-                list.add(Pair.of(randomPlacement, entry.getValue()));
-                //finds the structure with the maximum spacing
-                maxSpacing = Math.max(maxSpacing, randomPlacement.spacing());
+                randomSpreadStructures.add(Pair.of(randomPlacement, entry.getValue()));
+                // Find the maximum spacing to optimize search rings
+                maximumStructureSpacing = Math.max(maximumStructureSpacing, randomPlacement.spacing());
             }
         }
 
-        if (!list.isEmpty()) {
-            int chunkX = SectionPos.blockToSectionCoord(pos.getX());
-            int chunkZ = SectionPos.blockToSectionCoord(pos.getZ());
-            long seed = level.getSeed();
+        if (!randomSpreadStructures.isEmpty()) {
+            int centerChunkX = SectionPos.blockToSectionCoord(searchCenter.getX());
+            int centerChunkZ = SectionPos.blockToSectionCoord(searchCenter.getZ());
+            long worldSeed = level.getSeed();
 
             StructureManager manager = level.structureManager();
 
-            //checks in increments based off maximum structure spacing on the list
+            // Search in expanding rings based on maximum structure spacing
+            outerSearchLoop:
+            for (int ringIndex = 0; ringIndex <= maximumChunkSearchRadius / maximumStructureSpacing; ++ringIndex) {
 
-            outerLoop:
-            for (int k = 0; k <= maximumChunkDistance / maxSpacing; ++k) {
+                int outerRingRadius = (ringIndex + 1) * maximumStructureSpacing;
+                int innerRingRadius = ringIndex * maximumStructureSpacing;
 
-                int outerRing = (k + 1) * maxSpacing;
-                int innerRing = k * maxSpacing;
+                // Groups all possible structure chunk positions by relative coordinates, ordered by distance
+                TreeMap<Vector2i, List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>>> candidatePositions =
+                        new TreeMap<>(DISTANCE_COMPARATOR);
 
-
-
-                //<> madness
-                //groups and orders all possible feature chunks ordered by RELATIVE ChunkPos. TreeMap is RB tree for fast additions
-                TreeMap<Vector2i, List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>>> possiblePositions = new TreeMap<>(COMPARATOR);
-
-                for (Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>> p : list) {
-                    RandomSpreadStructurePlacement placement = p.getFirst();
+                for (Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>> placementPair : randomSpreadStructures) {
+                    RandomSpreadStructurePlacement placement = placementPair.getFirst();
                     int spacing = placement.spacing();
 
-                    //checks all features in the area where the structure with the biggest spacing can spawn
-                    for (int r = innerRing; r < outerRing; r += spacing) {
-                        addAllPossibleFeatureChunksAtDistance(chunkX, chunkZ, r, seed, placement, c -> {
-                            //converts chunkpos to relative pos, so they are ordered by distance already
-                            var v = new Vector2i(c.x - chunkX, c.z - chunkZ);
-                            if (possiblePositions.containsKey(v)) {
-                                Supplementaries.error();
-                            }
-                            var ll = possiblePositions.computeIfAbsent(v,
-                                    o -> new ArrayList<>());
+                    // Check all positions where this structure could spawn in the current ring
+                    for (int radius = innerRingRadius; radius < outerRingRadius; radius += spacing) {
+                        findPossibleStructureChunksInRing(centerChunkX, centerChunkZ, radius,
+                                worldSeed, placement, chunkPos -> {
+                                    // Convert to relative position for distance ordering
+                                    var relativePos = new Vector2i(chunkPos.x - centerChunkX, chunkPos.z - centerChunkZ);
+                                    if (candidatePositions.containsKey(relativePos)) {
+                                        Supplementaries.error();
+                                        // TODO: Fix duplicate position issue
+                                    }
+                                    var placementList = candidatePositions.computeIfAbsent(relativePos,
+                                            pos -> new ArrayList<>());
 
-                            if (ll.contains(p)) {
-                                Supplementaries.error();
-                                //TODO: this should never be called... fix
-                            } else ll.add(p);
-                        });
+                                    if (placementList.contains(placementPair)) {
+                                        Supplementaries.error();
+                                        // TODO: Fix duplicate placement issue
+                                    } else placementList.add(placementPair);
+                                });
                     }
                 }
 
-                //checks this first structure batch
-                //less precision after 2k blocks
-                boolean lessPrecision = innerRing * 16 > 2000;
-                int earlyStopAt = (exitEarly || lessPrecision) ? requiredCount : Integer.MAX_VALUE;
+                // Check candidate positions in current ring
+                // Use less precise search after 2000 blocks
+                boolean useLessPreciseSearch = innerRingRadius * 16 > 2000;
+                int stopSearchCount = (stopSearchWhenFound || useLessPreciseSearch) ?
+                        requiredStructureCount : Integer.MAX_VALUE;
 
-                for (var e : possiblePositions.entrySet()) {
-                    var vec2i = e.getKey();
-                    //check each chunkpos one by one
-                    ChunkPos chunkPos = new ChunkPos(vec2i.x() + chunkX, vec2i.y() + chunkZ);
-                    var structuresThatCanSpawnAtChunkPos = e.getValue();
-                    for (var pp : structuresThatCanSpawnAtChunkPos) {
-                        foundStructures.addAll(getStructuresAtChunkPos(pp.getSecond(), level, manager,
-                                newlyGenerated, pp.getFirst(), chunkPos, earlyStopAt));
+                for (var entry : candidatePositions.entrySet()) {
+                    var relativePos = entry.getKey();
+                    // Convert back to absolute chunk position
+                    ChunkPos chunkPos = new ChunkPos(relativePos.x() + centerChunkX, relativePos.y() + centerChunkZ);
+                    var placementsForThisPosition = entry.getValue();
+                    for (var placementPair : placementsForThisPosition) {
+                        foundStructures.addAll(getStructuresAtChunkPosition(
+                                placementPair.getSecond(), level, manager,
+                                findNewlyGeneratedOnly, placementPair.getFirst(),
+                                chunkPos, stopSearchCount));
                     }
-                    // after each it checks if criteria is met
-                    if (foundStructures.size() >= requiredCount) {
-                        break outerLoop;
+                    // Check if we found enough structures
+                    if (foundStructures.size() >= requiredStructureCount) {
+                        break outerSearchLoop;
                     }
                 }
             }
         }
-        //orders found by distance
-        foundStructures.sort(Comparator.comparingDouble(f -> pos.distSqr(f.pos)));
-        //returns only needed elements
-        if (foundStructures.size() >= requiredCount) {
-            foundStructures = Lists.partition(foundStructures, requiredCount).get(0);
+
+        // Sort found structures by distance
+        foundStructures.sort(Comparator.comparingDouble(f -> searchCenter.distSqr(f.position)));
+
+        // Return only the required number of structures
+        if (foundStructures.size() >= requiredStructureCount) {
+            foundStructures = Lists.partition(foundStructures, requiredStructureCount).get(0);
         }
-        //add references to selected ones
-        if (newlyGenerated) {
-            for (var s : foundStructures) {
-                if (s.start != null && s.start.canBeReferenced()) structuremanager.addReference(s.start);
+
+        // Add references for newly generated structures
+        if (findNewlyGeneratedOnly) {
+            for (var structure : foundStructures) {
+                if (structure.start != null && structure.start.canBeReferenced()) {
+                    structureManager.addReference(structure.start);
+                }
             }
         }
         return foundStructures;
     }
 
 
-    //gets all the chunk pos where a feature with a certain placement could spawn at a given radius from the center
-    private static void addAllPossibleFeatureChunksAtDistance(int chunkX, int chunkZ, int radius, long seed, RandomSpreadStructurePlacement placement,
-                                                              Consumer<ChunkPos> positionConsumer) {
-        //int spacing = placement.spacing();
+    // Finds all chunk positions where a structure with given placement could spawn at a given ring distance
+    private static void findPossibleStructureChunksInRing(
+            int centerChunkX, int centerChunkZ, int ringRadius, long worldSeed,
+            RandomSpreadStructurePlacement placement, Consumer<ChunkPos> positionConsumer) {
 
-        //checks square ring with radius
-        for (int j = -radius; j <= radius; ++j) {
-            boolean flag = j == -radius || j == radius;
+        // Iterate over the square ring at given radius
+        for (int dx = -ringRadius; dx <= ringRadius; ++dx) {
+            boolean isEdgeX = dx == -ringRadius || dx == ringRadius;
 
-            for (int k = -radius; k <= radius; ++k) {
-                boolean flag1 = k == -radius || k == radius;
-                if (flag || flag1) {
-                    int px = chunkX + j;
-                    int pz = chunkZ + k;
-                    ChunkPos chunkpos = placement.getPotentialStructureChunk(seed, px, pz);
-                    positionConsumer.accept(chunkpos);
+            for (int dz = -ringRadius; dz <= ringRadius; ++dz) {
+                boolean isEdgeZ = dz == -ringRadius || dz == ringRadius;
+                if (isEdgeX || isEdgeZ) {
+                    int potentialChunkX = centerChunkX + dx;
+                    int potentialChunkZ = centerChunkZ + dz;
+                    ChunkPos structureChunk = placement.getPotentialStructureChunk(
+                            worldSeed, potentialChunkX, potentialChunkZ);
+                    positionConsumer.accept(structureChunk);
                 }
             }
         }
     }
 
-    //gets all features that are at a certain chunks with their position from a tag
-    //like getStructuresGeneratingAt but gathers all possible structures at a chunk not just one
-    private static Set<LocatedStruct> getStructuresAtChunkPos(
-            Set<Holder<Structure>> targets, LevelReader level, StructureManager structureManager,
-            boolean skipKnown, RandomSpreadStructurePlacement placement, ChunkPos chunkpos, int stopAt) {
+    // Gets all structures of given types that are located at a specific chunk position
+    private static Set<LocatedStructure> getStructuresAtChunkPosition(
+            Set<Holder<Structure>> targetStructures, LevelReader level,
+            StructureManager structureManager, boolean skipKnownStructures,
+            RandomSpreadStructurePlacement placement, ChunkPos chunkPosition,
+            int maximumStructuresToFind) {
 
-        Set<LocatedStruct> foundStructures = new HashSet<>();
-        //the target set usually contains 1 structure since it's very unlikely that 2 structures have the same placement
+        Set<LocatedStructure> foundStructures = new HashSet<>();
+        // The target set usually contains 1 structure since it's unlikely that
+        // 2 structures have the same placement
 
-        for (Holder<Structure> holder : targets) {
-            //I believe this is what takes the most time to execute
-            StructureCheckResult structurecheckresult = structureManager.checkStructurePresence(chunkpos, holder.value(), placement, skipKnown);
-            if (structurecheckresult != StructureCheckResult.START_NOT_PRESENT) {
-                if (!skipKnown && structurecheckresult == StructureCheckResult.START_PRESENT) {
-                    //for not new chunk the ones without start are grabbed too?
-                    foundStructures.add(new LocatedStruct(placement.getLocatePos(chunkpos), holder, null));
+        for (Holder<Structure> structureHolder : targetStructures) {
+            // This check is performance-sensitive
+            StructureCheckResult checkResult = structureManager.checkStructurePresence(
+                    chunkPosition, structureHolder.value(), placement, skipKnownStructures);
+
+            if (checkResult != StructureCheckResult.START_NOT_PRESENT) {
+                if (!skipKnownStructures && checkResult == StructureCheckResult.START_PRESENT) {
+                    // For already generated chunks, include structures without start data
+                    foundStructures.add(new LocatedStructure(
+                            placement.getLocatePos(chunkPosition), structureHolder, null));
                 } else {
-                    ChunkAccess chunkaccess = level.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
-                    StructureStart structurestart = structureManager.getStartForStructure(SectionPos.bottomOf(chunkaccess), holder.value(), chunkaccess);
-                    if (structurestart != null && structurestart.isValid() &&
-                            (!skipKnown || structurestart.canBeReferenced())) { //if it has not other references
-                        foundStructures.add(new LocatedStruct(
-                                placement.getLocatePos(structurestart.getChunkPos()),
-                                holder,
-                                structurestart));
+                    ChunkAccess chunk = level.getChunk(
+                            chunkPosition.x, chunkPosition.z, ChunkStatus.STRUCTURE_STARTS);
+                    StructureStart structureStart = structureManager.getStartForStructure(
+                            SectionPos.bottomOf(chunk), structureHolder.value(), chunk);
+
+                    if (structureStart != null && structureStart.isValid() &&
+                            (!skipKnownStructures || structureStart.canBeReferenced())) {
+                        foundStructures.add(new LocatedStructure(
+                                placement.getLocatePos(structureStart.getChunkPos()),
+                                structureHolder,
+                                structureStart));
                     }
                 }
-                if (foundStructures.size() >= stopAt) {
+                if (foundStructures.size() >= maximumStructuresToFind) {
                     break;
                 }
             }
@@ -272,24 +299,29 @@ public class StructureLocator {
 
 
     @Nullable
-    private static Set<LocatedStruct> getNearestGeneratedStructureAtDistance(
-            Set<Holder<Structure>> targets, LevelReader level, StructureManager featureManager,
-            int x, int z, int distance, boolean newChunk, long seed, RandomSpreadStructurePlacement placement) {
-        int i = placement.spacing();
+    private static Set<LocatedStructure> findNearestGeneratedStructureAtDistance(
+            Set<Holder<Structure>> targetStructures, LevelReader level,
+            StructureManager structureManager, int centerChunkX, int centerChunkZ,
+            int searchDistance, boolean findNewlyGeneratedOnly, long worldSeed,
+            RandomSpreadStructurePlacement placement) {
 
-        //checks square ring with radius=distance
-        for (int j = -distance; j <= distance; ++j) {
-            boolean flag = j == -distance || j == distance;
+        int structureSpacing = placement.spacing();
 
-            for (int k = -distance; k <= distance; ++k) {
-                boolean flag1 = k == -distance || k == distance;
-                if (flag || flag1) {
-                    int px = x + i * j;
-                    int pz = z + i * k;
-                    ChunkPos chunkpos = placement.getPotentialStructureChunk(seed, px, pz);
+        // Search the square ring at given distance
+        for (int dx = -searchDistance; dx <= searchDistance; ++dx) {
+            boolean isEdgeX = dx == -searchDistance || dx == searchDistance;
 
+            for (int dz = -searchDistance; dz <= searchDistance; ++dz) {
+                boolean isEdgeZ = dz == -searchDistance || dz == searchDistance;
+                if (isEdgeX || isEdgeZ) {
+                    int potentialChunkX = centerChunkX + structureSpacing * dx;
+                    int potentialChunkZ = centerChunkZ + structureSpacing * dz;
+                    ChunkPos structureChunk = placement.getPotentialStructureChunk(
+                            worldSeed, potentialChunkX, potentialChunkZ);
 
-                    return getStructuresAtChunkPos(targets, level, featureManager, newChunk, placement, chunkpos, Integer.MAX_VALUE);
+                    return getStructuresAtChunkPosition(targetStructures, level,
+                            structureManager, findNewlyGeneratedOnly, placement,
+                            structureChunk, Integer.MAX_VALUE);
                 }
             }
         }
@@ -298,32 +330,36 @@ public class StructureLocator {
     }
 
 
-    //used for maps
+    // Used for map items to find a random structure
     @Nullable
-    public BlockPos findRandomMapFeature(TagKey<Structure> tagKey, BlockPos pos,
-                                         int radius, boolean unexplored, ServerLevel level) {
+    public BlockPos findRandomStructure(TagKey<Structure> structureTag, BlockPos searchCenter,
+                                        int searchRadius, boolean findUnexploredOnly,
+                                        ServerLevel level) {
         if (!level.getServer().getWorldData().worldGenOptions().generateStructures()) {
             return null;
         } else {
-            Optional<HolderSet.Named<Structure>> optional = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getTag(tagKey);
-            if (optional.isEmpty()) {
+            Optional<HolderSet.Named<Structure>> structureSet = level.registryAccess()
+                    .registryOrThrow(Registries.STRUCTURE).getTag(structureTag);
+
+            if (structureSet.isEmpty()) {
                 return null;
             } else {
-
-                var set = optional.get();
-                var list = set.stream().toList();
-                var chosen = list.get(level.random.nextInt(list.size()));
-                Pair<BlockPos, Holder<Structure>> pair = level.getChunkSource().getGenerator().findNearestMapStructure(level,
-                        HolderSet.direct(chosen), pos, radius, unexplored);
-                return pair != null ? pair.getFirst() : null;
+                var structures = structureSet.get();
+                var structureList = structures.stream().toList();
+                var chosenStructure = structureList.get(level.random.nextInt(structureList.size()));
+                Pair<BlockPos, Holder<Structure>> foundPair = level.getChunkSource()
+                        .getGenerator().findNearestMapStructure(level,
+                                HolderSet.direct(chosenStructure), searchCenter, searchRadius,
+                                findUnexploredOnly);
+                return foundPair != null ? foundPair.getFirst() : null;
             }
         }
     }
 
-    public record LocatedStruct(BlockPos pos, Holder<Structure> structure, @Nullable StructureStart start) {
-        public LocatedStruct(Pair<BlockPos, Holder<Structure>> pair) {
-            this(pair.getFirst(), pair.getSecond(), null);
+    public record LocatedStructure(BlockPos position, Holder<Structure> structure,
+                                   @Nullable StructureStart start) {
+        public LocatedStructure(Pair<BlockPos, Holder<Structure>> structurePair) {
+            this(structurePair.getFirst(), structurePair.getSecond(), null);
         }
     }
-
 }
