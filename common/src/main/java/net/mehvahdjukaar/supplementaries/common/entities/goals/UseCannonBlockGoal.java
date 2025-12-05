@@ -19,21 +19,16 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
-import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonBoatBehavior.aimCannonAndShoot;
+import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.*;
 
 public class UseCannonBlockGoal extends MoveToBlockGoal {
-
-    private static final int MAX_STAY_TIME = 1000;
-    private static final int MAX_GO_TO_TIME = 1200;
-    private static final int MIN_CANNON_RANGE = 16;
-    private static final int GOAL_INTERVAL = 200;
-    private static final int SHOOTING_COOLDOWN = 40;
 
     private final int searchRange;
     private final PlundererEntity plunderer;
 
-    private int attackDelay = 0;
-    private int ticksUsingCannon = 0;
+    private int igniteCannonCooldown = 0;
+    private int atCannonTicks = 0;
+    private int ticksSinceShot = 0;
 
     public UseCannonBlockGoal(PlundererEntity mob, double speedModifier, int searchRange) {
         super(mob, speedModifier, searchRange);
@@ -59,28 +54,30 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
     }
 
     @Override
+    public void stop() {
+        super.stop();
+    }
+
+    @Override
     public boolean canContinueToUse() {
-        if (this.mob.isPassenger() || !hasTargetInCannonRange()) return false;
-        return this.tryTicks >= -MAX_STAY_TIME && this.tryTicks <= MAX_GO_TO_TIME && this.isValidTarget(this.mob.level(), this.blockPos);
+        if (this.mob.isPassenger() || !hasTargetInCannonRange(mob)) return false;
+        if (isReachedTarget() && ticksSinceShot > MAX_TIME_WITHOUT_SHOOTING) {
+            // return false;
+        }
+        return this.atCannonTicks <= MAX_STAY_TIME && this.tryTicks <= MAX_GO_TO_TIME && this.isValidTarget(this.mob.level(), this.blockPos);
     }
 
     @Override
     public boolean canUse() {
-        if (this.mob.isPassenger() || !hasTargetInCannonRange()) return false;
+        if (this.mob.isPassenger() || !hasTargetInCannonRange(mob)) return false;
         return super.canUse();
     }
 
     @Override
     protected int nextStartTick(PathfinderMob creature) {
-        return GOAL_INTERVAL;
+        return reducedTickDelay(GOAL_INTERVAL);
     }
 
-    private boolean hasTargetInCannonRange() {
-        var target = mob.getTarget();
-        if (target == null || !target.isAlive()) return false;
-        double distSq = mob.distanceToSqr(target);
-        return distSq > MIN_CANNON_RANGE * MIN_CANNON_RANGE;
-    }
 
     @Override
     protected boolean findNearestBlock() {
@@ -117,16 +114,16 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
         super.tick();
         if (isReachedTarget()) {
 
-            this.mob.getLookControl().setLookAt(mob.getTarget());
             Level level = mob.level();
             var cannonTile = (CannonBlockTile) level.getBlockEntity(this.blockPos);
 
-            ticksUsingCannon++;
+            atCannonTicks++;
+            ticksSinceShot++;
             //shoot
-            if (attackDelay > 0) {
-                attackDelay--;
+            if (igniteCannonCooldown > 0) {
+                igniteCannonCooldown--;
             }
-            boolean canShoot = attackDelay <= 0;
+            boolean canShoot = igniteCannonCooldown <= 0;
             //check if we are in the way and move out incase we are
             Vec3 center = Vec3.atCenterOf(cannonTile.getBlockPos());
             Vec3 targetPos = mob.getTarget().position();
@@ -139,17 +136,21 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
 
             double t = toMe.dot(toTarget.normalize());
             boolean between = t > 0 && t < toTarget.length();
+            if (!mob.getNavigation().isDone()) {
+                //    return;
+            }
 
             if (dot > 0.6 && between) { // only block if aligned AND between
                 Direction wantedDir = Direction.getNearest(-toTarget.x, -toTarget.y, -toTarget.z);
-                moveAroundCannon(wantedDir);
+                if (ticksSinceShot % 4 == 0) moveAroundCannon(wantedDir);
                 return;
             }
+            this.mob.getLookControl().setLookAt(mob.getTarget());
 
-            if (!mob.getNavigation().isDone()) return;
 
             if (aimCannonAndShoot(cannonTile.selfAccess, mob, mob.getTarget(), canShoot)) {
-                attackDelay = Mth.randomBetweenInclusive(level.random, 20, 40); //random delay between shots
+                igniteCannonCooldown = Mth.randomBetweenInclusive(level.random, SHOOTING_COOLDOWN / 2, SHOOTING_COOLDOWN); //random delay between shots
+                ticksSinceShot = 0;
             }
         }
     }

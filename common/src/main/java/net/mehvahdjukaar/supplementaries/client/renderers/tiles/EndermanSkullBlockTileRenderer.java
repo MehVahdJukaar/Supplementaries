@@ -20,7 +20,6 @@ import static net.minecraft.client.renderer.blockentity.SkullBlockRenderer.rende
 
 public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<EndermanSkullBlockTile> {
 
-    @Nullable
     private final EndermanSkullModel model;
 
     public EndermanSkullBlockTileRenderer(BlockEntityRendererProvider.Context context) {
@@ -30,7 +29,6 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
     @Override
     public void render(EndermanSkullBlockTile blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
-        float f = blockEntity.getMouthAnimation(partialTick);
 
         BlockState blockState = blockEntity.getBlockState();
         boolean wall = blockState.getBlock() instanceof WallSkullBlock;
@@ -43,11 +41,11 @@ public class EndermanSkullBlockTileRenderer implements BlockEntityRenderer<Ender
             v.mul(0.001f);
             poseStack.translate(v.x(), v.y(), v.z());
         }
+        float oldJawAnim = blockEntity.getAnimation(partialTick);
+        float jawAim = blockEntity.getMouthAnimation(partialTick);
 
-        renderSkull(direction, rotation, f, poseStack, bufferSource, packedLight, model, renderType);
-
-        renderType = RenderType.eyes(ModTextures.ENDERMAN_HEAD_EYES);
-        renderSkull(direction, rotation, f, poseStack, bufferSource, LightTexture.FULL_SKY, model, renderType);
+        model.setupJawAnimation(jawAim);
+        renderSkull(direction, rotation, oldJawAnim, poseStack, bufferSource, packedLight, model, renderType);
 
         poseStack.popPose();
     }

@@ -18,6 +18,8 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.phys.Vec3;
 
+import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.aimCannonAndShoot;
+
 public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
 
     private int attackDelay;
@@ -84,78 +86,6 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
         }
     }
 
-    public static boolean aimCannonAndShoot(CannonAccess access, LivingEntity shooter, LivingEntity target, boolean canShoot) {
-        CannonBlockTile cannonTile = access.getInternalCannon();
-        if (cannonTile.isOnCooldown()) return false;
-
-        Vec3 cannonGlobalPosition = access.getCannonGlobalPosition(0);
-        Vec3 targetLoc = target.position();
-
-        //rough estimate of power needed
-        byte power = 1;
-        int maxPower = cannonTile.getFuel().getCount();
-        float distance = (float) targetLoc.distanceTo(cannonGlobalPosition);
-
-        if (distance > 64) {
-            power = 4;
-        } else if (distance > 32) {
-            power = 3;
-        } else if (distance > 16) {
-            power = 2;
-        }
-
-        //hack. Aim bot
-        //predict movement based off distance and speed
-        targetLoc = targetLoc.add(target.getDeltaMovement().scale(distance * 0.2))
-                .add(0,0.6,0);
-
-        power = (byte) Math.min(power, maxPower);
-        cannonTile.setPowerLevel(power);
-
-        var comp = CannonUtils.computeTrajectory(access, targetLoc, ShootingMode.DOWN);
-
-        var cannonTrajectory = comp.getFirst();
-        float wantedGlobalYawDeg = comp.getSecond() * Mth.RAD_TO_DEG;
-        if (cannonTrajectory != null) {
-            float cannonGlobalYawOffsetDeg = access.getCannonGlobalYawOffset(0);
-            float wantedLocalYawDeg = wantedGlobalYawDeg + cannonGlobalYawOffsetDeg;
-            setCannonAnglesToFollowTrajectory(access, cannonTrajectory, wantedLocalYawDeg);
-
-            if (canShoot) {
-                float newCannonGlobalYaw = (cannonTile.getYaw() - cannonGlobalYawOffsetDeg) * Mth.DEG_TO_RAD;
-
-                Vec3 hitLoc = cannonTrajectory.getHitLocation(cannonGlobalPosition, newCannonGlobalYaw);
-
-                //distance
-                double distance1 = hitLoc.distanceTo(targetLoc);
-                if (distance1 < 0.1) {
-                    cannonTile.ignite(shooter, access);
-                    return true;
-                }
-            }
-        }
-
-        return false;
-
-
-    }
-
-    private static void setCannonAnglesToFollowTrajectory(CannonAccess access, CannonTrajectory trajectory,
-                                                          float wantedLocalYawDeg) {
-        if (trajectory != null) {
-            float followSpeed = 1;
-            CannonBlockTile cannon = access.getInternalCannon();
-            //TODO: improve
-            cannon.setPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
-                    trajectory.pitch() * Mth.RAD_TO_DEG));
-            // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            cannon.setYaw(access, wantedLocalYawDeg);
-
-            //sync
-            cannon.setChanged();
-            access.updateClients();
-        }
-    }
 
     private void lookAtTarget(LivingEntity shooter, LivingEntity target) {
         shooter.getBrain().setMemory(MemoryModuleType.LOOK_TARGET, new EntityTracker(target, true));

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
+import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -106,10 +106,17 @@ public class ModSounds {
 
     public static final RegSupplier<SoundEvent> IMITATE_ENDERMAN = regSound("block.note_block.imitate.enderman");
 
+    public static final RegSupplier<SoundEvent> PLUNDERER_AMBIENT = regSound("entity.plunderer.ambient");
+    public static final RegSupplier<SoundEvent> PLUNDERER_HURT = regSound("entity.plunderer.hurt");
+    public static final RegSupplier<SoundEvent> PLUNDERER_DEATH = regSound("entity.plunderer.death");
+    public static final RegSupplier<SoundEvent> PLUNDERER_CELEBRATE = regSound("entity.plunderer.celebrate");
+    public static final RegSupplier<SoundEvent> PLUNDERER_CANNON_USE = regSound("entity.plunderer.cannon_use");
 
-    public static final HolderReference<JukeboxSong> PANCAKE_MUSIC_JUKEBOX = HolderReference.of(Supplementaries.res("pancake"),
+    public static final RegSupplier<SoundEvent> PARROT_IMITATE_PLUNDERER = regSound("entity.parrot.imitate.plunderer");
+
+    public static final HolderRef<JukeboxSong> PANCAKE_MUSIC_JUKEBOX = HolderRef.of(Supplementaries.res("pancake"),
             Registries.JUKEBOX_SONG);
-    public static final HolderReference<JukeboxSong> PIRATE_MUSIC_JUKEBOX = HolderReference.of(Supplementaries.res("heave_ho"),
+    public static final HolderRef<JukeboxSong> PIRATE_MUSIC_JUKEBOX = HolderRef.of(Supplementaries.res("heave_ho"),
             Registries.JUKEBOX_SONG);
 
     public static final ModSoundType SLIDY_BLOCK = new ModSoundType(1.0F, 1.0F,

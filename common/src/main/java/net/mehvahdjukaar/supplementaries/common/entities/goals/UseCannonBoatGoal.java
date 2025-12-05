@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonBoatBehavior.aimCannonAndShoot;
+import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.aimCannonAndShoot;
 
 //copied from skeleton soot goal
 public class UseCannonBoatGoal extends Goal {

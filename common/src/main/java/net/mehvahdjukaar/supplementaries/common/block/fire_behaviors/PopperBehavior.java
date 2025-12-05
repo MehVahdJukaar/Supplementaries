@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.supplementaries.common.items.ConfettiPopperItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -14,8 +15,8 @@ public class PopperBehavior implements IFireItemBehavior {
 
     @Override
     public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
-        ClientBoundParticlePacket packet = new ClientBoundParticlePacket(firePos,
-                ClientBoundParticlePacket.Kind.CONFETTI, direction.scale(power));
+        ClientBoundParticlePacket packet = ConfettiPopperItem.getConfettiPacket(stack, firePos, direction.scale(power));
+
         BlockPos pos = BlockPos.containing(firePos);
 
         NetworkHelper.sendToAllClientPlayersInDefaultRange(level, pos, packet);
