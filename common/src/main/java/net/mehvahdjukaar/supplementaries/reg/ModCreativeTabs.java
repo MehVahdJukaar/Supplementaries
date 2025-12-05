@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.common.worldgen.GalleonStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.minecraft.client.renderer.block.model.multipart.MultiPart;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -623,11 +622,12 @@ public class ModCreativeTabs {
         }
 
         private void before(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemStack... items) {
-            ResourceKey<CreativeModeTab> tabKey = getTabKey(tab);
+            if (MOD_TAB != null) {
+                add(tab, items);
+                return;
+            }
             for (ItemStack stack : items) {
-                if (isUnique(stack)) {
-                    event.addBefore(tabKey, target, stack);
-                }
+                event.addBefore(tab, target, stack);
             }
         }
 
@@ -637,11 +637,12 @@ public class ModCreativeTabs {
         }
 
         private void after(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemStack... items) {
-            ResourceKey<CreativeModeTab> tabKey = getTabKey(tab);
+            if (MOD_TAB != null) {
+                add(tab, items);
+                return;
+            }
             for (ItemStack stack : items) {
-                if (isUnique(stack)) {
-                    event.addAfter(tabKey, target, stack);
-                }
+                    event.addAfter(tab, target, stack);
             }
         }
 
@@ -650,19 +651,18 @@ public class ModCreativeTabs {
                     .map(i -> i.asItem().getDefaultInstance()).toArray(ItemStack[]::new));
         }
 
-        private void add(ResourceKey<CreativeModeTab> tab, ItemLike... items) {
-            ResourceKey<CreativeModeTab> tabKey = getTabKey(tab);
-            for (ItemLike item : items) {
-                ItemStack stack = item.asItem().getDefaultInstance();
+        private void add(ResourceKey<CreativeModeTab> tab, ItemStack... items) {
+            ResourceKey<CreativeModeTab> tabKey =  MOD_TAB == null ? tab : (ResourceKey<CreativeModeTab>) MOD_TAB.getKey();
+            for (ItemStack stack : items) {
                 if (isUnique(stack)) {
                     event.add(tabKey, stack);
                 }
             }
         }
 
-
-        private ResourceKey<CreativeModeTab> getTabKey(ResourceKey<CreativeModeTab> tab) {
-            return MOD_TAB == null ? tab : (ResourceKey<CreativeModeTab>) MOD_TAB.getKey();
+        private void add(ResourceKey<CreativeModeTab> tab, ItemLike... items) {
+            add(tab, Arrays.stream(items)
+                    .map(i -> i.asItem().getDefaultInstance()).toArray(ItemStack[]::new));
         }
 
         private boolean isUnique(ItemStack stack) {

@@ -54,6 +54,9 @@ public class RegUtils {
                 BuiltInRegistries.ITEM);
         BlockSetAPI.addDynamicRegistration(Supplementaries.MOD_ID, RegUtils::registerCannonBoatItems,
                 BuiltInRegistries.ITEM);
+        RegHelper.addExtraBEBlockStatesRegistration(event ->{
+            event.addBlocks(BlockEntityType.SKULL, ModRegistry.SPIDER_SKULL_BLOCK.get(),ModRegistry.SPIDER_SKULL_BLOCK_WALL.get());
+        });
     }
 
     public static void registerAdditionalPlacements() {

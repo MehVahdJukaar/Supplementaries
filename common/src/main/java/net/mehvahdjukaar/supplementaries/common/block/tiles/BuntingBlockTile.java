@@ -155,7 +155,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         super.loadAdditional(tag, registries);
         //structure block rotation decoding
         BlockState state = this.getBlockState();
-        if (state.getValue(RopeBuntingBlock.FLIP_TILE) && level != null) {
+        if (state.getValue(RopeBuntingBlock.FLIP_TILE) && level != null && !level.isClientSide) {
             rotateBuntings(state, Rotation.CLOCKWISE_90);
             level.setBlockAndUpdate(worldPosition, state.setValue(RopeBuntingBlock.FLIP_TILE, false));
         }

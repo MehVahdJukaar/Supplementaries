@@ -5,7 +5,6 @@ import net.mehvahdjukaar.moonlight.api.block.MimicBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.IScreenProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
@@ -42,7 +41,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -95,12 +93,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         return 2;
     }
 
-    @ForgeOverride
-    public AABB getRenderBoundingBox() {
-        BlockPos pos = this.getBlockPos();
-        return new AABB(pos.getX() - 0.25, pos.getY(), pos.getZ() - 0.25,
-                pos.getX() + 1.25, pos.getY() + 1d, pos.getZ() + 1.25);
-    }
 
     public float getPointingYaw(boolean up) {
         if (up) {
@@ -124,13 +116,11 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         }
         //structure block rotation decoding
         BlockState state = this.getBlockState();
-        if (state.hasProperty(ModBlockProperties.ROTATE_TILE) && level != null) {
-            Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
-            if (rot != Rotation.NONE) {
-                rotateSign(false, rot.ordinal() * 90, false);
-                rotateSign(true, rot.ordinal() * 90, false);
-                level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
-            }
+        Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
+        if (rot != Rotation.NONE && level != null && !level.isClientSide) {
+            rotateSign(false, rot.ordinal() * 90, false);
+            rotateSign(true, rot.ordinal() * 90, false);
+            level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
         }
     }
 

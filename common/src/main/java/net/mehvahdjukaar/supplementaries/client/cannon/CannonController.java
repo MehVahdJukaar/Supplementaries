@@ -200,7 +200,7 @@ public class CannonController {
 
         if (scrollDelta != 0) {
             CannonBlockTile tile = access.getInternalCannon();
-            byte newPower = (byte) (1 + Math.floorMod((int) (tile.getPowerLevel() - 1 + scrollDelta), 4));
+            byte newPower = (byte) (1 + Math.floorMod((int) (tile.getPowerLevel() - 1 + scrollDelta), CannonBlockTile.MAX_POWER_LEVEL));
             tile.setPowerLevel(newPower);
             needsToUpdateServer = true;
         }

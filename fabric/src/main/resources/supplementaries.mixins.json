@@ -11,6 +11,7 @@
     "MC263524FixMixin",
     "MinecraftInputMixin",
     "MouseScrollMixin",
+    "ParrotLayerMixin",
     "SkullBlockRendererMixin",
     "compat.CompatIFMapAtlasTextureMixin",
     "compat.CompatIFMapTextureMixin2"

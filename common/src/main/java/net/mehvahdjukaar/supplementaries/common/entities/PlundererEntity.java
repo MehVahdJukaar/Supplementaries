@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatMoveController;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatPathNavigation;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.LookControlWithSpyglass;
@@ -7,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamabl
 import net.mehvahdjukaar.supplementaries.common.entities.goals.*;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -34,9 +37,7 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Pig;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.monster.Pillager;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
@@ -174,11 +175,12 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     }
 
     public static AttributeSupplier.Builder createAttributes() {
+
         return Monster.createMonsterAttributes()
                 .add(Attributes.MOVEMENT_SPEED, 0.35F)
                 .add(Attributes.MAX_HEALTH, 24.0)
-                .add(Attributes.ATTACK_DAMAGE, 5.0)
-                .add(Attributes.FOLLOW_RANGE, 32.0);
+                .add(Attributes.ATTACK_DAMAGE, 6.0) //more since they have golden sword
+                .add(Attributes.FOLLOW_RANGE, 12.0);
     }
 
     public boolean isUsingSpyglass() {
@@ -268,22 +270,22 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.PILLAGER_AMBIENT;
+        return ModSounds.PLUNDERER_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.PILLAGER_DEATH;
+        return ModSounds.PLUNDERER_DEATH.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSource) {
-        return SoundEvents.PILLAGER_HURT;
+        return ModSounds.PLUNDERER_HURT.get();
     }
 
     @Override
     public SoundEvent getCelebrateSound() {
-        return SoundEvents.PILLAGER_CELEBRATE;
+        return ModSounds.PLUNDERER_CELEBRATE.get();
     }
 
     @Override

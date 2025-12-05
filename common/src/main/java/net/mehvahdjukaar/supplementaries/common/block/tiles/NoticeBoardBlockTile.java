@@ -49,7 +49,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     //just used for color
     private final TextHolder textHolder;
     private boolean isWaxed = false;
-    private int pageNumber = 0;
+    private int pageIndex = 0;
+    private int maxPageIndex = 0;
 
     @Nullable
     private UUID playerWhoMayEdit;
@@ -82,11 +83,16 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F,
                         this.level.random.nextFloat() * 0.10F + 0.85F);
             } else {
-                this.pageNumber = 0;
+                this.pageIndex = 0;
+                this.maxPageIndex = 0;
                 this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F,
                         this.level.random.nextFloat() * 0.10F + 0.50F);
             }
         }
+    }
+
+    public float getPageProgress() {
+        return maxPageIndex <= 0 ? 0 : (int) (((float) pageIndex / (float) maxPageIndex));
     }
 
     @Override
@@ -123,11 +129,12 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         if (written != null) {
             var pages = written.pages();
             if (!pages.isEmpty()) {
-                if (this.pageNumber >= pages.size()) {
-                    this.pageNumber = this.pageNumber % pages.size();
+                if (this.pageIndex >= pages.size()) {
+                    this.pageIndex = this.pageIndex % pages.size();
                 }
+                this.maxPageIndex = pages.size() - 1;
 
-                this.text = pages.get(this.pageNumber).map(Component::getString);
+                this.text = pages.get(this.pageIndex).map(Component::getString);
             }
             return;
         }
@@ -135,14 +142,14 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         if (writable != null) {
             var pages = writable.pages();
             if (!pages.isEmpty()) {
-                if (this.pageNumber >= pages.size()) {
-                    this.pageNumber = this.pageNumber % pages.size();
+                if (this.pageIndex >= pages.size()) {
+                    this.pageIndex = this.pageIndex % pages.size();
                 }
-                this.text = pages.get(this.pageNumber);
+                this.maxPageIndex = pages.size() - 1;
+                this.text = pages.get(this.pageIndex);
             }
             return;
         }
-
 
         //TODO: add back
         /*
@@ -173,14 +180,14 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.pageNumber = tag.getInt("PageNumber");
+        this.pageIndex = tag.getInt("PageNumber");
         this.textHolder.load(tag, registries, worldPosition);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.putInt("PageNumber", this.pageNumber);
+        tag.putInt("PageNumber", this.pageIndex);
         this.textHolder.save(tag, registries);
     }
 
@@ -263,7 +270,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     public void turnPage() {
-        this.pageNumber++;
+        this.pageIndex++;
         this.level.playSound(null, worldPosition, SoundEvents.BOOK_PAGE_TURN, SoundSource.BLOCKS, 1F,
                 this.level.random.nextFloat() * 0.10F + 1.45F);
         this.setChanged();

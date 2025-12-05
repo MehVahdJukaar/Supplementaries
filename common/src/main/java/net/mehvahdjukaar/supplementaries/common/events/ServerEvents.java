@@ -15,9 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesMa
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.PlundererEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.EatFodderGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.EvokerRedMerchantWololooSpellGoal;
-import net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonBoatGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.*;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
@@ -50,6 +48,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.entity.player.Player;
@@ -189,6 +188,11 @@ public class ServerEvents {
 
     @EventCalled
     public static void onAddExtraGoals(Entity entity, ServerLevel serverLevel) {
+        if (entity.getType() == EntityType.PARROT && CommonConfigs.Functional.PLUNDERER_ENABLED.get() ) {
+            Parrot p = (Parrot) entity;
+            p.goalSelector.addGoal(3, new ParrotLandOnPlundererGoal(p));
+            p.goalSelector.addGoal(2, new FollowLivingOwnerGoal(p, 1.0, 1.0F, 1.0F));
+        }
         if (CommonConfigs.Functional.FODDER_ENABLED.get()) {
             if (entity instanceof Animal animal) {
                 EntityType<?> type = entity.getType();
@@ -199,9 +203,11 @@ public class ServerEvents {
                 return;
             }
         }
+
         if (entity.getType() == EntityType.EVOKER) {
             ((Evoker) entity).goalSelector.addGoal(6,
                     new EvokerRedMerchantWololooSpellGoal((Evoker) entity));
+            return;
         }
         if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
             if (entity instanceof AbstractIllager pillager && !(entity instanceof PlundererEntity)) {

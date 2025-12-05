@@ -107,9 +107,10 @@ public class SuppPlatformStuffImpl {
         try {
             if (itemstack.isEnderMask(player, enderMan)) return true;
 
-            if (CompatObjects.END_VEIL.isPresent()) {
+            Level level = player.level();
+            if (CompatObjects.END_VEIL.isPresent(level.registryAccess()    )) {
                 var ench = itemstack.get(DataComponents.ENCHANTMENTS);
-                return ench != null && ench.getLevel(CompatObjects.END_VEIL) > 0;
+                return ench != null && ench.getLevel(CompatObjects.END_VEIL.getHolder(level)) > 0;
             }
         } catch (Exception ignored) {
         }

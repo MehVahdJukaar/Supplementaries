@@ -13,7 +13,7 @@ import net.minecraft.world.phys.Vec3;
 public final class UseCannonAICommon {
 
     public static final int MAX_STAY_TIME = 1000;
-    public static final int MAX_TIME_WITHOUT_SHOOTING = 400;
+    public static final int MAX_TIME_WITHOUT_SHOOTING = 300;
     public static final int MAX_GO_TO_TIME = 1200;
     public static final int MIN_CANNON_RANGE = 16;
     public static final int GOAL_INTERVAL = 90;

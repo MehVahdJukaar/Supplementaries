@@ -29,11 +29,11 @@ import java.util.List;
 public class FaucetBakedModel implements CustomBakedModel {
     private static final boolean SINGLE_PASS = PlatHelper.getPlatform().isFabric();
 
-    private final BakedModel goblet;
+    private final BakedModel model;
     private final BakedModel liquid;
 
-    public FaucetBakedModel(BakedModel goblet, BakedModel liquid, ModelState rotation) {
-        this.goblet = goblet;
+    public FaucetBakedModel(BakedModel model, BakedModel liquid, ModelState rotation) {
+        this.model = model;
         this.liquid = liquid;
     }
 
@@ -66,13 +66,13 @@ public class FaucetBakedModel implements CustomBakedModel {
             }
             if (!SINGLE_PASS) return quads;
         }
-        quads.addAll(goblet.getQuads(state, side, rand));
+     if(RenderType.cutout() == renderType)   quads.addAll(model.getQuads(state, side, rand));
         return quads;
     }
 
     @Override
     public TextureAtlasSprite getBlockParticle(ExtraModelData extraModelData) {
-        return goblet.getParticleIcon();
+        return model.getParticleIcon();
     }
 
     @Override

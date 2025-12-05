@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.ClockBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -51,9 +52,14 @@ public class ClockBlockTile extends BlockEntity {
         tag.putInt("Power", this.power);
     }
 
-    public void updateInitialTime(Level level, BlockState state, BlockPos pos) {
-        int time = (int) (level.getDayTime() % 24000);
-        this.updateTargetTime(time, level, state, pos);
+    //when first added to a chunk
+    @ForgeOverride
+    public void onLoad() {
+        updateInitialTime();
+    }
+
+    public void updateInitialTime() {
+        this.updateTargetTime();
         this.roll = this.targetRoll;
         this.prevRoll = this.targetRoll;
         this.sRoll = this.sTargetRoll;
@@ -68,7 +74,11 @@ public class ClockBlockTile extends BlockEntity {
         return Mth.clamp((time % 1000) / 20, 0, 50);
     }
 
-    protected void updateTargetTime(int time, Level level, BlockState state, BlockPos pos) {
+    protected void updateTargetTime() {
+        BlockState state = this.getBlockState();
+        Level level = this.level;
+        BlockPos pos = this.worldPosition;
+        int time = (int) (level.getDayTime() % 24000);
         //minute here are 1 rl second -> 50m in a minecraft hour
         int minute = calculateMinute(time);
         int hour = calculateHour(time);
@@ -105,11 +115,12 @@ public class ClockBlockTile extends BlockEntity {
         boolean canReadTime = ClockBlock.canReadTime(level);
 
         if (canReadTime && time % 20 == 0) {
-            tile.updateTargetTime(dayTime, level, pState, pPos);
+            tile.updateTargetTime();
         }
         if (!level.isClientSide) {
             return;
         }
+        //client side animation
 
         tile.prevRoll = tile.roll;
         if (canReadTime) {

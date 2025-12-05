@@ -669,7 +669,7 @@ public class CommonConfigs {
             ROPE_HORIZONTAL = builder.comment("Enables horizontal placement of ropes. Disabling will make ropes always non solid")
                     .define("horizontal_ropes", true);
             ROPE_REPLACE_LOOT_TABLES = PlatHelper.getPlatform().isFabric() ? () -> ReplaceTableMode.NONE :
-                    builder.comment("Use this config to turn allow supplementaries to replace all items tagged as #supplementaies:ropes with supplementaries own rope or turn them to air instead. This is applied to all loot tables (chests and drops)")
+                    builder.comment("Use this config to turn allow supplementaries to replace all items tagged as #supplementaries:ropes with supplementaries own rope or turn them to air instead. This is applied to all loot tables (chests and drops)")
                             .define("replace_in_loot_tables", ReplaceTableMode.NONE);
             builder.pop();
 

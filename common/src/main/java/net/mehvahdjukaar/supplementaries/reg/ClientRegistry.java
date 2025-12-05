@@ -56,18 +56,21 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.multipart.MultiPart;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.client.resources.model.MultiPartBakedModel;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -460,7 +463,6 @@ public class ClientRegistry {
         event.register(ModRegistry.JAR_BOAT_TILE.get(), JarBoatTileRenderer::new);
         event.register(ModRegistry.BUBBLE_BLOCK_TILE.get(), BubbleBlockTileRenderer::new);
         event.register(ModRegistry.ENDERMAN_SKULL_TILE.get(), EndermanSkullBlockTileRenderer::new);
-        event.register(ModRegistry.SPIDER_SKULL_TILE.get(), SpiderSkullBlockTileRenderer::new);
         event.register(ModRegistry.CANNON_TILE.get(), CannonBlockTileRenderer::new);
         event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
         event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), SlidyBlockRenderer::new);
@@ -480,12 +482,6 @@ public class ClientRegistry {
         event.register(ModRegistry.CAGE_ITEM.get(), new CageItemRenderer());
         event.register(ModRegistry.JAR_ITEM.get(), new JarItemRenderer());
         event.register(ModRegistry.BLACKBOARD_ITEM.get(), new BlackboardItemRenderer());
-        event.register(ModRegistry.ENDERMAN_SKULL_ITEM.get(), new TileDelegateItemRenderer(
-                ModRegistry.ENDERMAN_SKULL_TILE, ModRegistry.ENDERMAN_SKULL_BLOCK
-        ));
-        event.register(ModRegistry.SPIDER_SKULL_ITEM.get(), new TileDelegateItemRenderer(
-                ModRegistry.SPIDER_SKULL_TILE, ModRegistry.SPIDER_SKULL_BLOCK
-        ));
         event.register(ModRegistry.BUBBLE_BLOCK_ITEM.get(), new BubbleBlockItemRenderer());
         event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new LunchBoxItemRenderer());
         var renderer = new FlagItemRenderer();
@@ -607,13 +603,23 @@ public class ClientRegistry {
         event.register(JAR_MODEL, JarredHeadLayer::createMesh);
         event.register(PICKLE_MODEL, PickleModel::createMesh);
         event.register(ENDERMAN_HEAD_MODEL, EndermanSkullModel::createMesh);
-        event.register(SPIDER_HEAD_MODEL, SpiderSkullBlockTileRenderer::createMesh);
+        event.register(SPIDER_HEAD_MODEL, ClientRegistry::createSpiderHead);
         event.register(PARTY_CREEPER_MODEL, PartyHatLayer::createMesh);
         event.register(CANNON_MODEL, CannonBlockTileRenderer::createMesh);
         event.register(WIND_VANE_MODEL, WindVaneBlockTileRenderer::createMesh);
         event.register(BUNTING_MODEL, BuntingBlockTileRenderer::createMesh);
     }
 
+    //same as spider head. We do this because texture pack like to decapitate the spider model. Looking at you, Fresh
+    private static LayerDefinition createSpiderHead() {
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
+        PartPose partPose = PartPose.offset(0.0F, -0.0F, 0.0F);
+        partDefinition.addOrReplaceChild("head", CubeListBuilder.create()
+                .texOffs(32, 4)
+                .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F), partPose);
+        return LayerDefinition.create(meshDefinition, 64, 32);
+    }
 
     public static LevelLightEngine getLightEngine() {
         return Minecraft.getInstance().level.getLightEngine();

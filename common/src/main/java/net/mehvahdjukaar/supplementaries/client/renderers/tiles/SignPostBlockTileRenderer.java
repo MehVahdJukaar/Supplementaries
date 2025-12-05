@@ -55,7 +55,6 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         return new AABB(tile.getBlockPos()).inflate(0.1);
     }
 
-
     @Override
     public int getViewDistance() {
         return 32;

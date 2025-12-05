@@ -65,9 +65,9 @@ public class SuppPlatformStuffImpl {
 
     public static boolean isEndermanMask(EnderMan enderman, Player player, ItemStack itemstack) {
         if (itemstack.is(Items.CARVED_PUMPKIN)) return true;
-        if (CompatObjects.END_VEIL.isPresent()) {
+        if (CompatObjects.END_VEIL.isPresent(player.level())) {
             var ench = itemstack.get(DataComponents.ENCHANTMENTS);
-            return ench != null && ench.getLevel(CompatObjects.END_VEIL) > 0;
+            return ench != null && ench.getLevel(CompatObjects.END_VEIL.getHolder(player)) > 0;
         }
         return false;
     }

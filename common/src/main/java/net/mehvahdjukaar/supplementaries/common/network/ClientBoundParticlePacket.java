@@ -7,11 +7,10 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +24,7 @@ public class ClientBoundParticlePacket implements Message {
     public final Kind type;
     @Nullable
     public final Vec3 pos;
-    private final int[] extraData;
+    private final int @NotNull [] extraData;
     @Nullable
     public final Vec3 dir;
 
@@ -33,7 +32,7 @@ public class ClientBoundParticlePacket implements Message {
         this.type = buffer.readEnum(Kind.class);
         if (buffer.readBoolean()) {
             this.extraData = new int[]{buffer.readInt()};
-        } else this.extraData = null;
+        } else this.extraData = new int[0];
         if (buffer.readBoolean()) {
             this.pos = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
         } else {

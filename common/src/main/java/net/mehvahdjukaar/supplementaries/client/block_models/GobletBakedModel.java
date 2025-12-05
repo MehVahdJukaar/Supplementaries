@@ -59,7 +59,7 @@ public class GobletBakedModel implements CustomBakedModel {
             }
             if (!SINGLE_PASS) return quads;
         }
-        quads.addAll(goblet.getQuads(state, side, rand));
+        if(RenderType.cutout() == renderType) quads.addAll(goblet.getQuads(state, side, rand));
         return quads;
     }
 

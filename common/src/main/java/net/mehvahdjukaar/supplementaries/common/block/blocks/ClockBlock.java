@@ -174,7 +174,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
         if (level.isClientSide && level.getBlockEntity(pos) instanceof ClockBlockTile tile) {
-            tile.updateInitialTime(level, state, pos);
+            tile.updateInitialTime();
         }
     }
 

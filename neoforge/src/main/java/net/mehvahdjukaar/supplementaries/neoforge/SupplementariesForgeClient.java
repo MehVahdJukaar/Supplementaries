@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
 import com.google.common.collect.ImmutableList;
-import net.mehvahdjukaar.moonlight.api.platform.neoforge.ForgeHelperImpl;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
 import net.mehvahdjukaar.supplementaries.client.hud.SlimedOverlayHud;
@@ -10,16 +9,16 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredH
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.items.AltimeterItemRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullWithEyesModel;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.SpiderSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
-import net.minecraft.client.model.SkullModel;
-import net.minecraft.client.model.geom.ModelLayers;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
@@ -47,12 +46,12 @@ public class SupplementariesForgeClient {
     @SubscribeEvent
     public static void onRegisterSkullModels(EntityRenderersEvent.CreateSkullModels event) {
         event.registerSkullModel(EndermanSkullBlock.TYPE,
-                new SkullModel(event.getEntityModelSet().bakeLayer(ModelLayers.SKELETON_SKULL)));
+                new EndermanSkullModel(event.getEntityModelSet().bakeLayer(ClientRegistry.ENDERMAN_HEAD_MODEL)));
         SkullBlockRenderer.SKIN_BY_TYPE.put(EndermanSkullBlock.TYPE,
                 Supplementaries.res("textures/entity/enderman_head.png"));
-        event.registerSkullModel(SpiderSkullBlock.TYPE,
-                new SkullModel(event.getEntityModelSet().bakeLayer(ModelLayers.SKELETON_SKULL)));
-        SkullBlockRenderer.SKIN_BY_TYPE.put(SpiderSkullBlock.TYPE,
+        event.registerSkullModel(ModRegistry.SPIDER_SKULL_TYPE,
+                new SkullWithEyesModel(event.getEntityModelSet().bakeLayer(ClientRegistry.SPIDER_HEAD_MODEL), ModTextures.SPIDER_HEAD_EYES));
+        SkullBlockRenderer.SKIN_BY_TYPE.put(ModRegistry.SPIDER_SKULL_TYPE,
                 Supplementaries.res("textures/entity/spider_head.png"));
     }
 

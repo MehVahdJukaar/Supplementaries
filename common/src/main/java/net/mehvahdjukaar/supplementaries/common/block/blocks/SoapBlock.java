@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.player.LocalPlayer;
@@ -85,7 +86,7 @@ public class SoapBlock extends Block {
             }
         }
         if (!level.isClientSide && entity instanceof LivingEntity le) {
-            SlimedData data = ModRegistry.SLIMED_DATA.getOrCreate(le);
+            SlimedData data = ModEntities.SLIMED_DATA.getOrCreate(le);
             if (data != null && rand.nextFloat() < slipChance) {
                 data.clear((LivingEntity) entity);
                 level.blockEvent(pPos, state.getBlock(), 0, 0);

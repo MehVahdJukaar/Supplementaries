@@ -6,7 +6,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 public interface ISpyglassMob {
 
     default float getSpyglassMaxSeeDistance() {
-        return 200;
+        return 70;
     }
 
     default double getStartUsingSpyglassDistance() {

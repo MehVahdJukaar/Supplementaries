@@ -7,9 +7,9 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
+import net.mehvahdjukaar.supplementaries.common.items.components.ConfettiColors;
 import net.mehvahdjukaar.supplementaries.common.utils.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -135,7 +135,7 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
-    private static List<RecipeHolder<? extends CraftingRecipe>> makeTrappedPresentRecipes() {
+    private static List<RecipeHolder<? extends CraftingRecipe>> createTrappedPresentRecipes() {
         List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "supplementaries.trapped_presents";
 
@@ -160,7 +160,7 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
-    private static List<RecipeHolder<? extends CraftingRecipe>> makePresentColoringRecipes() {
+    private static List<RecipeHolder<? extends CraftingRecipe>> createPresentColoringRecipes() {
         List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "presents";
         Ingredient ingredients = Ingredient.of(ModRegistry.PRESENTS.get(null).get());
@@ -177,7 +177,7 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
-    private static List<RecipeHolder<? extends CraftingRecipe>> makeSackColoringRecipes() {
+    private static List<RecipeHolder<? extends CraftingRecipe>> createSackColoringRecipes() {
         List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
         String group = "sacks";
         Ingredient ingredients = Ingredient.of(ModRegistry.SACK.get());
@@ -189,6 +189,24 @@ public class SpecialRecipeDisplays {
 
             ResourceLocation id = Supplementaries.res("sack_" + color.getName() + "_display");
             ShapelessRecipe shapelessRecipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
+            recipes.add(new RecipeHolder<>(id, shapelessRecipe));
+        }
+        return recipes;
+    }
+
+    private static List<RecipeHolder<? extends CraftingRecipe>> createConfettiDye() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
+        String group = "confetti_dye";
+        Ingredient ingredients = Ingredient.of(ModRegistry.CONFETTI_POPPER.get());
+        for (DyeColor color : DyeColor.values()) {
+            DyeItem dye = DyeItem.byColor(color);
+            ItemStack output = ModRegistry.CONFETTI_POPPER.get().getDefaultInstance();
+            output.set(ModComponents.CONFETTI_COLORS.get(), ConfettiColors.of(dye.getDyeColor().getTextureDiffuseColor()));
+
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(dye));
+
+            ResourceLocation id = Supplementaries.res("confetti_" + color.getName() + "_display");
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
             recipes.add(new RecipeHolder<>(id, shapelessRecipe));
         }
         return recipes;
@@ -421,55 +439,28 @@ public class SpecialRecipeDisplays {
     }
 
     public static void registerRecipes(RecipeBookCategories category, RecipeSpecialDisplayOutput<CraftingRecipe> registry) {
-
         if (category == RecipeBookCategories.CRAFTING_MISC) {
-
             //these config checks aren't even needed anymore
-            if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get()) {
-                registry.add("bamboo_spikes_tipped", createTippedBambooSpikesRecipes());
-            }
-            if (CommonConfigs.Building.FLAG_ENABLED.get()) {
-                registry.add("flags/flag_from_banner", createFlagFromBanner());
-            }
-            if (CommonConfigs.Functional.SAFE_ENABLED.get()) {
-                registry.add("safe", createSafeRecipe());
-            }
-            if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-                registry.add("antique_map", createAntiqueMapRecipe());
-                registry.add("antique_book", createAntiqueBookRecipe());
-            }
-            if (CommonConfigs.Functional.SACK_ENABLED.get() && CompatHandler.SUPPSQUARED) {
-                registry.add("suppsquared:sack_dye", makeSackColoringRecipes());
-            }
-            if (CommonConfigs.Tweaks.ITEM_LORE.get()) {
-                registry.add("item_lore", createItemLoreRecipe());
-                registry.add("item_lore_clear", createRemoveLoreRecipe());
-            }
-            if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
-                registry.add("soap/clear", createSoapCleanRecipe());
-            }
-            if (CommonConfigs.Functional.PRESENT_ENABLED.get()) {
-                registry.add("present_dye", makePresentColoringRecipes());
-                if (CommonConfigs.Functional.TRAPPED_PRESENT_ENABLED.get()) {
-                    registry.add("trapped_present", makeTrappedPresentRecipes());
-                }
-            }
-            if (CommonConfigs.Tweaks.SUS_RECIPES.get()) {
-                registry.add("sus_crafting", createSusRecipe());
-            }
+            registry.add("bamboo_spikes_tipped", SpecialRecipeDisplays::createTippedBambooSpikesRecipes);
+            registry.add("flags/flag_from_banner", SpecialRecipeDisplays::createFlagFromBanner);
+            registry.add("safe", SpecialRecipeDisplays::createSafeRecipe);
+            registry.add("antique_map", SpecialRecipeDisplays::createAntiqueMapRecipe);
+            registry.add("antique_book", SpecialRecipeDisplays::createAntiqueBookRecipe);
+            registry.add("suppsquared:sack_dye", SpecialRecipeDisplays:: createSackColoringRecipes);
+            registry.add("item_lore", SpecialRecipeDisplays::createItemLoreRecipe);
+            registry.add("item_lore_clear", SpecialRecipeDisplays::createRemoveLoreRecipe);
+            registry.add("soap/clear", SpecialRecipeDisplays::createSoapCleanRecipe);
+            registry.add("present_dye", SpecialRecipeDisplays::createPresentColoringRecipes);
+            registry.add("trapped_present", SpecialRecipeDisplays::createTrappedPresentRecipes);
+            registry.add("sus_crafting", SpecialRecipeDisplays::createSusRecipe);
+            registry.add("confetti_popper_dye", SpecialRecipeDisplays::createConfettiDye);
 
         } else if (category == RecipeBookCategories.CRAFTING_BUILDING_BLOCKS) {
-            if (CommonConfigs.Building.BLACKBOARD_ENABLED.get()) {
-                registry.add("blackboard_duplicate", createBlackboardDuplicate());
-            }
+            registry.add("blackboard_duplicate", SpecialRecipeDisplays::createBlackboardDuplicate);
         } else if (category == RecipeBookCategories.CRAFTING_EQUIPMENT) {
-            if (CommonConfigs.Tools.ROPE_ARROW_ENABLED.get()) {
-                registry.add("rope_arrow_create", createRopeArrowCreateRecipe());
-                registry.add("rope_arrow_add", createRopeArrowAddRecipe());
-            }
-            if (CommonConfigs.Tools.BUBBLE_BLOWER_ENABLED.get()) {
-                registry.add("bubble_blower_charge", createBubbleBlowerChargeRecipe());
-            }
+            registry.add("rope_arrow_create", SpecialRecipeDisplays::createRopeArrowCreateRecipe);
+            registry.add("rope_arrow_add", SpecialRecipeDisplays::createRopeArrowAddRecipe);
+            registry.add("bubble_blower_charge", SpecialRecipeDisplays::createBubbleBlowerChargeRecipe);
         }
     }
 }

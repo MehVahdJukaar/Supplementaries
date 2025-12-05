@@ -90,6 +90,7 @@ public class ModTags {
     public static final TagKey<Item> CAUSES_LIGHTNING_WHEN_HELD = itemTag("causes_lightning_when_held");
 
     public static final TagKey<Item> SHULKER_BOXES = cItemTag("shulker_boxes");
+    public static final TagKey<Item> DYES = cItemTag("dyes");
 
     public static final TagKey<BannerPattern> PATTERN_ITEM_DRAGON = bannerTag("pattern_item/dragon");
 

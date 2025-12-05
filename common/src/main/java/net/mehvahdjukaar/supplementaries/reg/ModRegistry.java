@@ -279,7 +279,8 @@ public class ModRegistry {
 
     //notice board
     public static final Supplier<Block> NOTICE_BOARD = regWithItem(NOTICE_BOARD_NAME, () -> new NoticeBoardBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
+            BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)
+                    .isRedstoneConductor(NEVER)));
 
     public static final Supplier<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = regTile(
             NOTICE_BOARD_NAME, () -> PlatHelper.newBlockEntityType(

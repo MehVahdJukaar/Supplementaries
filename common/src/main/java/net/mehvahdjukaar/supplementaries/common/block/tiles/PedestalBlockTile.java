@@ -22,12 +22,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
     public PedestalBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PEDESTAL_TILE.get(), pos, state);
     }
-
-    @ForgeOverride
-    public AABB getRenderBoundingBox() {
-        return AABB.encapsulatingFullBlocks(worldPosition, worldPosition.offset(1, 2, 1));
-    }
-
+    
     public DisplayType getDisplayType() {
         return type;
     }

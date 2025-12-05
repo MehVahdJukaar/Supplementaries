@@ -106,7 +106,7 @@ public class BlockUtil {
         return Optional.empty();
     }
 
-    public static Optional<BlockState> getRotatedState(Direction dir, boolean ccw, BlockPos targetPos, Level world,
+    public static Optional<BlockState> getRotatedState(Direction dir, boolean ccw, BlockPos targetPos, Level level,
                                                        BlockState state, @Nullable Player player) {
 
         // is block blacklisted?
@@ -124,15 +124,15 @@ public class BlockUtil {
         if (dir.getAxis() == Direction.Axis.Y) {
 
             if (block == Blocks.CAKE) {
-                var dc = CompatObjects.DIRECTIONAL_CAKE.get();
+                Block dc = CompatObjects.DIRECTIONAL_CAKE.get();
                 if (dc != null) {
                     int bites = state.getValue(CakeBlock.BITES);
                     if (bites != 0) return Optional.of(ForgeHelper.rotateBlock(
-                            dc.defaultBlockState().setValue(CakeBlock.BITES, bites), world, targetPos, rot));
+                            dc.defaultBlockState().setValue(CakeBlock.BITES, bites), level, targetPos, rot));
                 }
             }
 
-            BlockState rotated = ForgeHelper.rotateBlock(state, world, targetPos, rot);
+            BlockState rotated = ForgeHelper.rotateBlock(state, level, targetPos, rot);
             //also hardcoding vanilla rotation methods cause some mods just dont implement rotate methods for their blocks
             //this could cause problems for mods that do and dont want it to be rotated but those should really be added to the blacklist
             if (rotated == state) {

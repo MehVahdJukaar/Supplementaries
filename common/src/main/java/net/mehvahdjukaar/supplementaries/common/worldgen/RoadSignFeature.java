@@ -249,7 +249,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
 
     //post process
 
-    public static void applyPostProcess(Config c, ServerLevel level, BlockPos generatorPos, List<StructureLocator.LocatedStruct> foundVillages) {
+    public static void applyPostProcess(Config c, ServerLevel level, BlockPos generatorPos, List<LocatedStructure> foundVillages) {
 
 
         RandomState r = c.randomState;
@@ -258,8 +258,8 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
         BlockPos pos = generatorPos.below(2);
 
         List<Pair<Integer, BlockPos>> villages = new ArrayList<>();
-        for (var f : foundVillages) {
-            villages.add(Pair.of((int) Mth.sqrt((float) f.pos().distToCenterSqr(pos.getX(), pos.getY(), pos.getZ())), f.pos()));
+        for (LocatedStructure str : foundVillages) {
+            villages.add(Pair.of((int) Math.sqrt(str.distSqrt()), str.position()));
         }
 
         //if I am in a village
@@ -287,8 +287,8 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
             //only 1 sing found/ 1 tile post. always to closest village. posts that are relatively close to a village will always have two.
             //posts in a village will point away
             if (villages.size() == 1 || (r.doubleSignChance > rand.nextFloat() && villages.get(0).getFirst() > 192)) {
-                dist1 = villages.get(0).getFirst();
-                village1 = villages.get(0).getSecond();
+                dist1 = villages.getFirst().getFirst();
+                village1 = villages.getFirst().getSecond();
                 dist2 = dist1;
                 village2 = village1;
                 twoSigns = false;

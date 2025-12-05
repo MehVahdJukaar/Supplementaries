@@ -184,8 +184,7 @@ public class PearlMarker extends Entity {
                     }
                     NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
                             new ClientBoundParticlePacket(fromPos.getCenter(),
-                                    ClientBoundParticlePacket.Kind.PEARL_TELEPORT,
-                                    0, toPos.getCenter()));
+                                    ClientBoundParticlePacket.Kind.PEARL_TELEPORT, toPos.getCenter()));
 
                     super.teleportTo(toPos.getX() + 0.5, toPos.getY() + 0.5 - this.getBbHeight() / 2f, toPos.getZ() + 0.5);
                 }

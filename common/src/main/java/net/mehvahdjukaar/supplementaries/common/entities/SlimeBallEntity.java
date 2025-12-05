@@ -145,7 +145,7 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
         }
         if (entity instanceof LivingEntity le  && le.attackable()) {
             //sets on both but also sends packet just because lmao
-            SlimedData slimedData = ModRegistry.SLIMED_DATA.getOrCreate(le);
+            SlimedData slimedData = ModEntities.SLIMED_DATA.getOrCreate(le);
             slimedData.setSlimedTicks(le, CommonConfigs.Tweaks.SLIME_DURATION.get());
         }
         else if (entity instanceof EndCrystal) {

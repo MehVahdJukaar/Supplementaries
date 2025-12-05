@@ -24,6 +24,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -37,6 +38,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,6 +47,7 @@ import java.util.UUID;
 
 public class CannonBlockTile extends OpenableContainerBlockTile implements IOneUserInteractable {
 
+    public static final int MAX_POWER_LEVEL = 4;
     public Object ccHack = null;
 
     //no list = normal behavior. empty list = cant break anything
@@ -158,7 +161,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         this.pitch = tag.getFloat("pitch");
         this.cooldownTimer = tag.getInt("cooldown");
         this.fuseTimer = Math.max(this.fuseTimer, tag.getInt("fuse_timer")); //don lose client animation
-        this.powerLevel = tag.getByte("fire_power");
+        this.setPowerLevel(tag.getByte("fire_power"));
         if (tag.contains("player_ignited")) {
             this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");
         }
@@ -170,12 +173,10 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
         //structure block rotation decoding
         BlockState state = this.getBlockState();
-        if (state.hasProperty(ModBlockProperties.ROTATE_TILE) && level != null) {
-            Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
-            if (rot != Rotation.NONE) {
-                this.setYaw(this.selfAccess, this.yaw + (rot.ordinal() * 90));
-                level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
-            }
+        Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
+        if (rot != Rotation.NONE && level != null && !level.isClientSide) {
+            this.setYaw(this.selfAccess, this.yaw + (rot.ordinal() * 90));
+            level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
         }
     }
 
@@ -279,7 +280,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     public void setPowerLevel(byte powerLevel) {
-        this.powerLevel = powerLevel;
+        this.powerLevel = (byte) Math.clamp(powerLevel, 1, MAX_POWER_LEVEL);
     }
 
     public float getFirePower() {
@@ -306,7 +307,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
                               Player controllingPlayer, CannonAccess access) {
         this.setYaw(access, yaw);
         this.setPitch(access, pitch);
-        this.powerLevel = firePower;
+        this.setPowerLevel(firePower);
         if (fire) this.ignite(controllingPlayer, access);
     }
 
@@ -432,4 +433,26 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return new CannonContainerMenu(id, inv, this.selfAccess);
     }
 
+    @Override
+    public void unpackLootTable(@Nullable Player player) {
+        ResourceKey<LootTable> resourceKey = this.getLootTable();
+        super.unpackLootTable(player);
+        //fix loot table shit. it doesnt even check if stuff can go in a slot. thanks mojank
+        if (resourceKey != getLootTable()) {
+            //if has just unpacked
+            ItemStack currentAmmo = this.getProjectile();
+            ItemStack currentFuel = this.getFuel();
+            if (!this.canPlaceItem(0, currentFuel)) {
+                //swap items
+                this.setFuel(ItemStack.EMPTY);
+                this.setProjectile(ItemStack.EMPTY);
+                if (canPlaceItem(0, currentAmmo)) {
+                    this.setItem(0, currentAmmo);
+                }
+                if (canPlaceItem(1, currentFuel)) {
+                    this.setItem(1, currentFuel);
+                }
+            }
+        }
+    }
 }

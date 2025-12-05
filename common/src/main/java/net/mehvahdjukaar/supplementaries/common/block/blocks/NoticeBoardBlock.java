@@ -4,7 +4,11 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.*;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -108,8 +112,8 @@ public class NoticeBoardBlock extends Block implements EntityBlock {
 
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
-        if (world.getBlockEntity(pos) instanceof Container tile)
-            return tile.isEmpty() ? 0 : 15;
+        if (world.getBlockEntity(pos) instanceof NoticeBoardBlockTile tile && !tile.isEmpty())
+            return (int) Mth.clamp(tile.getPageProgress() + 1, 1, 15);
         else
             return 0;
     }

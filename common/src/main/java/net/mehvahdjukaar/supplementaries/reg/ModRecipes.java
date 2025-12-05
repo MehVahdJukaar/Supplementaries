@@ -34,6 +34,8 @@ public class ModRecipes {
             "soap_clearing", SoapClearRecipe.Serializer::new);
     public static final Supplier<RecipeSerializer<PresentDyeRecipe>> PRESENT_DYE = reg(
             "present_dye", PresentDyeRecipe::new);
+    public static final Supplier<RecipeSerializer<ConfettiDyeRecipe>> CONFETTI_DYE = reg(
+            "confetti_dye", ConfettiDyeRecipe.Serializer::new);
     public static final Supplier<RecipeSerializer<TrappedPresentRecipe>> TRAPPED_PRESENT = reg(
             "trapped_present", TrappedPresentRecipe.Serializer::new);
     public static final Supplier<RecipeSerializer<ItemLoreRecipe>> ITEM_LORE = reg(

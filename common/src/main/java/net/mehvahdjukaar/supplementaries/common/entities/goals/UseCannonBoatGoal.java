@@ -11,6 +11,7 @@ import java.util.EnumSet;
 
 import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.aimCannonAndShoot;
 
+//TOOD: uniform with cannon ai common
 //copied from skeleton soot goal
 public class UseCannonBoatGoal extends Goal {
     private final Mob mob;

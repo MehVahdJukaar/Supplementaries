@@ -41,7 +41,9 @@ public class ParrotLandOnPlundererGoal extends Goal {
     @Override
     public void tick() {
         if (!this.isSittingOnShoulder && !this.entity.isInSittingPose() && !this.entity.isLeashed()) {
-            if (this.entity.getBoundingBox().inflate(0.3, 0.3, 0.3).intersects(this.plunderer.getBoundingBox())) {
+            double cheatRadius = 0.25;
+            if (this.entity.getBoundingBox().inflate(cheatRadius, cheatRadius, cheatRadius)
+                    .intersects(this.plunderer.getBoundingBox())) {
                 this.isSittingOnShoulder = this.plunderer.setEntityOnShoulder(this.entity);
             }
         }
