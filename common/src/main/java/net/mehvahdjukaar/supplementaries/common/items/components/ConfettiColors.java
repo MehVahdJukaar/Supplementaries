@@ -5,8 +5,8 @@ import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
-import net.mehvahdjukaar.supplementaries.common.items.ConfettiPopperItem;
-import net.mehvahdjukaar.supplementaries.common.items.crafting.ConfettiDyeRecipe;
+import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
+import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -28,8 +28,13 @@ import java.util.stream.Collectors;
 
 public class ConfettiColors implements TooltipProvider {
     protected static final HashBiMap<DyeColor, Integer> COLOR_TO_DIFFUSE = Arrays.stream(DyeColor.values())
-            .collect(Collectors.toMap(Function.identity(), DyeColor::getFireworkColor,
+            .collect(Collectors.toMap(Function.identity(), ConfettiColors::dyeToRGB,
                     (color, color2) -> color2, HashBiMap::create));
+
+    private static int dyeToRGB(DyeColor dyeColor) {
+        return ColorHelper.prettyfyColor(new RGBColor(dyeColor.getTextColor()).asHSL())
+                .asRGB().toInt();
+    }
 
     public static final Codec<ConfettiColors> CODEC = Codec.INT.listOf().xmap(
             list -> new ConfettiColors(list.stream().mapToInt(i -> i).toArray()),
@@ -45,14 +50,14 @@ public class ConfettiColors implements TooltipProvider {
 
     public static final ConfettiColors EMPTY = new ConfettiColors();
 
-    public static ConfettiColors of (int... colors) {
+    public static ConfettiColors of(int... colors) {
         return new ConfettiColors(colors);
     }
 
-    public static ConfettiColors of (DyeColor ...colors) {
+    public static ConfettiColors of(DyeColor... colors) {
         IntList list = IntList.of();
         for (DyeColor c : colors) {
-            list.add(c.getFireworkColor());
+            list.add(dyeToRGB(c));
         }
         return new ConfettiColors(list.toIntArray());
     }
@@ -67,7 +72,7 @@ public class ConfettiColors implements TooltipProvider {
         }
         var c = ForgeHelper.getColor(stack);
         if (c != null) {
-            return c.getFireworkColor();
+            return dyeToRGB(c);
         }
         return null;
     }

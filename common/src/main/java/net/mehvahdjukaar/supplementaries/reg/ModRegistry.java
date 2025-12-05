@@ -83,14 +83,6 @@ public class ModRegistry {
             res("globe_data"), GlobeData::createFromLevel, GlobeData.CODEC, GlobeData.STREAM_CODEC
     );
 
-    public static final IAttachmentType<SlimedData, LivingEntity> SLIMED_DATA = RegHelper.registerDataAttachment(
-            res("slimed_data"),
-            () -> RegHelper.AttachmentBuilder.create(SlimedData::new)
-                    .syncWith(SlimedData.STREAM_CODEC)
-                    .persistent(SlimedData.CODEC),
-            LivingEntity.class
-    );
-
     //effects
     public static final RegSupplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
             res("overencumbered"), OverencumberedEffect::new);
@@ -104,7 +96,7 @@ public class ModRegistry {
     //        PlatHelper.newSpawnEgg(ModEntities.RED_MERCHANT, 0x7A090F, 0xF4f1e0, new Item.Properties()));
 
     public static final Supplier<Item> PLUNDERER_SPAWN_EGG_ITEM = regItem(PLUNDERER_NAME + "_spawn_egg", () ->
-            PlatHelper.newSpawnEgg(ModEntities.PLUNDERER, 0x989898, 0x4d2f29, new Item.Properties()));
+            PlatHelper.newSpawnEgg(ModEntities.PLUNDERER, 0x6b5745, 0xe89e64, new Item.Properties()));
 
 
     //dispenser minecart
@@ -1111,10 +1103,8 @@ public class ModRegistry {
     public static final Supplier<Block> CANNON = regWithItem(CANNON_NAME, () -> new CannonBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.ANVIL)
                     .isSuffocating(NEVER)
-                    //.forceSolidOff()
                     .forceSolidOn()
                     .isRedstoneConductor(NEVER)
-                    .isViewBlocking(NEVER)
                     .noOcclusion()
     ));
 
@@ -1218,21 +1208,19 @@ public class ModRegistry {
                     EndermanSkullBlockTile::new, ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get()));
 
     //spider head
+    public static final SkullBlock.Type SPIDER_SKULL_TYPE = () -> "supplementaries_spider_skull";
+
     public static final Supplier<SkullBlock> SPIDER_SKULL_BLOCK = regBlock(SPIDER_HEAD_NAME, () ->
-            new SpiderSkullBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+            new SkullBlock(SPIDER_SKULL_TYPE, BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
                     .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<WallSkullBlock> SPIDER_SKULL_BLOCK_WALL = regBlock("spider_wall_head", () ->
-            new SpiderWallSkullBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+            new WallSkullBlock(SPIDER_SKULL_TYPE, BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
                     .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<Item> SPIDER_SKULL_ITEM = regItem(SPIDER_HEAD_NAME, () ->
             new StandingAndWallBlockItem(SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get(),
                     new Item.Properties().rarity(Rarity.UNCOMMON), Direction.UP));
-
-    public static final Supplier<BlockEntityType<SkullBlockEntity>> SPIDER_SKULL_TILE = regTile(
-            SPIDER_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
-                    SpiderSkullBlockTile::new, SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get()));
 
     public static final Supplier<Block> BARNACLES = regWithItem(BARNACLES_NAME, () -> new BarnaclesBlock(
             BlockBehaviour.Properties.of()

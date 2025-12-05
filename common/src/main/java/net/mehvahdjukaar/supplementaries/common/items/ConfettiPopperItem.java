@@ -55,20 +55,15 @@ public class ConfettiPopperItem extends BlockItem {
         VibeChecker.assertSameLevel(level, player);
         ItemStack heldItem = player.getItemInHand(hand);
 
-        ConfettiColors colorsComp = heldItem.get(ModComponents.CONFETTI_COLORS.get());
-        int[] colors;
-        if (colorsComp != null) {
-            colors = colorsComp.getColors().stream().mapToInt(i -> i).toArray();
-        } else {
-            colors = new int[]{};
-        }
+
 
         //no clue why im doing this from server side
         Vec3 pos = player.getEyePosition().add(player.getLookAngle().scale(0.2)).add(0d, -0.25, 0d);
         //hack
         float oldRot = player.getXRot();
         player.setXRot((float) (oldRot - 20 * Math.cos(oldRot * Mth.DEG_TO_RAD)));
-        ClientBoundParticlePacket packet = new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.CONFETTI, player.getLookAngle(), colors);
+        Vec3 dir = player.getLookAngle();
+        ClientBoundParticlePacket packet = getConfettiPacket(heldItem, pos, dir);
         player.setXRot(oldRot);
         if (!level.isClientSide) {
             NetworkHelper.sendToAllClientPlayersTrackingEntity(player, packet);
@@ -81,6 +76,18 @@ public class ConfettiPopperItem extends BlockItem {
 
         heldItem.consume(1, player);
         return InteractionResultHolder.sidedSuccess(heldItem, level.isClientSide);
+    }
+
+    public static @NotNull ClientBoundParticlePacket getConfettiPacket(ItemStack heldItem, Vec3 pos, Vec3 dir) {
+        ConfettiColors colorsComp = heldItem.get(ModComponents.CONFETTI_COLORS.get());
+        int[] colors;
+        if (colorsComp != null) {
+            colors = colorsComp.getColors().stream().mapToInt(i -> i).toArray();
+        } else {
+            colors = new int[]{};
+        }
+        return new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.CONFETTI,
+                dir, colors);
     }
 
     @Override
