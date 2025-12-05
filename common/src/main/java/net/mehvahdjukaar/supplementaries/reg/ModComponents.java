@@ -41,6 +41,9 @@ public class ModComponents {
     public static final Supplier<DataComponentType<BlackboardData>> BLACKBOARD = register("blackboard",
             BlackboardData.CODEC, BlackboardData.STREAM_CODEC, true);
 
+    public static final Supplier<DataComponentType<ConfettiColors>> CONFETTI_COLORS = register("confetti_colors",
+            ConfettiColors.CODEC, ConfettiColors.STREAM_CODEC, true);
+
     public static final Supplier<DataComponentType<LunchBaskedContent>> LUNCH_BASKET_CONTENT = register("lunch_basket_content",
             LunchBaskedContent.CODEC, LunchBaskedContent.STREAM_CODEC, true);
 

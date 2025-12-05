@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.worldgen.LocatedStructure;
 import net.mehvahdjukaar.supplementaries.common.worldgen.RoadSignFeature;
 import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -26,7 +27,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
 
     private static final ExecutorService EXECUTORS = Executors.newCachedThreadPool();
 
-    private CompletableFuture<List<StructureLocator.LocatedStruct>> threadResult;
+    private CompletableFuture<List<LocatedStructure>> threadResult;
     private boolean firstTick = true;
     private RoadSignFeature.Config config = null;
 
@@ -41,7 +42,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
         if (tile.firstTick) {
             tile.firstTick = false;
 
-            tile.threadResult = CompletableFuture.supplyAsync(() -> StructureLocator.findNearestMapFeatures(
+            tile.threadResult = CompletableFuture.supplyAsync(() -> StructureLocator.findNearestStructures(
                     (ServerLevel) level, ModTags.ROAD_SIGN_DESTINATIONS, pos, 250,
                     false, 2, CommonConfigs.Building.ROAD_SIGN_MAX_SEARCHES.get(),
                             CommonConfigs.Building.ROAD_SIGN_EXIT_EARLY.get()),

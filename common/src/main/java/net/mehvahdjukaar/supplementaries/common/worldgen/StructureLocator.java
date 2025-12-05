@@ -176,8 +176,7 @@ public class StructureLocator {
 
                 // Check candidate positions in current ring
                 // Use less precise search after 2000 blocks
-                boolean useLessPreciseSearch = stopSearchWhenFound || radius > 2000;
-                useLessPreciseSearch = false;
+                boolean useLessPreciseSearch = stopSearchWhenFound || (radius*16 > 2000);
                 //we only flush here so the results are most accurate and we dont miss stuff thats closer
                 if (lastIteration != ring.commonIterationsIndex()) { //new iteration over all the scales
                     lastIteration = ring.commonIterationsIndex();

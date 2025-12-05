@@ -4,7 +4,7 @@ import java.util.*;
 
 public class FairRingIterator implements Iterator<FairRingIterator.Ring>, Iterable<FairRingIterator.Ring> {
 
-    public record Ring(int gridSize, int radius, int commonIterations) {
+    public record Ring(int gridSize, int radius, int commonIterationsIndex) {
     }
 
     private static class GridRing {
@@ -47,9 +47,9 @@ public class FairRingIterator implements Iterator<FairRingIterator.Ring>, Iterab
 
             int kMax;
             if (inclusive) {
-                kMax = (int) Math.ceil((double) (maxRadius - s) / s); // include rings that cover maxRadius
+                kMax = (int) Math.ceil((double) (maxRadius) / s); // include rings that cover maxRadius
             } else {
-                kMax = (int) ((maxRadius - s) / s); // floor division
+                kMax = (int) ((maxRadius) / s); // floor division
             }
 
             pq.add(new GridRing(i, s, 0, kMax));
@@ -82,7 +82,7 @@ public class FairRingIterator implements Iterator<FairRingIterator.Ring>, Iterab
             commonIterations = commonIterations();
         }
 
-        return new Ring(gr.gridSize, snapped + gr.gridSize, commonIterations);
+        return new Ring(gr.gridSize, snapped , commonIterations);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.trades;
 
 import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.moonlight.api.map.MapHelper;
+import net.mehvahdjukaar.supplementaries.common.worldgen.LocatedStructure;
 import net.mehvahdjukaar.supplementaries.common.worldgen.StructureLocator;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -52,11 +53,11 @@ public class AdventurerMapsHandler {
         }
 
         int maxSearches = CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAPS_MAX_SEARCHES.get();
-        var found = StructureLocator.findNearestMapFeature(
+        LocatedStructure found = StructureLocator.findNearestStructure(
                 serverLevel, targets, pos, radius, skipKnown, maxSearches, false);
 
         if (found != null) {
-            BlockPos toPos = found.pos();
+            BlockPos toPos = found.position();
             return createStructureMap(serverLevel, toPos, found.structure(), zoom, mapMarker, name, color);
         }
         return ItemStack.EMPTY;

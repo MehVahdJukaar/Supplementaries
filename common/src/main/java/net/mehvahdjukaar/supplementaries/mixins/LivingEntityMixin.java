@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Holder;
@@ -52,7 +53,7 @@ public abstract class LivingEntityMixin extends Entity {
         }
         // yes they stack
         LivingEntity self = (LivingEntity) (Object) this;
-        SlimedData data = ModRegistry.SLIMED_DATA.getOrCreate(self);
+        SlimedData data = ModEntities.SLIMED_DATA.getOrCreate(self);
         if (data.isSlimed()) {
             var mode = CommonConfigs.Tweaks.HINDERS_JUMP.get();
             if (mode.isOn(this.level())) {
@@ -96,7 +97,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void suppl$slimeTick(CallbackInfo ci) {
         if (CommonConfigs.Tweaks.SLIMED_EFFECT.get()) {
             LivingEntity le = (LivingEntity) (Object) this;
-            SlimedData data = ModRegistry.SLIMED_DATA.getOrNull(le);
+            SlimedData data = ModEntities.SLIMED_DATA.getOrNull(le);
             if (data != null) data.tick(le);
         }
     }
