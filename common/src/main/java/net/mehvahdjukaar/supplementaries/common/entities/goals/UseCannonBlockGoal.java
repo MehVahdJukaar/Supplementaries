@@ -14,6 +14,7 @@ import net.minecraft.world.entity.ai.village.poi.PoiRecord;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 import java.util.stream.Stream;
@@ -32,6 +33,7 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
     private final PlundererEntity plunderer;
 
     private int attackDelay = 0;
+    private int ticksUsingCannon = 0;
 
     public UseCannonBlockGoal(PlundererEntity mob, double speedModifier, int searchRange) {
         super(mob, speedModifier, searchRange);
@@ -100,7 +102,7 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
     @Override
     protected boolean isValidTarget(LevelReader level, BlockPos pos) {
         BlockEntity be = level.getBlockEntity(pos);
-        return (be instanceof CannonBlockTile cb && cb.canBeUsedBy(pos, this.mob));
+        return (be instanceof CannonBlockTile cb && cb.canBeUsedBy(pos, this.mob) && cb.hasFuelAndProjectiles());
     }
 
     //idk why its not like this before
@@ -119,11 +121,34 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
             Level level = mob.level();
             var cannonTile = (CannonBlockTile) level.getBlockEntity(this.blockPos);
 
+            ticksUsingCannon++;
             //shoot
             if (attackDelay > 0) {
                 attackDelay--;
             }
-            if (aimCannonAndShoot(cannonTile.selfAccess, mob, mob.getTarget(), attackDelay <= 0)) {
+            boolean canShoot = attackDelay <= 0;
+            //check if we are in the way and move out incase we are
+            Vec3 center = Vec3.atCenterOf(cannonTile.getBlockPos());
+            Vec3 targetPos = mob.getTarget().position();
+            Vec3 myPos = mob.position();
+
+            Vec3 toTarget = targetPos.subtract(center);
+            Vec3 toMe = myPos.subtract(center);
+
+            double dot = toTarget.normalize().dot(toMe.normalize());
+
+            double t = toMe.dot(toTarget.normalize());
+            boolean between = t > 0 && t < toTarget.length();
+
+            if (dot > 0.6 && between) { // only block if aligned AND between
+                Direction wantedDir = Direction.getNearest(-toTarget.x, -toTarget.y, -toTarget.z);
+                moveAroundCannon(wantedDir);
+                return;
+            }
+
+            if (!mob.getNavigation().isDone()) return;
+
+            if (aimCannonAndShoot(cannonTile.selfAccess, mob, mob.getTarget(), canShoot)) {
                 attackDelay = Mth.randomBetweenInclusive(level.random, 20, 40); //random delay between shots
             }
         }

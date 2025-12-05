@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PlundererItemInHandRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PlundererParrotOnShoulderLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.PlundererModel;
 import net.mehvahdjukaar.supplementaries.common.entities.PlundererEntity;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -9,6 +10,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.IllagerRenderer;
+import net.minecraft.client.renderer.entity.layers.ParrotOnShoulderLayer;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class PlundererRenderer extends IllagerRenderer<PlundererEntity> {
@@ -16,6 +19,7 @@ public class PlundererRenderer extends IllagerRenderer<PlundererEntity> {
     public PlundererRenderer(EntityRendererProvider.Context context) {
         super(context, new PlundererModel(context.bakeLayer(ClientRegistry.PLUNDERER_MODEL)), 0.5F);
         this.addLayer(new PlundererItemInHandRenderer<>(this, context.getItemInHandRenderer()));
+        this.addLayer(new PlundererParrotOnShoulderLayer<>(this, context.getModelSet()));
     }
 
 

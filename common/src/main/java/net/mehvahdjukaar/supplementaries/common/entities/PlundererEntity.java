@@ -3,7 +3,10 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatMoveController;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatPathNavigation;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.LookControlWithSpyglass;
+import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.*;
+import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
@@ -22,7 +25,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
@@ -30,8 +32,11 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Pillager;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
@@ -40,6 +45,7 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.providers.EnchantmentProvider;
 import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders;
@@ -50,10 +56,14 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 public class PlundererEntity extends AbstractIllager implements InventoryCarrier, ISpyglassMob {
+    private static final float PARROT_CHANE = 0.2f;
+
     private static final int INVENTORY_SIZE = 5;
     private static final int SLOT_OFFSET = 300;
     protected static final EntityDataAccessor<Boolean> USING_SPYGLASS =
             SynchedEntityData.defineId(PlundererEntity.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDataAccessor<CompoundTag> DATA_SHOULDER_LEFT = SynchedEntityData.defineId(PlundererEntity.class, EntityDataSerializers.COMPOUND_TAG);
+    protected static final EntityDataAccessor<CompoundTag> DATA_SHOULDER_RIGHT = SynchedEntityData.defineId(PlundererEntity.class, EntityDataSerializers.COMPOUND_TAG);
 
     private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
 
@@ -62,6 +72,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     private final BoatMoveController boatController;
     private final MoveControl defaultController;
 
+    private float timeEntitySatOnShoulder = 0;
     private BlockPos lastKnownCannonPos = null;
 
     public PlundererEntity(EntityType<? extends PlundererEntity> entityType, Level level) {
@@ -71,13 +82,13 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         this.lookControl = new LookControlWithSpyglass<>(this);
     }
 
-
     @Override
     public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         //don't remove when has target that's a player
         if (this.getTarget() instanceof Player) {
             return false;
         }
+
         return super.removeWhenFarAway(distanceToClosestPlayer);
     }
 
@@ -113,11 +124,26 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         //TODO: go to boat,leave boat, switch to captain, soot cannon
         //this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1, 20));
 
-        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6));
+        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6){
+            @Override
+            public boolean canContinueToUse() {
+                return super.canContinueToUse();
+            }
+
+            @Override
+            public boolean canUse() {
+                return super.canUse();
+            }
+        });
         this.goalSelector.addGoal(9, new PlundererLookAtPlayerGoal(this, Player.class, 1.0F));
         this.goalSelector.addGoal(10, new PlundererLookAtPlayerGoal(this, Mob.class));
     }
     //got to do this since the accessors aren't used consistently...
+
+    @Override
+    public void setNoActionTime(int idleTime) {
+        super.setNoActionTime(idleTime);
+    }
 
     @Override
     protected void customServerAiStep() {
@@ -131,6 +157,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         super.customServerAiStep();
     }
 
+
     @Override
     protected PathNavigation createNavigation(Level level) {
         this.boatNavigation = new BoatPathNavigation(this, level);
@@ -142,6 +169,8 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(USING_SPYGLASS, false);
+        builder.define(DATA_SHOULDER_LEFT, new CompoundTag());
+        builder.define(DATA_SHOULDER_RIGHT, new CompoundTag());
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -183,6 +212,13 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         super.addAdditionalSaveData(compound);
         RegistryAccess ra = this.registryAccess();
         this.writeInventoryToTag(compound, ra);
+
+        if (!this.getShoulderEntityLeft().isEmpty()) {
+            compound.put("ShoulderEntityLeft", this.getShoulderEntityLeft());
+        }
+        if (!this.getShoulderEntityRight().isEmpty()) {
+            compound.put("ShoulderEntityRight", this.getShoulderEntityRight());
+        }
     }
 
     @Override
@@ -191,6 +227,14 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         RegistryAccess ra = this.registryAccess();
         this.readInventoryFromTag(compound, ra);
         this.setCanPickUpLoot(true);
+
+        if (compound.contains("ShoulderEntityLeft", 10)) {
+            this.setShoulderEntityLeft(compound.getCompound("ShoulderEntityLeft"));
+        }
+        if (compound.contains("ShoulderEntityRight", 10)) {
+            this.setShoulderEntityRight(compound.getCompound("ShoulderEntityRight"));
+        }
+
     }
 
     @Override
@@ -201,15 +245,6 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     @Override
     public int getMaxSpawnClusterSize() {
         return 1;
-    }
-
-    @Nullable
-    @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
-        RandomSource randomSource = level.getRandom();
-        this.populateDefaultEquipmentSlots(randomSource, difficulty);
-        this.populateDefaultEquipmentEnchantments(level, randomSource, difficulty);
-        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
     @Override
@@ -286,5 +321,136 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         }
     }
 
+    // parrot. A bunch of copied player code
+
+    @Nullable
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType,
+                                        @Nullable SpawnGroupData spawnGroupData) {
+
+        RandomSource randomSource = level.getRandom();
+        this.populateDefaultEquipmentSlots(randomSource, difficulty);
+        this.populateDefaultEquipmentEnchantments(level, randomSource, difficulty);
+        spawnGroupData = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
+        if (level.getRandom().nextFloat() < PARROT_CHANE) {
+            Parrot parrot = EntityType.PARROT.create(this.level());
+            if (parrot != null) {
+                parrot.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
+                parrot.finalizeSpawn(level, difficulty, spawnType, null);
+
+                this.setEntityOnShoulder(parrot);
+            }
+        }
+        return spawnGroupData;
+    }
+
+
+    public CompoundTag getShoulderEntityLeft() {
+        return this.entityData.get(DATA_SHOULDER_LEFT);
+    }
+
+    protected void setShoulderEntityLeft(CompoundTag entityCompound) {
+        this.entityData.set(DATA_SHOULDER_LEFT, entityCompound);
+    }
+
+    public CompoundTag getShoulderEntityRight() {
+        return this.entityData.get(DATA_SHOULDER_RIGHT);
+    }
+
+    protected void setShoulderEntityRight(CompoundTag entityCompound) {
+        this.entityData.set(DATA_SHOULDER_RIGHT, entityCompound);
+    }
+
+    public boolean setEntityOnShoulder(LivingEntity parrot) {
+        CompoundTag compoundTag = new CompoundTag();
+        parrot.saveAsPassenger(compoundTag);
+        float leftChance = this.getMainArm() == HumanoidArm.RIGHT ? 0.8f : 0.2f;
+        if (this.setEntityOnShoulder(compoundTag, this.random.nextFloat() < leftChance)) {
+            parrot.discard();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean setEntityOnShoulder(CompoundTag entityCompound, boolean leftFirst) {
+        boolean success = false;
+
+        if (leftFirst) {
+            if (this.getShoulderEntityLeft().isEmpty()) {
+                this.setShoulderEntityLeft(entityCompound);
+                success = true;
+            } else if (this.getShoulderEntityRight().isEmpty()) {
+                this.setShoulderEntityRight(entityCompound);
+                success = true;
+            }
+        } else {
+            if (this.getShoulderEntityRight().isEmpty()) {
+                this.setShoulderEntityRight(entityCompound);
+                success = true;
+            } else if (this.getShoulderEntityLeft().isEmpty()) {
+                this.setShoulderEntityLeft(entityCompound);
+                success = true;
+            }
+        }
+        if (success) {
+            this.timeEntitySatOnShoulder = this.level().getGameTime();
+        }
+        return success;
+    }
+
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        //same as player
+        this.playShoulderEntityAmbientSound(this.getShoulderEntityLeft());
+        this.playShoulderEntityAmbientSound(this.getShoulderEntityRight());
+        if (!this.level().isClientSide && (this.fallDistance > 1.5F || this.isUnderWater()) || this.isSleeping() || this.isInPowderSnow) {
+            this.removeEntitiesOnShoulder();
+        }
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float amount) {
+        boolean didHurt = super.hurt(source, amount);
+        if (didHurt && !this.level().isClientSide) {
+            this.removeEntitiesOnShoulder();
+        }
+        return didHurt;
+    }
+
+
+    protected void removeEntitiesOnShoulder() {
+        if (this.timeEntitySatOnShoulder + 20L < this.level().getGameTime()) {
+            this.respawnEntityOnShoulder(this.getShoulderEntityLeft());
+            this.setShoulderEntityLeft(new CompoundTag());
+            this.respawnEntityOnShoulder(this.getShoulderEntityRight());
+            this.setShoulderEntityRight(new CompoundTag());
+        }
+    }
+
+    private void respawnEntityOnShoulder(CompoundTag entityCompound) {
+        if (!this.level().isClientSide && !entityCompound.isEmpty()) {
+            EntityType.create(entityCompound, this.level()).ifPresent((entity) -> {
+                LivingEntityTamable tamable = ModEntities.LIVING_TAMABLE.getOrCreate((LivingEntity) entity);
+                tamable.setOwner(this);
+                entity.setPos(this.getX(), this.getY() + 0.699999988079071, this.getZ());
+                ((ServerLevel) this.level()).addWithUUID(entity);
+            });
+        }
+
+    }
+
+    private void playShoulderEntityAmbientSound(@Nullable CompoundTag entityCompound) {
+        if (entityCompound != null && (!entityCompound.contains("Silent") || !entityCompound.getBoolean("Silent")) && this.level().random.nextInt(200) == 0) {
+            String string = entityCompound.getString("id");
+            EntityType.byString(string).filter((entityType) -> entityType == EntityType.PARROT).ifPresent((entityType) -> {
+                if (!Parrot.imitateNearbyMobs(this.level(), this)) {
+                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), Parrot.getAmbient(this.level(), this.level().random), this.getSoundSource(), 1.0F, Parrot.getPitch(this.level().random));
+                }
+            });
+        }
+
+    }
 
 }
