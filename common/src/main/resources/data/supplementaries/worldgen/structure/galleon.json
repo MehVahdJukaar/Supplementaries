@@ -26,5 +26,32 @@
   "start_pool": "supplementaries:galleon/start_pool",
   "step": "surface_structures",
   "liquid_settings": "ignore_waterlogging",
-  "require_sea_level": true
+  "require_sea_level": true,
+  "biome_point": {
+    "continentalness": {
+      "min": -0.92,
+      "max": -0.48
+    },
+    "temperature": {
+      "min": -2,
+      "max": 2
+    },
+    "humidity": {
+      "min": -2,
+      "max": 2
+    },
+    "erosion": {
+      "min": -2,
+      "max": 2
+    },
+    "depth": {
+      "min": -2,
+      "max": 2
+    },
+    "weirdness": {
+      "min": -2,
+      "max": 2
+    },
+    "offset": 0
+  }
 }
