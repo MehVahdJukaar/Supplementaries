@@ -55,8 +55,10 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
         poseStack.translate(0.5, 0.5, 0.5);
         BlockPos pos = tile.getBlockPos();
         long l = tile.getLevel().getGameTime();
-        for (var e : tile.getBuntings().entrySet()) {
-            renderBunting(e.getValue(), e.getKey(), partialTicks, poseStack,
+        for (Direction d : Direction.Plane.HORIZONTAL) {
+            DyeColor color = tile.getBunting(d);
+            if (color == null) continue;
+            renderBunting(color, d, partialTicks, poseStack,
                     null, bufferIn, combinedLightIn,
                     combinedOverlayIn, pos, l);
         }

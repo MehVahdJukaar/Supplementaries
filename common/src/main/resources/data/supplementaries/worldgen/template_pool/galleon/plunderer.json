@@ -1,6 +1,46 @@
 {
-  "name": "supplementaries:galleon/plunderer",
+  "name": "supplementaries:galleon/boats",
   "fallback": "minecraft:empty",
   "elements": [
+    {
+      "weight": 4,
+      "element": {
+        "element_type": "minecraft:feature_pool_element",
+        "feature": {
+          "placement": [
+          ],
+          "feature": {
+            "config": {
+              "entity": "supplementaries:plunderer"
+            },
+            "type": "supplementaries:spawn_entity_with_passengers"
+          }
+        },
+        "projection": "rigid"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:feature_pool_element",
+        "feature": {
+          "placement": [
+          ],
+          "feature": {
+            "config": {
+              "entity": "minecraft:pillager"
+            },
+            "type": "supplementaries:spawn_entity_with_passengers"
+          }
+        },
+        "projection": "rigid"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:empty_pool_element"
+      }
+    }
   ]
 }

@@ -72,6 +72,14 @@ public class ServerEventsFabric {
                     GenerationStep.Decoration.UNDERGROUND_DECORATION,
                     ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("basalt_ash")));
         }
+        if(CommonConfigs.Building.BARNACLES_ENABLED.get()){
+            BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_BARNACLES),
+                    GenerationStep.Decoration.VEGETAL_DECORATION,
+                    ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("shore_barnacles")));
+            BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_BARNACLES),
+                    GenerationStep.Decoration.VEGETAL_DECORATION,
+                    ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("ocean_barnacles")));
+        }
     }
 
     private static InteractionResult onRightClickBlock(Player player, Level level, InteractionHand hand, BlockHitResult hitResult) {

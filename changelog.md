@@ -1,21 +1,6 @@
-- sign recipe
-- fixed lumisene bucket and bottle not having forge cap
-- present stack more than 1
-- improved gui interactions
-- turn table analog rotation of cannons
-- fire pit loot
-- more config for structure location
-- fixed some missing textures
-- improved the speed and accuracy of way sign and adventurer maps structure locations
-- jei recipe displays will be hidden when their recipe is disabled
-- villagers use confetti when celebrating a raid
-- confetti poppers can be dyed
-- notice boards dont conduct power and also give comparator output as their current page index
-- confetti work in dispensers
-- added recipe advancements
-- improved rotation of cannons, buntings and sign posts in structure
-- glowing eyes for spider and enderman skulls
-- fixed some missing null checks in color providers
-- vista and canon turn table rotation
+
+- todo: vista and canon turn table rotation
 - todo: soul fired, fix sawmill and improve recipe gen
 - todo. rotation for cannons, safe and cannon loot tables
+- todo: fix pillagers in boats not facing right
+- todo: fix pillagers not moving while shooting and strafing. could be dangerous here, parrot thing

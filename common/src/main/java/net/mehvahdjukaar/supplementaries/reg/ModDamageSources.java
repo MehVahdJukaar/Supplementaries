@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
+import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -16,13 +16,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class ModDamageSources {
 
-    public static final HolderReference<DamageType> SPIKE = HolderReference.of(Supplementaries.res("bamboo_spikes"), Registries.DAMAGE_TYPE);
-    public static final HolderReference<DamageType> BOTTLING = HolderReference.of(Supplementaries.res("xp_extracting"), Registries.DAMAGE_TYPE);
-    public static final HolderReference<DamageType> BOMB = HolderReference.of(Supplementaries.res("bomb_explosion"), Registries.DAMAGE_TYPE);
-    public static final HolderReference<DamageType> PLAYER_BOMB = HolderReference.of(Supplementaries.res("player_bomb_explosion"), Registries.DAMAGE_TYPE);
-    public static final HolderReference<DamageType> CANNONBALL = HolderReference.of(Supplementaries.res("cannonball"), Registries.DAMAGE_TYPE);
-    public static final HolderReference<DamageType> PLAYER_CANNONBALL = HolderReference.of(Supplementaries.res("player_cannonball"), Registries.DAMAGE_TYPE);
-    public static final HolderReference<DamageType> SLINGSHOT = HolderReference.of(Supplementaries.res("slingshot"), Registries.DAMAGE_TYPE);
+    public static final HolderRef<DamageType> SPIKE = HolderRef.of(Supplementaries.res("bamboo_spikes"), Registries.DAMAGE_TYPE);
+    public static final HolderRef<DamageType> BOTTLING = HolderRef.of(Supplementaries.res("xp_extracting"), Registries.DAMAGE_TYPE);
+    public static final HolderRef<DamageType> BOMB = HolderRef.of(Supplementaries.res("bomb_explosion"), Registries.DAMAGE_TYPE);
+    public static final HolderRef<DamageType> PLAYER_BOMB = HolderRef.of(Supplementaries.res("player_bomb_explosion"), Registries.DAMAGE_TYPE);
+    public static final HolderRef<DamageType> CANNONBALL = HolderRef.of(Supplementaries.res("cannonball"), Registries.DAMAGE_TYPE);
+    public static final HolderRef<DamageType> PLAYER_CANNONBALL = HolderRef.of(Supplementaries.res("player_cannonball"), Registries.DAMAGE_TYPE);
+    public static final HolderRef<DamageType> SLINGSHOT = HolderRef.of(Supplementaries.res("slingshot"), Registries.DAMAGE_TYPE);
 
     public static DamageSource spikePlayer(Player player) {
         return new SpikePlayerDamageSource(SPIKE.getHolder(player), player);

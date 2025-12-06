@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.serialization.MapCodec;
-import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,7 +9,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -21,9 +23,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
-import java.util.Set;
-
 public class BarnaclesBlock extends MultifaceBlock implements BonemealableBlock, SimpleWaterloggedBlock {
     public static final MapCodec<BarnaclesBlock> CODEC = simpleCodec(BarnaclesBlock::new);
     private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -33,6 +32,55 @@ public class BarnaclesBlock extends MultifaceBlock implements BonemealableBlock,
     public BarnaclesBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
+    }
+
+    //can attach to stuff
+    protected boolean canBeAttachTo(BlockGetter level, Direction direction, BlockPos pos, BlockState state) {
+        return MultifaceBlock.canAttachTo(level, direction, pos, state)
+                && state.isSolid();
+    }
+
+    @Override
+    public boolean isValidStateForPlacement(BlockGetter level, BlockState state, BlockPos pos, Direction direction) {
+        if (this.isFaceSupported(direction) && (!state.is(this) || !hasFace(state, direction))) {
+            BlockPos blockPos = pos.relative(direction);
+            return canBeAttachTo(level, direction, blockPos, level.getBlockState(blockPos));
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        boolean bl = false;
+
+        for (Direction direction : DIRECTIONS) {
+            if (hasFace(state, direction)) {
+                BlockPos blockPos = pos.relative(direction);
+                if (!canBeAttachTo(level, direction, blockPos, level.getBlockState(blockPos))) {
+                    return false;
+                }
+                bl = true;
+            }
+        }
+        return bl;
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        if (state.getValue(WATERLOGGED)) {
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        }
+        if (!hasAnyFace(state)) {
+            return Blocks.AIR.defaultBlockState();
+        } else {
+            return hasFace(state, direction) && !canBeAttachTo(level, direction, neighborPos, neighborState) ? removeFace(state, getFaceProperty(direction)) : state;
+        }
+    }
+
+    private static BlockState removeFace(BlockState state, BooleanProperty faceProp) {
+        BlockState blockState = state.setValue(faceProp, false);
+        return hasAnyFace(blockState) ? blockState : Blocks.AIR.defaultBlockState();
     }
 
     @Override
@@ -47,7 +95,7 @@ public class BarnaclesBlock extends MultifaceBlock implements BonemealableBlock,
             Direction[] directions = MultifaceBlock.availableFaces(state).toArray(Direction[]::new);
             Direction dir = directions[random.nextInt(directions.length)];
             //TODO: custom smaller growing longer lasting particles?
-            ParticleUtils.spawnParticleOnFace(level, pos, dir, ParticleTypes.BUBBLE, new Vec3(0,0.1,0), 0.44f);
+            ParticleUtils.spawnParticleOnFace(level, pos, dir, ParticleTypes.BUBBLE, new Vec3(0, 0.1, 0), 0.44f);
         }
     }
 
@@ -55,15 +103,6 @@ public class BarnaclesBlock extends MultifaceBlock implements BonemealableBlock,
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(WATERLOGGED);
-    }
-
-    @Override
-    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        if (state.getValue(WATERLOGGED)) {
-            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        }
-
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
     }
 
     @Override

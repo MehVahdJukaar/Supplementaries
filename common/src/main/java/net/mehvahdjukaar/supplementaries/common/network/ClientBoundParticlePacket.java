@@ -30,9 +30,7 @@ public class ClientBoundParticlePacket implements Message {
 
     public ClientBoundParticlePacket(RegistryFriendlyByteBuf buffer) {
         this.type = buffer.readEnum(Kind.class);
-        if (buffer.readBoolean()) {
-            this.extraData = new int[]{buffer.readInt()};
-        } else this.extraData = new int[0];
+        this.extraData = buffer.readVarIntArray();
         if (buffer.readBoolean()) {
             this.pos = new Vec3(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
         } else {
@@ -57,7 +55,7 @@ public class ClientBoundParticlePacket implements Message {
         this(pos, type, null, extraData);
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, Kind type, @Nullable Vec3 direction,  int ...extraData) {
+    public ClientBoundParticlePacket(Vec3 pos, Kind type, @Nullable Vec3 direction, int... extraData) {
         this.pos = pos;
         this.type = type;
         this.dir = direction;
@@ -78,7 +76,7 @@ public class ClientBoundParticlePacket implements Message {
     @Override
     public void write(RegistryFriendlyByteBuf buffer) {
         buffer.writeEnum(this.type);
-            buffer.writeVarIntArray(this.extraData);
+        buffer.writeVarIntArray(this.extraData);
         if (pos != null) {
             buffer.writeBoolean(true);
             buffer.writeDouble(this.pos.x);
@@ -111,8 +109,9 @@ public class ClientBoundParticlePacket implements Message {
         return Arrays.stream(extraData).boxed().collect(Collectors.toList());
     }
 
+    @Nullable
     public Integer getFirstExtraData() {
-        if (extraData != null && extraData.length > 0) {
+        if (extraData.length > 0) {
             return extraData[0];
         }
         return null;

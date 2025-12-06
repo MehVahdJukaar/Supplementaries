@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapMarker;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLSpecialMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.map.decoration.SimpleMapMarker;
+import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
 import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -40,8 +41,8 @@ public class ModMapMarkers {
     //builtin code defined ones
 
     //with markers
-    public static final HolderReference<MLMapDecorationType<?, ?>> DEATH_MARKER =
-            HolderReference.of(Supplementaries.res("death_marker"), MapDataRegistry.MAP_DECORATION_REGISTRY_KEY);
+    public static final HolderRef<MLMapDecorationType<?, ?>> DEATH_MARKER =
+            HolderRef.of(Supplementaries.res("death_marker"), MapDataRegistry.MAP_DECORATION_REGISTRY_KEY);
 
     public static final ResourceLocation WAY_SIGN_FACTORY_ID = Supplementaries.res("way_sign");
     public static final ResourceLocation WAYSTONE_FACTORY_ID = Supplementaries.res("waystone");

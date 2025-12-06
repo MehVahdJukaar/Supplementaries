@@ -16,6 +16,7 @@ import net.minecraft.world.entity.ai.behavior.BehaviorUtils;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.phys.Vec3;
 
 import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.aimCannonAndShoot;
@@ -81,7 +82,7 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
         if (attackDelay > 0) {
             attackDelay--;
         }
-        if (aimCannonAndShoot(access, owner, livingentity, attackDelay <= 0)) {
+        if (aimCannonAndShoot(access, (Raider) owner, livingentity, attackDelay <= 0)) {
             attackDelay = Mth.randomBetweenInclusive(level.random, 20, 40); //random delay between shots
         }
     }

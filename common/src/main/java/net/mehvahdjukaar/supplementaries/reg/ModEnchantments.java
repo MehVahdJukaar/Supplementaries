@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
 import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.component.DataComponentType;
@@ -17,7 +18,7 @@ public class ModEnchantments {
     }
 
     //enchantment
-    public static final HolderReference<Enchantment> STASIS_ENCHANTMENT = HolderReference.of(
+    public static final HolderRef<Enchantment> STASIS_ENCHANTMENT = HolderRef.of(
             res("stasis"), Registries.ENCHANTMENT);
 
 

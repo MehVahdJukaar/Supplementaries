@@ -17,6 +17,8 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
+import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -97,6 +99,18 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
                     if (CommonConfigs.Functional.URN_PILE_ENABLED.get()) {
                         builder.addTag(BiomeTags.IS_OVERWORLD);
+                    }
+                    sink.addTag(builder, Registries.BIOME);
+                }
+
+                //barnacles
+                {
+                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BARNACLES);
+
+                    if (CommonConfigs.Building.BARNACLES_ENABLED.get()) {
+                        builder.addTag(BiomeTags.IS_OCEAN);
+                        builder.add(Biomes.STONY_SHORE.location());
+                        builder.addTag(BiomeTags.IS_BEACH);
                     }
                     sink.addTag(builder, Registries.BIOME);
                 }

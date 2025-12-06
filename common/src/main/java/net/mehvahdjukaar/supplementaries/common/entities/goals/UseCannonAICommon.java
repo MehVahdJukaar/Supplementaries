@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.phys.Vec3;
 
 public final class UseCannonAICommon {
@@ -19,7 +20,7 @@ public final class UseCannonAICommon {
     public static final int GOAL_INTERVAL = 90;
     public static final int SHOOTING_COOLDOWN = 60;
 
-    public static boolean aimCannonAndShoot(CannonAccess access, LivingEntity shooter, LivingEntity target, boolean canShoot) {
+    public static boolean aimCannonAndShoot(CannonAccess access, Raider shooter, LivingEntity target, boolean canShoot) {
         CannonBlockTile cannonTile = access.getInternalCannon();
         if (cannonTile.isOnCooldown()) return false;
 
@@ -65,6 +66,10 @@ public final class UseCannonAICommon {
                 double distance1 = hitLoc.distanceTo(targetLoc);
                 if (distance1 < 0.1) {
                     cannonTile.ignite(shooter, access);
+
+                    shooter.playSound(shooter.getCelebrateSound(), 1.0F, 1.2F);
+
+
                     return true;
                 }
             }

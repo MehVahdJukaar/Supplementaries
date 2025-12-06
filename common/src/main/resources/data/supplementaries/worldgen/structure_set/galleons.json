@@ -6,18 +6,19 @@
     }
   ],
   "placement": {
-
-    "type": "minecraft:random_spread",
-
+    "type": "supplementaries:random_spread_with_exclusion",
     "salt": 121047156,
-
-    "spacing": 22,
-
-    "separation": 10,
-
-    "exclusion_zone": {
-      "chunk_count": 16,
-      "other_set": "minecraft:villages"
-    }
+    "spacing": 30,
+    "separation": 18,
+    "exclusion_zones": [
+      {
+        "chunk_count": 16,
+        "other_set": "minecraft:villages"
+      },
+      {
+        "chunk_count": 5,
+        "other_set": "minecraft:ocean_monuments"
+      }
+    ]
   }
 }

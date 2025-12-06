@@ -299,6 +299,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         return i >= 0 && i < this.inventory.getContainerSize() ? SlotAccess.forContainer(this.inventory, i) : super.getSlot(slot);
     }
 
+    //TODO: add this
     @Override
     public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {
         Raid raid = this.getCurrentRaid();
@@ -448,7 +449,8 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
             String string = entityCompound.getString("id");
             EntityType.byString(string).filter((entityType) -> entityType == EntityType.PARROT).ifPresent((entityType) -> {
                 if (!Parrot.imitateNearbyMobs(this.level(), this)) {
-                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(), Parrot.getAmbient(this.level(), this.level().random), this.getSoundSource(), 1.0F, Parrot.getPitch(this.level().random));
+                    this.level().playSound(null, this.getX(), this.getY(), this.getZ(),
+                            Parrot.getAmbient(this.level(), this.level().random), this.getSoundSource(), 1.0F, Parrot.getPitch(this.level().random));
                 }
             });
         }

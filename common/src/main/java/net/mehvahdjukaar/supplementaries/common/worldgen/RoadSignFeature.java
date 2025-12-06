@@ -53,8 +53,8 @@ import java.util.function.Function;
 
 public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
 
-    public RoadSignFeature(Codec<Config> codec) {
-        super(codec);
+    public RoadSignFeature() {
+        super(RoadSignFeature.Config.CODEC);
     }
 
     public record Config(RandomState randomState, WoodType postWood, WoodType signWood,

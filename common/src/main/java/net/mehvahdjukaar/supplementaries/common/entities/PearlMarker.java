@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 
 import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -36,6 +35,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.portal.DimensionTransition;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -135,7 +135,6 @@ public class PearlMarker extends Entity {
         }
     }
 
-    @NotNull
     private static boolean isValidBlock(BlockState p) {
         Block b = p.getBlock();
         return b instanceof DispenserBlock || b instanceof CannonBlock || b instanceof TrappedPresentBlock;
@@ -150,53 +149,52 @@ public class PearlMarker extends Entity {
     }
 
     @Override
-    public void teleportTo(double pX, double pY, double pZ) {
-
-        if (event != null) {
-            var trace = event.getSecond();
-            var pearl = event.getFirst();
-            if (trace instanceof BlockHitResult hitResult) {
-                Level level = level();
-                BlockPos fromPos = this.blockPosition();
-                BlockState state = level.getBlockState(fromPos);
-                BlockEntity blockEntity = level.getBlockEntity(fromPos);
-                if (isValidBlockEntity(blockEntity)) {
-                    Direction direction = hitResult.getDirection();
-                    BlockPos toPos = hitResult.getBlockPos().relative(direction);
-                    if (level.getBlockState(toPos).canBeReplaced()) {
-                        CompoundTag nbt = blockEntity.saveWithoutMetadata(level.registryAccess());
-                        blockEntity.setRemoved();
-
-                        BlockState newState = getLandingState(state, toPos, direction, level);
-                        if (level.setBlockAndUpdate(fromPos, Blocks.AIR.defaultBlockState()) &&
-                                level.setBlockAndUpdate(toPos, newState)) {
-                            // gets rid of triggered state of dispenser
-                            newState.handleNeighborChanged(level, toPos, level.getBlockState(toPos.below()).getBlock(), toPos.below(), true);
-
-                            BlockEntity dstEntity = level.getBlockEntity(toPos);
-                            if (isValidBlockEntity(dstEntity)) {
-                                dstEntity.loadWithComponents(nbt, level.registryAccess());
-                            }
-                            SoundType type = state.getSoundType();
-                            level.playSound(null, toPos, type.getPlaceSound(), SoundSource.BLOCKS, (type.getVolume() + 1.0F) / 2.0F, type.getPitch() * 0.8F);
-                        }
-
-                    }
-                    NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
-                            new ClientBoundParticlePacket(fromPos.getCenter(),
-                                    ClientBoundParticlePacket.Kind.PEARL_TELEPORT, toPos.getCenter()));
-
-                    super.teleportTo(toPos.getX() + 0.5, toPos.getY() + 0.5 - this.getBbHeight() / 2f, toPos.getZ() + 0.5);
-                }
-            }
-
-            this.removePearl(pearl);
-            pearl.discard();
-            event = null;
-        } else {
-            super.teleportTo(pX, pY, pZ);
-            Supplementaries.error();
+    public void moveTo(double x, double y, double z, float yRot, float xRot) {
+        if (event == null) {
+            super.moveTo(x, y, z, yRot, xRot);
+            return;
         }
+        var trace = event.getSecond();
+        var pearl = event.getFirst();
+        if (trace instanceof BlockHitResult hitResult) {
+            Level level = level();
+            BlockPos fromPos = this.blockPosition();
+            BlockState state = level.getBlockState(fromPos);
+            BlockEntity blockEntity = level.getBlockEntity(fromPos);
+            if (isValidBlockEntity(blockEntity)) {
+                Direction direction = hitResult.getDirection();
+                BlockPos toPos = hitResult.getBlockPos().relative(direction);
+                if (level.getBlockState(toPos).canBeReplaced()) {
+                    CompoundTag nbt = blockEntity.saveWithoutMetadata(level.registryAccess());
+                    blockEntity.setRemoved();
+
+                    BlockState newState = getLandingState(state, toPos, direction, level);
+                    if (level.setBlockAndUpdate(fromPos, Blocks.AIR.defaultBlockState()) &&
+                            level.setBlockAndUpdate(toPos, newState)) {
+                        // gets rid of triggered state of dispenser
+                        newState.handleNeighborChanged(level, toPos, level.getBlockState(toPos.below()).getBlock(), toPos.below(), true);
+
+                        BlockEntity dstEntity = level.getBlockEntity(toPos);
+                        if (isValidBlockEntity(dstEntity)) {
+                            dstEntity.loadWithComponents(nbt, level.registryAccess());
+                        }
+                        SoundType type = state.getSoundType();
+                        level.playSound(null, toPos, type.getPlaceSound(), SoundSource.BLOCKS, (type.getVolume() + 1.0F) / 2.0F, type.getPitch() * 0.8F);
+                    }
+
+                }
+                NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
+                        new ClientBoundParticlePacket(fromPos.getCenter(),
+                                ClientBoundParticlePacket.Kind.PEARL_TELEPORT, toPos.getCenter()));
+
+                super.moveTo(toPos.getX() + 0.5, toPos.getY() + 0.5 - this.getBbHeight() / 2f, toPos.getZ() + 0.5,
+                        yRot, xRot);
+            }
+        }
+
+        this.removePearl(pearl);
+        pearl.discard();
+        event = null;
     }
 
     @NotNull
@@ -225,6 +223,7 @@ public class PearlMarker extends Entity {
             markerEntity.event = Pair.of(pearl, hitResult);
         }
     }
+
     public static ThrownEnderpearl createPearlToDispenseAndPlaceMarker(BlockSource source, Position pearlPos) {
         ServerLevel level = source.level();
         BlockPos pos = source.pos();

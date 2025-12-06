@@ -34,6 +34,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -170,7 +171,10 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             this.trajectoryData = IBallisticBehavior.Data.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
                     .getOrThrow();
         }
+        // fixRotation(this.level);
+    }
 
+    private void fixRotation(Level level) {
         //structure block rotation decoding
         BlockState state = this.getBlockState();
         Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
@@ -287,12 +291,16 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return (float) (Math.pow(powerLevel, CommonConfigs.Functional.CANNON_FIRE_POWER.get()));
     }
 
+    private float getStructureYaw() {
+        return this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90;
+    }
+
     public float getYaw(float partialTicks) {
-        return Mth.rotLerp(partialTicks, this.prevYaw, this.yaw);
+        return Mth.rotLerp(partialTicks, this.prevYaw, this.yaw) + getStructureYaw();
     }
 
     public float getYaw() {
-        return yaw;
+        return yaw + getStructureYaw();
     }
 
     public float getPitch(float partialTicks) {
@@ -318,7 +326,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public void setYaw(CannonAccess access, float relativeYaw) {
         var r = access.getPitchAndYawRestrains();
-        this.yaw = MthUtils.clampDegrees(relativeYaw, r.minYaw(), r.maxYaw());
+        this.yaw = MthUtils.clampDegrees(relativeYaw, r.minYaw(), r.maxYaw()) - getStructureYaw();
     }
 
     // sets both prev and current yaw. Only makes sense to be called from render thread
@@ -442,17 +450,23 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             //if has just unpacked
             ItemStack currentAmmo = this.getProjectile();
             ItemStack currentFuel = this.getFuel();
-            if (!this.canPlaceItem(0, currentFuel)) {
-                //swap items
-                this.setFuel(ItemStack.EMPTY);
-                this.setProjectile(ItemStack.EMPTY);
-                if (canPlaceItem(0, currentAmmo)) {
-                    this.setItem(0, currentAmmo);
-                }
-                if (canPlaceItem(1, currentFuel)) {
-                    this.setItem(1, currentFuel);
-                }
+            //consolidate
+            if (currentAmmo.is(currentFuel.getItem())) {
+                currentFuel.setCount(currentFuel.getCount() + currentAmmo.getCount());
+                currentAmmo = ItemStack.EMPTY;
             }
+            if (this.canPlaceItem(0, currentFuel) && canPlaceItem(1, currentFuel)) {
+            } else if (this.canPlaceItem(0, currentAmmo) && canPlaceItem(1, currentFuel)) {
+                //swap
+                var temp = currentAmmo;
+                currentAmmo = currentFuel;
+                currentFuel = temp;
+            } else {
+                currentFuel = ItemStack.EMPTY;
+                currentAmmo = ItemStack.EMPTY;
+            }
+            this.setFuel(currentFuel);
+            this.setProjectile(currentAmmo);
         }
     }
 }

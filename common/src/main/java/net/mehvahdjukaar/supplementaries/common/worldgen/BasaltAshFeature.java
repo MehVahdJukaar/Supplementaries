@@ -18,8 +18,8 @@ import java.util.Optional;
 
 public class BasaltAshFeature extends Feature<Config> {
 
-    public BasaltAshFeature(Codec<Config> codec) {
-        super(codec);
+    public BasaltAshFeature() {
+        super(BasaltAshFeature.Config.CODEC);
     }
 
     @Override

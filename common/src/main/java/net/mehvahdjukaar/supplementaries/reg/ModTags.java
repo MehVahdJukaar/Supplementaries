@@ -126,6 +126,7 @@ public class ModTags {
     public static final TagKey<Biome> HAS_GALLEONS = biomeTag("has_galleons");
     public static final TagKey<Biome> HAS_CAVE_URNS = biomeTag("has_cave_urns");
     public static final TagKey<Biome> HAS_WILD_FLAX = biomeTag("has_wild_flax");
+    public static final TagKey<Biome> HAS_BARNACLES = biomeTag("has_barnacles");
     public static final TagKey<Biome> HAS_BASALT_ASH = biomeTag("has_basalt_ash");
 
     private static TagKey<Structure> MCstructureTag(String name) {

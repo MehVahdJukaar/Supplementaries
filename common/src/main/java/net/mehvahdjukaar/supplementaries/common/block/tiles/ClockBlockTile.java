@@ -52,9 +52,9 @@ public class ClockBlockTile extends BlockEntity {
         tag.putInt("Power", this.power);
     }
 
-    //when first added to a chunk
-    @ForgeOverride
-    public void onLoad() {
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
         updateInitialTime();
     }
 

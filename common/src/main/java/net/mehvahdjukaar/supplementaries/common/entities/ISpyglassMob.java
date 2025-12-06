@@ -10,7 +10,7 @@ public interface ISpyglassMob {
     }
 
     default double getStartUsingSpyglassDistance() {
-        return ((LivingEntity) this).getAttribute(Attributes.FOLLOW_RANGE).getValue();
+        return 18;// ((LivingEntity) this).getAttribute(Attributes.FOLLOW_RANGE).getValue();
     }
 
     boolean isUsingSpyglass();

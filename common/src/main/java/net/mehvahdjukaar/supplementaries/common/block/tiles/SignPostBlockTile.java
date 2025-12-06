@@ -12,6 +12,8 @@ import net.mehvahdjukaar.supplementaries.client.screens.SignPostScreen;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -114,14 +116,11 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         if (this.level != null) {
             if (this.level.isClientSide) this.requestModelReload();
         }
-        //structure block rotation decoding
-        BlockState state = this.getBlockState();
-        Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
-        if (rot != Rotation.NONE && level != null && !level.isClientSide) {
-            rotateSign(false, rot.ordinal() * 90, false);
-            rotateSign(true, rot.ordinal() * 90, false);
-            level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
-        }
+    }
+
+    //TODO: add this
+    private float getStructureYaw() {
+        return this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90;
     }
 
     @Override

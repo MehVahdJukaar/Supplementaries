@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "supplementaries:enderman_head",
-    "supplementaries:spider_head"
+    "supplementaries:enderman_wall_head",
+    "supplementaries:spider_head",
+    "supplementaries:spider_wall_head"
   ]
 }

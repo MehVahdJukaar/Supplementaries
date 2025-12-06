@@ -5,6 +5,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.raid.Raider;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -14,7 +15,7 @@ import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonA
 //TOOD: uniform with cannon ai common
 //copied from skeleton soot goal
 public class UseCannonBoatGoal extends Goal {
-    private final Mob mob;
+    private final Raider mob;
     private final int attackIntervalMin;
     private final int attackIntervalMax;
     private final int minRangeSQ;
@@ -28,7 +29,7 @@ public class UseCannonBoatGoal extends Goal {
     private int seeTime;
     private CannonAccess access;
 
-    public UseCannonBoatGoal(Mob mob, int attackIntervalMin, int attackIntervalMax, int minRange,
+    public UseCannonBoatGoal(Raider mob, int attackIntervalMin, int attackIntervalMax, int minRange,
                              int maxDuration) {
         this.mob = mob;
         this.attackIntervalMin = attackIntervalMin;

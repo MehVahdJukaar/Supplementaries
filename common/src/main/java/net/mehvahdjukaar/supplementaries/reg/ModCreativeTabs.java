@@ -158,7 +158,7 @@ public class ModCreativeTabs {
                 ModConstants.SPIDER_HEAD_NAME,
                 ModRegistry.SPIDER_SKULL_ITEM);
 
-        adder.after(Items.COAL, CreativeModeTabs.NATURAL_BLOCKS,
+        adder.before(Items.SEA_PICKLE, CreativeModeTabs.NATURAL_BLOCKS,
                 ModConstants.BARNACLES_NAME,
                 ModRegistry.BARNACLES);
 

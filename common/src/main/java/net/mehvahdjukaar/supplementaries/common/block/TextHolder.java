@@ -114,7 +114,7 @@ public class TextHolder implements IAntiquable {
                     for (int j = 0; j < renderMessages.length; j++) {
                         this.renderMessages[j] = null;
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     Supplementaries.LOGGER.error("Failed to load textholder data for block at {}", pos, e);
                 }
             }
@@ -264,6 +264,7 @@ public class TextHolder implements IAntiquable {
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
+    //Todo chang and flatten when editing
     public boolean hasEditableText(boolean filtering) {
         return Arrays.stream(this.getMessages(filtering))
                 .allMatch((component) -> component.equals(CommonComponents.EMPTY) || component.getContents() instanceof PlainTextContents.LiteralContents);

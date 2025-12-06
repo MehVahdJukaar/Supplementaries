@@ -34,12 +34,9 @@ import java.util.Map;
 public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBlockTile> {
     public static final Map<WoodType, BakedModel> MODELS = new IdentityHashMap<>();
     private static ModelBlockRenderer renderer;
-
-    private final Camera camera;
     private final Font font;
 
     public SignPostBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        this.camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         this.font = context.getFont();
         ModelManager manager = Minecraft.getInstance().getModelManager();
         MODELS.clear();
@@ -72,8 +69,6 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         //render signs
         if (up || down) {
 
-            BlockPos pos = tile.getBlockPos();
-
             //don't render signs from far away
             LOD lod = LOD.at(tile);
 
@@ -85,7 +80,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             Vec3 offsetFromCenter = new Vec3(0,0,2/16f);
 
             if (up) {
-                if (lod.isPlaneCulled(signUp.getNormal(),offsetFromCenter, 0)) {
+                if (!lod.isPlaneCulled(signUp.getNormal(),offsetFromCenter, 0)) {
                     var v = new Vector3f(1, 0, 0);
                     v.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);
                     var textProperties = tile.getTextHolder(0).computeRenderProperties(combinedLightIn, v, lod::isVeryNear);
@@ -95,7 +90,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             }
 
             if (down) {
-                if (lod.isPlaneCulled(signDown.getNormal(), offsetFromCenter,0 )) {
+                if (!lod.isPlaneCulled(signDown.getNormal(), offsetFromCenter,0 )) {
 
                     Vector3f normalVector = new Vector3f(1, 0, 0);
                     normalVector.rotateY(signUp.yaw() * Mth.DEG_TO_RAD);

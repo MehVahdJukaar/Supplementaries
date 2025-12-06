@@ -8,10 +8,14 @@
         "element_type": "minecraft:feature_pool_element",
         "feature": {
           "placement": [
+            {
+              "type": "minecraft:heightmap",
+              "heightmap": "MOTION_BLOCKING"
+            }
           ],
           "feature": {
             "config": {
-              "vehicle": "minecraft:boat",
+              "entity": "minecraft:boat",
               "boat_type": "dark_oak",
               "passengers": [
                 "supplementaries:plunderer",
@@ -30,10 +34,14 @@
         "element_type": "minecraft:feature_pool_element",
         "feature": {
           "placement": [
+            {
+              "type": "minecraft:heightmap",
+              "heightmap": "MOTION_BLOCKING"
+            }
           ],
           "feature": {
             "config": {
-              "vehicle": "minecraft:boat",
+              "entity": "minecraft:boat",
               "boat_type": "dark_oak",
               "passengers": [
                 "supplementaries:plunderer"
@@ -51,10 +59,14 @@
         "element_type": "minecraft:feature_pool_element",
         "feature": {
           "placement": [
+            {
+              "type": "minecraft:heightmap",
+              "heightmap": "MOTION_BLOCKING"
+            }
           ],
           "feature": {
             "config": {
-              "vehicle": "supplementaries:cannon_boat",
+              "entity": "supplementaries:cannon_boat",
               "boat_type": "dark_oak",
               "passengers": [
                 "supplementaries:plunderer"
@@ -72,10 +84,14 @@
         "element_type": "minecraft:feature_pool_element",
         "feature": {
           "placement": [
+            {
+              "type": "minecraft:heightmap",
+              "heightmap": "MOTION_BLOCKING"
+            }
           ],
           "feature": {
             "config": {
-              "vehicle": "minecraft:boat",
+              "entity": "minecraft:boat",
               "boat_type": "dark_oak",
               "passengers": [
               ]

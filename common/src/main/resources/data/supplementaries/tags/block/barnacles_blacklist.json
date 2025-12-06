@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#minecraft:dirt","required":false},
+    {"id":"#c:sands","required":false},
+    {"id":"neoforge:villager_farmlands","required":false},
+    {"id":"minecraft:villager_farmland","required":false},
+    {"id":"minecraft:dirt_path","required":false},
+    {"id":"#minecraft:leaves","required":false},
+    {"id":"minecraft:moss_block","required":false},
+    {"id":"#minecraft:ice","required":false},
+    {"id":"#minecraft:snow","required":false},
+    {"id":"#minecraft:wart_blocks","required":false},
+    {"id":"minecraft:mangrove_roots","required":false},
+    {"id":"#c:glass_blocks","required":false},
+    {"id":"#c:impermeable","required":false}
+  ]
+}

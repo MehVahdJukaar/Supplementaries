@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#supplementaries:has_barnacles",
+  "features": "supplementaries:ocean_barnacles",
+  "step": "vegetal_decoration"
+}

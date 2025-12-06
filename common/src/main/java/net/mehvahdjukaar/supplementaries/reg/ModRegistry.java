@@ -71,12 +71,12 @@ public class ModRegistry {
     //misc entries
 
     //loot
-    public static final Supplier<LootItemFunctionType<RandomEnchantFunction>> CURSE_LOOT_FUNCTION = RegHelper.register(res("curse_loot"),
-            () -> new LootItemFunctionType<>(RandomEnchantFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
-    public static final Supplier<LootItemFunctionType<RandomArrowFunction>> RANDOM_ARROW_FUNCTION = RegHelper.register(res("random_arrows"),
-            () -> new LootItemFunctionType<>(RandomArrowFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
-    public static final Supplier<LootItemFunctionType<SetChargesFunction>> SET_CHARGES_FUNCTION = RegHelper.register(res("set_charges"),
-            () -> new LootItemFunctionType<>(SetChargesFunction.CODEC), Registries.LOOT_FUNCTION_TYPE);
+    public static final Supplier<LootItemFunctionType<RandomEnchantFunction>> CURSE_LOOT_FUNCTION = RegHelper.registerLootFunction(
+            res("curse_loot"), RandomEnchantFunction.CODEC);
+    public static final Supplier<LootItemFunctionType<RandomArrowFunction>> RANDOM_ARROW_FUNCTION = RegHelper.registerLootFunction(
+            res("random_arrows"), RandomArrowFunction.CODEC);
+    public static final Supplier<LootItemFunctionType<SetChargesFunction>> SET_CHARGES_FUNCTION = RegHelper.registerLootFunction(
+            res("set_charges"), SetChargesFunction.CODEC);
 
     //data
     public static final WorldSavedDataType<GlobeData> GLOBE_DATA = RegHelper.registerWorldSavedData(

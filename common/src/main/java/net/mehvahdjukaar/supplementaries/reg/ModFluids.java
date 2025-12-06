@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
+import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
 import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -46,7 +47,7 @@ public class ModFluids {
     public static final Supplier<BucketItem> LUMISENE_BUCKET;
     public static final Supplier<Item> LUMISENE_BOTTLE;
 
-    public static final HolderReference<SoftFluid> LUMISENE_SOFT_FLUID = HolderReference.of(
+    public static final HolderRef<SoftFluid> LUMISENE_SOFT_FLUID = HolderRef.of(
             Supplementaries.res(ModConstants.LUMISENE_NAME), SoftFluidRegistry.KEY);
 
     static {
@@ -89,7 +90,7 @@ public class ModFluids {
     }
 
     public static <T extends Fluid> Supplier<T> registerFluid(String name, Supplier<T> fluidSupplier) {
-        return RegHelper.register(Supplementaries.res(name), fluidSupplier, Registries.FLUID);
+        return RegHelper.registerFluid(Supplementaries.res(name), fluidSupplier);
     }
 
 

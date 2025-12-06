@@ -24,8 +24,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
@@ -48,8 +50,27 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         super(ModRegistry.BUNTING_TILE.get(), pos, state, 4);
     }
 
-    public Map<Direction, DyeColor> getBuntings() {
-        return buntings;
+    @Nullable
+    public DyeColor getBunting(Direction direction) {
+        if (isStructureRotated()){
+            direction = direction.getClockWise();
+        }
+        return buntings.get(direction);
+    }
+
+    public void setBunting(Direction direction, @Nullable DyeColor color) {
+        if (isStructureRotated()){
+            direction = direction.getCounterClockWise();
+        }
+        if (color == null) {
+            buntings.remove(direction);
+        } else {
+            buntings.put(direction, color);
+        }
+    }
+
+    private @NotNull Boolean isStructureRotated() {
+        return getBlockState().getValue(RopeBuntingBlock.FLIP_TILE);
     }
 
     @Override
@@ -59,7 +80,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
             ItemStack stack = this.getItem(d.get2DDataValue());
             if (stack.getItem() instanceof BuntingItem bi) {
                 DyeColor color = bi.getColor();
-                this.buntings.put(d, color);
+                this.setBunting(d, color);
             }
         }
         if (buntings.isEmpty()) {
@@ -103,10 +124,10 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
         super.addExtraModelData(builder);
-        builder.with(NORTH_BUNTING, buntings.getOrDefault(Direction.NORTH, null));
-        builder.with(SOUTH_BUNTING, buntings.getOrDefault(Direction.SOUTH, null));
-        builder.with(EAST_BUNTING, buntings.getOrDefault(Direction.EAST, null));
-        builder.with(WEST_BUNTING, buntings.getOrDefault(Direction.WEST, null));
+        builder.with(NORTH_BUNTING, getBunting(Direction.NORTH));
+        builder.with(SOUTH_BUNTING, getBunting(Direction.SOUTH));
+        builder.with(EAST_BUNTING, getBunting(Direction.EAST));
+        builder.with(WEST_BUNTING, getBunting(Direction.WEST));
     }
 
     @Override
@@ -150,17 +171,11 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         return false;
     }
 
+
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        //structure block rotation decoding
-        BlockState state = this.getBlockState();
-        if (state.getValue(RopeBuntingBlock.FLIP_TILE) && level != null && !level.isClientSide) {
-            rotateBuntings(state, Rotation.CLOCKWISE_90);
-            level.setBlockAndUpdate(worldPosition, state.setValue(RopeBuntingBlock.FLIP_TILE, false));
-        }
         //NBT items backward compat
-
         ListTag listTag = tag.getList("Items", 10);
         for (int i = 0; i < listTag.size(); ++i) {
             CompoundTag compoundTag = listTag.getCompound(i);

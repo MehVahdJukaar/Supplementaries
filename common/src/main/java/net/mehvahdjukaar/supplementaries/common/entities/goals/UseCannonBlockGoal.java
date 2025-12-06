@@ -11,6 +11,7 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiRecord;
+import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,13 +25,13 @@ import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonA
 public class UseCannonBlockGoal extends MoveToBlockGoal {
 
     private final int searchRange;
-    private final PlundererEntity plunderer;
+    private final Raider plunderer;
 
     private int igniteCannonCooldown = 0;
     private int atCannonTicks = 0;
     private int ticksSinceShot = 0;
 
-    public UseCannonBlockGoal(PlundererEntity mob, double speedModifier, int searchRange) {
+    public UseCannonBlockGoal(Raider mob, double speedModifier, int searchRange) {
         super(mob, speedModifier, searchRange);
         this.searchRange = searchRange;
         this.plunderer = mob;
@@ -148,7 +149,7 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
             this.mob.getLookControl().setLookAt(mob.getTarget());
 
 
-            if (aimCannonAndShoot(cannonTile.selfAccess, mob, mob.getTarget(), canShoot)) {
+            if (aimCannonAndShoot(cannonTile.selfAccess, plunderer, mob.getTarget(), canShoot)) {
                 igniteCannonCooldown = Mth.randomBetweenInclusive(level.random, SHOOTING_COOLDOWN / 2, SHOOTING_COOLDOWN); //random delay between shots
                 ticksSinceShot = 0;
             }

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
-import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
+import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.UrnBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.FallingUrnEntity;
@@ -205,7 +205,7 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
     }
 
     private static int getFortuneLevel(ItemStack stack, Level level) {
-        var holder = HolderReference.of(Enchantments.FORTUNE);
+        var holder = HolderRef.of(Enchantments.FORTUNE);
         return EnchantmentHelper.getItemEnchantmentLevel(holder.getHolder(level), stack);
     }
 
