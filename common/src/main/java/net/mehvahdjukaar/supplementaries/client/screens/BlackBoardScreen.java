@@ -166,7 +166,7 @@ public class BlackBoardScreen extends Screen {
         this.historyButton = this.addRenderableWidget(Button.builder(UNDO, this::undoPressed)
                 .bounds(this.width / 2 + buttonW / 2 + sep / 2, this.height / 4 + 120, buttonW - sep, 20).build());
 
-        if (CommonConfigs.Building.BLACKBOARD_COLOR.get() || PlatHelper.isDev()) {
+        if (CommonConfigs.Building.BLACKBOARD_COLOR.get()) {
             for (byte b = 0; b < DyeColor.values().length; b++) {
                 int ox = b / 8;
                 int oy = b % 8;

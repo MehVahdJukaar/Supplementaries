@@ -7,7 +7,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "supplementaries:galleon/hull_back01",
-        "processors": "minecraft:empty",
+        "processors": "supplementaries:remove_disabled_blocks",
         "projection": "rigid"
       }
     },
@@ -16,7 +16,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "supplementaries:galleon/hull_back02",
-        "processors": "minecraft:empty",
+        "processors": "supplementaries:remove_disabled_blocks",
         "projection": "rigid"
       }
     },
@@ -25,7 +25,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "supplementaries:galleon/hull_back03",
-        "processors": "minecraft:empty",
+        "processors": "supplementaries:remove_disabled_blocks",
         "projection": "rigid"
       }
     }

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.worldgen.GalleonStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -284,6 +286,7 @@ public class ModCreativeTabs {
                     () -> GalleonStructure.getGalleonFlag(event.getParameters().holders()
                             .lookup(Registries.BANNER_PATTERN).get()));
         }
+
 
         adder.after(ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.FLAG_NAME,
@@ -581,6 +584,10 @@ public class ModCreativeTabs {
                 ModRegistry.GOLD_BARS);
 
         adder.after(Items.IRON_BARS, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.IRON_GATE_NAME,
+                ModRegistry.IRON_GATE);
+
+        adder.after(Items.IRON_TRAPDOOR, CreativeModeTabs.REDSTONE_BLOCKS,
                 ModConstants.IRON_GATE_NAME,
                 ModRegistry.IRON_GATE);
 

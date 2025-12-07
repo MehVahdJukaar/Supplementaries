@@ -71,7 +71,7 @@ public final class UseCannonAICommon {
                     if (shooter instanceof ICannonShooter cs) {
                         cs.onShotCannon(cannonTile.getBlockPos());
                     } else if (shooter instanceof Raider r) {
-                        r.playSound(r.getCelebrateSound(), 1.0F, 1.2F);
+                        r.playSound(r.getCelebrateSound(), 2.5F, 1.2F);
                     }
                     return true;
                 }

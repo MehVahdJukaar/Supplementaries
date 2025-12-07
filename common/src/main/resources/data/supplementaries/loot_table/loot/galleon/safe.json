@@ -326,7 +326,24 @@
         {
           "type": "minecraft:item",
           "name": "supplementaries:lumisene_bottle",
-          "weight": 1
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "lumisene"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "lumisene"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -348,7 +365,24 @@
             {
               "type": "minecraft:item",
               "name": "supplementaries:hourglass",
-              "weight": 1
+              "weight": 1,
+              "conditions": [
+                {
+                  "condition": "moonlight:load_conditions",
+                  "fabric:load_conditions": [
+                    {
+                      "condition": "supplementaries:flag",
+                      "flag": "hourglass"
+                    }
+                  ],
+                  "neoforge:conditions": [
+                    {
+                      "type": "supplementaries:flag",
+                      "flag": "hourglass"
+                    }
+                  ]
+                }
+              ]
             },
             {
               "type": "minecraft:item",

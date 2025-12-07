@@ -9,6 +9,7 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacementType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 
 import java.util.function.Supplier;
 
@@ -24,7 +25,7 @@ public class ModWorldgen {
 
     //structure placement
     public static final Supplier<StructurePlacementType<RandomSpreadStructurePlacementWithExclusion>> RANDOM_SPREAD_WITH_EXCLUSION_PLACEMENT = RegHelper.register(
-            Supplementaries.res("random_spread_with_exclusion"), () -> () -> RandomSpreadStructurePlacementWithExclusion.CODEC, Registries.STRUCTURE_PLACEMENT);
+            Supplementaries.res("random_spread_with_exclusion"), () -> () -> RandomSpreadStructurePlacementWithExclusion.CODEC, net.minecraft.core.registries.Registries.STRUCTURE_PLACEMENT);
 
     //structure types
 
@@ -33,6 +34,11 @@ public class ModWorldgen {
 
     public static final Supplier<StructureType<GalleonStructure>> GALLEON_STRUCTURE = RegHelper.registerStructure(
             Supplementaries.res("galleon"), GalleonStructure.Type::new);
+
+    //structure processors
+    public static final Supplier<StructureProcessorType<RemoveDisabledBlocksProcessor>> REMOVE_DISABLED_PROCESSOR =
+            RegHelper.register(Supplementaries.res("remove_disabled_blocks"), () -> () -> RemoveDisabledBlocksProcessor.CODEC, Registries.STRUCTURE_PROCESSOR);
+
 
     //feature types
 

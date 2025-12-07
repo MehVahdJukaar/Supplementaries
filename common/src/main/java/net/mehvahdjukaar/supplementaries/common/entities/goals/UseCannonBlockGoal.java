@@ -31,6 +31,8 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
     private int atCannonTicks = 0;
     private int ticksSinceShot = 0;
 
+    private CannonBlockTile lastTile = null;
+
     public UseCannonBlockGoal(PathfinderMob mob, double speedModifier, int searchRange) {
         super(mob, speedModifier, searchRange);
         this.searchRange = searchRange;
@@ -56,6 +58,10 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
     @Override
     public void stop() {
         super.stop();
+        if (lastTile != null) {
+            lastTile.setCurrentUser(null);
+            lastTile = null;
+        }
     }
 
     @Override
@@ -109,6 +115,7 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
         this.mob.getNavigation().moveTo(actualTarget.getX() + 0.5, actualTarget.getY(), actualTarget.getZ() + 0.5, this.speedModifier);
     }
 
+
     @Override
     public void tick() {
         super.tick();
@@ -116,6 +123,8 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
 
             Level level = mob.level();
             var cannonTile = (CannonBlockTile) level.getBlockEntity(this.blockPos);
+            lastTile = cannonTile;
+            lastTile.setCurrentUser(mob.getUUID());
 
             atCannonTicks++;
             ticksSinceShot++;

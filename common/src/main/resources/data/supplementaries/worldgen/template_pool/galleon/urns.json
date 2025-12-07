@@ -10,6 +10,7 @@
           "placement": [
           ]
         },
+        "processors": "supplementaries:remove_disabled_blocks",
         "projection": "rigid",
         "element_type": "minecraft:feature_pool_element"
       }

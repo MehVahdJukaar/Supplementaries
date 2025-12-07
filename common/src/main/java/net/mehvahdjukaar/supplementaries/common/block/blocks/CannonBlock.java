@@ -293,13 +293,13 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         if (context instanceof EntityCollisionContext ec) {
-            if (ec.getEntity() instanceof Projectile p && p.tickCount < 10) {
-                return Shapes.empty();
+            if (ec.getEntity() instanceof Projectile p && p.tickCount < 40) {
+                return Shapes.empty(); //Hack but avoids checking the tile every time which could be a big save
             } else if (ec.getEntity() != null) {
-                return Shapes.block();
+                return super.getCollisionShape(state, level, pos, context);
             }
         }
-        return Shapes.block();
+        return Shapes.empty();
     }
 
     @Override

@@ -7,7 +7,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "supplementaries:galleon/galleon",
-        "processors": "minecraft:empty",
+        "processors": "supplementaries:remove_disabled_blocks",
         "projection": "rigid"
       }
     }

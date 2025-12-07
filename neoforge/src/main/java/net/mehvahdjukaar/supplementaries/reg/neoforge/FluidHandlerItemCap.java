@@ -11,18 +11,22 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 //same as FluidBucketWrapper but with configurable count
 public class FluidHandlerItemCap implements IFluidHandlerItem {
-    protected ItemStack container;
     protected final int tankVolume;
+    protected final Item empty;
 
-    public FluidHandlerItemCap(ItemStack container, int volume) {
+    protected ItemStack container;
+
+    public FluidHandlerItemCap(ItemStack container, int volume, Item empty) {
         this.container = container;
         this.tankVolume = volume;
+     this.empty = empty;
     }
 
     @Override
     public ItemStack getContainer() {
         return container;
     }
+
 
     public boolean canFillFluidType(FluidStack fluid) {
         if (fluid.is(Fluids.WATER) || fluid.is(Fluids.LAVA)) {
@@ -44,7 +48,7 @@ public class FluidHandlerItemCap implements IFluidHandlerItem {
 
     protected void setFluid(FluidStack fluidStack) {
         if (fluidStack.isEmpty())
-            container = new ItemStack(Items.BUCKET);
+            container = new ItemStack(empty);
         else
             container = FluidUtil.getFilledBucket(fluidStack);
     }

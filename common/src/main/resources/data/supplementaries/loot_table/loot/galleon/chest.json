@@ -93,6 +93,23 @@
               "function": "minecraft:set_count",
               "count": { "type": "minecraft:uniform", "min": 1, "max": 2 }
             }
+          ],
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "bomb"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "bomb"
+                }
+              ]
+            }
           ]
         },
         {
@@ -103,6 +120,23 @@
             {
               "function": "minecraft:set_count",
               "count": { "type": "minecraft:uniform", "min": 1, "max": 2 }
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "cannonball"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "cannonball"
+                }
+              ]
             }
           ]
         },
@@ -125,6 +159,23 @@
             {
               "function": "minecraft:set_count",
               "count": { "type": "minecraft:uniform", "min": 2, "max": 4 }
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "candy"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "candy"
+                }
+              ]
             }
           ]
         },
@@ -152,6 +203,23 @@
             {
               "function": "minecraft:set_count",
               "count": { "type": "minecraft:uniform", "min": 2, "max": 5 }
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "rope"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "rope"
+                }
+              ]
             }
           ]
         },
@@ -201,7 +269,24 @@
         },
         { "type": "minecraft:item", "name": "minecraft:melon_seeds", "weight": 2 },
         { "type": "minecraft:item", "name": "minecraft:pumpkin_seeds", "weight": 2 },
-        { "type": "minecraft:item", "name": "supplementaries:flax_seeds", "weight": 2 },
+        { "type": "minecraft:item", "name": "supplementaries:flax_seeds", "weight": 2,
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "flax"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "flax"
+                }
+              ]
+            }
+          ]},
         { "type": "minecraft:item", "name": "minecraft:bread", "weight": 3 },
         {
           "type": "minecraft:item",

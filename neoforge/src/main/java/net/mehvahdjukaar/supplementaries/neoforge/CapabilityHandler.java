@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.neoforge.FluidHandlerItemCap;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -130,7 +131,7 @@ public class CapabilityHandler {
                 new FluidBucketWrapper(stack), ModFluids.LUMISENE_BUCKET.get());
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, ctx) ->
-                new FluidHandlerItemCap(stack, 250),
+                new FluidHandlerItemCap(stack, 250, Items.GLASS_BOTTLE),
                 ModFluids.LUMISENE_BOTTLE.get());
 
         //if compat handler computer craft add cap to speaker block

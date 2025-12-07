@@ -60,11 +60,8 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
         if (!CommonConfigs.Building.BLACKBOARD_MODE.get().canManualDraw() && !noise) return;
 
         Direction dir = tile.getDirection();
-        float yaw = -dir.toYRot();
 
-        Vec3 cameraPos = camera.getPosition();
         BlockPos pos = tile.getBlockPos();
-
 
         if (noise) {
 
@@ -93,8 +90,9 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             return;
         }
 
+        LOD lod = LOD.at(tile);
 
-        if (LOD.isOutOfFocus(cameraPos, pos, yaw, 0, dir, WIDTH / 16f)) return;
+        if (lod.isPlaneCulled(dir, WIDTH / 16f)) return;
 
         HitResult hit = mc.hitResult;
         if (hit != null && hit.getType() == HitResult.Type.BLOCK) {

@@ -6,7 +6,24 @@
         {
           "type": "item",
           "weight": 1,
-          "name": "supplementaries:key"
+          "name": "supplementaries:key",
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "key"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "key"
+                }
+              ]
+            }
+          ]
         }
       ]
     },

@@ -62,6 +62,23 @@
               },
               "function": "minecraft:set_count"
             }
+          ],
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "cannonball"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "cannonball"
+                }
+              ]
+            }
           ]
         },
         {
@@ -77,6 +94,23 @@
                 "min": 8.0
               },
               "function": "minecraft:set_count"
+            }
+          ],
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "bomb"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "bomb"
+                }
+              ]
             }
           ]
         }

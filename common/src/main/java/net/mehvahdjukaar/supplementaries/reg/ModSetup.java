@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBo
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.common.worldgen.RemoveDisabledBlocksProcessor;
 import net.mehvahdjukaar.supplementaries.common.worldgen.RoadSignStructure;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.RegistryAccess;
@@ -55,6 +56,7 @@ public class ModSetup {
         LootTablesInjects.setup();
         ModSetup.registerFrameBlocks();
         PlaceableBookManager.setup();
+        RemoveDisabledBlocksProcessor.setup();
         //  PlaceableBookManager.setup();
     }
 
