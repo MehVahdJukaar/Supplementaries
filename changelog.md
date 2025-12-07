@@ -4,3 +4,16 @@
 - todo. rotation for cannons, safe and cannon loot tables
 - todo: fix pillagers in boats not facing right
 - todo: fix pillagers not moving while shooting and strafing. could be dangerous here, parrot thing
+- make pillagers and other entities have right folow range and dismount properly off boats. also shoot and stuff
+- todos: canons arrows
+- blank screen in generation for some raeson
+- flag not dorpping
+- entities not persistent on ship
+- fix pillagers not shooting while moving
+- fix pillagers not facing right direction in boats
+- pillagers use same cannon
+- urn empty
+- generalize cannon use goal
+- finish barnacles
+- parrot slingshot
+- celebrate sound

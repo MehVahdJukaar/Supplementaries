@@ -36,8 +36,7 @@ public class BarnaclesBlock extends MultifaceBlock implements BonemealableBlock,
 
     //can attach to stuff
     protected boolean canBeAttachTo(BlockGetter level, Direction direction, BlockPos pos, BlockState state) {
-        return MultifaceBlock.canAttachTo(level, direction, pos, state)
-                && state.isSolid();
+        return MultifaceBlock.canAttachTo(level, direction, pos, state) && state.isSolid();
     }
 
     @Override

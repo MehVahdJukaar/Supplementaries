@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "supplementaries:block/cog_block_off"
+    "all": "supplementaries:block/cog_block_off",
+    "particle": "supplementaries:block/cog_block_off"
   }
 }

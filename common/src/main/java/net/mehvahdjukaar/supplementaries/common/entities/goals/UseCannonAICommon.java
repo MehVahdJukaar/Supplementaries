@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.ICannonShooter;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -20,7 +21,7 @@ public final class UseCannonAICommon {
     public static final int GOAL_INTERVAL = 90;
     public static final int SHOOTING_COOLDOWN = 60;
 
-    public static boolean aimCannonAndShoot(CannonAccess access, Raider shooter, LivingEntity target, boolean canShoot) {
+    public static boolean aimCannonAndShoot(CannonAccess access, Mob shooter, LivingEntity target, boolean canShoot) {
         CannonBlockTile cannonTile = access.getInternalCannon();
         if (cannonTile.isOnCooldown()) return false;
 
@@ -43,7 +44,7 @@ public final class UseCannonAICommon {
         //hack. Aim bot
         //predict movement based off distance and speed
         targetLoc = targetLoc.add(target.getDeltaMovement().scale(distance * 0.2))
-                .add(0,0.6,0);
+                .add(0, 0.6, 0);
 
         power = (byte) Math.min(power, maxPower);
         cannonTile.setPowerLevel(power);
@@ -67,9 +68,11 @@ public final class UseCannonAICommon {
                 if (distance1 < 0.1) {
                     cannonTile.ignite(shooter, access);
 
-                    shooter.playSound(shooter.getCelebrateSound(), 1.0F, 1.2F);
-
-
+                    if (shooter instanceof ICannonShooter cs) {
+                        cs.onShotCannon(cannonTile.getBlockPos());
+                    } else if (shooter instanceof Raider r) {
+                        r.playSound(r.getCelebrateSound(), 1.0F, 1.2F);
+                    }
                     return true;
                 }
             }

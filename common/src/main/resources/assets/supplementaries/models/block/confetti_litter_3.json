@@ -2,7 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/cube_column",
 	"textures": {
-		"top": "supplementaries:block/confetti_litter"
+		"top": "supplementaries:block/confetti_litter",
+		"particle": "supplementaries:block/confetti_litter"
 	},
 	"elements": [
 		{

@@ -80,7 +80,7 @@ public class ConfettiDyeRecipe extends CustomRecipe {
                 }
             }
         }
-        ItemStack result = itemstack.copy();
+        ItemStack result = itemstack.copyWithCount(1);
         ConfettiColors colorComp = result.getOrDefault(ModComponents.CONFETTI_COLORS.get(), ConfettiColors.EMPTY);
         result.set(ModComponents.CONFETTI_COLORS.get(),
                 colorComp.withAddedColor(dyecolor));
