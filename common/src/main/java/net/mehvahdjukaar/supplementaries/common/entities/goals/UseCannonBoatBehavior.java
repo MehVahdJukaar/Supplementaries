@@ -2,10 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -17,15 +13,13 @@ import net.minecraft.world.entity.ai.behavior.EntityTracker;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.phys.Vec3;
 
-import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.aimCannonAndShoot;
+import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.*;
 
 public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
 
     private int attackDelay;
     private CannonAccess access;
-
 
     public UseCannonBoatBehavior() {
         super(ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus.VALUE_PRESENT, MemoryModuleType.LAST_WOKEN, MemoryStatus.REGISTERED));
@@ -35,7 +29,7 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
     protected boolean checkExtraStartConditions(ServerLevel level, LivingEntity owner) {
         Entity boat = owner.getControlledVehicle();
         if (boat instanceof CannonBoatEntity cb) {
-            return cb.getInternalCannon().hasFuelAndProjectiles();
+            return cb.getInternalCannon().hasSomeFuelAndProjectiles();
         }
         LivingEntity livingentity = getAttackTarget(owner);
         return BehaviorUtils.canSee(owner, livingentity);
@@ -50,7 +44,7 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
     protected boolean canStillUse(ServerLevel level, LivingEntity owner, long gameTime) {
         Entity boat = owner.getControlledVehicle();
         if (boat instanceof CannonBoatEntity cb) {
-            return cb.getInternalCannon().hasFuelAndProjectiles();
+            return cb.getInternalCannon().hasSomeFuelAndProjectiles();
         }
         return false;
     }
@@ -83,7 +77,7 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
             attackDelay--;
         }
         if (aimCannonAndShoot(access, (Raider) owner, livingentity, attackDelay <= 0)) {
-            attackDelay = Mth.randomBetweenInclusive(level.random, 20, 40); //random delay between shots
+            attackDelay = Mth.randomBetweenInclusive(level.random, SHOOTING_COOLDOWN_MIN, SHOOTING_COOLDOWN_MAX); //random delay between shots
         }
     }
 

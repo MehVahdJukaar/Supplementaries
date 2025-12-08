@@ -1,9 +1,12 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.DifferentProspectiveItemRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.fabric.LumiseneFluidRenderPropertiesImpl;
@@ -12,7 +15,11 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.component.TooltipProvider;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
 
@@ -27,7 +34,6 @@ public class SupplementariesFabricClient implements ClientModInitializer {
     public static void init() {
         ClientRegistry.init();
         ClientHelper.addClientSetup(SupplementariesFabricClient::fabricSetup);
-
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (!firstScreenShown && screen instanceof TitleScreen) {
                 ClientEvents.onFirstScreen(screen);
@@ -48,7 +54,6 @@ public class SupplementariesFabricClient implements ClientModInitializer {
                         Set.of(ItemDisplayContext.HEAD)));
 
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.LUMISENE_FLUID.get(), new LumiseneFluidRenderPropertiesImpl());
-
     }
 
 

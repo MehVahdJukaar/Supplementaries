@@ -14,5 +14,6 @@
   "type": "supplementaries:soap_clearing",
   "ingredient": {
     "item": "supplementaries:soap"
-  }
+  },
+  "dyed_items_amount": 1
 }

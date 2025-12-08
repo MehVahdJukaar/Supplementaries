@@ -1,10 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
-import net.mehvahdjukaar.moonlight.api.item.IThirdPersonSpecialItemRenderer;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
-import net.minecraft.client.renderer.ItemInHandRenderer;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
@@ -32,7 +28,7 @@ public class PillagerNearestAttackableTargetGoal<T extends LivingEntity> extends
     @Override
     protected double getFollowDistance() {
         var original = super.getFollowDistance();
-        if (this.mob.getControlledVehicle() instanceof CannonBoatEntity cb && cb.getInternalCannon().hasFuelAndProjectiles()) {
+        if (this.mob.getControlledVehicle() instanceof CannonBoatEntity cb && cb.getInternalCannon().hasSomeFuelAndProjectiles()) {
             return original * 3;
         }
         return original;

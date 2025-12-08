@@ -35,7 +35,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#c:milk"
+            "items": "#c:drinks/milk"
           }
         ]
       },

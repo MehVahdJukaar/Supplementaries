@@ -16,8 +16,8 @@ import net.minecraft.world.level.material.FluidState;
 
 public class AmendmentsCompat {
 
-    public static boolean canSurviveCeilingAndMaybeFall(BlockState state, BlockPos pos, LevelReader level) {
-        return FallingLanternEntity.canSurviveCeilingAndMaybeFall(state, pos, level);
+    public static boolean maybeFall(boolean canSurvive, BlockState state, BlockPos pos, LevelReader level) {
+        return FallingLanternEntity.maybeFall(canSurvive,state, pos, level);
     }
 
     public static boolean has3DSlimeballRenderer() {

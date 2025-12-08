@@ -119,7 +119,11 @@ dependencies {
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-tweaked-282001:5714511")
     modCompileOnly("curse.maven:jei-238222:5846878")
-    modCompileOnly("curse.maven:amendments-896746:5791204")
+    //modCompileOnly("curse.maven:amendments-896746:5791204")
+    modCompileOnly("net.mehvahdjukaar:amendments-fabric:1.21-2.0.9"){
+        transitive = false
+    }
+
     modCompileOnly("curse.maven:jei-fabric-waystones-410902:4950461")
     modCompileOnly("curse.maven:jei-fabric-waystones-owo-lib-532610:4749199")
     modCompileOnly("curse.maven:owo-lib-532610:6297839")

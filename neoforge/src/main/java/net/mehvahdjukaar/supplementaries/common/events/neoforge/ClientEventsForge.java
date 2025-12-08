@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
+import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
@@ -18,9 +19,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.HangingEntityItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.*;
@@ -29,6 +33,8 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.Optional;
 
 public class ClientEventsForge {
 
@@ -156,10 +162,20 @@ public class ClientEventsForge {
     public static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();
         if (stack.isEmpty()) return;
+
         Item i = stack.getItem();
-        var pattern = DecoratedPotPatterns.getPatternFromItem(i);
-        if (pattern != null && i != Items.BRICK) {
-            event.getTooltipElements().add(Either.right(new SherdTooltip(pattern)));
+        if(ClientConfigs.Tweaks.SHERDS_TOOLTIPS.get()) {
+            var pattern = DecoratedPotPatterns.getPatternFromItem(i);
+            if (pattern != null && i != Items.BRICK) {
+                event.getTooltipElements().add(Either.right(new SherdTooltip(pattern)));
+            }
+        }
+
+        if (ClientConfigs.Tweaks.PAINTINGS_TOOLTIPS.get() && i instanceof HangingEntityItem) {
+            CustomData customData = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
+            if (!customData.isEmpty() && customData.contains("variant")) {
+                event.getTooltipElements().add(Either.right(new PaintingTooltip(customData)));
+            }
         }
     }
 

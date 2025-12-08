@@ -23,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -58,8 +59,7 @@ import org.jetbrains.annotations.Nullable;
 public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, CannonAccess, IControllableVehicle {
 
     private static final EntityDataAccessor<WoodType> DATA_WOOD_TYPE =
-            SynchedEntityData.defineId(
-                    CannonBoatEntity.class, WoodType.ENTITY_SERIALIZER.get());
+            SynchedEntityData.defineId(CannonBoatEntity.class, WoodType.ENTITY_SERIALIZER.get());
     private static final EntityDataAccessor<ItemStack> BANNER_ITEM = SynchedEntityData.defineId(
             CannonBoatEntity.class, EntityDataSerializers.ITEM_STACK);
 
@@ -82,11 +82,15 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.yo = y;
         this.zo = z;
         this.setWoodType(type);
-        this.setVariant(type.toVanillaBoatOrOak());
     }
 
     public boolean isBamboo() {
         return isBamboo;
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return super.getDisplayName();
     }
 
     @Override
@@ -106,7 +110,9 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     public void setWoodType(WoodType type) {
         this.entityData.set(DATA_WOOD_TYPE, type);
-        this.isBamboo = type.getId().toString().equals("minecraft:bamboo");
+        Type vanillaBoatOrOak = type.toVanillaBoatOrOak();
+        this.isBamboo = vanillaBoatOrOak == Type.BAMBOO;
+        this.setVariant(vanillaBoatOrOak);
     }
 
     @Override
@@ -202,7 +208,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @Override
     public InteractionResult interactWithContainerVehicle(Player player) {
-        if (player instanceof ServerPlayer sp) {
+        if (player instanceof ServerPlayer sp && cannon.canBeUsedBy(this.blockPosition(), player)) {
             PlatHelper.openCustomMenu(sp, this);
             return InteractionResult.SUCCESS;
         }
@@ -358,10 +364,6 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
 
     //TODO:fix vanilla bug where entities rotate like shit in boats
-    @Override
-    protected void positionRider(Entity passenger, Entity.MoveFunction callback) {
-        super.positionRider(passenger, callback);
-    }
 
     @Override
     protected void clampRotation(Entity entityToUpdate) {
@@ -410,20 +412,11 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     public void tick() {
         super.tick();
         this.cannon.tick(this);
-    }
 
-    @Override
-    protected void addPassenger(Entity passenger) {
-        super.addPassenger(passenger);
-        if (passenger instanceof Player player) {
-            this.cannon.setCurrentUser(player.getUUID());
+        Entity controlling = this.getControllingPassenger();
+        if (controlling != null){
+            cannon.setCurrentUser(controlling.getUUID());
         }
-    }
-
-    @Override
-    protected void removePassenger(Entity passenger) {
-        super.removePassenger(passenger);
-        this.cannon.setCurrentUser(null);
     }
 
     @Override

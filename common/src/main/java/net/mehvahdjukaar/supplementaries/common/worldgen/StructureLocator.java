@@ -1,9 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.worldgen;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.ints.Int2ObjectAVLTreeMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMap;
@@ -34,7 +31,6 @@ import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStruct
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector2i;
 
 import java.util.*;
 
@@ -172,11 +168,11 @@ public class StructureLocator {
                 int gridScale = ring.gridSize(); //spread
                 var placementsInGrid = spreadToStructures.get(gridScale);
                 int radius = ring.radius();
-               // Supplementaries.LOGGER.info("Searching in ring with radius {} (grid scale {})", radius, gridScale);
+                // Supplementaries.LOGGER.info("Searching in ring with radius {} (grid scale {})", radius, gridScale);
 
                 // Check candidate positions in current ring
                 // Use less precise search after 2000 blocks
-                boolean useLessPreciseSearch = stopSearchWhenFound || (radius*16 > 2000);
+                boolean useLessPreciseSearch = stopSearchWhenFound || (radius * 16 > 2000);
                 //we only flush here so the results are most accurate and we dont miss stuff thats closer
                 if (lastIteration != ring.commonIterationsIndex()) { //new iteration over all the scales
                     lastIteration = ring.commonIterationsIndex();
@@ -202,7 +198,7 @@ public class StructureLocator {
                         ChunkPos structureChunk = placement.getPotentialStructureChunk(
                                 worldSeed, potentialChunkX, potentialChunkZ);
 
-                      //  Supplementaries.LOGGER.info("potential structure {} at chunk {}",structure.getRegisteredName(), structureChunk);
+                        //  Supplementaries.LOGGER.info("potential structure {} at chunk {}",structure.getRegisteredName(), structureChunk);
 
                         candidatePosThisIteration.add(Pair.of(structureChunk,
                                 new StructureAndPlacement(structure, placement)));
@@ -248,8 +244,8 @@ public class StructureLocator {
     }
 
     private static void flushCandidates(ServerLevel level, BlockPos searchCenter, boolean findNewlyGeneratedOnly,
-                                                          List<Pair<ChunkPos, StructureAndPlacement>> candidatePosThisIteration,
-                                                          StructureManager manager, List<LocatedStructure> found) {
+                                        List<Pair<ChunkPos, StructureAndPlacement>> candidatePosThisIteration,
+                                        StructureManager manager, List<LocatedStructure> found) {
         for (var entry : candidatePosThisIteration) {
             ChunkPos chunkPos = entry.getFirst();
             RandomSpreadStructurePlacement placement = entry.getSecond().placement;
@@ -305,9 +301,9 @@ public class StructureLocator {
                 }
             }
         }
-        if(foundStructures!=null){
+        if (foundStructures != null) {
             //Supplementaries.LOGGER.info("Found structure {} at {}, chunk {}",
-              //      targetStructures.getRegisteredName(), foundStructures.position(), chunkPosition);
+            //      targetStructures.getRegisteredName(), foundStructures.position(), chunkPosition);
         }
         return foundStructures;
     }

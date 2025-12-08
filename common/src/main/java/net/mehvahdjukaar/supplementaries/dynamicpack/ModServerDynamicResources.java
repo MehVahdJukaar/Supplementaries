@@ -3,11 +3,17 @@ package net.mehvahdjukaar.supplementaries.dynamicpack;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.SimpleTagBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicServerResourceProvider;
+import net.mehvahdjukaar.moonlight.api.resources.pack.PackGenerationStrategy;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
+import net.mehvahdjukaar.supplementaries.client.tooltip.SherdTooltipComponent;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
+import net.mehvahdjukaar.supplementaries.common.items.crafting.SoapClearRecipe;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -17,8 +23,6 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;
-import net.minecraft.world.level.levelgen.placement.HeightRangePlacement;
-import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,7 +34,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
     public ModServerDynamicResources() {
         super(Supplementaries.res("generated_pack"),
-                CommonConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
+                PlatHelper.isDev() ? PackGenerationStrategy.CACHED : CommonConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
     }
 
     @Override
@@ -142,17 +146,18 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
     }
 
     private void addCannonBoatRecipes(ResourceManager manager, ResourceSink sink) {
-        WoodType oak = VanillaWoodTypes.OAK;
         ModRegistry.CANNON_BOAT_ITEMS.forEach((w, i) -> {
-            WoodType bamboo = VanillaWoodTypes.BAMBOO;
-            if (w != oak && w != bamboo) {
-                try {
-                    sink.addBlockTypeSwapRecipe(manager, Supplementaries.res("cannon_boat_oak"),
-                            VanillaWoodTypes.OAK, w, Supplementaries.res("cannon_boat_oak"));
-                } catch (Exception e) {
-                    Supplementaries.LOGGER.error("Failed to generate recipe for cannon boat {}:", i, e);
-                }
+            if (w.getChild("boat") == null) {
+                Supplementaries.LOGGER.warn("Could not find Boat for wood {}. Does this item even exist? It should! Skipping cannon boat generation", w);
+                return;
             }
+            try {
+                sink.addBlockTypeSwapRecipe(manager, Supplementaries.res("cannon_boat_oak"),
+                        VanillaWoodTypes.OAK, w, Supplementaries.res("cannon_boat"));
+            } catch (Exception e) {
+                Supplementaries.LOGGER.error("Failed to generate recipe for cannon boat {}:", i, e);
+            }
+
         });
     }
 
@@ -161,18 +166,18 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
         WoodType oak = VanillaWoodTypes.OAK;
 
         ModRegistry.WAY_SIGN_ITEMS.forEach((w, i) -> {
-            if (w != oak) {
-                try {
-                    //Check for disabled ones. Will actually crash if its null since vanilla recipe builder expects a non-null one
-                    ResourceLocation recipeTemplate = w.getChild("sign") == null ?
-                            Supplementaries.res("way_sign_oak") : Supplementaries.res("way_sign_mod_template");
 
-                    sink.addBlockTypeSwapRecipe(manager, recipeTemplate, VanillaWoodTypes.OAK, w,
-                            Supplementaries.res("way_sign_oak"));
-                } catch (Exception e) {
-                    Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
-                }
+            if (w.getChild("sign") == null) {
+                Supplementaries.LOGGER.warn("Could not find Sign for wood {}. Does this block even exist? It should! Skipping way sign recipe generation", w);
+                return;
             }
+            try {
+                sink.addBlockTypeSwapRecipe(manager, Supplementaries.res("way_sign_oak"), VanillaWoodTypes.OAK, w,
+                        Supplementaries.res("way_sign"));
+            } catch (Exception e) {
+                Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
+            }
+
         });
     }
 }

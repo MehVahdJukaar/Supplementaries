@@ -104,7 +104,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     private void fire(CannonAccess access) {
-        if (!this.hasFuelAndProjectiles()) return;
+        if (!this.hasRequiredFuelAndProjectiles()) return;
 
         if (this.getLevel() instanceof ServerLevel sl) {
             //level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
@@ -216,12 +216,16 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     public boolean readyToFire() {
-        return !isOnCooldown() && fuseTimer == 0 && hasFuelAndProjectiles();
+        return !isOnCooldown() && fuseTimer == 0 && hasRequiredFuelAndProjectiles();
     }
 
-    public boolean hasFuelAndProjectiles() {
+    public boolean hasRequiredFuelAndProjectiles() {
         return !getProjectile().isEmpty() && !getFuel().isEmpty() &&
                 getFuel().getCount() >= powerLevel;
+    }
+
+    public boolean hasSomeFuelAndProjectiles() {
+        return !getProjectile().isEmpty() && !getFuel().isEmpty();
     }
 
     public boolean isFiring() {

@@ -30,6 +30,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
 import org.jetbrains.annotations.Nullable;
@@ -298,9 +299,11 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         });
 
         //entity textures
-        try (TextureImage template = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/boat/oak"))) {
+        try (TextureImage template = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/boat/oak"));
+                TextureImage bambooTemplate = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/boat/bamboo"))) {
 
             Respriter respriter = Respriter.of(template);
+            Respriter respriter2 = Respriter.of(bambooTemplate);
 
             //unfortunately theres no programmatic way to get all boat textures of a given boat. also because entities might be for multiple wod types. we can only generate them from scratc
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
@@ -312,7 +315,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                         //Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankTexture);
                         Palette targetPalette = Palette.fromImage(plankTexture);
                         //TextureImage newImage = respriter.recolorWithAnimationOf(plankTexture);
-                        return respriter.recolor(targetPalette);
+                        Respriter r = wood.toVanillaBoatOrOak() == Boat.Type.BAMBOO ? respriter2 : respriter;
+                        return  r.recolor(targetPalette);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

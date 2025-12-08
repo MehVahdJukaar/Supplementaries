@@ -47,7 +47,7 @@ public class FirePitBlock extends LightUpWaterBlock {
         super(properties.lightLevel((state) -> state.getValue(LIT) ? 15 : 0));
         this.fireDamage = fireDamage;
         this.registerDefaultState(this.defaultBlockState()
-                        .setValue(WATERLOGGED,false)
+                .setValue(WATERLOGGED, false)
                 .setValue(HANGING, false));
     }
 
@@ -75,9 +75,11 @@ public class FirePitBlock extends LightUpWaterBlock {
 
     @Override
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        if (state.getValue(HANGING) && CompatHandler.AMENDMENTS &&
-                AmendmentsCompat.canSurviveCeilingAndMaybeFall(state, pos, level)) {
-            return true;
+        if (state.getValue(HANGING) && CompatHandler.AMENDMENTS) {
+            boolean canSurvive = IRopeConnection.isSupportingCeiling(pos.above(), level);
+            if (AmendmentsCompat.maybeFall(canSurvive, state, pos, level)) {
+                return true;
+            }
         }
         return super.canSurvive(state, level, pos);
     }
@@ -93,7 +95,7 @@ public class FirePitBlock extends LightUpWaterBlock {
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
         stateIn = super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
-        if(facing == Direction.UP){
+        if (facing == Direction.UP) {
             stateIn = stateIn.setValue(HANGING, IRopeConnection.isSupportingCeiling(currentPos.above(), level));
         }
         return getDir(stateIn).getOpposite() == facing && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);

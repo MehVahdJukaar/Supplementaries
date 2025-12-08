@@ -4,7 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEntity;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
@@ -25,6 +27,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
@@ -298,8 +301,6 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
 
 
     //parrot dumb
-
-
     private boolean tryShootingParrot(ServerPlayer player, ItemStack stack, float power) {
         CompoundTag[] parrots = new CompoundTag[]{
                 player.getShoulderEntityLeft(),
@@ -311,6 +312,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
         shootParrots(player.serverLevel(), player, player.getUsedItemHand(), stack,
                 parrots, power, 1.0F);
         player.awardStat(Stats.ITEM_USED.get(this));
+
         return true;
     }
 
@@ -321,7 +323,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
         float g = parrots.length == 1 ? 0.0F : 2.0F * f / (float) (parrots.length - 1);
         float h = (float) ((parrots.length - 1) % 2) * g / 2.0F;
         float i = 1.0F;
-
+        boolean wasParrot = false;
         for (int j = 0; j < parrots.length; ++j) {
             CompoundTag itemStack = parrots[j];
             if (!itemStack.isEmpty()) {
@@ -331,10 +333,14 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
                 shootParrot(shooter, projectile, j, velocity, inaccuracy, k);
                 level.addFreshEntity(projectile);
                 weapon.hurtAndBreak(1, shooter, LivingEntity.getSlotForHand(hand));
+                if (projectile instanceof Parrot) wasParrot = true;
                 if (weapon.isEmpty()) {
                     break;
                 }
             }
+        }
+        if (wasParrot) {
+            Utils.awardAdvancement(shooter, Supplementaries.res("husbandry/angry_birds"));
         }
     }
 
@@ -343,7 +349,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
             LivingEntity shooter, Entity parrot, int index, float velocity, float inaccuracy, float angle) {
         Vector3f vector3f = getShootVector(shooter, angle);
         RandomSource random = parrot.getRandom();
-        velocity *=4;
+        velocity *= 4;
 
         //same as projectile shoot
         {

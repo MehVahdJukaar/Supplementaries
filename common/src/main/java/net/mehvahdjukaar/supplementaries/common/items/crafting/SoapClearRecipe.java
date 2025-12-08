@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.crafting;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
@@ -9,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -18,16 +20,18 @@ import net.minecraft.world.level.Level;
 public class SoapClearRecipe extends CustomRecipe {
 
     private final Ingredient soap;
+    private final int dyeAmount;
 
-    public SoapClearRecipe(CraftingBookCategory category, Ingredient soap) {
+    public SoapClearRecipe(CraftingBookCategory category, Ingredient soap, int amount) {
         super(category);
         this.soap = soap;
+        this.dyeAmount = amount;
     }
 
     @Override
     public boolean matches(CraftingInput craftingContainer, Level level) {
-        int i = 0;
-        int j = 0;
+        int dyes = 0;
+        int soaps = 0;
 
         for (int k = 0; k < craftingContainer.size(); ++k) {
             ItemStack itemstack = craftingContainer.getItem(k);
@@ -36,21 +40,17 @@ public class SoapClearRecipe extends CustomRecipe {
                 boolean isColored = (BlocksColorAPI.getColor(item) != null &&
                         SoapWashableHelper.canCleanColor(item));
                 if (isColored || itemstack.has(DataComponents.DYED_COLOR) || hasTrim(item)) {
-                    ++i;
+                    ++dyes;
                 } else {
                     if (!soap.test(itemstack)) {
                         return false;
                     }
-                    ++j;
-                }
-
-                if (j > 1 || i > 1) {
-                    return false;
+                    ++soaps;
                 }
             }
         }
 
-        return i == 1 && j == 1;
+        return soaps == 1 && dyes == dyeAmount;
     }
 
     //TODO: add this and JEI view of it
@@ -115,12 +115,14 @@ public class SoapClearRecipe extends CustomRecipe {
 
         private static final MapCodec<SoapClearRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
                 CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(CraftingRecipe::category),
-                Ingredient.CODEC.fieldOf("ingredient").forGetter((recipe) -> recipe.soap)
+                Ingredient.CODEC.fieldOf("ingredient").forGetter((recipe) -> recipe.soap),
+                Codec.INT.optionalFieldOf("dyed_items_amount", 1).forGetter((recipe) -> recipe.dyeAmount)
         ).apply(instance, SoapClearRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, SoapClearRecipe> STREAM_CODEC = StreamCodec.composite(
                 CraftingBookCategory.STREAM_CODEC, CraftingRecipe::category,
                 Ingredient.CONTENTS_STREAM_CODEC, recipe -> recipe.soap,
+                ByteBufCodecs.VAR_INT, recipe -> recipe.dyeAmount,
                 SoapClearRecipe::new);
 
         @Override

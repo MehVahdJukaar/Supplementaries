@@ -8,19 +8,21 @@
         "element_type": "minecraft:feature_pool_element",
         "feature": {
           "placement": [
-            {
-              "type": "minecraft:heightmap",
-              "heightmap": "MOTION_BLOCKING"
-            }
           ],
           "feature": {
             "config": {
               "entity": "minecraft:boat",
-              "boat_type": "dark_oak",
+              "data": {
+                "boat_type": "dark_oak",
+                "loot_table": "supplementaries:loot/galleon/cannon"
+              },
               "passengers": [
                 "supplementaries:plunderer",
                 "minecraft:pillager"
-              ]
+              ],
+              "spread": 4,
+                "attempts": 4,
+              "projection": "terrain_matching"
             },
             "type": "supplementaries:spawn_entity_with_passengers"
           }
@@ -34,18 +36,20 @@
         "element_type": "minecraft:feature_pool_element",
         "feature": {
           "placement": [
-            {
-              "type": "minecraft:heightmap",
-              "heightmap": "MOTION_BLOCKING"
-            }
           ],
           "feature": {
             "config": {
               "entity": "minecraft:boat",
-              "boat_type": "dark_oak",
+              "data": {
+                "boat_type": "dark_oak",
+                "loot_table": "supplementaries:loot/galleon/cannon"
+              },
               "passengers": [
                 "supplementaries:plunderer"
-              ]
+              ],
+              "spread": 4,
+              "attempts": 4,
+              "projection": "terrain_matching"
             },
             "type": "supplementaries:spawn_entity_with_passengers"
           }
@@ -59,18 +63,20 @@
         "element_type": "minecraft:feature_pool_element",
         "feature": {
           "placement": [
-            {
-              "type": "minecraft:heightmap",
-              "heightmap": "MOTION_BLOCKING"
-            }
           ],
           "feature": {
             "config": {
               "entity": "supplementaries:cannon_boat",
-              "boat_type": "dark_oak",
+              "data": {
+                "boat_type": "dark_oak",
+                "loot_table": "supplementaries:loot/galleon/cannon"
+              },
               "passengers": [
                 "supplementaries:plunderer"
-              ]
+              ],
+              "spread": 4,
+              "attempts": 4,
+              "projection": "terrain_matching"
             },
             "type": "supplementaries:spawn_entity_with_passengers"
           }
@@ -84,17 +90,19 @@
         "element_type": "minecraft:feature_pool_element",
         "feature": {
           "placement": [
-            {
-              "type": "minecraft:heightmap",
-              "heightmap": "MOTION_BLOCKING"
-            }
           ],
           "feature": {
             "config": {
               "entity": "minecraft:boat",
-              "boat_type": "dark_oak",
+              "data": {
+                "boat_type": "dark_oak",
+                "loot_table": "supplementaries:loot/galleon/cannon"
+              },
               "passengers": [
-              ]
+              ],
+              "spread": 4,
+              "attempts": 4,
+              "projection": "terrain_matching"
             },
             "type": "supplementaries:spawn_entity_with_passengers"
           }
@@ -103,7 +111,7 @@
       }
     },
     {
-      "weight": 3,
+      "weight": 2,
       "element": {
         "element_type": "minecraft:empty_pool_element"
       }

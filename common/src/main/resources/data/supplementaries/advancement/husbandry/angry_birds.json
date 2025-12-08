@@ -10,7 +10,7 @@
     "description": {
       "translate": "advancements.husbandry.angry_birds.description"
     },
-    "frame": "challenge",
+    "frame": "goal",
     "show_toast": true,
     "announce_to_chat": true,
     "hidden": true

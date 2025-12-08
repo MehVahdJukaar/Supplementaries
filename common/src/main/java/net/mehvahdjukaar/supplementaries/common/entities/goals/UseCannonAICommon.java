@@ -19,7 +19,8 @@ public final class UseCannonAICommon {
     public static final int MAX_GO_TO_TIME = 1200;
     public static final int MIN_CANNON_RANGE = 16;
     public static final int GOAL_INTERVAL = 90;
-    public static final int SHOOTING_COOLDOWN = 60;
+    public static final int SHOOTING_COOLDOWN_MIN = 50;
+    public static final int SHOOTING_COOLDOWN_MAX = 80;
 
     public static boolean aimCannonAndShoot(CannonAccess access, Mob shooter, LivingEntity target, boolean canShoot) {
         CannonBlockTile cannonTile = access.getInternalCannon();
@@ -62,16 +63,15 @@ public final class UseCannonAICommon {
                 float newCannonGlobalYaw = (cannonTile.getYaw() - cannonGlobalYawOffsetDeg) * Mth.DEG_TO_RAD;
 
                 Vec3 hitLoc = cannonTrajectory.getHitLocation(cannonGlobalPosition, newCannonGlobalYaw);
-
                 //distance
                 double distance1 = hitLoc.distanceTo(targetLoc);
-                if (distance1 < 0.1) {
+                if (distance1 < 0.1 && cannonTile.readyToFire()) {
                     cannonTile.ignite(shooter, access);
 
                     if (shooter instanceof ICannonShooter cs) {
                         cs.onShotCannon(cannonTile.getBlockPos());
                     } else if (shooter instanceof Raider r) {
-                        r.playSound(r.getCelebrateSound(), 2.5F, 1.2F);
+                        r.playSound(r.getCelebrateSound(), 2.5F, 1F);
                     }
                     return true;
                 }
@@ -100,11 +100,11 @@ public final class UseCannonAICommon {
         }
     }
 
-    public static boolean hasTargetInCannonRange(Mob mob) {
+    public static boolean hasValidTargetInCannonRange(Mob mob, int minCannonRange) {
         var target = mob.getTarget();
         if (target == null || !target.isAlive()) return false;
         double distSq = mob.distanceToSqr(target);
-        return distSq > MIN_CANNON_RANGE * MIN_CANNON_RANGE;
+        return distSq > minCannonRange * minCannonRange;
     }
 
 
