@@ -341,7 +341,7 @@
   "gui.supplementaries.cannon.maneuver": "Maneuver",
   "gui.supplementaries.doormat": "Doormat",
   "gui.supplementaries.doormat.edit": "Edit Doormat message",
-  "gui.supplementaries.incompatible_mods.message": "Supplementaries has detected the following mods that are known to cause crashes:\n\n %s\n\nThese issues are not fixable by supplementaries as they are from these mods instead.\nPlease remove them or be advised of random crashes. If you think this issue has been solve please contact us instead.",
+  "gui.supplementaries.incompatible_mods.message": "Supplementaries has detected the following mods that are known to cause crashes:\n\n %s\n\nThese issues are not fixable by supplementaries as they are from these mods instead.\nPlease remove them or be advised of random crashes. If you think this issue has been solved please contact us instead.",
   "gui.supplementaries.incompatible_mods.title": "Warning: Incompatible mods found",
   "gui.supplementaries.lunch_basket": "Lunch Basket",
   "gui.supplementaries.notice_board": "Notice Board",
