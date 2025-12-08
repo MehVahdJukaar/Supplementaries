@@ -166,7 +166,8 @@ public class ServerEvents {
 
     @EventCalled
     public static void onServerStart(MinecraftServer server) {
-        FaucetBehaviorsManager.reloadWithLevel(server.overworld());
+        FaucetBehaviorsManager.getInstance(server.overworld())
+                .onLevelLoad(server.overworld());
         //compute cache so it doesnt lag later.. because aparelty thats a thing.
         //TODO: figure out why starting this lags
         IEntityInterceptFakeLevel.get(server.overworld());

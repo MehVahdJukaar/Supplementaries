@@ -4,13 +4,13 @@ import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.IExtraModelDataProvider;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FaucetBlock;
-import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetItemSource;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetSource;
-import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetTarget;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -22,6 +22,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -38,20 +39,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
 public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvider {
 
-    private static final List<FaucetSource.BlState> BLOCK_INTERACTIONS = new ArrayList<>();
-    private static final List<FaucetSource.Tile> TILE_INTERACTIONS = new ArrayList<>();
-    private static final List<FaucetSource.Fluid> SOURCE_FLUID_INTERACTIONS = new ArrayList<>();
-    private static final List<FaucetItemSource> ITEM_INTERACTIONS = new ArrayList<>();
-    private static final List<FaucetTarget.BlState> TARGET_BLOCK_INTERACTIONS = new ArrayList<>();
-    private static final List<FaucetTarget.Tile> TARGET_TILE_INTERACTIONS = new ArrayList<>();
-    private static final List<FaucetTarget.Fluid> TARGET_FLUID_INTERACTIONS = new ArrayList<>();
 
     public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID = ModBlockProperties.FLUID;
     public static final ModelDataKey<Integer> FLUID_COLOR = ModBlockProperties.FLUID_COLOR;
@@ -64,7 +57,6 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         super(ModRegistry.FAUCET_TILE.get(), pos, state);
         this.tempFluidHolder = SoftFluidTank.create(5, Utils.hackyGetRegistryAccess());
     }
-
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
@@ -84,11 +76,12 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         }
     }
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, FaucetBlockTile tile) {
+
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FaucetBlockTile tile) {
         if (tile.transferCooldown > 0) {
             tile.transferCooldown--;
         } else if (tile.isOpen()) {
-            int cooldown = tile.tryExtract(pLevel, pPos, pState, false);
+            int cooldown = tile.tryExtract((ServerLevel) pLevel, false);
             tile.transferCooldown += cooldown;
         }
     }
@@ -96,37 +89,43 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 //------fluids------
 
     //returns true if it has water animation
-    public boolean updateContainedFluidVisuals(Level level, BlockPos pos, BlockState state) {
-        boolean r = this.tryExtract(level, pos, state, true) != 0;
+    public boolean updateContainedFluidVisuals(ServerLevel serverLevel) {
+        SoftFluidStack previous = this.tempFluidHolder.getFluid().copy();
+        boolean r = this.tryExtract(serverLevel, true) != 0; //this will set the internal tank
         this.updateLight();
-        this.requestModelReload();
+        if (previous.isSameFluidSameComponents(this.tempFluidHolder.getFluid())) {
+            this.setChanged();
+            serverLevel.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
+        }
         return r;
     }
 
     /**
      * @return 0 for fail, non 0 will be the transfer cooldown
      */
-    private int tryExtract(Level level, BlockPos pos, BlockState state, boolean justVisual) {
+    private int tryExtract(ServerLevel level, boolean simulate) {
+        BlockState state = this.getBlockState();
         Direction dir = state.getValue(FaucetBlock.FACING);
-        BlockPos behind = pos.relative(dir.getOpposite());
+        BlockPos behind = this.worldPosition.relative(dir.getOpposite());
         BlockState backState = level.getBlockState(behind);
         if (backState.isAir() || backState.is(ModTags.FAUCET_CANT_INTERACT)) return 0;
-        Integer filledAmount = runInteractions(BLOCK_INTERACTIONS, level, dir, behind, backState, justVisual);
+        var behaviors = FaucetBehaviorsManager.getInstance(level);
+        Integer filledAmount = runInteractions(behaviors.getBlockInteractions(), level, dir, behind, backState, simulate);
         if (filledAmount != null) return filledAmount;
 
         //tile interactions
         BlockEntity tileBack = level.getBlockEntity(behind);
 
         if (tileBack != null) {
-            filledAmount = runInteractions(TILE_INTERACTIONS, level, dir, behind, tileBack, justVisual);
+            filledAmount = runInteractions(behaviors.getTileInteractions(), level, dir, behind, tileBack, simulate);
 
             if (filledAmount != null) return filledAmount;
         }
 
-        if (!this.isConnectedBelow() && !justVisual &&
+        if (!this.isConnectedBelow() && !simulate &&
                 (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get() ||
                         CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get())) {
-            for (var bi : ITEM_INTERACTIONS) {
+            for (var bi : behaviors.getItemInteractions()) {
                 ItemStack removed = bi.tryExtractItem(level, behind, backState, dir, tileBack);
                 if (!removed.isEmpty()) {
                     if (CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get() && fillEntityBelow(removed)) {
@@ -140,7 +139,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         }
 
         FluidState fluidState = level.getFluidState(behind);
-        filledAmount = runInteractions(SOURCE_FLUID_INTERACTIONS, level, dir, behind, fluidState, justVisual);
+        filledAmount = runInteractions(behaviors.getSourceFluidInteractions(), level, dir, behind, fluidState, simulate);
         if (filledAmount != null) return filledAmount;
 
         return 0;
@@ -148,7 +147,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     // returns cooldown
     @Nullable
-    private <T, S extends FaucetSource<T>> Integer runInteractions(List<S> interactions, Level level, Direction dir,
+    private <T, S extends FaucetSource<T>> Integer runInteractions(Iterable<S> interactions, Level level, Direction dir,
                                                                    BlockPos pos, T source, boolean justVisual) {
         for (var inter : interactions) {
             FluidOffer fluid = inter.getProvidedFluid(level, pos, dir, source);
@@ -171,21 +170,21 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     private Integer tryFillingBlockBelow(FluidOffer offer) {
         BlockPos below = this.worldPosition.below();
         BlockState belowState = level.getBlockState(below);
-
-        for (var bi : TARGET_BLOCK_INTERACTIONS) {
+        var behaviors = FaucetBehaviorsManager.getInstance(level);
+        for (var bi : behaviors.getTargetBlockInteractions()) {
             Integer res = bi.fill(level, below, belowState, offer);
             if (res != null) return res;
         }
 
         BlockEntity tileBelow = level.getBlockEntity(below);
         if (tileBelow != null) {
-            for (var bi : TARGET_TILE_INTERACTIONS) {
+            for (var bi : behaviors.getTargetTileInteractions()) {
                 Integer res = bi.fill(level, below, tileBelow, offer);
                 if (res != null) return res;
             }
         }
         FluidState fluidState = belowState.getFluidState();
-        for (var bi : TARGET_FLUID_INTERACTIONS) {
+        for (var bi : behaviors.getTargetFluidInteractions()) {
             Integer res = bi.fill(level, below, fluidState, offer);
             if (res != null) return res;
         }
@@ -244,6 +243,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         super.saveAdditional(tag, registries);
         tag.putInt("TransferCooldown", this.transferCooldown);
         this.tempFluidHolder.save(tag, registries);
+
     }
 
     @Override
@@ -262,48 +262,5 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         int tryExecute(int maxAmount);
     }
 
-    public static void registerInteraction(Object interaction) {
-        boolean success = false;
-        if (interaction instanceof FaucetSource.BlState bs) {
-            BLOCK_INTERACTIONS.add(bs);
-            success = true;
-        }
-        if (interaction instanceof FaucetSource.Tile ts) {
-            TILE_INTERACTIONS.add(ts);
-            success = true;
-        }
-        if (interaction instanceof FaucetSource.Fluid bs) {
-            SOURCE_FLUID_INTERACTIONS.add(bs);
-            success = true;
-        }
-        if (interaction instanceof FaucetTarget.BlState tb) {
-            TARGET_BLOCK_INTERACTIONS.add(tb);
-            success = true;
-        }
-        if (interaction instanceof FaucetTarget.Tile tt) {
-            TARGET_TILE_INTERACTIONS.add(tt);
-            success = true;
-        }
-        if (interaction instanceof FaucetTarget.Fluid tf) {
-            TARGET_FLUID_INTERACTIONS.add(tf);
-            success = true;
-        }
-        if (interaction instanceof FaucetItemSource is) {
-            ITEM_INTERACTIONS.add(is);
-            success = true;
-        }
-        if (!success)
-            throw new UnsupportedOperationException("Unsupported faucet interaction class: " + interaction.getClass().getSimpleName());
-    }
-
-    public static void clearBehaviors() {
-        BLOCK_INTERACTIONS.clear();
-        TILE_INTERACTIONS.clear();
-        SOURCE_FLUID_INTERACTIONS.clear();
-        ITEM_INTERACTIONS.clear();
-        TARGET_BLOCK_INTERACTIONS.clear();
-        TARGET_TILE_INTERACTIONS.clear();
-        TARGET_FLUID_INTERACTIONS.clear();
-    }
 
 }

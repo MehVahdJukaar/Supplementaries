@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
+import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +12,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
@@ -26,7 +29,7 @@ public class CapturedMobCache {
                 }
             });
 
-    public static void addMob(Entity e) {
+    private static void addToCache(Entity e) {
         if (e != null) MOB_CACHE.put(e.getUUID(), e);
     }
 
@@ -34,26 +37,35 @@ public class CapturedMobCache {
     private static boolean updateCrystal = false;
 
     @Nullable
-    public static Entity getOrCreateCachedMob(UUID id, CompoundTag tag) {
+    public static Entity getOrCreateCachedMob(@NotNull Level level, UUID id, CompoundTag tag) {
         Entity e = MOB_CACHE.getIfPresent(id);
         if (e == null) {
-            Level world = Minecraft.getInstance().level;
-            if (world != null) {
-                CompoundTag mobData = tag.getCompound("EntityData");
-
-                e = MobContainer.createEntityFromNBT(mobData, id, world);
-                addMob(e);
-            }
+            e = createEntityFromNBT(tag, id, level);
+            addToCache(e);
         }
         return e;
     }
 
+
+    @Nullable
+    public static Entity createEntityFromNBT(CompoundTag tag, @Nullable UUID id, Level world) {
+        if (tag != null && tag.contains("id")) {
+            Entity entity = EntityType.loadEntityRecursive(tag, world, o -> o);
+            if (id != null && entity != null) {
+                entity.setUUID(id);
+                if (entity.hasCustomName()) entity.setCustomName(entity.getCustomName());
+            }
+            return entity;
+        }
+        return null;
+    }
+
     public static void tickCrystal() {
-        if(!updateCrystal)return;
+        if (!updateCrystal) return;
         var e = MOB_CACHE.getIfPresent(crystalID);
-        if (e instanceof EndCrystal c){
+        if (e instanceof EndCrystal c) {
             c.time++;
-            if(e.level() != Minecraft.getInstance().level){
+            if (e.level() != Minecraft.getInstance().level) {
                 //invalid. make new one
                 crystalID = UUID.randomUUID();
             }
@@ -68,12 +80,12 @@ public class CapturedMobCache {
         EndCrystal entity = new EndCrystal(EntityType.END_CRYSTAL, level);
         entity.setShowBottom(false);
         entity.setUUID(crystalID);
-        addMob(entity);
+        addToCache(entity);
         return entity;
     }
 
     //clears immediately so level itself can unload immediately too
-    public static void clear(){
+    public static void clear() {
         MOB_CACHE.invalidateAll();
     }
 }

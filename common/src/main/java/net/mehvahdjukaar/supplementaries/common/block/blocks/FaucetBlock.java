@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
@@ -99,7 +100,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-        boolean hasWater = updateTileFluid(state, pos, worldIn);
+        boolean hasWater = updateTileFluidAndReturnIfHasWater(state, pos, worldIn);
         if (hasWater != state.getValue(HAS_WATER)) worldIn.setBlockAndUpdate(pos, state.setValue(HAS_WATER, hasWater));
     }
 
@@ -114,33 +115,33 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
             return stateIn.setValue(CONNECTED, canConnectDown);
         }
         if (facing == stateIn.getValue(FACING).getOpposite()) {
-            boolean hasWater = updateTileFluid(stateIn, currentPos, worldIn);
+            boolean hasWater = updateTileFluidAndReturnIfHasWater(stateIn, currentPos, worldIn);
             return stateIn.setValue(HAS_WATER, hasWater);
         }
         return stateIn;
     }
 
     //returns false if no color (water)
-    public boolean updateTileFluid(BlockState state, BlockPos pos, LevelAccessor world) {
-        if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof Level level) {
-            return tile.updateContainedFluidVisuals(level, pos, state);
+    public boolean updateTileFluidAndReturnIfHasWater(BlockState state, BlockPos pos, LevelReader world) {
+        if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof ServerLevel level) {
+            return tile.updateContainedFluidVisuals(level);
         }
         return false;
     }
 
     @ForgeOverride
-    public void onNeighborChange(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor) {
-        if (world.getBlockEntity(pos) instanceof FaucetBlockTile tile && world instanceof Level level) {
-            boolean water = tile.updateContainedFluidVisuals(level, pos, state);
-            if (state.getValue(HAS_WATER) != water) {
-                level.setBlock(pos, state.setValue(HAS_WATER, water), 2);
+    public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+        boolean water = updateTileFluidAndReturnIfHasWater(state, pos, level);
+        if (state.getValue(HAS_WATER) != water) {
+            if (level instanceof Level l) {
+                l.setBlock(pos, state.setValue(HAS_WATER, water), 2);
             }
         }
     }
 
     private boolean canConnect(BlockState downState, LevelAccessor world, BlockPos pos, Direction dir) {
         if (downState.getBlock() instanceof JarBlock) return true;
-        else if(downState.getBlock() instanceof AbstractCauldronBlock) return false;
+        else if (downState.getBlock() instanceof AbstractCauldronBlock) return false;
         else if (downState.is(ModTags.FAUCET_CONNECTION_BLACKLIST)) return false;
         else if (downState.is(ModTags.FAUCET_CONNECTION_WHITELIST)) return false;
         else if (downState.hasProperty(BlockStateProperties.LEVEL_HONEY)) return true;
@@ -159,7 +160,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
             world.setBlock(pos, state.setValue(POWERED, isPowered).setValue(ENABLED, toggle ^ state.getValue(ENABLED)), 2);
         }
 
-        boolean hasWater = updateTileFluid(state, pos, world);
+        boolean hasWater = updateTileFluidAndReturnIfHasWater(state, pos, world);
         if (hasWater != state.getValue(HAS_WATER)) world.setBlockAndUpdate(pos, state.setValue(HAS_WATER, hasWater));
     }
 
@@ -233,7 +234,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return Utils.getTicker(pBlockEntityType, ModRegistry.FAUCET_TILE.get(), pLevel.isClientSide ? null : FaucetBlockTile::tick);
+        return Utils.getTicker(pBlockEntityType, ModRegistry.FAUCET_TILE.get(), pLevel.isClientSide ? null : FaucetBlockTile::serverTick);
     }
 }
 

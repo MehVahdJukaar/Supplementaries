@@ -9,11 +9,14 @@ import net.mehvahdjukaar.supplementaries.common.entities.SlingshotProjectileEnti
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.PlayerAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModEnchantments;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -21,8 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
@@ -46,30 +48,34 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeCharged) {
         //same as bow
-        if (entity instanceof Player player) {
-            ItemStack ammo = player.getProjectile(stack);
-            if (!ammo.isEmpty()) {
+        if (entity instanceof ServerPlayer player) {
 
-                int useDuration = this.getUseDuration(stack, entity) - timeCharged;
-                float power = getPowerForTime(useDuration, stack, entity);
-                if ((power >= 0.085D)) {
 
+            int useDuration = this.getUseDuration(stack, entity) - timeCharged;
+            float power = getPowerForTime(useDuration, stack, entity);
+            if ((power >= 0.085D)) {
+                if (tryShootingParrot(player, stack, power)) return;
+                ItemStack ammo = player.getProjectile(stack);
+                if (!ammo.isEmpty()) {
                     List<ItemStack> projectiles = draw(stack, ammo, player);
 
-                    boolean noGravity = EnchantmentHelper.has(stack, ModEnchantments.PROJECTILE_NO_GRAVITY.get());
-                    power *= (float) ((CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (noGravity ? 0.5 : 0)) * 1.1);
-
-                    if (level instanceof ServerLevel serverLevel && !projectiles.isEmpty()) {
-                        this.shoot(serverLevel, player, player.getUsedItemHand(), stack,
+                    power = applyPowerModifiers(stack, power);
+                    if (!projectiles.isEmpty()) {
+                        this.shoot(player.serverLevel(), player, player.getUsedItemHand(), stack,
                                 projectiles, power, 1.0F, false, null);
+                        player.awardStat(Stats.ITEM_USED.get(this));
                     }
-
-
-                    player.awardStat(Stats.ITEM_USED.get(this));
                 }
             }
         }
     }
+
+    private static float applyPowerModifiers(ItemStack stack, float power) {
+        boolean noGravity = EnchantmentHelper.has(stack, ModEnchantments.PROJECTILE_NO_GRAVITY.get());
+        power *= (float) ((CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (noGravity ? 0.5 : 0)) * 1.1);
+        return power;
+    }
+
 
     @Override
     protected Projectile createProjectile(Level level, LivingEntity shooter, ItemStack weapon, ItemStack ammo, boolean isCrit) {
@@ -89,16 +95,22 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
             double g = target.getY(0.3333333333333333) - projectile.getY() + f * 0.2F;
             vector3f = getProjectileShotVector(shooter, new Vec3(d, g, e), angle);
         } else {
-            Vec3 vec3 = shooter.getUpVector(1.0F);
-            Quaternionf quaternionf = new Quaternionf().setAngleAxis((angle * (float) (Math.PI / 180.0)), vec3.x, vec3.y, vec3.z);
-            Vec3 vec32 = shooter.getViewVector(1.0F);
-            vector3f = vec32.toVector3f().rotate(quaternionf);
+            vector3f = getShootVector(shooter, angle);
         }
 
         projectile.shoot(vector3f.x(), vector3f.y(), vector3f.z(), velocity, inaccuracy);
         float pitch = getShotPitch(shooter.getRandom(), index);
         shooter.level().playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
-                ModSounds.SLINGSHOT_SHOOT.get() , shooter.getSoundSource(), 1.0F, pitch);
+                ModSounds.SLINGSHOT_SHOOT.get(), shooter.getSoundSource(), 1.0F, pitch);
+    }
+
+    private static Vector3f getShootVector(LivingEntity shooter, float angle) {
+        Vector3f vector3f;
+        Vec3 vec3 = shooter.getUpVector(1.0F);
+        Quaternionf quaternionf = new Quaternionf().setAngleAxis((angle * (float) (Math.PI / 180.0)), vec3.x, vec3.y, vec3.z);
+        Vec3 vec32 = shooter.getViewVector(1.0F);
+        vector3f = vec32.toVector3f().rotate(quaternionf);
+        return vector3f;
     }
 
     private static Vector3f getProjectileShotVector(LivingEntity shooter, Vec3 distance, float angle) {
@@ -143,7 +155,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
 
     //actual use duration, in seconds i guess
     public static int getChargeDuration(ItemStack stack, LivingEntity shooter) {
-        float f = EnchantmentHelper.modifyCrossbowChargingTime(stack, shooter, CommonConfigs.Tools.SLINGSHOT_CHARGE.get())/20f;
+        float f = EnchantmentHelper.modifyCrossbowChargingTime(stack, shooter, CommonConfigs.Tools.SLINGSHOT_CHARGE.get()) / 20f;
         return Mth.floor(f * 20.0F);
     }
 
@@ -282,6 +294,99 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
             matrixStack.scale(1.0F, 1.0F, 1.0F + power * 0.2F);
             //matrixStack.mulPose(Axis.YN.rotationDegrees((float)k * 45.0F));
         }
+    }
+
+
+    //parrot dumb
+
+
+    private boolean tryShootingParrot(ServerPlayer player, ItemStack stack, float power) {
+        CompoundTag[] parrots = new CompoundTag[]{
+                player.getShoulderEntityLeft(),
+                player.getShoulderEntityRight()
+        };
+        if (parrots[0].isEmpty() && parrots[1].isEmpty()) return false;
+
+        power = applyPowerModifiers(stack, power);
+        shootParrots(player.serverLevel(), player, player.getUsedItemHand(), stack,
+                parrots, power, 1.0F);
+        player.awardStat(Stats.ITEM_USED.get(this));
+        return true;
+    }
+
+    //same as shoot
+    private void shootParrots(ServerLevel level, ServerPlayer shooter, InteractionHand hand, ItemStack weapon,
+                              CompoundTag[] parrots, float velocity, float inaccuracy) {
+        float f = EnchantmentHelper.processProjectileSpread(level, weapon, shooter, 0.0F);
+        float g = parrots.length == 1 ? 0.0F : 2.0F * f / (float) (parrots.length - 1);
+        float h = (float) ((parrots.length - 1) % 2) * g / 2.0F;
+        float i = 1.0F;
+
+        for (int j = 0; j < parrots.length; ++j) {
+            CompoundTag itemStack = parrots[j];
+            if (!itemStack.isEmpty()) {
+                float k = h + i * (float) ((j + 1) / 2) * g;
+                i = -i;
+                Entity projectile = createEntityOnShoulder(shooter, j == 0);
+                shootParrot(shooter, projectile, j, velocity, inaccuracy, k);
+                level.addFreshEntity(projectile);
+                weapon.hurtAndBreak(1, shooter, LivingEntity.getSlotForHand(hand));
+                if (weapon.isEmpty()) {
+                    break;
+                }
+            }
+        }
+    }
+
+    //same as shootProjectile
+    protected void shootParrot(
+            LivingEntity shooter, Entity parrot, int index, float velocity, float inaccuracy, float angle) {
+        Vector3f vector3f = getShootVector(shooter, angle);
+        RandomSource random = parrot.getRandom();
+        velocity *=4;
+
+        //same as projectile shoot
+        {
+            float x = vector3f.x();
+            float y = vector3f.y();
+            float z = vector3f.z();
+            //same as getMovementToShoot
+            Vec3 vec3 = (new Vec3(x, y, z)).normalize().add(random.triangle(0.0, 0.0172275 * (double) inaccuracy), random.triangle(0.0, 0.0172275 * (double) inaccuracy), random.triangle(0.0, 0.0172275 * (double) inaccuracy)).scale(velocity);
+            parrot.setDeltaMovement(vec3);
+            parrot.hasImpulse = true;
+            double d = vec3.horizontalDistance();
+            parrot.setYRot((float) (Mth.atan2(vec3.x, vec3.z) * 57.2957763671875));
+            parrot.setXRot((float) (Mth.atan2(vec3.y, d) * 57.2957763671875));
+            parrot.yRotO = parrot.getYRot();
+            parrot.xRotO = parrot.getXRot();
+        }
+
+        float pitch = getShotPitch(shooter.getRandom(), index);
+        shooter.level().playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
+                ModSounds.SLINGSHOT_SHOOT.get(), shooter.getSoundSource(), 1.0F, pitch);
+    }
+
+
+    @Nullable
+    private Entity createEntityOnShoulder(ServerPlayer player, boolean left) {
+        CompoundTag entityCompound = left ? player.getShoulderEntityLeft() : player.getShoulderEntityRight();
+        var e = EntityType.create(entityCompound, player.level());
+        if (e.isPresent()) {
+            if (left) {
+                ((PlayerAccessor) player).invokeSetShoulderEntityLeft(new CompoundTag());
+            } else {
+                ((PlayerAccessor) player).invokeSetShoulderEntityRight(new CompoundTag());
+            }
+            Entity entity = e.get();
+            if (entity instanceof TamableAnimal ta) {
+                ta.setOwnerUUID(player.getUUID());
+                ta.setOrderedToSit(true);
+            }
+            entity.setPos(player.getX(), player.getEyeY() - 0.1F, player.getZ());
+            player.serverLevel().addWithUUID(entity);
+            return entity;
+        }
+        return null;
     }
 
 }

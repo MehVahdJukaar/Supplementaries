@@ -11,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
+import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -169,7 +170,7 @@ public class MobContainer {
     public static Entity createStaticMob(MobData.Entity data, @NotNull Level world, BlockPos pos) {
         Entity entity = null;
         if (data != null) {
-            entity = createEntityFromNBT(data.mobTag, data.uuid, world);
+            entity = CapturedMobCache.createEntityFromNBT(data.mobTag, data.uuid, world);
             if (entity == null) return null;
 
             //don't even need to sync these since they are only used by the block
@@ -190,19 +191,6 @@ public class MobContainer {
             //entity.tickCount += this.rand.nextInt(40);
         }
         return entity;
-    }
-
-    @Nullable
-    public static Entity createEntityFromNBT(CompoundTag tag, @Nullable UUID id, Level world) {
-        if (tag != null && tag.contains("id")) {
-            Entity entity = EntityType.loadEntityRecursive(tag, world, o -> o);
-            if (id != null && entity != null) {
-                entity.setUUID(id);
-                if (entity.hasCustomName()) entity.setCustomName(entity.getCustomName());
-            }
-            return entity;
-        }
-        return null;
     }
 
     //-----end-init-----

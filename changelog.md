@@ -12,3 +12,4 @@
 - generalize cannon use goal
 - finish barnacles
 - parrot slingshot
+- chalk sound

@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:husbandry/root",
+  "display": {
+    "icon": {
+      "id": "supplementaries:slingshot"
+    },
+    "title": {
+      "translate": "advancements.husbandry.angry_birds.title"
+    },
+    "description": {
+      "translate": "advancements.husbandry.angry_birds.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "unlock": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "requirements": [
+    [
+      "unlock"
+    ]
+  ],
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "slingshot"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
@@ -54,7 +55,7 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
 
         matrixStack.translate(x, y, z);
 
-        matrixStack.mulPose(RotHlpr.rot(-(int) rot));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-(int) rot));
 
         matrixStack.scale(scale, scale, scale);
 

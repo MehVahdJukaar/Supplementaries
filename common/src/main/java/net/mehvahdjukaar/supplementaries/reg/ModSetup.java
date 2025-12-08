@@ -158,10 +158,6 @@ public class ModSetup {
             } catch (Exception e) {
                 throw new RuntimeException("Failed to get empty soft fluid from datapack. How?", e);
             }
-            var server = PlatHelper.getCurrentServer();
-            if (server != null) {
-                FaucetBehaviorsManager.reloadWithLevel(server.overworld());
-            }
         }
     }
 
