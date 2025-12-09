@@ -1,5 +1,5 @@
 # Supplementaries Team License
-Version 1.4, August 2025
+Version 1.5, September 2025
 
 Copyright (c) 2025 Supplementaries Team.  All Rights Reserved.
 
@@ -39,7 +39,7 @@ The Software may be copied for private use or to contribute to its development.
 The Licensee may incorporate part of this Software code into their own projects provided that:
 - Appropriate credit is given to the original authors of the Software.
 - The Licensee's project does not "Compete" with the Software.
-- "Assets" are exempt from this clause and require explicit permission
+- "Assets" are exempt from this clause and require explicit permission unless they are part of a project that is a dependency of the Software.
 
 ### 2.3. Modification
 The Software may be modified for private use or to contribute to its development.
