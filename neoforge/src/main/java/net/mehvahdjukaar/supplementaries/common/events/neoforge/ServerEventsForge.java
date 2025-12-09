@@ -19,6 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.CatVariant;
 import net.minecraft.world.level.LevelAccessor;
@@ -64,7 +65,7 @@ public class ServerEventsForge {
     }
 
     @SubscribeEvent
-    public static void onLivingDeath(LivingDeathEvent event){
+    public static void onLivingDeath(LivingDeathEvent event) {
         ServerEvents.onLivingDeath(event.getEntity(), event.getSource());
     }
 
@@ -155,7 +156,7 @@ public class ServerEventsForge {
     public static void onEntityJoin(EntityJoinLevelEvent event) {
         var level = event.getLevel();
         if (level instanceof ServerLevel serverLevel) {
-            ServerEvents.onAddExtraGoals(event.getEntity(), serverLevel);
+            if (event.getEntity() instanceof Mob m) ServerEvents.onAddExtraGoals(m);
         } else {
             ClientEvents.onEntityLoad(event.getEntity(), event.getLevel());
         }

@@ -15,6 +15,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.BlockTestLevel;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.core.BlockPos;
@@ -49,7 +50,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
     private static final Codec<Either<DataItemInteraction, DataFluidInteraction>> CODEC =
             Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
 
-    private static final Set<Consumer<FaucetBehaviorsManager>> SERVER_LISTENERS = new HashSet<>();
+    private static final Set<Consumer<IFaucetEvent>> SERVER_LISTENERS = new HashSet<>();
     private static final SidedInstance<FaucetBehaviorsManager> INSTANCES = SidedInstance.of(FaucetBehaviorsManager::new);
 
     public static FaucetBehaviorsManager getInstance(HolderLookup.Provider ra) {
@@ -61,7 +62,11 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         return getInstance(level.registryAccess());
     }
 
-    synchronized public static void addRegisterFaucetInteraction(Consumer<FaucetBehaviorsManager> listener) {
+    public interface IFaucetEvent {
+        void registerInteraction(Object interaction);
+    }
+
+    synchronized public static void addRegisterFaucetInteractions(Consumer<IFaucetEvent> listener) {
         SERVER_LISTENERS.add(listener);
     }
 
@@ -166,7 +171,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         //if (CompatHandler.FARMERS_RESPRITE) FaucetBlockTile.registerInteraction(new KettleInteraction());
 
 
-        SERVER_LISTENERS.forEach(l -> l.accept(this));
+        SERVER_LISTENERS.forEach(l -> l.accept(FaucetBehaviorsManager.this::registerInteraction));
 
         //true when data reload
         MinecraftServer currentServer = PlatHelper.getCurrentServer();

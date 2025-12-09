@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ISimpleBrushable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -159,6 +160,8 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
                     if (te.getPixel(x, y) != newColor) {
                         te.setPixel(x, y, newColor);
                         te.setChanged(); //this also updates clients
+                        level.playSound(null, pos, ModSounds.BLACKBOARD_DRAW.get(),
+                                SoundSource.PLAYERS, 0.8f, 1);
                     }
                     return ItemInteractionResult.CONSUME;
                 }

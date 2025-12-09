@@ -14,7 +14,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.raid.Raider;
 
-import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.*;
+import static net.mehvahdjukaar.supplementaries.common.entities.goals.PlundererAICommon.*;
 
 public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
 

@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -10,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.*;
+import static net.mehvahdjukaar.supplementaries.common.entities.goals.PlundererAICommon.*;
 
 //TOOD: uniform with cannon ai common
 //copied from skeleton soot goal
@@ -37,8 +36,8 @@ public class UseCannonBoatGoal extends Goal {
         this(mob, maxDuration, minRange, a, b, MAX_TIME_WITHOUT_SHOOTING);
     }
 
-    public UseCannonBoatGoal(Mob mob,int maxDuration) {
-        this(mob, maxDuration, MIN_CANNON_RANGE, SHOOTING_COOLDOWN_MIN, SHOOTING_COOLDOWN_MAX, MAX_TIME_WITHOUT_SHOOTING);
+    public UseCannonBoatGoal(Mob mob) {
+        this(mob, MAX_USE_CANNON_BOAT, MIN_CANNON_RANGE, SHOOTING_COOLDOWN_MIN, SHOOTING_COOLDOWN_MAX, MAX_TIME_WITHOUT_SHOOTING);
     }
 
     public UseCannonBoatGoal(Mob mob,int maxDuration, int minRange, int minShootingCooldown, int maxShootingCooldown, int maxTimeWithoutShooting) {
@@ -58,7 +57,7 @@ public class UseCannonBoatGoal extends Goal {
         if (this.mob.getNavigation().isStuck()) return false;
         if (mob.getControlledVehicle() instanceof CannonAccess ac &&
                 ac.getInternalCannon().hasSomeFuelAndProjectiles() &&
-                UseCannonAICommon.hasValidTargetInCannonRange(this.mob, minCannonRange)) {
+                PlundererAICommon.hasValidTargetInCannonRange(this.mob, minCannonRange)) {
             this.access = ac;
             this.target = this.mob.getTarget();
             return true;

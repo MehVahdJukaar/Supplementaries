@@ -37,7 +37,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -47,10 +46,14 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Evoker;
+import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.Item;
@@ -188,8 +191,8 @@ public class ServerEvents {
 
 
     @EventCalled
-    public static void onAddExtraGoals(Entity entity, ServerLevel serverLevel) {
-        if (entity.getType() == EntityType.PARROT && CommonConfigs.Functional.PLUNDERER_ENABLED.get() ) {
+    public static void onAddExtraGoals(Mob entity) {
+        if (entity.getType() == EntityType.PARROT && CommonConfigs.Functional.PLUNDERER_ENABLED.get()) {
             Parrot p = (Parrot) entity;
             p.goalSelector.addGoal(3, new ParrotLandOnPlundererGoal(p));
             p.goalSelector.addGoal(2, new FollowLivingOwnerGoal(p, 1.0, 1.0F, 1.0F));
@@ -206,16 +209,17 @@ public class ServerEvents {
         }
 
         if (entity.getType() == EntityType.EVOKER) {
-            ((Evoker) entity).goalSelector.addGoal(6,
+            entity.goalSelector.addGoal(6,
                     new EvokerRedMerchantWololooSpellGoal((Evoker) entity));
             return;
         }
-        if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
-            if (entity instanceof AbstractIllager pillager && !(entity instanceof PlundererEntity)) {
-                pillager.goalSelector.addGoal(1,
-                        new UseCannonBoatGoal(pillager, 20, 40,
-                                16, 20 * 15)); //10 seconds max
+        if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get() && CommonConfigs.Tweaks.USE_CANNON_BOAT.get()) {
+            if (entity.getType().is(ModTags.CAN_SHOOT_CANNON_BOAT) && !(entity instanceof PlundererEntity)) {
+                entity.goalSelector.addGoal(1, new UseCannonBoatGoal(entity));
             }
+        }
+        if (CommonConfigs.Tweaks.DISMOUNT_BOAT.get() &&  entity.getType().is(ModTags.BOAT_DISMOUNT) && !(entity instanceof PlundererEntity)) {
+            entity.goalSelector.addGoal(3, new AbandonShipGoal(entity));
         }
     }
 

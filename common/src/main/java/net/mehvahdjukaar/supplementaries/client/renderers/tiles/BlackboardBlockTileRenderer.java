@@ -34,12 +34,10 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
     public static final int WIDTH = 6;
 
     private final Minecraft mc;
-    private final Camera camera;
     private final boolean noise;
 
     public BlackboardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.mc = Minecraft.getInstance();
-        this.camera = this.mc.gameRenderer.getMainCamera();
         this.noise = MiscUtils.FESTIVITY.isAprilsFool();
     }
 
@@ -60,8 +58,11 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
         if (!CommonConfigs.Building.BLACKBOARD_MODE.get().canManualDraw() && !noise) return;
 
         Direction dir = tile.getDirection();
-
         BlockPos pos = tile.getBlockPos();
+
+        LOD lod = LOD.at(tile);
+
+        if (lod.isPlaneCulled(dir, WIDTH / 16f)) return;
 
         if (noise) {
 
@@ -90,16 +91,12 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
             return;
         }
 
-        LOD lod = LOD.at(tile);
-
-        if (lod.isPlaneCulled(dir, WIDTH / 16f)) return;
-
         HitResult hit = mc.hitResult;
-        if (hit != null && hit.getType() == HitResult.Type.BLOCK) {
+        Player player = mc.player;
+        if (hit != null && hit.getType() == HitResult.Type.BLOCK && player != null && !player.isSecondaryUseActive()) {
             BlockHitResult blockHit = (BlockHitResult) hit;
             if (blockHit.getBlockPos().equals(pos) && tile.getDirection() == blockHit.getDirection()) {
-                Player player = mc.player;
-                if (player != null && Utils.mayPerformBlockAction(player, pos, player.getMainHandItem())
+                if (Utils.mayPerformBlockAction(player, pos, player.getMainHandItem())
                         && BlackboardBlock.getStackChalkColor(player.getMainHandItem()) != null) {
 
                     poseStack.pushPose();

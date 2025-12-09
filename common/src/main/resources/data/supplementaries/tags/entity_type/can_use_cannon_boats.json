@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#minecraft:illager","required":false}
+  ]
+}
+

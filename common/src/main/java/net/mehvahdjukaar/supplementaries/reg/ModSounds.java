@@ -30,6 +30,7 @@ public class ModSounds {
 
     public static final Supplier<SoundEvent> BLOCK_ROTATE = regSound("block.rotate");
 
+    public static final Supplier<SoundEvent> BLACKBOARD_DRAW_COMPLETE = regSound("block.blackboard.draw_complete");
     public static final Supplier<SoundEvent> BLACKBOARD_DRAW = regSound("block.blackboard.draw");
 
     public static final Supplier<SoundEvent> WRENCH_ROTATE = regSound("item.wrench.rotate");

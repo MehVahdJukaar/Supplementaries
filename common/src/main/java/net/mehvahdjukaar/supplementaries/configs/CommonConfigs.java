@@ -1137,6 +1137,13 @@ public class CommonConfigs {
             SHULKER_HELMET_ENABLED = feature(builder.comment("Allows wearing shulker shells"));
             builder.pop();
 
+            builder.push("ai_tweaks");
+            USE_CANNON_BOAT = builder.comment("Allows pillagers to use cannon boats. Add more entities to the 'supplementaries:can_use_cannon_boat' tag to allow them to use cannon boats as well")
+                    .define("pillagers_use_cannon_boats", true);
+            DISMOUNT_BOAT = builder.comment("Allows mobs to dismount from boats when on land. Add more entities to the 'supplementaries:can_dismount_boats' tag to allow them to dismount as well")
+                    .define("raiders_dismount_boats", true);
+            builder.pop();
+
             builder.push("golden_apple_disenchant");
             APPLE_DISENCHANT = feature(builder);
             builder.pop();
@@ -1286,6 +1293,8 @@ public class CommonConfigs {
 
 
         public static final Supplier<Boolean> SHULKER_HELMET_ENABLED;
+        public static final Supplier<Boolean> USE_CANNON_BOAT;
+        public static final Supplier<Boolean> DISMOUNT_BOAT;
         public static final Supplier<Boolean> DRAGON_PATTERN;
         public static final Supplier<Boolean> APPLE_DISENCHANT;
 

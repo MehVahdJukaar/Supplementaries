@@ -22,6 +22,6 @@ public abstract class MobMixin extends LivingEntity {
             shift = At.Shift.AFTER))
     private void supp$addExtraGoals(EntityType entityType, Level level, CallbackInfo ci) {
         if (level instanceof ServerLevel sl)
-            ServerEvents.onAddExtraGoals(this, sl);
+            ServerEvents.onAddExtraGoals((Mob)(Object) this);
     }
 }

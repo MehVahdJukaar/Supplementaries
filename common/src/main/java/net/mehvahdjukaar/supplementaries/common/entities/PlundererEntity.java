@@ -101,8 +101,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new UseCannonBoatGoal(this, 20, 40,
-                16, 20 * 15)); //max 15 sec
+        this.goalSelector.addGoal(1, new UseCannonBoatGoal(this)); //max 15 sec
 
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this, Raider.class)
                 .setAlertOthers());
@@ -116,7 +115,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, IronGolem.class, true));
 
 
-        this.goalSelector.addGoal(3, new AbandonShipGoal(this, 15));
+        this.goalSelector.addGoal(3, new AbandonShipGoal(this));
 
         this.goalSelector.addGoal(3, new UseCannonBlockGoal(this, 1, 20));
 

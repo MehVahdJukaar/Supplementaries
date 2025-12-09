@@ -12,7 +12,11 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.phys.Vec3;
 
-public final class UseCannonAICommon {
+public final class PlundererAICommon {
+
+    public static final int TIME_TO_DISMOUNT_BOAT = 15;
+
+    public static final int MAX_USE_CANNON_BOAT = 20 * 15;
 
     public static final int MAX_STAY_TIME = 1000;
     public static final int MAX_TIME_WITHOUT_SHOOTING = 300;

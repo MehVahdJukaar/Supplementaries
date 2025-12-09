@@ -214,7 +214,7 @@ public class BlackboardBlockTile extends BlockEntity implements
             }
         }
         if (!data.hasSamePixels(pixels)) {
-            level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
+            level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW_COMPLETE.get(),
                     SoundSource.BLOCKS, 1, 1);
 
             this.setCurrentUser(null);

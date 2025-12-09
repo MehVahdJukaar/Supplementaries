@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#minecraft:raiders","required":false},
+    {"id":"#minecraft:illager","required":false},
+    {"id":"minecraft:vex","required":false},
+    {"id":"minecraft:blaze","required":false},
+    {"id":"minecraft:breeze","required":false},
+    {"id":"minecraft:enderman","required":false}
+  ]
+}
+

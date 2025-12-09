@@ -256,11 +256,11 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         return this.saveWithoutMetadata(registries);
     }
 
-    @FunctionalInterface
-    public interface FillAction {
-        // to fill a block below the max ampunt thatcould be transfered is given. return amount is the one actually accepted
-        int tryExecute(int maxAmount);
+    @Deprecated(forRemoval = true)
+    public static void registerInteraction(Object interaction) {
+        FaucetBehaviorsManager.addRegisterFaucetInteractions(iFaucetEvent -> {
+            iFaucetEvent.registerInteraction(interaction);
+        });
     }
-
 
 }

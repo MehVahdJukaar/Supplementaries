@@ -18,7 +18,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
-import static net.mehvahdjukaar.supplementaries.common.entities.goals.UseCannonAICommon.*;
+import static net.mehvahdjukaar.supplementaries.common.entities.goals.PlundererAICommon.*;
 
 public class UseCannonBlockGoal extends MoveToBlockGoal {
 

@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.impl.item.ItemExtensions;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.fabric.DataMapBridge;
@@ -24,6 +25,7 @@ public class SupplementariesFabric implements ModInitializer {
             ClientLifecycleEvents.CLIENT_STARTED.register(client -> VibeChecker.checkVibe());
             ClientEventsFabric.init();
             SupplementariesFabricClient.init();
+
         }
 
         PlatHelper.addCommonSetup(() -> {

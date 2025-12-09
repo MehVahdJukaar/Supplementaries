@@ -55,7 +55,7 @@ public class ClockBlockTile extends BlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        updateInitialTime();
+      if(level.isClientSide)  updateInitialTime();
     }
 
     public void updateInitialTime() {

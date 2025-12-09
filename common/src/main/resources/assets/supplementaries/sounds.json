@@ -9,6 +9,28 @@
     ],
     "subtitle": "subtitles.entity.enderman.teleport"
   },
+  "block.blackboard.draw_complete": {
+    "sounds": [
+      "supplementaries:block/draw_complete1",
+      "supplementaries:block/draw_complete2",
+      "supplementaries:block/draw_complete3",
+      "supplementaries:block/draw_complete4"
+    ],
+    "subtitle": "subtitles.supplementaries.blackboard.draw"
+  },
+  "block.blackboard.draw": {
+    "sounds": [
+      "supplementaries:block/draw1",
+      "supplementaries:block/draw2",
+      "supplementaries:block/draw3",
+      "supplementaries:block/draw4",
+      "supplementaries:block/draw5",
+      "supplementaries:block/draw6",
+      "supplementaries:block/draw7",
+      "supplementaries:block/draw8"
+    ],
+    "subtitle": "subtitles.supplementaries.blackboard.draw"
+  },
   "block.awning.bounce": {
     "sounds": [
       "supplementaries:block/awning_bounce_0",
@@ -525,23 +547,6 @@
       "supplementaries:block/cannon_fizzle"
     ]
   },
-  "block.blackboard.draw": {
-    "sounds": [
-      {
-        "pitch": 0.8,
-        "name": "ui/cartography_table/drawmap1"
-      },
-      {
-        "pitch": 0.8,
-        "name": "ui/cartography_table/drawmap2"
-      },
-      {
-        "pitch": 0.8,
-        "name": "ui/cartography_table/drawmap3"
-      }
-    ],
-    "subtitle": "subtitles.supplementaries.blackboard.draw"
-  },
   "block.rotate": {
     "subtitle": "subtitles.supplementaries.generic.block.rotate",
     "sounds": [
@@ -616,7 +621,7 @@
       }
     ]
   },
-   "entity.plunderer.ambient": {
+  "entity.plunderer.ambient": {
     "sounds": [
       "supplementaries:entity/plunderer/idle1",
       "supplementaries:entity/plunderer/idle2",
@@ -650,7 +655,7 @@
     ],
     "subtitle": "subtitles.entity.plunderer.hurt"
   },
-    "entity.parrot.imitate.plunderer": {
+  "entity.parrot.imitate.plunderer": {
     "sounds": [
       {
         "name": "entity.plunderer.ambient",

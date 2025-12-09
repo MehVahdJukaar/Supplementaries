@@ -587,10 +587,6 @@ public class ModCreativeTabs {
                 ModConstants.IRON_GATE_NAME,
                 ModRegistry.IRON_GATE);
 
-        adder.after(Items.IRON_TRAPDOOR, CreativeModeTabs.REDSTONE_BLOCKS,
-                ModConstants.IRON_GATE_NAME,
-                ModRegistry.IRON_GATE);
-
         if (CompatHandler.QUARK && QuarkCompat.isGoldBarsOn()) {
             adder.afterML("quark:gold_bars", CreativeModeTabs.BUILDING_BLOCKS,
                     ModConstants.IRON_GATE_NAME,
