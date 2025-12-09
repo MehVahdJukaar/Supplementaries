@@ -24,6 +24,7 @@ dependencies {
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
     annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
+    modImplementation ("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
 
     modImplementation("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
@@ -51,7 +52,7 @@ dependencies {
     modImplementation("curse.maven:soul-fire-d-662413:5448803")
     modCompileOnly("curse.maven:blueprint-382216:5292242")
     modCompileOnly("curse.maven:environmental-388992:6060255")
-    modImplementation ("net.mehvahdjukaar:moonlight:${moonlight_version}")
+    modImplementation ("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
     modImplementation("curse.maven:immediatelyfast-686911:4937545")
     modImplementation("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge")
     modImplementation("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")

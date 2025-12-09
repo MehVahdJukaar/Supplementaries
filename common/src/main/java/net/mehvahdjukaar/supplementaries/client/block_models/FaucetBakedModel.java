@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.ColorUtils;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -45,7 +46,7 @@ public class FaucetBakedModel implements CustomBakedModel {
             Level level = Minecraft.getInstance().level;
             if (fluidKey != null && level != null) {
                 SoftFluid fluid = SoftFluidRegistry.getRegistry(level.registryAccess()).get(fluidKey);
-                if(fluid != null) {
+                if (fluid != null) {
                     List<BakedQuad> liquidQuads = liquid.getQuads(state, side, rand);
                     if (!liquidQuads.isEmpty()) {
                         int color = ColorUtils.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);
@@ -66,7 +67,7 @@ public class FaucetBakedModel implements CustomBakedModel {
             }
             if (!SINGLE_PASS) return quads;
         }
-        quads.addAll(goblet.getQuads(state, side, rand));
+        if (renderType == RenderType.cutout()) quads.addAll(goblet.getQuads(state, side, rand));
         return quads;
     }
 

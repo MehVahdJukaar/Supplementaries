@@ -63,7 +63,7 @@ class XPBottlingBehavior implements ItemUseOnBlockBehavior {
 
                     if (dummyTile.canInteractWithSoftFluidTank()) {
                         ItemStack tempStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
-                        ItemStack temp = dummyTile.fluidHolder.interactWithItem(tempStack, null, null, false);
+                        ItemStack temp = dummyTile.fluidHolder.interactWithItem(tempStack, world, null, false);
                         if (temp != null && temp.getItem() == Items.GLASS_BOTTLE) {
                             returnStack = ((JarBlock) ((BlockItem) i).getBlock()).getJarItem(dummyTile);
                         }
