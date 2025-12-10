@@ -31,18 +31,25 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ModClientDynamicResources;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ModServerDynamicResources;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.behavior.CelebrateVillagersSurvivedRaid;
 import net.minecraft.world.entity.animal.Parrot;
+import net.minecraft.world.entity.animal.Salmon;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
+import net.minecraft.world.level.pathfinder.NodeEvaluator;
+import net.minecraft.world.level.pathfinder.PathType;
+import net.minecraft.world.level.pathfinder.SwimNodeEvaluator;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 
 public class Supplementaries {
@@ -130,6 +137,5 @@ public class Supplementaries {
         error();
         LOGGER.error(message, params);
     }
-
 
 }

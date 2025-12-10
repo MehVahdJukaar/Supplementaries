@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,6 +40,7 @@ public class FlowerPotHandler {
         throw new AssertionError();
     }
 
+    @ApiStatus.Internal
     //move to forge
     @ExpectPlatform
     public static void registerFlowerPots() {
@@ -61,35 +63,35 @@ public class FlowerPotHandler {
      * @param item  target item
      * @param model resource location of the block model to be used
      */
-    public static void registerCustomFlower(Item item, ResourceLocation model) {
+    public synchronized static void registerCustomFlower(Item item, ResourceLocation model) {
         SPECIAL_FLOWER_BOX_FLOWERS.put(item, model);
+        CUSTOM_MODELS_TO_LOAD.add(model);
     }
-//TODO: split in common and client
+    //TODO: split in common and client
     /**
      * Same as above but just used for the "simple" mode. Ideally this just contains tall flowers
      */
-    public static void registerCustomSimpleFlower(Item item, ResourceLocation model) {
+    public synchronized static void registerCustomSimpleFlower(Item item, ResourceLocation model) {
         SPECIAL_TALL_FLOWER_BOX_FLOWERS.put(item, model);
+        CUSTOM_MODELS_TO_LOAD.add(model);
     }
 
     private static void registerFlower(String itemRes) {
-        var id = ResourceLocation.parse(itemRes);
+        ResourceLocation id = ResourceLocation.parse(itemRes);
         var opt = BuiltInRegistries.ITEM.getOptional(id);
         if (opt.isPresent()) {
             ResourceLocation res = Supplementaries.res("block/plants/" + id.getPath());
-            CUSTOM_MODELS.add(res);
             registerCustomFlower(opt.get(), res);
         }
     }
 
     private static void registerSimpleFlower(Item item) {
         ResourceLocation res = Supplementaries.res("block/plants/simple/" + Utils.getID(item).getPath());
-        CUSTOM_MODELS.add(res);
         registerCustomSimpleFlower(item, res);
     }
 
     //to manually add
-    public static final List<ResourceLocation> CUSTOM_MODELS = new ArrayList<>();
+    public static final List<ResourceLocation> CUSTOM_MODELS_TO_LOAD = new ArrayList<>();
 
     //static registerBus for client and server sync
     private static void registerBuiltin() {
