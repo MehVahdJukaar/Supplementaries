@@ -149,6 +149,11 @@ public class PearlMarker extends Entity {
     }
 
     @Override
+    public void teleportTo(double x, double y, double z) {
+        super.teleportTo(x, y, z);
+    }
+
+    @Override
     public void moveTo(double x, double y, double z, float yRot, float xRot) {
         if (event == null) {
             super.moveTo(x, y, z, yRot, xRot);

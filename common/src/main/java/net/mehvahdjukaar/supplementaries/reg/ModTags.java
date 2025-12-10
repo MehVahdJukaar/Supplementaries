@@ -110,6 +110,7 @@ public class ModTags {
     public static final TagKey<EntityType<?>> CAN_STEER_BOAT = entityTag("can_steer_boats");
     public static final TagKey<EntityType<?>> BOAT_DISMOUNT = entityTag("can_dismount_boats");
     public static final TagKey<EntityType<?>> CAN_SHOOT_CANNON_BOAT = entityTag("can_use_cannon_boat");
+    public static final TagKey<EntityType<?>> CAN_DISMOUNT_FROM = entityTag("can_entity_dismount_from");
 
     //features
     public static final TagKey<Structure> ROAD_SIGN_DESTINATIONS = structureTag("road_sign_destinations");

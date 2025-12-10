@@ -7,13 +7,7 @@ import net.mehvahdjukaar.moonlight.api.resources.pack.PackGenerationStrategy;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
-import net.mehvahdjukaar.supplementaries.client.tooltip.SherdTooltipComponent;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.crafting.SoapClearRecipe;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -147,6 +141,8 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
     private void addCannonBoatRecipes(ResourceManager manager, ResourceSink sink) {
         ModRegistry.CANNON_BOAT_ITEMS.forEach((w, i) -> {
+            if (w == VanillaWoodTypes.OAK) return;
+
             if (w.getChild("boat") == null) {
                 Supplementaries.LOGGER.warn("Could not find Boat for wood {}. Does this item even exist? It should! Skipping cannon boat generation", w);
                 return;
@@ -163,10 +159,8 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
 
     private void addSignPostRecipes(ResourceManager manager, ResourceSink sink) {
-        WoodType oak = VanillaWoodTypes.OAK;
-
         ModRegistry.WAY_SIGN_ITEMS.forEach((w, i) -> {
-
+            if (w == VanillaWoodTypes.OAK) return;
             if (w.getChild("sign") == null) {
                 Supplementaries.LOGGER.warn("Could not find Sign for wood {}. Does this block even exist? It should! Skipping way sign recipe generation", w);
                 return;

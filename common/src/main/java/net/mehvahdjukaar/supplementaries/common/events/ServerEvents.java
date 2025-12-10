@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsMana
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.PearlMarker;
 import net.mehvahdjukaar.supplementaries.common.entities.PlundererEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.*;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
@@ -56,6 +57,7 @@ import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -67,6 +69,7 @@ import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -308,4 +311,8 @@ public class ServerEvents {
         return false;
     }
 
+    @EventCalled
+    public static void onProjectileImpact(Projectile projectile, HitResult rayTraceResult) {
+        PearlMarker.onProjectileImpact(projectile, rayTraceResult);
+    }
 }

@@ -23,6 +23,7 @@
     "MobMixin",
     "RedstoneWireBlockMixin",
     "SugarCaneBlockMixin",
+    "ThrowableProjectileMixin",
     "compat.CompatFarmersDelightTomatoMixin",
     "compat.CompatSodiumFluidRendererMixin"
   ],

@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:boat","required":false},
+    {"id":"#minecraft:boats","required":false},
+    {"id":"#c:boats","required":false},
+    {"id":"#c:boat","required":false},
+    {"id":"#c:minecart","required":false},
+    {"id":"#c:minecarts","required":false},
+    {"id":"snowyspirit:sled","required":false},
+    {"id":"#snowyspirit:sleds","required":false}
+  ]
+}
+

@@ -1,5 +1,6 @@
 # 1.21 bugs and stuff
 
+- mermaid
 - snow on ropes spawning?
 - slidy block stopped by magnets when they pull it while its sliding
 - soap block slippery for spiders

@@ -169,13 +169,13 @@ public class ServerEventsForge {
         }
     }
 
-    //TODO: add these on fabric
-    //forge only
-
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onProjectileImpact(final ProjectileImpactEvent event) {
-        PearlMarker.onProjectileImpact(event.getProjectile(), event.getRayTraceResult());
+        ServerEvents.onProjectileImpact(event.getProjectile(), event.getRayTraceResult());
     }
+
+    //TODO: add these on fabric
+    //forge only
 
     @SubscribeEvent
     public static void noteBlockEvent(final NoteBlockEvent.Play event) {

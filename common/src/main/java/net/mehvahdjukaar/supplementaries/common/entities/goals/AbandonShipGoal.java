@@ -3,12 +3,12 @@ package net.mehvahdjukaar.supplementaries.common.entities.goals;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.pathfinder.PathType;
@@ -31,14 +31,15 @@ public class AbandonShipGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (this.mob.getVehicle() instanceof Boat b) {
-            LivingEntity captain = b.getControllingPassenger();
+        Entity vehicle = this.mob.getVehicle();
+        if (vehicle != null && vehicle.getType().is(ModTags.CAN_DISMOUNT_FROM)) {
+            LivingEntity captain = vehicle.getControllingPassenger();
             if (captain != null && captain != this.mob && captain.getType().is(ModTags.CAN_STEER_BOAT)) {
                 //my captain my captain
                 return false;
             }
-            if (!b.isInWater()) return true;
-            if (b.onGround()) return true;
+            if (!vehicle.isInWater()) return true;
+            if (vehicle.onGround()) return true;
             PathNavigation nav = this.mob.getNavigation();
             //arrg, abandon ship!
             return nav.isStuck() || (!nav.isDone() && nav.getPath().getNextNode().type != PathType.WATER);

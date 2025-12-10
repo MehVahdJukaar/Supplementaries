@@ -48,14 +48,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public class SlingshotProjectileEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
+public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
     private static final EntityDataAccessor<Byte> LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
     protected static final int MAX_AGE = 700;
 
     //these are used on both sides...need to be synced on creation. Could use only clientside tbh
     private float xRotInc;
     private float yRotInc;
-    private float particleCooldown = 0;
 
     private final ParticleTrailEmitter trailEmitter = ParticleTrailEmitter.builder()
             .spacing(3)
@@ -338,13 +337,11 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
 
     @Override
     protected void updateRotation() {
-
         if (!this.isNoGravity()) {
             this.xRotO = this.getXRot();
             this.yRotO = this.getYRot();
             this.setXRot(this.getXRot() + xRotInc);
             this.setYRot(this.getYRot() + yRotInc);
-            this.particleCooldown++;
         } else {
             super.updateRotation();
         }
@@ -383,34 +380,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     @Override
     protected float getInertia() {
         return this.isNoGravity() ? (float) (double) CommonConfigs.Tools.SLINGSHOT_DECELERATION.get() : super.getInertia();
-    }
-
-    @Override
-    public void writeSpawnData(RegistryFriendlyByteBuf buffer) {
-        Entity entity = this.getOwner();
-        int id = -1;
-        if (entity != null) {
-            id = entity.getId();
-        }
-        buffer.writeInt(id);
-        buffer.writeFloat(this.xRotInc);
-        buffer.writeFloat(this.yRotInc);
-        buffer.writeFloat(this.getXRot());
-        buffer.writeFloat(this.getYRot());
-    }
-
-    @Override
-    public void readSpawnData(RegistryFriendlyByteBuf buffer) {
-        int id = buffer.readInt();
-        if (id != -1) {
-            this.setOwner(this.level().getEntity(id));
-        }
-        this.xRotInc = buffer.readFloat();
-        this.yRotInc = buffer.readFloat();
-        this.setXRot(buffer.readFloat());
-        this.setYRot(buffer.readFloat());
-        this.xRotO = this.getXRot();
-        this.yRotO = this.getYRot();
     }
 
     public int getLightEmission() {
