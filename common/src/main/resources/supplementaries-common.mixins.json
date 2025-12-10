@@ -19,7 +19,6 @@
     "CelebrateVillagersSurvivedRaidMixin",
     "ComparatorBlockMixin",
     "CreeperMixin",
-    "EndermanAccessor",
     "EntityAccessor",
     "EntityMixin",
     "EvokerMixin",

@@ -142,12 +142,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         if (globeModel == GlobeManager.Model.ROUND || (noise && isSepia)) {
             poseStack.mulPose(RotHlpr.Z180);
             builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
-            try {
-                var mc = Minecraft.getInstance();
-                ClientRegistry.SPHERE_SHADER.get().getUniform("ScreenSize")
-                        .set(mc.getWindow().getWidth(), mc.getWindow().getHeight());
-            } catch (Exception ignored) {
-            }
+
             addSphereQuad(poseStack, builder, 0.65f, light);
             poseStack.popPose();
             return;

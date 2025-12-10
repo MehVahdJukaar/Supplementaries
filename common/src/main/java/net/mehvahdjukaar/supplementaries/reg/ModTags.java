@@ -108,7 +108,7 @@ public class ModTags {
     public static final TagKey<EntityType<?>> AWNING_BLACKLIST = entityTag("cant_bounce_off_awnings");
     public static final TagKey<EntityType<?>> CAN_SLIME = entityTag("can_slime");
     public static final TagKey<EntityType<?>> CAN_STEER_BOAT = entityTag("can_steer_boats");
-    public static final TagKey<EntityType<?>> BOAT_DISMOUNT = entityTag("can_dismount_boat");
+    public static final TagKey<EntityType<?>> BOAT_DISMOUNT = entityTag("can_dismount_boats");
     public static final TagKey<EntityType<?>> CAN_SHOOT_CANNON_BOAT = entityTag("can_use_cannon_boat");
 
     //features

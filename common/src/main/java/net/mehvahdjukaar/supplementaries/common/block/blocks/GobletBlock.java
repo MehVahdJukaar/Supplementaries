@@ -68,6 +68,7 @@ public class GobletBlock extends WaterBlock implements EntityBlock {
                 //from drink
                 if (CommonConfigs.Building.GOBLET_DRINK.get()) {
                     boolean success = tile.getSoftFluidTank().tryDrinkUpFluid(player, level);
+                    if (!level.isClientSide()) tile.setChanged();
                     if (success && player instanceof ServerPlayer serverPlayer) {
                         Utils.awardAdvancement(serverPlayer, Supplementaries.res("nether/goblet"));
                     }
