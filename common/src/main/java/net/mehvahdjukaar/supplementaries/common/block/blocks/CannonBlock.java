@@ -70,10 +70,6 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     public static final int MAX_POWER_LEVELS = 4;
     public static final MapCodec<CannonBlock> CODEC = simpleCodec(CannonBlock::new);
 
-    private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
-    private static final IFireItemBehavior DEFAULT = new AlternativeBehavior(
-            new GenericProjectileBehavior(), new SlingshotBehavior());
-
     protected static final VoxelShape SHAPE_DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
     protected static final VoxelShape SHAPE_UP = Block.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0);
     protected static final VoxelShape SHAPE_SOUTH = Block.box(0.0, 0.0, 14.0, 16.0, 16.0, 16.0);
@@ -95,18 +91,6 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     @Override
     protected MapCodec<? extends DirectionalBlock> codec() {
         return CODEC;
-    }
-
-    public static void clearBehaviors() {
-        FIRE_BEHAVIORS.clear();
-    }
-
-    public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
-        FIRE_BEHAVIORS.put(pItem.asItem(), pBehavior);
-    }
-
-    public static IFireItemBehavior getCannonBehavior(ItemLike item) {
-        return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT);
     }
 
     @Override

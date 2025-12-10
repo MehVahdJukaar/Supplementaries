@@ -36,10 +36,6 @@ import java.util.Map;
 
 public class TrappedPresentBlock extends AbstractPresentBlock implements ILightable {
 
-    private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new IdentityHashMap<>();
-    private static final IFireItemBehavior DEFAULT =
-            new AlternativeBehavior(new GenericProjectileBehavior(), new SpitItemBehavior());
-
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ON_COOLDOWN = BlockStateProperties.TRIGGERED;
 
@@ -47,18 +43,6 @@ public class TrappedPresentBlock extends AbstractPresentBlock implements ILighta
         super(color, properties);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH)
                 .setValue(ON_COOLDOWN, false));
-    }
-
-    public static void clearBehaviors() {
-        FIRE_BEHAVIORS.clear();
-    }
-
-    public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
-        FIRE_BEHAVIORS.put(pItem.asItem(), pBehavior);
-    }
-
-    public static IFireItemBehavior getPresentBehavior(ItemLike item) {
-        return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT);
     }
 
     @Override

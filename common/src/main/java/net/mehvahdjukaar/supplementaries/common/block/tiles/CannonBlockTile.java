@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
@@ -203,7 +204,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     private void computeTrajectoryData() {
         ItemStack proj = this.getProjectile();
-        var behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
+        var behavior = FireBehaviorsManager.getCannonBehavior(getProjectile().getItem());
         if (behavior instanceof IBallisticBehavior b) {
             this.trajectoryData = b.calculateData(proj, level);
         } else {
@@ -409,7 +410,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             projectile.set(ModComponents.CANNONBALL_WHITELIST.get(), new CannonballWhitelist(breakWhitelist));
         }
 
-        IFireItemBehavior behavior = CannonBlock.getCannonBehavior(getProjectile().getItem());
+        IFireItemBehavior behavior = FireBehaviorsManager.getCannonBehavior(getProjectile().getItem());
 
         float firePower = getFirePower();
 

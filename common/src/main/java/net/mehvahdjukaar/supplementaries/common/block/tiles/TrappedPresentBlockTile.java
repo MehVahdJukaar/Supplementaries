@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TrappedPresentBlock;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.inventories.TrappedPresentContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -113,7 +114,7 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
 
         if (level instanceof ServerLevel sl) {
             ItemStack stack = this.getItem(0);
-            IFireItemBehavior behavior = TrappedPresentBlock.getPresentBehavior(stack.getItem());
+            IFireItemBehavior behavior = FireBehaviorsManager.getPresentBehavior(stack.getItem());
             this.updateState(false);
             if (behavior.fire(stack.copyWithCount(1), sl, pos, 0.4f, new Vec3(0, 1, 0),
                     0.35f, 11, opener)) {
