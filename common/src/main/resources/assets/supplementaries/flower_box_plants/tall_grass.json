@@ -1,0 +1,5 @@
+{
+  "items": "minecraft:tall_grass",
+  "small_model": "supplementaries:special_models/plants/tall_grass",
+  "big_model": "supplementaries:special_models/plants/simple/tall_grass"
+}

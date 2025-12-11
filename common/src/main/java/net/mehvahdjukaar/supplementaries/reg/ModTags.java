@@ -72,6 +72,7 @@ public class ModTags {
     public static final TagKey<Item> CHOCOLATE_BARS = itemTag("chocolate_bars");
     public static final TagKey<Item> FLINT_AND_STEELS = ILightable.FLINT_AND_STEELS;
     public static final TagKey<Item> FLOWER_BOX_PLANTABLE = itemTag("flower_box_plantable");
+    public static final TagKey<Item> FLOWER_BOX_TALL_PLANTABLE = itemTag("flower_box_tall_plantable");
     public static final Map<DyeColor, TagKey<Item>> BLACKBOARD_TAGS = Arrays.stream(DyeColor.values())
             .collect(Collectors.toUnmodifiableMap(d -> d, d -> itemTag("blackboard_" + d.getName())));
     public static final TagKey<Item> BOOKS = itemTag("placeable_books");

@@ -2,14 +2,17 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -25,6 +28,7 @@ import net.minecraft.world.ticks.ScheduledTick;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -178,4 +182,12 @@ public class MiscUtils {
             return Either.right(decodeB.apply(buf));
         }
     }
+
+    //TODO: use ml stuff
+    public static final Codec<List<Item>> LENIENT_ITEM_OR_ITEM_LIST = Utils.lenientListOrSingleCodec(
+            BuiltInRegistries.ITEM.byNameCodec());
+
+    public static final Codec<List<EntityType<?>>> LENIENT_ENTITY_OR_ITEM_LIST =Utils.lenientListOrSingleCodec(
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec());
+
 }

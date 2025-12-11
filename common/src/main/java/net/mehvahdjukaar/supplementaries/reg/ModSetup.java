@@ -9,12 +9,12 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.CauldronBehaviorsManager;
-import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager;
+import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotUtils;
 import net.mehvahdjukaar.supplementaries.common.worldgen.RemoveDisabledBlocksProcessor;
 import net.mehvahdjukaar.supplementaries.common.worldgen.RoadSignStructure;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -44,7 +44,7 @@ public class ModSetup {
     private static final List<Runnable> MOD_SETUP_WORK = List.of(
             CompatHandler::setup,
             RegUtils::registerAdditionalPlacements,
-            FlowerPotHandler::setup,
+            FlowerPotUtils::setup,
             ModSetup::registerFlammables,
             CauldronBehaviorsManager::registerBehaviors,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkExplosion.Shape.CREEPER)

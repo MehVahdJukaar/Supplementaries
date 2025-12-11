@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.utils.neoforge;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -15,7 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public class FlowerPotHandlerImpl {
+public class FlowerPotUtilsImpl {
     //vanilla pot flower pots
     //empty pot, map(flower item registry name, full block provider)
     private static Map<Block, Map<ResourceLocation, Supplier<? extends Block>>> FULL_POTS;

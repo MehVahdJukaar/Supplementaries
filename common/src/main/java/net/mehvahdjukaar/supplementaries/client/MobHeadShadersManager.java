@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -162,9 +163,9 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
 
         public static final Codec<MobHeadEffect> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
-                        BuiltInRegistries.ITEM.byNameCodec().listOf().optionalFieldOf("items", List.of()).
+                        MiscUtils. LENIENT_ITEM_OR_ITEM_LIST.lenientOptionalFieldOf("items", List.of()).
                                 forGetter(MobHeadEffect::items),
-                        BuiltInRegistries.ENTITY_TYPE.byNameCodec().listOf().optionalFieldOf("entity_types", List.of()).
+                        MiscUtils.LENIENT_ENTITY_OR_ITEM_LIST.lenientOptionalFieldOf("entity_types", List.of()).
                                 forGetter(MobHeadEffect::entityTypes),
                         ResourceLocation.CODEC.fieldOf("shader").forGetter(MobHeadEffect::shader)
                 ).apply(instance, MobHeadEffect::new)

@@ -4,7 +4,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 
-public class FlowerPotHandlerImpl {
+public class FlowerPotUtilsImpl {
 
     public static void registerFlowerPots() {
     }

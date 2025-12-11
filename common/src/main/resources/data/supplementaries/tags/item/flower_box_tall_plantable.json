@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#minecraft:tall_flowers","required":false},
+    {"id":"minecraft:tall_grass","required":false}
+  ]
+}

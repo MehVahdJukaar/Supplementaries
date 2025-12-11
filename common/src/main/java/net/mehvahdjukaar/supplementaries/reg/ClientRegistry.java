@@ -44,7 +44,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerP
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
@@ -160,6 +160,7 @@ public class ClientRegistry {
         CompatHandlerClient.init();
         ClientHelper.addClientSetup(ClientRegistry::setup);
         ClientHelper.addClientReloadListener(() -> MobHeadShadersManager.INSTANCE, Supplementaries.res("mob_head_effects"));
+        ClientHelper.addClientReloadListener(() -> FlowerBoxModelsManager.INSTANCE, Supplementaries.res("flower_box_plants"));
 
 
         ClientHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
@@ -493,7 +494,6 @@ public class ClientRegistry {
 
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
-        FlowerPotHandler.CUSTOM_MODELS_TO_LOAD.forEach(event::register);
         WAY_SIGN_MODELS.get().values().forEach(event::register);
         PlaceableBookManagerClient.registerExtraModels(event);
         event.register(BLACKBOARD_FRAME);

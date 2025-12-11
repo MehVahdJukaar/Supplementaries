@@ -8,7 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlowerBoxBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
+import net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -129,14 +129,12 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
                                  PoseStack poseStack, @Nullable Direction side, @NotNull RandomSource rand) {
         BakedModel model;
         //for special flowers
-        ResourceLocation res = FlowerPotHandler.getSpecialFlowerModel(state.getBlock().asItem(), true);
-        if (res != null) {
+        ModelResourceLocation modelRes = FlowerBoxModelsManager.INSTANCE.getSpecialFlowerModel(state.getBlock().asItem());
+        if (modelRes != null) {
             if (state.hasProperty(DoublePlantBlock.HALF) && state.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
                 //dont render double plants
                 return;
             }
-            ModelResourceLocation modelRes = ModMaterials.TO_STANDALONE_MODEL.apply(res);
-
             model = ClientHelper.getModel(blockModelShaper.getModelManager(), modelRes);
         } else {
             model = blockModelShaper.getBlockModel(state);
@@ -146,7 +144,7 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
         if (mimicQuads.isEmpty()) return;
 
         poseStack.pushPose();
-        if (res == null) {
+        if (modelRes == null) {
             poseStack.translate(-0.5f, -0.5f, -0.5f);
             poseStack.scale(0.6249f, 0.6249f, 0.6249f);
         } else {
