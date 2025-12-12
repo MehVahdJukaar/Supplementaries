@@ -713,6 +713,11 @@ public class ModCreativeTabs {
             }
         }
 
+        private void before(TagKey<Item> target,
+                           ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
+            before(i -> i.is(target), tab, key, items);
+        }
+
         private void before(ItemLike target,
                             ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
             before(i -> i.is(target.asItem()), tab, key, items);

@@ -9,6 +9,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -95,11 +96,15 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
                         MobSpawnType.STRUCTURE, null);
             }
         }
-        if (!worldgenLevel.hasChunkAt(blockPos) || !worldgenLevel.noCollision(boat)) {
-            return false;
-        }
-
-        serverLevel.addFreshEntityWithPassengers(boat);
+        //TODO: figure out why this deadlocks
+        //if (!worldgenLevel.hasChunkAt(blockPos) || !worldgenLevel.noCollision(boat)) {
+        //    return false;
+        //}
+        MinecraftServer server = serverLevel.getServer();
+        server.executeIfPossible(() -> {
+            //some bullshit bukkit or c2me error hat doesnt like spawning an entity offthread
+            serverLevel.addFreshEntityWithPassengers(boat);
+        });
         return true;
     }
 

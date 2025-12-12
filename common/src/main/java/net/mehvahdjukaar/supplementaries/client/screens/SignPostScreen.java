@@ -22,13 +22,18 @@ import static net.mehvahdjukaar.supplementaries.client.renderers.tiles.SignPostB
 
 public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
 
-    private SignPostScreen(SignPostBlockTile tile) {
+    private SignPostScreen(SignPostBlockTile tile, int signIndex) {
         super(tile, Component.translatable("sign.edit"));
-        this.textHolderIndex = !this.tile.getSignUp().active() ? 1 : 0;
+        this.textHolderIndex = signIndex;
+        if (!this.tile.getSignUp().active()) {
+            this.textHolderIndex = 1;
+        } else if (!this.tile.getSignDown().active()) {
+            this.textHolderIndex = 0;
+        }
     }
 
-    public static void open(SignPostBlockTile teSign) {
-        Minecraft.getInstance().setScreen(new SignPostScreen(teSign));
+    public static void open(SignPostBlockTile teSign, int index) {
+        Minecraft.getInstance().setScreen(new SignPostScreen(teSign, index));
     }
 
     @Override
@@ -68,10 +73,10 @@ public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
 
         var modelRenderer = blockRenderer.getModelRenderer();
         poseStack.pushPose();
-        renderSign(poseStack,modelRenderer, bufferSource, signUp, leftUp);
+        renderSign(poseStack, modelRenderer, bufferSource, signUp, leftUp);
 
         poseStack.translate(0, -0.5, 0);
-        renderSign(poseStack,modelRenderer, bufferSource, signDown, leftDown);
+        renderSign(poseStack, modelRenderer, bufferSource, signDown, leftDown);
 
         poseStack.popPose();
 
@@ -118,7 +123,7 @@ public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
             if (!leftDown) {
                 poseStack.mulPose(RotHlpr.YN180);
                 poseStack.translate(0, 0, -0.55);
-            }else{
+            } else {
                 poseStack.translate(0, 0, -0.3);
 
             }

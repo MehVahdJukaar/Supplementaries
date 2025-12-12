@@ -41,6 +41,7 @@ public class RopeBlock extends AbstractRopeBlock {
                 .setValue(EAST, false).setValue(WEST, false));
     }
 
+    @Override
     protected Map<BlockState, VoxelShape> makeShapes() {
         Map<BlockState, VoxelShape> shapes = new HashMap<>();
 
@@ -75,7 +76,6 @@ public class RopeBlock extends AbstractRopeBlock {
         }
         return new Object2ObjectOpenHashMap<>(shapes);
     }
-
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

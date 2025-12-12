@@ -161,8 +161,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
-    public void openScreen(Level level, Player player, Direction direction) {
-        SignPostScreen.open(this);
+    public void openScreen(Level level, Player player, Direction direction, Vec3 hit) {
+        SignPostScreen.open(this, getClickedSignIndex(hit)? 0 : 1);
     }
 
     public float getOffset() {
@@ -204,7 +204,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         public void load(CompoundTag compound, HolderLookup.Provider registries, BlockPos pos) {
             this.active = compound.getBoolean("Active");
             this.left = compound.getBoolean("Left");
-            this.yaw = compound.getFloat("Yaw");
+            this.setYaw(compound.getFloat("Yaw"));
             this.woodType = WoodTypeRegistry.INSTANCE.get(ResourceLocation.parse(compound.getString("WoodType")));
             this.text.load(compound, registries, pos);
 
@@ -223,6 +223,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         public void pointToward(BlockPos myPos, BlockPos targetPos) {
             float yaw = (float) (Math.atan2(targetPos.getX() - (double) myPos.getX(),
                     targetPos.getZ() - (double) myPos.getZ()) * Mth.RAD_TO_DEG);
+            yaw =  Mth.wrapDegrees(yaw - (this.left ? 180 : 0));
             this.setYaw(yaw);
         }
 
@@ -231,13 +232,14 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         }
 
         private void setYaw(float yaw) {
-            this.yaw = Mth.wrapDegrees(yaw - (this.left ? 180 : 0));
-            this.signNormal = new Vec3(0, 0, 1).yRot(this.yaw * Mth.DEG_TO_RAD);
+            this.yaw = yaw;
+            this.signNormal = new Vec3(-1, 0, 0).yRot(this.yaw * Mth.DEG_TO_RAD);
         }
 
         private void rotateBy(float angle, boolean constrainAngle) {
-            this.setYaw(Mth.wrapDegrees(this.yaw + angle));
-            if (constrainAngle) this.yaw -= this.yaw % 22.5f;
+            float yaw = (Mth.wrapDegrees(this.yaw + angle));
+            if (constrainAngle) yaw -= yaw % 22.5f;
+            this.setYaw(yaw);
         }
 
         public void setActive(boolean active) {
@@ -329,6 +331,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 if (pointingPos != null) {
                     if (sign.active) {
                         sign.pointToward(pos, pointingPos);
+                        level.playSound(null, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
                     }
                     this.setChanged();
                     level.sendBlockUpdated(pos, state, state, 3);

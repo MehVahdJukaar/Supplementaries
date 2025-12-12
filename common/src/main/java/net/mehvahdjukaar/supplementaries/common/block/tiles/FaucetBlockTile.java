@@ -93,8 +93,8 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         SoftFluidStack previous = this.tempFluidHolder.getFluid().copy();
         boolean r = this.tryExtract(serverLevel, true) != 0; //this will set the internal tank
         this.updateLight();
-        if (previous.isSameFluidSameComponents(this.tempFluidHolder.getFluid())) {
-            this.setChanged();
+        if (!previous.isSameFluidSameComponents(this.tempFluidHolder.getFluid())) {
+            this.setChanged();//prevents recursion
             serverLevel.sendBlockUpdated(this.worldPosition, this.getBlockState(), this.getBlockState(), 3);
         }
         return r;

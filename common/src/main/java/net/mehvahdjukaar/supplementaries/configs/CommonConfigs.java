@@ -748,16 +748,15 @@ public class CommonConfigs {
 
             builder.push("soap");
             SOAP_ENABLED = feature(builder);
-            SOAP_DYE_CLEAN_BLACKLIST = builder.comment("Dyed Bock types that cannot be cleaned with soap")
+            SOAP_DYE_CLEAN_BLACKLIST = builder.comment("Dyed Bock/Item types that cannot be cleaned with soap")
                     .define("clean_blacklist", List.of("minecraft:glazed_terracotta", "botania:mystical_flower",
                             "mna:chimerite_crystal", "botania:floating_flower", ",minecraft:mushroom", "botania:mushroom",
                             "botania:tall_mystical_flower", "botania:petal_block", "morered:network_cable",
                             "xycraft_world:glowing_shiny_aurey_block", "xycraft_world:shiny_aurey_block", "xycraft_world:rgb_lamp",
                             "xycraft_world:glowing_rgb_viewer", "xycraft_world:glowing_matte_rgb_block", "xycraft_world:rgb_lamp_pole"));
-            SOAP_SPECIAL = builder.comment("This is a map of special blocks that can be cleaned with soap")
+            SOAP_SPECIAL = builder.comment("This is a map of special blocks that can be cleaned with soap. For items you will also need to add a recipe")
                     .defineObject("special_blocks", () -> Map.of(
                                     BlockPredicate.create("quark:dirty_glass"), ResourceLocation.withDefaultNamespace("glass"),
-                                    BlockPredicate.create("minecraft:wither_rose"), ResourceLocation.withDefaultNamespace("poppy"),
                                     BlockPredicate.create("quark:dirty_glass_pane"), ResourceLocation.withDefaultNamespace("glass_pane"),
                                     BlockPredicate.create("#alexscaves:cave_paintings"), ResourceLocation.parse("alexscaves:smooth_limestone")
                             ),
