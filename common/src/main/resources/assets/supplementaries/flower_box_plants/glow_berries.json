@@ -1,4 +1,4 @@
 {
-  "items": "minecraft:glow_berries",
+  "items": ["minecraft:glow_berries", "berry_good:glow_berry_pips"],
   "big_model": "supplementaries:special_models/plants/simple/glow_berries"
 }

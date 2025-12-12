@@ -1,4 +1,4 @@
 {
-  "items": "minecraft:sunflower",
+  "items": ["minecraft:sunflower", "create_bic_bit:sunflower_seeds"],
   "big_model": "supplementaries:special_models/plants/simple/sunflower"
 }

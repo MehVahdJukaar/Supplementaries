@@ -1,5 +1,5 @@
 {
-	"parent": "supplementaries:block/plants/simple/bush_with_vines",
+	"parent": "supplementaries:special_models/plants/simple/bush_with_vines",
 	"ambientocclusion": false,
 	"textures": {
 		"flower": "supplementaries:block/plants/simple/potted_rose_bush",

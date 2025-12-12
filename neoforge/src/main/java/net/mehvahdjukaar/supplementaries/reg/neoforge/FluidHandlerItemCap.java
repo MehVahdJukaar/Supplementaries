@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.supplementaries.reg.neoforge;
 
-import net.minecraft.world.item.*;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.event.level.ExplosionEvent;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
@@ -13,13 +12,15 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 public class FluidHandlerItemCap implements IFluidHandlerItem {
     protected final int tankVolume;
     protected final Item empty;
+    protected final Fluid validContent;
 
     protected ItemStack container;
 
-    public FluidHandlerItemCap(ItemStack container, int volume, Item empty) {
+    public FluidHandlerItemCap(ItemStack container, int volume, Item empty, Fluid validContent) {
         this.container = container;
         this.tankVolume = volume;
-     this.empty = empty;
+        this.empty = empty;
+        this.validContent = validContent;
     }
 
     @Override
@@ -29,18 +30,13 @@ public class FluidHandlerItemCap implements IFluidHandlerItem {
 
 
     public boolean canFillFluidType(FluidStack fluid) {
-        if (fluid.is(Fluids.WATER) || fluid.is(Fluids.LAVA)) {
-            return true;
-        }
-        return !fluid.getFluidType().getBucket(fluid).isEmpty();
+        return fluid.is(validContent);
     }
 
     public FluidStack getFluid() {
         Item item = container.getItem();
         if (item instanceof BucketItem) {
             return new FluidStack(((BucketItem) item).content, tankVolume);
-        } else if (item instanceof MilkBucketItem && NeoForgeMod.MILK.isBound()) {
-            return new FluidStack(NeoForgeMod.MILK.get(), tankVolume);
         } else {
             return FluidStack.EMPTY;
         }
@@ -75,7 +71,7 @@ public class FluidHandlerItemCap implements IFluidHandlerItem {
 
     @Override
     public int fill(FluidStack resource, FluidAction action) {
-        if (container.getCount() != 1 || resource.getAmount() < tankVolume || container.getItem() instanceof MilkBucketItem || !getFluid().isEmpty() || !canFillFluidType(resource)) {
+        if (container.getCount() != 1 || resource.getAmount() < tankVolume || !getFluid().isEmpty() || !canFillFluidType(resource)) {
             return 0;
         }
 

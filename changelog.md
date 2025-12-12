@@ -1,4 +1,12 @@
+- flower boxes are data driven
+- many misc fixes
 
+slingshots mending and unbreakig
+- hand on rope doesnt give back rope
+- metal frame shader
+- locked atlas not working
+- map atlases paper
+- sleep tight nightmaare with dream essemce^???
 - todo::!!!!! slingshots sometime dont play block place sounD!!!!
 - first slingshot projectile is a stone block
 - todo: plunderers are not intereted in player when very nearby them whilst the player is in water

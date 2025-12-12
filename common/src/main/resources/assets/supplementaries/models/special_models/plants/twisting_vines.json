@@ -1,5 +1,5 @@
 {
-  "parent": "supplementaries:block/plants/cross_template",
+  "parent": "supplementaries:special_models/plants/cross_template",
   "textures": {
     "plant": "minecraft:block/twisting_vines"
   }

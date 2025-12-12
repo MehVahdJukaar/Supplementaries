@@ -1,5 +1,5 @@
 {
-  "items": "minecraft:sweet_berries",
+  "items": ["minecraft:sweet_berries", "berry_good:sweet_berry_pips"],
   "small_model": "supplementaries:special_models/plants/sweet_berries",
   "big_model": "supplementaries:special_models/plants/simple/sweet_berries"
 }

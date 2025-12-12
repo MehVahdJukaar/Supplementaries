@@ -131,7 +131,7 @@ public class CapabilityHandler {
                 new FluidBucketWrapper(stack), ModFluids.LUMISENE_BUCKET.get());
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, ctx) ->
-                new FluidHandlerItemCap(stack, 250, Items.GLASS_BOTTLE),
+                new FluidHandlerItemCap(stack, 250, Items.GLASS_BOTTLE, ModFluids.LUMISENE_FLUID.get()),
                 ModFluids.LUMISENE_BOTTLE.get());
 
         //if compat handler computer craft add cap to speaker block
