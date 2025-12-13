@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -46,7 +47,7 @@ public class KeyItem extends Item {
                 if (t.tryClearingKey(context.getPlayer(), context.getItemInHand())) {
                     return InteractionResult.sidedSuccess(level.isClientSide);
                 }
-            } else if (tile instanceof SafeBlockTile) {
+            } else if (tile instanceof SafeBlockTile) { //why is this needed?
                 return level.getBlockState(pos).useItemOn(
                                 context.getItemInHand(),
                                 level, context.getPlayer(), context.getHand(),
@@ -59,6 +60,9 @@ public class KeyItem extends Item {
     }
 
     public String getPassword(ItemStack stack) {
+        if (stack.get(DataComponents.CUSTOM_NAME) == null) {
+            return "Key"; //non translated name
+        }
         return stack.getHoverName().getString();
     }
 
