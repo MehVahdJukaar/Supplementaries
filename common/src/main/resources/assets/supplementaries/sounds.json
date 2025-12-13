@@ -9,6 +9,15 @@
     ],
     "subtitle": "subtitles.entity.enderman.teleport"
   },
+  "block.note_block.imitate.spider": {
+    "sounds": [
+      {
+        "name": "entity.spider.ambient",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.entity.spider.ambient"
+  },
   "block.blackboard.draw_complete": {
     "sounds": [
       "supplementaries:block/draw_complete1",

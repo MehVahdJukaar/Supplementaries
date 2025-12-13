@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ModStairBlock;
-import net.mehvahdjukaar.moonlight.api.misc.IAttachmentType;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.misc.WorldSavedDataType;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -12,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
@@ -32,7 +30,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -40,7 +37,6 @@ import net.minecraft.world.item.armortrim.TrimPattern;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -1209,19 +1205,24 @@ public class ModRegistry {
                     EndermanSkullBlockTile::new, ENDERMAN_SKULL_BLOCK.get(), ENDERMAN_SKULL_BLOCK_WALL.get()));
 
     //spider head
-    public static final SkullBlock.Type SPIDER_SKULL_TYPE = () -> "supplementaries_spider_skull";
 
-    public static final Supplier<SkullBlock> SPIDER_SKULL_BLOCK = regBlock(SPIDER_HEAD_NAME, () ->
-            new SkullBlock(SPIDER_SKULL_TYPE, BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+    public static final Supplier<SpiderSkullBlock> SPIDER_SKULL_BLOCK = regBlock(SPIDER_HEAD_NAME, () ->
+            new SpiderSkullBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
                     .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
-    public static final Supplier<WallSkullBlock> SPIDER_SKULL_BLOCK_WALL = regBlock("spider_wall_head", () ->
-            new WallSkullBlock(SPIDER_SKULL_TYPE, BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
+    public static final Supplier<SpiderSkullWallBlock> SPIDER_SKULL_BLOCK_WALL = regBlock("spider_wall_head", () ->
+            new SpiderSkullWallBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CREEPER_HEAD)
                     .instrument(NoteBlockInstrument.CUSTOM_HEAD))
     );
     public static final Supplier<Item> SPIDER_SKULL_ITEM = regItem(SPIDER_HEAD_NAME, () ->
             new StandingAndWallBlockItem(SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get(),
                     new Item.Properties().rarity(Rarity.UNCOMMON), Direction.UP));
+
+
+    public static final Supplier<BlockEntityType<SpiderSkullBlockTile>> SPIDER_SKULL_TILE = regTile(
+            ENDERMAN_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
+                    SpiderSkullBlockTile::new, SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get()));
+
 
     public static final Supplier<Block> BARNACLES = regWithItem(BARNACLES_NAME, () -> new BarnaclesBlock(
             BlockBehaviour.Properties.of()

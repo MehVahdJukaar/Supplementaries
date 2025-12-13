@@ -9,6 +9,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.JukeboxSong;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 
 import java.util.function.Supplier;
 
@@ -106,6 +107,7 @@ public class ModSounds {
     public static final Supplier<SoundEvent> SLINGSHOT_SHOOT = regSound("item.slingshot.release");
 
     public static final RegSupplier<SoundEvent> IMITATE_ENDERMAN = regSound("block.note_block.imitate.enderman");
+    public static final RegSupplier<SoundEvent> IMITATE_SPIDER = regSound("block.note_block.imitate.spider");
 
     public static final RegSupplier<SoundEvent> PLUNDERER_AMBIENT = regSound("entity.plunderer.ambient");
     public static final RegSupplier<SoundEvent> PLUNDERER_HURT = regSound("entity.plunderer.hurt");
