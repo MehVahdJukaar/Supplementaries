@@ -1,5 +1,22 @@
 # 1.21 bugs and stuff
 
+slingshots mending and unbreakig
+- metal frame shader
+- locked atlas not working
+- map atlases paper
+- sleep tight nightmaare with dream essemce^???
+- todo::!!!!! slingshots sometime dont play block place sounD!!!!
+- first slingshot projectile is a stone block
+- todo: plunderers are not intereted in player when very nearby them whilst the player is in water
+- todo: vista and canon turn table rotation
+- todo: soul fired, fix sawmill and improve recipe gen
+- todo. rotation for cannons
+- todo: fix pillagers in boats not facing right
+- todo: fix pillagers not moving while shooting and strafing. could be dangerous here, parrot thing
+- fix pillagers not shooting while moving
+- fix pillagers not facing right direction in boats
+- finish barnacles
+
 - mermaid
 - snow on ropes spawning?
 - slidy block stopped by magnets when they pull it while its sliding
@@ -10,15 +27,12 @@
 - Lumisene has no sound when bucketed.
 - check rope sound
 - sound event from bell ring with rope
-- polytone season compat
 - sign posts have incorrect sounds for weird wood types
 - jar Entities do not render correctly in the inventory icon.
   (1.20) bubble recipe
 - snowy spirit step height config
 - some bug with ominous fluid
 - safe speaker block name thing
-- amendments ender dragon head bounding box (1.21)
-- goblet dont consume liquid
 - wind rod held like blaze rod
 - wind rod particles
 - recipe conditions not working for negated ones?

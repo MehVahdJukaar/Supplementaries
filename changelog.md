@@ -1,2 +1,17 @@
-- added back some classes for backward compat sake
-- fixed spider noteblock sound
+
+slingshots mending and unbreakig
+- metal frame shader
+- locked atlas not working
+- map atlases paper
+- sleep tight nightmaare with dream essemce^???
+- todo::!!!!! slingshots sometime dont play block place sounD!!!!
+- first slingshot projectile is a stone block
+- todo: plunderers are not intereted in player when very nearby them whilst the player is in water
+- todo: vista and canon turn table rotation
+- todo: soul fired, fix sawmill and improve recipe gen
+- todo. rotation for cannons
+- todo: fix pillagers in boats not facing right
+- todo: fix pillagers not moving while shooting and strafing. could be dangerous here, parrot thing
+- fix pillagers not shooting while moving
+- fix pillagers not facing right direction in boats
+- finish barnacles

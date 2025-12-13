@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullWithEyesModel;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SpiderSkullBlock;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -33,12 +34,12 @@ public abstract class SkullBlockRendererMixin {
     private static void supp$addExtraSkulls(EntityModelSet entityModelSet, CallbackInfoReturnable<Map<SkullBlock.Type, SkullModelBase>> cir,
                                             @Local ImmutableMap.Builder<SkullBlock.Type, SkullModelBase> builder){
         builder.put(EndermanSkullBlock.TYPE, new EndermanSkullModel(entityModelSet.bakeLayer(ClientRegistry.ENDERMAN_HEAD_MODEL)));
-        builder.put(ModRegistry.SPIDER_SKULL_TYPE, new SkullWithEyesModel(entityModelSet.bakeLayer(ClientRegistry.SPIDER_HEAD_MODEL), ModTextures.SPIDER_HEAD_EYES));
+        builder.put(SpiderSkullBlock.TYPE, new SkullWithEyesModel(entityModelSet.bakeLayer(ClientRegistry.SPIDER_HEAD_MODEL), ModTextures.SPIDER_HEAD_EYES));
     }
 
     @Inject(method = "method_3580(Ljava/util/HashMap;)V", at = @At("TAIL"))
     private static void supp$addExtraTextures(HashMap<SkullBlock.Type, ResourceLocation> hashMap, CallbackInfo ci){
         hashMap.put(EndermanSkullBlock.TYPE, Supplementaries.res("textures/entity/enderman_head.png"));
-        hashMap.put(ModRegistry.SPIDER_SKULL_TYPE, Supplementaries.res("textures/entity/spider_head.png"));
+        hashMap.put(SpiderSkullBlock.TYPE, Supplementaries.res("textures/entity/spider_head.png"));
     }
 }

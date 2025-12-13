@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.CropBlock;
