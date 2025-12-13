@@ -77,7 +77,12 @@ public interface ITextHolderProvider extends IOneUserInteractable, IWashable, IW
         return false;
     }
 
+    @Deprecated(forRemoval = true)
     default boolean tryOpeningTextEditGui(BlockEntity be, ServerPlayer player, ItemStack stack, Direction face) {
+        return this.tryOpeningTextEditGui(be, player, stack, face, Vec3.ZERO);
+    }
+
+    default boolean tryOpeningTextEditGui(BlockEntity be, ServerPlayer player, ItemStack stack, Direction face, Vec3 hit) {
         if (this.isWaxed()) return false;
         boolean filtering = player.isTextFilteringEnabled();
         for (int i = 0; i < this.textHoldersCount(); i++) {
@@ -85,12 +90,20 @@ public interface ITextHolderProvider extends IOneUserInteractable, IWashable, IW
                 return false;
             }
         }
-        return Utils.openGuiIfPossible(be, player, stack, face);
+        return Utils.openGuiIfPossible(be, player, stack, face, hit);
+    }
+
+    @Deprecated(forRemoval = true)
+    default ItemInteractionResult textHolderInteract(BlockEntity be, int index,
+                                                     Player player, InteractionHand hand, ItemStack stack,
+                                                     Direction face) {
+        return textHolderInteract(be, index, player, hand, stack, face, Vec3.ZERO);
     }
 
     //calls all interfaces methods
     default ItemInteractionResult textHolderInteract(BlockEntity be, int index,
-                                                     Player player, InteractionHand hand, ItemStack stack, Direction face) {
+                                                     Player player, InteractionHand hand, ItemStack stack,
+                                                     Direction face, Vec3 hit) {
         Level level = be.getLevel();
         BlockPos pos = be.getBlockPos();
         BlockState state = be.getBlockState();
@@ -109,7 +122,7 @@ public interface ITextHolderProvider extends IOneUserInteractable, IWashable, IW
             return result;
         }
         if (player instanceof ServerPlayer serverPlayer &&
-                this.tryOpeningTextEditGui(be, serverPlayer, stack, face)) {
+                this.tryOpeningTextEditGui(be, serverPlayer, stack, face, hit)) {
             return ItemInteractionResult.CONSUME;
         }
         return ItemInteractionResult.SUCCESS;

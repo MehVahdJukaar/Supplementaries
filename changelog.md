@@ -1,5 +1,2 @@
-- flower boxes are data driven
-- many misc fixes
-- color system used by soap is now data driven
-- fixed an issue with faucet
-- fixed an issue with feature placement
+- added back some classes for backward compat sake
+- fixed spider noteblock sound

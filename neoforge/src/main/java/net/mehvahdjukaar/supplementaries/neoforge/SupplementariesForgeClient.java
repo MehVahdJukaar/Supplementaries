@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.Slimed
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullWithEyesModel;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SpiderSkullBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -49,9 +50,9 @@ public class SupplementariesForgeClient {
                 new EndermanSkullModel(event.getEntityModelSet().bakeLayer(ClientRegistry.ENDERMAN_HEAD_MODEL)));
         SkullBlockRenderer.SKIN_BY_TYPE.put(EndermanSkullBlock.TYPE,
                 Supplementaries.res("textures/entity/enderman_head.png"));
-        event.registerSkullModel(ModRegistry.SPIDER_SKULL_TYPE,
+        event.registerSkullModel(SpiderSkullBlock.TYPE,
                 new SkullWithEyesModel(event.getEntityModelSet().bakeLayer(ClientRegistry.SPIDER_HEAD_MODEL), ModTextures.SPIDER_HEAD_EYES));
-        SkullBlockRenderer.SKIN_BY_TYPE.put(ModRegistry.SPIDER_SKULL_TYPE,
+        SkullBlockRenderer.SKIN_BY_TYPE.put(SpiderSkullBlock.TYPE,
                 Supplementaries.res("textures/entity/spider_head.png"));
     }
 

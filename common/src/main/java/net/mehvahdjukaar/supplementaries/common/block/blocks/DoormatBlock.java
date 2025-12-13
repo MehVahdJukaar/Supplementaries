@@ -66,7 +66,7 @@ public class DoormatBlock extends WaterBlock implements EntityBlock {
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
             //color wax and gui
-            return tile.textHolderInteract(tile, 0, player, hand, stack, hitResult.getDirection());
+            return tile.textHolderInteract(tile, 0, player, hand, stack, hitResult.getDirection(), hitResult.getLocation());
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }

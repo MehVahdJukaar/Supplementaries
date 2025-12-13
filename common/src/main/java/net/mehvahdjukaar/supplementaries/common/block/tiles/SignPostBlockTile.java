@@ -343,7 +343,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 if (success) return ItemInteractionResult.CONSUME;
             }
         }
-        return this.textHolderInteract(this, ind ? 0 : 1, player, handIn, itemstack, hit.getDirection());
+        return this.textHolderInteract(this, ind ? 0 : 1, player, handIn, itemstack, hit.getDirection(), hit.getLocation());
     }
 
     private static BlockPos getCompassTrackedPos(ServerLevel level, ItemStack itemstack) {

@@ -168,7 +168,7 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             }
             if (config.canOpenGui()) {
                 if (player instanceof ServerPlayer serverPlayer && !te.isWaxed()) {
-                    Utils.openGuiIfPossible(te, serverPlayer, stack, hit.getDirection());
+                    Utils.openGuiIfPossible(te, serverPlayer, stack, hit.getDirection(), hit.getLocation());
                 }
                 return ItemInteractionResult.CONSUME;
             }

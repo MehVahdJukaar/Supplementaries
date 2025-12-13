@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.SkullWithEyesModel;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SpiderSkullBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.model.SkullModelBase;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -36,7 +37,7 @@ public class SkullBlockRendererMixin {
     private static RenderType supplementaries$modifyDragonHeadRenderType(RenderType original,
                                                                          @Local ResourceLocation texture,
                                                                          @Local(argsOnly = true) SkullBlock.Type type) {
-        if (type == ModRegistry.SPIDER_SKULL_TYPE || type == EndermanSkullBlock.TYPE) {
+        if (type == SpiderSkullBlock.TYPE || type == EndermanSkullBlock.TYPE) {
             return RenderType.entityCutoutNoCull(texture);
         }
         return original;

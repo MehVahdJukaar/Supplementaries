@@ -214,7 +214,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                         tile.setCurrentUser(player.getUUID());
                         NetworkHelper.sendToClientPlayer(sp, new ClientBoundControlCannonPacket(TileOrEntityTarget.of(tile)));
                     }
-                } else Utils.openGuiIfPossible(tile, sp, stack, hitResult.getDirection());
+                } else Utils.openGuiIfPossible(tile, sp, stack, hitResult.getDirection(), hitResult.getLocation());
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide());
         }

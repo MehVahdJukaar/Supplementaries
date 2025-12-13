@@ -31,11 +31,6 @@ public class UseCannonBoatGoal extends Goal {
     private int ticksSinceShot;
     private CannonAccess access;
 
-    @Deprecated(forRemoval = true)
-    public UseCannonBoatGoal(Mob mob, int a, int b, int minRange, int maxDuration) {
-        this(mob, maxDuration, minRange, a, b, MAX_TIME_WITHOUT_SHOOTING);
-    }
-
     public UseCannonBoatGoal(Mob mob) {
         this(mob, MAX_USE_CANNON_BOAT, MIN_CANNON_RANGE, SHOOTING_COOLDOWN_MIN, SHOOTING_COOLDOWN_MAX, MAX_TIME_WITHOUT_SHOOTING);
     }

@@ -155,7 +155,7 @@ public interface CannonAccess {
 
         @Override
         public void openCannonGui(ServerPlayer player) {
-            Utils.openGuiIfPossible(this.cannon, player, player.getMainHandItem(), Direction.UP);
+            Utils.openGuiIfPossible(this.cannon, player, player.getMainHandItem(), Direction.UP, Vec3.ZERO);
         }
 
         @Override

@@ -1,8 +1,10 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
+import net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
+@Deprecated(forRemoval = true)
 public class FlowerPotHandler {
 
     //Use resource pack way + tag

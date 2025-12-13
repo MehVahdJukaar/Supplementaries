@@ -1220,7 +1220,7 @@ public class ModRegistry {
 
 
     public static final Supplier<BlockEntityType<SpiderSkullBlockTile>> SPIDER_SKULL_TILE = regTile(
-            ENDERMAN_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
+            SPIDER_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
                     SpiderSkullBlockTile::new, SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get()));
 
 
