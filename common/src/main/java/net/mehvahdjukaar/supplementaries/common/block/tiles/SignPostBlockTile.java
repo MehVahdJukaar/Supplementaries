@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -41,7 +40,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -162,7 +160,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     @Override
     public void openScreen(Level level, Player player, Direction direction, Vec3 hit) {
-        SignPostScreen.open(this, getClickedSignIndex(hit)? 0 : 1);
+        SignPostScreen.open(this, getClickedSignIndex(hit) ? 0 : 1);
     }
 
     public float getOffset() {
@@ -223,7 +221,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         public void pointToward(BlockPos myPos, BlockPos targetPos) {
             float yaw = (float) (Math.atan2(targetPos.getX() - (double) myPos.getX(),
                     targetPos.getZ() - (double) myPos.getZ()) * Mth.RAD_TO_DEG);
-            yaw =  Mth.wrapDegrees(yaw - (this.left ? 180 : 0));
+            yaw = Mth.wrapDegrees(yaw - (this.left ? 180 : 0));
             this.setYaw(yaw);
         }
 

@@ -1,4 +1,6 @@
 {
+  "required_mod": "habitat",
+
   "parent": "supplementaries:special_models/plants/cross_template",
   "textures": {
     "plant": "habitat:block/potted_kabloom_bush"

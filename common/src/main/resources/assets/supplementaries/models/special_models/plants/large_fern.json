@@ -1,4 +1,6 @@
 {
+    "required_mod": "hauntedharvest",
+
     "parent": "supplementaries:special_models/plants/tinted_cross_template",
     "textures": {
         "plant": "block/large_fern_top"

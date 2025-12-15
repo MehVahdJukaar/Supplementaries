@@ -1,4 +1,6 @@
 {
+	"required_mod": "atmospheric",
+
 	"credit": "Made with Blockbench",
 	"parent": "block/block",
 	"ambientocclusion": false,

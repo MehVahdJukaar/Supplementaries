@@ -1,4 +1,6 @@
 {
+	"required_mod": "habitat",
+
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {

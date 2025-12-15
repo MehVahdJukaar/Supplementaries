@@ -1,4 +1,6 @@
 {
+	"required_mod": "overweight_farming",
+
 	"credit": "Made with Blockbench",
 	"ambientocclusion": false,
 	"textures": {

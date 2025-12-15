@@ -1,4 +1,6 @@
 {
+	"required_mod": "pokecube_legends",
+
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/potted_cactus",
 	"ambientocclusion": false,

@@ -7,8 +7,10 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +28,7 @@ public class IconGenerator {
         }
 
         if (Minecraft.getInstance().level != null) {
-            var res = Minecraft.getInstance().getResourceManager();
+            ResourceManager res = Minecraft.getInstance().getResourceManager();
             try {
                 var plus = TextureImage.open(res, Supplementaries.res("plus"));
                 var unseen = TextureImage.open(res, Supplementaries.res("unseen"));

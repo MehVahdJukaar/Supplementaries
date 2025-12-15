@@ -166,7 +166,7 @@ public class MiscUtils {
     }
 
 
-    public static <A,B, Buf extends ByteBuf> void writeEither(Buf buf, Either<A,B> either, BiConsumer<Buf, A> encodeA, BiConsumer<Buf, B> encodeB) {
+    public static <A, B, Buf extends ByteBuf> void writeEither(Buf buf, Either<A, B> either, BiConsumer<Buf, A> encodeA, BiConsumer<Buf, B> encodeB) {
         buf.writeBoolean(either.left().isPresent());
         if (either.left().isPresent()) {
             encodeA.accept(buf, either.left().get());
@@ -175,7 +175,7 @@ public class MiscUtils {
         }
     }
 
-    public static <A,B, Buf extends ByteBuf> Either<A,B> readEither(Buf buf, Function<Buf, A> decodeA, Function<Buf, B> decodeB) {
+    public static <A, B, Buf extends ByteBuf> Either<A, B> readEither(Buf buf, Function<Buf, A> decodeA, Function<Buf, B> decodeB) {
         if (buf.readBoolean()) {
             return Either.left(decodeA.apply(buf));
         } else {
@@ -187,7 +187,8 @@ public class MiscUtils {
     public static final Codec<List<Item>> LENIENT_ITEM_OR_ITEM_LIST = Utils.lenientListOrSingleCodec(
             BuiltInRegistries.ITEM.byNameCodec());
 
-    public static final Codec<List<EntityType<?>>> LENIENT_ENTITY_OR_ITEM_LIST =Utils.lenientListOrSingleCodec(
+    public static final Codec<List<EntityType<?>>> LENIENT_ENTITY_OR_ITEM_LIST = Utils.lenientListOrSingleCodec(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec());
+
 
 }

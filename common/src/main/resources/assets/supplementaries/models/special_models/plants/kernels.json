@@ -1,4 +1,6 @@
 {
+	"required_mod": "hauntedharvest",
+
 	"parent": "supplementaries:special_models/plants/cross_template",
 	"textures": {
 		"plant": "hauntedharvest:block/corn_pot"

@@ -1,4 +1,6 @@
 {
+  "required_mod": "habitat",
+
   "parent": "supplementaries:special_models/plants/ball_cactus_template",
   "textures": {
     "petal": "habitat:block/yellow_ball_cactus_flower"
