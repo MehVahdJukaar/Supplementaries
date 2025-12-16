@@ -26,6 +26,7 @@
     "self.SelfNetheriteDoorMixin",
     "self.SelfPlanterMixin",
     "self.SelfSafeMixin",
+    "self.SelfSlingshotMixin",
     "self.SelfSoapItemMixin",
     "self.SelfWrenchMixin"
   ],

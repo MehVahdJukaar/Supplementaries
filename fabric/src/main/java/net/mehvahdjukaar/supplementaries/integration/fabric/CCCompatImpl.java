@@ -6,7 +6,6 @@ import dan200.computercraft.api.peripheral.PeripheralLookup;
 import dan200.computercraft.shared.media.items.PrintoutData;
 import dan200.computercraft.shared.media.items.PrintoutItem;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
-import net.mehvahdjukaar.moonlight.fabric.MoonlightFabric;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
@@ -22,22 +21,15 @@ import java.util.Objects;
 public class CCCompatImpl {
 
     public static void setup() {
-        PeripheralLookup.get().registerForBlocks((world, pos, state, blockEntity, context) -> {
-                    if (blockEntity instanceof SpeakerBlockTile t) {
-                        if (t.ccHack == null) t.ccHack = new SpeakerPeripheral(t);
-                        return (IPeripheral) t.ccHack;
-                    }
-                    return null;
-                }
-                , ModRegistry.SPEAKER_BLOCK.get());
-        PeripheralLookup.get().registerForBlocks((world, pos, state, blockEntity, context) -> {
-                    if (blockEntity instanceof CannonBlockTile t) {
-                        if (t.ccHack == null) t.ccHack = new CannonPeripheral(t);
-                        return (IPeripheral) t.ccHack;
-                    }
-                    return null;
-                }
-                , ModRegistry.CANNON.get());
+        PeripheralLookup.get().registerForBlockEntity((tile, direction) -> {
+            if (tile.ccHack == null) tile.ccHack = new CannonPeripheral(tile);
+            return (IPeripheral) tile.ccHack;
+        }, ModRegistry.CANNON_TILE.get());
+
+        PeripheralLookup.get().registerForBlockEntity((tile, direction) -> {
+            if (tile.ccHack == null) tile.ccHack = new SpeakerPeripheral(tile);
+            return (IPeripheral) tile.ccHack;
+        }, ModRegistry.SPEAKER_BLOCK_TILE.get());
     }
 
     public static int getPages(ItemStack itemstack) {
@@ -45,7 +37,7 @@ public class CCCompatImpl {
     }
 
     public static String[] getText(ItemStack itemstack) {
-        return  PrintoutData.getOrEmpty(itemstack).lines()
+        return PrintoutData.getOrEmpty(itemstack).lines()
                 .stream().map(PrintoutData.Line::text).toArray(String[]::new);
     }
 
@@ -150,7 +142,6 @@ public class CCCompatImpl {
     }
 
 
-
     public static final class CannonPeripheral implements IPeripheral {
         private final CannonBlockTile tile;
         private final CannonAccess acc;
@@ -165,29 +156,35 @@ public class CCCompatImpl {
             tile.setYaw(acc, (float) value);
             acc.updateClients();
         }
+
         @LuaFunction
         public float getYaw() {
             return tile.getYaw();
         }
+
         @LuaFunction
         public void setPitch(double value) {
             tile.setPitch(acc, (float) value);
             acc.updateClients();
         }
+
         @LuaFunction
         public float getPitch() {
             return tile.getPitch();
         }
+
         @LuaFunction
         public void setPower(int inPower) {
-            byte power = (byte) Math.min(Math.max(inPower, 1), 4); // todo improve when there is a system similar to pitch/yaw restraints for power
+            byte power = (byte) Math.min(Math.max(inPower, 1), CannonBlockTile.MAX_POWER_LEVEL);
             tile.setPowerLevel(power);
             acc.updateClients();
         }
+
         @LuaFunction
         public byte getPower() {
             return tile.getPowerLevel();
         }
+
         @LuaFunction
         public void ignite() {
             tile.ignite(null, acc);

@@ -54,7 +54,7 @@ public class FlowerBoxModelsManager extends SimpleJsonResourceReloadListener {
 
     private record FlowerBoxPlant(List<Item> seedItems, ModelResourceLocation tallModel,
                                   ModelResourceLocation normalModel) {
-        private FlowerBoxPlant(List<Item> item, Optional<ResourceLocation> tallModel, Optional<ResourceLocation> normalModel, boolean enabled) {
+        private FlowerBoxPlant(List<Item> item, Optional<ResourceLocation> tallModel, Optional<ResourceLocation> normalModel) {
             this(item, tallModel.map(RenderUtil::getStandaloneModelLocation).orElse(null),
                     normalModel.map(RenderUtil::getStandaloneModelLocation).orElse(null));
         }

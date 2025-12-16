@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.misc.IProgressTracker;
@@ -83,13 +85,13 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             addMissingFlagPatterns(manager, sink);
             //addGlobeItemModels(manager, sink);
             moveGates(manager, sink);
-
             MojangNeedsToAddMoreCopper.run(manager, sink);
         });
 
         executor.accept(this::addSignPostAssets);
         executor.accept(this::generateBoatTextures);
     }
+
 
     private void moveGates(ResourceManager manager, ResourceSink sink) {
         if (CompatHandler.QUARK && !CommonConfigs.Building.GOLD_BARS_ENABLED.get()) {

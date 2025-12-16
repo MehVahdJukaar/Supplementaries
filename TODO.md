@@ -1,6 +1,6 @@
 # 1.21 bugs and stuff
 
-slingshots mending and unbreakig
+slingshots mending and unbreakig missing tags
 - metal frame shader
 - locked atlas not working
 - map atlases paper

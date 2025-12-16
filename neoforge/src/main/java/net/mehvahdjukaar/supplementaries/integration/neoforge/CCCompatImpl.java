@@ -196,7 +196,7 @@ public class CCCompatImpl {
         }
         @LuaFunction
         public void setPower(int inPower) {
-            byte power = (byte) Math.min(Math.max(inPower, 1), 4); // todo improve when there is a system similar to pitch/yaw restraints for power
+            byte power = (byte) Math.min(Math.max(inPower, 1), CannonBlockTile.MAX_POWER_LEVEL);
             tile.setPowerLevel(power);
             acc.updateClients();
         }

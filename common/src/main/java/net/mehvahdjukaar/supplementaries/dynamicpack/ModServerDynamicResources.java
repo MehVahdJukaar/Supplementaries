@@ -16,6 +16,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.biome.Biomes;
 
 import java.util.Collection;
@@ -38,7 +41,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
     @Override
     protected Collection<String> gatherSupportedNamespaces() {
-        return List.of();
+        return List.of("minecraft");
     }
 
     public static final Map<ResourceLocation, Resource> TAG_TRANSLATION_HACK = new HashMap<>();
@@ -135,6 +138,12 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
                     }
                     sink.addTag(builder, Registries.BIOME);
                 }
+            }else {
+
+                //fabric stuff
+                sink.appendItemToEnchantment(manager, Enchantments.QUICK_CHARGE, ModRegistry.SLINGSHOT_ITEM.get());
+                sink.appendItemToEnchantment(manager, Enchantments.MULTISHOT, ModRegistry.SLINGSHOT_ITEM.get());
+                sink.appendItemToEnchantment(manager, Enchantments.KNOCKBACK, ModRegistry.WRENCH.get());
             }
         });
     }
