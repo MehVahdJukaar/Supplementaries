@@ -1,8 +1,11 @@
 package net.mehvahdjukaar.supplementaries.fabric;
 
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.FabricConfigHolder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.fabric.values.BoolConfigValue;
+import net.mehvahdjukaar.supplementaries.api.IFireItemBehaviorProvider;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehaviorRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -12,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.mixins.fabric.BiomeAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.fabric.FireBlockAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
@@ -209,4 +213,9 @@ public class SuppPlatformStuffImpl {
         }
     }
 
+    public static void registerFireBehaviors(RegistryAccess registry, IFireItemBehaviorRegistry event) {
+        FabricLoader.getInstance().invokeEntrypoints("supplementaries:register_fire_behaviors", IFireItemBehaviorProvider.class, provider -> {
+            provider.register(registry, event);
+        });
+    }
 }
