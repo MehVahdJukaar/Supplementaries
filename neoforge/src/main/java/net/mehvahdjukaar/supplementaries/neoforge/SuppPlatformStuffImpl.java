@@ -5,7 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.neoforge.ForgeConfigHolder;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.api.neoforge.RegisterFireBehavioursEvent;
+import net.mehvahdjukaar.supplementaries.api.neoforge.RegisterFireBehaviorsEvent;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehaviorRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -278,7 +278,7 @@ public class SuppPlatformStuffImpl {
         RegHelper.register(Supplementaries.res("mod_cap"), () -> (StreamCodec) CapSlotReference.CODEC, SlotReference.TYPE_REGISTRY_KEY);
     }
 
-    public static void registerFireBehaviours(RegistryAccess registry, IFireItemBehaviorRegistry event) {
-        NeoForge.EVENT_BUS.post(new RegisterFireBehavioursEvent(registry, event));
+    public static void registerFireBehaviors(RegistryAccess registry, IFireItemBehaviorRegistry event) {
+        NeoForge.EVENT_BUS.post(new RegisterFireBehaviorsEvent(registry, event));
     }
 }

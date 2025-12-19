@@ -10,12 +10,12 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Neoforge event dispatched when we want to register {@link IFireItemBehavior}s
  */
-public class RegisterFireBehavioursEvent extends Event implements IFireItemBehaviorRegistry {
+public class RegisterFireBehaviorsEvent extends Event implements IFireItemBehaviorRegistry {
     private final RegistryAccess registry;
     private final IFireItemBehaviorRegistry delegate;
 
     @ApiStatus.Internal
-    public RegisterFireBehavioursEvent(RegistryAccess registry, IFireItemBehaviorRegistry delegate) {
+    public RegisterFireBehaviorsEvent(RegistryAccess registry, IFireItemBehaviorRegistry delegate) {
         this.registry = registry;
         this.delegate = delegate;
     }

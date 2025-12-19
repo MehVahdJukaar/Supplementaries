@@ -213,8 +213,8 @@ public class SuppPlatformStuffImpl {
         }
     }
 
-    public static void registerFireBehaviours(RegistryAccess registry, IFireItemBehaviorRegistry event) {
-        FabricLoader.getInstance().invokeEntrypoints("supplementaries:register_fire_behaviours", IFireItemBehaviorProvider.class, provider -> {
+    public static void registerFireBehaviors(RegistryAccess registry, IFireItemBehaviorRegistry event) {
+        FabricLoader.getInstance().invokeEntrypoints("supplementaries:register_fire_behaviors", IFireItemBehaviorProvider.class, provider -> {
             provider.register(registry, event);
         });
     }

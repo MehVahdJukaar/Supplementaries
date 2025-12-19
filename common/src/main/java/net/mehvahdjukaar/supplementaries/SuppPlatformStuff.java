@@ -175,5 +175,5 @@ public class SuppPlatformStuff {
     }
 
     @ExpectPlatform
-    public static void registerFireBehaviours(RegistryAccess registry, IFireItemBehaviorRegistry event) { throw new AssertionError(); }
+    public static void registerFireBehaviors(RegistryAccess registry, IFireItemBehaviorRegistry event) { throw new AssertionError(); }
 }
