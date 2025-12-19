@@ -12,6 +12,7 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.block_models.JarBakedModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexModels;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
+import net.mehvahdjukaar.supplementaries.common.misc.mob_container.MobContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -66,7 +67,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                     return j < tile.getContainerSize() ? tile.getItem(j) : ItemStack.EMPTY;
                 });
         //render fish
-        var data = tile.mobContainer.getData();
+        MobContainer.MobData data = tile.getMobContainer().getData();
         if (data != null) {
             if (data.is2DFish()) {
                 poseStack.pushPose();
@@ -93,7 +94,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             } else {
                 super.render(tile, partialTicks, poseStack, bufferIn, combinedLightIn, combinedOverlayIn);
             }
-            var fluid = tile.mobContainer.shouldRenderWithFluid();
+            var fluid = tile.getMobContainer().shouldRenderWithFluid();
             if (fluid != null && fluid.isPresent()) {
                 if (fluid.get().is(MLBuiltinSoftFluids.WATER.getID())) {
                     //sand
@@ -115,7 +116,7 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
             }
         }
         //render fluid
-        SoftFluidTank tank = tile.fluidHolder;
+        SoftFluidTank tank = tile.getSoftFluidTank();
         if (!USE_MODEL && !tank.isEmpty()) {
             SoftFluid fluid = tank.getFluidValue();
             renderFluid(tank.getHeight(1), tank.getCachedStillColor(tile.getLevel(), tile.getBlockPos()),

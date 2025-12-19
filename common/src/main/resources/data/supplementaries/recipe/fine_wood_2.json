@@ -5,11 +5,8 @@
       "flag": "fine_wood"
     },
     {
-      "condition": "fabric:not",
-      "value": {
-        "condition": "fabric:mod_loaded",
-        "modid": "vanillabackport"
-      }
+      "condition": "fabric:mod_loaded",
+      "modid": "vanillabackport"
     }
   ],
   "neoforge:conditions": [
@@ -18,11 +15,8 @@
       "flag": "fine_wood"
     },
     {
-      "type": "neoforge:not",
-      "value": {
-        "type": "neoforge:mod_loaded",
-        "modid": "vanillabackport"
-      }
+      "type": "neoforge:mod_loaded",
+      "modid": "vanillabackport"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -36,7 +30,7 @@
       "tag": "minecraft:logs"
     },
     "2": {
-      "item": "minecraft:honeycomb"
+      "item": "minecraft:resin_clump"
     }
   },
   "result": {

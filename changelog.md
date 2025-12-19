@@ -1,3 +1,1 @@
-
-fixed galleon safe
-fixed missing enchantment tags
+fixed a cash with faucets and brewing stands

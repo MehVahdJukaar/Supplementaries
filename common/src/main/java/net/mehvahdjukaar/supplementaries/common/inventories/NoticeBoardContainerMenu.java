@@ -32,13 +32,7 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
         checkContainerSize(container, 1);
         container.startOpen(playerInventory.player);
 
-        this.addSlot(new Slot(container, 0, 35, 33) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return (CommonConfigs.Building.NOTICE_BOARDS_UNRESTRICTED.get() || NoticeBoardBlockTile.isPageItem(stack.getItem()));
-            }
-        });
-
+        this.addSlot(new DelegatingSlot( container, 0, 35, 33, this));
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)

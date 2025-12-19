@@ -14,19 +14,19 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvider, IExtraModelDataProvider {
 
-    public final SoftFluidTank fluidHolder;
     public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID_ID = ModBlockProperties.FLUID;
 
+    public SoftFluidTank fluidHolder;
 
     public GobletBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GOBLET_TILE.get(), pos, state);
-        this.fluidHolder = SoftFluidTank.create(1, Utils.hackyGetRegistryAccess());
     }
 
     @Override
@@ -61,9 +61,15 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     }
 
     @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        getOrCreateFluidTank(level.registryAccess());
+    }
+
+    @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.fluidHolder.load(tag, registries);
+        this.getOrCreateFluidTank(registries).load(tag, registries);
 
         if (this.level != null) {
             if (this.level.isClientSide) this.requestModelReload();
@@ -73,7 +79,14 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        this.fluidHolder.save(tag, registries);
+        this.getOrCreateFluidTank(registries).save(tag, registries);
+    }
+
+    public SoftFluidTank getOrCreateFluidTank(HolderLookup.Provider registries) {
+        if (this.fluidHolder == null) {
+            this.fluidHolder = SoftFluidTank.create(1, registries);
+        }
+        return this.fluidHolder;
     }
 
     @Override

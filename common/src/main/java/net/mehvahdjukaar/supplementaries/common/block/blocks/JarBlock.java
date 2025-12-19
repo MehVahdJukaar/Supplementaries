@@ -58,7 +58,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     public int getJarLiquidColor(BlockPos pos, LevelReader world) {
         BlockEntity te = world.getBlockEntity(pos);
         if (te instanceof JarBlockTile tile) {
-            return tile.fluidHolder.getCachedParticleColor(world, pos);
+            return tile.getSoftFluidTank().getCachedParticleColor(world, pos);
         }
         return 0xffffff;
     }
@@ -84,7 +84,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }
             if (CommonConfigs.Functional.JAR_CAPTURE.get()) {
-                return tile.mobContainer.onInteract(level, pos, player, hand, stack);
+                return tile.getMobContainer().onInteract(level, pos, player, hand, stack);
             }
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -146,9 +146,9 @@ public class JarBlock extends WaterBlock implements EntityBlock {
         if (world.getBlockEntity(pos) instanceof JarBlockTile tile) {
             if (!tile.isEmpty())
                 return AbstractContainerMenu.getRedstoneSignalFromContainer(tile);
-            else if (!tile.fluidHolder.isEmpty()) {
-                return tile.fluidHolder.getComparatorOutput();
-            } else if (!tile.mobContainer.isEmpty()) return 15;
+            else if (!tile.getSoftFluidTank().isEmpty()) {
+                return tile.getSoftFluidTank().getComparatorOutput();
+            } else if (!tile.getMobContainer().isEmpty()) return 15;
         }
         return 0;
     }

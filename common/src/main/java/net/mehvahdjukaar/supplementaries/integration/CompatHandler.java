@@ -59,7 +59,7 @@ public class CompatHandler {
     public static final boolean SIMPLEFARMING = isLoaded("simplefarming");
     public static final boolean ATMOSPHERIC = isLoaded("atmospheric");
     public static final boolean ENCHANTEDBOOKREDESIGN = isLoaded("enchantedbookredesign");
-    public static final boolean CUSTOMVILLAGERTRADES = isLoaded("customvillagertrades");
+    public static final boolean EXPOSURE = isLoaded("exposure");
     public static final boolean COMPUTERCRAFT = isLoaded("computercraft");
     public static final boolean NETHERSDELIGHT = isLoaded("nethers_delight");
     public static final boolean DOUBLEDOORS = isLoaded("doubledoors");

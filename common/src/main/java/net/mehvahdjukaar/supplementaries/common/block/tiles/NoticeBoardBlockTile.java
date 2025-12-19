@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.inventories.NoticeBoardContainer
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CCCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.ExposureCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
@@ -95,6 +96,10 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return maxPageIndex <= 0 ? 0 : (int) (((float) pageIndex / (float) maxPageIndex));
     }
 
+    public int getPageIndex() {
+        return pageIndex;
+    }
+
     @Override
     public ItemStack getMapStack() {
         return this.getDisplayedItem();
@@ -115,7 +120,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.text = null;
         updateText();
 
-        this.isNormalItem = !isPageItem(itemstack.getItem());
+        this.isNormalItem = !canPlaceInNoticeBoard(itemstack.getItem());
     }
 
     public boolean isNormalItem() {
@@ -149,6 +154,12 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 this.text = pages.get(this.pageIndex);
             }
             return;
+        }
+
+        if (CompatHandler.EXPOSURE) {
+            if (ExposureCompat.isPictureItem(itemstack.getItem())) {
+                this.maxPageIndex = ExposureCompat.getMaxPictureCount(itemstack);
+            }
         }
 
         //TODO: add back
@@ -198,12 +209,15 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return this.isEmpty() && (CommonConfigs.Building.NOTICE_BOARDS_UNRESTRICTED.get() || isPageItem(stack.getItem()));
+        return this.isEmpty() && (CommonConfigs.Building.NOTICE_BOARDS_UNRESTRICTED.get() || canPlaceInNoticeBoard(stack.getItem()));
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static boolean isPageItem(Item item) {
-        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) || item instanceof MapItem || item instanceof BannerPatternItem || (CompatHandler.COMPUTERCRAFT && CCCompat.isPrintedBook(item));
+    private static boolean canPlaceInNoticeBoard(Item item) {
+        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) ||
+                item instanceof MapItem || item instanceof BannerPatternItem ||
+                (CompatHandler.EXPOSURE && ExposureCompat.isPictureItem(item)) ||
+                (CompatHandler.COMPUTERCRAFT && CCCompat.isPrintedBook(item));
     }
 
     @Override
@@ -298,7 +312,7 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 return res;
             }
         }
-        ItemInteractionResult r = this.textHolderInteract(this,0, player, handIn, stack, face, hit.getLocation());
+        ItemInteractionResult r = this.textHolderInteract(this, 0, player, handIn, stack, face, hit.getLocation());
         if (r != ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION) return r;
 
 

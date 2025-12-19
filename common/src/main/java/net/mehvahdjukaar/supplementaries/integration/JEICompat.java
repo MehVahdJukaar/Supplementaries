@@ -32,7 +32,7 @@ public class JEICompat implements IModPlugin {
         if (!CompatHandler.REI && !CompatHandler.EMI) {
 
             SpecialRecipeDisplays.registerCraftingRecipes(RecipeSpecialDisplayOutput.of(
-                    (r -> registry.addRecipes(RecipeTypes.CRAFTING, r))));
+                    (r ->  registry.addRecipes(RecipeTypes.CRAFTING, r))));
         }
     }
 

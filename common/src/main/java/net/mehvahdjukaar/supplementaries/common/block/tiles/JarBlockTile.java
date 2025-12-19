@@ -44,16 +44,15 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID = ModBlockProperties.FLUID;
     public static final ModelDataKey<Float> FILL_LEVEL = ModBlockProperties.FILL_LEVEL;
 
-    public final MobContainer mobContainer;
-    public final SoftFluidTank fluidHolder;
+    private final MobContainer mobContainer;
+    private SoftFluidTank fluidHolder;
 
     public JarBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.JAR_TILE.get(), pos, state, 12);
-        int capacity = CommonConfigs.Functional.JAR_CAPACITY.get();
-        this.fluidHolder = SoftFluidTank.create(capacity, Utils.hackyGetRegistryAccess());
         AbstractMobContainerItem item = ((AbstractMobContainerItem) state.getBlock().asItem());
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), true);
     }
+
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
@@ -218,17 +217,36 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         return false;
     }
 
+    private SoftFluidTank getOrCreateFluidTank(HolderLookup.Provider registries) {
+        if (this.fluidHolder == null) {
+            int capacity = CommonConfigs.Functional.JAR_CAPACITY.get();
+            this.fluidHolder = SoftFluidTank.create(capacity, registries);
+        }
+        return this.fluidHolder;
+    }
+
+    @Override
+    public SoftFluidTank getSoftFluidTank() {
+        return this.fluidHolder;
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        getOrCreateFluidTank(level.registryAccess());
+    }
+
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.fluidHolder.load(tag, registries);
+        this.getOrCreateFluidTank(registries).load(tag, registries);
         this.mobContainer.load(tag, registries);
     }
 
     @Override
     public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        this.fluidHolder.save(tag, registries);
+        this.getOrCreateFluidTank(registries).save(tag, registries);
         this.mobContainer.save(tag, registries);
     }
 
@@ -273,10 +291,6 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         tile.mobContainer.tick(pLevel, pPos);
     }
 
-    @Override
-    public SoftFluidTank getSoftFluidTank() {
-        return this.fluidHolder;
-    }
 
     @Override
     public boolean canInteractWithSoftFluidTank() {

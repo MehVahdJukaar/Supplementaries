@@ -61,6 +61,8 @@ dependencies {
     modCompileOnly("curse.maven:quark-243121:5378961")
     modCompileOnly("curse.maven:zeta-968868:5597406")
 
+    modImplementation("curse.maven:exposure-871755:7033927")
+
     modCompileOnly ("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}"){
         transitive = false
     }

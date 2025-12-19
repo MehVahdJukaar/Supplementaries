@@ -23,8 +23,8 @@ class FishBucketJarBehavior extends DispenserHelper.AdditionalDispenserBehavior 
         ServerLevel world = source.level();
         BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
         if (world.getBlockEntity(blockpos) instanceof JarBlockTile tile) {
-            if (tile.fluidHolder.isEmpty() && tile.isEmpty()) {
-                if (tile.mobContainer.interactWithBucket(stack, world, blockpos, null, null)) {
+            if (tile.getSoftFluidTank().isEmpty() && tile.isEmpty()) {
+                if (tile.getMobContainer().interactWithBucket(stack, world, blockpos, null, null)) {
                     tile.setChanged();
                     return InteractionResultHolder.success(new ItemStack(Items.BUCKET));
                 }
