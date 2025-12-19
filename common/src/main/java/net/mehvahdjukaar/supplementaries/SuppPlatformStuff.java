@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehaviorRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -173,5 +174,6 @@ public class SuppPlatformStuff {
         throw new AssertionError();
     }
 
-
+    @ExpectPlatform
+    public static void registerFireBehaviours(RegistryAccess registry, IFireItemBehaviorRegistry event) { throw new AssertionError(); }
 }

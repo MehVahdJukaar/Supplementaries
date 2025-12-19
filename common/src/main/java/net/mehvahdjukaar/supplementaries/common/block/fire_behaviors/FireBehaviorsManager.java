@@ -1,13 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -59,7 +60,7 @@ public class FireBehaviorsManager {
         IFireItemBehavior fireBall = new SimpleProjectileBehavior<>(EntityType.SMALL_FIREBALL, ProjectileStats.FIREBALL_SPEED);
         IFireItemBehavior cannonBall = new SimpleProjectileBehavior<>(ModEntities.CANNONBALL.get(), ProjectileStats.CANNONBALL_SPEED);
 
-        for (Item i : BuiltInRegistries.ITEM) {
+        for (Item i : access.registryOrThrow(Registries.ITEM)) {
             if (i instanceof BlockItem bi && TntBehavior.isTNTLikeBlock(bi.getBlock().defaultBlockState())) {
                 registerPresentBehavior(i, tnt);
                 if (CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() == CommonConfigs.TNTMode.IGNITE) {
@@ -94,8 +95,20 @@ public class FireBehaviorsManager {
 
         registerPresentBehavior(Items.ARMOR_STAND, spawnArmorStand);
         registerCannonBehavior(Items.ARMOR_STAND, spawnArmorStand);
-    }
 
+        // Dispatch event to allow other mods to register fire behaviours
+        SuppPlatformStuff.registerFireBehaviours(access, new IFireItemBehaviorRegistry() {
+            @Override
+            public void registerCannonBehavior(ItemLike item, IFireItemBehavior behavior) {
+                FireBehaviorsManager.registerCannonBehavior(item, behavior);
+            }
+
+            @Override
+            public void registerPresentBehavior(ItemLike item, IFireItemBehavior behavior) {
+                FireBehaviorsManager.registerPresentBehavior(item, behavior);
+            }
+        });
+    }
 }
 
 

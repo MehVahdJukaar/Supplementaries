@@ -5,6 +5,8 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.neoforge.ForgeConfigHolder;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.api.neoforge.RegisterFireBehavioursEvent;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehaviorRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
@@ -12,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.mixins.neoforge.FireBlockAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.neoforge.ItemStackAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -42,6 +45,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -272,5 +276,9 @@ public class SuppPlatformStuffImpl {
     @SuppressWarnings("all")
     public static void init() {
         RegHelper.register(Supplementaries.res("mod_cap"), () -> (StreamCodec) CapSlotReference.CODEC, SlotReference.TYPE_REGISTRY_KEY);
+    }
+
+    public static void registerFireBehaviours(RegistryAccess registry, IFireItemBehaviorRegistry event) {
+        NeoForge.EVENT_BUS.post(new RegisterFireBehavioursEvent(registry, event));
     }
 }
