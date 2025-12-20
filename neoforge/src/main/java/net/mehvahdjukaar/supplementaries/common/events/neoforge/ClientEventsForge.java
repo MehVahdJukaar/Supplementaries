@@ -20,6 +20,7 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.HangingEntityItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -113,13 +114,13 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onRenderGuiOverlayPre(RenderGuiLayerEvent.Pre event) {
         if (CannonController.cancelsXPBar()) {
-            var overlay = event.getName();
-            if (overlay == (VanillaGuiLayers.EXPERIENCE_BAR)) {
+            ResourceLocation overlay = event.getName();
+            if (overlay == VanillaGuiLayers.EXPERIENCE_BAR || overlay == VanillaGuiLayers.EXPERIENCE_LEVEL) {
                 event.setCanceled(true);
             }
         }
         if (CannonController.cancelsHotBar()) {
-            var overlay = event.getName();
+            ResourceLocation overlay = event.getName();
             if (overlay == (VanillaGuiLayers.HOTBAR)) {
                 event.setCanceled(true);
             }

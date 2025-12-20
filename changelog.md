@@ -1,1 +1,1 @@
-fixed a cash with faucets and brewing stands
+fixed an issue with red merchant
