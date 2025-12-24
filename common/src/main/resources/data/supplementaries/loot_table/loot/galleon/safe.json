@@ -189,7 +189,7 @@
           "functions": [
             {
               "function": "minecraft:enchant_randomly",
-              "options": "#minecraft:galleon_treasure"
+              "options": "#supplementaries:galleon_treasure"
             }
           ],
           "name": "minecraft:book",
