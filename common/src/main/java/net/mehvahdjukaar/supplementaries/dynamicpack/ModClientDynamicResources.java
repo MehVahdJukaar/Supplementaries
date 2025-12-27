@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.dynamicpack;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.events.AfterLanguageLoadEvent;
 import net.mehvahdjukaar.moonlight.api.misc.IProgressTracker;
@@ -23,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBoatItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -86,6 +85,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             //addGlobeItemModels(manager, sink);
             moveGates(manager, sink);
             MojangNeedsToAddMoreCopper.run(manager, sink);
+
         });
 
         executor.accept(this::addSignPostAssets);
@@ -99,6 +99,11 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                     ResType.BLOCK_TEXTURES.getPath(Supplementaries.res("gold_gate_bottom")), false);
             sink.copyResource(manager, ResType.BLOCK_TEXTURES.getPath(Supplementaries.res("gold_gate_top_old")),
                     ResType.BLOCK_TEXTURES.getPath(Supplementaries.res("gold_gate_top")), false);
+        }
+
+        if (MiscUtils.FESTIVITY.isChristmas()) {
+            sink.copyResource(manager, ResType.ITEM_TEXTURES.getPath(Supplementaries.res("party_hat")),
+                    ResType.ITEM_TEXTURES.getPath(Supplementaries.res("party_hat_christmas")), false);
         }
     }
 
@@ -302,7 +307,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
         //entity textures
         try (TextureImage template = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/boat/oak"));
-                TextureImage bambooTemplate = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/boat/bamboo"))) {
+             TextureImage bambooTemplate = TextureImage.open(manager, ResourceLocation.withDefaultNamespace("entity/boat/bamboo"))) {
 
             Respriter respriter = Respriter.of(template);
             Respriter respriter2 = Respriter.of(bambooTemplate);
@@ -318,7 +323,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                         Palette targetPalette = Palette.fromImage(plankTexture);
                         //TextureImage newImage = respriter.recolorWithAnimationOf(plankTexture);
                         Respriter r = wood.toVanillaBoatOrOak() == Boat.Type.BAMBOO ? respriter2 : respriter;
-                        return  r.recolor(targetPalette);
+                        return r.recolor(targetPalette);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }

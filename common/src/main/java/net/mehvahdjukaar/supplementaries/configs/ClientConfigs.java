@@ -203,10 +203,11 @@ public class ClientConfigs {
                     .define("send_chat_on_death", true);
             HEAD_VANILLA = builder.comment("Makes enderman and spider heads use vanilla texture. Enable for texture pack support")
                             .define("enderman_and_spider_head_texture_pack_support", true);
-
-            builder.push("colored_maps");
             SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
                     .define("slime_effect_overlay", true);
+
+            builder.push("colored_maps");
+
             COLORED_MAPS = builder
                     .comment("Needs the server config with same name on. If on here it will ignore the server one and keep vanilla colors")
                     .define("tinted_blocks_on_maps", true);

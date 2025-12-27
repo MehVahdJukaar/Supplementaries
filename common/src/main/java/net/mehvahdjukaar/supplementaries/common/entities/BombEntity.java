@@ -334,6 +334,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
                 case SPIKY -> {
                     RandomSource random = level.getRandom();
                     //maybe use method above?
+
                     var particle = CompatObjects.SHARPNEL.get();
                     if (particle instanceof ParticleOptions p) {
                         for (int i = 0; i < 80; i++) {
