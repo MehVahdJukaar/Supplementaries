@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.trades.ModItemListing;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -27,7 +28,7 @@ public record PresentItemListing(ModItemListing original) implements ModItemList
 
         MerchantOffer originalOffer = original.getOffer(entity, random);
         if (originalOffer == null) return null;
-        if (MiscUtils.FESTIVITY.isChristmas()) {
+        if (MiscUtils.FESTIVITY.isChristmas() && CommonConfigs.Functional.PRESENT_ENABLED.get()) {
             Block randomPresent = ModRegistry.PRESENTS.get(DyeColor.values()[
                     random.nextInt(DyeColor.values().length)]).get();
             PresentBlockTile dummyTile = new PresentBlockTile(BlockPos.ZERO,

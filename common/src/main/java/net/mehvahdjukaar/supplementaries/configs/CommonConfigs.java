@@ -486,8 +486,8 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("netherite_doors");
-            NETHERITE_DOOR_ENABLED = builder.define("door", true);
-            NETHERITE_TRAPDOOR_ENABLED = builder.define("trapdoor", true);
+            NETHERITE_DOOR_ENABLED = feature(builder,"door");
+            NETHERITE_TRAPDOOR_ENABLED = feature(builder,"trapdoor");
             NETHERITE_DOOR_UNBREAKABLE = builder.comment("Makes netherite doors and trapdoors unbreakable")
                     .define("unbreakable", false);
             builder.pop();

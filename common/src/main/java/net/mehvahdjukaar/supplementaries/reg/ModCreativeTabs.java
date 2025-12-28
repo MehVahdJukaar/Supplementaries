@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
 import net.mehvahdjukaar.supplementaries.common.worldgen.GalleonStructure;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -23,9 +22,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootTable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,6 +56,13 @@ public class ModCreativeTabs {
         adder.before(Items.LANTERN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.SCONCE_NAME,
                 sconces.toArray(Supplier[]::new));
+
+        if (!CommonConfigs.Tools.STASIS_ENABLED.get()) {
+            var enchantment = ModEnchantments.STASIS_ENCHANTMENT.getHolder(event.getParameters().holders());
+            ItemStack book = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, 1));
+            event.remove(CreativeModeTabs.TOOLS_AND_UTILITIES, book);
+        }
+
 
         adder.before(Items.CAMPFIRE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.FIRE_PIT_NAME,
@@ -645,7 +651,7 @@ public class ModCreativeTabs {
                 return;
             }
             for (ItemStack stack : items) {
-                    event.addAfter(tab, target, stack);
+                event.addAfter(tab, target, stack);
             }
         }
 
@@ -655,7 +661,7 @@ public class ModCreativeTabs {
         }
 
         private void add(ResourceKey<CreativeModeTab> tab, ItemStack... items) {
-            ResourceKey<CreativeModeTab> tabKey =  MOD_TAB == null ? tab : (ResourceKey<CreativeModeTab>) MOD_TAB.getKey();
+            ResourceKey<CreativeModeTab> tabKey = MOD_TAB == null ? tab : (ResourceKey<CreativeModeTab>) MOD_TAB.getKey();
             for (ItemStack stack : items) {
                 if (isUnique(stack)) {
                     event.add(tabKey, stack);
@@ -714,7 +720,7 @@ public class ModCreativeTabs {
         }
 
         private void before(TagKey<Item> target,
-                           ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
+                            ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
             before(i -> i.is(target), tab, key, items);
         }
 

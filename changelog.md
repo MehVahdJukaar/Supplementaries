@@ -1,1 +1,1 @@
-fixed an issue with red merchant
+fixed an issue with confetti popper recipe

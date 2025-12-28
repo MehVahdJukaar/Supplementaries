@@ -62,7 +62,7 @@ public class ModTags {
     public static final TagKey<Item> SLINGSHOT_BLACKLIST = itemTag("slingshot_blacklist");
     public static final TagKey<Item> CANNON_BLACKLIST = itemTag("cannon_blacklist");
     public static final TagKey<Item> SLINGSHOT_DAMAGEABLE = itemTag("slingshot_damageable");
-    public static final TagKey<Item> COOKIES = itemTag("cookies");
+    public static final TagKey<Item> COOKIES = itemTag("jar_cookies");
     public static final TagKey<Item> BRICKS = itemTag("throwable_bricks");
     public static final TagKey<Item> SLIMEBALLS = itemTag("throwable_slimeballs");
     public static final TagKey<Item> ROPES = itemTag("ropes");

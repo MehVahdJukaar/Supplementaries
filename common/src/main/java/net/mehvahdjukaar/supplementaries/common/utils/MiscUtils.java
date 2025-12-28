@@ -29,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -99,7 +100,13 @@ public class MiscUtils {
             };
         }
 
-        private static Festivity get() {
+        private static Festivity compute() {
+            if (PlatHelper.isDev()) {
+                Random rand = new Random();
+                if (rand.nextFloat() < 0.3f) {
+                    return values()[rand.nextInt(values().length - 1) + 1];
+                }
+            }
             if (PlatHelper.getPhysicalSide().isClient() && ClientConfigs.General.UNFUNNY.get()) {
                 return NONE;
             }
@@ -118,7 +125,7 @@ public class MiscUtils {
         }
     }
 
-    public static final Festivity FESTIVITY = Festivity.get();
+    public static final Festivity FESTIVITY = Festivity.compute();
 
     public static boolean isSword(Item i) {
         if (i.builtInRegistryHolder().is(ModTags.STATUE_SWORDS)) return true;

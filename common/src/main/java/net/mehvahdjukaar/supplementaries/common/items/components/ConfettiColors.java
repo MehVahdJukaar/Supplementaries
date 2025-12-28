@@ -18,6 +18,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.component.TooltipProvider;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,7 +66,7 @@ public class ConfettiColors implements TooltipProvider {
     @Nullable
     public static Integer getRgbColor(ItemStack stack) {
         if (CompatObjects.DYE_BOTTLE.is(stack.getItem())) {
-            var colorComp = stack.get(DataComponents.DYED_COLOR);
+            DyedItemColor colorComp = stack.get(DataComponents.DYED_COLOR);
             if (colorComp != null) {
                 return colorComp.rgb();
             }
