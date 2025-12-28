@@ -50,7 +50,7 @@ public class RemoveDisabledBlocksProcessor extends StructureProcessor {
         add(ModRegistry.ASH_BLOCK, Blocks.AIR);
         addAll(ModRegistry.FLAGS.values(), ModConstants.FLAG_NAME, Blocks.AIR);
         add(ModRegistry.SAFE, Blocks.CHEST);
-        add(ModRegistry.ROPE_KNOT, Blocks.IRON_BARS);
+        add(ModRegistry.ROPE_KNOT, ModConstants.ROPE_NAME, Blocks.IRON_BARS);
         add(ModRegistry.ROPE, Blocks.IRON_BARS);
         addAll(ModRegistry.CANDLE_HOLDERS.values(), ModConstants.CANDLE_HOLDER_NAME, Blocks.TORCH);
         add(ModRegistry.GOLD_DOOR, Blocks.DARK_OAK_DOOR);
@@ -60,6 +60,7 @@ public class RemoveDisabledBlocksProcessor extends StructureProcessor {
         add(ModRegistry.SCONCE_GREEN, ModConstants.SCONCE_NAME, Blocks.WALL_TORCH);
         add(ModRegistry.SCONCE_SOUL, ModConstants.SCONCE_NAME, Blocks.SOUL_TORCH);
         add(ModRegistry.SCONCE_WALL_SOUL, ModConstants.SCONCE_NAME, Blocks.SOUL_WALL_TORCH);
+        add(ModRegistry.SCONCE_LEVER, Blocks.WALL_TORCH);
     }
 
     private static void add(Block from, Replacement replacement) {

@@ -16,6 +16,7 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -56,7 +57,7 @@ public class DecoBlocksCompatImpl {
                         .noOcclusion()
                         .lightLevel((state) -> 11), CompatObjects.SOUL_CHANDELIER, () -> ParticleTypes.SOUL_FIRE_FLAME));
 
-        if (CompatHandler.DECO_BLOCKS_ABNORMALS) {
+        if (CompatObjects.ENDER_CHANDELIER.isPresent()) {
             ENDER_CHANDELIER_ROPE = RegHelper.registerBlock(Supplementaries.res("rope_ender_chandelier"), () ->
                     new RopeChandelierBlock(BlockBehaviour.Properties.of()
                             .mapColor(MapColor.WOOD)
@@ -67,7 +68,7 @@ public class DecoBlocksCompatImpl {
                             CompatObjects.ENDER_FLAME));
         } else ENDER_CHANDELIER_ROPE = null;
 
-        if (CompatHandler.MUCH_MORE_MOD_COMPAT) {
+        if (CompatObjects.GLOW_CHANDELIER.isPresent()) {
             GLOW_CHANDELIER_ROPE = RegHelper.registerBlock(Supplementaries.res("rope_glow_chandelier"), () ->
                     new RopeChandelierBlock(BlockBehaviour.Properties.of()
                             .mapColor(MapColor.WOOD)
@@ -142,7 +143,8 @@ public class DecoBlocksCompatImpl {
         }
 
         @Override
-        public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
+        public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, RandomSource rand) {
+            super.animateTick(stateIn, worldIn, pos, rand);
             double d0 = pos.getX() + 0.5D;
             double d1 = pos.getY() + 0.7D;
             double d2 = pos.getZ() + 0.5D;

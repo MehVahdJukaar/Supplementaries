@@ -51,7 +51,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#c:grain"
+            "items": "minecraft:wheat"
           }
         ]
       },

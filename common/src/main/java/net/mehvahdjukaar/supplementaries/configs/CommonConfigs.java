@@ -74,6 +74,7 @@ public class CommonConfigs {
     private static void onRefresh() {
         //this isn't safe. refresh could happen sooner than item registration for fabric
         ropeOverride = Suppliers.memoize(() -> {
+            if (Functional.ROPE_OVERRIDE == null) return null;
             var o = BuiltInRegistries.BLOCK.getHolder(ResourceKey.create(Registries.BLOCK, Functional.ROPE_OVERRIDE.get()));
             if (o.isPresent() && o.get().value() != ModRegistry.ROPE.get()) {
                 return o.get();
@@ -213,6 +214,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("pulley_block");
+            builder.comment("Pulleys are automatically disabled if 'rope' feature is disabled");
             PULLEY_ENABLED = feature(builder);
             MINESHAFT_ELEVATOR = builder.comment("Chance for a new mineshaft elevator piece to spawn")
                     .define("mineshaft_elevator", 0.035, 0, 1);
@@ -486,8 +488,8 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("netherite_doors");
-            NETHERITE_DOOR_ENABLED = feature(builder,"door");
-            NETHERITE_TRAPDOOR_ENABLED = feature(builder,"trapdoor");
+            NETHERITE_DOOR_ENABLED = feature(builder, "door");
+            NETHERITE_TRAPDOOR_ENABLED = feature(builder, "trapdoor");
             NETHERITE_DOOR_UNBREAKABLE = builder.comment("Makes netherite doors and trapdoors unbreakable")
                     .define("unbreakable", false);
             builder.pop();
@@ -499,9 +501,12 @@ public class CommonConfigs {
             STONE_LAMP_ENABLED = feature(builder, ModConstants.STONE_LAMP_NAME);
             TILE_ENABLED = feature(builder, ModConstants.STONE_TILE_NAME);
             BLACKSTONE_TILE_ENABLED = feature(builder, ModConstants.BLACKSTONE_TILE_NAME);
+            builder.comment("Buntings are automatically disabled if 'rope' feature is disabled");
             BUNTINGS_ENABLED = feature(builder, ModConstants.BUNTING_NAME);
-            SCONCE_ENABLED = feature(builder, ModConstants.SCONCE_NAME);
+            builder.push(ModConstants.SCONCE_NAME);
+            SCONCE_ENABLED = feature(builder);
             SCONCE_LEVER_ENABLED = feature(builder, ModConstants.SCONCE_LEVER_NAME);
+            builder.pop();
             PANCAKES_ENABLED = feature(builder, ModConstants.PANCAKE_NAME);
 
 
@@ -656,16 +661,17 @@ public class CommonConfigs {
             builder.push("functional");
 
             builder.push("rope");
-            ROPE_ENABLED = TRUE;
-            //var funny = feature(builder.comment("So you came here to disable supp rope not because they are bad but because they are the easiest to disable, despite them doing all the stuff other ropes can do. Well too bad, this config doesnt do anything :P. Learn how to use datapacks to disable stuff, like its normally done"));
-            FEATURE_TOGGLES.put("rope", TRUE);
+            ROPE_ENABLED = feature(builder.comment("Also internally disables Galleons, Pulleys, Buntings, Rope arrows and rope mineshaft.\n" +
+                    "Also disables compat blocks such as supplementaries Farmers Delight rope tomatoes and Decorative blocks rope chandeliers.\n" +
+                    "Also reminder that you can disable any item from any mod with a recipe (datapack) + JEI hide"));
 
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
                     .define("block_side_attachment", true);
             ROPE_SLIDE = builder.comment("Makes sliding down ropes as fast as free falling, still negating fall damage")
                     .define("slide_on_fall", true);
-            ROPE_OVERRIDE = builder.comment("In case you want to disable supplementaries ropes you can specify here another mod rope and they will be used for rope arrows and in mineshafts instead")
-                    .define("rope_override", Supplementaries.res("rope"));
+            ROPE_OVERRIDE = null;
+            // builder.comment("In case you want to disable supplementaries ropes you can specify here another mod rope and they will be used for rope arrows and in mineshafts instead")
+            // .define("rope_override", Supplementaries.res("rope"));
             ROPE_HORIZONTAL = builder.comment("Enables horizontal placement of ropes. Disabling will make ropes always non solid")
                     .define("horizontal_ropes", true);
             ROPE_REPLACE_LOOT_TABLES = PlatHelper.getPlatform().isFabric() ? () -> ReplaceTableMode.NONE :
@@ -976,6 +982,7 @@ public class CommonConfigs {
 
             //rope arrow
             builder.push("rope_arrow");
+            builder.comment("Rope arrows are automatically disabled if 'rope' feature is disabled");
             ROPE_ARROW_ENABLED = feature(builder);
             ROPE_ARROW_CAPACITY = builder.comment("Max number of rope items allowed to be stored inside a rope arrow")
                     .gameRestart()
@@ -1201,7 +1208,7 @@ public class CommonConfigs {
             builder.push("map_tweaks");
             builder.push("random_adventurer_maps");
             RANDOM_ADVENTURER_MAPS = feature(builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
-                            "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)"));
+                    "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)"));
             RANDOM_ADVENTURER_MAX_SEARCH_RADIUS = builder.comment("Maximum number of structure types from the tag that road signs will attempt to look for every time. Decrease to speed up search at the cost of making them not point to the nearest structure out of all. Also if made too low and in cases it were to pick a structure that only spawns very rarely, this would actually slow down the search")
                     .define("max_search_radius", 100, 1, 1000);
             RANDOM_ADVENTURER_MAPS_MAX_SEARCHES = builder.comment("Select a random structure to look for instead of iterating through all of the ones in the tag returning the closest. Turning on will make ones that have diff structures (aka all different ruined portals) show up more. Increasing the number past 1 will allow x random structures to be picked instead. this can possibly speed up search as it decreases chances to find far away ones")
@@ -1404,6 +1411,9 @@ public class CommonConfigs {
         if (!CONFIG_HOLDER.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
             case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
+            case ModConstants.PULLEY_BLOCK_NAME -> Redstone.PULLEY_ENABLED.get() && Functional.ROPE_ENABLED.get();
+            case ModConstants.BUNTING_NAME -> Building.BUNTINGS_ENABLED.get() && Functional.ROPE_ENABLED.get();
+            case ModConstants.ROPE_ARROW_NAME -> Tools.ROPE_ARROW_ENABLED.get() && Functional.ROPE_ENABLED.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
             default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();

@@ -161,6 +161,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         super.loadAdditional(tag, registries);
         this.yaw = tag.getFloat("yaw");
         this.pitch = tag.getFloat("pitch");
+        this.prevPitch = this.pitch;
+        this.prevYaw = this.yaw;
         this.cooldownTimer = tag.getInt("cooldown");
         this.fuseTimer = Math.max(this.fuseTimer, tag.getInt("fuse_timer")); //don lose client animation
         this.setPowerLevel(tag.getByte("fire_power"));
@@ -171,17 +173,6 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         if (tag.contains("trajectory")) {
             this.trajectoryData = IBallisticBehavior.Data.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
                     .getOrThrow();
-        }
-        // fixRotation(this.level);
-    }
-
-    private void fixRotation(Level level) {
-        //structure block rotation decoding
-        BlockState state = this.getBlockState();
-        Rotation rot = state.getValue(ModBlockProperties.ROTATE_TILE);
-        if (rot != Rotation.NONE && level != null && !level.isClientSide) {
-            this.setYaw(this.selfAccess, this.yaw + (rot.ordinal() * 90));
-            level.setBlockAndUpdate(worldPosition, state.setValue(ModBlockProperties.ROTATE_TILE, Rotation.NONE));
         }
     }
 

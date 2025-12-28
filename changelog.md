@@ -1,1 +1,4 @@
-fixed an issue with confetti popper recipe
+- added rope disable config
+- improved rope config description and improved configs in general, fixing some items not being disabled properly
+- disabling ropes will also automatically disable pulleys, buntings, rope arrows, mineshaft elevator and compat blocks like rope tomatoes and rope chandeliers
+- updated deco blocks compat
