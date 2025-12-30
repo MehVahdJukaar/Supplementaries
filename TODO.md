@@ -1,6 +1,10 @@
 # 1.21 bugs and stuff
 
-slingshots mending and unbreakig missing tags
+- 2 plunderers using same cannon
+- barnacles spawning inside ship hulls
+- boat facing thing
+- copper brazier ceiling crash
+- blue bomb rework
 - metal frame shader
 - locked atlas not working
 - map atlases paper
@@ -8,14 +12,19 @@ slingshots mending and unbreakig missing tags
 - todo::!!!!! slingshots sometime dont play block place sounD!!!!
 - first slingshot projectile is a stone block
 - todo: plunderers are not intereted in player when very nearby them whilst the player is in water
-- todo: vista and canon turn table rotation
 - todo: soul fired, fix sawmill and improve recipe gen
-- todo. rotation for cannons
 - todo: fix pillagers in boats not facing right
 - todo: fix pillagers not moving while shooting and strafing. could be dangerous here, parrot thing
 - fix pillagers not shooting while moving
 - fix pillagers not facing right direction in boats
 - finish barnacles
+- wind charges should wobble signs
+- Double stacked Iron/Gold Gate not opening/closing. (with quark?)
+- wattle and daub in suppsquared tag broken
+- fire pit as fire source tag of create and fd
+- Spring launcher activates too fast, probably instantly.
+- Tattered Written Books Cut Off Content From Original Book
+- amendments fire charges have fire overlay. also they dont work when ghast ones are hit by hand
 
 - mermaid
 - snow on ropes spawning?

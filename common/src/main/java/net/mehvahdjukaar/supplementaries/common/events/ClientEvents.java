@@ -100,9 +100,10 @@ public class ClientEvents {
             }
             if (!disabled) newScreen = WelcomeMessageScreen.createOptifine(newScreen);
         }
+        /*
         if (!CompatHandler.AMENDMENTS && !ClientConfigs.General.NO_AMENDMENTS_WARN.get()) {
             newScreen = WelcomeMessageScreen.createAmendments(newScreen);
-        }
+        }*/
         if (!ClientConfigs.General.NO_INCOMPATIBLE_MODS.get() && WelcomeMessageScreen.hasIncompat() && !PlatHelper.isDev()) {
             newScreen = WelcomeMessageScreen.createIncompatibleMods(newScreen);
         }

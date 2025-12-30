@@ -30,7 +30,10 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ModClientDynamicResources;
 import net.mehvahdjukaar.supplementaries.dynamicpack.ModServerDynamicResources;
 import net.mehvahdjukaar.supplementaries.reg.*;
+import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.dimension.DimensionType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

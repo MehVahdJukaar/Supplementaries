@@ -1403,10 +1403,6 @@ public class CommonConfigs {
     }
 
 
-    private static Supplier<Boolean> dep(Supplier<Supplier<Boolean>> original) {
-        return CompatHandler.AMENDMENTS ? () -> false : original.get();
-    }
-
     public static boolean isEnabled(String key) {
         if (!CONFIG_HOLDER.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
