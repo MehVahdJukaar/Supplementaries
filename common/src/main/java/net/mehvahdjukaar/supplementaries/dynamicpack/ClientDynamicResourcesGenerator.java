@@ -13,10 +13,12 @@ import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
 import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
+import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -140,45 +142,10 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.SIGN_POST_ITEMS.forEach((wood, sign) -> {
-                ResourceLocation textureRes = Supplementaries.res("item/sign_posts/" + Utils.getID(sign).getPath());
-                if (alreadyHasTextureAtLocation(manager, textureRes)) return;
-
-                TextureImage newImage = null;
-                Item signItem = wood.getItemOfThis("sign");
-                if (signItem != null) {
-                    try (TextureImage vanillaSign = TextureImage.open(manager,
-                            RPUtils.findFirstItemTextureLocation(manager, signItem));
-                         TextureImage signMask = TextureImage.open(manager,
-                                 Supplementaries.res("item/hanging_signs/sign_board_mask"))) {
-
-                        List<Palette> targetPalette = Palette.fromAnimatedImage(vanillaSign, signMask);
-                        newImage = respriter.recolor(targetPalette);
-
-                        try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
-                                Supplementaries.res("item/hanging_signs/sign_scribbles_mask"),
-                                Supplementaries.res("item/sign_posts/scribbles_template"))) {
-                            newImage.applyOverlay(scribbles);
-                        } catch (Exception ex) {
-                            getLogger().error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
-                        }
-
-                    } catch (Exception ex) {
-                        //getLogger().error("Could not find sign texture for wood type {}. Using plank texture : {}", wood, ex);
-                    }
-                }
-                //if it failed use plank one
-                if (newImage == null) {
-                    try (TextureImage plankPalette = TextureImage.open(manager,
-                            RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
-                        Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
-                        newImage = respriter.recolor(targetPalette);
-
-                    } catch (Exception ex) {
-                        getLogger().error("Failed to generate Sign Post item texture for for {} : {}", sign, ex);
-                    }
-                }
-                if (newImage != null) {
-                    dynamicPack.addAndCloseTexture(textureRes, newImage);
+                try {
+                    genSignItemTexture(manager, wood, sign, respriter);
+                } catch (Exception e) {
+                    getLogger().error("Fail to generate sign post " + sign);
                 }
             });
         } catch (Exception ex) {
@@ -209,6 +176,49 @@ public class ClientDynamicResourcesGenerator extends DynClientResourcesGenerator
             });
         } catch (Exception ex) {
             getLogger().error("Could not generate any Sign Post block texture : ", ex);
+        }
+    }
+
+    private void genSignItemTexture(ResourceManager manager, WoodType wood, SignPostItem sign, Respriter respriter) {
+        ResourceLocation textureRes = Supplementaries.res("item/sign_posts/" + Utils.getID(sign).getPath());
+        if (alreadyHasTextureAtLocation(manager, textureRes)) return;
+
+        TextureImage newImage = null;
+        Item signItem = wood.getItemOfThis("sign");
+        if (signItem != null) {
+            try (TextureImage vanillaSign = TextureImage.open(manager,
+                    RPUtils.findFirstItemTextureLocation(manager, signItem));
+                 TextureImage signMask = TextureImage.open(manager,
+                         Supplementaries.res("item/hanging_signs/sign_board_mask"))) {
+
+                List<Palette> targetPalette = Palette.fromAnimatedImage(vanillaSign, signMask);
+                newImage = respriter.recolor(targetPalette);
+
+                try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
+                        Supplementaries.res("item/hanging_signs/sign_scribbles_mask"),
+                        Supplementaries.res("item/sign_posts/scribbles_template"))) {
+                    newImage.applyOverlay(scribbles);
+                } catch (Exception ex) {
+                    getLogger().error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
+                }
+
+            } catch (Exception ex) {
+                //getLogger().error("Could not find sign texture for wood type {}. Using plank texture : {}", wood, ex);
+            }
+        }
+        //if it failed use plank one
+        if (newImage == null) {
+            try (TextureImage plankPalette = TextureImage.open(manager,
+                    RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
+                Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
+                newImage = respriter.recolor(targetPalette);
+
+            } catch (Exception ex) {
+                getLogger().error("Failed to generate Sign Post item texture for for {} : {}", sign, ex);
+            }
+        }
+        if (newImage != null) {
+            dynamicPack.addAndCloseTexture(textureRes, newImage);
         }
     }
 
