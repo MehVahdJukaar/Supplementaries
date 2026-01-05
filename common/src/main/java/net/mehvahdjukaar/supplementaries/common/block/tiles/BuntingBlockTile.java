@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.frozenblock.lib.shadow.org.jetbrains.annotations.NotNull;
 import net.mehvahdjukaar.moonlight.api.block.DynamicRenderedItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
@@ -92,13 +93,9 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
             if (stack.getItem() instanceof BuntingItem) {
                 DyeColor color = BuntingItem.getColor(stack);
                 if (color != null) {
-                    this.buntings.put(d, color);
+                    this.setBunting(d, color);
                 }
             }
-        }
-        if (buntings.isEmpty()) {
-            //error; should be cleared soon
-            // Supplementaries.error();
         }
         requestModelReload();
     }
@@ -137,10 +134,10 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
         super.addExtraModelData(builder);
-        builder.with(NORTH_BUNTING, buntings.getOrDefault(Direction.NORTH, null));
-        builder.with(SOUTH_BUNTING, buntings.getOrDefault(Direction.SOUTH, null));
-        builder.with(EAST_BUNTING, buntings.getOrDefault(Direction.EAST, null));
-        builder.with(WEST_BUNTING, buntings.getOrDefault(Direction.WEST, null));
+        builder.with(NORTH_BUNTING, getBunting(Direction.NORTH));
+        builder.with(SOUTH_BUNTING, getBunting(Direction.SOUTH));
+        builder.with(EAST_BUNTING, getBunting(Direction.EAST));
+        builder.with(WEST_BUNTING,getBunting(Direction.WEST));
     }
 
     @Override
