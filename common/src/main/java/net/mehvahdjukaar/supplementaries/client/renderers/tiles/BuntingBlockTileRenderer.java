@@ -47,10 +47,13 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
         poseStack.translate(0.5, 0.5, 0.5);
         BlockPos pos = tile.getBlockPos();
         long l = tile.getLevel().getGameTime();
-        for (var e : tile.getBuntings().entrySet()) {
-            renderBunting(e.getValue(), e.getKey(), partialTicks, poseStack,
-                    null, bufferIn, combinedLightIn,
-                    combinedOverlayIn, pos, l);
+        for (var d : Direction.Plane.HORIZONTAL) {
+            var b = tile.getBunting(d);
+            if (b != null) {
+                renderBunting(b, d, partialTicks, poseStack,
+                        null, bufferIn, combinedLightIn,
+                        combinedOverlayIn, pos, l);
+            }
         }
 
         poseStack.popPose();

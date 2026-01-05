@@ -48,23 +48,40 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
         super(ModRegistry.BUNTING_TILE.get(), pos, state, 4);
     }
 
-    public Map<Direction, DyeColor> getBuntings() {
-        return buntings;
-    }
 
     @ForgeOverride
     public AABB getRenderBoundingBox() {
         return new AABB(worldPosition);
     }
 
+    @Nullable
+    public DyeColor getBunting(Direction direction) {
+        if (isStructureRotated()){
+            direction = direction.getClockWise();
+        }
+        return buntings.get(direction);
+    }
+
+    public void setBunting(Direction direction, @Nullable DyeColor color) {
+        if (isStructureRotated()){
+            direction = direction.getCounterClockWise();
+        }
+        if (color == null) {
+            buntings.remove(direction);
+        } else {
+            buntings.put(direction, color);
+        }
+    }
+
+    private @NotNull Boolean isStructureRotated() {
+        return getBlockState().getValue(RopeBuntingBlock.FLIP_TILE);
+    }
+
+
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
         BlockState state = this.getBlockState();
-        if (state.getValue(RopeBuntingBlock.FLIP_TILE) && level != null) {
-            rotateBuntings(state, Rotation.CLOCKWISE_90);
-            level.setBlockAndUpdate(worldPosition, state.setValue(RopeBuntingBlock.FLIP_TILE, false));
-        }
     }
 
     @Override
