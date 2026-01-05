@@ -1,6 +1,6 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.11-SNAPSHOT" apply false
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.modrinth.minotaur" version "2.+"
     id "com.github.johnrengelman.shadow" version "7.1.2" apply false
@@ -10,11 +10,96 @@ architectury {
     minecraft = rootProject.minecraft_version
 }
 
-    subprojects {
-        apply plugin: "dev.architectury.loom"
-        apply plugin: "com.github.johnrengelman.shadow"
-        apply plugin: "com.matthewprenger.cursegradle"
-        apply plugin: "com.modrinth.minotaur"
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
+
+    archivesBaseName = rootProject.mod_id
+    version = rootProject.mod_version
+    group = rootProject.mod_group_id
+    required_moonlight_version = rootProject.required_moonlight_version
+
+    repositories {
+
+        flatDir {
+            dirs 'mods'
+        }
+
+        mavenCentral()
+
+        mavenLocal()
+
+        maven { url "https://registry.somethingcatchy.net/repository/maven-releases/" }
+
+        maven { url "https://maven.parchmentmc.org" }
+
+        maven {
+            url = "https://www.cursemaven.com"
+            allowInsecureProtocol = true
+        }
+
+        maven { url "https://maven.shedaniel.me/" }
+        maven { url "https://maven.terraformersmc.com/releases" }
+        maven { url 'https://maven.ladysnake.org/releases' }
+
+
+        maven {
+            url "https://maven.firstdarkdev.xyz/snapshots"
+        }
+        maven { url 'https://jitpack.io' }
+
+        maven {
+            name = "TerraformersMC"
+            url = "https://maven.terraformersmc.com/"
+        }
+        maven {
+            name = 'Ladysnake Mods'
+            url = 'https://maven.ladysnake.org/releases'
+        }
+        maven {
+            url = 'https://maven.neoforged.net'
+        }
+
+        maven { // Reach Entity Attributes
+            url = "https://maven.jamieswhiteshirt.com/libs-release"
+            content { includeGroup("com.jamieswhiteshirt") }
+        }
+        maven { url = "https://maven.tterrag.com/" } // Flywheel
+        maven { url = "https://mvn.devos.one/snapshots/" } // Registrate, Porting Lib, Forge Tags, Milk Lib
+        maven { url = "https://mvn.devos.one/releases/" }
+
+        maven {
+            url = "https://api.modrinth.com/maven"
+        }
+
+        maven {
+            url = "https://maven.blamejared.com/"
+        }
+        maven{
+            url = "https://mvn.devos.one/snapshots/"
+        }
+        maven { url = "https://mvn.devos.one/snapshots" }
+        maven { url = "https://maven.createmod.net" } // Ponder, Flywheel
+
+        maven { url "https://maven.misterpemodder.com/libs-release/" } // ShulkerBoxTooltip
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release = rootProject.java_version.toInteger()
+    }
+
+    java {
+        withSourcesJar()
+    }
+}
+
+subprojects {
+    apply plugin: "dev.architectury.loom"
+    apply plugin: "com.github.johnrengelman.shadow"
+    apply plugin: "com.matthewprenger.cursegradle"
+    apply plugin: "com.modrinth.minotaur"
 
     loom {
         silentMojangMappingsLicense()
@@ -26,7 +111,7 @@ architectury {
             it.officialMojangMappings {
                 setNameSyntheticMembers(false)
             }
-            it.parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}")
+            //it.parchment("org.parchmentmc.data:parchment-${rootProject.parchment_version}")
         }
 
     }
@@ -42,9 +127,9 @@ architectury {
             projectId = rootProject.mod_id
             uploadFile = tasks.remapJar
             gameVersions = [rootProject.minecraft_version]
-            if(modLoader == "forge"){
+            if (modLoader == "forge") {
                 loaders = [modLoader, "neoforge"]
-            }else{
+            } else {
                 loaders = [modLoader]
             }
 
@@ -72,7 +157,7 @@ architectury {
                 releaseType = 'release'
                 addGameVersion rootProject.minecraft_version
                 addGameVersion modLoader.capitalize()
-                if(modLoader == "forge"){
+                if (modLoader == "forge") {
                     addGameVersion "NeoForge"
                 }
 
@@ -121,93 +206,45 @@ architectury {
         }
     }
 
-}
+    publishing {
+        repositories {
+            mavenLocal()
 
-allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
-
-    archivesBaseName = rootProject.mod_id
-    version = rootProject.mod_version
-    group = rootProject.mod_group_id
-    required_moonlight_version = rootProject.required_moonlight_version
-
-    repositories {
-
-        flatDir {
-            dirs 'mods'
+            if (env.NEXUS_TOKEN != null && env.NEXUS_USER != null) {
+                maven {
+                    url = uri("https://registry.somethingcatchy.net/repository/maven-releases/")
+                    credentials {
+                        username = env.NEXUS_USER
+                        password = env.NEXUS_TOKEN
+                    }
+                }
+            }
         }
-
-        mavenCentral()
-
-        mavenLocal()
-
-        maven { url "https://maven.parchmentmc.org" }
-
-        maven {
-            url = "https://www.cursemaven.com"
-            allowInsecureProtocol = true
-        }
-
-        maven {
-            url "https://maven.firstdarkdev.xyz/snapshots"
-        }
-        maven { url 'https://jitpack.io' }
-
-        maven {
-            name = "TerraformersMC"
-            url = "https://maven.terraformersmc.com/"
-        }
-        maven {
-            name = 'Ladysnake Mods'
-            url = 'https://maven.ladysnake.org/releases'
-        }
-        maven {
-            url = 'https://maven.neoforged.net'
-        }
-
-        maven {
-            url = "https://api.modrinth.com/maven"
-        }
-
-        maven {
-            url = "https://maven.blamejared.com/"
-        }
-    }
-
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-        options.release = rootProject.java_version.toInteger()
-    }
-
-    java {
-        withSourcesJar()
     }
 }
 
-ext{
+ext {
     replaceProperties = [
-            minecraft_version    : minecraft_version,
-            minecraft_min_version: minecraft_min_version,
-            minecraft_max_version: minecraft_max_version,
-            pack_format_number   : pack_format_number,
+            minecraft_version         : minecraft_version,
+            minecraft_min_version     : minecraft_min_version,
+            minecraft_max_version     : minecraft_max_version,
+            pack_format_number        : pack_format_number,
 
-            mod_id               : mod_id,
-            mod_name             : mod_name,
-            mod_version          : mod_version,
-            mod_license          : mod_license,
-            mod_authors          : mod_authors,
-            mod_description      : mod_description,
-            mod_credits          : mod_credits,
-            mod_homepage         : mod_homepage,
-            mod_github           : mod_github,
-            update_url           : update_url,
+            mod_id                    : mod_id,
+            mod_name                  : mod_name,
+            mod_version               : mod_version,
+            mod_license               : mod_license,
+            mod_authors               : mod_authors,
+            mod_description           : mod_description,
+            mod_credits               : mod_credits,
+            mod_homepage              : mod_homepage,
+            mod_github                : mod_github,
+            update_url                : update_url,
 
-            neo_version          : neo_version,
-            neo_version_range    : neo_version_range,
-            loader_version_range : loader_version_range,
-            required_moonlight_version : required_moonlight_version
+            neo_version               : neo_version,
+            neo_version_range         : neo_version_range,
+            loader_version_range      : loader_version_range,
+            required_moonlight_version: required_moonlight_version
     ]
 }
 
@@ -219,16 +256,8 @@ task buildAndPublishAll {
     dependsOn ':forge:modrinth'
     dependsOn ':fabric:curseforge'
     dependsOn ':fabric:modrinth'
+    dependsOn ':publish'
 }
 
 buildAndPublishAll.group = 'build'
-buildAndPublishAll.description = 'Runs clean, build, and publish forge and fabric'
-
-task buildAndPublishAllM {
-    dependsOn buildAndPublishAll
-    dependsOn ':publishToMavenLocal'
-}
-
-buildAndPublishAllM.group = 'build'
-buildAndPublishAllM.description = 'Runs clean, build, publish forge and fabric and uploads to maven local'
-
+buildAndPublishAll.description = 'Runs clean, build, and publish forge and fabric and maven'

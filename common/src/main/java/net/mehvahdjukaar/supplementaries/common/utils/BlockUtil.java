@@ -12,9 +12,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -96,7 +94,7 @@ public class BlockUtil {
         // container shuffle stuff
         if (!level.isClientSide && CommonConfigs.Redstone.TURN_TABLE_SHUFFLE.get() &&
                 dir.getAxis() != Direction.Axis.Y && state.hasProperty(BarrelBlock.FACING)) {
-            if (state.getBlock() != ModRegistry.HOURGLASS.get() && level.getBlockEntity(targetPos) instanceof Container c) {
+            if (!state.is(ModTags.TURN_TABLE_CANT_SHUFFLE) && level.getBlockEntity(targetPos) instanceof Container c) {
                 shuffleContainerContent(c, level);
                 //continue normally below
             }
@@ -214,7 +212,7 @@ public class BlockUtil {
 
     private static boolean isBlacklisted(BlockState state) {
         // double blocks
-        if (state.getBlock() instanceof BedBlock) return true;
+        if (state.hasProperty(BedBlock.PART)) return true;
         if (state.hasProperty(BlockStateProperties.CHEST_TYPE)) {
             if (state.getValue(BlockStateProperties.CHEST_TYPE) != ChestType.SINGLE) return true;
         }
@@ -245,7 +243,7 @@ public class BlockUtil {
             var opt = rotatePistonHead(state, pos, level, face, ccw);
             if (opt.isPresent()) return opt;
         }
-        if (b instanceof BedBlock) {
+        if (state.hasProperty(BedBlock.PART)) {
             return rotateBedBlock(face, pos, level, state, rot);
         }
         if (b instanceof ChestBlock) {
@@ -262,18 +260,33 @@ public class BlockUtil {
         return Optional.empty();
     }
 
-    private static void shuffleContainerContent(Container c, Level level) {
-        ObjectArrayList<ItemStack> content = ObjectArrayList.of();
-        for (int i = 0; i < c.getContainerSize(); i++) {
-            content.add(c.removeItemNoUpdate(i));
-        }
-        Util.shuffle(content, level.random);
+    public static void shuffleContainerContent(Container c, Level level) {
+        int size = c.getContainerSize();
+        boolean changed = false;
 
-        for (int i = 0; i < content.size(); i++) {
-            c.setItem(i, content.get(i));
+        for (int i = size - 1; i > 0; i--) {
+            // Pick a random index from 0 to i
+            int j = level.random.nextInt(i + 1);
+
+            if (i == j) continue;
+
+            // Swap items if allowed
+            ItemStack firstItem = c.getItem(i);
+            ItemStack secondItem = c.getItem(j);
+
+            if (c.canTakeItem(c, i, firstItem) && c.canTakeItem(c, j, secondItem) &&
+                    c.canPlaceItem(j, firstItem) && c.canPlaceItem(i, secondItem)) {
+                c.setItem(i, secondItem);
+                c.setItem(j, firstItem);
+                changed = true;
+            }
         }
-        c.setChanged();
+
+        if (changed) {
+            c.setChanged();
+        }
     }
+
 
 
     //TODO: add rotation vertical slabs & doors

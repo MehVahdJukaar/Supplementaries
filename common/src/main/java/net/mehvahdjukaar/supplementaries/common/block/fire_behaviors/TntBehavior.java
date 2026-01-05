@@ -1,51 +1,51 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
-import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.common.utils.fake_level.IEntityInterceptFakeLevel;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.TntBlock;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class TntBehavior implements IFireItemBehavior {
-
+public class TntBehavior extends GenericProjectileBehavior {
 
     @Override
-    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction,
-                        float power, int inaccuracy, @Nullable Player owner) {
-        BlockPos blockpos = BlockPos.containing(firePos);
-
-        if (stack.getItem() instanceof BlockItem bi) {
-            Block tnt = bi.getBlock();
-            if (tnt instanceof TntBlock) {
-                Explosion dummyExplosion = new Explosion(level, null,
-                        firePos.x, firePos.y, firePos.z, 0, false, Explosion.BlockInteraction.KEEP);
-                tnt.wasExploded(level, blockpos, dummyExplosion);
-            } else {
-                GunpowderExplosion.igniteTntHack(level, blockpos, tnt);
-            }
-
-            var entities = level.getEntities((Entity) null, new AABB(blockpos).move(0, 0.5, 0),
-                    entity -> (entity instanceof PrimedTnt) || entity.getType() == CompatObjects.ALEX_NUKE.get());
-            for (var e : entities) {
-                Vec3 p = e.position();
-                e.setPos(new Vec3(p.x, blockpos.getY() + 10 / 16f, p.z));
-            }
-            level.gameEvent(null, GameEvent.ENTITY_PLACE, blockpos);
-
-            return true;
+    public @Nullable Entity createEntity(ItemStack projectile, IEntityInterceptFakeLevel fakeLevel, Vec3 facing) {
+        if (projectile.isEmpty()) return null;
+        if (projectile.getItem() instanceof BlockItem bi) {
+            BlockState tntState = bi.getBlock().defaultBlockState();
+            BlockPos pos = BlockPos.ZERO;
+            Level level = (Level) fakeLevel;
+            level.setBlock(pos, tntState, Block.UPDATE_NONE);
+            igniteTntHack(tntState, level, pos);
+            var e = fakeLevel.getIntercepted();
+            if (e != null) e.setDeltaMovement(0, 1, 0);
+            return e;
         }
-        return false;
+        return null;
+    }
+
+    public static boolean isTNTLikeBlock(BlockState tntState) {
+        return tntState.is(ModTags.CANNON_TNTS) || tntState.getBlock() instanceof TntBlock;
+    }
+
+    public static void igniteTntHack(BlockState tntState, Level level, BlockPos pos) {
+        Arrow dummyArrow = new Arrow(level, pos.getX() + 0.5, pos.getY() + 0.5,
+                pos.getZ() + 0.5);
+        dummyArrow.setRemainingFireTicks(20);
+        tntState.onProjectileHit(level, tntState,
+                new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.UP, pos, true),
+                dummyArrow);
     }
 
 

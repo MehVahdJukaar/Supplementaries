@@ -20,8 +20,8 @@ public abstract class CrossbowMixin {
                                           ItemStack ammoStack, boolean hasAmmo, boolean isCreative,
                                           CallbackInfoReturnable<Boolean> cir) {
         //Very hacky. Consume if the arrow isnt from inventory
-        if(shooter instanceof Player p && !p.getInventory().hasAnyMatching(i->i==ammoStack)) {
-            var q = QuiverItem.getQuiver(shooter);
+        if (shooter instanceof Player p && !p.getInventory().hasAnyMatching(i -> i == ammoStack)) {
+            var q = QuiverItem.findActiveQuiver(shooter);
             if (!q.isEmpty()) {
                 var data = QuiverItem.getQuiverData(q);
                 if (data != null) data.consumeSelected();

@@ -137,7 +137,6 @@ public class BlackBoardScreen extends Screen {
             for (var v : this.history.pollLast()) {
                 this.buttons[v.x()][v.y()].setColor(v.color());
             }
-            ;
             //clear history step from this undo we just added
             this.currentHistoryStep.clear();
         }
@@ -172,8 +171,8 @@ public class BlackBoardScreen extends Screen {
             for (byte b = 0; b < 16; b++) {
                 int ox = b % 2;
                 int oy = b / 2;
-                this.addRenderableWidget(new DyeBlackBoardButton(this, this.width / 2 - 78 + ox * 10,
-                        73 + oy * 10, b));
+                this.addRenderableWidget(new DyeBlackBoardButton(this, this.width / 2 - 78 + ox * 10 + ox * 2,
+                        67 + oy * 10 + oy * 2, b));
             }
         }
     }

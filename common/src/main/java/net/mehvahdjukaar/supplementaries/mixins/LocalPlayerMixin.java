@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.mojang.authlib.GameProfile;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
@@ -60,8 +60,8 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
                     shift = At.Shift.AFTER)
     )
     private void suppl$checkIfHasQuiver(CallbackInfo ci) {
-       supplementaries$quiverSlotForHUD = QuiverItem.getQuiverSlot(this);
-       supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get();
+       supplementaries$quiverSlotForHUD = QuiverItem.findActiveQuiverSlot(this);
+       supplementaries$quiverForRenderer = supplementaries$quiverSlotForHUD.get(this);
     }
 
     @Override

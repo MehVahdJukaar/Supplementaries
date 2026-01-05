@@ -73,6 +73,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     private void updateRenderData() {
+        if (this.level == null || !this.level.isClientSide) return;
         if (this.sheared) {
             this.renderData = Pair.of(Model.SHEARED,
                     sepia ? GLOBE_SHEARED_SEPIA_TEXTURE :
@@ -106,7 +107,7 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         this.yaw = compound.getFloat("Yaw");
         this.sheared = compound.getBoolean("Sheared");
         super.load(compound);
-
+        this.updateRenderData();
     }
 
     @Override
@@ -137,6 +138,9 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
                     ModSounds.GLOBE_SPIN.get(),
                     SoundSource.BLOCKS, 0.65f,
                     MthUtils.nextWeighted(level.random, 0.2f) + 0.9f);
+            return true;
+        } else if (id == 2) {
+            level.addDestroyBlockEffect(worldPosition, getBlockState());
             return true;
         } else {
             return super.triggerEvent(id, type);

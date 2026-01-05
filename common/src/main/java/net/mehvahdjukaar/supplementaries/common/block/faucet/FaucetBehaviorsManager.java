@@ -12,7 +12,7 @@ import net.mehvahdjukaar.moonlight.api.misc.RegistryAccessJsonReloadListener;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.core.misc.FakeLevel;
+import net.mehvahdjukaar.moonlight.core.misc.FakeLevelManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.fake_level.BlockTestLevel;
@@ -23,6 +23,7 @@ import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -58,8 +59,6 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
 
     @Override
     public void parse(Map<ResourceLocation, JsonElement> map, RegistryAccess registryAccess) {
-        FaucetBlockTile.clearBehaviors();
-
         dataInteractions.clear();
         map.forEach((key, json) -> {
             try {
@@ -70,7 +69,6 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
                 if (l.isPresent()) o = l.get();
                 else o = d.right().get();
                 dataInteractions.add(o);
-                FaucetBlockTile.registerInteraction(o);
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to parse JSON object for faucet interaction {}", key);
             }
@@ -78,8 +76,13 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         if (!dataInteractions.isEmpty())
             Supplementaries.LOGGER.info("Loaded  {} custom faucet interactions", dataInteractions.size());
 
+    }
 
+    public void onReloadWithLevel(ServerLevel level) {
         FaucetBlockTile.clearBehaviors();
+
+        dataInteractions.forEach(FaucetBlockTile::registerInteraction);
+
         FaucetBlockTile.registerInteraction(new SoftFluidProviderInteraction());
         FaucetBlockTile.registerInteraction(new WaterCauldronInteraction());
         FaucetBlockTile.registerInteraction(new FullBucketCauldronInteraction(Blocks.LAVA_CAULDRON.defaultBlockState(), Items.LAVA_BUCKET.getDefaultInstance()));
@@ -98,7 +101,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
         if (CompatHandler.AUTUMNITY) FaucetBlockTile.registerInteraction(new SappyLogInteraction());
         //if (CompatHandler.FARMERS_RESPRITE) FaucetBlockTile.registerInteraction(new KettleInteraction());
 
-        BlockTestLevel testLevel = BlockTestLevel.get(registryAccess);
+        BlockTestLevel testLevel = BlockTestLevel.get(level);
         Player player = FakePlayerManager.getDefault(testLevel);
         InteractionHand hand = InteractionHand.MAIN_HAND;
         BlockState emptyCauldron = Blocks.CAULDRON.defaultBlockState();
@@ -124,6 +127,7 @@ public class FaucetBehaviorsManager extends RegistryAccessJsonReloadListener {
 
         }
 
+        FakeLevelManager.invalidate(testLevel);
         listeners.forEach(Runnable::run);
     }
 

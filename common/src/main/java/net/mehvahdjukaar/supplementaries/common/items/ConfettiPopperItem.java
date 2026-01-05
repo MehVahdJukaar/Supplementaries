@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
@@ -68,7 +67,7 @@ public class ConfettiPopperItem extends Item {
         return super.interactLivingEntity(stack, player, entity, usedHand);
     }
 
-    @PlatformOnly(PlatformOnly.FORGE)
+    @ForgeOverride
     public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
         return EquipmentSlot.HEAD;
     }

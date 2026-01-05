@@ -39,7 +39,6 @@ public class BasaltAshFeature extends Feature<Config> {
         BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 
         // Set<Pair<Integer, Integer>> blacklist = new HashSet<>();
-
         for (int l = 0; l < tries; ++l) {
             mutableBlockPos.setWithOffset(blockPos, randomSource.nextInt(xzSpread) - randomSource.nextInt(xzSpread), 0, randomSource.nextInt(xzSpread) - randomSource.nextInt(xzSpread));
 

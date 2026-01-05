@@ -15,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 
 public class EndermanHeadItemRenderer extends ItemStackRenderer {
 
-
     private final EndermanSkullBlockTile dummyTile;
 
     public EndermanHeadItemRenderer() {

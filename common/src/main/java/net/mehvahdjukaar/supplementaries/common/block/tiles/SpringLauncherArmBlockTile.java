@@ -216,5 +216,7 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
     public void retractOnFallOn() {
         this.age = 1;
         this.offset = -0.5;
+        level.setBlockAndUpdate(worldPosition, getBlockState());
+        this.setChanged();
     }
 }

@@ -3,6 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -13,12 +15,15 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBe
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -32,8 +37,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
@@ -60,6 +67,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -82,12 +90,23 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         super(properties);
     }
 
+    public static void clearBehaviors() {
+        FIRE_BEHAVIORS.clear();
+    }
+
     public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
         FIRE_BEHAVIORS.put(pItem.asItem(), pBehavior);
     }
 
     public static IFireItemBehavior getCannonBehavior(ItemLike item) {
         return FIRE_BEHAVIORS.getOrDefault(item, DEFAULT);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, @Nullable BlockGetter blockGetter, List<Component> list, TooltipFlag tooltipFlag) {
+        super.appendHoverText(itemStack, blockGetter, list, tooltipFlag);
+        if (!MiscUtils.showsHints(blockGetter, tooltipFlag)) return;
+        list.add((Component.translatable("message.supplementaries.cannon")).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC));
     }
 
     @Nullable
@@ -286,6 +305,16 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
     @Override
+    public boolean hasAnalogOutputSignal(BlockState blockState) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(blockPos));
+    }
+
+    @Override
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
         if (id > 1) return false;
         if (!level.isClientSide) return true;
@@ -310,6 +339,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         return false;
     }
 
+    @Environment(value = EnvType.CLIENT)
     private static void playIgniteEffects(BlockPos pos, Level level, PoseStack poseStack) {
         Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.75f, 1));
 
@@ -321,6 +351,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     }
 
 
+    @Environment(value = EnvType.CLIENT)
     private void playFiringEffects(BlockPos pos, Level level, PoseStack poseStack, float pitch, float yaw, int power) {
         level.addParticle(ModParticles.CANNON_FIRE_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                 pitch * Mth.DEG_TO_RAD, -yaw * Mth.DEG_TO_RAD, 0);
@@ -336,6 +367,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                 soundVolume, soundPitch, false);
     }
 
+    @Environment(value = EnvType.CLIENT)
     private void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran) {
         int smokeCount = 40;
         for (int i = 0; i < smokeCount; i += 1) {
@@ -356,6 +388,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         }
     }
 
+    @Environment(value = EnvType.CLIENT)
     private void spawnDustRing(Level level, PoseStack poseStack) {
         poseStack.pushPose();
 

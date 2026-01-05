@@ -1,5 +1,6 @@
 {
-  "force_fluid": "minecraft:water","fish_index": 39,
+  "force_fluid": "minecraft:water",
+  "fish_index": 38,
   "height_increment": 0.0,
   "owners": [
     "betteranimalsplus:eel_saltwater"

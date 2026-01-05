@@ -1,0 +1,11 @@
+{
+  "items": [
+    "minecraft:skeleton_skull",
+    "minecraft:wither_skeleton_skull"
+  ],
+    "entity_types": [
+        "minecraft:skeleton",
+        "minecraft:wither_skeleton"
+    ],
+  "shader": "supplementaries:black_and_white"
+}

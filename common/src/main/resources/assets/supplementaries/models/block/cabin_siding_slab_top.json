@@ -1,0 +1,23 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/slab_top",
+	"textures": {
+		"particle": "supplementaries:block/cabin_siding_side",
+		"side_2": "supplementaries:block/cabin_siding_end",
+		"top": "supplementaries:block/cabin_siding_side"
+	},
+	"elements": [
+		{
+			"from": [0, 8, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 8], "texture": "#side_2", "cullface": "north"},
+				"east": {"uv": [0, 0, 8, 16], "rotation": 90, "texture": "#top", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 8], "texture": "#side_2", "cullface": "south"},
+				"west": {"uv": [0, 0, 8, 16], "rotation": 90, "texture": "#top", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#top", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#top"}
+			}
+		}
+	]
+}

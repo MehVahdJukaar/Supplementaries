@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"minecraft:bamboo_stalk","required":false},
+    {"id":"minecraft:bamboo","required":false}
+  ]
+}

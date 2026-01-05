@@ -9,6 +9,15 @@
     ],
     "subtitle": "subtitles.entity.enderman.teleport"
   },
+  "block.awning.bounce": {
+    "sounds": [
+      "supplementaries:block/awning_bounce_0",
+      "supplementaries:item/awning_bounce_1",
+      "supplementaries:item/awning_bounce_2",
+      "supplementaries:item/awning_bounce_3"
+    ],
+    "subtitle": "subtitles.supplementaries.entity.bounce"
+  },
   "entity.cannonball.break": {
     "sounds": [
       "block/copper/break1",
@@ -57,7 +66,7 @@
         "volume": 0.95
       }
     ],
-    "subtitle": "subtitles.supplementaries.cannonball.bounce"
+    "subtitle": "subtitles.supplementaries.entity.bounce"
   },
   "entity.brick.throw": {
     "sounds": [
@@ -79,7 +88,7 @@
       "mob/slime/small4",
       "mob/slime/small5"
     ],
-    "subtitle": "subtitles.supplementaries.slimeball.bounce"
+    "subtitle": "subtitles.supplementaries.entity.bounce"
   },
   "entity.slimed": {
     "sounds": [
@@ -108,6 +117,14 @@
       {
         "name": "supplementaries:block/tom",
         "stream": true
+      }
+    ]
+  },
+  "item.aeugh": {
+    "subtitle": "subtitles.supplementaries.aeugh",
+    "sounds": [
+      {
+        "name": "supplementaries:item/aeugh"
       }
     ]
   },
@@ -195,10 +212,10 @@
       }
     ]
   },
-  "music.avast": {
+  "music.heave_ho": {
     "sounds": [
       {
-        "name": "supplementaries:music/avast",
+        "name": "supplementaries:music/heave_ho",
         "stream": true
       }
     ]
@@ -331,7 +348,6 @@
     "subtitle": "subtitles.block.generic.hit"
   },
   "block.rope.slide": {
-    "subtitle": "subtitles.supplementaries.rope.slide",
     "sounds": [
       "supplementaries:block/rope_slide"
     ]

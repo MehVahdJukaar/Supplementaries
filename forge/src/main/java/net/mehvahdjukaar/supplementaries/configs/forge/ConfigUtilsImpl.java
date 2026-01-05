@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.forge.configured.ModConfigSelectScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraftforge.registries.ForgeRegistries;

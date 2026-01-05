@@ -52,6 +52,19 @@ public class FirePitBlock extends LightUpWaterBlock {
         this.registerDefaultState(this.defaultBlockState().setValue(HANGING, false));
     }
 
+    @ForgeOverride
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+        else return null;
+    }
+
+    @ForgeOverride
+    public @Nullable BlockPathTypes getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, BlockPathTypes originalType) {
+        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+        else return null;
+    }
+
+
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (state.getValue(LIT) && entity instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entity)) {
@@ -120,12 +133,6 @@ public class FirePitBlock extends LightUpWaterBlock {
     @Override
     public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
         return false;
-    }
-
-    @ForgeOverride
-    @Nullable
-    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob entity) {
-        return isLitUp(state, level, pos) ? BlockPathTypes.DAMAGE_FIRE : null;
     }
 
     @Override

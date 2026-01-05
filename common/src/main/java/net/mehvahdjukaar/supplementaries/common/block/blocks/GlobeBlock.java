@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.StatueBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -103,6 +104,15 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        var stack = super.getCloneItemStack(level, pos, state);
+        if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile && tile.hasCustomName()) {
+            stack.setHoverName(tile.getCustomName());
+        }
+        return stack;
+    }
+
+    @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile) {
@@ -112,8 +122,8 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
                 tile.setChanged();
                 level.sendBlockUpdated(pos, state, state, 3);
                 level.playSound(player, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1, 1);
-                if (level.isClientSide) {
-                    level.addDestroyBlockEffect(pos, state);
+                if (!level.isClientSide) {
+                    level.blockEvent(pos, state.getBlock(), 2, 0);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -207,6 +217,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
         super.triggerEvent(state, world, pos, eventID, eventParam);
         BlockEntity tile = world.getBlockEntity(pos);
+
         return tile != null && tile.triggerEvent(eventID, eventParam);
     }
 

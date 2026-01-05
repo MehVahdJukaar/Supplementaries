@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import java.util.LinkedList;
 
+//@Deprecated(forRemoval = true)
 public class CircularList<T> extends LinkedList<T> {
 
     private final int size;

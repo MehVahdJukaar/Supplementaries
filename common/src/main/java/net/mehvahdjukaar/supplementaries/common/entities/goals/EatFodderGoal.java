@@ -112,11 +112,11 @@ public class EatFodderGoal extends MoveToBlockGoal {
             this.mob.getLookControl().setLookAt(vector3d.x(), vector3d.y(), vector3d.z());
             if (this.ticksSinceReachedGoal > 0) {
 
-                if (!level.isClientSide && ticksSinceReachedGoal % 2 == 0) {
+                if (level instanceof ServerLevel sl && ticksSinceReachedGoal % 2 == 0) {
 
-                    ((ServerLevel) level).sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, FODDER_STATE),
+                    sl.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, FODDER_STATE),
                             targetPos.getX() + 0.5D, targetPos.getY() + 0.7D, targetPos.getZ() + 0.5D, 3,
-                            (random.nextFloat() - 0.5D) * 0.08D, (random.nextFloat() - 0.5D) * 0.08D, ( random.nextFloat() - 0.5D) * 0.08D, 0.15F);
+                            (random.nextFloat() - 0.5D) * 0.08D, (random.nextFloat() - 0.5D) * 0.08D, (random.nextFloat() - 0.5D) * 0.08D, 0.15F);
                 }
             }
             if (this.ticksSinceReachedGoal == 1 && this.animal instanceof Sheep) {
@@ -141,8 +141,8 @@ public class EatFodderGoal extends MoveToBlockGoal {
                     } else {
                         level.destroyBlock(targetPos, false);
                     }
-                    if (!level.isClientSide) {
-                        ((ServerLevel) level).sendParticles(ParticleTypes.HAPPY_VILLAGER,
+                    if (level instanceof ServerLevel sl) {
+                        sl.sendParticles(ParticleTypes.HAPPY_VILLAGER,
                                 this.animal.getX(), this.animal.getY(), this.animal.getZ(), 5,
                                 this.animal.getBbWidth() / 2f, this.animal.getBbHeight() / 2f, this.animal.getBbWidth() / 2f, 0);
                     }

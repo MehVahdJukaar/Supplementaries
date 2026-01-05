@@ -23,7 +23,7 @@ public class FluidsUtilImpl {
     }
 
     @org.jetbrains.annotations.Contract
-    public static SoftFluidStack getFluidInTank(Level level, BlockPos pos, Direction dir, BlockEntity source) {
-        return SoftFluidStack.empty();
+    public static FluidOffer getFluidInTank(Level level, BlockPos pos, Direction dir, BlockEntity source) {
+        return null;
     }
 }

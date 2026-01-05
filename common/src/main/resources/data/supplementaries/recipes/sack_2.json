@@ -8,6 +8,13 @@
       }
     },
     {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "farmersdelight"
+      }
+    },
+    {
       "type": "supplementaries:flag",
       "flag": "sack"
     }

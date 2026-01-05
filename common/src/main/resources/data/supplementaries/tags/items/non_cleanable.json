@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#minecraft:glazed_terracotta","required":false},
+    {"id":"#botania:tall_mystical_flower","required":false},
+    {"id":"#botania:mystical_flower","required":false},
+    {"id":"#botania:petal_block","required":false},
+    {"id":"#botania:floating_flower","required":false},
+    {"id":"#botania:mushroom","required":false},
+    {"id":"#mna:chimerite_crystal","required":false},
+    {"id":"#morered:network_cable","required":false},
+    {"id":"#xycraft_world:glowing_shiny_aurey_block","required":false},
+    {"id":"#xycraft_world:shiny_aurey_block","required":false},
+    {"id":"#xycraft_world:rgb_lamp","required":false},
+    {"id":"#xycraft_world:glowing_rgb_viewer","required":false},
+    {"id":"#xycraft_world:glowing_matte_rgb_block","required":false},
+    {"id":"#xycraft_world:rgb_lamp_pole","required":false}
+  ]
+}

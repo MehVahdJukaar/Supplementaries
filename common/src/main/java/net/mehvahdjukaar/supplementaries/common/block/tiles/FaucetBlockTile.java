@@ -15,10 +15,12 @@ import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -50,7 +52,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     private static final List<FaucetTarget.Tile> TARGET_TILE_INTERACTIONS = new ArrayList<>();
     private static final List<FaucetTarget.Fluid> TARGET_FLUID_INTERACTIONS = new ArrayList<>();
 
-    public static final ModelDataKey<SoftFluid> FLUID = ModBlockProperties.FLUID;
+    public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID = ModBlockProperties.FLUID;
     public static final ModelDataKey<Integer> FLUID_COLOR = ModBlockProperties.FLUID_COLOR;
     public static final int COOLDOWN_PER_BOTTLE = 20;
 
@@ -64,12 +66,11 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
-        int color = -1;
-        if (level != null) {
-            color = tempFluidHolder.getCachedFlowingColor(level, worldPosition);
+        if (level != null && !tempFluidHolder.isEmpty()) {
+            int color = tempFluidHolder.getCachedFlowingColor(level, worldPosition);
+            builder.with(FLUID, tempFluidHolder.getFluid().fluidKey());
+            builder.with(FLUID_COLOR, color);
         }
-        builder.with(FLUID, tempFluidHolder.getFluidValue());
-        builder.with(FLUID_COLOR, color);
     }
 
     public void updateLight() {
@@ -95,7 +96,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         }
     }
 
-    //------fluids------
+//------fluids------
 
     //returns true if it has water animation
     public boolean updateContainedFluidVisuals(Level level, BlockPos pos, BlockState state) {
@@ -112,8 +113,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         Direction dir = state.getValue(FaucetBlock.FACING);
         BlockPos behind = pos.relative(dir.getOpposite());
         BlockState backState = level.getBlockState(behind);
-        this.tempFluidHolder.clear();
-        if (backState.isAir()) return 0;
+        if (backState.isAir() || backState.is(ModTags.FAUCET_CANT_INTERACT)) return 0;
         Integer filledAmount = runInteractions(BLOCK_INTERACTIONS, level, dir, behind, backState, justVisual);
         if (filledAmount != null) return filledAmount;
 
@@ -196,7 +196,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         return null;
     }
 
-    //------end-fluids------
+//------end-fluids------
 
     public boolean isOpen() {
         return (this.getBlockState().getValue(BlockStateProperties.POWERED) ^ this.getBlockState().getValue(BlockStateProperties.ENABLED));
@@ -210,7 +210,7 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         return this.getBlockState().getValue(FaucetBlock.CONNECTED);
     }
 
-    //------items------
+//------items------
 
     private void drop(ItemStack extracted) {
         BlockPos pos = worldPosition;

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import net.mehvahdjukaar.moonlight.api.block.ModStairBlock;
 import net.mehvahdjukaar.moonlight.api.item.WoodBasedBlockItem;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
@@ -157,6 +159,14 @@ public class ModRegistry {
             LUNCH_BASKET_NAME, () -> PlatHelper.newBlockEntityType(
                     LunchBoxBlockTile::new, LUNCH_BASKET.get()));
 
+    public static final Supplier<BannerPattern> DRAGON_PATTER = RegHelper.register(
+            res("dragon"), () -> new BannerPattern("supplementaries:dragon"), Registries.BANNER_PATTERN
+    );
+
+    public static final Supplier<Item> DRAGON_PATTERN_ITEM = regItem(DRAGON_PATTERN_NAME,
+            () -> new BannerPatternItem(ModTags.PATTERN_ITEM_DRAGON, (new Item.Properties())
+                    .stacksTo(1).rarity(Rarity.RARE)));
+
 
     //speedometer
     //   public static final Supplier<Item> SPEEDOMETER_ITEM = regItem(SPEEDOMETER_NAME,()-> new SpeedometerItem(new Item.Properties()));
@@ -172,16 +182,18 @@ public class ModRegistry {
 
     //sign posts
     public static final Supplier<Block> SIGN_POST = regBlock(SIGN_POST_NAME, () -> {
-        var p = BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)
-                .strength(2f, 3f)
-                .sound(SoundType.WOOD)
-                .noOcclusion();
-        return /*CompatHandler.create ? SchematicCannonStuff.makeSignPost(p) :*/ new SignPostBlock(p);
+        var p = BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS);
+        return new SignPostBlock(p);
+    });
+
+    public static final Supplier<Block> SIGN_POST_WALL = regBlock(SIGN_POST_NAME + "_wall", () -> {
+        var p = BlockBehaviour.Properties.copy(Blocks.OAK_SIGN);
+        return new SignPostWallBlock(p);
     });
 
     public static final Supplier<BlockEntityType<SignPostBlockTile>> SIGN_POST_TILE = regTile(
             SIGN_POST_NAME, () -> PlatHelper.newBlockEntityType(
-                    SignPostBlockTile::new, SIGN_POST.get()));
+                    SignPostBlockTile::new, SIGN_POST.get(), SIGN_POST_WALL.get()));
 
     public static final Map<WoodType, SignPostItem> SIGN_POST_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
 
@@ -241,6 +253,16 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<NoticeBoardBlockTile>> NOTICE_BOARD_TILE = regTile(
             NOTICE_BOARD_NAME, () -> PlatHelper.newBlockEntityType(
                     NoticeBoardBlockTile::new, NOTICE_BOARD.get()));
+
+    public static final Supplier<Block> FINE_WOOD = regWithItem(FINE_WOOD_NAME, () -> new RotatedPillarBlock(
+                    BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
+            300);
+    public static final Supplier<Block> FINE_WOOD_STAIRS = regWithItem(FINE_WOOD_NAME + "_stairs", () -> new ModStairBlock(
+                    FINE_WOOD, BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
+            300);
+    public static final Supplier<Block> FINE_WOOD_SLAB = regWithItem(FINE_WOOD_NAME + "_slab", () -> new DirectionalSlabBlock(
+                    BlockBehaviour.Properties.copy(Blocks.ACACIA_STAIRS)),
+            300);
 
     //safe
     public static final Supplier<Block> SAFE = regBlock(SAFE_NAME, () -> new SafeBlock(
@@ -346,6 +368,7 @@ public class ModRegistry {
     public static final Supplier<Block> SCONCE = regBlock(SCONCE_NAME, () -> new SconceBlock(
             BlockBehaviour.Properties.of()
                     .noCollission()
+                    .noOcclusion()
                     .pushReaction(PushReaction.DESTROY)
                     .instabreak()
                     .sound(SoundType.LANTERN),
@@ -741,8 +764,8 @@ public class ModRegistry {
                     .sound(SoundType.WOOL))
     );
 
-    public static final Supplier<Item> AVAST_DISC = regItem(AVAST_DISC_NAME, () -> PlatHelper.newMusicDisc(15,
-            ModSounds.AVAST_MUSIC, new Item.Properties()
+    public static final Supplier<Item> PIRATE_DISC = regItem(PIRATE_DISC_NAME, () -> PlatHelper.newMusicDisc(15,
+            ModSounds.PIRATE_MUSIC, new Item.Properties()
                     .stacksTo(1)
                     .rarity(Rarity.RARE),
             20 * 60 * 3));
@@ -1033,7 +1056,7 @@ public class ModRegistry {
                     .isRedstoneConductor(NEVER)
                     .isViewBlocking(NEVER)
                     .noOcclusion()
-                    ));
+    ));
 
     public static final Supplier<BlockEntityType<CannonBlockTile>> CANNON_TILE = regTile(
             CANNON_NAME, () -> PlatHelper.newBlockEntityType(
@@ -1042,7 +1065,7 @@ public class ModRegistry {
     //cannonball
     public static final Supplier<Block> CANNONBALL = regBlock(CANNONBALL_NAME, () -> new CannonBallBlock(
             BlockBehaviour.Properties.copy(Blocks.ANVIL)
-                    .strength(5,6)
+                    .strength(5, 6)
                     .sound(SoundType.COPPER)
                     .isSuffocating(NEVER)
                     .isRedstoneConductor(NEVER)

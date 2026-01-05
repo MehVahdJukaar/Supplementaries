@@ -24,6 +24,7 @@ dependencies {
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
     annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
+    modImplementation ("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
 
     modImplementation("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
@@ -38,23 +39,28 @@ dependencies {
     modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
     modCompileOnly("curse.maven:curios-309927:4581099")
     modCompileOnly("curse.maven:jade-324717:4801177")
-    modCompileOnly("curse.maven:emi-580555:5032425")
-    modCompileOnly("curse.maven:create-328085:4835191")
+    modCompileOnly("curse.maven:emi-580555:6362009")
     modCompileOnly("curse.maven:quark-243121:5378961")
     modCompileOnly("curse.maven:zeta-968868:5597406")
-    modCompileOnly("com.jozufozu.flywheel:flywheel-forge-${flywheel_version}")
+
+    modCompileOnly ("dev.engine-room.flywheel:flywheel-forge-${flywheel_forge_version}")
+    modCompileOnly("curse.maven:create-328085:6323270")
+    modCompileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
+    modCompileOnly("net.createmod.ponder:Ponder-Forge-${ponder_version}")
+
     modImplementation("curse.maven:farmers-delight-398521:5051242")
     modImplementation("curse.maven:soul-fire-d-662413:5448803")
-
-    //modImplementation("curse.maven:selene-common:499980:5651445")
-    modImplementation ("net.mehvahdjukaar:moonlight:${moonlight_version}")
+    modCompileOnly("curse.maven:blueprint-382216:5292242")
+    modCompileOnly("curse.maven:environmental-388992:6060255")
+    modImplementation ("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
     modImplementation("curse.maven:immediatelyfast-686911:4937545")
     modImplementation("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge")
     modImplementation("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("curse.maven:buzzier-bees-355458:4776328")
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
-    modImplementation ("curse.maven:amendments-896746:5692774")
-
+    modImplementation ("curse.maven:amendments-896746:6858616")
+    modImplementation ("curse.maven:appleskin-248787:4770828")
+    modCompileOnly("com.misterpemodder:shulkerboxtooltip-common:${shulker_box_tooltip_version}") { transitive false }
 }
 
 publishing {
@@ -63,9 +69,5 @@ publishing {
             artifactId = rootProject.mod_id
             from components.java
         }
-    }
-
-    repositories {
-        // Add repositories to publish to here.
     }
 }

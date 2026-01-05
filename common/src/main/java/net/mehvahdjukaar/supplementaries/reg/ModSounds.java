@@ -21,9 +21,10 @@ public class ModSounds {
     public static final Supplier<SoundEvent> CLOCK_TICK_2 = regSound("block.clock.tick_2");
     public static final Supplier<SoundEvent> BOMB_EXPLOSION = regSound("item.bomb");
     public static final Supplier<SoundEvent> PANCAKE_MUSIC = regSound("music.pancake");
-    public static final Supplier<SoundEvent> AVAST_MUSIC = regSound("music.avast");
+    public static final Supplier<SoundEvent> PIRATE_MUSIC = regSound("music.heave_ho");
     public static final Supplier<SoundEvent> GUNPOWDER_IGNITE = regSound("block.gunpowder.ignite");
     public static final Supplier<SoundEvent> CRANK = regSound("block.crank");
+    public static final Supplier<SoundEvent> AEUGH = regSound("item.aeugh");
 
     public static final Supplier<SoundEvent> BLOCK_ROTATE = regSound("block.rotate");
 
@@ -42,6 +43,8 @@ public class ModSounds {
     public static final Supplier<SoundEvent> BRICK_THROW = regSound("entity.brick.throw");
 
     public static final Supplier<SoundEvent> SOAP_WASH = regSound("item.soap.wash");
+
+    public static final Supplier<SoundEvent> AWNING_BOUNCES = regSound("block.awning.bounce");
 
     public static final Supplier<SoundEvent> PRESENT_BREAK = regSound("block.present.break");
     public static final Supplier<SoundEvent> PRESENT_PLACE = regSound("block.present.place");

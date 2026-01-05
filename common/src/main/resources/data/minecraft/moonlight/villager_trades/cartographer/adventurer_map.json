@@ -1,7 +1,7 @@
 {
   "global_conditions": [
     {
-      "flag": "adventurer_maps",
+      "flag": "random_adventurer_maps",
       "type": "supplementaries:flag"
     }
   ],

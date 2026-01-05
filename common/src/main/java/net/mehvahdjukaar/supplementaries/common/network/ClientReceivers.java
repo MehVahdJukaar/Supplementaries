@@ -112,6 +112,11 @@ public class ClientReceivers {
                             ParticleTypes.WAX_ON,
                             UniformInt.of(3, 5), 0.01f);
                 }
+                case GLOW_ON -> {
+                    ParticleUtil.spawnParticleOnBlockShape(l, BlockPos.containing(message.pos),
+                            ParticleTypes.GLOW,
+                            UniformInt.of(3, 5), 0.01f);
+                }
                 case BUBBLE_CLEAN_ENTITY -> {
                     if (message.extraData != null) {
                         var e = l.getEntity(message.extraData);
@@ -177,23 +182,7 @@ public class ClientReceivers {
                     }
                 }
                 case CONFETTI -> {
-                    float spread = 0.1f;
-                    var dir = message.dir;
-                    var pos = message.pos;
-                    float scale = message.extraData != null ? (message.extraData + 1) * 0.8f : 1;
-                    for (int j = 0; j < 60; ++j) {
-
-                        Vector3f facingDir = randomizeVector(ran, dir, spread)
-                                .mul(scale * Mth.nextFloat(ran, 0.3f, 0.7f));
-                        SimpleParticleType p = ran.nextInt(6) == 0 ?
-                                ModParticles.STREAMER_PARTICLE.get() :
-                                ModParticles.CONFETTI_PARTICLE.get();
-                        l.addParticle(p, pos.x, pos.y, pos.z,
-                                facingDir.x, facingDir.y, facingDir.z);
-                    }
-
-                    l.playLocalSound(message.pos.x, message.pos.y, message.pos.z, ModSounds.CONFETTI_POPPER.get(),
-                            SoundSource.PLAYERS, 1.0f, ran.nextFloat() * 0.2F + 0.8F, false);
+                    spawnConfettiParticles(message, l, ran);
                 }
                 case CONFETTI_EXPLOSION -> {
                     int radius = message.extraData;
@@ -247,6 +236,26 @@ public class ClientReceivers {
                 }
             }
         });
+    }
+
+    public static void spawnConfettiParticles(ClientBoundParticlePacket message, Level l, RandomSource ran) {
+        float spread = 0.1f;
+        var dir = message.dir;
+        var pos = message.pos;
+        float scale = message.extraData != null ? (message.extraData + 1) * 0.8f : 1;
+        for (int j = 0; j < 60; ++j) {
+
+            Vector3f facingDir = randomizeVector(ran, dir, spread)
+                    .mul(scale * Mth.nextFloat(ran, 0.3f, 0.7f));
+            SimpleParticleType p = ran.nextInt(6) == 0 ?
+                    ModParticles.STREAMER_PARTICLE.get() :
+                    ModParticles.CONFETTI_PARTICLE.get();
+            l.addParticle(p, pos.x, pos.y, pos.z,
+                    facingDir.x, facingDir.y, facingDir.z);
+        }
+
+        l.playLocalSound(message.pos.x, message.pos.y, message.pos.z, ModSounds.CONFETTI_POPPER.get(),
+                SoundSource.PLAYERS, 1.0f, ran.nextFloat() * 0.2F + 0.8F, false);
     }
 
     public static void handleSetSlidingBlockEntityPacket(ClientBoundSetSlidingBlockEntityPacket m) {
@@ -332,11 +341,11 @@ public class ClientReceivers {
         });
     }
 
-    public static void handleSyncQuiverPacket(SyncSkellyQuiverPacket message) {
+    public static void handleSyncQuiverPacket(SyncEquippedQuiverPacket message) {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.entityID);
             if (e instanceof IQuiverEntity qe) {
-                qe.supplementaries$setQuiver(message.on ? ModRegistry.QUIVER_ITEM.get().getDefaultInstance() : ItemStack.EMPTY);
+                qe.supplementaries$setQuiver(message.quiver);
             }
         });
     }

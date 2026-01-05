@@ -33,6 +33,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class BubbleBlock extends Block implements EntityBlock {
+
     public BubbleBlock(Properties properties) {
         super(properties);
     }
@@ -78,7 +79,7 @@ public class BubbleBlock extends Block implements EntityBlock {
         playBreakSound(state, level, pos, player);
     }
 
-    private void playBreakSound(BlockState state, Level level, BlockPos pos, Player player) {
+    private static void playBreakSound(BlockState state, Level level, BlockPos pos, Player player) {
         SoundType soundtype = state.getSoundType();
         level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
     }
@@ -92,15 +93,17 @@ public class BubbleBlock extends Block implements EntityBlock {
         level.addParticle(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
     }
 
-    public void sendParticles(BlockPos pos, ServerLevel level) {
+    public static void sendParticles(BlockPos pos, ServerLevel level) {
         level.sendParticles(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                 1, 0, 0, 0, 0);
     }
 
-    public void breakBubble(ServerLevel level, BlockPos pos, BlockState state) {
-        level.removeBlock(pos, false);
-        sendParticles(pos, level);
-        playBreakSound(state, level, pos, null);
+    public static void breakBubble(Level level, BlockPos pos, BlockState state) {
+        if (level instanceof ServerLevel sl) {
+            level.removeBlock(pos, false);
+            sendParticles(pos, sl);
+            playBreakSound(state, level, pos, null);
+        }
     }
 
     @Override
@@ -114,7 +117,7 @@ public class BubbleBlock extends Block implements EntityBlock {
         super.fallOn(level, state, pos, entity, v);
         if (!level.isClientSide && CommonConfigs.Tools.BUBBLE_BREAK.get()) {
             if (canPopBubble(entity)) {
-                if (v > 3) breakBubble((ServerLevel) level, pos, state);
+                if (v > 3) breakBubble(level, pos, state);
                 else level.scheduleTick(pos, this, (int) Mth.clamp(7 - v / 2, 1, 5));
             }
         }

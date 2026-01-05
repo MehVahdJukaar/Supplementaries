@@ -23,6 +23,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
@@ -35,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 
 public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvider, ISoftFluidTankProvider, IExtraModelDataProvider {
-    public static final ModelDataKey<SoftFluid> FLUID = ModBlockProperties.FLUID;
+    public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID = ModBlockProperties.FLUID;
     public static final ModelDataKey<Float> FILL_LEVEL = ModBlockProperties.FILL_LEVEL;
 
     public final MobContainer mobContainer;
@@ -51,8 +52,10 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
-        builder.with(FLUID, fluidHolder.getFluidValue())
-                .with(FILL_LEVEL, fluidHolder.getHeight(1));
+        if (!fluidHolder.isEmpty()) {
+            builder.with(FLUID, fluidHolder.getFluid().fluidKey())
+                    .with(FILL_LEVEL, fluidHolder.getHeight(1));
+        }
     }
 
     @Override

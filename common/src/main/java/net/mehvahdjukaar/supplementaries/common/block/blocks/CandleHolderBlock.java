@@ -1,14 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMaps;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.minecraft.ChatFormatting;
@@ -46,6 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 //TODO: extinguish sound. same for candle skull & interaction
@@ -63,12 +61,6 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
 
     private static final EnumMap<Direction, EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>>> PARTICLE_OFFSETS;
 
-    private static final List<Vec3> S2_FLOOR_1 = List.of(new Vec3(0.5, 0.6875 + 3 / 16f, 0.5));
-    private static final List<Vec3> S2_FLOOR_3 = List.of(new Vec3(0.1875, 0.9375 - 1 / 16f, 0.5), new Vec3(0.5, 0.9375, 0.5), new Vec3(0.8125, 0.9375 - 1 / 16f, 0.5));
-    private static final List<Vec3> S2_FLOOR_3f = List.of(new Vec3(0.5, 0.9375 - 1 / 16f, 0.1875), new Vec3(0.5, 0.9375, 0.5), new Vec3(0.5, 0.9375 - 1 / 16f, 0.8125));
-    private final Supplier<Boolean> isFromSuppSquared = Suppliers.memoize(() ->
-            !Utils.getID(this).getNamespace().equals(Supplementaries.MOD_ID));
-
     static {
         PARTICLE_OFFSETS = new EnumMap<>(Direction.class);
         EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>> temp = new EnumMap<>(AttachFace.class);
@@ -84,7 +76,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             Int2ObjectMap<List<Vec3>> int2ObjectMap = new Int2ObjectArrayMap<>();
             int2ObjectMap.put(1, List.of(new Vec3(0.5, 0.9375, 0.1875)));
             int2ObjectMap.put(2, List.of(new Vec3(0.3125, 0.9375, 0.1875), new Vec3(0.6875, 0.9375, 0.1875)));
-            int2ObjectMap.put(3, List.of(new Vec3(0.8125, 0.9375, 0.1875), new Vec3(0.1875, 0.9375, 0.1875), new Vec3(0.5, 0.9375, 0.25)));
+            int2ObjectMap.put(3, List.of(new Vec3(0.8125, 0.9375, 0.1875), new Vec3(0.1875, 0.9375, 0.1875), new Vec3(0.5, 0.9375, 0.25 + 1 / 16f)));
             int2ObjectMap.put(4, List.of(new Vec3(0.1875, 1, 0.1875), new Vec3(0.8125, 1, 0.1875), new Vec3(0.3125, 0.875, 0.3125), new Vec3(0.6875, 0.875, 0.3125)));
             temp.put(AttachFace.WALL, Int2ObjectMaps.unmodifiable(int2ObjectMap));
         }
@@ -96,7 +88,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
             int2ObjectMap.put(4, List.of(new Vec3(0.1875, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.1875), new Vec3(0.8125, 0.8125, 0.8125), new Vec3(0.1875, 0.8125, 0.8125)));
             temp.put(AttachFace.CEILING, Int2ObjectMaps.unmodifiable(int2ObjectMap));
         }
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Direction.Plane.HORIZONTAL) {
             EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>> newFaceMap = new EnumMap<>(AttachFace.class);
             for (var faceList : temp.entrySet()) {
                 Int2ObjectMap<List<Vec3>> newCandleList = new Int2ObjectArrayMap<>();
@@ -117,16 +109,39 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         }
     }
 
+    //default offsets
+    public static List<Vec3> getParticleOffsets(BlockState state) {
+        Direction direction = state.getValue(FACING);
+        AttachFace face = state.getValue(FACE);
+        int candles = state.getValue(CANDLES);
+        return PARTICLE_OFFSETS.get(direction).get(face).get(candles);
+    }
+
     @Nullable
     private final DyeColor color;
     private final Supplier<ParticleType<? extends ParticleOptions>> particle;
+    private final Function<BlockState, List<Vec3>> particleOffsets;
 
+    @Deprecated(forRemoval = true)
     public CandleHolderBlock(DyeColor color, Properties properties) {
-        this(color, properties, () -> ParticleTypes.SMALL_FLAME);
+        this(color, properties, () -> ParticleTypes.SMALL_FLAME, CandleHolderBlock::getParticleOffsets);
     }
 
-    public CandleHolderBlock(DyeColor color, Properties properties, Supplier<ParticleType<? extends ParticleOptions>> particle) {
+    @Deprecated(forRemoval = true)
+    public CandleHolderBlock(@Nullable DyeColor color, Properties properties,
+                             Supplier<ParticleType<? extends ParticleOptions>> particle) {
+        this(color, properties, particle, CandleHolderBlock::getParticleOffsets);
+    }
+
+    public CandleHolderBlock(DyeColor color, Properties properties, Function<BlockState, List<Vec3>> particleOffsets) {
+        this(color, properties, () -> ParticleTypes.SMALL_FLAME, particleOffsets);
+    }
+
+    public CandleHolderBlock(@Nullable DyeColor color, Properties properties,
+                             Supplier<ParticleType<? extends ParticleOptions>> particle,
+                             Function<BlockState, List<Vec3>> particleOffsets) {
         super(properties.lightLevel(CandleHolderBlock::lightLevel));
+        this.particleOffsets = particleOffsets;
         this.color = color;
         this.particle = particle;
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(LIT, false)
@@ -184,10 +199,10 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         return switch (state.getValue(FACE)) {
             case FLOOR -> SHAPE_FLOOR;
             case WALL -> switch (state.getValue(FACING)) {
-                default -> SHAPE_WALL_NORTH;
                 case SOUTH -> SHAPE_WALL_SOUTH;
                 case WEST -> SHAPE_WALL_WEST;
                 case EAST -> SHAPE_WALL_EAST;
+                default -> SHAPE_WALL_NORTH;
             };
             case CEILING -> SHAPE_CEILING;
         };
@@ -224,21 +239,10 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rand) {
         if (state.getValue(LIT)) {
-            getParticleOffset(state).forEach(v -> addParticlesAndSound(level, v.add(pos.getX(), pos.getY(), pos.getZ()), rand));
+            particleOffsets.apply(state).forEach(v -> addParticlesAndSound(level, v.add(pos.getX(), pos.getY(), pos.getZ()), rand));
         }
     }
 
-    private List<Vec3> getParticleOffset(BlockState state) {
-        Direction direction = state.getValue(FACING);
-        AttachFace face = state.getValue(FACE);
-        int candles = state.getValue(CANDLES);
-        var v = PARTICLE_OFFSETS.get(direction).get(face).get(candles);
-        if (isFromSuppSquared.get() && face == AttachFace.FLOOR) {
-            if (candles == 1) return S2_FLOOR_1;
-            if (candles == 3) return direction.getAxis() == Direction.Axis.Z ? S2_FLOOR_3 : S2_FLOOR_3f;
-        }
-        return v;
-    }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -300,7 +304,7 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
 
     @Override
     public void spawnSmokeParticles(BlockState state, BlockPos pos, LevelAccessor level) {
-        ((CandleHolderBlock) state.getBlock()).getParticleOffset(state).forEach(vec3 -> {
+        this.particleOffsets.apply(state).forEach(vec3 -> {
             level.addParticle(ParticleTypes.SMOKE, pos.getX() + vec3.x(), pos.getY() + vec3.y(), pos.getZ() + vec3.z(), 0.0, 0.10000000149011612, 0.0);
         });
     }

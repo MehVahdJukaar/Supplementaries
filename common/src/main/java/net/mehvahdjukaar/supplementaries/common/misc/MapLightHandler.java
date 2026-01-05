@@ -179,7 +179,7 @@ public class MapLightHandler {
 
         @Override
         public boolean persistOnCopyOrLock() {
-            return false;
+            return true;
         }
 
         @Override

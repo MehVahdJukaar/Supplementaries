@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration.create;
 
+import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
-import com.simibubi.create.content.redstone.displayLink.target.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.target.DisplayTargetStats;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
+import net.mehvahdjukaar.supplementaries.common.block.TextHolder;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
@@ -15,9 +17,8 @@ public class TextHolderDisplayTarget extends DisplayTarget {
     public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
         BlockEntity te = context.getTargetBlockEntity();
         if (te instanceof ITextHolderProvider th) {
-            var textHolder = th.getTextHolder();
+            TextHolder textHolder = th.getTextHolder();
             boolean changed = false;
-
             for (int i = 0; i < text.size() && i + line < textHolder.size(); ++i) {
                 if (i == 0) {
                     reserve(i + line, te, context);
@@ -36,7 +37,7 @@ public class TextHolderDisplayTarget extends DisplayTarget {
 
     @Override
     public DisplayTargetStats provideStats(DisplayLinkContext context) {
-        var textHolder = ((ITextHolderProvider) context.getTargetBlockEntity()).getTextHolder();
+        TextHolder textHolder = ((ITextHolderProvider) context.getTargetBlockEntity()).getTextHolder();
         return new DisplayTargetStats(textHolder.size(), textHolder.getMaxLineCharacters(), this);
     }
 }

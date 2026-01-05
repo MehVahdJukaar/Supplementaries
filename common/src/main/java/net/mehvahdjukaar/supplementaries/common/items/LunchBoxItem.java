@@ -12,7 +12,9 @@ import net.mehvahdjukaar.supplementaries.client.renderers.items.LunchBoxItemRend
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.LivingEntityAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -47,12 +49,10 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             addClientTooltip(list);
         }
         Data data = this.getData(pStack);
-        if (data != null) {
-            boolean open = data.canEatFrom();
-            list.add(open ?
-                    Component.translatable("message.supplementaries.lunch_box.tooltip.open") :
-                    Component.translatable("message.supplementaries.lunch_box.tooltip.closed"));
-        }
+        boolean open = data.canEatFrom();
+        list.add(open ?
+                Component.translatable("message.supplementaries.lunch_box.tooltip.open") :
+                Component.translatable("message.supplementaries.lunch_box.tooltip.closed"));
 
     }
 
@@ -65,23 +65,22 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
-        var data = getData(stack);
+        ItemStack basket = player.getItemInHand(hand);
+        var data = getData(basket);
         if (data.canEatFrom()) {
             ItemStack food = data.getSelected();
             if (food.isEmpty()) {
-                return InteractionResultHolder.fail(stack);
+                return InteractionResultHolder.fail(basket);
             }
-            if (food.isEdible()) {
-                if (player.canEat(SuppPlatformStuff.getFoodProperties(food, player).canAlwaysEat())) {
-                    player.startUsingItem(hand);
-                    return InteractionResultHolder.consume(stack);
-                } else {
-                    return InteractionResultHolder.fail(stack);
-                }
-            }
+            player.setItemInHand(hand, food);
+            //takes care of instant uses. Normally doesnt happen with food but we never know
+            var result = food.use(pLevel, player, hand);
+            ItemStack resItem = result.getObject();
+            swapWithSelected(player, resItem, data, food);
+            ((LivingEntityAccessor) player).setUseItem(basket);
+            player.setItemInHand(hand, basket);
 
-            return InteractionResultHolder.pass(stack);
+            return new InteractionResultHolder<>(result.getResult(), basket);
         }
         return super.use(pLevel, player, hand);
     }
@@ -136,6 +135,8 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return super.getUseAnimation(stack);
     }
 
+
+
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
         var data = getData(stack);
@@ -144,20 +145,36 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             //assume it will be decremented by at most 1
             //hacks
             ItemStack copy = selected.copyWithCount(1);
-            ItemStack result = copy.finishUsingItem(level, livingEntity);
-            if (result.isEmpty()) {
-                data.consumeSelected();
-            } else if (result != copy) {
-                data.consumeSelected();
-                ItemStack remaining = data.tryAdding(result);
-
-                if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
-                    p.drop(remaining, false);
-                }
-            }
+            ItemStack result = SuppPlatformStuff.finishUsingItem(copy, level, livingEntity);
+            //livingEntity.releaseUsingItem();
+            swapWithSelected(livingEntity, result, data, selected);
             return stack;
         }
         return super.finishUsingItem(stack, level, livingEntity);
+    }
+
+    @ForgeOverride
+    public void onStopUsing(ItemStack stack, LivingEntity entity, int count){
+        var data = getData(stack);
+        if (data.canEatFrom()) {
+            ItemStack selected = data.getSelected();
+            //same as in here
+            //entity.releaseUsingItem();
+            SuppPlatformStuff.releaseUsingItem(selected, entity);
+        }
+    }
+
+    private static void swapWithSelected(LivingEntity livingEntity, ItemStack result, Data data, ItemStack original) {
+        if (result.isEmpty()) {
+            data.consumeSelected();
+        } else if (!ItemStack.isSameItemSameTags(result,original)) {
+            data.consumeSelected();
+            ItemStack remaining = data.tryAdding(result);
+
+            if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
+                p.drop(remaining, false);
+            }
+        }
     }
 
     @Override
@@ -177,33 +194,36 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         return CommonConfigs.Tools.LUNCH_BOX_SLOTS.get();
     }
 
+    @NotNull
     @Override
     public Data getData(ItemStack stack) {
-        return getLunchBoxData(stack);
+        return getLunchBoxDataOrThrow(stack);
     }
 
-    @Override
-    public @NotNull ItemStack getFirstInInventory(Player player) {
-        return getLunchBox(player);
+    @ExpectPlatform
+    public static Data getLunchBoxDataOrThrow(ItemStack stack) {
+        throw new AssertionError();
     }
 
+    @Nullable
     @ExpectPlatform
     public static Data getLunchBoxData(ItemStack stack) {
         throw new AssertionError();
     }
 
     @NotNull
-    public static ItemStack getLunchBox(LivingEntity entity) {
-        return getLunchBoxSlot(entity).get();
+    public static ItemStack findActiveLunchBox(LivingEntity entity) {
+        return findActiveLunchBoxSlot(entity).get(entity);
     }
 
     @NotNull
-    public static SlotReference getLunchBoxSlot(LivingEntity entity) {
+    public static SlotReference findActiveLunchBoxSlot(LivingEntity entity) {
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof LunchBoxItem);
     }
 
     public static boolean canAcceptItem(ItemStack toInsert) {
         if (!toInsert.getItem().canFitInsideContainerItems()) return false;
+        if (toInsert.is(ModTags.LUNCH_BASKET_BLACKLIST)) return false;
         var animation = toInsert.getItem().getUseAnimation(toInsert);
         return animation == UseAnim.DRINK || animation == UseAnim.EAT;
     }

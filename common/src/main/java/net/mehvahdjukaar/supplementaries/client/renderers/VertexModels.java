@@ -134,7 +134,6 @@ public class VertexModels {
         int textH = 32;
         int fishW = 5;
         int fishH = 4;
-        fishType -= 1; //wah
         int fishv = fishType % (textH / fishH);
         int fishu = fishType / (textH / fishH);
 
@@ -146,8 +145,8 @@ public class VertexModels {
         float hh = 2 * h / 2f;
         int lu = combinedLightIn & '\uffff';
         int lv = combinedLightIn >> 16 & '\uffff';
-        float minu = 0 * fishu * w;
-        float minv = 0 * fishv * h;
+        float minu = fishu * w;
+        float minv = fishv * h;
         float maxu = 1 * w + minu;
         float maxv = 1 * h + minv;
 
@@ -164,8 +163,8 @@ public class VertexModels {
                 maxu = temp;
             }
             lu = 240;
-            minu += (1 / 2);
-            maxu += (1 / 2);
+            minu += (1 / 2f);
+            maxu += (1 / 2f);
 
         }
     }

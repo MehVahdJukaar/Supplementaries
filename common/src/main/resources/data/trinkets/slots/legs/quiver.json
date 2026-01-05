@@ -1,4 +1,10 @@
 {
+	"global_conditions": [
+		{
+			"flag": "quiver",
+			"type": "supplementaries:flag"
+		}
+	],
 	"icon": "supplementaries:gui/slots/quiver",
 	"replace": false,
 	"amount": 1,

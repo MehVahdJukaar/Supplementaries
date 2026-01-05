@@ -1,19 +1,24 @@
 package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 
+import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.renderers.NoiseRenderType;
+import net.mehvahdjukaar.supplementaries.client.renderers.SphereRenderType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -22,6 +27,7 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -106,7 +112,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         models.put(GlobeManager.Model.SNOW, special.getChild("snow"));
         models.put(GlobeManager.Model.SHEARED, special.getChild("sheared"));
         INSTANCE = this;
-        this.noise = MiscUtils.FESTIVITY.isAprilsFool() && PlatHelper.getPlatform().isForge();
+        this.noise = MiscUtils.FESTIVITY.isAprilsFool();
 
     }
 
@@ -136,17 +142,21 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         ModelPart model = this.models.get(data.getFirst());
 
-        VertexConsumer builder;
+        VertexConsumer builder = null;
         if (texture == null) {
             if (noise) {
+                ShaderInstance shader = ClientRegistry.NOISE_SHADER.get();
                 double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
                 float v = (float) Mth.clamp(si, -0.5, 0.5);
                 float c = (float) Mth.clamp(si, -2, 2);
-                SuppClientPlatformStuff.getNoiseShader().getUniform("Intensity").set(Mth.cos(Mth.PI * c / 4f));
+                Uniform intensity = shader.getUniform("Intensity");
+                if (intensity != null) intensity.set(Mth.cos(Mth.PI * c / 4f));
                 poseStack.scale(v + 0.5f + 0.01f, 1, 1);
-                builder = buffer.getBuffer(SuppClientPlatformStuff.staticNoise(ModTextures.GLOBE_TEXTURE));
-            } else {
-                builder = buffer.getBuffer(GlobeManager.getRenderType(level, isSepia));
+                builder = buffer.getBuffer(NoiseRenderType.STATIC_NOISE.apply(ModTextures.GLOBE_TEXTURE));
+            }
+            if (builder == null) {
+                RenderType renderType = GlobeManager.getRenderType(level, isSepia);
+                builder = buffer.getBuffer(renderType);
             }
         } else {
             builder = buffer.getBuffer(RenderType.entityCutout(texture));

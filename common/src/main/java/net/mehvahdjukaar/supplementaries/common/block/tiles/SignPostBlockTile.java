@@ -35,6 +35,9 @@ import net.minecraft.world.item.CompassItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -48,7 +51,7 @@ import java.util.UUID;
 public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProvider, IOwnerProtected, IScreenProvider {
 
     public static final ModelDataKey<Boolean> FRAMED_KEY = ModBlockProperties.FRAMED;
-    public static final ModelDataKey<Boolean> SLIM_KEY = ModBlockProperties.SLIM;
+    public static final ModelDataKey<Float> RENDER_OFFSET_KEY = ModBlockProperties.RENDER_OFFSET;
     public static final ModelDataKey<Sign> SIGN_UP_KEY = ModBlockProperties.SIGN_UP;
     public static final ModelDataKey<Sign> SIGN_DOWN_KEY = ModBlockProperties.SIGN_DOWN;
 
@@ -56,7 +59,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     private final Sign signDown = new Sign(false, false, 0, WoodTypeRegistry.OAK_TYPE);
     private boolean isWaxed = false;
     private UUID owner = null;
-    private boolean isSlim = false;
+    private float zRenderOffset = 0;
 
     //is holding a framed fence (for framed blocks mod compat)
     private boolean framed = false;
@@ -73,7 +76,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         builder.with(FRAMED_KEY, this.framed)
                 .with(SIGN_UP_KEY, this.signUp)
                 .with(SIGN_DOWN_KEY, this.signDown)
-                .with(SLIM_KEY, this.isSlim);
+                .with(RENDER_OFFSET_KEY, this.zRenderOffset);
     }
 
     @Override
@@ -109,11 +112,12 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
+        //TODO: remove this
+        this.setHeldBlock(mimic);
         this.framed = compound.getBoolean("Framed");
         this.signUp.load(compound.getCompound("SignUp"), this.level, this.worldPosition);
         this.signDown.load(compound.getCompound("SignDown"), this.level, this.worldPosition);
         this.loadOwner(compound);
-        this.isSlim = this.mimic.getBlock() instanceof StickBlock;
         if (compound.contains("Waxed")) {
             this.isWaxed = compound.getBoolean("Waxed");
         }
@@ -123,13 +127,30 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     }
 
     @Override
+    public boolean setHeldBlock(BlockState state, int index) {
+        Block b = state.getBlock();
+        if (b instanceof StickBlock) {
+            zRenderOffset = 9 / 16f;
+        } else if (b == Blocks.AIR) {
+            zRenderOffset = 0;
+        } else {
+            zRenderOffset = 10 / 16f;
+        }
+        return super.setHeldBlock(state, index);
+    }
+
+    @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
-        compound.putBoolean("Framed", this.framed);
+        if (this.mimic.isAir()) {
+            //for wall ones
+            compound.remove("Mimic");
+        }
+        if (this.framed) compound.putBoolean("Framed", true);
+        if (this.isWaxed) compound.putBoolean("Waxed", true);
         compound.put("SignUp", this.signUp.save());
         compound.put("SignDown", this.signDown.save());
         this.saveOwner(compound);
-        if (isWaxed) compound.putBoolean("Waxed", isWaxed);
     }
 
     @Nullable
@@ -164,8 +185,8 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         SignPostScreen.open(this);
     }
 
-    public boolean isSlim() {
-        return isSlim;
+    public float getOffset() {
+        return zRenderOffset;
     }
 
     public Sign getSignUp() {
@@ -274,16 +295,17 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         }
     }
 
-    public boolean initializeSignAfterConversion(WoodType woodType, int r, boolean up,
-                                                 boolean slim, boolean framed) {
+    public boolean trySetSign(WoodType woodType, int r, boolean up, boolean framed) {
         var sign = getSign(up);
         if (!sign.active) {
             sign.active = true;
             sign.woodType = woodType;
-            sign.yaw = 90 + r * -22.5f;
-
+            if (this.getBlockState().hasProperty(HorizontalDirectionalBlock.FACING)) {
+                sign.yaw = 90 - this.getBlockState().getValue(HorizontalDirectionalBlock.FACING).toYRot();
+            } else {
+                sign.yaw = 90 + r * -22.5f;
+            }
             this.framed = framed;
-            this.isSlim = slim;
             return true;
         }
         return false;
@@ -313,7 +335,7 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
                 return InteractionResult.CONSUME;
             }
             //change direction with compass
-            else if (item instanceof CompassItem) {
+            else if (item instanceof CompassItem && !state.hasProperty(HorizontalDirectionalBlock.FACING)) {
                 //itemModelProperties code
                 BlockPos pointingPos = CompassItem.isLodestoneCompass(itemstack) ?
                         this.getLodestonePos(level, itemstack) : this.getWorldSpawnPos(level);

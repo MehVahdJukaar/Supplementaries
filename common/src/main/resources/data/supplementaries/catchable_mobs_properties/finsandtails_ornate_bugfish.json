@@ -1,5 +1,6 @@
 {
-  "force_fluid": "minecraft:water","fish_index": 11,
+  "force_fluid": "minecraft:water",
+  "fish_index": 10,
   "height_increment": 0.0,
   "owners": [
     "finsandtails:ornate_bugfish"

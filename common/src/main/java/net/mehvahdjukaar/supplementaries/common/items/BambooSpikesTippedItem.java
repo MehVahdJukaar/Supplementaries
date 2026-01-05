@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTil
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -52,17 +53,21 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public boolean isBarVisible(ItemStack stack) {
-        return !CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get();
+        return !CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get();
     }
 
     public static boolean isPotionValid(Potion potion) {
         List<MobEffectInstance> effects = potion.getEffects();
-        if (CommonConfigs.Functional.ONLY_ALLOW_HARMFUL.get()) {
-            for (var e : effects) {
+        if (effects.isEmpty()) return false;
+        Boolean alternativeMode = CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get();
+        if (alternativeMode) {
+            for (var e : potion.getEffects()) {
                 if (e.getEffect().isBeneficial()) return false;
             }
         }
-        return !BuiltInRegistries.POTION.wrapAsHolder(potion).is(ModTags.TIPPED_SPIKES_POTION_BLACKLIST);
+        Holder<Potion> holder = BuiltInRegistries.POTION.wrapAsHolder(potion);
+        return !holder.is(alternativeMode ?
+                ModTags.TIPPED_SPIKES_POTION_BLACKLIST : ModTags.TIPPED_SPIKES_FINITE_POTION_BLACKLIST);
     }
 
     @Override
@@ -83,27 +88,15 @@ public class BambooSpikesTippedItem extends WoodBasedBlockItem implements Simple
 
     @Override
     public String getDescriptionId(ItemStack stack) {
-        return "item.supplementaries.bamboo_spikes_tipped";
-        //return PotionUtils.getPotionTypeFromNBT(stack.getChildTag("BlockEntityTag")).getNamePrefixed(super.getTranslationKey() + ".effect.");
+        Potion p = PotionUtils.getPotion(stack);
+        return p.getName("item.supplementaries.bamboo_spikes_tipped.effect.");
     }
 
-    @Override
-    public Component getName(ItemStack stack) {
-        Potion p = PotionUtils.getPotion(stack);
-        Component arrowName = Component.translatable(p.getName("item.minecraft.tipped_arrow.effect."));
-        String s = arrowName.getString();
-        if (s.contains("Arrow of ")) {
-            return Component.translatable("item.supplementaries.bamboo_spikes_tipped_effect",
-                    s.replace("Arrow of ", ""));
-        }
-        return Component.translatable(this.getDescriptionId(stack));
-    }
 
     @Override
     public ItemStack getDefaultInstance() {
         return makeSpikeItem(Potions.POISON);
     }
-
 
     public static ItemStack makeSpikeItem(Potion potion) {
         ItemStack stack = new ItemStack(ModRegistry.BAMBOO_SPIKES_TIPPED_ITEM.get());

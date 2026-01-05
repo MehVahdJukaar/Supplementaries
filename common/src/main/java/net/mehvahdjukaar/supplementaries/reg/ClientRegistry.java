@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
@@ -13,6 +15,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
 import net.mehvahdjukaar.supplementaries.client.particles.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.*;
@@ -30,6 +33,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
+import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
@@ -42,6 +46,8 @@ import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMa
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -51,6 +57,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
@@ -75,11 +82,17 @@ import java.util.stream.Collectors;
 
 public class ClientRegistry {
 
+    // post shaders
     public static final ResourceLocation RAGE_SHADER = Supplementaries.res("shaders/post/rage.json");
     public static final String BARBARIC_RAGE_SHADER = Supplementaries.res("shaders/post/barbaric_rage.json").toString();
     public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
+    public static final ResourceLocation GLITTER_SHADER = Supplementaries.res("shaders/post/glitter.json");
     public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
-    public static final ResourceLocation VANILLA_DESATURATE = new ResourceLocation("shaders/post/desaturate.json");
+    public static final ResourceLocation VANILLA_DESATURATE_SHADER = new ResourceLocation("shaders/post/desaturate.json");
+    // core shaders
+    public static final CoreShaderContainer ENTITY_OFFSET_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntityCutoutShader);
+    public static final CoreShaderContainer NOISE_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntitySolidShader);
+    public static final CoreShaderContainer SPHERE_SHADER = new CoreShaderContainer(GameRenderer::getRendertypeEntitySolidShader);
     //entity models
     public static final ModelLayerLocation BELLOWS_MODEL = loc("bellows");
     public static final ModelLayerLocation CLOCK_HANDS_MODEL = loc("clock_hands");
@@ -127,6 +140,8 @@ public class ClientRegistry {
     public static void init() {
         CompatHandlerClient.init();
         ClientHelper.addClientSetup(ClientRegistry::setup);
+        ClientHelper.addClientReloadListener(() -> MobHeadShadersManager.INSTANCE, Supplementaries.res("mob_head_effects"));
+
 
         ClientHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
         ClientHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);
@@ -139,6 +154,7 @@ public class ClientRegistry {
         ClientHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
         ClientHelper.addItemDecoratorsRegistration(ClientRegistry::registerItemDecorators);
         ClientHelper.addKeyBindRegistration(ClientRegistry::registerKeyBinds);
+        ClientHelper.addShaderRegistration(ClientRegistry::registerShaders);
     }
 
     public static void setup() {
@@ -349,7 +365,11 @@ public class ClientRegistry {
         @Override
         public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
             Particle p = super.createParticle(pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
-            if (p != null) p.setColor(108 / 255f, 103 / 255f, 103 / 255f);
+            if (p != null) {
+                float yellow = pLevel.random.nextFloat() * 0.05f;
+                p.setColor(108 / 255f
+                        + yellow, 103 / 255f + yellow, 103 / 255f);
+            }
             return p;
         }
     }
@@ -359,7 +379,9 @@ public class ClientRegistry {
         //entities
         event.register(ModEntities.BOMB.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
         event.register(ModEntities.THROWABLE_BRICK.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
-        event.register(ModEntities.THROWABLE_SLIMEBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
+      if(!CompatHandler.AMENDMENTS || !AmendmentsCompat.has3DSlimeballRenderer()){
+          event.register(ModEntities.THROWABLE_SLIMEBALL.get(), context -> new ImprovedThrownItemRenderer<>(context, 1));
+      }
         if (ClientConfigs.Items.CANNONBALL_3D.get()) {
             event.register(ModEntities.CANNONBALL.get(), context -> new CannonballRenderer<>(context, 1.615f));
         } else {
@@ -404,6 +426,13 @@ public class ClientRegistry {
     }
 
     @EventCalled
+    private static void registerShaders(ClientHelper.ShaderEvent event) {
+        event.register(Supplementaries.res("static_noise"), DefaultVertexFormat.NEW_ENTITY, NOISE_SHADER::assign);
+        event.register(Supplementaries.res("spherify"), DefaultVertexFormat.NEW_ENTITY, SPHERE_SHADER::assign);
+        event.register(Supplementaries.res("entity_cutout_texture_offset"), DefaultVertexFormat.NEW_ENTITY, ENTITY_OFFSET_SHADER::assign);
+    }
+
+    @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
         FlowerPotHandler.CUSTOM_MODELS.forEach(event::register);
         SIGN_POST_MODELS.get().values().forEach(event::register);
@@ -430,7 +459,7 @@ public class ClientRegistry {
         event.register(Supplementaries.res("flower_box"), new NestedModelLoader("box", FlowerBoxBakedModel::new));
         event.register(Supplementaries.res("rope_knot"), new NestedModelLoader("knot", RopeKnotBlockBakedModel::new));
         event.register(Supplementaries.res("blackboard"), new NestedModelLoader("frame", BlackboardBakedModel::new));
-        event.register(Supplementaries.res("mimic_block"), SignPostBlockBakedModel::new);
+        event.register(Supplementaries.res("sign_post"), SignPostBlockBakedModel::new);
         event.register(Supplementaries.res("goblet"), new GobletModelLoader());
         event.register(Supplementaries.res("extra_rotation"), new AwningModelLoader());
         event.register(Supplementaries.res("faucet"), new FaucetModelLoader());

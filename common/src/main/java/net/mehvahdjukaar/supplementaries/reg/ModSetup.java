@@ -37,7 +37,6 @@ public class ModSetup {
             ModSetup::registerFabricFlammable,
             CauldronBehaviorsManager::registerBehaviors,
             ModCreativeTabs::setup,
-            FireBehaviorsManager::registerBehaviors,
             () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkRocketItem.Shape.CREEPER)
     );
 
@@ -121,7 +120,10 @@ public class ModSetup {
             Supplementaries.LOGGER.info("Finished additional setup in {} ms", watch.elapsed().toMillis());
         }
         // this we can properly refresh every time
-        InteractEventsHandler.setupOverrides();
+        InteractEventsHandler.registerOverrides(registryAccess);
+
+        FireBehaviorsManager.registerBehaviors(registryAccess);
+
 
     }
 

@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundExplosionPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
@@ -30,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SlimeBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -41,6 +43,7 @@ import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class CannonBallEntity extends ImprovedProjectileEntity {
 
@@ -159,7 +162,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         }
 
         if (!level().isClientSide) {
-            float radius = 1.1f;
+            double radius = CommonConfigs.Functional.CANNONBALL_BREAK_RADIUS.get();
 
             Vec3 movement = this.getDeltaMovement();
             double vel = Math.abs(movement.length());
@@ -172,8 +175,9 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             Vec3 loc = this.position();
 
             BlockPos pos = result.getBlockPos();
+            Set<Block> whitelist = CannonBlockTile.readBreakWhitelist(this.getItem().getOrCreateTag());
             CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
-                    loc.x(), loc.y(), loc.z(), pos, maxAmount, radius);
+                    loc.x(), loc.y(), loc.z(), pos, maxAmount, (float) radius, whitelist);
             exp.explode();
             exp.finalizeExplosion(true);
 
@@ -257,7 +261,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
         double speed = this.getDeltaMovement().lengthSqr();
         double minSpeed = 0.2f;
-        if (!this.level().isClientSide && !state.isAir() && speed > minSpeed) {
+        if (this.level() instanceof ServerLevel sl && !state.isAir() && speed > minSpeed) {
             double x = hit.getLocation().x;
             double y = hit.getLocation().y;
             double z = hit.getLocation().z;
@@ -266,7 +270,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
             BlockParticleOption blockParticleOption = new BlockParticleOption(ParticleTypes.BLOCK, state);
             SuppPlatformStuff.setParticlePos(blockParticleOption, pos);
-            ((ServerLevel) this.level()).sendParticles(blockParticleOption,
+            sl.sendParticles(blockParticleOption,
                     x, y, z, count, 0.0, 0.0, 0.0, 0.15);
 
         }
@@ -291,8 +295,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         float elasticity = 1;
         if (target instanceof LivingEntity le) {
             double lostEnergy = initialKineticEnergy * (1 - lossFactor);
-            float dmgMult = 3.5f; //TODO: config
-            float amount = (float) lostEnergy * dmgMult;
+            double dmgMult = CommonConfigs.Functional.CANNONBALL_POWER_SCALING.get();
+            float amount = (float) (lostEnergy * dmgMult);
             float oldHealth = le.getHealth();
             if (le.hurt(ModDamageSources.cannonBallExplosion(this, this.getOwner()), amount)) {
                 elasticity = Mth.sqrt(1 - lossFactor);
@@ -330,9 +334,9 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
     }
 
     private void maybeDropDisc(LivingEntity le) {
-        if (!le.isAlive() && CommonConfigs.Functional.AVAST_DISC_ENABLED.get() && this.getOwner() instanceof Player) {
+        if (!le.isAlive() && CommonConfigs.Functional.PIRATE_DISC_ENABLED.get() && this.getOwner() instanceof Player) {
             if (((LivingEntityAccessor) le).invokeShouldDropLoot() && this.level().getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
-                le.spawnAtLocation(ModRegistry.AVAST_DISC.get());
+                le.spawnAtLocation(ModRegistry.PIRATE_DISC.get());
                 // we cant use global loot modifiers because we dont have access to damage value there
             }
         }

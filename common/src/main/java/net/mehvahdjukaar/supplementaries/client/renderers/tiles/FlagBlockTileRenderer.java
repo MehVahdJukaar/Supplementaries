@@ -31,11 +31,12 @@ import java.util.List;
 
 public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile> {
     private final Minecraft minecraft = Minecraft.getInstance();
-    private final ModelPart flag;
+
+    private final ModelPart flagModel;
 
     public FlagBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         ModelPart modelpart = context.bakeLayer(ModelLayers.BANNER);
-        this.flag = modelpart.getChild("flag");
+        flagModel = modelpart.getChild("flag");
     }
 
     @Override
@@ -43,16 +44,17 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         return 128;
     }
 
-    private void renderBanner(float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<Holder<BannerPattern>, DyeColor>> list) {
+    public static void renderBanner(ModelPart flagModel,
+                                    float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay, List<Pair<Holder<BannerPattern>, DyeColor>> list) {
         matrixStack.pushPose();
         matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
         matrixStack.mulPose(Axis.YP.rotationDegrees(0.05f * ang));
-        this.flag.xRot = (float) (0.5 * Math.PI);
-        this.flag.yRot = (float) (1 * Math.PI);
-        this.flag.zRot = (float) (0.5 * Math.PI);
-        this.flag.y = -12;
-        this.flag.x = 1.5f;
-        BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, this.flag, ModelBakery.BANNER_BASE, true, list);
+        flagModel.xRot = (float) (0.5 * Math.PI);
+        flagModel.yRot = (float) (1 * Math.PI);
+        flagModel.zRot = (float) (0.5 * Math.PI);
+        flagModel.y = -12;
+        flagModel.x = 1.5f;
+        BannerRenderer.renderPatterns(matrixStack, bufferSource, light, pPackedOverlay, flagModel, ModelBakery.BANNER_BASE, true, list);
         matrixStack.popPose();
     }
 
@@ -89,7 +91,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
             if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
                 float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
-                renderBanner(ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, list);
+                renderBanner(flagModel, ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, list);
             } else {
 
                 int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;

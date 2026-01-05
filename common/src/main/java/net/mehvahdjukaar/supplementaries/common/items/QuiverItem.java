@@ -24,14 +24,8 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
     }
 
     @Override
-    public Data getData(ItemStack stack) {
-        return getQuiverData(stack);
-    }
-
-    @NotNull
-    @Override
-    public ItemStack getFirstInInventory(Player player) {
-        return getQuiver(player);
+    public @NotNull Data getData(ItemStack stack) {
+        return getQuiverDataOrThrow(stack);
     }
 
     @Override
@@ -45,25 +39,32 @@ public class QuiverItem extends SelectableContainerItem<QuiverItem.Data> impleme
         throw new AssertionError();
     }
 
+    @Nullable
+    @ExpectPlatform
+    public static QuiverItem.Data getQuiverDataOrThrow(ItemStack stack) {
+        throw new AssertionError();
+    }
+
     @NotNull
-    public static SlotReference getQuiverSlot(LivingEntity entity) {
+    public static SlotReference findActiveQuiverSlot(LivingEntity entity) {
         if (entity instanceof Player player) {
             var curioQuiver = CompatHandler.getQuiverFromModsSlots(player);
             if (!curioQuiver.isEmpty()) return curioQuiver;
             if (CommonConfigs.Tools.QUIVER_CURIO_ONLY.get()) return SlotReference.EMPTY;
         } else if (entity instanceof IQuiverEntity e) {
-            return e::supplementaries$getQuiver;
+            return SlotReference.quiver(e);
         }
 
         return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof QuiverItem);
     }
 
-    public static ItemStack getQuiver(LivingEntity entity) {
-        return getQuiverSlot(entity).get();
+    public static ItemStack findActiveQuiver(LivingEntity entity) {
+        return findActiveQuiverSlot(entity).get(entity);
     }
 
     public static boolean canAcceptItem(ItemStack toInsert) {
-        return toInsert.getItem() instanceof ArrowItem && !toInsert.is(ModTags.QUIVER_BLACKLIST);
+        return (toInsert.getItem() instanceof ArrowItem || toInsert.is(ModTags.QUIVER_WHITELIST)) &&
+                !toInsert.is(ModTags.QUIVER_BLACKLIST);
     }
 
     //this is cap, cap provider

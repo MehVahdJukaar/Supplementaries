@@ -38,6 +38,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         super(properties);
     }
 
+    @NotNull
     public abstract D getData(ItemStack stack);
 
     @Override
@@ -55,26 +56,22 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
             AtomicBoolean didStuff = new AtomicBoolean(false);
             if (itemstack.isEmpty()) {
                 D data = this.getData(quiver);
-                if (data != null) {
-                    data.removeOneStack().ifPresent((stack) -> {
-                        this.playRemoveOneSound(pPlayer);
-                        data.tryAdding(pSlot.safeInsert(stack));
-                        didStuff.set(true);
-                    });
-                }
+                data.removeOneStack().ifPresent((stack) -> {
+                    this.playRemoveOneSound(pPlayer);
+                    data.tryAdding(pSlot.safeInsert(stack));
+                    didStuff.set(true);
+                });
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
                 D data = this.getData(quiver);
-                if (data != null) {
-                    var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
-                    ItemStack remaining = data.tryAdding(taken);
-                    if (!remaining.equals(taken)) {
-                        this.playInsertSound(pPlayer);
-                        didStuff.set(true);
-                    }
-                    pSlot.set(remaining);
+                var taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
+                ItemStack remaining = data.tryAdding(taken);
+                if (!remaining.equals(taken)) {
+                    this.playInsertSound(pPlayer);
+                    didStuff.set(true);
                 }
+                pSlot.set(remaining);
             }
             return didStuff.get();
         }
@@ -84,24 +81,22 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     public boolean overrideOtherStackedOnMe(ItemStack quiver, ItemStack pOther, Slot pSlot, ClickAction pAction, Player pPlayer, SlotAccess pAccess) {
         if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
             AbstractData data = this.getData(quiver);
-            if (data != null) {
-                AtomicBoolean didStuff = new AtomicBoolean(false);
-                if (pOther.isEmpty()) {
-                    data.removeOneStack().ifPresent((removed) -> {
-                        this.playRemoveOneSound(pPlayer);
-                        pAccess.set(removed);
-                        didStuff.set(true);
-                    });
-                } else {
-                    ItemStack i = data.tryAdding(pOther);
-                    if (!i.equals(pOther)) {
-                        this.playInsertSound(pPlayer);
-                        pAccess.set(i);
-                        didStuff.set(true);
-                    }
+            AtomicBoolean didStuff = new AtomicBoolean(false);
+            if (pOther.isEmpty()) {
+                data.removeOneStack().ifPresent((removed) -> {
+                    this.playRemoveOneSound(pPlayer);
+                    pAccess.set(removed);
+                    didStuff.set(true);
+                });
+            } else {
+                ItemStack i = data.tryAdding(pOther);
+                if (!i.equals(pOther)) {
+                    this.playInsertSound(pPlayer);
+                    pAccess.set(i);
+                    didStuff.set(true);
                 }
-                return didStuff.get();
             }
+            return didStuff.get();
         }
         return false;
     }
@@ -110,6 +105,8 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        if (!stack.is(this)) return super.use(pLevel, player, hand);
+
         D data = this.getData(stack);
 
         InteractionHand otherHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
@@ -133,7 +130,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
         } else {
             //same as startUsingItem but client only so it does not slow
             if (pLevel.isClientSide) {
-                SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.hand(player, hand));
+                SelectableContainerItemHud.getInstance().setUsingItem(SlotReference.hand(hand), player);
             }
             this.playRemoveOneSound(player);
             player.startUsingItem(hand);
@@ -149,7 +146,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
         if (level.isClientSide) {
-            SelectableContainerItemHud.INSTANCE.setUsingItem(SlotReference.EMPTY);
+            SelectableContainerItemHud.getInstance().setUsingItem(SlotReference.EMPTY, livingEntity);
         }
         this.playInsertSound(livingEntity);
         livingEntity.swing(livingEntity.getUsedItemHand());
@@ -159,20 +156,14 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public boolean isBarVisible(ItemStack pStack) {
         D data = this.getData(pStack);
-        if (data != null) {
-            return data.getSelected().getCount() > 0;
-        }
-        return false;
+        return data.getSelected().getCount() > 0;
     }
 
     @Override
     public int getBarWidth(ItemStack pStack) {
         D data = this.getData(pStack);
-        if (data != null) {
-            return Math.min(1 + 12 * data.getSelectedItemCount() /
-                    (data.getSelected().getMaxStackSize() * data.getContentView().size()), 13);
-        }
-        return 0;
+        return Math.min(1 + 12 * data.getSelectedItemCount() /
+                (data.getSelected().getMaxStackSize() * data.getContentView().size()), 13);
     }
 
     @Override
@@ -184,16 +175,14 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack pStack) {
         D data = this.getData(pStack);
-        if (data != null) {
-            NonNullList<ItemStack> list = NonNullList.create();
-            boolean isEmpty = true;
-            for (var v : data.getContentView()) {
-                if (!v.isEmpty()) isEmpty = false;
-                list.add(v);
-            }
-            if (!isEmpty) {
-                return Optional.of(new SelectableContainerTooltip(data.getContentView(), data.getSelectedSlot()));
-            }
+        NonNullList<ItemStack> list = NonNullList.create();
+        boolean isEmpty = true;
+        for (var v : data.getContentView()) {
+            if (!v.isEmpty()) isEmpty = false;
+            list.add(v);
+        }
+        if (!isEmpty) {
+            return Optional.of(new SelectableContainerTooltip(data.getContentView(), data.getSelectedSlot()));
         }
         return Optional.empty();
     }
@@ -202,12 +191,10 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
         D data = this.getData(pStack);
-        if (data != null) {
-            int c = data.getSelectedItemCount();
-            if (c != 0) {
-                pTooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
-                        data.getSelected().getItem().getDescription(), c).withStyle(ChatFormatting.GRAY));
-            }
+        int c = data.getSelectedItemCount();
+        if (c != 0) {
+            pTooltipComponents.add(Component.translatable("message.supplementaries.quiver.tooltip",
+                    data.getSelected().getItem().getDescription(), c).withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -215,9 +202,7 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void onDestroyed(ItemEntity pItemEntity) {
         D data = this.getData(pItemEntity.getItem());
-        if (data != null) {
-            ItemUtils.onContainerDestroyed(pItemEntity, data.getContentView().stream());
-        }
+        ItemUtils.onContainerDestroyed(pItemEntity, data.getContentView().stream());
     }
 
     protected void playRemoveOneSound(Entity pEntity) {
@@ -236,14 +221,11 @@ public abstract class SelectableContainerItem<D extends SelectableContainerItem.
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         D data = this.getData(stack);
-        if (data != null) data.updateSelectedIfNeeded();
+        data.updateSelectedIfNeeded();
         super.inventoryTick(stack, level, entity, slotId, isSelected);
     }
 
     // BS instance fields
-
-    @NotNull
-    public abstract ItemStack getFirstInInventory(Player player);
 
     public abstract int getMaxSlots();
 

@@ -191,7 +191,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         Level level = level();
         if (!level.isClientSide()) {
             level.broadcastEntityEvent(this, (byte) 67);
-            level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.5F, 1.5F);
+            this.playEntityOnFireExtinguishedSound();
         }
         this.active = false;
     }
@@ -308,10 +308,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         explosion.finalizeExplosion(true);
 
         for (var p : level().players()) {
-            if (p.distanceToSqr(this) < 64 * 64) {
+            if (p.distanceToSqr(this) < 64 * 64 && p instanceof ServerPlayer sp) {
                 Message message = ClientBoundExplosionPacket.bomb(explosion, p);
 
-                ModNetwork.CHANNEL.sendToClientPlayer((ServerPlayer) p, message);
+                ModNetwork.CHANNEL.sendToClientPlayer(sp, message);
             }
         }
 

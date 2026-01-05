@@ -2,15 +2,18 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 
 import com.simibubi.create.AllMovementBehaviours;
+import com.simibubi.create.api.behaviour.display.DisplaySource;
+import com.simibubi.create.api.behaviour.display.DisplayTarget;
+import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
+import com.simibubi.create.api.registry.CreateRegistries;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
-import com.simibubi.create.content.logistics.filter.ItemAttribute;
-import com.simibubi.create.content.redstone.displayLink.AllDisplayBehaviours;
-import com.simibubi.create.content.redstone.displayLink.DisplayBehaviour;
+import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.create.*;
@@ -26,66 +29,111 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 public class CreateCompat {
 
+
+    public static final Supplier<ItemAttributeType> PRESENT_ATTRIBUTE = RegHelper.
+            register(Supplementaries.res("present_recipient"), PresentRecipientAttribute.Type::new,
+                    CreateRegistries.ITEM_ATTRIBUTE_TYPE);
+
+    static {
+        RegHelper.register(
+                Supplementaries.res("notice_board_display_target"), () -> {
+                    var obj = new NoticeBoardDisplayTarget();
+                    DisplayTarget.BY_BLOCK_ENTITY.register(ModRegistry.NOTICE_BOARD_TILE.get(), obj);
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_TARGET);
+
+
+        RegHelper.register(
+                Supplementaries.res("text_holder_display_target"), () -> {
+                    var obj = new TextHolderDisplayTarget();
+                    DisplayTarget.BY_BLOCK_ENTITY.register(ModRegistry.SIGN_POST_TILE.get(), obj);
+                    DisplayTarget.BY_BLOCK_ENTITY.register(ModRegistry.DOORMAT_TILE.get(), obj);
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_TARGET);
+
+        RegHelper.register(
+                Supplementaries.res("speaker_block_display_target"), () -> {
+                    var obj = new SpeakerBlockDisplayTarget();
+                    DisplayTarget.BY_BLOCK_ENTITY.register(ModRegistry.SPEAKER_BLOCK_TILE.get(), obj);
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_TARGET);
+
+        RegHelper.register(
+                Supplementaries.res("blackboard_display_target"), () -> {
+                    var obj = new BlackboardDisplayTarget();
+                    DisplayTarget.BY_BLOCK_ENTITY.register(ModRegistry.BLACKBOARD_TILE.get(), obj);
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_TARGET);
+
+        RegHelper.register(
+                Supplementaries.res("globe_display_source"), () -> {
+                    var obj = new GlobeDisplaySource();
+                    DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.GLOBE_TILE.get(), List.of(obj));
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_SOURCE);
+
+        RegHelper.register(
+                Supplementaries.res("notice_board_display_source"), () -> {
+                    var obj = new NoticeBoardDisplaySource();
+                    DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.NOTICE_BOARD_TILE.get(), List.of(obj));
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_SOURCE);
+
+        RegHelper.register(
+                Supplementaries.res("clock_source"), () -> {
+                    var obj = new ClockDisplaySource();
+                    DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.CLOCK_BLOCK_TILE.get(), List.of(obj));
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_SOURCE);
+
+        RegHelper.register(
+                Supplementaries.res("item_display_source"), () -> {
+                    var obj = new ItemDisplayDisplaySource();
+                    DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.PEDESTAL_TILE.get(), List.of(obj));
+                    DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.ITEM_SHELF_TILE.get(), List.of(obj));
+                    DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.STATUE_TILE.get(), List.of(obj));
+                    DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.HOURGLASS_TILE.get(), List.of(obj));
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_SOURCE);
+
+        RegHelper.register(
+                Supplementaries.res("fluid_tank_source"), () -> {
+                    var obj = new FluidFillLevelDisplaySource();
+                    DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.JAR_TILE.get(), List.of(obj));
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_SOURCE);
+
+    }
+
+    public static void init() {
+
+    }
+
     public static void setup() {
         try {
-            ItemAttribute.register(PresentRecipientAttribute.EMPTY);
+            MovementBehaviour.REGISTRY.register(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
+            MovementBehaviour.REGISTRY.register(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
 
-            AllMovementBehaviours.registerBehaviour(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
-            AllMovementBehaviours.registerBehaviour(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
-
-            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
-                    Supplementaries.res("notice_board_display_target"),
-                    new NoticeBoardDisplayTarget()), ModRegistry.NOTICE_BOARD_TILE.get());
-
-            DisplayBehaviour textHolderTarget = AllDisplayBehaviours.register(
-                    Supplementaries.res("text_holder_display_target"), new TextHolderDisplayTarget());
-
-            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.SIGN_POST_TILE.get());
-            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
-            AllDisplayBehaviours.assignBlockEntity(textHolderTarget, ModRegistry.DOORMAT_TILE.get());
-
-            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
-                    Supplementaries.res("speaker_block_display_target"),
-                    new SpeakerBlockDisplayTarget()), ModRegistry.SPEAKER_BLOCK_TILE.get());
-
-            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
-                    Supplementaries.res("blackboard_display_target"),
-                    new BlackboardDisplayTarget()), ModRegistry.BLACKBOARD_TILE.get());
-
-            //sources
-            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
-                    Supplementaries.res("globe_display_source"),
-                    new GlobeDisplaySource()), ModRegistry.GLOBE_TILE.get());
-
-            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
-                    Supplementaries.res("notice_board_display_source"),
-                    new NoticeBoardDisplaySource()), ModRegistry.NOTICE_BOARD_TILE.get());
-
-            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
-                    Supplementaries.res("clock_source"),
-                    new ClockDisplaySource()), ModRegistry.CLOCK_BLOCK_TILE.get());
-
-            DisplayBehaviour itemDisplaySource = AllDisplayBehaviours.register(
-                    Supplementaries.res("item_display_source"),
-                    new ItemDisplayDisplaySource());
-
-            AllDisplayBehaviours.assignBlock(itemDisplaySource, ModRegistry.PEDESTAL.get());
-            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.ITEM_SHELF_TILE.get());
-            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.STATUE_TILE.get());
-            AllDisplayBehaviours.assignBlockEntity(itemDisplaySource, ModRegistry.HOURGLASS_TILE.get());
-
-            AllDisplayBehaviours.assignBlockEntity(AllDisplayBehaviours.register(
-                    Supplementaries.res("fluid_tank_source"),
-                    new FluidFillLevelDisplaySource()), ModRegistry.JAR_TILE.get());
 
         } catch (Exception e) {
-            Supplementaries.LOGGER.warn("failed to register supplementaries create behaviors: " + e);
+            Supplementaries.LOGGER.warn("failed to register supplementaries create behaviors: {}", String.valueOf(e));
         }
     }
 

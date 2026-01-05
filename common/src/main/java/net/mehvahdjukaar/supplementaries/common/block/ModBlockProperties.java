@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.client.model.ModelDataKey;
 import net.mehvahdjukaar.moonlight.api.fluids.BuiltInSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.client.BlackboardManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.HoneyBottleItem;
 import net.minecraft.world.item.Item;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.*;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -55,6 +57,7 @@ public class ModBlockProperties {
     public static final BooleanProperty ON_PRESSURE_PLATE = BooleanProperty.create("on_pressure_plate");
     public static final BooleanProperty TWO_FACED = BooleanProperty.create("two_faced");
     public static final BooleanProperty SLANTED = BooleanProperty.create("slanted");
+    public static final BooleanProperty FLIP_TILE = BooleanProperty.create("flip_tile");
 
     public static final IntegerProperty HOUR = IntegerProperty.create("hour", 0, 23);
     public static final IntegerProperty LIGHT_LEVEL_0_15 = IntegerProperty.create("light_level", 0, 15);
@@ -83,13 +86,14 @@ public class ModBlockProperties {
     public static final ModelDataKey<BlockState> MIMIC = MimicBlockTile.MIMIC_KEY;
     public static final ModelDataKey<Boolean> FANCY = new ModelDataKey<>(Boolean.class);
     public static final ModelDataKey<Boolean> FRAMED = new ModelDataKey<>(Boolean.class);
-    public static final ModelDataKey<Boolean> SLIM = new ModelDataKey<>(Boolean.class);
+    public static final ModelDataKey<Float> RENDER_OFFSET = new ModelDataKey<>(Float.class);
     public static final ModelDataKey<SignPostBlockTile.Sign> SIGN_UP = new ModelDataKey<>(SignPostBlockTile.Sign.class);
     public static final ModelDataKey<SignPostBlockTile.Sign> SIGN_DOWN = new ModelDataKey<>(SignPostBlockTile.Sign.class);
     public static final ModelDataKey<BlockState> FLOWER_0 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_1 = new ModelDataKey<>(BlockState.class);
     public static final ModelDataKey<BlockState> FLOWER_2 = new ModelDataKey<>(BlockState.class);
-    public static final ModelDataKey<SoftFluid> FLUID = new ModelDataKey<>(SoftFluid.class);
+    public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID = (ModelDataKey<ResourceKey<SoftFluid>>) new ModelDataKey(ResourceKey.class);
+
     public static final ModelDataKey<Integer> FLUID_COLOR = new ModelDataKey<>(Integer.class);
     public static final ModelDataKey<Float> FILL_LEVEL = new ModelDataKey<>(Float.class);
     public static final ModelDataKey<BlackboardManager.Key> BLACKBOARD = new ModelDataKey<>(BlackboardManager.Key.class);
@@ -145,7 +149,7 @@ public class ModBlockProperties {
             PostType type = null;
             //if (state.getBlock().hasTileEntity(state)) return type;
             if (state.is(ModTags.POSTS)) {
-                if(!state.hasProperty(BlockStateProperties.AXIS) || state.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y) {
+                if (!state.hasProperty(BlockStateProperties.AXIS) || state.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y) {
                     type = PostType.POST;
                 }
             } else if (state.is(ModTags.PALISADES) || (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.isPalisade(state))) {
@@ -191,25 +195,26 @@ public class ModBlockProperties {
             return this.name;
         }
 
+        @NotNull
         public static Pair<Topping, Item> fromFluidItem(Item item) {
             var holder = SoftFluidStack.fromItem(item.getDefaultInstance());
-            if (holder == null) return null;
-            SoftFluid s = holder.getFirst().fluid();
+            if (holder == null) return  Pair.of(NONE, null);
+            SoftFluidStack s = holder.getFirst();
             var cat = holder.getSecond();
-            if (cat.isEmpty() || cat.getAmount() != 1) return null;
+            if (cat.isEmpty() || cat.getAmount() != 1) return Pair.of(NONE, null);
             Topping t = fromFluid(s);
-            if(t != NONE){
+            if (t != NONE) {
                 return Pair.of(t, cat.getEmptyContainer());
             }
-            return null;
+            return Pair.of(NONE, null);
         }
 
-        public static Topping fromFluid(SoftFluid s) {
-            if (s.isEmptyFluid()) return NONE;
-            if (s == BuiltInSoftFluids.HONEY.get()) {
+        public static Topping fromFluid(SoftFluidStack stack) {
+            if (stack.isEmpty()) return NONE;
+            if (stack.is(BuiltInSoftFluids.HONEY)) {
                 return HONEY;
             }
-            String name = Utils.getID(s).getPath();
+            String name = stack.fluidKey().location().getPath();
             if (name.contains("jam")) {
                 return JAM;
             }
@@ -223,18 +228,21 @@ public class ModBlockProperties {
         }
 
         //topping and empty item
-        public static Pair<Topping, Item> fromItem(ItemStack stack) {
-            Item item = stack.getItem();
+        public static Pair<Topping, Item> fromItem(Item item) {
             var ff = fromFluidItem(item);
-            if (ff != null) return ff;
-            if (stack.is(Items.SWEET_BERRIES)) return Pair.of(JAM, null);
-            if (stack.is(ModTags.SYRUP)) return Pair.of(SYRUP, null);
-            if (item instanceof HoneyBottleItem) return Pair.of(HONEY, null);
-            var tag = BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS);
-            if ((item == Items.COCOA_BEANS && (tag.isEmpty() || tag.get().stream().findAny().isEmpty())) || stack.is(ModTags.CHOCOLATE_BARS)) {
-                return Pair.of(CHOCOLATE, null);
-            }
-            return Pair.of(NONE, null);
+            if (ff.getFirst() != NONE) return ff;
+            var holder = item.builtInRegistryHolder();
+            Topping t;
+            if (item == Items.SWEET_BERRIES) t = JAM;
+            else if (holder.is(ModTags.SYRUP)) t = SYRUP;
+
+            else if (item instanceof HoneyBottleItem) t = HONEY;
+            else if (item == Items.COCOA_BEANS && BuiltInRegistries.ITEM.getTag(ModTags.CHOCOLATE_BARS).isEmpty()) {
+                t = CHOCOLATE;
+            } else if (holder.is(ModTags.CHOCOLATE_BARS)) t = CHOCOLATE;
+            else t = NONE;
+            return Pair.of(t, ForgeHelper.getCraftingRemainingItem(item.getDefaultInstance()).map(ItemStack::getItem)
+                    .orElse(Items.AIR));
         }
     }
 
@@ -332,7 +340,6 @@ public class ModBlockProperties {
             return this.name;
         }
     }
-
 
 
     public enum DisplayStatus implements StringRepresentable {

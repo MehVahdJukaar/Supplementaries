@@ -34,14 +34,17 @@ public class CannonBallExplosion extends Explosion {
 
     private final BlockPos centerPos;
     private final float maxExplodedAmount;
+    private final @Nullable Set<Block> whitelist;
 
     private float explosionAmountLeft;
 
     public CannonBallExplosion(Level level, @Nullable Entity source, double toBlowX, double toBlowY, double toBlowZ,
-                               BlockPos centerPos, float maxExplodedAmount, float maxRadius) {
+                               BlockPos centerPos, float maxExplodedAmount, float maxRadius,
+                               @Nullable Set<Block> whitelist) {
         super(level, source, toBlowX, toBlowY, toBlowZ, maxRadius, false, BlockInteraction.DESTROY);
         this.centerPos = centerPos;
         this.maxExplodedAmount = maxExplodedAmount;
+        this.whitelist = maxRadius == 0 ? Set.of() : whitelist;
     }
 
     //client factory
@@ -50,6 +53,7 @@ public class CannonBallExplosion extends Explosion {
         super(level, source, toBlowX, toBlowY, toBlowZ, radius, toBlow);
         this.centerPos = BlockPos.containing(new Vec3(toBlowX, toBlowY, toBlowZ));
         this.maxExplodedAmount = 0;
+        this.whitelist = null;
     }
 
     @Override
@@ -90,6 +94,7 @@ public class CannonBallExplosion extends Explosion {
 
         boolean canPropagateExplosion = false;
         if (!blockState.isAir()) {
+            if (whitelist != null && !whitelist.contains(blockState.getBlock())) return;
             Optional<Float> optional = damageCalculator.getBlockExplosionResistance(this, level, pos, blockState, fluidState);
             if (optional.isPresent()) {
                 float resistance = (optional.get() + 0.3F) * 0.3F;

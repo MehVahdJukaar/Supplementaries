@@ -32,7 +32,7 @@ class ThrowableSlimeballBehavior implements ItemUseBehavior {
 
     @Override
     public boolean appliesToItem(Item item) {
-        return SuppPlatformStuff.isSlimeball(item);
+        return SuppPlatformStuff.isSlimeball(item) && !item.isEdible();
     }
 
     @Override

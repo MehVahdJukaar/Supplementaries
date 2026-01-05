@@ -7,7 +7,10 @@
   "client": [
     "CompatIFMapAtlasTextureMixin",
     "CompatIFMapTextureMixin2",
-    "MC263524FixMixin",
+    "GuiMixin",
+    "ItemInHandRendererMixin",
+    "LevelRendererMixin",
+    "MinecraftInputMixin",
     "MouseScrollMixin",
     "SkullBlockRendererMixin"
   ],
@@ -16,8 +19,10 @@
     "BowMixin",
     "BushBlockMixin",
     "CompatFarmersDelightTomatoMixin",
+    "CompatSodiumFluidRendererMixin",
     "CropBlockMixin",
     "CrossbowMixin",
+    "DumbFabricShapedRecipeMixin",
     "FireBlockAccessor",
     "MobBucketItemAccessor",
     "PlayerProjectileMixin",

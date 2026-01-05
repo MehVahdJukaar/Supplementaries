@@ -147,9 +147,9 @@ public class SackBlock extends FallingBlock implements EntityBlock, SimpleWaterl
         } else if (player.isSpectator()) {
             return InteractionResult.CONSUME;
         } else {
-            if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile) {
+            if (worldIn.getBlockEntity(pos) instanceof SackBlockTile tile && player instanceof ServerPlayer sp) {
 
-                PlatHelper.openCustomMenu((ServerPlayer) player, tile, p -> {
+                PlatHelper.openCustomMenu(sp, tile, p -> {
                     p.writeBoolean(true);
                     p.writeBlockPos(pos);
                     p.writeInt(tile.getContainerSize());

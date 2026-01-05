@@ -50,7 +50,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CartographersQuillItem extends PathfindersQuillItem {
 
     public static final String TAG_STRUCTURE = "targetStructure";
-    public static final String TAG_SKIP_KNOWN = "skinKnown";
+    public static final String TAG_SKIP_KNOWN = "skipKnown";
     public static final String TAG_SEARCH_RADIUS = "maxSearchRadius";
     public static final String TAG_ZOOM = "zoomLevel";
     public static final String TAG_DECORATION = "decoration";

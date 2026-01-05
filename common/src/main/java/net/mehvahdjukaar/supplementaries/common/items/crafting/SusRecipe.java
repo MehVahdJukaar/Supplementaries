@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SusGravelBricksTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -56,11 +57,16 @@ public class SusRecipe extends CustomRecipe {
                 something = stack;
             }
         }
-        ItemStack result = this.result.copy();
+        ItemStack result = this.result.copyWithCount(1);
         result.getOrCreateTagElement("BlockEntityTag")
-                .put("item", something.save(new CompoundTag()));
+                .put("item", something.copyWithCount(1).save(new CompoundTag()));
 
         return result;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
+        return NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
     }
 
     @Override
@@ -73,7 +79,6 @@ public class SusRecipe extends CustomRecipe {
         return ModRecipes.SUS_CRAFTING.get();
     }
 
-    //TODO: add recipe serializers
     public static class Serializer implements RecipeSerializer<SusRecipe> {
 
 

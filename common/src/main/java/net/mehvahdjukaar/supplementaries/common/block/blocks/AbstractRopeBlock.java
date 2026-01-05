@@ -55,7 +55,7 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
 
     public AbstractRopeBlock(Properties properties) {
         super(properties);
-                this.registerDefaultState(this.stateDefinition.any()
+        this.registerDefaultState(this.stateDefinition.any()
                 .setValue(KNOT, false).setValue(WATERLOGGED, false));
         shapes = this.makeShapes();
     }
@@ -88,7 +88,7 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        if(!CommonConfigs.Functional.ROPE_HORIZONTAL.get())return Shapes.empty();
+        if (!CommonConfigs.Functional.ROPE_HORIZONTAL.get()) return Shapes.empty();
         return ((!hasConnection(Direction.UP, state) && (context.isAbove(COLLISION_SHAPE, pos, true) || !hasConnection(Direction.DOWN, state)))
                 || !(context instanceof EntityCollisionContext ec && ec.getEntity() instanceof LivingEntity) ?
                 getShape(state, worldIn, pos, context) : Shapes.empty());
@@ -267,7 +267,8 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
                 }
             }
             if (!player.isShiftKeyDown() && handIn == InteractionHand.MAIN_HAND) {
-                if (world.getBlockState(pos.below()).getBlock() == this) {
+                if (world.getBlockState(pos.below()).is(this)
+                        || world.getBlockState(pos.above()).is(this)) {
                     if (RopeHelper.removeRopeDown(pos.below(), world, this)) {
                         world.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (!player.getAbilities().instabuild) {

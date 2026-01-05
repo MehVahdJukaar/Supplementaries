@@ -10,6 +10,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -17,8 +20,10 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class PresentBlockTile extends AbstractPresentBlockTile {
@@ -69,7 +74,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
         this.setRecipient(PUBLIC_KEY);
     }
 
-    public void updateState(boolean shouldPack, String newRecipient, String sender, String description) {
+    public void updateState(boolean shouldPack, String newRecipient, String sender, String description, Player playerWhoChanged) {
         if (shouldPack) {
             if (newRecipient.isEmpty()) newRecipient = PUBLIC_KEY;
             this.recipient = newRecipient;
@@ -92,8 +97,14 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
                         level.random.nextFloat() * 0.1F + 1.2F);
 
             }
+            level.gameEvent(playerWhoChanged, GameEvent.BLOCK_CHANGE, worldPosition);
             this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(PresentBlock.PACKED, shouldPack), 3);
         }
+    }
+
+    @Override
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        return super.canPlaceItem(index, stack) && !isPacked();
     }
 
     @Override
@@ -109,7 +120,6 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     @Override
     public InteractionResult interact(Level level, BlockPos pos, BlockState state, Player player) {
         if (this.isUnused()) {
-
             if (this.canOpen(player)) {
                 if (player instanceof ServerPlayer serverPlayer) {
                     //we open directly as its a container and can open contains this logic
@@ -148,9 +158,22 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
         if (!this.description.isEmpty()) tag.putString("Description", this.description);
     }
 
+    //sync stuff to client. Needed for pick block
     @Override
-    public AbstractContainerMenu createMenu(int id, Inventory player) {
-        return new PresentContainerMenu(id, player, this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory inv) {
+        //thanks mojank
+        if (inv.player.isSpectator()) return null;
+        return new PresentContainerMenu(id, inv, this);
     }
 
     @Nullable

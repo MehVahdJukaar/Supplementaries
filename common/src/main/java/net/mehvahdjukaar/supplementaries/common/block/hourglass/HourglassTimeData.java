@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.hourglass;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.moonlight.api.misc.StrOpt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -49,6 +51,7 @@ public record HourglassTimeData(HolderSet<Item> dusts, int duration, int light, 
                 integer, integer1, resourceLocation, integer2);
     }
 
+    @Environment(EnvType.CLIENT)
     public ResourceLocation computeTexture(ItemStack i, Level world) {
         Minecraft mc = Minecraft.getInstance();
         if (this.texture.isEmpty()) {

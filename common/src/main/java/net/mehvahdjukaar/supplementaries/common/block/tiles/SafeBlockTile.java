@@ -94,7 +94,9 @@ public class SafeBlockTile extends OpeneableContainerBlockEntity implements IOwn
                     return true;
                 }
             }
-            PlatHelper.openCustomMenu((ServerPlayer) player, this, worldPosition);
+            if(player instanceof ServerPlayer sp) {
+                PlatHelper.openCustomMenu(sp, this, worldPosition);
+            }
             PiglinAi.angerNearbyPiglins(player, true);
         }
 

@@ -53,13 +53,6 @@ public abstract class AbstractPresentBlockTile extends OpeneableContainerBlockEn
         return false;
     }
 
-    //sync stuff to client. Needed for pick block
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
     public ItemStack getPresentItem(ItemLike block) {
         CompoundTag compoundTag = new CompoundTag();
         this.saveAdditional(compoundTag);

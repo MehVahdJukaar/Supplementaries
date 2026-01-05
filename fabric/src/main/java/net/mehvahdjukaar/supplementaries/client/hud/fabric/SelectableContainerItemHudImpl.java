@@ -12,10 +12,8 @@ import net.minecraft.world.item.ItemStack;
 
 public class SelectableContainerItemHudImpl extends SelectableContainerItemHud {
 
-    public static final SelectableContainerItemHudImpl INSTANCE = new SelectableContainerItemHudImpl();
-
     public static SelectableContainerItemHud makeInstance() {
-        return INSTANCE;
+        return new SelectableContainerItemHudImpl();
     }
 
     public SelectableContainerItemHudImpl() {
@@ -43,11 +41,6 @@ public class SelectableContainerItemHudImpl extends SelectableContainerItemHud {
         nx = (screenWidth - font.width(highlightTip)) / 2;
         graphics.drawString(font, highlightTip, nx, ny, 0xFFFFFF + (l << 24));
         RenderSystem.disableBlend();
-    }
-
-    public void render(GuiGraphics graphics, float partialTicks) {
-        var w = this.mc.getWindow();
-        this.render(graphics, partialTicks, w.getGuiScaledWidth(), w.getGuiScaledHeight());
     }
 
 }

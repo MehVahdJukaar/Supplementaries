@@ -128,28 +128,28 @@ public class GunpowderBlock extends LightUpBlock {
     //-----connection logic------
 
     private BlockState getConnectionState(BlockGetter world, BlockState state, BlockPos pos) {
-        boolean flag = isDot(state);
+        boolean isDot = isDot(state);
         state = this.getMissingConnections(world, this.defaultBlockState().setValue(BURNING, state.getValue(BURNING)), pos);
-        if (!flag || !isDot(state)) {
-            boolean flag1 = state.getValue(NORTH).isConnected();
-            boolean flag2 = state.getValue(SOUTH).isConnected();
-            boolean flag3 = state.getValue(EAST).isConnected();
-            boolean flag4 = state.getValue(WEST).isConnected();
-            boolean flag5 = !flag1 && !flag2;
-            boolean flag6 = !flag3 && !flag4;
-            if (!flag4 && flag5) {
+        if (!isDot || !isDot(state)) {
+            boolean northConnected = state.getValue(NORTH).isConnected();
+            boolean southConnected = state.getValue(SOUTH).isConnected();
+            boolean eastConnected = state.getValue(EAST).isConnected();
+            boolean westConnected = state.getValue(WEST).isConnected();
+            boolean noXAxis = !northConnected && !southConnected;
+            boolean noZAxis = !eastConnected && !westConnected;
+            if (!westConnected && noXAxis) {
                 state = state.setValue(WEST, RedstoneSide.SIDE);
             }
 
-            if (!flag3 && flag5) {
+            if (!eastConnected && noXAxis) {
                 state = state.setValue(EAST, RedstoneSide.SIDE);
             }
 
-            if (!flag1 && flag6) {
+            if (!northConnected && noZAxis) {
                 state = state.setValue(NORTH, RedstoneSide.SIDE);
             }
 
-            if (!flag2 && flag6) {
+            if (!southConnected && noZAxis) {
                 state = state.setValue(SOUTH, RedstoneSide.SIDE);
             }
         }
@@ -157,11 +157,11 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     private BlockState getMissingConnections(BlockGetter world, BlockState state, BlockPos pos) {
-        boolean flag = !world.getBlockState(pos.above()).isRedstoneConductor(world, pos);
+        boolean canClimbUp = !world.getBlockState(pos.above()).isRedstoneConductor(world, pos);
 
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             if (!state.getValue(PROPERTY_BY_DIRECTION.get(direction)).isConnected()) {
-                RedstoneSide redstoneside = this.getConnectingSide(world, pos, direction, flag);
+                RedstoneSide redstoneside = this.getConnectingSide(world, pos, direction, canClimbUp);
                 state = state.setValue(PROPERTY_BY_DIRECTION.get(direction), redstoneside);
             }
         }
@@ -227,18 +227,18 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     private RedstoneSide getConnectingSide(BlockGetter world, BlockPos pos, Direction dir, boolean canClimbUp) {
-        BlockPos blockpos = pos.relative(dir);
-        BlockState blockstate = world.getBlockState(blockpos);
+        BlockPos facingPos = pos.relative(dir);
+        BlockState facingState = world.getBlockState(facingPos);
         if (canClimbUp) {
-            boolean flag = this.canSurviveOn(world, blockpos, blockstate);
-            if (flag && canConnectTo(world.getBlockState(blockpos.above()), world, blockpos.above(), null)) {
-                if (blockstate.isFaceSturdy(world, blockpos, dir.getOpposite())) {
+            boolean canSurvive = this.canSurviveOn(world, facingPos, facingState);
+            if (canSurvive && canClimbTo(world.getBlockState(facingPos.above()), world, facingPos.above(), null)) {
+                if (facingState.isFaceSturdy(world, facingPos, dir.getOpposite())) {
                     return RedstoneSide.UP;
                 }
                 return RedstoneSide.SIDE;
             }
         }
-        return !canConnectTo(blockstate, world, blockpos, dir) && (blockstate.isRedstoneConductor(world, blockpos) || !canConnectTo(world.getBlockState(blockpos.below()), world, blockpos.below(), null)) ? RedstoneSide.NONE : RedstoneSide.SIDE;
+        return !canConnectTo(facingState, world, facingPos, dir) && (facingState.isRedstoneConductor(world, facingPos) || !canConnectTo(world.getBlockState(facingPos.below()), world, facingPos.below(), null)) ? RedstoneSide.NONE : RedstoneSide.SIDE;
     }
 
     @Override
@@ -252,11 +252,20 @@ public class GunpowderBlock extends LightUpBlock {
         return state.isFaceSturdy(world, pos, Direction.UP) || state.is(Blocks.HOPPER);
     }
 
+    // same as can connect but just applies to blocks over and up from it
+    protected boolean canClimbTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
+        Block b = state.getBlock();
+        return state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) ||
+                b instanceof ILightable || b instanceof TntBlock ||
+                b instanceof AbstractCandleBlock;
+    }
+
     @SuppressWarnings("ConstantConditions")
     protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
-        return state.is(ModTags.LIGHTS_GUNPOWDER) || b instanceof ILightable || b instanceof TntBlock ||
-                b instanceof AbstractCandleBlock || b == CompatObjects.NUKE_BLOCK.get();
+        return state.is(ModTags.LIGHTS_GUNPOWDER) || state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) ||
+                b instanceof ILightable || b instanceof TntBlock ||
+                b instanceof AbstractCandleBlock;
     }
 
     @Override
@@ -401,7 +410,7 @@ public class GunpowderBlock extends LightUpBlock {
             else {
                 for (Direction dir : Direction.values()) {
                     BlockPos p = pos.relative(dir);
-                    if (isFireSource(world, p)) {
+                    if (canLightMeOnFire(world, p)) {
                         this.lightUp(null, state, pos, world, FireSourceType.FLAMING_ARROW);
                         world.scheduleTick(pos, this, getDelay());
                         break;
@@ -413,7 +422,8 @@ public class GunpowderBlock extends LightUpBlock {
 
 
     public static void createMiniExplosion(Level world, BlockPos pos, boolean alwaysFire) {
-        GunpowderExplosion explosion = new GunpowderExplosion(world, null, pos.getX(), pos.getY(), pos.getZ(), 0.5f);
+        GunpowderExplosion explosion = new GunpowderExplosion(world, null,
+                pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0.5f);
         if (ForgeHelper.onExplosionStart(world, explosion)) return;
         explosion.explode();
         explosion.finalizeExplosion(alwaysFire);
@@ -471,23 +481,23 @@ public class GunpowderBlock extends LightUpBlock {
     }
 
     @SuppressWarnings("ConstantConditions")
-    public static boolean isFireSource(BlockState state, BlockGetter level, BlockPos pos) {
+    public static boolean canLightMeOnFire(BlockState state, BlockGetter level, BlockPos pos) {
         Block b = state.getBlock();
+
+        if (state.is(ModTags.LIGHTS_GUNPOWDER)) {
+            if (state.getBlock() instanceof ILightable l) return l.isLitUp(state, level, pos);
+            if (state.hasProperty(BlockStateProperties.LIT)) return state.getValue(BlockStateProperties.LIT);
+            return true;
+        }
         if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
             return true;
-        if (state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) && state.hasProperty(BlockStateProperties.LIT)) {
-            return state.getValue(BlockStateProperties.LIT);
-        }
-        if(state.is(ModTags.LIGHTS_GUNPOWDER)){
-            return !(state.getBlock() instanceof ILightable l) || l.isLitUp(state, level, pos);
-        }
         return false;
     }
 
-    public static boolean isFireSource(LevelAccessor world, BlockPos pos) {
+    public static boolean canLightMeOnFire(LevelAccessor world, BlockPos pos) {
         //wires handled separately
         BlockState state = world.getBlockState(pos);
-        return isFireSource(state, world, pos);
+        return canLightMeOnFire(state, world, pos);
     }
 
     //TODO: this is not working
@@ -567,9 +577,9 @@ public class GunpowderBlock extends LightUpBlock {
         float in = (7.5f - (burning - 1)) / 7.5f;
         if ((rand.nextFloat() < 1 * f * in)) {
             float f2 = from + f * rand.nextFloat();
-            double x = pos.getX() + 0.5D +  (0.4375F * dir1.getStepX()) + (f2 * dir2.getStepX());
-            double y = pos.getY() + 0.5D +  (0.4375F * dir1.getStepY()) + (f2 * dir2.getStepY());
-            double z = pos.getZ() + 0.5D +  (0.4375F * dir1.getStepZ()) + (f2 * dir2.getStepZ());
+            double x = pos.getX() + 0.5D + (0.4375F * dir1.getStepX()) + (f2 * dir2.getStepX());
+            double y = pos.getY() + 0.5D + (0.4375F * dir1.getStepY()) + (f2 * dir2.getStepY());
+            double z = pos.getZ() + 0.5D + (0.4375F * dir1.getStepZ()) + (f2 * dir2.getStepZ());
 
             float velY = (burning / 15.0F) * 0.03F;
             float velX = rand.nextFloat() * 0.02f - 0.01f;

@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
@@ -16,8 +17,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -72,26 +71,37 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onKeyPress(InputEvent.Key event) {
-        if (Minecraft.getInstance().screen == null &&
+        int action = event.getAction();
+        Minecraft mc = Minecraft.getInstance();
+        var player = mc.player;
+        if (mc.screen == null &&
                 ClientRegistry.QUIVER_KEYBIND.matches(event.getKey(), event.getScanCode())
-                && Minecraft.getInstance().player instanceof IQuiverPlayer qe) {
-            int a = event.getAction();
-            if (a == InputConstants.REPEAT || a == InputConstants.PRESS) {
-                SelectableContainerItemHud.INSTANCE.setUsingKeybind(qe.supplementaries$getQuiverSlot());
-            } else if (a == InputConstants.RELEASE) {
-                SelectableContainerItemHud.INSTANCE.setUsingKeybind(SlotReference.EMPTY);
+                && player instanceof IQuiverPlayer qe) {
+            if (action == InputConstants.REPEAT || action == InputConstants.PRESS) {
+                SelectableContainerItemHud.getInstance().setUsingKeybind(qe.supplementaries$getQuiverSlot(), player);
+            } else if (action == InputConstants.RELEASE) {
+                SelectableContainerItemHud.getInstance().setUsingKeybind(SlotReference.EMPTY, player);
             }
         }
 
-        if (CannonController.isActive()) {
-            CannonController.onKeyPressed(event.getKey(), event.getAction(), event.getModifiers());
-            //event.setCanceled(true);
+        if (CannonController.isActive() && action == GLFW.GLFW_PRESS) {
+            int key = event.getKey();
+            int scanCode = event.getScanCode();
+            if (mc.options.keyJump.matches(key, scanCode)) {
+                CannonController.onKeyJump();
+            }
+            if (mc.options.keyShift.matches(key, scanCode)) {
+                CannonController.onKeyShift();
+            }
+            if (mc.options.keyInventory.matches(key, scanCode)) {
+                CannonController.onKeyInventory();
+            }
         }
     }
 
     @SubscribeEvent
     public static void onMouseScrolled(InputEvent.MouseScrollingEvent event) {
-        if (SelectableContainerItemHud.INSTANCE.onMouseScrolled(event.getScrollDelta())) {
+        if (SelectableContainerItemHud.getInstance().onMouseScrolled(event.getScrollDelta())) {
             event.setCanceled(true);
         }
         if (CannonController.isActive()) {
@@ -100,28 +110,44 @@ public class ClientEventsForge {
         }
     }
 
+    @SubscribeEvent
+    public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
+        if (CannonController.isActive()) {
+            event.setCanceled(true);
+            event.setSwingHand(false);
+            if (event.isAttack()) {
+                CannonController.onPlayerAttack();
+            } else if (event.isUseItem()) {
+                CannonController.onPlayerUse();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void renderHandEvent(RenderHandEvent event) {
+        if (CannonController.isActive()) event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
+        if (CannonController.isActive()) {
+            var overlay = event.getOverlay();
+            if (overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
+                event.setCanceled(true);
+            }
+        }
+    }
 
     //forge only below
 
     //TODO: add to fabric
 
-    private static double wobble; // from 0 to 1
 
     @SubscribeEvent
     public static void onCameraSetup(ViewportEvent.ComputeCameraAngles event) {
-        Player p = Minecraft.getInstance().player;
-        if (p != null && !Minecraft.getInstance().isPaused()) {
-            boolean isOnRope = ClientEvents.isIsOnRope();
-            if (isOnRope || wobble != 0) {
-                double period = ClientConfigs.Blocks.ROPE_WOBBLE_PERIOD.get();
-                double newWobble = (((p.tickCount + event.getPartialTick()) / period) % 1);
-                if (!isOnRope && newWobble < wobble) {
-                    wobble = 0;
-                } else {
-                    wobble = newWobble;
-                }
-                event.setRoll((float) (event.getRoll() + Mth.sin((float) (wobble * 2 * Math.PI)) * ClientConfigs.Blocks.ROPE_WOBBLE_AMPLITUDE.get()));
-            }
+        double wobble = ClientEvents.getRopeWobble(event.getPartialTick());
+        if (wobble != 0) {
+            event.setRoll((float) (event.getRoll() + wobble));
         }
     }
 
@@ -155,38 +181,23 @@ public class ClientEventsForge {
     }
 
     @SubscribeEvent
-    public static void onClickInput(InputEvent.InteractionKeyMappingTriggered event) {
-        if (CannonController.isActive()) {
-            event.setCanceled(true);
-            event.setSwingHand(false);
-            if (event.isAttack()) {
-                CannonController.onPlayerAttack();
-            } else if (event.isUseItem()) {
-                CannonController.onPlayerUse();
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void renderHandEvent(RenderHandEvent event) {
-        if (CannonController.isActive())
-            event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public static void onRenderGuiOverlayPre(RenderGuiOverlayEvent.Pre event) {
-        if (CannonController.isActive()) {
-            var overlay = event.getOverlay();
-            if (overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type() || overlay == VanillaGuiOverlay.HOTBAR.type()) {
-                event.setCanceled(true);
-            }
-        }
-    }
-
-    @SubscribeEvent
     public static void onRenderOutline(RenderHighlightEvent.Block event) {
         if (CannonController.isActive()) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAddTooltips(RenderTooltipEvent.GatherComponents event) {
+        ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof SelectableContainerItem<?> si) {
+            ItemStack selected = si.getData(stack).getSelected();
+            if (selected.getItem() instanceof SelectableContainerItem<?>) {
+                return;
+            }
+            RenderTooltipEvent.GatherComponents newEvent = new RenderTooltipEvent.GatherComponents(selected,
+                    event.getScreenWidth(), event.getScreenHeight(), event.getTooltipElements(), event.getMaxWidth());
+            MinecraftForge.EVENT_BUS.post(newEvent);
         }
     }
 

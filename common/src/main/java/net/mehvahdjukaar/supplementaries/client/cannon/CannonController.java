@@ -177,24 +177,20 @@ public class CannonController {
         if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
     }
 
-
-    public static void onKeyPressed(int key, int action, int modifiers) {
-        if (action != GLFW.GLFW_PRESS) return;
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.screen != null) return;
-        Options options = mc.options;
-        if (options.keyShift.matches(key, action)) {
-            stopControllingAndSync();
-        } else if (options.keyInventory.matches(key, action)) {
-            ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
-
-            //Minecraft.getInstance().player.openMenu()
-        } else if (options.keyJump.matches(key, action)) {
-            if (trajectory != null && trajectory.gravity() != 0) {
-                shootingMode = shootingMode.cycle();
-                needsToUpdateServer = true;
-            }
+    public static void onKeyJump(){
+        if (trajectory != null && trajectory.gravity() != 0) {
+            shootingMode = shootingMode.cycle();
+            needsToUpdateServer = true;
         }
+    }
+
+    public static void onKeyInventory(){
+        //Disabled, too buggy
+        ModNetwork.CHANNEL.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon.getBlockPos()));
+    }
+
+    public static void onKeyShift(){
+        stopControllingAndSync();
     }
 
     public static void onMouseScrolled(double scrollDelta) {

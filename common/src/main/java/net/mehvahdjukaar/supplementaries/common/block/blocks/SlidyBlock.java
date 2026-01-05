@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -71,7 +73,17 @@ public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
     public static boolean canFall(BlockPos pos, LevelAccessor world) {
         return (world.isEmptyBlock(pos.below()) || isFree(world.getBlockState(pos.below()))) &&
                 pos.getY() >= world.getMinBuildHeight() &&
-                !IRopeConnection.isSupportingCeiling(pos.above(), world);
+                !IRopeConnection.isSupportingCeiling(pos.above(), world) &&
+                !hasHoneyAround(pos, world);
+    }
+
+    private static boolean hasHoneyAround(BlockPos pos, LevelAccessor world) {
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            if (world.getBlockState(pos.relative(dir)).is(Blocks.HONEY_BLOCK)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -99,12 +111,12 @@ public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
                                  InteractionHand hand, BlockHitResult hit) {
+        if (hit.getDirection().getAxis() == Direction.Axis.Y) return InteractionResult.PASS;
         if (MovingSlidyBlock.maybeMove(state, level, pos, hit.getDirection().getOpposite())) {
             level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
             return InteractionResult.sidedSuccess(level.isClientSide);
         }
         return InteractionResult.FAIL;
     }
-
 
 }

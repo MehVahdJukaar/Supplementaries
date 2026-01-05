@@ -1,12 +1,15 @@
 {
-  "type": "simple",
-  "max_trades": 8,
-  "price": {
-    "id": "minecraft:emerald",
-    "Count": 1
-  },
-  "offer": {
-    "id": "minecraft:gunpowder",
-    "Count": 2
+  "type": "supplementaries:wrap_on_christmas",
+  "trade": {
+    "type": "simple",
+    "max_trades": 8,
+    "price": {
+      "id": "minecraft:emerald",
+      "Count": 1
+    },
+    "offer": {
+      "id": "minecraft:gunpowder",
+      "Count": 2
+    }
   }
 }

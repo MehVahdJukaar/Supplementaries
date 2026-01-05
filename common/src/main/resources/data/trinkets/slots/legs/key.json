@@ -1,4 +1,10 @@
 {
+	"global_conditions": [
+		{
+			"flag": "key",
+			"type": "supplementaries:flag"
+		}
+	],
 	"icon": "supplementaries:gui/slots/key",
 	"replace": false,
 	"amount": 1,

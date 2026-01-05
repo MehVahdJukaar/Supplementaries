@@ -12,7 +12,7 @@ class MudInteraction implements FaucetTarget.BlState {
     @Override
     public Integer fill(Level level, BlockPos pos, BlockState state, FluidOffer offer) {
         if (state.is(Blocks.DIRT)) {
-            if (offer.fluid().is(BuiltInSoftFluids.WATER.get())) {
+            if (offer.fluid().is(BuiltInSoftFluids.WATER)) {
                 level.setBlock(pos, Blocks.MUD.defaultBlockState(), 3);
                 return offer.minAmount();
             }

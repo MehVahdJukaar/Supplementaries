@@ -1,10 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
@@ -14,46 +19,45 @@ import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
+import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
-import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
-import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 
 
 public class ClientEvents {
+
+    protected static final MutableComponent PLACEABLE_TOOLTIP = Component.translatable("message.supplementaries.placeable")
+            .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC);
 
     @EventCalled
     public static void onItemTooltip(ItemStack itemStack, TooltipFlag tooltipFlag, List<Component> components) {
@@ -63,10 +67,11 @@ public class ClientEvents {
 
         if (ClientConfigs.General.PLACEABLE_TOOLTIP.get()) {
             if (AdditionalItemPlacementsAPI.getBehavior(itemStack.getItem()) instanceof SuppAdditionalPlacement) {
-                components.add(Component.translatable("message.supplementaries.placeable").withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC));
+                components.add(PLACEABLE_TOOLTIP);
             }
         }
 
+        //TODO: remove in 1.21
         Item item = itemStack.getItem();
         if (item == ModRegistry.ROPE_ARROW_ITEM.get() || item == ModRegistry.BUBBLE_BLOWER.get()) {
 
@@ -98,6 +103,9 @@ public class ClientEvents {
         if (!CompatHandler.AMENDMENTS && !ClientConfigs.General.NO_AMENDMENTS_WARN.get()) {
             newScreen = WelcomeMessageScreen.createAmendments(newScreen);
         }
+        if (!ClientConfigs.General.NO_INCOMPATIBLE_MODS.get() && WelcomeMessageScreen.hasIncompat() && !PlatHelper.isDev()) {
+            newScreen = WelcomeMessageScreen.createIncompatibleMods(newScreen);
+        }
         if (newScreen != screen) Minecraft.getInstance().setScreen(newScreen);
     }
 
@@ -112,64 +120,28 @@ public class ClientEvents {
         if (p == null) return;
 
         checkIfOnRope(p);
-        applyMobHeadShaders(p, minecraft);
+        MobHeadShadersManager.INSTANCE.applyMobHeadShaders(p, minecraft);
         CannonController.onClientTick(minecraft);
     }
 
-    private static String currentlyAppliedMobShader = null;
+    private static boolean isOnRope;
+    private static double wobble; // from 0 to 1
 
-    private static void applyMobHeadShaders(Player p, Minecraft mc) {
-        if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get() && !p.isSpectator()) {
-            GameRenderer renderer = Minecraft.getInstance().gameRenderer;
-
-            String current = renderer.postEffect == null ? null : renderer.postEffect.getName();
-            if (current == null && currentlyAppliedMobShader != null) {
-                currentlyAppliedMobShader = null; //clear when something else unsets it
-                return;
-            }
-
-            ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
-            if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
-            Item item = stack.getItem();
-            String newShader;
-            if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-                newShader = EFFECTS_PER_ITEM.get(item);
-            } else newShader = null;
-
-            if (newShader == null && shouldHaveGoatedEffect(p, item)) {
-                newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
-            }
-            if (newShader != null && !newShader.equals(current)) {
-                renderer.loadEffect(new ResourceLocation(newShader));
-                currentlyAppliedMobShader = newShader;
-            } else if (current != null && (!current.equals(currentlyAppliedMobShader) || newShader == null)) {
-                renderer.shutdownEffect();
-                currentlyAppliedMobShader = null;
+    public static double getRopeWobble(double partialTicks) {
+        Player p = Minecraft.getInstance().player;
+        if (p != null && !Minecraft.getInstance().isPaused() && !p.isSpectator()) {
+            if (isOnRope || wobble != 0) {
+                double period = ClientConfigs.Blocks.ROPE_WOBBLE_PERIOD.get();
+                double newWobble = (((p.tickCount + partialTicks) / period) % 1);
+                if (!isOnRope && newWobble < wobble) {
+                    wobble = 0;
+                } else {
+                    wobble = newWobble;
+                }
+                return Mth.sin((float) (wobble * 2 * Math.PI)) * ClientConfigs.Blocks.ROPE_WOBBLE_AMPLITUDE.get();
             }
         }
-    }
-
-    private static boolean shouldHaveGoatedEffect(Player p, Item item) {
-        return CompatHandler.GOATED && item == CompatObjects.BARBARIC_HELMET.get() && p.getHealth() < 5;
-    }
-
-    private static final Map<Item, String> EFFECTS_PER_ITEM = Util.make(() -> {
-        var map = new Object2ObjectOpenHashMap<Item, String>();
-        map.put(Items.CREEPER_HEAD, "minecraft:shaders/post/creeper.json");
-        map.put(Items.SKELETON_SKULL, ClientRegistry.BLACK_AND_WHITE_SHADER.toString());
-        map.put(Items.WITHER_SKELETON_SKULL, ClientRegistry.BLACK_AND_WHITE_SHADER.toString());
-        map.put(Items.ZOMBIE_HEAD, "minecraft:shaders/post/desaturate.json");
-        map.put(Items.DRAGON_HEAD, ClientRegistry.FLARE_SHADER.toString());
-        map.put(ModRegistry.CAGE_ITEM.get(), ClientRegistry.RAGE_SHADER.toString());
-        map.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), "minecraft:shaders/post/invert.json");
-
-        return map;
-    });
-
-    private static boolean isOnRope;
-
-    public static boolean isIsOnRope() {
-        return isOnRope;
+        return 0;
     }
 
     private static void checkIfOnRope(Player p) {
@@ -180,9 +152,9 @@ public class ClientEvents {
 
     //TODO: this isnt ideal. Improve
     public static void onEntityLoad(Entity entity, Level clientLevel) {
-        if (entity instanceof AbstractSkeleton q && entity instanceof IQuiverEntity) {
+        if (entity instanceof AbstractSkeleton && entity instanceof IQuiverEntity q) {
             //ask server to send quiver data
-            ModNetwork.CHANNEL.sendToServer(new SyncSkellyQuiverPacket(q));
+            ModNetwork.CHANNEL.sendToServer(new SyncEquippedQuiverPacket(entity, q));
         }
         if (entity instanceof IPartyCreeper && entity instanceof Creeper c) {
             ModNetwork.CHANNEL.sendToServer(new SyncPartyCreeperPacket(c));

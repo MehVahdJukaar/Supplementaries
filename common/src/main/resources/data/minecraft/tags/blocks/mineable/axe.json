@@ -6,6 +6,10 @@
     "supplementaries:pulley_block",
     "supplementaries:lock_block",
     "supplementaries:bellows",
+    "supplementaries:fine_wood",
+    "supplementaries:fine_wood_slab",
+    "supplementaries:fine_wood_stairs",
+    "supplementaries:sign_post_wall",
     "supplementaries:speaker_block",
     "supplementaries:bamboo_spikes",
     "supplementaries:notice_board",
@@ -16,6 +20,7 @@
     "supplementaries:timber_frame",
     "supplementaries:daub_cross_brace",
     "supplementaries:daub_brace",
-    "supplementaries:daub_frame"
+    "supplementaries:daub_frame",
+    "supplementaries:wicker_fence"
   ]
 }

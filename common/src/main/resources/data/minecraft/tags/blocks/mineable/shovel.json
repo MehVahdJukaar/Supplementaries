@@ -3,6 +3,8 @@
   "values": [
     "supplementaries:raked_gravel",
     "supplementaries:sugar_cube",
+    "supplementaries:gravel_bricks",
+    "supplementaries:suspicious_gravel_bricks",
     "supplementaries:ash"
   ]
 }

@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.block.IWaxable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -22,12 +23,16 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.UUID;
+
+import static net.mehvahdjukaar.supplementaries.common.block.blocks.BlackboardBlock.colorToByte;
 
 public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         IOnePlayerInteractable, IScreenProvider, IWaxable, IExtraModelDataProvider {
@@ -126,9 +131,44 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         return bytes;
     }
 
-    //string length = 16*4 = 64
+    //string length = 16*4+64 = 128
     public static String packPixelsToString(long[] packed) {
         StringBuilder builder = new StringBuilder();
+        for (var l : packed) {
+            char c = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + (4 * k))) & 1));
+                }
+                c = (char) (c | (h << k));
+            }
+            char c1 = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + 16 + (4 * k))) & 1));
+                }
+                c1 = (char) (c1 | (h << k));
+            }
+            char c2 = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + 32 + (4 * k))) & 1));
+                }
+                c2 = (char) (c2 | (h << k));
+            }
+            char c3 = 0;
+            for (int k = 0; k < 4; k++) {
+                byte h = 0;
+                for (int j = 0; j < 4; j++) {
+                    h = (byte) (h | ((l >> (j + 48 + (4 * k))) & 1));
+                }
+                c3 = (char) (c3 | (h << k));
+            }
+            builder.append(c).append(c1).append(c2).append(c3);
+        }
         for (var l : packed) {
             char a = (char) (l & Character.MAX_VALUE);
             char b = (char) (l >> 16 & Character.MAX_VALUE);
@@ -140,11 +180,14 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     public static long[] unpackPixelsFromString(String packed) {
-        long[] unpacked = new long[16];
-        var chars = packed.toCharArray();
+        long[] unpacked = unpackPixelsFromStringWhiteOnly(packed);
+        if (packed.length() <= 64) {
+            return unpacked;
+        }
+        var chars = packed.substring(64).toCharArray();
         int j = 0;
-        for (int i = 0; i + 3 < chars.length; i += 4) {
-            unpacked[j] = (long) chars[i + 3] << 48 | (long) chars[i + 2] << 32 | (long) chars[i + 1] << 16 | chars[i];
+        for (int i = 0; i + 3 < chars.length && j < 16; i += 4) {
+            unpacked[j] = (unpacked[j] * 15) & ((long) chars[i + 3] << 48 | (long) chars[i + 2] << 32 | (long) chars[i + 1] << 16 | chars[i]);
             j++;
         }
         return unpacked;
@@ -154,7 +197,7 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
         long[] unpacked = new long[16];
         var chars = packed.toCharArray();
         int j = 0;
-        for (int i = 0; i + 3 < chars.length; i += 4) {
+        for (int i = 0; i + 3 < chars.length && j < 16; i += 4) {
             long l = 0;
             char c = chars[i];
             for (int k = 0; k < 4; k++) {
@@ -290,16 +333,33 @@ public class BlackboardBlockTile extends BlockEntity implements IOwnerProtected,
     }
 
     public boolean tryAcceptingClientPixels(ServerPlayer player, byte[][] pixels) {
-        if (this.isEditingPlayer(player)) {
-            level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
-                    SoundSource.BLOCKS, 1, 1);
-            this.setPixels(pixels);
-            this.setPlayerWhoMayEdit(null);
-            return true;
-        } else {
+        if (!this.isEditingPlayer(player)) {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
         }
+        //check if all pixels are non colored
+        if (!CommonConfigs.Building.BLACKBOARD_COLOR.get()) {
+            byte black = colorToByte(DyeColor.BLACK);
+            byte white = colorToByte(DyeColor.WHITE);
+            for (byte[] pixel : pixels) {
+                for (byte b : pixel) {
+                    if (b != black && b != white) {
+                        Supplementaries.LOGGER.warn("Player {} just tried to change blackboard block with colored pixels",
+                                player.getName().getString());
+                        return false;
+                    }
+                }
+            }
+        }
+        if (!Arrays.deepEquals(pixels, this.pixels)) {
+            level.playSound(null, this.worldPosition, ModSounds.BLACKBOARD_DRAW.get(),
+                    SoundSource.BLOCKS, 1, 1);
+
+            this.setPlayerWhoMayEdit(null);
+            this.setPixels(pixels);
+            return true;
+        }
         return false;
+
     }
 }

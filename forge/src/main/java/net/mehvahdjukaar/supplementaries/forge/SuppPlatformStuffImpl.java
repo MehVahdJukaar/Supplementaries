@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.forge;
 
+import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.common.capabilities.CapabilityHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
@@ -112,6 +113,10 @@ public class SuppPlatformStuffImpl {
         ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
     }
 
+    public static void disableIMWarn() {
+        ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_INCOMPATIBLE_MODS).set(true);
+    }
+
     public static void disableOFWarn(boolean on) {
         ((ForgeConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(on);
     }
@@ -126,8 +131,7 @@ public class SuppPlatformStuffImpl {
             for (int i = 0; i < cap.getSlots(); i++) {
                 ItemStack quiver = cap.getStackInSlot(i);
                 if (predicate.test(quiver)) {
-                    int finalI = i;
-                    return () -> cap.getStackInSlot(finalI);
+                    return new CapSlotReference(i);
                 }
             }
         }
@@ -160,7 +164,7 @@ public class SuppPlatformStuffImpl {
     }
 
 
-    public static InteractionResultHolder<ItemStack> fireItemUseEvent(Player player, InteractionHand hand) {
+    public static InteractionResultHolder<ItemStack> fireItemRightClickEvent(Player player, InteractionHand hand) {
         var r = ForgeHooks.onItemRightClick(player, hand);
         if (r == null) r = InteractionResult.PASS;
         return new InteractionResultHolder<>(r, player.getItemInHand(hand));
@@ -168,6 +172,54 @@ public class SuppPlatformStuffImpl {
 
     public static void dispenseContent(DispensibleContainerItem dc, ItemStack stack, BlockHitResult hit, Level level, @Nullable Player player) {
         dc.emptyContents(player, level, hit.getBlockPos(), hit, stack);
+    }
+
+    public static void releaseUsingItem(ItemStack stack, LivingEntity entity) {
+        //does what LivingEntity releaseUsingItem but for an arbitrary item thats not being directly used
+        if (!ForgeEventFactory.onUseItemStop(entity, stack, entity.getUseItemRemainingTicks())) {
+            ItemStack copy = entity instanceof Player ? stack.copy() : null;
+            stack.releaseUsing(entity.level(), entity, entity.getUseItemRemainingTicks());
+            if (copy != null && stack.isEmpty()) {
+                ForgeEventFactory.onPlayerDestroyItem((Player) entity, copy, entity.getUsedItemHand());
+            }
+        }
+/*
+        if (stack.useOnRelease()) {
+            entity.updatingUsingItem();
+        }
+*/
+        //this whould be this.stopUsingItem() which calls the below
+        stack.onStopUsing(entity, entity.getUseItemRemainingTicks());
+    }
+
+    public static ItemStack finishUsingItem(ItemStack item, Level level, LivingEntity entity) {
+        return ForgeEventFactory.onItemUseFinish(entity, item.copy(), entity.getUseItemRemainingTicks(),
+                item.finishUsingItem(level, entity));
+    }
+
+    public record CapSlotReference(int slot) implements SlotReference {
+
+        public static final Codec<CapSlotReference> CODEC = Codec.INT
+                .xmap(CapSlotReference::new, CapSlotReference::slot);
+
+
+        @Override
+        public ItemStack get(LivingEntity player) {
+            var cap = player.getCapability(ForgeCapabilities.ITEM_HANDLER);
+            if (cap.isPresent()) {
+                return cap.orElse(null).getStackInSlot(slot);
+            }
+            return null;
+        }
+
+        @Override
+        public Codec<? extends SlotReference> getCodec() {
+            return CODEC;
+        }
+    }
+
+    static {
+        SlotReference.REGISTRY.register("cap_slot", CapSlotReference.CODEC);
     }
 
 }

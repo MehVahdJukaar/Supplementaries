@@ -57,4 +57,23 @@ public class PresentItem extends BlockItem implements IColored {
     public boolean supportsBlankColor() {
         return true;
     }
+
+    @ForgeOverride
+    public int getMaxStackSize(ItemStack stack) {
+        var tag = stack.getTag();
+        return(tag != null && tag.contains("Recipient")) ? 1 : this.getDefaultMaxStackSize();
+    }
+
+    @ForgeOverride
+    public boolean canFitInsideContainerItems(ItemStack stack) {
+        var tag = stack.getTag();
+
+        return !stack.has(ModComponents.ADDRESS.get());
+    }
+
+    @Override
+    public boolean canFitInsideContainerItems() {
+        return false;
+    }
+
 }

@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,6 +19,7 @@ public class MovingSlidyBlockSource extends DirectionalBlock {
     public MovingSlidyBlockSource(Properties properties) {
         super(properties);
     }
+
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -40,10 +42,12 @@ public class MovingSlidyBlockSource extends DirectionalBlock {
         BlockState frontState = level.getBlockState(pos.relative(state.getValue(FACING)));
         if (!frontState.is(ModRegistry.MOVING_SLIDY_BLOCK.get()) ||
                 frontState.getValue(FACING) != state.getValue(FACING)) {
-            level.removeBlock(pos, true);
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(),
+                    Block.UPDATE_ALL | Block.UPDATE_MOVE_BY_PISTON);
+            //mixin suppresses obserber updates
+            //we need to update all for falling blocks
         }
     }
-    //TODO: fix not updating neighboring blocks
 
 
 }

@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -57,6 +58,7 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
     public static final EnumProperty<ModBlockProperties.Bunting> EAST = ModBlockProperties.EAST_BUNTING;
     public static final BooleanProperty UP = BlockStateProperties.UP;
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
+    public static final BooleanProperty FLIP_TILE = ModBlockProperties.FLIP_TILE;
 
     public static final Map<Direction, EnumProperty<ModBlockProperties.Bunting>> HORIZONTAL_FACING_TO_PROPERTY_MAP = Util.make(Maps.newEnumMap(Direction.class), (directions) -> {
         directions.put(Direction.NORTH, NORTH);
@@ -77,14 +79,21 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
             }
             buntingToRope.put(state, state1);
         }
+        this.registerDefaultState(this.defaultBlockState().setValue(FLIP_TILE, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(NORTH, SOUTH, WEST, EAST, UP, DOWN);
+        builder.add(NORTH, SOUTH, WEST, EAST, UP, DOWN, FLIP_TILE);
     }
 
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return super.getShape(state.setValue(FLIP_TILE, false), worldIn, pos, context);
+    }
+
+    @Override
     protected Map<BlockState, VoxelShape> makeShapes() {
         Map<BlockState, VoxelShape> shapes = new HashMap<>();
 
@@ -104,6 +113,7 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
 
         for (BlockState state : this.stateDefinition.getPossibleStates()) {
             if (state.getValue(WATERLOGGED)) continue;
+            if (state.getValue(FLIP_TILE)) continue;
             VoxelShape v = Shapes.empty();
             if (state.getValue(KNOT)) v = Shapes.or(knot);
             if (state.getValue(DOWN)) v = Shapes.or(v, down);
@@ -168,24 +178,33 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
     public Optional<Direction> rotateOverAxis(BlockState state, LevelAccessor level, BlockPos pos, Rotation rotation, Direction axis, @Nullable Vec3 hit) {
         if (axis.getAxis() == Direction.Axis.Y) {
             if (level.getBlockEntity(pos) instanceof BuntingBlockTile tile) {
-                Map<Direction, ItemStack> newMap = new HashMap<>();
-                for (Direction dir : Direction.Plane.HORIZONTAL) {
-                    ItemStack stack = tile.getItem(dir.get2DDataValue());
-                    if (stack.isEmpty()) continue;
-                    Direction newDir = rotation.rotate(dir);
-                    if (canSupportBunting(state, newDir.get2DDataValue())) {
-                        newMap.put(newDir, stack);
-                    } else return Optional.empty();
-                }
-                if (!newMap.isEmpty()) {
-                    tile.clearContent();
-                    newMap.forEach((dir, stack) ->
-                            tile.setItem(dir.get2DDataValue(), stack));
-                    return Optional.of(axis);
-                }
+                if (tile.rotateBuntings(state, rotation)) return Optional.of(axis);
             }
         }
         return Optional.empty();
+    }
+
+    //aaa, structure blocks dont call anything with world awareness
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        var s = super.rotate(state, rotation);
+        if (rotation == Rotation.CLOCKWISE_90 || rotation == Rotation.COUNTERCLOCKWISE_90) {
+            s = s.setValue(FLIP_TILE, !s.getValue(FLIP_TILE));
+        }
+        return s;
+    }
+
+    @ForgeOverride
+    public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation direction) {
+        BlockState s = rotate(state, direction);
+        s = s.setValue(FLIP_TILE, false);
+        rotateOverAxis(state, level, pos, direction, Direction.UP, null);
+        return s;
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return super.mirror(state, mirror);
     }
 
     @Override

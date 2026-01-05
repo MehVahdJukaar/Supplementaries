@@ -45,6 +45,9 @@ public class CommonConfigs {
 
     private static final Supplier<Boolean> TRUE = () -> true;
     private static final Supplier<Boolean> FALSE = () -> false;
+    private static final Supplier<Double> ZERO = () -> 0d;
+
+    private static String currentCat = "";
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.res("common"), ConfigType.COMMON);
@@ -365,6 +368,8 @@ public class CommonConfigs {
 
             builder.push("sugar_cube");
             SUGAR_CUBE_ENABLED = feature(builder);
+            SUGAR_CUBE_RAIN = builder.comment("Makes sugar cubes dissolve in rain")
+                    .define("dissolve_in_rain", true);
             SUGAR_BLOCK_HORSE_SPEED_DURATION = builder.comment("Duration in seconts of speed effect garanted to horses that eat a sugar cube")
                     .define("horse_speed_duration", 10, 0, 1000);
             builder.pop();
@@ -387,8 +392,8 @@ public class CommonConfigs {
 
             builder.push("pedestal");
             PEDESTAL_ENABLED = feature(builder);
-            CRYSTAL_ENCHANTING = builder.comment("If enabled end crystals placed on a pedestals will provide an enchantment power bonus equivalent to 3 bookshelves")
-                    .define("crystal_enchanting", 3, 0, 100);
+            CRYSTAL_ENCHANTING = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("If enabled end crystals placed on a pedestals will provide an enchantment power bonus equivalent to 3 bookshelves")
+                    .define("crystal_enchanting", 3, 0d, 100);
             builder.pop();
 
             builder.push("ash");
@@ -396,16 +401,10 @@ public class CommonConfigs {
             ASH_BURN_CHANCE = builder.comment("Burnable blocks will have a chance to create ash layers when burned. Greater this number the greater the chance will be")
                     .define("ash_from_fire_chance", 1d, 0, 1);
             ASH_FROM_MOBS = PlatHelper.getPlatform().isFabric() ? FALSE :
-                    builder.comment("Burning mobs will drop ash when they die")
-                            .define("ash_from_burning_mobs", true);
+                    feature(builder.comment("Burning mobs will drop ash when they die"), "ash_from_burning_mobs");
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
             BASALT_ASH_ENABLED = PlatHelper.getPlatform().isFabric() ? TRUE : builder.comment("Use a datapack to tweak rarity").define("basalt_ash", true);
-            //TODO REMOVE
-            ///BASALT_ASH_TRIES = builder.comment("Attempts at every patch to spawn 1 block. Increases average patch size")
-            //       .define("attempts_per_patch", 36, 1, 1000);
-            //BASALT_ASH_PER_CHUNK = builder.comment("Spawn attempts per chunk. Increases spawn frequency")
-            //        .define("spawn_attempts", 15, 0, 100);
             builder.pop();
 
             builder.push("flag");
@@ -468,6 +467,10 @@ public class CommonConfigs {
                     .define("simple_mode", true);
             builder.pop();
 
+            builder.push("netherite_doors");
+            NETHERITE_DOOR_ENABLED = builder.define("door", true);
+            NETHERITE_TRAPDOOR_ENABLED = builder.define("trapdoor", true);
+            builder.pop();
 
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
@@ -480,14 +483,13 @@ public class CommonConfigs {
             SCONCE_ENABLED = feature(builder, ModConstants.SCONCE_NAME);
             SCONCE_LEVER_ENABLED = feature(builder, ModConstants.SCONCE_LEVER_NAME);
             PANCAKES_ENABLED = feature(builder, ModConstants.PANCAKE_NAME);
-            NETHERITE_DOOR_ENABLED = feature(builder, ModConstants.NETHERITE_DOOR_NAME);
-            NETHERITE_TRAPDOOR_ENABLED = feature(builder, ModConstants.NETHERITE_TRAPDOOR_NAME);
             CHECKERBOARD_ENABLED = feature(builder, ModConstants.CHECKER_BLOCK_NAME);
             RAKED_GRAVEL_ENABLED = feature(builder, ModConstants.RAKED_GRAVEL_NAME);
             FEATHER_BLOCK_ENABLED = feature(builder, ModConstants.FEATHER_BLOCK_NAME);
             STATUE_ENABLED = feature(builder, ModConstants.STATUE_NAME);
             DOORMAT_ENABLED = feature(builder, ModConstants.DOORMAT_NAME);
             FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
+            FINE_WOOD_ENABLED = feature(builder, ModConstants.FINE_WOOD_NAME);
             CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
             FIRE_PIT_ENABLED = feature(builder, ModConstants.FIRE_PIT_NAME);
             WICKER_FENCE_ENABLED = feature(builder, ModConstants.WICKER_FENCE_NAME);
@@ -511,6 +513,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> BASALT_ASH_ENABLED;
 
         public static final Supplier<Boolean> SUGAR_CUBE_ENABLED;
+        public static final Supplier<Boolean> SUGAR_CUBE_RAIN;
         public static final Supplier<Integer> SUGAR_BLOCK_HORSE_SPEED_DURATION;
 
         public static final Supplier<Boolean> ITEM_SHELF_ENABLED;
@@ -539,7 +542,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> GLOBE_SEPIA;
 
         public static final Supplier<Boolean> PEDESTAL_ENABLED;
-        public static final Supplier<Integer> CRYSTAL_ENCHANTING;
+        public static final Supplier<Double> CRYSTAL_ENCHANTING;
 
         public static final Supplier<Boolean> TIMBER_FRAME_ENABLED;
         public static final Supplier<Boolean> REPLACE_DAUB;
@@ -586,6 +589,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FEATHER_BLOCK_ENABLED;
 
         public static final Supplier<Boolean> FLINT_BLOCK_ENABLED;
+        public static final Supplier<Boolean> FINE_WOOD_ENABLED;
 
         public static final Supplier<Boolean> DOORMAT_ENABLED;
 
@@ -633,6 +637,9 @@ public class CommonConfigs {
                     .define("rope_override", Supplementaries.res("rope"));
             ROPE_HORIZONTAL = builder.comment("Enables horizontal placement of ropes. Disabling will make ropes always non solid")
                     .define("horizontal_ropes", true);
+            ROPE_REPLACE_LOOT_TABLES = PlatHelper.getPlatform().isFabric() ? () -> ReplaceTableMode.NONE :
+                    builder.comment("Use this config to turn allow supplementaries to replace all items tagged as #supplementaies:ropes with supplementaries own rope or turn them to air instead. This is applied to all loot tables (chests and drops)")
+                            .define("replace_in_loot_tables", ReplaceTableMode.NONE);
             builder.pop();
 
             builder.push("jar");
@@ -690,11 +697,12 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("bamboo_spikes");
+
             BAMBOO_SPIKES_ENABLED = feature(builder);
             TIPPED_SPIKES_ENABLED = feature(builder, "tipped_spikes");
             BAMBOO_SPIKES_DROP_LOOT = builder.comment("Allows entities killed by spikes to drop loot as if they were killed by a player")
                     .define("player_loot", false);
-            ONLY_ALLOW_HARMFUL = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
+            ONLY_ALLOW_HARMFUL_INFINITE = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
                     .define("only_allow_harmful_effects", true);
             TIPPED_SPIKES_TAB = builder.comment("Populate the creative inventory with all tipped spikes variations")
                     .define("populate_creative_tab", true);
@@ -717,7 +725,6 @@ public class CommonConfigs {
                             "xycraft_world:glowing_rgb_viewer", "xycraft_world:glowing_matte_rgb_block", "xycraft_world:rgb_lamp_pole"));
             SOAP_SPECIAL = builder.comment("This is a map of special blocks that can be cleaned with soap")
                     .defineObject("special_blocks", () -> Map.of(
-                                    BlockPredicate.create("sticky_piston"), new ResourceLocation("piston"),
                                     BlockPredicate.create("quark:dirty_glass"), new ResourceLocation("glass"),
                                     BlockPredicate.create("quark:dirty_glass_pane"), new ResourceLocation("glass_pane"),
                                     BlockPredicate.create("#alexscaves:cave_paintings"), new ResourceLocation("alexscaves:smooth_limestone")
@@ -727,14 +734,22 @@ public class CommonConfigs {
 
             builder.push("cannon");
             CANNON_ENABLED = feature(builder);
+            CANNON_EXPLODE_TNT = builder.comment("Makes TNT-like block shot from a cannon explode on impact")
+                    .define("explode_tnt", TNTMode.IGNITE);
             CANNON_FIRE_POWER = builder.comment("Cannon fire power multiplier")
                     .define("fire_power", 0.6d, 0, 5);
             CANNON_FUSE_TIME = builder.comment("Time for a cannon to fire a projectile after it has been lit up")
                     .define("fuse_time", 40, 0, 500);
             CANNON_COOLDOWN = builder.comment("Time for a cannon to be able to fire again after it has been fired")
                     .define("cooldown", 60, 0, 500);
-            CANNONBALL_ENABLED = feature(builder, "cannonball");
-            AVAST_DISC_ENABLED = feature(builder, ModConstants.AVAST_DISC_NAME);
+            builder.push("cannonball");
+            CANNONBALL_ENABLED = feature(builder);
+            CANNONBALL_POWER_SCALING = builder.comment("Cannonball power scaling. Higher values will make cannonballs have more energy. Reminder that the damage and breaking power of a cannonball is proportional to its energy (speed squared) times this constant")
+                    .define("power_scaling", 3.5, 0, 100);
+            CANNONBALL_BREAK_RADIUS = builder.comment("Radius of the 'explosion' when a cannonball hits a block. Set to 0 to disable")
+                    .define("break_radius", 1.1, 0, 10);
+            builder.pop();
+            PIRATE_DISC_ENABLED = feature(builder, ModConstants.PIRATE_DISC_NAME);
             builder.pop();
 
             builder.push("present");
@@ -755,13 +770,15 @@ public class CommonConfigs {
             LUMISENE_BOTTLE = feature(builder
                     .comment("Enables lumisene bottles and the flammable effect and lumisene bottles. Turn off if you think its over the top and doesnt match with existing effects")
             );
-            FLAMMABLE_DURATION = builder.comment("Duration of the flammable effect")
+            FLAMMABLE_DURATION = builder.comment("Duration of the flammable effect when you drink a lumisene bottle")
                     .gameRestart()
                     .define("flammable_duration", 300, 0, 10000);
-            GLOWING_DURATION = builder.comment("Duration of the glowing effect")
+            GLOWING_DURATION = builder.comment("Duration of the glowing effect when you drink a lumisene bottle")
                     .gameRestart()
                     .define("glowing_duration", 200, 0, 10000);
             builder.pop();
+            FLAMMABLE_FROM_LUMISENE = builder.comment("Gives the flammable effext also when merely stepping on lumisene. Turning this off if you think effects are not something that should be applied like that and just by drinking it.")
+                    .define("flammable_from_lumisene_block_duration", 50, 0, 10000);
             builder.pop();
 
             FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
@@ -779,7 +796,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> TIPPED_SPIKES_ENABLED;
         public static final Supplier<Boolean> TIPPED_SPIKES_TAB;
 
-        public static final Supplier<Boolean> ONLY_ALLOW_HARMFUL;
+        public static final Supplier<Boolean> ONLY_ALLOW_HARMFUL_INFINITE;
         public static final Supplier<Boolean> BAMBOO_SPIKES_DROP_LOOT;
 
         public static final Supplier<Boolean> SACK_ENABLED;
@@ -812,6 +829,7 @@ public class CommonConfigs {
         public static final Supplier<ResourceLocation> ROPE_OVERRIDE;
         public static final Supplier<Boolean> ROPE_UNRESTRICTED;
         public static final Supplier<Boolean> ROPE_HORIZONTAL;
+        public static final Supplier<ReplaceTableMode> ROPE_REPLACE_LOOT_TABLES;
         public static final Supplier<Boolean> ROPE_SLIDE;
 
         public static final Supplier<Boolean> URN_ENABLED;
@@ -827,17 +845,21 @@ public class CommonConfigs {
         public static final Supplier<Boolean> LUMISENE_BOTTLE;
         public static final Supplier<Integer> FLAMMABLE_DURATION;
         public static final Supplier<Integer> GLOWING_DURATION;
+        public static final Supplier<Integer> FLAMMABLE_FROM_LUMISENE;
 
         public static final Supplier<Boolean> PRESENT_ENABLED;
         public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;
 
         public static final Supplier<Boolean> HOURGLASS_ENABLED;
         public static final Supplier<Boolean> CANNON_ENABLED;
+        public static final Supplier<TNTMode> CANNON_EXPLODE_TNT;
         public static final Supplier<Double> CANNON_FIRE_POWER;
         public static final Supplier<Integer> CANNON_FUSE_TIME;
         public static final Supplier<Integer> CANNON_COOLDOWN;
         public static final Supplier<Boolean> CANNONBALL_ENABLED;
-        public static final Supplier<Boolean> AVAST_DISC_ENABLED;
+        public static final Supplier<Double> CANNONBALL_POWER_SCALING;
+        public static final Supplier<Double> CANNONBALL_BREAK_RADIUS;
+        public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
     }
 
 
@@ -858,8 +880,10 @@ public class CommonConfigs {
             QUIVER_SLOTS = builder.comment("Arrow stacks that can fit inside a quiver. Requires reboot")
                     .gameRestart()
                     .define("slots", 6, 1, 9);
-            QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn. Note that this also depends on local difficulty so you wont ever see them on easy and very rarely on normal. Similar logic to equipment")
-                    .define("quiver_skeleton_spawn_chance", 0.03d, 0, 1);
+            QUIVER_SKELETON_SPAWN = builder.comment("Increase this number to alter the probability for a Skeleton with quiver to spawn.")
+                    .define("quiver_skeleton_spawn_chance", 0.025d, 0, 1);
+            QUIVER_SKELETON_SPAWN_LOCAL_DIFFICULTY = builder.comment("If the chance for a skeleton to spawn with a quiver will be affected by local difficulty. If true, you wont ever see them on easy and very rarely on normal. Similar logic to equipment")
+                    .define("quiver_skeleton_spawn_affected_by_local_difficulty", true);
             QUIVER_CURIO_ONLY = builder.comment("Allows quiver to only be used when in offhand or in curio slot")
                     .define("only_works_in_curio", false);
             QUIVER_PICKUP = builder.comment("Arrows you pickup will try to go in a quiver if available provided it has some arrow of the same type")
@@ -905,7 +929,7 @@ public class CommonConfigs {
             //rope arrow
             builder.push("rope_arrow");
             ROPE_ARROW_ENABLED = feature(builder);
-            ROPE_ARROW_CAPACITY = builder.comment("Max number of robe items allowed to be stored inside a rope arrow")
+            ROPE_ARROW_CAPACITY = builder.comment("Max number of rope items allowed to be stored inside a rope arrow")
                     .define("capacity", 32, 1, 256);
             ROPE_ARROW_CROSSBOW = builder.comment("Makes rope arrows exclusive to crossbows")
                     .define("exclusive_to_crossbows", false);
@@ -989,6 +1013,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
         public static final Supplier<Integer> QUIVER_SLOTS;
         public static final Supplier<Double> QUIVER_SKELETON_SPAWN;
+        public static final Supplier<Boolean> QUIVER_SKELETON_SPAWN_LOCAL_DIFFICULTY;
         public static final Supplier<Boolean> QUIVER_CURIO_ONLY;
         public static final Supplier<Boolean> QUIVER_PICKUP;
 
@@ -1051,6 +1076,10 @@ public class CommonConfigs {
 
             builder.comment("Vanilla tweaks").push("tweaks");
 
+            builder.push(ModConstants.DRAGON_PATTERN_NAME);
+            DRAGON_PATTERN = feature(builder.comment("Adds dragon banner pattern made from dragon head"));
+            builder.pop();
+
             builder.push("shulker_helmet");
             SHULKER_HELMET_ENABLED = feature(builder.comment("Allows wearing shulker shells"));
             builder.pop();
@@ -1060,7 +1089,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("traders_open_doors");
-            WANDERING_TRADER_DOORS = builder.comment("Allows traders to open doors (because they couldnt aparently)")
+            WANDERING_TRADER_DOORS = builder.comment("Allows traders to open doors (because they couldn't apparently)")
                     .define("enabled", true);
             builder.pop();
 
@@ -1111,9 +1140,9 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("map_tweaks");
-            RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
-                            "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)")
-                    .define("random_adventurer_maps", true);
+            RANDOM_ADVENTURER_MAPS = feature(builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
+                            "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)"),
+                    "random_adventurer_maps");
             RANDOM_ADVENTURER_MAPS_RANDOM = builder.comment("Select a random structure to look for instead of iterating through all of the ones in the tag returning the closest. Turning on will make ones that have diff structures (aka all different ruined portals) show up more. On could take much more time to compute")
                     .define("random_adventurer_maps_select_random_structure", true);
             MAP_MARKERS = builder.comment("Enables beacons, lodestones, respawn anchors, beds, conduits, portals to be displayed on maps by clicking one of them with a map")
@@ -1141,9 +1170,9 @@ public class CommonConfigs {
                     .define("written_books", true);
             PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground")
                     .define("enabled", true);
-            BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
+            BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
                     .define("book_power", 1d, 0, 5);
-            ENCHANTED_BOOK_POWER = builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
+            ENCHANTED_BOOK_POWER = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("Enchantment power bonus given by normal book piles with 4 books. Piles with less books will have their respective fraction of this total. For reference a vanilla bookshelf provides 1")
                     .define("enchanted_book_power", 1.334d, 0, 5);
             MIXED_BOOKS = builder.comment("Allow all books to be placed both vertically and horizontally")
                     .define("mixed_books", false);
@@ -1187,8 +1216,6 @@ public class CommonConfigs {
             SLIMED_EFFECT = feature(builder);
             THROWABLE_SLIMEBALLS = builder.comment("Allow slimeballs to be thrown")
                     .define("throwable_slimeballs", true);
-            SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
-                    .define("overlay", true);
             HINDERS_JUMP = builder.comment("Thrown slimeballs will shortly nerf the player jump height. Disable if you don't want this effect as it can be quite powerful")
                     .define("hinders_jump", SlimedJumpMode.NORMAL_DIFFICULTY);
             SLIME_DURATION = builder.comment("Duration of the slimed effect in ticks")
@@ -1202,6 +1229,7 @@ public class CommonConfigs {
 
 
         public static final Supplier<Boolean> SHULKER_HELMET_ENABLED;
+        public static final Supplier<Boolean> DRAGON_PATTERN;
         public static final Supplier<Boolean> APPLE_DISENCHANT;
 
         public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
@@ -1242,7 +1270,6 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SUS_RECIPES;
         public static final Supplier<Boolean> SLIMED_EFFECT;
         public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
-        public static final Supplier<Boolean> SLIME_OVERLAY;
         public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
         public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;
@@ -1273,6 +1300,8 @@ public class CommonConfigs {
             SERVER_PROTECTION = builder.comment("Turn this on to disable any interaction on blocks placed by other players. This affects item shelves, signs, flower pots, and boards. " +
                             "Useful for protected servers. Note that it will affect only blocks placed after this is turned on and such blocks will keep being protected after this option is disabled")
                     .define("server_protection", false);
+            SANITY_CHECKS_MESSAGES = builder.comment("Disable startup messages and sanity check that the mod performs to inform of possible detected crashes that might occur due to issues")
+                    .define("sanity_checks_messages", true);
             RED_MERCHANT_SPAWN_MULTIPLIER = builder.comment("slightly increase this or decrease this number to tweak the red merchant spawn chance. Won't spawn at 0 and will spawn twice as often on 2")
                     .define("red_merchant_spawn_multiplier", 1d, 0, 10);
             builder.pop();
@@ -1285,6 +1314,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> DISPENSERS;
         public static final Supplier<Boolean> DEBUG_RESOURCES;
         public static final Supplier<Boolean> SERVER_PROTECTION;
+        public static final Supplier<Boolean> SANITY_CHECKS_MESSAGES;
     }
 
     private static Supplier<Boolean> feature(ConfigBuilder builder) {
@@ -1296,7 +1326,13 @@ public class CommonConfigs {
     }
 
     private static Supplier<Boolean> feature(ConfigBuilder builder, String name, String key, boolean value) {
-        var config = builder.gameRestart().define(name, value);
+        var config = builder.define(name, value);
+        String parentCat = builder.currentCategory();
+        var parentConf = FEATURE_TOGGLES.get(parentCat);
+        if (parentConf != null) {
+            Supplier<Boolean> finalChildConf = config;
+            config = () -> parentConf.get() && finalChildConf.get();
+        }
         FEATURE_TOGGLES.put(key, config);
         return config;
     }
@@ -1306,19 +1342,10 @@ public class CommonConfigs {
         return CompatHandler.AMENDMENTS ? () -> false : original.get();
     }
 
-    //TODO: cleanup
     public static boolean isEnabled(String key) {
         if (!SPEC.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
-            case ModConstants.ASH_BRICK_NAME -> Building.ASH_BRICKS_ENABLED.get();
-            case ModConstants.TRAPPED_PRESENT_NAME ->
-                    Functional.PRESENT_ENABLED.get() && Functional.TRAPPED_PRESENT_ENABLED.get();
-            case ModConstants.FLAX_BLOCK_NAME, ModConstants.FLAX_WILD_NAME -> Functional.FLAX_ENABLED.get();
-            case ModConstants.SOAP_BLOCK_NAME -> Functional.SOAP_ENABLED.get();
-            case ModConstants.CHECKER_SLAB_NAME -> Building.CHECKERBOARD_ENABLED.get();
             case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
-            case "ash_from_burning" -> Building.ASH_ENABLED.get() && Building.ASH_FROM_MOBS.get();
-            case "adventurer_maps" -> Tweaks.RANDOM_ADVENTURER_MAPS.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
             default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();
@@ -1337,4 +1364,16 @@ public class CommonConfigs {
         }
     }
 
+
+    public enum ReplaceTableMode {
+        REPLACE,
+        NONE,
+        REMOVE
+    }
+
+    public enum TNTMode {
+        IGNITE,
+        IGNITE_ON_IMPACT,
+        NONE
+    }
 }

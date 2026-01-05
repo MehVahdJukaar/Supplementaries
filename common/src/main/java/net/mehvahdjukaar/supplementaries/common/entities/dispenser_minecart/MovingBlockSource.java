@@ -11,10 +11,12 @@ public class MovingBlockSource<T extends BlockEntity> implements BlockSource {
 
     private final Entity entity;
     private final T blockEntity;
+    private final ServerLevel serverLevel;
 
-    public MovingBlockSource(Entity entity, T internal) {
+    public MovingBlockSource(Entity entity, T internal, ServerLevel serverLevel) {
         this.entity = entity;
         this.blockEntity = internal;
+        this.serverLevel = serverLevel;
     }
 
     @Override
@@ -49,7 +51,7 @@ public class MovingBlockSource<T extends BlockEntity> implements BlockSource {
 
     @Override
     public ServerLevel getLevel() {
-        return ((ServerLevel) entity.level());
+        return serverLevel;
     }
 
     public Entity getMinecartEntity() {

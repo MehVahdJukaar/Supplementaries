@@ -14,13 +14,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -85,11 +85,7 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
                 }
             } else {
                 //boom!
-                level.setBlockAndUpdate(pos, state.setValue(TrappedPresentBlock.ON_COOLDOWN, true));
-                level.scheduleTick(pos, state.getBlock(), 10);
-                if (level instanceof ServerLevel sl) {
-                    detonate(sl, pos, player);
-                }
+                detonate(level, pos, state, player);
             }
             return InteractionResult.sidedSuccess(level.isClientSide);
 
@@ -97,16 +93,22 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
         return InteractionResult.PASS;
     }
 
-    public void detonate(ServerLevel level, BlockPos pos, @Nullable Player opener) {
-        ItemStack stack = this.getItem(0);
-        IFireItemBehavior behavior = TrappedPresentBlock.getPresentBehavior(stack.getItem());
-        this.updateState(false);
-        if (behavior.fire(stack.copy(), level, pos, 0.4f, new Vec3(0, 1, 0),
-                0.35f,  11, opener)) {
-            stack.shrink(1);
-        }
+    public void detonate(LevelAccessor level, BlockPos pos, BlockState state, @Nullable Player opener) {
 
-        level.blockEvent(pos, this.getBlockState().getBlock(), 0, 0);
+        level.setBlock(pos, state.setValue(TrappedPresentBlock.ON_COOLDOWN, true), 3);
+        level.scheduleTick(pos, state.getBlock(), 10);
+
+        if (level instanceof ServerLevel sl) {
+            ItemStack stack = this.getItem(0);
+            IFireItemBehavior behavior = TrappedPresentBlock.getPresentBehavior(stack.getItem());
+            this.updateState(false);
+            if (behavior.fire(stack.copyWithCount(1), sl, pos, 0.4f, new Vec3(0, 1, 0),
+                    0.35f, 11, opener)) {
+                stack.shrink(1);
+            }
+
+            sl.blockEvent(pos, this.getBlockState().getBlock(), 0, 0);
+        }
 
     }
 

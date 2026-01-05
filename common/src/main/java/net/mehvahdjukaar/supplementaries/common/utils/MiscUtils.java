@@ -1,13 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import com.google.common.base.Suppliers;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ChunkPos;
@@ -18,6 +22,7 @@ import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.ScheduledTick;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Calendar;
 import java.util.function.Supplier;
@@ -30,6 +35,14 @@ public class MiscUtils {
             return ClientConfigs.General.TOOLTIP_HINTS.get();
         }
         return false;
+    }
+
+    @Nullable
+    public static Entity cloneEntity(Entity entity, ServerLevel level) {
+        CompoundTag c = new CompoundTag();
+        entity.save(c);
+        var opt = EntityType.create(c, level); // create new to reset level properly
+        return opt.orElse(null);
     }
 
     public enum Festivity {
@@ -68,13 +81,16 @@ public class MiscUtils {
 
         public float getCandyWrappingIndex() {
             return switch (this) {
-                default -> 0;
                 case HALLOWEEN -> 0.5f;
                 case CHRISTMAS -> 1;
+                default -> 0;
             };
         }
 
         private static Festivity get() {
+            if (PlatHelper.getPhysicalSide().isClient() && ClientConfigs.General.UNFUNNY.get()) {
+                return NONE;
+            }
             Calendar calendar = Calendar.getInstance();
             int month = calendar.get(Calendar.MONTH);
             int date = calendar.get(Calendar.DATE);
@@ -134,9 +150,10 @@ public class MiscUtils {
     public static boolean isAllowedInShulker(ItemStack stack, Level level) {
         var te = SHULKER_TILE.get();
         te.setLevel(level);
-        var r = te.canPlaceItemThroughFace(0, stack, null);
+        boolean first = te.canPlaceItemThroughFace(0, stack, null);
         te.setLevel(null);
-        return r;
+        //also check if its container item. Shulker is super inconsistent here. block checks instanceof, gui checks canfitinsidecontainer
+        return first && stack.getItem().canFitInsideContainerItems();
     }
 
     //cylinder distance
@@ -149,14 +166,14 @@ public class MiscUtils {
     }
 
     // vanilla is wont allow to tick a block that already has a scheduled tick, even if at an earlier time
-    public static void scheduleTickOverridingExisting(ServerLevel level, BlockPos pos,  Block block, int delay){
-        var tick = new ScheduledTick<>(block, pos, level.getGameTime() + (long)delay, level.nextSubTickCount());
+    public static void scheduleTickOverridingExisting(ServerLevel level, BlockPos pos, Block block, int delay) {
+        var tick = new ScheduledTick<>(block, pos, level.getGameTime() + (long) delay, level.nextSubTickCount());
 
         long l = ChunkPos.asLong(tick.pos());
 
-       var container = level.getBlockTicks().allContainers.get(l);
-       container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
-       container.schedule(tick);
+        var container = level.getBlockTicks().allContainers.get(l);
+        container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
+        container.schedule(tick);
     }
 
 }

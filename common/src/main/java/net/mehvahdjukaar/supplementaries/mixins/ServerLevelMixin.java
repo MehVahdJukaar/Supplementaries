@@ -58,7 +58,8 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
     //for dispenser minecart
     @Inject(method = "levelEvent", at = @At("HEAD"), cancellable = true)
     private void levelEvent(Player pPlayer, int pType, BlockPos pPos, int pData, CallbackInfo ci) {
-        if (this.supplementaries$redirectLevelEvents && ILevelEventRedirect.supp$tryRedirect(this, pPlayer, supplementaries$redirectedEntityPos, pType, pPos, pData)) {
+        if (this.supplementaries$redirectLevelEvents && ILevelEventRedirect.supp$tryRedirect(
+                (ServerLevel) (Object) this, pPlayer, supplementaries$redirectedEntityPos, pType, pPos, pData)) {
             ci.cancel();
         }
     }

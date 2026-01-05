@@ -24,10 +24,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CaveEnhancementsCompat {
@@ -43,11 +45,12 @@ public class CaveEnhancementsCompat {
         SpectacleCandleBlockEntity.tick(level, pos, state);
     }
 
-    public static void registerCandle(ResourceLocation id) {
+    public static void registerCandle(ResourceLocation id, Function<BlockState, List<Vec3>> offsets) {
         var name = id.getPath() + "_spectacle";
         ResourceLocation res = new ResourceLocation(id.getNamespace(), name);
         var b = RegHelper.registerBlockWithItem(res, () -> new SpectacleCandleHolder(null,
-                        BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), () -> ParticleTypes.SMALL_FLAME));
+                BlockBehaviour.Properties.copy(ModRegistry.SCONCE.get()), () -> ParticleTypes.SMALL_FLAME,
+                offsets));
         SPECTACLE_CANDLE_HOLDERS.add(b);
 
         tile = RegHelper.registerBlockEntityType(res,
@@ -57,7 +60,6 @@ public class CaveEnhancementsCompat {
 
         ModRegistry.ALL_CANDLE_HOLDERS.add(b);
     }
-
 
 
     public static void setupClient() {
@@ -75,8 +77,9 @@ public class CaveEnhancementsCompat {
     private static class SpectacleCandleHolder extends CandleHolderBlock implements EntityBlock {
 
 
-        public SpectacleCandleHolder(DyeColor color, Properties properties, Supplier<ParticleType<? extends ParticleOptions>> particle) {
-            super(color, properties, particle);
+        public SpectacleCandleHolder(DyeColor color, Properties properties, Supplier<ParticleType<? extends ParticleOptions>> particle,
+                                     Function<BlockState, List<Vec3>> offsets) {
+            super(color, properties, particle, offsets);
         }
 
         @Nullable

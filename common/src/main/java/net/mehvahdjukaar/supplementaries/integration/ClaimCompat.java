@@ -5,6 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
+//unused?
 public abstract class ClaimCompat {
     private static  ClaimCompat INSTANCE ;
     public static  boolean ON;

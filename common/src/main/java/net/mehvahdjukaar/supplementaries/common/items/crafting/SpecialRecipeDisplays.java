@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
+import net.mehvahdjukaar.supplementaries.common.utils.SoapWashableHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -30,7 +31,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class SpecialRecipeDisplays {
@@ -113,10 +116,10 @@ public class SpecialRecipeDisplays {
         String group = "supplementaries.soap";
 
         for (String k : BlocksColorAPI.getBlockKeys()) {
-            if (!CommonConfigs.Functional.SOAP_DYE_CLEAN_BLACKLIST.get().contains(k)) {
+            Item out = BlocksColorAPI.getColoredItem(k, null);
+            if (out != null && SoapWashableHelper.canCleanColor(out)) {
                 var n = BlocksColorAPI.getItemHolderSet(k);
-                Item out = BlocksColorAPI.getColoredItem(k, null);
-                if (n == null || out == null) continue;
+                if (n == null) continue;
 
                 Ingredient ing = n.unwrap().map(Ingredient::of, l ->
                         Ingredient.of(l.stream().map(Holder::value)
@@ -229,20 +232,22 @@ public class SpecialRecipeDisplays {
         List<CraftingRecipe> recipes = new ArrayList<>();
 
         String group = "sus_crafting";
-        List<Block> blocks = new ArrayList<>();
-        if(CommonConfigs.Tweaks.SUS_RECIPES.get()){
-            blocks.add(Blocks.SAND);
-            blocks.add(Blocks.GRAVEL);
-        }
-        if(CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()){
-            blocks.add(ModRegistry.GRAVEL_BRICKS.get());
+        Map<Block,Block> blocks = new HashMap<>();
+        if (CommonConfigs.Tweaks.SUS_RECIPES.get()) {
+            blocks.put(Blocks.SAND, Blocks.SUSPICIOUS_SAND);
+            blocks.put(Blocks.GRAVEL, Blocks.SUSPICIOUS_GRAVEL);
+            if (CommonConfigs.Building.GRAVEL_BRICKS_ENABLED.get()) {
+                blocks.put(ModRegistry.GRAVEL_BRICKS.get(), ModRegistry.SUS_GRAVEL_BRICKS.get());
+            }
         }
 
-        for (Block block : blocks) {
-            ItemStack output = new ItemStack(Items.SLIME_BALL);
-            ItemStack input = new ItemStack(block);
-            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(Items.NAME_TAG));
-            ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, Utils.getID(output.getItem()).getPath());
+        ItemStack content = Items.GOLD_INGOT.getDefaultInstance();
+        content.setHoverName(Component.literal("Precious Item"));
+        for (var e : blocks.entrySet()) {
+            ItemStack output = new ItemStack(e.getValue());
+            ItemStack input = new ItemStack(e.getKey());
+            NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(content));
+            ResourceLocation id = Supplementaries.res(Utils.getID(output.getItem()).getPath());
             ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, output, inputs);
             recipes.add(recipe);
         }
@@ -262,6 +267,23 @@ public class SpecialRecipeDisplays {
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, base, soap);
         ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "bubble_blower_charge_display");
         ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, ropeArrow, inputs);
+        recipes.add(recipe);
+
+        return recipes;
+    }
+
+    private static List<CraftingRecipe> createSafeRecipe() {
+        List<CraftingRecipe> recipes = new ArrayList<>();
+        String group = "safe";
+
+        ItemStack safe = new ItemStack(ModRegistry.SAFE.get());
+
+        Ingredient base = Ingredient.of(ModTags.SHULKER_BOXES);
+        Ingredient ingot = Ingredient.of(Items.NETHERITE_INGOT);
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, base, ingot);
+
+        ResourceLocation id = new ResourceLocation(Supplementaries.MOD_ID, "safe_crafting");
+        ShapelessRecipe recipe = new ShapelessRecipe(id, group, CraftingBookCategory.MISC, safe, inputs);
         recipes.add(recipe);
 
         return recipes;
@@ -408,6 +430,9 @@ public class SpecialRecipeDisplays {
             }
             if (CommonConfigs.Building.FLAG_ENABLED.get()) {
                 registry.accept(createFlagFromBanner());
+            }
+            if (CommonConfigs.Functional.SAFE_ENABLED.get()) {
+                registry.accept(createSafeRecipe());
             }
             if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
                 registry.accept(createAntiqueMapRecipe());

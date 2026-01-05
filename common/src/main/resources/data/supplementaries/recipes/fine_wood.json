@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "121",
+    "111"
+  ],
+  "key": {
+    "1": {
+      "tag": "minecraft:logs"
+    },
+    "2": {
+      "item": "minecraft:honeycomb"
+    }
+  },
+  "result": {
+    "item": "supplementaries:fine_wood",
+    "count": 8
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "fine_wood"
+    }
+  ]
+}

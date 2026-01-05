@@ -46,7 +46,7 @@ public class RepairBubbleBlowerRecipe extends CustomRecipe {
         ItemStack blower = null;
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
-            if (stack.getItem() == ModRegistry.BUBBLE_BLOWER.get()) {
+            if (stack.is(ModRegistry.BUBBLE_BLOWER.get())) {
                 blower = stack;
             }
         }
@@ -54,11 +54,6 @@ public class RepairBubbleBlowerRecipe extends CustomRecipe {
         repaired.setDamageValue(0);
         return repaired;
 
-    }
-
-    @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
-        return NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
     }
 
     @Override

@@ -28,46 +28,62 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
 
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
+
+    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
     }
-    modImplementation("curse.maven:yacl-667299:4574163")
+    modCompileOnly("curse.maven:yacl-667299:4574163")
 
     modCompileOnly("curse.maven:modmenu-308702:3920481") {
         exclude module: "fabric-api"
     }
 
     //modImplementation("curse.maven:roughly-enough-items-310111:4440734")
-    modRuntimeOnly("curse.maven:architectury-419699:4581904")
+   // modRuntimeOnly("curse.maven:architectury-419699:4581904")
     modCompileOnly("curse.maven:flan-404578:3902630")
+    //modImplementation("curse.maven:valkyrien-skies-258371:5212231")
+    //modImplementation("curse.maven:fabric-language-kotlin-308769:4718458")
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
+  //  modImplementation("curse.maven:supplementaries-squared-838411:6280153")
 
-    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5215751")
+
+    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5684645")
+    modCompileOnly("curse.maven:create-fabric-624165:5245234")
+
+    for (String module in port_lib_modules.split(",")) {
+        modCompileOnly("io.github.fabricators_of_create.Porting-Lib:$module:$port_lib_version")
+    }
+    //modRuntimeOnly("curse.maven:forge-config-api-port-fabric-547434:4583000") // v8.0.1 | Regions-Unexplored, Chipped
+
+    modCompileOnly("com.github.Chocohead:Fabric-ASM:${fabric_asm_version}") {
+        exclude (group: "net.fabricmc.fabric-api")
+    }
+
     modCompileOnly("curse.maven:decorative-blocks-362528:3941637")
     modCompileOnly("curse.maven:cc-tweaked-282001:4579773")
     modCompileOnly("curse.maven:jei-238222:4405345")
-    modImplementation("curse.maven:jei-fabric-waystones-410902:4950461")
-    modImplementation("curse.maven:jei-fabric-waystones-owo-lib-532610:4749199")
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
-    modImplementation "dev.emi:trinkets:${project.trinkets_version}"
+    modCompileOnly("curse.maven:jei-fabric-waystones-410902:4950461")
+    modCompileOnly("curse.maven:jei-fabric-waystones-owo-lib-532610:4749199")
+    modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+    modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+    modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
     //modImplementation("curse.maven:biome-makeover-412182:4572458")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
     modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")
-    modImplementation("curse.maven:selene-499980:5651442")
-    //modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
+    //modCompileOnly("com.jozufozu.flywheel:flywheel-fabric-$flywheel_fabric_version")
+    modApi("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
 
     //modImplementation("curse.maven:cyanide-541676:4824161")
     modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
+    modCompileOnly("maven.modrinth:sodium:mc1.20.1-0.5.11")
 
-    modImplementation("curse.maven:immediatelyfast-686911:4937544")
-    modImplementation("org.uiutils:uiutils")
+    modCompileOnly("curse.maven:immediatelyfast-686911:4937544")
     //modImplementation("curse.maven:spectrum-556967:5080474")
-    modCompileOnly("curse.maven:create-328085:4835191")
 
     modCompileOnly("org.embeddedt:embeddium-fabric-1.20.1:0.3.1-git.b3f920f+mc1.20.1")
+    modCompileOnly("com.misterpemodder:shulkerboxtooltip-fabric:${shulker_box_tooltip_version}") { transitive false }
 
 //    modImplementation("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
@@ -120,27 +136,4 @@ publishing {
             from components.java
         }
     }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        maven {
-            url = "https://www.cursemaven.com"
-            allowInsecureProtocol = true
-        }
-        maven {
-            name = "TerraformersMC"
-            url = "https://maven.terraformersmc.com/releases"
-        }
-        maven {
-            url = "https://maven.shedaniel.me"
-        }
-        maven { url 'https://maven.ladysnake.org/releases' }
-
-    }
-}
-repositories {
-    maven { url "https://maven.shedaniel.me/" }
-    maven { url "https://maven.terraformersmc.com/releases" }
-    maven { url 'https://maven.ladysnake.org/releases' }
 }

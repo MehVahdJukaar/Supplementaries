@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlockSource;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
@@ -15,6 +16,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -64,7 +66,9 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
                             blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, false);
                         }
 
-                        level.setBlock(pos, blockState, 67);
+                        SUPPRESS_OBSERVER_HACK.set(true);
+                        level.setBlock(pos, blockState, 67 | Block.UPDATE_KNOWN_SHAPE);
+                        SUPPRESS_OBSERVER_HACK.set(false);
                         level.neighborChanged(pos, blockState.getBlock(), pos);
 
                         if (level instanceof ServerLevel sl) blockState.tick(sl, pos, sl.random);
@@ -83,6 +87,7 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
                 t.progress = 1.0F;
 
                 Direction direction = t.getDirection();
+                if (direction.getAxis() == Direction.Axis.Y) return;
                 if (level.getBlockState(pos.below()).is(BlockTags.ICE)) {
                     MovingSlidyBlock.maybeMove(movedState, level, pos, direction);
                     level.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
@@ -138,4 +143,19 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
         this.progressO = this.progress;
         this.progress += offset;
     }
+
+    private static final ThreadLocal<Boolean> SUPPRESS_OBSERVER_HACK = ThreadLocal.withInitial(() -> false);
+
+    //so bad
+    public static boolean shouldCancelObserverUpdateHack(BlockState neighbor) {
+        Block block = neighbor.getBlock();
+        if (block instanceof MovingSlidyBlockSource) {
+            return true;
+        }
+        if (block == Blocks.AIR) {
+            return SUPPRESS_OBSERVER_HACK.get();
+        }
+        return false;
+    }
+
 }

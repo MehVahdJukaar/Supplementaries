@@ -1,0 +1,6 @@
+{
+  "items": ["minecraft:glowstone_dust"],
+  "duration": 190,
+  "light_level": 10,
+  "texture":  "supplementaries:block/hourglass_glowstone"
+}

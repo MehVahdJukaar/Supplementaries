@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -127,6 +128,7 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
 
         if (!state.getValue(POWERED) && gold || !CommonConfigs.Building.CONSISTENT_GATE.get()) {
             Direction dir = player.getDirection();
+            float yaw = player.getYRot();
             if (CompatHandler.QUARK) {
                 QuarkCompat.disableFenceGateStuff();
             }
@@ -134,14 +136,14 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
                 BlockPos up = pos.above();
                 BlockState stateUp = level.getBlockState(up);
                 if (stateUp.is(this) && stateUp.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))
-                    openGate(stateUp, level, up, dir);
+                    openGate(stateUp, level, up, yaw);
                 BlockPos down = pos.below();
                 BlockState stateDown = level.getBlockState(down);
                 if (stateDown.is(this) && stateDown.setValue(IN_WALL, false) == state.setValue(IN_WALL, false))
-                    openGate(stateDown, level, down, dir);
+                    openGate(stateDown, level, down, yaw);
             }
 
-            openGate(state, level, pos, dir);
+            openGate(state, level, pos, yaw);
             soundAndEvent(state, level, pos, player);
             if (CompatHandler.QUARK) {
                 QuarkCompat.enableFenceGateStuff();
@@ -159,16 +161,32 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
         level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
     }
 
-    private void openGate(BlockState state, Level world, BlockPos pos, Direction dir) {
+    private void openGate(BlockState state, Level world, BlockPos pos, float yaw) {
         if (state.getValue(OPEN)) {
             state = state.setValue(OPEN, Boolean.FALSE);
         } else {
-            if (state.getValue(FACING) == dir.getOpposite()) {
-                state = state.setValue(FACING, dir);
-            }
+            Direction myDir = state.getValue(FACING);
+            Direction dir = getClosest(yaw, myDir, myDir.getOpposite());
+            //find the closest direction among myDir or myDir.opposite based on yaw
+            state = state.setValue(FACING, dir);
             state = state.setValue(OPEN, Boolean.TRUE);
         }
         world.setBlock(pos, state, 10);
+    }
+
+    private Direction getClosest(float yaw, Direction... valid) {
+        //finish this
+        Direction closest = null;
+        yaw = Mth.wrapDegrees(yaw);
+        float min = 360;
+        for (Direction d : valid) {
+            float angle = Mth.degreesDifferenceAbs(yaw, d.toYRot());
+            if (angle < min) {
+                min = angle;
+                closest = d;
+            }
+        }
+        return closest;
     }
 
 

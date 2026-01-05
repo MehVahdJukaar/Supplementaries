@@ -5,17 +5,20 @@
       "type": "supplementaries:flag"
     }
   ],
-  "type": "simple",
-  "max_trades": 12,
-  "price": {
-    "id": "minecraft:emerald",
-    "Count": 4
-  },
-  "offer": {
-    "id": "supplementaries:rope_arrow",
-    "Count": 1,
-    "tag": {
-      "Damage": 16
+  "type": "supplementaries:wrap_on_christmas",
+  "trade": {
+    "type": "simple",
+    "max_trades": 12,
+    "price": {
+      "id": "minecraft:emerald",
+      "Count": 4
+    },
+    "offer": {
+      "id": "supplementaries:rope_arrow",
+      "Count": 1,
+      "tag": {
+        "Damage": 16
+      }
     }
   }
 }

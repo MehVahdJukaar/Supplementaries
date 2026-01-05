@@ -14,6 +14,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BannerPattern;
 import net.minecraft.world.level.levelgen.structure.Structure;
 
 import java.util.Arrays;
@@ -49,10 +50,16 @@ public class ModTags {
     public static final TagKey<Block> NOT_TINTED_ON_MAPS = blockTag("map_tint_blacklist");
     public static final TagKey<Block> FAST_FALL_ROPES = blockTag("fast_fall_climbable");
     public static final TagKey<Block> BOUNCY_BLOCKS = blockTag("bouncy_blocks");
+    public static final TagKey<Block> TURN_TABLE_CANT_SHUFFLE = blockTag("turn_table_cant_shuffle");
+    public static final TagKey<Block> SOAP_BLACKLIST_BLOCK = blockTag("non_cleanable");
+    public static final TagKey<Block> CANNON_TNTS = blockTag("cannon_tnts");
+    public static final TagKey<Block> FAUCET_CANT_INTERACT = blockTag("faucet_cant_interact");
+    public static final TagKey<Block> ROPE_PUSH_BLACKLIST = blockTag("un_movable_by_ropes");
 
     //item tags
     public static final TagKey<Item> SHULKER_BLACKLIST_TAG = itemTag("shulker_blacklist");
     public static final TagKey<Item> SLINGSHOT_BLACKLIST = itemTag("slingshot_blacklist");
+    public static final TagKey<Item> CANNON_BLACKLIST = itemTag("cannon_blacklist");
     public static final TagKey<Item> SLINGSHOT_DAMAGEABLE = itemTag("slingshot_damageable");
     public static final TagKey<Item> COOKIES = itemTag("cookies");
     public static final TagKey<Item> BRICKS = itemTag("throwable_bricks");
@@ -72,9 +79,15 @@ public class ModTags {
     public static final TagKey<Item> SYRUP = itemTag("pancake_syrup");
     public static final TagKey<Item> OVERENCUMBERING = itemTag("overencumbering");
     public static final TagKey<Item> QUIVER_BLACKLIST = itemTag("quiver_blacklist");
+    public static final TagKey<Item> QUIVER_WHITELIST = itemTag("quiver_blacklist");
     public static final TagKey<Item> IGNITE_FLINT_BLOCKS = itemTag("ignite_flint_blocks");
+    public static final TagKey<Item> LUNCH_BASKET_BLACKLIST = itemTag("lunch_basket_blacklist");
+    public static final TagKey<Item> SOAP_BLACKLIST_ITEM = itemTag("non_cleanable");
+    public static final TagKey<Item> WEAPON_PROJECTILE_OVERLAY_BLACKLIST = itemTag("weapon_projectile_overlay_blacklist");
 
     public static final TagKey<Item> SHULKER_BOXES = MCitemTag("shulker_boxes");
+
+    public static final TagKey<BannerPattern> PATTERN_ITEM_DRAGON = bannerTag("pattern_item/dragon");
 
     //entity tags
     public static final TagKey<EntityType<?>> JAR_CATCHABLE = entityTag("jar_catchable");
@@ -96,6 +109,7 @@ public class ModTags {
 
     public static final TagKey<Potion> QUIVER_POTION_BLACKLIST = potionTag("quiver_blacklist");
     public static final TagKey<Potion> TIPPED_SPIKES_POTION_BLACKLIST = potionTag("tipped_spikes_blacklist");
+    public static final TagKey<Potion> TIPPED_SPIKES_FINITE_POTION_BLACKLIST = potionTag("tipped_spikes_finite_blacklist");
 
 
     //biomes
@@ -139,6 +153,10 @@ public class ModTags {
 
     private static TagKey<Biome> biomeTag(String name) {
         return TagKey.create(Registries.BIOME, Supplementaries.res(name));
+    }
+
+    private static TagKey<BannerPattern> bannerTag(String name) {
+        return TagKey.create(Registries.BANNER_PATTERN, Supplementaries.res(name));
     }
 
 }

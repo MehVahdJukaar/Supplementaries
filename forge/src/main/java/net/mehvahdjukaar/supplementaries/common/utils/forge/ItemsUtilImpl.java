@@ -83,7 +83,13 @@ public class ItemsUtilImpl {
                             }
                         } else {
                             int i = stack.getCount() - result.getCount();
-                            slot.safeTake(i, i, player);
+                            int takenCount = 0;
+                            do{
+                                ItemStack taken = slot.safeTake(i, i, player);
+                                takenCount = taken.getCount();
+                                i -= takenCount;
+                            }
+                            while (takenCount != 0 && i > 0);
                             containerStack.setTag(newTag);
                             return true;
                         }

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "supplementaries:fine_wood"
+    }
+  },
+  "conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "fine_wood"
+    }
+  ],
+  "result": {
+    "item": "supplementaries:fine_wood_slab",
+    "count": 6
+  }
+}

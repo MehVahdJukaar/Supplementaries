@@ -9,8 +9,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.Objects;
-
 public class ServerBoundSetTrappedPresentPacket implements Message {
     private final BlockPos pos;
     private final boolean packed;
@@ -35,22 +33,23 @@ public class ServerBoundSetTrappedPresentPacket implements Message {
     @Override
     public void handle(ChannelHandler.Context context) {
         // server level
-        ServerPlayer player = (ServerPlayer) Objects.requireNonNull(context.getSender());
-        Level level = player.level();
+        if (context.getSender() instanceof ServerPlayer player) {
+            Level level = player.level();
 
-        if (level.hasChunkAt(pos) && level.getBlockEntity(this.pos) instanceof TrappedPresentBlockTile present) {
-            //TODO: sound here
+            if (level.hasChunkAt(pos) && level.getBlockEntity(this.pos) instanceof TrappedPresentBlockTile present) {
+                //TODO: sound here
 
-            present.updateState(this.packed);
+                present.updateState(this.packed);
 
-            BlockState state = level.getBlockState(pos);
-            present.setChanged();
-            //also sends new block to clients. maybe not needed since blockstate changes
-            level.sendBlockUpdated(pos, state, state, 3);
+                BlockState state = level.getBlockState(pos);
+                present.setChanged();
+                //also sends new block to clients. maybe not needed since blockstate changes
+                level.sendBlockUpdated(pos, state, state, 3);
 
-            //if I'm packing also closes the gui
-            if (this.packed) {
-                player.doCloseContainer();
+                //if I'm packing also closes the gui
+                if (this.packed) {
+                    player.doCloseContainer();
+                }
             }
         }
     }

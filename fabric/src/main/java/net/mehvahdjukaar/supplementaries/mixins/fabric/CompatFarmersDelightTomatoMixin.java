@@ -23,9 +23,12 @@ public abstract class CompatFarmersDelightTomatoMixin extends Block {
         super(arg);
     }
 
-    @Inject(method = "attemptRopeClimb", at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/core/BlockPos;above()Lnet/minecraft/core/BlockPos;"), require = 1,
-            remap = false, cancellable = true)
+    @Inject(method = "attemptRopeClimb",
+            remap = false,
+            at = @At(value = "INVOKE",
+                    remap = true,
+                    target = "Lnet/minecraft/core/BlockPos;above()Lnet/minecraft/core/BlockPos;"),
+            cancellable = true)
     public void supp$tomatoLoggingCompat(ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
 
         BlockState tomatoLogReplacement = FarmersDelightCompat.getTomatoLoggedReplacement(level, pos.above());
@@ -45,7 +48,8 @@ public abstract class CompatFarmersDelightTomatoMixin extends Block {
     @WrapOperation(method = "attemptRopeClimb",
             remap = false,
             at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
+                    remap = true,
+                    target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"))
     public boolean supp$tomatoLoggingCompat2(BlockState state, Block block, Operation<Boolean> operation) {
         return state.getBlock() instanceof TomatoVineBlock || operation.call(state, block);
     }

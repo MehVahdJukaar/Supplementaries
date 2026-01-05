@@ -5,10 +5,11 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
-import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.SoulFiredCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -19,8 +20,10 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -36,6 +39,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -83,7 +87,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.MODEL;
+        return FireStage.fromAge(state.getValue(AGE)).isBurning() ? RenderShape.MODEL : RenderShape.INVISIBLE;
     }
 
     @ForgeOverride
@@ -190,7 +194,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         Level level = context.getLevel();
         boolean shouldBeOnFire = false;
         for (Direction direction : context.getNearestLookingDirections()) {
-            if (GunpowderBlock.isFireSource(level, pos.relative(direction))) {
+            if (GunpowderBlock.canLightMeOnFire(level, pos.relative(direction))) {
                 shouldBeOnFire = true;
                 break;
             }
@@ -218,9 +222,16 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             }
             // normal fire damage
             entity.hurt(level.damageSources().inFire(), 1);
+
         } else if (entity.isOnFire()) {
             this.lightUp(entity, state, pos, level, FireSourceType.FLAMING_ARROW);
         }
+        Integer duration = CommonConfigs.Functional.FLAMMABLE_FROM_LUMISENE.get();
+        if (entity instanceof LivingEntity le && duration > 0) {
+            le.addEffect(new MobEffectInstance(ModRegistry.FLAMMABLE.get(), duration,
+                    0, false, false));
+        }
+
         super.entityInside(state, level, pos, entity);
     }
 
@@ -285,7 +296,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             // lights up from neighbors
             for (Direction dir : Direction.values()) {
                 if (dir == Direction.DOWN) continue;
-                if (GunpowderBlock.isFireSource(level, pos.relative(dir))) {
+                if (GunpowderBlock.canLightMeOnFire(level, pos.relative(dir))) {
                     //plays sound too
                     this.lightUp(null, state, pos, level, FireSourceType.FLAMING_ARROW);
                     return;
@@ -401,6 +412,18 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                 }
             }
         }
+    }
+
+    @ForgeOverride
+    public BlockPathTypes getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+        else return null;
+    }
+
+    @ForgeOverride
+    public @Nullable BlockPathTypes getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, BlockPathTypes originalType) {
+        if (isLitUp(state, level, pos)) return BlockPathTypes.DAMAGE_FIRE;
+        else return null;
     }
 
     private static @NotNull FireBlock getFireDelegate() {

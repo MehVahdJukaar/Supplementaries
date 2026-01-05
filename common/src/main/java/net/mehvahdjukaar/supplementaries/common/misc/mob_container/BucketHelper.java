@@ -76,6 +76,7 @@ public class BucketHelper {
         ItemStack bucket = ItemStack.EMPTY;
         if (entity instanceof Bucketable bucketable) {
             bucket = Preconditions.checkNotNull(bucketable.getBucketItemStack(), "Bucketable modded entity " + Utils.getID(entity.getType()) + " returned a null bucket!");
+            bucketable.saveToBucketTag(bucket);
         }
         //maybe remove. not needed with new bucketable interface. might improve compat
         else if (entity instanceof WaterAnimal) {

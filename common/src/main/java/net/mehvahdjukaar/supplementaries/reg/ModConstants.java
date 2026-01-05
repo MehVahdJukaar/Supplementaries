@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.minecraft.world.level.block.entity.BannerPatterns;
+
 public final class ModConstants {
     public static final String STASIS_NAME = "stasis";
 
@@ -30,6 +32,7 @@ public final class ModConstants {
     public static final String DEPTH_METER_NAME = "altimeter";
     public static final String SLICE_MAP_NAME = "slice_map";
     public static final String CONFETTI_POPPER_NAME = "confetti_popper";
+    public static final String DRAGON_PATTERN_NAME = "dragon_banner_pattern";
 
     public static final String SIGN_POST_NAME = "sign_post";
     public static final String FLAG_NAME = "flag";
@@ -44,6 +47,7 @@ public final class ModConstants {
     public static final String SAFE_NAME = "safe";
     public static final String CAGE_NAME = "cage";
     public static final String JAR_NAME = "jar";
+    public static final String FINE_WOOD_NAME = "fine_wood";
     public static final String SACK_NAME = "sack";
     public static final String BLACKBOARD_NAME = "blackboard";
     public static final String GLOBE_NAME = "globe";
@@ -139,5 +143,5 @@ public final class ModConstants {
     public static final String BUBBLE_BLOCK_NAME = "bubble_block";
     public static final String LAPIS_BRICKS_NAME = "lapis_bricks";
     public static final String ENDERMAN_HEAD_NAME = "enderman_head";
-    public static final String AVAST_DISC_NAME = "music_disc_avast";
+    public static final String PIRATE_DISC_NAME = "music_disc_heave_ho";
 }

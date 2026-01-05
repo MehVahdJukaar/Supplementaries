@@ -1,21 +1,23 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SpitItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -30,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-public class TrappedPresentBlock extends AbstractPresentBlock {
+public class TrappedPresentBlock extends AbstractPresentBlock implements ILightable {
 
     private static final Map<Item, IFireItemBehavior> FIRE_BEHAVIORS = new IdentityHashMap<>();
     private static final IFireItemBehavior DEFAULT =
@@ -43,6 +45,10 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
         super(color, properties);
         this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH)
                 .setValue(ON_COOLDOWN, false));
+    }
+
+    public static void clearBehaviors() {
+        FIRE_BEHAVIORS.clear();
     }
 
     public static void registerBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
@@ -114,10 +120,24 @@ public class TrappedPresentBlock extends AbstractPresentBlock {
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, block, fromPos, isMoving);
         boolean isPowered = world.hasNeighborSignal(pos);
-        if (world instanceof ServerLevel serverLevel && isPowered && state.getValue(PACKED)
-                && world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
-            tile.detonate(serverLevel, pos, null);
+        if (isPowered) {
+            lightUp(null, state, pos, world, FireSourceType.FIRE_CHANGE);
         }
     }
 
+    @Override
+    public boolean isLitUp(BlockState state, BlockGetter level, BlockPos pos) {
+        return !state.getValue(PACKED);
+    }
+
+    @Override
+    public boolean lightUp(@Nullable Entity player, BlockState state, BlockPos pos, LevelAccessor world, FireSourceType fireSourceType) {
+        if (state.getValue(PACKED) && !state.getValue(ON_COOLDOWN) && world.getBlockEntity(pos) instanceof TrappedPresentBlockTile tile) {
+            if (world instanceof ServerLevel serverLevel) {
+                tile.detonate(serverLevel, pos, state, null);
+            }
+            return true;
+        }
+        return false;
+    }
 }

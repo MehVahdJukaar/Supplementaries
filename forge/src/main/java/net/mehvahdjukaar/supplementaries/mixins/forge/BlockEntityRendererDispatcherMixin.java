@@ -7,7 +7,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -25,9 +24,9 @@ public abstract class BlockEntityRendererDispatcherMixin {
     private static <T extends BlockEntity> void setupAndRenderPre(BlockEntityRenderer<T> renderer, T tile, float partialTicks,
                                                                   PoseStack matrixStack, MultiBufferSource buffer, CallbackInfo ci) {
         tile.getCapability(CapabilityHandler.ANTIQUE_TEXT_CAP).ifPresent(c -> {
-            if (c.hasAntiqueInk()) {
+            if (c.supp$hasAntiqueInk()) {
                 IAntiqueTextProvider font = (IAntiqueTextProvider) (Minecraft.getInstance().font);
-                font.setAntiqueInk(true);
+                font.supp$setAntiqueInk(true);
                 supplementaries$antiqueFontActive = true;
             }
         });
@@ -38,7 +37,7 @@ public abstract class BlockEntityRendererDispatcherMixin {
                                                                    PoseStack matrixStack, MultiBufferSource buffer, CallbackInfo ci) {
         if (supplementaries$antiqueFontActive) {
             IAntiqueTextProvider font = (IAntiqueTextProvider) (Minecraft.getInstance().font);
-            font.setAntiqueInk(false);
+            font.supp$setAntiqueInk(false);
             supplementaries$antiqueFontActive = false;
         }
     }

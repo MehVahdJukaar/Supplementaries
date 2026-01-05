@@ -1,0 +1,174 @@
+{
+  "variants": {
+    "facing=east,half=bottom,shape=inner_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_north",
+      "y": 270
+    },
+    "facing=east,half=bottom,shape=inner_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_east"
+    },
+    "facing=east,half=bottom,shape=outer_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_left_mirror",
+      "y": 270
+    },
+    "facing=east,half=bottom,shape=outer_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_right_mirror"
+    },
+    "facing=east,half=bottom,shape=straight": {
+      "model": "supplementaries:block/cabin_siding_stairs"
+    },
+    "facing=east,half=top,shape=inner_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_north_top",
+      "x": 180
+    },
+    "facing=east,half=top,shape=inner_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_east_top",
+      "x": 180,
+      "y": 90
+    },
+    "facing=east,half=top,shape=outer_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_right_mirror_top",
+      "x": 180
+    },
+    "facing=east,half=top,shape=outer_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_left_mirror_top",
+      "x": 180,
+      "y": 90
+    },
+    "facing=east,half=top,shape=straight": {
+      "model": "supplementaries:block/cabin_siding_stairs_top",
+      "x": 180
+    },
+    "facing=north,half=bottom,shape=inner_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_west",
+      "y": 180
+    },
+    "facing=north,half=bottom,shape=inner_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_north",
+      "y": 270
+    },
+    "facing=north,half=bottom,shape=outer_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_left_mirror",
+      "y": 180
+    },
+    "facing=north,half=bottom,shape=outer_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_right_mirror",
+      "y": 270
+    },
+    "facing=north,half=bottom,shape=straight": {
+      "model": "supplementaries:block/cabin_siding_stairs_mirror",
+      "y": 270
+    },
+    "facing=north,half=top,shape=inner_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_west_top",
+      "x": 180,
+      "y": 270
+    },
+    "facing=north,half=top,shape=inner_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_north_top",
+      "x": 180
+    },
+    "facing=north,half=top,shape=outer_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_right_mirror_top",
+      "x": 180,
+      "y": 270
+    },
+    "facing=north,half=top,shape=outer_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_left_mirror_top",
+      "x": 180
+    },
+    "facing=north,half=top,shape=straight": {
+      "model": "supplementaries:block/cabin_siding_stairs_mirror_top",
+      "x": 180,
+      "y": 270
+    },
+    "facing=south,half=bottom,shape=inner_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_east"
+    },
+    "facing=south,half=bottom,shape=inner_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_south",
+      "y": 90
+    },
+    "facing=south,half=bottom,shape=outer_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_left"
+    },
+    "facing=south,half=bottom,shape=outer_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_right",
+      "y": 90
+    },
+    "facing=south,half=bottom,shape=straight": {
+      "model": "supplementaries:block/cabin_siding_stairs",
+      "y": 90
+    },
+    "facing=south,half=top,shape=inner_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_east_top",
+      "x": 180,
+      "y": 90
+    },
+    "facing=south,half=top,shape=inner_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_south_top",
+      "x": 180,
+      "y": 180
+    },
+    "facing=south,half=top,shape=outer_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_right_top",
+      "x": 180,
+      "y": 90
+    },
+    "facing=south,half=top,shape=outer_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_left_top",
+      "x": 180,
+      "y": 180
+    },
+    "facing=south,half=top,shape=straight": {
+      "model": "supplementaries:block/cabin_siding_stairs_top",
+      "x": 180,
+      "y": 90
+    },
+    "facing=west,half=bottom,shape=inner_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_south",
+      "y": 90
+    },
+    "facing=west,half=bottom,shape=inner_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_west",
+      "y": 180
+    },
+    "facing=west,half=bottom,shape=outer_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_left",
+      "y": 90
+    },
+    "facing=west,half=bottom,shape=outer_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_right",
+      "y": 180
+    },
+    "facing=west,half=bottom,shape=straight": {
+      "model": "supplementaries:block/cabin_siding_stairs_mirror",
+      "y": 180
+    },
+    "facing=west,half=top,shape=inner_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_south_top",
+      "x": 180,
+      "y": 180
+    },
+    "facing=west,half=top,shape=inner_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_inner_west_top",
+      "x": 180,
+      "y": 270
+    },
+    "facing=west,half=top,shape=outer_left": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_right_top",
+      "x": 180,
+      "y": 180
+    },
+    "facing=west,half=top,shape=outer_right": {
+      "model": "supplementaries:block/cabin_siding_stairs_outer_left_top",
+      "x": 180,
+      "y": 270
+    },
+    "facing=west,half=top,shape=straight": {
+      "model": "supplementaries:block/cabin_siding_stairs_mirror_top",
+      "x": 180,
+      "y": 180
+    }
+  }
+}

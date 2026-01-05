@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.api.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ModNetwork;
-import net.mehvahdjukaar.supplementaries.common.network.SyncSkellyQuiverPacket;
+import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.damagesource.DamageSource;
@@ -66,10 +66,10 @@ public abstract class StrayMixin extends AbstractSkeleton implements IQuiverEnti
     @Override
     public void supplementaries$setQuiver(ItemStack quiver) {
         this.supplementaries$quiver = quiver;
-        if(!level().isClientSide){
+        if (!level().isClientSide) {
             //only needed when entity is alraedy spawned
             ModNetwork.CHANNEL.sentToAllClientPlayersTrackingEntity(this,
-                    new SyncSkellyQuiverPacket(this));
+                    new SyncEquippedQuiverPacket(this));
         }
     }
 

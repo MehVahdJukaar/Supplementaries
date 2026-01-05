@@ -17,7 +17,7 @@ body:
           required: true
         - label: "Always include a latest.log if you are crashing"
           required: true
-        - label: "Remove mod that enhances Minecraft: Optifine, Sodium, others. The issue persists."
+        - label: "Remove known hacky mods such as: Optifine, Fabric API/Connector on forge, and every kind of hybrid server like Mohist and Velocity. None of these are supported. Also try without other lesser usual suspects like Sodium and Lithium."
           required: true
         - label: "If you are unsure which mod is the culprit.\nDisable all of your mods and enable them 1-2 mods each time to isolate the culprit"
           required: true
@@ -30,11 +30,12 @@ body:
       label: Version
       description: The Version of Minecraft?
       options:
+        - 1.21.1-NEOFORGE
+        - 1.21.1-FABRIC
         - 1.20.1-FORGE
         - 1.20.1-FABRIC
         - 1.19.2-FORGE
         - 1.19.2-FABRIC
-        - 1.18.2-FORGE
       default: 0
     validations:
       required: true
@@ -60,7 +61,7 @@ body:
   - type: textarea
     id: issue-details
     attributes:
-      label: "Issue Detail"
+      label: "Describe Issue"
       description: "A clear and concise description of what the bug is."
       placeholder: "TIP: Always include A log if the issue is causing a crash. These are found in your instance directory under /logs. \nTIP: If applicable, add screenshots to help explain your problem."
     validations:

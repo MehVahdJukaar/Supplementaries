@@ -1,0 +1,23 @@
+{
+  labelsSynonyms: {
+    "1.21.1": ["1.21.1-NEOFORGE"],
+    "1.21.1": ["1.21.1-FABRIC"],
+    "1.20.1": ["1.20.1-FORGE"],
+    "1.20.1": ["1.20.1-FABRIC"],
+    "1.19.2": ["1.19.2-FORGE"],
+    "1.19.2": ["1.19.2-FABRIC"],
+    "outdated": ["out of date", "out dated"],
+    "not related": ["not my issue", "report there", "100% their issue"],
+    "duplicate": ["duplicate"],
+    "conflict": ["conflicted with", "is a conflict"]
+  },
+  labelsNotAllowed: [
+    'done',
+    'duplicate',
+    'help wanted',
+    'invalid',
+    'information',
+    'server'
+  ],
+  //defaultLabels: ['bug']
+}

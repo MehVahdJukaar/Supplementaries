@@ -3,6 +3,7 @@
   "values": [
     {"id":"#decorative_blocks:braziers","required":false},
     {"id":"#caverns_and_chasms:braziers","required":false},
+    {"id":"alexcaves:nuclear_bomb","required":false},
     {"id":"bbb:brazier","required":false},
     {"id":"bbb:soul_brazier","required":false},
     {"id":"#bbb:braziers","required":false},
@@ -10,6 +11,7 @@
     {"id":"#minecraft:candles","required":true},
     {"id":"#minecraft:candle_cakes","required":true},
     {"id":"#minecraft:campfires","required":true},
-    {"id":"amendments:candle_skull","required":false}
+    {"id":"#amendments:skull_candles","required":false},
+    {"id":"#supplementaries:trapped_presents","required":false}
   ]
 }

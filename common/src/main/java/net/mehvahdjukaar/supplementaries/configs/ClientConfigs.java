@@ -7,7 +7,9 @@ import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigSpec;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BookPileBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.resources.ResourceLocation;
@@ -160,6 +162,7 @@ public class ClientConfigs {
     public static class Tweaks {
 
 
+
         private static void init() {
         }
 
@@ -173,10 +176,12 @@ public class ClientConfigs {
         public static final Supplier<Integer> TOOLTIP_IMAGE_SIZE;
         public static final Supplier<Boolean> MOB_HEAD_EFFECTS;
         public static final Supplier<Boolean> DEATH_CHAT;
+        public static final Supplier<Boolean> SLIME_OVERLAY;
         public static final Supplier<Boolean> TALL_GRASS_COLOR_CHANGE;
         public static final Supplier<Boolean> COLORED_MAPS;
         public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
         public static final Supplier<Boolean> PROJECTILE_WEAPON_OVERLAY;
+        public static final Supplier<Boolean> ENDERMAN_HEAD_VANILLA;
 
 
         static {
@@ -184,6 +189,8 @@ public class ClientConfigs {
 
             builder.comment("Game tweaks")
                     .push("tweaks");
+            SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
+                    .define("overlay", true);
             CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
                     .define("clock_right_click", true);
             PROJECTILE_WEAPON_OVERLAY = builder.comment("Adds an overlay to projectile weapons in gui displaying currently selected ammo")
@@ -207,6 +214,9 @@ public class ClientConfigs {
                     .define("mob_head_shaders", true);
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
                     .define("send_chat_on_death", true);
+            ENDERMAN_HEAD_VANILLA = builder.comment("Makes enderman heads use vanilla texture. Enable for texture pack support")
+                            .define("enderman_head_texture_pack_support", true);
+
             builder.push("colored_maps");
             COLORED_MAPS = builder
                     .comment("Needs the server config with same name on. If on here it will ignore the server one and keep vanilla colors")
@@ -231,8 +241,10 @@ public class ClientConfigs {
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
         public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
+        public static final Supplier<Boolean> UNFUNNY;
         public static final Supplier<Boolean> NO_OPTIFINE_WARN;
         public static final Supplier<Boolean> NO_AMENDMENTS_WARN;
+        public static final Supplier<Boolean> NO_INCOMPATIBLE_MODS;
 
         public static final Supplier<Double> TEST1;
         public static final Supplier<Double> TEST2;
@@ -247,6 +259,8 @@ public class ClientConfigs {
                     .define("no_optifine_warn_screen", false);
             NO_AMENDMENTS_WARN = builder.comment("Disables Amendments suggestion screen")
                     .define("no_amendments_screen", false);
+            NO_INCOMPATIBLE_MODS = builder.comment("Disable incompatible mods warning screen")
+                    .define("no_incompatible_mods_screen", false);
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
                     .define("config_button", CompatHandler.CONFIGURED);
             CONFIG_BUTTON_Y_OFF = builder.comment("Config button Y offset")
@@ -257,6 +271,8 @@ public class ClientConfigs {
                     .define("placeable_tooltips", true);
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                     .define("custom_configured_screen", true);
+            UNFUNNY=builder.comment("I am very boring")
+                    .define("unfunny", false);
             TEST1 = builder.comment("ignore this").define("test1", 0d, -10, 10);
             TEST2 = builder.comment("ignore this").define("test2", 0d, -10, 10);
             TEST3 = builder.comment("ignore this").define("test3", 0d, -10, 10);

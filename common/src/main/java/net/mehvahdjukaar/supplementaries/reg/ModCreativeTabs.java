@@ -320,8 +320,8 @@ public class ModCreativeTabs {
                 ModRegistry.CANNON);
 
         after(e, i -> i.getItem() instanceof RecordItem, CreativeModeTabs.TOOLS_AND_UTILITIES,
-                ModConstants.AVAST_DISC_NAME,
-                ModRegistry.AVAST_DISC);
+                ModConstants.PIRATE_DISC_NAME,
+                ModRegistry.PIRATE_DISC);
 
         after(e, Items.LAVA_BUCKET, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.LUMISENE_NAME,
@@ -518,6 +518,10 @@ public class ModCreativeTabs {
                 ModConstants.LUNCH_BASKET_NAME,
                 ModRegistry.LUNCH_BASKET);
 
+        after(e, Items.PIGLIN_BANNER_PATTERN, CreativeModeTabs.INGREDIENTS,
+                ModConstants.DRAGON_PATTERN_NAME,
+                ModRegistry.DRAGON_PATTERN_ITEM);
+
         before(e, Items.FLINT_AND_STEEL, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.WRENCH_NAME,
                 ModRegistry.WRENCH);
@@ -573,6 +577,10 @@ public class ModCreativeTabs {
         add(e, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.CHECKER_BLOCK_NAME,
                 ModRegistry.CHECKER_BLOCK, ModRegistry.CHECKER_SLAB);
+
+        add(e, CreativeModeTabs.BUILDING_BLOCKS,
+                ModConstants.FINE_WOOD_NAME,
+                ModRegistry.FINE_WOOD, ModRegistry.FINE_WOOD_STAIRS, ModRegistry.FINE_WOOD_SLAB);
 
         add(e, CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.DAUB_NAME,

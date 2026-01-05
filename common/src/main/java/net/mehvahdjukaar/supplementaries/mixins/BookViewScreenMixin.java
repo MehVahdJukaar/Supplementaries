@@ -26,9 +26,9 @@ public abstract class BookViewScreenMixin {
     @ModifyArg(method = "render", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))
     public ResourceLocation setTatteredBookTexture(ResourceLocation resourceLocation) {
-        if (this.bookAccess instanceof IAntiqueTextProvider wb && wb.hasAntiqueInk()) {
-            ((IAntiqueTextProvider) this.forwardButton).setAntiqueInk(true);
-            ((IAntiqueTextProvider) this.backButton).setAntiqueInk(true);
+        if (this.bookAccess instanceof IAntiqueTextProvider wb && wb.supp$hasAntiqueInk()) {
+            ((IAntiqueTextProvider) this.forwardButton).supp$setAntiqueInk(true);
+            ((IAntiqueTextProvider) this.backButton).supp$setAntiqueInk(true);
             return ModTextures.TATTERED_BOOK_GUI_TEXTURE;
         }
         return resourceLocation;

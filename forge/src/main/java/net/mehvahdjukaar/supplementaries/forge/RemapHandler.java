@@ -4,10 +4,13 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.DefaultedRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.level.block.BushBlock;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.MissingMappingsEvent;
+import sfiomn.legendarysurvivaloverhaul.common.events.CommonForgeEvents;
+import sfiomn.legendarysurvivaloverhaul.common.items.drink.CanteenItem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +30,10 @@ public class RemapHandler {
         REMAP.put("supplementaries:lead_lantern", "oreganized:lead_lantern");
         REMAP.put("supplementaries:lead_door", "oreganized:lead_door");
         REMAP.put("supplementaries:lead_trapdoor", "oreganized:lead_trapdoor");
+        REMAP.put("supplementaries:cabin_siding", "supplementaries:fine_wood");
+        REMAP.put("supplementaries:cabin_siding_slab", "supplementaries:fine_wood_slab");
+        REMAP.put("supplementaries:cabin_siding_stairs", "supplementaries:fine_wood_stairs");
+
     }
 
     @SubscribeEvent

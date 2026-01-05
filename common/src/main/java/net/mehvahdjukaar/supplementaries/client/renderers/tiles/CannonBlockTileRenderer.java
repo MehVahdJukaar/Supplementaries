@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.FlywheelCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -44,7 +45,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
                        int packedLight, int packedOverlay) {
 
         CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick);
-        if (CompatHandler.FLYWHEEL) return;
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);

@@ -31,7 +31,7 @@
     "item": "autumnity:syrup_bottle"
   },
   "from_mod": "autumnity",
-  "color": "#bd6e2a",
+  "color": "#8e3f26",
   "still_texture": "moonlight:block/soft_fluids/honey_liquid",
   "flowing_texture": "moonlight:block/soft_fluids/potion_flow",
 

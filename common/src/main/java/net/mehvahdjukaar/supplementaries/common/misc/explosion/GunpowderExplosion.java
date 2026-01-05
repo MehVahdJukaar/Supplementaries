@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -60,7 +61,7 @@ public class GunpowderExplosion extends Explosion {
         int pz = Mth.floor(this.z);
 
         this.radius2 *= 2.0F;
-
+        //is this needed?
         ForgeHelper.onExplosionDetonate(this.level, this, new ArrayList<>(), this.radius2);
 
         explodeBlock(px + 1, py, pz);
@@ -69,6 +70,12 @@ public class GunpowderExplosion extends Explosion {
         explodeBlock(px, py - 1, pz);
         explodeBlock(px, py, pz + 1);
         explodeBlock(px, py, pz - 1);
+        //explode ones above for gunpowder climb
+        explodeBlock(px, py + 1, pz + 1);
+        explodeBlock(px, py + 1, pz - 1);
+        explodeBlock(px + 1, py + 1, pz);
+        explodeBlock(px - 1, py + 1, pz);
+
 
         BlockPos pos = new BlockPos(px, py, pz);
         BlockState newFire = BaseFireBlock.getState(this.level, pos);
@@ -104,10 +111,10 @@ public class GunpowderExplosion extends Explosion {
 
 
             if (ForgeHelper.getExplosionResistance(state, this.level, pos, this) == 0) {
-                if (block instanceof TntBlock) {
-                    this.getToBlow().add(pos);
-                } else if (block == CompatObjects.NUKE_BLOCK.get()) {
-                    igniteTntHack(this.level, pos, block);
+                if (state.getBlock() instanceof TntBlock) {
+                    getToBlow().add(pos);
+                } else if (TntBehavior.isTNTLikeBlock(state)) {
+                    TntBehavior.igniteTntHack(state, this.level, pos);
                 }
             }
             //lights up burnable blocks
@@ -177,18 +184,5 @@ public class GunpowderExplosion extends Explosion {
         }
     }
 
-
-    // specifically for alex caves nukes basically
-    public static void igniteTntHack(Level level, BlockPos blockpos, Block tnt) {
-        Arrow dummyArrow = new Arrow(level, blockpos.getX() + 0.5, blockpos.getY() + 0.5, blockpos.getZ() + 0.5);
-        dummyArrow.setSecondsOnFire(20);
-        BlockState old = level.getBlockState(blockpos);
-        //this will remove block above. too bad we are about to explode it anyways
-        tnt.onProjectileHit(level, tnt.defaultBlockState(),
-                new BlockHitResult(new Vec3(0.5, 0.5, 0.5), Direction.UP, blockpos, true),
-                dummyArrow);
-        //restore old block
-        level.setBlockAndUpdate(blockpos, old);
-    }
 
 }

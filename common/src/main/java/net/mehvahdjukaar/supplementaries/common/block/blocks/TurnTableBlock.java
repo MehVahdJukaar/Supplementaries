@@ -86,7 +86,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn,
                                  BlockHitResult hit) {
         Direction face = hit.getDirection();
         Direction myDir = state.getValue(FACING);
@@ -96,9 +96,9 @@ public class TurnTableBlock extends Block implements EntityBlock {
             } else {
                 state = state.cycle(INVERTED);
                 float f = state.getValue(INVERTED) ? 0.55F : 0.5F;
-                worldIn.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundSource.BLOCKS, 0.3F, f);
-                worldIn.setBlock(pos, state, 2 | 4);
-                return InteractionResult.sidedSuccess(worldIn.isClientSide);
+                level.playSound(player, pos, SoundEvents.COMPARATOR_CLICK, SoundSource.BLOCKS, 0.3F, f);
+                level.setBlock(pos, state, 2 | 4);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
         return InteractionResult.PASS;

@@ -25,6 +25,7 @@ public abstract class LightUpWaterBlock extends LightUpBlock implements SimpleWa
 
     protected LightUpWaterBlock(Properties properties) {
         super(properties);
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }
 
     @Override

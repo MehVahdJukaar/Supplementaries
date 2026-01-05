@@ -8,19 +8,59 @@
     },
     "NotHypherionSA": {},
     "anon": {},
+    "CreeperTyp89":{
+      "uuid": "5e938614-59ba-40ce-830f-57f7a22466cb",
+      "has_statue": true
+    },
+    "JanieUwU": {
+       "uuid": "defe187e-4220-44d9-856d-4dc8c73b105c",
+       "has_statue": true
+    },
+    "arzinist": {
+      "has_globe": true
+    },
+    "looxond": {
+      "uuid": "20f05082-8450-4841-9fe4-a36aa89249c1",
+      "has_statue": true,
+      "has_globe": true
+    },
+    "jordoVR": {
+      "uuid": "a01e815c-def7-4f2e-b608-bb87ea9db78f",
+      "has_statue": true
+    },
+    "oneVR": {
+      "uuid": "dcd4b443-657d-4c02-95b5-cffd5ceb9f77",
+      "has_statue": true
+    },
     "FishSupreme": {
       "has_globe": true,
       "uuid": "c5e26940-e3af-4d81-9fd7-4c5cd1a57d34",
       "has_statue": true
     },
+    "DarkShrek_": {
+      "uuid": "351a126a-705e-4c5f-9ab1-3051f18e16f0",
+      "has_statue": true
+    },
+    "Ganpan14O": {
+      "has_statue": true,
+      "uuid": "04910f2c-8c44-4c6f-a09e-871298f5d992"
+    },
     "ScribeOfDays": {
       "has_statue": true,
       "uuid": "6ee3abb1-86b1-4d4c-ac0e-6e1c37bb83d5"
+    },
+    "Sarahtoma":{
+      "has_statue": true,
+      "uuid": "49383690-da2e-48f8-9a11-bbabe49f12c8"
     },
     "ClintDK": {},
     "Laynce": {
         "has_statue": true,
         "uuid": "0acaca97-ca7d-4b90-ba4b-f524a5101cd4"
+    },
+    "goldninja100gn":{
+      "uuid": "5ab06274-4c85-455c-88a9-e269e9ec5bc1",
+      "has_statue": true
     },
     "yutonishiogi": {
       "uuid": "0c952629-7a55-45d0-a412-8e1e98500ed3",
@@ -56,10 +96,9 @@
       "uuid": "5f7b3c4e-34bd-435f-b3f2-491fba2eb554",
       "has_statue": true
     },
-    "TorchTheDragon": {
+    "NovaXentret": {
       "uuid": "f8f525b7-2dd2-41b9-98cb-9a2f974e8349",
-      "has_statue": true,
-      "has_globe": true
+      "has_statue": true
     },
     "Azrod_dovahkiin": {
       "uuid": "171ccd8a-3afe-4788-806d-ee643fe33a9c",
@@ -131,8 +170,8 @@
       "has_statue": true,
       "has_globe": true
     },
-    "Moomallowz": {
-      "uuid": "356f28fa-22bb-48f4-af1d-eafdfc4dd7f3",
+    "Moofellow": {
+      "uuid": "a290a9b9-b6ba-4561-b2a4-55ef774000ea",
       "has_statue": true
     },
     "SylveticHearts": {
@@ -202,7 +241,7 @@
     "Eudes Gerodez": {}
   },
   "music_and_sounds": [
-    "Partyp",
+    "hlzfss",
     "Cydian",
     "DemiMark",
     "Rapsmary",

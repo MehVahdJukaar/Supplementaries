@@ -6,6 +6,7 @@
     {"id":"minecraft:magma_cube","required":false},
     {"id":"minecraft:allay","required":false},
     {"id":"minecraft:frog","required":false},
+    {"id":"wilder_wild:firefly","required":false},
     {"id":"feywild:spring_pixie","required":false},
     {"id":"feywild:autumn_pixie","required":false},
     {"id":"feywild:summer_pixie","required":false},

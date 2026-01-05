@@ -332,6 +332,11 @@ public class ColoredMapHandler {
 
         @Override
         public boolean persistOnCopyOrLock() {
+            return true;
+        }
+
+        //@Override
+        public boolean persistOnRescale() {
             return false;
         }
 

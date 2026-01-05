@@ -30,12 +30,13 @@ public class CompatHandler {
     public static final boolean CONFIGURED = isLoaded("configured");
     public static final boolean SOUL_FIRED = isLoaded("soul_fire_d");
     public static final boolean OREGANIZED = isLoaded("oreganized");
-    public static final boolean CREATE = isLoaded("create");
+    public static final boolean CREATE = isLoaded("create") && PlatHelper.getPlatform().isForge(); //TODO: remove
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
     public static final boolean CURIOS = isLoaded("curios");
     public static final boolean TRINKETS = isLoaded("trinkets");
     public static final boolean FARMERS_DELIGHT;
     public static final boolean INFERNALEXP = isLoaded("infernalexp");
+    public static final boolean ENVIRONMENTAL = isLoaded("environmental");
     public static final boolean INSPIRATIONS = isLoaded("inspirations");
     public static final boolean FRAMEDBLOCKS = isLoaded("framedblocks");
     public static final boolean RGBLIB = isLoaded("rgblib");
@@ -69,6 +70,7 @@ public class CompatHandler {
     public static final boolean SNOWYSPIRIT = isLoaded("snowyspirit");
     public static final boolean HAUNTEDHARVEST = isLoaded("hauntedharvest");
     public static final boolean CLOTH_CONFIG = isLoaded("cloth_config");
+    public static final boolean YACL = isLoaded("yacl") || isLoaded("yet_another_config_lib");
     public static final boolean FLAN = isLoaded("flan");
     public static final boolean BREEZY = isLoaded("breezy");
     public static final boolean WILDER_WILD = isLoaded("wilder-wild");
@@ -79,6 +81,7 @@ public class CompatHandler {
     public static final boolean FARMERS_RESPRITE = isLoaded("farmersrespite");
     public static final boolean ARCHITECTS_PALETTE = isLoaded("architects_palette");
     public static final boolean OPTIFINE;
+    public static final boolean SHULKER_BOX_TOOLTIP = isLoaded("shulkerboxtooltip");
 
     static {
         boolean of = false;
@@ -111,17 +114,22 @@ public class CompatHandler {
     public static void setup() {
         if (CREATE) CreateCompat.setup();
         if (COMPUTERCRAFT) CCCompat.setup();
+        if (SOUL_FIRED) SoulFiredCompat.setup();
+
     }
 
     public static void initOptionalRegistries() {
         if (FARMERS_DELIGHT) FarmersDelightCompat.init();
         if (DECO_BLOCKS) DecoBlocksCompat.init();
         if (QUARK) QuarkCompat.init();
+        if (CREATE) CreateCompat.init();
         if (ENDERGETIC) EndergeticCompat.init();
         if (CAVERNS_AND_CHASMS) ModRegistry.SCONCES.add(ModRegistry.SCONCE_ITEM_GREEN);
         if (INFERNALEXP) InfernalExpCompat.init();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
-        if (SOUL_FIRED) SoulFiredCompat.init();
+        if (SHULKER_BOX_TOOLTIP) ShulkerBoxTooltipCompat.init();
+        if (CURIOS) CuriosCompat.init();
+        if (TRINKETS) TrinketsCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 

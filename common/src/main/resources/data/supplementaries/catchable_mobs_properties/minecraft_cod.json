@@ -1,5 +1,6 @@
 {
-  "force_fluid": "minecraft:water","fish_index": 4,
+  "force_fluid": "minecraft:water",
+  "fish_index": 3,
   "height_increment": 0.0,
   "owners": [
     "minecraft:cod"

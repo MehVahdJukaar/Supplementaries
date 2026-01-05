@@ -3,41 +3,41 @@
 	"parent": "minecraft:block/cube",
 	"textures": {
 		"particle": "supplementaries:block/sign_posts/sign_post_oak",
-		"east": "supplementaries:block/sign_posts/sign_post_oak"
+		"sign": "supplementaries:block/sign_posts/sign_post_oak"
 	},
 	"elements": [
 		{
 			"from": [0, 2, 6],
 			"to": [16, 7, 7],
 			"faces": {
-				"north": {"uv": [16, 0, 0, 5], "texture": "#east"},
-				"east": {"uv": [15, 0, 16, 5], "texture": "#east"},
-				"south": {"uv": [0, 0, 16, 5], "texture": "#east"},
-				"west": {"uv": [0, 0, 1, 5], "texture": "#east"},
-				"up": {"uv": [16, 0, 0, 1], "rotation": 180, "texture": "#east"},
-				"down": {"uv": [16, 4, 0, 5], "rotation": 180, "texture": "#east"}
+				"north": {"uv": [16, 0, 0, 5], "texture": "#sign"},
+				"east": {"uv": [15, 0, 16, 5], "texture": "#sign"},
+				"south": {"uv": [0, 0, 16, 5], "texture": "#sign", "cullface": "south"},
+				"west": {"uv": [0, 0, 1, 5], "texture": "#sign"},
+				"up": {"uv": [16, 0, 0, 1], "rotation": 180, "texture": "#sign"},
+				"down": {"uv": [16, 4, 0, 5], "rotation": 180, "texture": "#sign"}
 			}
 		},
 		{
-			"from": [-2, 3, 6],
-			"to": [0, 6, 7],
+			"from": [-2, 3, 6.0005],
+			"to": [0, 6, 6.9990],
 			"faces": {
-				"north": {"uv": [4, 6, 2, 9], "texture": "#east"},
-				"south": {"uv": [2, 6, 4, 9], "texture": "#east"},
-				"west": {"uv": [2, 6, 3, 9], "texture": "#east"},
-				"up": {"uv": [4, 6, 2, 7], "rotation": 180, "texture": "#east"},
-				"down": {"uv": [4, 8, 2, 9], "rotation": 180, "texture": "#east"}
+				"north": {"uv": [4, 6, 2, 9], "texture": "#sign"},
+				"south": {"uv": [2, 6, 4, 9], "texture": "#sign"},
+				"west": {"uv": [2, 6, 3, 9], "texture": "#sign"},
+				"up": {"uv": [4, 6, 2, 7], "rotation": 180, "texture": "#sign"},
+				"down": {"uv": [4, 8, 2, 9], "rotation": 180, "texture": "#sign"}
 			}
 		},
 		{
-			"from": [-4, 4, 6],
-			"to": [-2, 5, 7],
+			"from": [-4, 4, 6.0005],
+			"to": [-2, 5, 6.9990],
 			"faces": {
-				"north": {"uv": [2, 7, 0, 8], "texture": "#east"},
-				"south": {"uv": [0, 7, 2, 8], "texture": "#east"},
-				"west": {"uv": [0, 7, 1, 8], "texture": "#east"},
-				"up": {"uv": [2, 7, 0, 8], "rotation": 180, "texture": "#east"},
-				"down": {"uv": [2, 7, 0, 8], "rotation": 180, "texture": "#east"}
+				"north": {"uv": [2, 7, 0, 8], "texture": "#sign"},
+				"south": {"uv": [0, 7, 2, 8], "texture": "#sign"},
+				"west": {"uv": [0, 7, 1, 8], "texture": "#sign"},
+				"up": {"uv": [2, 7, 0, 8], "rotation": 180, "texture": "#sign"},
+				"down": {"uv": [2, 7, 0, 8], "rotation": 180, "texture": "#sign"}
 			}
 		}
 	]
