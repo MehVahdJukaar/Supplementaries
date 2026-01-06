@@ -96,7 +96,7 @@ subprojects {
 
             def nexusToken = providers.environmentVariable("NEXUS_TOKEN")
             def nexusUser = providers.environmentVariable("NEXUS_USER")
-            if (nexusToken && nexusUser) {
+            if (nexusToken.isPresent() && nexusUser.isPresent()) {
                 maven {
                     url = uri("https://registry.somethingcatchy.net/repository/maven-releases/")
                     credentials {
