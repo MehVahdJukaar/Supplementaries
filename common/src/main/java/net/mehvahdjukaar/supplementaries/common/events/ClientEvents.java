@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
@@ -30,6 +31,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.texture.SpriteTicker;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -116,6 +118,9 @@ public class ClientEvents {
         if (SelectableContainerItemHud.getInstance().onMouseScrolled(dy)) {
            return true;
         }
+        Level l;
+        l.dimensionType().fixedTime();
+                l.dayTime();
         if (CannonController.onMouseScrolled(dy)) {
             return true;
         }

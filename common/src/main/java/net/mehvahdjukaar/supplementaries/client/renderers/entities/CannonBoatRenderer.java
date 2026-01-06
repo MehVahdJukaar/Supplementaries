@@ -40,9 +40,6 @@ public class CannonBoatRenderer extends BoatRenderer {
     @Override
     public ResourceLocation getTextureLocation(Boat entity) {
         WoodType woodType = ((CannonBoatEntity) entity).getWoodType();
-        if (woodType.isVanilla()) {
-            return super.getTextureLocation(entity);
-        }
         return textures.get(woodType);
     }
 
