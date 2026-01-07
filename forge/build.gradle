@@ -131,6 +131,7 @@ dependencies {
     modImplementation ("curse.maven:athena-841890:5176879")
     modImplementation ("curse.maven:forgified-fabric-api-889079:6169304")
     modImplementation ("curse.maven:legendary-survival-overhaul-840254:6423363")
+    modRuntimeOnly ("curse.maven:vmp-forge-892037:4657678")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
 

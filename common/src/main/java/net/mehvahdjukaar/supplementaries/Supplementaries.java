@@ -28,9 +28,8 @@ import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.MixinEnvironment;
-import org.spongepowered.tools.agent.MixinAgent;
+
+import java.util.List;
 
 
 public class Supplementaries {
@@ -45,6 +44,26 @@ public class Supplementaries {
 
     public static String str(String n) {
         return MOD_ID + ":" + n;
+    }
+
+    public static void bubbleSort(List<String> a) {
+        //implement a bubble sort
+        int n = a.size();
+        boolean swapped;
+        for (int i = 0; i < n - 1; i++) {
+            swapped = false;
+            for (int j = 0; j < n - i - 1; j++) {
+                if (a.get(j).compareTo(a.get(j + 1)) > 0) {
+                    // swap a[j] and a[j+1]
+                    String temp = a.get(j);
+                    a.set(j, a.get(j + 1));
+                    a.set(j + 1, temp);
+                    swapped = true;
+                }
+            }
+            // If no two elements were swapped by inner loop, then break
+            if (!swapped) break;
+        }
     }
 
     //called on mod creation
