@@ -1,16 +1,32 @@
 architectury {
-    common(rootProject.enabled_platforms.split(","))
+    common(enabled_platforms.split(","))
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/supplementaries.accesswidener")
+    accessWidenerPath = file("src/main/resources/${mod_id}.accesswidener")
 }
 
-shadowJar {
-    zip64 true
 
+publishing {
+    publications {
+        mavenCommon(MavenPublication) {
+            artifactId = rootProject.mod_id
+            from components.java
+        }
+    }
+
+    repositories {
+        // Add repositories to publish to here.
+    }
 }
 
+tasks.withType(JavaCompile).configureEach {
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
+
+    it.options.compilerArgs << "-Xmaxerrs" << "4000"
+
+}
 dependencies {
 
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
@@ -63,11 +79,3 @@ dependencies {
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-common:${shulker_box_tooltip_version}") { transitive false }
 }
 
-publishing {
-    publications {
-        mavenCommon(MavenPublication) {
-            artifactId = rootProject.mod_id
-            from components.java
-        }
-    }
-}
