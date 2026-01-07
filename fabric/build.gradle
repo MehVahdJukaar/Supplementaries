@@ -85,7 +85,8 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
-
+  //  modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}");
+    modImplementation("curse.maven:selene-499980:7390196")
 
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
@@ -130,7 +131,7 @@ dependencies {
     //modImplementation("curse.maven:frame-api-580137:3943404")
     modCompileOnly("dev.emi:emi:${project.emi_version}+1.19.4:api")
     //modCompileOnly("com.jozufozu.flywheel:flywheel-fabric-$flywheel_fabric_version")
-    modApi("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
+
 
     //modImplementation("curse.maven:cyanide-541676:4824161")
     modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")

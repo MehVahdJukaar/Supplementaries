@@ -5,14 +5,22 @@ plugins {
 
 architectury {
     platformSetupLoomIde()
+
     forge {
-        //platformPackage = "forge"
     }
 }
 
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
+
+    forge {
+        convertAccessWideners = true
+        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
+
+        mixinConfig "supplementaries-common.mixins.json"
+        mixinConfig "supplementaries.mixins.json"
+    }
 }
 
 configurations {
@@ -108,8 +116,9 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:22.0.0'
 
+    //modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
+    modImplementation("curse.maven:selene-499980:7388296")
 
-    modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
     modCompileOnly("curse.maven:farmers-delight-398521:5051242")
 
     //modRuntimeOnly("curse.maven:modernfix-790626:4599348")

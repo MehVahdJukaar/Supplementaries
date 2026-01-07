@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.moonlight.api.block.IColored;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.minecraft.ChatFormatting;
@@ -61,14 +62,13 @@ public class PresentItem extends BlockItem implements IColored {
     @ForgeOverride
     public int getMaxStackSize(ItemStack stack) {
         var tag = stack.getTag();
-        return(tag != null && tag.contains("Recipient")) ? 1 : this.getDefaultMaxStackSize();
+        return(tag != null && tag.contains("Recipient")) ? 1 : this.getMaxStackSize();
     }
 
     @ForgeOverride
     public boolean canFitInsideContainerItems(ItemStack stack) {
         var tag = stack.getTag();
-
-        return !stack.has(ModComponents.ADDRESS.get());
+        return tag == null || !tag.contains("Recipient");
     }
 
     @Override
