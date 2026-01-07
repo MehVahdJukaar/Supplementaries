@@ -85,21 +85,8 @@ public class SoapWashableHelper {
             toPlace = tryParseWax(state);
         }
 
-        BlockEntity oldBe = null;
-        if (b instanceof EntityBlock) {
-            oldBe = level.getBlockEntity(pos);
-        }
-
         if (toPlace != null) {
-            level.setBlock(pos, toPlace, 11);
-
-            if (oldBe != null) {
-                CompoundTag tag = oldBe.saveWithoutMetadata(level.registryAccess());
-                var be = level.getBlockEntity(pos);
-                if (be != null) {
-                    be.loadWithComponents(tag, level.registryAccess());
-                }
-            }
+            replaceWithBlockEntity(level, pos, b, toPlace);
             return true;
         }
         return false;
@@ -209,24 +196,34 @@ public class SoapWashableHelper {
                 }
             }
 
-            BlockEntity oldBe = null;
-            if (newColor instanceof EntityBlock) {
-                oldBe = level.getBlockEntity(pos);
-            }
-
             BlockState toPlace = newColor.withPropertiesOf(state);
 
-            level.setBlock(pos, toPlace, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
-            if (oldBe != null) {
-                CompoundTag tag = oldBe.saveWithoutMetadata(level.registryAccess());
-                var be = level.getBlockEntity(pos);
-                if (be != null) {
-                    be.loadWithComponents(tag, level.registryAccess());
-                }
-            }
+
+            replaceWithBlockEntity(level, pos, newColor, toPlace);
             return true;
         }
         return false;
+    }
+
+    private static void replaceWithBlockEntity(Level level, BlockPos pos, Block newColor, BlockState toPlace) {
+        BlockEntity oldBe;
+        CompoundTag oldBetag = null;
+        if (newColor instanceof EntityBlock) {
+            oldBe = level.getBlockEntity(pos);
+            if (oldBe != null) {
+                oldBetag = oldBe.saveWithoutMetadata(level.registryAccess());
+                level.removeBlockEntity(pos);
+            }
+        }
+
+
+        level.setBlock(pos, toPlace, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+        if (oldBetag != null) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be != null) {
+                be.loadWithComponents(oldBetag, level.registryAccess());
+            }
+        }
     }
 }
 
