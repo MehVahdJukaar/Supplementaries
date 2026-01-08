@@ -41,12 +41,11 @@ public class RopeArrowItem extends ArrowItem {
     }
 
     //return remaining
-    public static void addRopes(ItemStack stack, int ropes) {
-       old stack.setDamageValue(stack.getDamageValue() - ropes);
+    public static int addRopes(ItemStack stack, int ropes) {
         int current = getRopes(stack);
         int newCharges = Math.min(getRopeCapacity(), current + ropes);
         int remaining = ropes - (newCharges - current);
-        stack.set(ModComponents.CHARGES.get(), newCharges);
+        stack.setDamageValue(newCharges);
         return remaining;
     }
 
