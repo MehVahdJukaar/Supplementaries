@@ -50,7 +50,6 @@ public class Supplementaries {
     }
 
     public static ResourceLocation parseRes(String n) {
-        CannonBoatRenderer
         if (n.contains(":")) return ResourceLocation.parse(n);
         else return res(n);
     }

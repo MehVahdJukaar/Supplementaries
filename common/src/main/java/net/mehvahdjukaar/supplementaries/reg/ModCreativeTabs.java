@@ -26,10 +26,7 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -208,13 +205,23 @@ public class ModCreativeTabs {
                 ModConstants.ITEM_SHELF_NAME,
                 ModRegistry.ITEM_SHELF);
 
+        Set<ItemLike> allCandles = new HashSet<>();
+        List<Supplier<ItemLike>> candleSuppliers = new ArrayList<>();
+        for (var b : ModRegistry.ALL_CANDLE_HOLDERS) {
+            Item i = b.get().asItem();
+            if (allCandles.contains(i)) {
+                throw new AssertionError("Duplicate candle holder item in creative tab registration: " + i + "How??");
+            }
+            allCandles.add(i);
+            candleSuppliers.add(() -> i);
+        }
         adder.after(ItemTags.CANDLES, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.CANDLE_HOLDER_NAME,
-                ModRegistry.ALL_CANDLE_HOLDERS.toArray(Supplier[]::new));
+                candleSuppliers.toArray(Supplier[]::new));
 
         adder.after(ItemTags.CANDLES, CreativeModeTabs.COLORED_BLOCKS,
                 ModConstants.CANDLE_HOLDER_NAME,
-                ModRegistry.CANDLE_HOLDERS.values().toArray(Supplier[]::new));
+                candleSuppliers.toArray(Supplier[]::new));
 
         adder.after(Items.ENDER_CHEST, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.SAFE_NAME,
