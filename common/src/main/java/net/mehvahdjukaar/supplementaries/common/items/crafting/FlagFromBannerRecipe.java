@@ -70,6 +70,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
                 }
 
                 BannerPatternLayers patterns = itemStack.get(DataComponents.BANNER_PATTERNS);
+                if (patterns == null) return false;
                 int j = patterns.layers().size();
                 if (j > getMaxBannerPatterns()) {
                     return false;
@@ -104,7 +105,7 @@ public class FlagFromBannerRecipe extends CustomRecipe {
             if (!withPatterns.isEmpty()) {
                 BannerPatternLayers patterns = withPatterns.get(DataComponents.BANNER_PATTERNS);
                 //find item with patterns
-                if(patterns != null && patterns.layers().isEmpty()) {
+                if (patterns != null && patterns.layers().isEmpty()) {
                     continue; //no patterns
                 }
                 for (int k = 0; k < inv.size(); ++k) {
