@@ -1,5 +1,6 @@
 # Official Supplementaries Mod Wiki page
-For the love of god, google, this is the OFFICIAL wiki page: https://github.com/MehVahdJukaar/Supplementaries/wiki
+Official and Up-to-date Supplementaries Mod Wiki can ONLY be found here: https://github.com/MehVahdJukaar/Supplementaries/wiki
+For the love of god google index this wiki, it is THE ONLY official one.
 
 
 # Supplementaries
