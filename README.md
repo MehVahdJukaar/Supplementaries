@@ -1,3 +1,7 @@
+# Official Supplementaries Mod Wiki page
+For the love of god, google, this is the OFFICIAL wiki page: https://github.com/MehVahdJukaar/Supplementaries/wiki
+
+
 # Supplementaries
 
 Supplementaries is a highly configurable Forge mod focused on adding valuable content which fills the gaps vanilla has. Its features are tailored to be functional, aesthetically viable, and complementary to preexisting content and provide many new ways to enhance your Vanilla+ experience.
