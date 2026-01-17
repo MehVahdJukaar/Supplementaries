@@ -138,7 +138,7 @@ public class WelcomeMessageScreen extends Screen {
 
     private static final Component AM_URL = Component.translatable("gui.supplementaries.amendments.suggestions")
             .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).applyFormat(ChatFormatting.UNDERLINE)
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://legacy.curseforge.com/minecraft/mc-mods/amendments")));
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/amendments")));
 
     private static final Component AM_TITLE = Component.translatable("gui.supplementaries.amendments.title")
             .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
