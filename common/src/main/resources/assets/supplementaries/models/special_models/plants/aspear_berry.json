@@ -1,7 +1,8 @@
 {
+  "required_mod": "pokecube",
+
   "parent": "supplementaries:special_models/plants/cross_template",
   "textures": {
     "plant": "pokecube:block/potted_aspear_berry"
-  },
-  "required_mod": "pokecube"
+  }
 }

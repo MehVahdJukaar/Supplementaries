@@ -1,5 +1,5 @@
 {
-  "required_mod": "supplementaries",
+  "required_mod": "pokecube",
 
   "parent": "supplementaries:special_models/plants/cross_template",
   "textures": {

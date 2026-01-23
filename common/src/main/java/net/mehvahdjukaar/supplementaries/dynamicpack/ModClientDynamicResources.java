@@ -11,10 +11,7 @@ import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicClientResourceProvider;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
-import net.mehvahdjukaar.moonlight.api.resources.textures.Palette;
-import net.mehvahdjukaar.moonlight.api.resources.textures.Respriter;
-import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
-import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
+import net.mehvahdjukaar.moonlight.api.resources.textures.*;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -44,6 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
 public class ModClientDynamicResources extends DynamicClientResourceProvider {
@@ -187,6 +185,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                             RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
                         Palette palette = Palette.fromImage(plankTexture);
                         return respriter.recolor(palette);
+                    }catch (Exception e){
+                        throw new RuntimeException(e);
                     }
                 });
             });
@@ -195,7 +195,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         }
     }
 
-    private static TextureImage createWaySignItemTexture(ResourceManager manager, WoodType wood, SignPostItem sign, Respriter respriter) throws Exception {
+    private static TextureImage createWaySignItemTexture(ResourceManager manager, WoodType wood, SignPostItem sign, Respriter respriter) {
         Item signItem = wood.getItemOfThis("sign");
         if (signItem != null) {
             try (TextureImage vanillaSign = TextureImage.open(manager,
@@ -214,6 +214,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                     }
                     return newImage;
                 }
+            }catch (Exception e){
+                throw new RuntimeException(e);
             }
         }
         //if it failed use plank one
@@ -221,6 +223,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                 RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
             Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
             return respriter.recolor(targetPalette);
+        }catch (Exception e){
+            throw new RuntimeException(e);
         }
     }
 
@@ -297,6 +301,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                         //TextureImage newImage = respriter.recolorWithAnimationOf(plankTexture);
                         Respriter r = wood.toVanillaBoatOrOak() == Boat.Type.BAMBOO ? respriter2 : respriter;
                         return r.recolor(targetPalette);
+                    }catch (Exception e){
+                        throw new RuntimeException(e);
                     }
                 });
 
@@ -324,7 +330,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
     }
 
     private @Nullable TextureImage createBoatItemTexture(ResourceManager manager, WoodType wood,
-                                                         Respriter respriter) throws Exception {
+                                                         Respriter respriter)  {
         TextureImage newImage = null;
         Item boat = wood.getItemOfThis("boat");
         if (boat != null) {
@@ -334,6 +340,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                 Palette targetPalette = Palette.fromImage(vanillaBoat);
                 newImage = respriter.recolor(targetPalette);
 
+            }catch (Exception e){
+                throw new RuntimeException(e);
             }
         }
         //if it failed use plank one
@@ -343,6 +351,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                 Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
                 newImage = respriter.recolor(targetPalette);
 
+            }catch (Exception e){
+                throw new RuntimeException(e);
             }
         }
         return newImage;

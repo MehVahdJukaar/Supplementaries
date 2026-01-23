@@ -159,7 +159,7 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
     @Override
     public int getBarWidth(ItemStack stack) {
         int charges = getCharges(stack);
-        return Mth.clamp(Math.round(charges * 13.0F / (float) getCharges(stack)), 0, 13);
+        return Mth.clamp(Math.round(charges * 13.0F / (float) getMaxCharges(stack)), 0, 13);
     }
 
     @ForgeOverride

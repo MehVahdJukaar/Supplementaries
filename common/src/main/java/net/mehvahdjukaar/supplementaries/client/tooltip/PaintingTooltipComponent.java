@@ -19,10 +19,9 @@ public class PaintingTooltipComponent implements ClientTooltipComponent {
     private final int height;
     private final int width;
 
-    public PaintingTooltipComponent(PaintingTooltip tooltip) {
-        RegistryAccess ra = Minecraft.getInstance().level.registryAccess();
-        var painting = tooltip.data().read(ra.createSerializationContext(NbtOps.INSTANCE), Painting.VARIANT_MAP_CODEC);
-        this.pattern = painting.getOrThrow().value();
+    public PaintingTooltipComponent(PaintingTooltip painting) {
+
+        this.pattern = painting.data();
         float h = pattern.height() * 16;
         float w = pattern.width() * 16;
         int size = ClientConfigs.Tweaks.TOOLTIP_IMAGE_SIZE.get();

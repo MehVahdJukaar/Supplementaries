@@ -175,7 +175,10 @@ public class ClientEventsForge {
         if (ClientConfigs.Tweaks.PAINTINGS_TOOLTIPS.get() && i instanceof HangingEntityItem) {
             CustomData customData = stack.getOrDefault(DataComponents.ENTITY_DATA, CustomData.EMPTY);
             if (!customData.isEmpty() && customData.contains("variant")) {
-                event.getTooltipElements().add(Either.right(new PaintingTooltip(customData)));
+                PaintingTooltip paintingTooltip = PaintingTooltip.create(customData);
+                if (paintingTooltip != null) {
+                    event.getTooltipElements().add(Either.right(paintingTooltip));
+                }
             }
         }
     }

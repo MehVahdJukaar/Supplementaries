@@ -29,7 +29,10 @@ public abstract class BannerPatternItemMixin extends Item {
     @Override
     public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         if (ClientConfigs.Tweaks.BANNER_PATTERN_TOOLTIP.get()) {
-            return Optional.of(new BannerPatternTooltip(this.bannerPattern));
+            BannerPatternTooltip patternTooltip = BannerPatternTooltip.create(this.bannerPattern);
+            if (patternTooltip != null) {
+                return Optional.of(patternTooltip);
+            }
         }
         return Optional.empty();
     }

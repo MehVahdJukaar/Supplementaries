@@ -118,9 +118,6 @@ public class ClientEvents {
         if (SelectableContainerItemHud.getInstance().onMouseScrolled(dy)) {
            return true;
         }
-        Level l;
-        l.dimensionType().fixedTime();
-                l.dayTime();
         if (CannonController.onMouseScrolled(dy)) {
             return true;
         }

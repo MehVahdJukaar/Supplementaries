@@ -1,4 +1,5 @@
 {
+    "required_mod": "quark",
     "parent": "supplementaries:special_models/plants/cross_template",
     "textures": {
         "plant": "quark:block/potted/carrot"

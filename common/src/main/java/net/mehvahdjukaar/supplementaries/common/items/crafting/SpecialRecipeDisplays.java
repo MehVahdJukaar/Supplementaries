@@ -183,12 +183,16 @@ public class SpecialRecipeDisplays {
         Ingredient ingredients = Ingredient.of(ModRegistry.SACK.get());
         for (DyeColor color : DyeColor.values()) {
             DyeItem dye = DyeItem.byColor(color);
-            ItemStack output = BlocksColorAPI.changeColor(ModRegistry.SACK.get().asItem(), color).getDefaultInstance();
+            var output = BlocksColorAPI.changeColor(ModRegistry.SACK.get().asItem(), color);
+            if (output == null) {
+                break;
+                //throw new AssertionError("Change color operation on " + color + "sack failed.");
+            }
 
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, ingredients, Ingredient.of(dye));
 
             ResourceLocation id = Supplementaries.res("/sack_" + color.getName() + "_display");
-            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
+            ShapelessRecipe shapelessRecipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output.getDefaultInstance(), inputs);
             recipes.add(new RecipeHolder<>(id, shapelessRecipe));
         }
         return recipes;
@@ -268,7 +272,7 @@ public class SpecialRecipeDisplays {
             ItemStack output = new ItemStack(e.getValue());
             ItemStack input = new ItemStack(e.getKey());
             NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(content));
-            ResourceLocation id = Supplementaries.res("/"+Utils.getID(output.getItem()).getPath());
+            ResourceLocation id = Supplementaries.res("/" + Utils.getID(output.getItem()).getPath());
             ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
             recipes.add(new RecipeHolder<>(id, recipe));
         }
@@ -330,7 +334,7 @@ public class SpecialRecipeDisplays {
         Ingredient potionIngredient = Ingredient.of(lingeringPotion);
         NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, spikeIngredient, potionIngredient);
         ItemStack output = BambooSpikesTippedItem.createItemStack(potionType);
-        ResourceLocation id = Supplementaries.res("/"+Potion.getName(Optional.of(potionType), "tipped_spikes_display."));
+        ResourceLocation id = Supplementaries.res("/" + Potion.getName(Optional.of(potionType), "tipped_spikes_display."));
 
         var recipe = new ShapelessRecipe(group, CraftingBookCategory.BUILDING, output, inputs);
         return new RecipeHolder<>(id, recipe);
@@ -446,7 +450,7 @@ public class SpecialRecipeDisplays {
             registry.add("safe", SpecialRecipeDisplays::createSafeRecipe);
             registry.add("antique_map", SpecialRecipeDisplays::createAntiqueMapRecipe);
             registry.add("antique_book", SpecialRecipeDisplays::createAntiqueBookRecipe);
-            registry.add("suppsquared:sack_dye", SpecialRecipeDisplays:: createSackColoringRecipes);
+            registry.add("suppsquared:sack_dye", SpecialRecipeDisplays::createSackColoringRecipes);
             registry.add("item_lore", SpecialRecipeDisplays::createItemLoreRecipe);
             registry.add("item_lore_clear", SpecialRecipeDisplays::createRemoveLoreRecipe);
             registry.add("soap/clear", SpecialRecipeDisplays::createSoapCleanRecipe);

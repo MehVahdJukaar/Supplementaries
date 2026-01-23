@@ -40,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -53,7 +54,6 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeCharged) {
         //same as bow
         if (entity instanceof ServerPlayer player) {
-
 
             int useDuration = this.getUseDuration(stack, entity) - timeCharged;
             float power = getPowerForTime(useDuration, stack, entity);
@@ -73,6 +73,7 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
             }
         }
     }
+
 
     private static float applyPowerModifiers(ItemStack stack, float power) {
         boolean noGravity = EnchantmentHelper.has(stack, ModEnchantments.PROJECTILE_NO_GRAVITY.get());

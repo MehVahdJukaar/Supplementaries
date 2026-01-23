@@ -85,6 +85,7 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
     }
 
 
+    //todo: USE NEOFOGE REGISTER SPECTATOR SHADERS EVENT
     public void applyMobHeadShaders(Player p, Minecraft mc) {
         if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get()) {
             GameRenderer renderer = Minecraft.getInstance().gameRenderer;

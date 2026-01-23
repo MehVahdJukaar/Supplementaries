@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
+import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.world.InteractionHand;
@@ -16,7 +18,6 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.function.Predicate;
@@ -55,7 +56,6 @@ public abstract class ProjectileWeaponItemMixin {
     }
 
 
-
     // use use ammo
     @WrapOperation(method = "useAmmo",
             at = @At(value = "INVOKE",
@@ -80,11 +80,16 @@ public abstract class ProjectileWeaponItemMixin {
         return original.call(ammo, amount);
     }
 
-    @ModifyVariable(method = "draw", at = @At("STORE"), ordinal = 1)
-    private static int supp$dontShoot2RopeArrows(int original, @Local(argsOnly = true) LivingEntity entity,
-                                                 @Local(ordinal = 2) ItemStack ammo) {
-        if (original > 1 && ammo.getItem() instanceof RopeArrowItem) return 1;
-        return original;
+    @WrapOperation(method = "draw",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/world/item/ProjectileWeaponItem;useAmmo(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;Z)Lnet/minecraft/world/item/ItemStack;"))
+    private static ItemStack supp$preventFreeMultishot(
+            ItemStack weapon, ItemStack ammo, LivingEntity shooter, boolean intangable, Operation<ItemStack> op,
+            @Local(ordinal = 1, argsOnly = true) ItemStack actualAmmo) {
+        if (weapon.getItem() instanceof SlingshotItem || actualAmmo.getItem() instanceof RopeArrowItem) {
+            return op.call(weapon, actualAmmo, shooter, false);
+        }
+        return op.call(weapon, ammo, shooter, intangable);
     }
 
 }

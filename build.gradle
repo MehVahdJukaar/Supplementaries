@@ -225,16 +225,38 @@ ext.replaceProperties = [
 ]
 
 // --- Utils
-static def listGameVersions(String minVersion, String maxVersion) {
-// minVersion like "1.20", maxVersion like "1.20.4"
-    def versions = []
-    versions << minVersion
-    int endPatch = Integer.parseInt(maxVersion.split('\\.')[2])
-    for (int i = 1; i <= endPatch; i++) {
-        versions << "${minVersion}.${i}"
+static List<String> listGameVersions(String minInclusive, String maxExclusive) {
+
+    def minParts = minInclusive.split('\\.')
+    def maxParts = maxExclusive.split('\\.')
+
+    if (minParts.size() < 2 || minParts.size() > 3 ||
+            maxParts.size() < 2 || maxParts.size() > 3) {
+        throw new IllegalArgumentException("Version must be MAJOR.MINOR or MAJOR.MINOR.PATCH")
     }
+
+    def minNums = minParts.collect { it as int }
+    def maxNums = maxParts.collect { it as int }
+
+    while (minNums.size() < 3) minNums << 0
+    while (maxNums.size() < 3) maxNums << 0
+
+    if (minNums[0] != maxNums[0] || minNums[1] != maxNums[1]) {
+        throw new IllegalArgumentException("Major and minor versions must match")
+    }
+
+    int startPatch = minNums[2]
+    int endPatch   = maxNums[2]
+
+    def versions = []
+
+    for (int i = startPatch; i < endPatch; i++) {
+        versions << "${minNums[0]}.${minNums[1]}.${i}"
+    }
+
     return versions
 }
+
 
 tasks.register('buildAndPublishAll') {
     dependsOn ':clean'
