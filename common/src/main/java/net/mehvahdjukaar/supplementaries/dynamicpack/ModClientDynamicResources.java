@@ -34,14 +34,16 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 
 public class ModClientDynamicResources extends DynamicClientResourceProvider {
@@ -165,7 +167,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
                 ResourceLocation textureRes = Supplementaries.res("item/way_signs/" + Utils.getID(sign).getPath());
-                sink.addTextureIfNotPresent(manager, textureRes, () ->
+                sink.addTextureUnlessPresent(manager, textureRes, () ->
                         createWaySignItemTexture(manager, wood, sign, respriter));
             });
         } catch (Exception ex) {
@@ -185,7 +187,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                             RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
                         Palette palette = Palette.fromImage(plankTexture);
                         return respriter.recolor(palette);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 });
@@ -195,7 +197,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         }
     }
 
-    private static TextureImage createWaySignItemTexture(ResourceManager manager, WoodType wood, SignPostItem sign, Respriter respriter) {
+    private static TextureImage createWaySignItemTexture(ResourceManager manager, WoodType wood, SignPostItem sign, Respriter respriter)
+            throws IOException {
         Item signItem = wood.getItemOfThis("sign");
         if (signItem != null) {
             try (TextureImage vanillaSign = TextureImage.open(manager,
@@ -204,18 +207,15 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                          Supplementaries.res("item/way_signs/sign_board_mask"))) {
 
                 List<Palette> targetPalette = Palette.fromAnimatedImage(vanillaSign, signMask);
-                try (TextureImage newImage = respriter.recolor(targetPalette)) {
-                    try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
-                            Supplementaries.res("item/way_signs/sign_scribbles_mask"),
-                            Supplementaries.res("item/way_signs/scribbles_template"))) {
-                        TextureOps.applyOverlay(newImage, scribbles);
-                    } catch (Exception ex) {
-                        Supplementaries.LOGGER.error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
-                    }
-                    return newImage;
+                TextureImage newImage = respriter.recolor(targetPalette);
+                try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
+                        Supplementaries.res("item/way_signs/sign_scribbles_mask"),
+                        Supplementaries.res("item/way_signs/scribbles_template"))) {
+                    TextureOps.applyOverlay(newImage, scribbles);
+                } catch (Exception ex) {
+                    Supplementaries.LOGGER.error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
                 }
-            }catch (Exception e){
-                throw new RuntimeException(e);
+                return newImage;
             }
         }
         //if it failed use plank one
@@ -223,8 +223,6 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                 RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
             Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
             return respriter.recolor(targetPalette);
-        }catch (Exception e){
-            throw new RuntimeException(e);
         }
     }
 
@@ -301,7 +299,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                         //TextureImage newImage = respriter.recolorWithAnimationOf(plankTexture);
                         Respriter r = wood.toVanillaBoatOrOak() == Boat.Type.BAMBOO ? respriter2 : respriter;
                         return r.recolor(targetPalette);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 });
@@ -330,7 +328,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
     }
 
     private @Nullable TextureImage createBoatItemTexture(ResourceManager manager, WoodType wood,
-                                                         Respriter respriter)  {
+                                                         Respriter respriter) {
         TextureImage newImage = null;
         Item boat = wood.getItemOfThis("boat");
         if (boat != null) {
@@ -340,7 +338,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                 Palette targetPalette = Palette.fromImage(vanillaBoat);
                 newImage = respriter.recolor(targetPalette);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
@@ -351,36 +349,13 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                 Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
                 newImage = respriter.recolor(targetPalette);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
         return newImage;
     }
 
-        /*
-    private void addGlobeItemModels(ResourceManager manager, ResourceSink sink) {
-        sink.appendModelOverride(manager, sink, Supplementaries.res("globe"), e -> {
-            int i = 0;
-            for (var text : GlobeManager.TEXTURES) {
-                String name = text.getPath().split("/")[3].split("\\.")[0];
-                e.add(new ItemOverride(Supplementaries.res("item/" + name),
-                        List.of(new ItemOverride.Predicate(Supplementaries.res("type"), i))));
-                i++;
-                sink.addItemModel(Supplementaries.res(name), JsonParser.parseString(
-                        """
-                                {
-                                    "parent": "item/generated",
-                                    "textures": {
-                                        "layer0": "supplementaries:item/globes/""" + name + "\"" +
-                                """
-                                            }
-                                        }
-                                        """));
-            }
-
-        });
-    }*/
 
     private static void generateTagTranslations() {
         JsonObject jo = new JsonObject();
@@ -414,6 +389,31 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         }
         return null;
     }
+
+
+            /*
+    private void addGlobeItemModels(ResourceManager manager, ResourceSink sink) {
+        sink.appendModelOverride(manager, sink, Supplementaries.res("globe"), e -> {
+            int i = 0;
+            for (var text : GlobeManager.TEXTURES) {
+                String name = text.getPath().split("/")[3].split("\\.")[0];
+                e.add(new ItemOverride(Supplementaries.res("item/" + name),
+                        List.of(new ItemOverride.Predicate(Supplementaries.res("type"), i))));
+                i++;
+                sink.addItemModel(Supplementaries.res(name), JsonParser.parseString(
+                        """
+                                {
+                                    "parent": "item/generated",
+                                    "textures": {
+                                        "layer0": "supplementaries:item/globes/""" + name + "\"" +
+                                """
+                                            }
+                                        }
+                                        """));
+            }
+
+        });
+    }*/
 
     //TODO: invert scribble color if sign is darker than them
 

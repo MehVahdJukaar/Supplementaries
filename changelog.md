@@ -1,2 +1,1 @@
-- fixed multishot slingshot consuming just 1 projectile
-- similarly rope arrows shot from multishot crossbows will be able to be shot more than 1, still consuming all projectiles
+fixed an issue with sign post textures gen

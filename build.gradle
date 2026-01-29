@@ -251,7 +251,11 @@ static List<String> listGameVersions(String minInclusive, String maxExclusive) {
     def versions = []
 
     for (int i = startPatch; i < endPatch; i++) {
-        versions << "${minNums[0]}.${minNums[1]}.${i}"
+        if (i == 0) {
+            versions << "${minNums[0]}.${minNums[1]}"
+        } else {
+            versions << "${minNums[0]}.${minNums[1]}.${i}"
+        }
     }
 
     return versions

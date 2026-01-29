@@ -35,7 +35,7 @@ public record ServerBoundSetSpeakerBlockPacket(
     @Override
     public void handle(Context context) {
         // server level
-        if(context.getPlayer() instanceof ServerPlayer sender) {
+        if (context.getPlayer() instanceof ServerPlayer sender) {
             Level level = sender.level();
             BlockPos pos = this.pos;
             if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {

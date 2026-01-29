@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.map.decoration.MLMapMarker;
 import net.mehvahdjukaar.moonlight.api.map.decoration.MLSpecialMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.map.decoration.SimpleMapMarker;
 import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
-import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
@@ -28,6 +27,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.WallBannerBlock;
 import net.minecraft.world.level.block.entity.BedBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
+import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
@@ -45,6 +46,7 @@ public class ModMapMarkers {
             HolderRef.of(Supplementaries.res("death_marker"), MapDataRegistry.MAP_DECORATION_REGISTRY_KEY);
 
     public static final ResourceLocation WAY_SIGN_FACTORY_ID = Supplementaries.res("way_sign");
+    public static final ResourceLocation SIGN_FACTORY_ID = Supplementaries.res("sign");
     public static final ResourceLocation WAYSTONE_FACTORY_ID = Supplementaries.res("waystone");
     public static final ResourceLocation BANNER_FACTORY_ID = Supplementaries.res("banner");
     public static final ResourceLocation BED_FACTORY_ID = Supplementaries.res("bed");
@@ -53,6 +55,8 @@ public class ModMapMarkers {
     public static void init() {
         MapDataRegistry.registerSpecialMapDecorationTypeFactory(WAY_SIGN_FACTORY_ID, () ->
                 MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::signPost));
+        MapDataRegistry.registerSpecialMapDecorationTypeFactory(SIGN_FACTORY_ID, () ->
+                MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::sign));
         MapDataRegistry.registerSpecialMapDecorationTypeFactory(WAYSTONE_FACTORY_ID, () ->
                 MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::waystone));
 
@@ -91,11 +95,38 @@ public class ModMapMarkers {
     private static SimpleMapMarker signPost(Holder<MLMapDecorationType<?, ?>> type,
                                             BlockGetter level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
-            Component t = Component.literal("");
+            Component t = null;
             if (tile.getSignUp().active()) t = tile.getTextHolder(0).getMessage(0, false);
             if (tile.getSignDown().active() && t.getString().isEmpty())
                 t = tile.getTextHolder(1).getMessage(0, false);
             if (t.getString().isEmpty()) t = null;
+            return new SimpleMapMarker(type, pos, 0f, Optional.ofNullable(t));
+        } else {
+            return null;
+        }
+    }
+
+    @Nullable
+    private static SimpleMapMarker sign(Holder<MLMapDecorationType<?, ?>> type,
+                                            BlockGetter level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof SignBlockEntity tile) {
+            Component t = null;
+            SignText front = tile.getFrontText();
+            SignText back = tile.getBackText();
+            //find first non empty line
+            for (int i = 0; i < 4; i++) {
+                var frontLine = front.getMessage(i, false);
+                if (!frontLine.getString().isEmpty()) {
+                    t = frontLine;
+                    break;
+                } else {
+                    var backLine = back.getMessage(i, false);
+                    if (!backLine.getString().isEmpty()) {
+                        t = backLine;
+                        break;
+                    }
+                }
+            }
             return new SimpleMapMarker(type, pos, 0f, Optional.ofNullable(t));
         } else {
             return null;
