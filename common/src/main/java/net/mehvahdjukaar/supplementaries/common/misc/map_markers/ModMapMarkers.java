@@ -17,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.entity.SignText;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -47,6 +49,7 @@ public class ModMapMarkers {
 
     public static final ResourceLocation WAY_SIGN_FACTORY_ID = Supplementaries.res("way_sign");
     public static final ResourceLocation SIGN_FACTORY_ID = Supplementaries.res("sign");
+    public static final ResourceLocation HANGING_SIGN_FACTORY_ID = Supplementaries.res("hanging_sign");
     public static final ResourceLocation WAYSTONE_FACTORY_ID = Supplementaries.res("waystone");
     public static final ResourceLocation BANNER_FACTORY_ID = Supplementaries.res("banner");
     public static final ResourceLocation BED_FACTORY_ID = Supplementaries.res("bed");
@@ -57,6 +60,8 @@ public class ModMapMarkers {
                 MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::signPost));
         MapDataRegistry.registerSpecialMapDecorationTypeFactory(SIGN_FACTORY_ID, () ->
                 MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::sign));
+        MapDataRegistry.registerSpecialMapDecorationTypeFactory(HANGING_SIGN_FACTORY_ID, () ->
+                MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::hangingSign));
         MapDataRegistry.registerSpecialMapDecorationTypeFactory(WAYSTONE_FACTORY_ID, () ->
                 MLSpecialMapDecorationType.fromWorldSimple(ModMapMarkers::waystone));
 
@@ -109,28 +114,43 @@ public class ModMapMarkers {
     @Nullable
     private static SimpleMapMarker sign(Holder<MLMapDecorationType<?, ?>> type,
                                             BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof SignBlockEntity tile) {
-            Component t = null;
-            SignText front = tile.getFrontText();
-            SignText back = tile.getBackText();
-            //find first non empty line
-            for (int i = 0; i < 4; i++) {
-                var frontLine = front.getMessage(i, false);
-                if (!frontLine.getString().isEmpty()) {
-                    t = frontLine;
-                    break;
-                } else {
-                    var backLine = back.getMessage(i, false);
-                    if (!backLine.getString().isEmpty()) {
-                        t = backLine;
-                        break;
-                    }
-                }
-            }
-            return new SimpleMapMarker(type, pos, 0f, Optional.ofNullable(t));
+        if (level.getBlockEntity(pos) instanceof SignBlockEntity tile && tile.getBlockState().is(BlockTags.ALL_SIGNS) &&
+        !tile.getBlockState().is(BlockTags.ALL_HANGING_SIGNS)) {
+            return getSignMarker(type, pos, tile);
         } else {
             return null;
         }
+    }
+
+    @Nullable
+    private static SimpleMapMarker hangingSign(Holder<MLMapDecorationType<?, ?>> type,
+                                        BlockGetter level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof SignBlockEntity tile && tile.getBlockState().is(BlockTags.ALL_HANGING_SIGNS)) {
+            return getSignMarker(type, pos, tile);
+        } else {
+            return null;
+        }
+    }
+
+    private static @NotNull SimpleMapMarker getSignMarker(Holder<MLMapDecorationType<?, ?>> type, BlockPos pos, SignBlockEntity tile) {
+        Component t = null;
+        SignText front = tile.getFrontText();
+        SignText back = tile.getBackText();
+        //find first non empty line
+        for (int i = 0; i < 4; i++) {
+            var frontLine = front.getMessage(i, false);
+            if (!frontLine.getString().isEmpty()) {
+                t = frontLine;
+                break;
+            } else {
+                var backLine = back.getMessage(i, false);
+                if (!backLine.getString().isEmpty()) {
+                    t = backLine;
+                    break;
+                }
+            }
+        }
+        return new SimpleMapMarker(type, pos, 0f, Optional.ofNullable(t));
     }
 
     @Nullable

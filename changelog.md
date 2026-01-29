@@ -1,1 +1,2 @@
-fixed an issue with sign post textures gen
+- added new map markers for spawners and signs
+- minor fixes

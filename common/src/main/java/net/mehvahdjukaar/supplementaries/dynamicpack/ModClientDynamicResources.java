@@ -154,7 +154,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                     sink.addSimilarJsonResource(manager, spItemModel, "way_sign_oak", id);
                     sink.addSimilarJsonResource(manager, spBlockModel, "way_sign_oak", id);
                 } catch (Exception e) {
-                    Supplementaries.LOGGER.error("Failed to generate sign post models for " + sign + " : ", e);
+                    Supplementaries.LOGGER.error("Failed to generate sign post models for {} : ", sign, e);
                 }
             });
         }
