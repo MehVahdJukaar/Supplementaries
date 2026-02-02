@@ -164,9 +164,9 @@ dependencies {
     modImplementation("curse.maven:decorative-blocks-reborn-1327768:6897419")
     modCompileOnly("curse.maven:map-atlases-forge-519759:4902239")
     //- Only For TESTING - can be commented out or enabled
-    //   modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140") // v4.0.0.2 | BOP, Regions-Unexplored
-    //   modRuntimeOnly("curse.maven:glitchcore-955399:5660740") // v2.1.0.0 | BOP
-    //  modRuntimeOnly("curse.maven:biomes-o-plenty-220318:6501142")
+        modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140") // v4.0.0.2 | BOP, Regions-Unexplored
+        modRuntimeOnly("curse.maven:glitchcore-955399:5660740") // v2.1.0.0 | BOP
+       modRuntimeOnly("curse.maven:biomes-o-plenty-220318:6501142")
 
     modCompileOnly("curse.maven:terrablender-563928:4590487")
     modCompileOnly("curse.maven:tetra-289712:4414851")
