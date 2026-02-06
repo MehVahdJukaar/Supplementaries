@@ -1,2 +1,1 @@
-- added new map markers for spawners and signs
-- minor fixes
+client side check
