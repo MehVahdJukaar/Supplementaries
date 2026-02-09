@@ -45,7 +45,7 @@ public class RopeArrowItem extends ArrowItem {
         int current = getRopes(stack);
         int newCharges = Math.min(getRopeCapacity(), current + ropes);
         int remaining = ropes - (newCharges - current);
-        stack.setDamageValue(newCharges);
+        stack.setDamageValue(stack.getMaxDamage() - newCharges);
         return remaining;
     }
 
