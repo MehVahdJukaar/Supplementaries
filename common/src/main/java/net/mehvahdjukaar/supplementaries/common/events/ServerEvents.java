@@ -221,7 +221,7 @@ public class ServerEvents {
                 entity.goalSelector.addGoal(1, new UseCannonBoatGoal(entity));
             }
         }
-        if (CommonConfigs.Tweaks.DISMOUNT_BOAT.get() &&  entity.getType().is(ModTags.BOAT_DISMOUNT) && !(entity instanceof PlundererEntity)) {
+        if (CommonConfigs.Tweaks.DISMOUNT_BOAT.get() && entity.getType().is(ModTags.BOAT_DISMOUNT) && !(entity instanceof PlundererEntity)) {
             entity.goalSelector.addGoal(3, new AbandonShipGoal(entity));
         }
     }
@@ -242,8 +242,9 @@ public class ServerEvents {
     }
 
     @EventCalled
-    public static void serverPlayerTick(Player player) {
-        CandyItem.checkSweetTooth(player);
+    public static void serverPlayerTick(ServerPlayer player) {
+        CandyItem.tickSweetTooth(player);
+        SackItem.applyOverencumbered(player);
 
         //refresh quiver for remote players
         if (player instanceof IQuiverPlayer q) {
@@ -255,7 +256,9 @@ public class ServerEvents {
                         new SyncEquippedQuiverPacket(player, q));
             }
         }
+
     }
+
 
     //TODO: fabric
     @EventCalled

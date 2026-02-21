@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,7 +28,7 @@ public class CandyItem extends Item {
     private static final Object2IntMap<UUID> SWEET_TOOTH_COUNTER = PlatHelper.getPhysicalSide().isServer() ? new Object2IntOpenHashMap<>() : new Object2IntArrayMap<>();
 
     @ApiStatus.Internal
-    public static void checkSweetTooth(Player entity) {
+    public static void tickSweetTooth(ServerPlayer entity) {
         UUID id = entity.getUUID();
         int newValue = SWEET_TOOTH_COUNTER.computeIntIfPresent(id, (k, i) -> i - 1);
         if (newValue <= 0) {

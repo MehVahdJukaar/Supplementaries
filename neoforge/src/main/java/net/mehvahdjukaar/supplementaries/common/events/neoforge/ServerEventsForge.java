@@ -168,8 +168,8 @@ public class ServerEventsForge {
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
-        if (!event.getEntity().level().isClientSide) {
-            ServerEvents.serverPlayerTick(event.getEntity());
+        if (event.getEntity() instanceof ServerPlayer sp) {
+            ServerEvents.serverPlayerTick(sp);
         }
     }
 

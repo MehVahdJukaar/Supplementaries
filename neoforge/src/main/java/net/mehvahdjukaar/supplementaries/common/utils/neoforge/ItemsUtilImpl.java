@@ -93,7 +93,7 @@ public class ItemsUtilImpl {
         return null;
     }
 
-    public static float getEncumbermentFromInventory(ItemStack stack, ServerPlayer player) {
+    public static float getEncumbermentFromInventory(ServerPlayer player) {
         float amount = 0;
         IItemHandler itemHandler = player.getCapability(Capabilities.ItemHandler.ENTITY);
         if (itemHandler != null) {
