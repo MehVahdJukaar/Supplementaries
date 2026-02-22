@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.block.IOptionalEntityBlock;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
@@ -38,7 +39,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyContainerHolder {
+public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyContainerHolder, IOptionalEntityBlock {
     protected static final VoxelShape SHAPE = Shapes.or(Shapes.box(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),
             Shapes.box(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D),
             Shapes.box(0.0625D, 0D, 0.0625D, 0.9375D, 0.1875D, 0.9375D));
@@ -182,10 +183,15 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
         }
     }
 
+    @Override
+    public boolean shouldHaveBlockEntity(BlockStateBase state) {
+        return state.getValue(ITEM_STATUS).hasTile();
+    }
+
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        if (pState.getValue(ITEM_STATUS).hasTile()) {
+        if (shouldHaveBlockEntity(pState)) {
             return new PedestalBlockTile(pPos, pState);
         }
         return null;
@@ -228,18 +234,19 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
         if (state.getValue(ITEM_STATUS).hasTile()) {
             return (PedestalBlockTile) level.getBlockEntity(pos);
         }
-        return new TileLessContainer(state, level, pos);
+        return new OptionalTileContainer(state, level, pos);
     }
 
+    //TODO: move to ML
     @Deprecated(forRemoval = true)
-    static class TileLessContainer extends SimpleContainer implements WorldlyContainer {
+    static class OptionalTileContainer extends SimpleContainer implements WorldlyContainer {
         private final BlockState state;
         private final LevelAccessor level;
         private final BlockPos pos;
-        private PedestalBlockTile tileReference = null;
+        private WorldlyContainer tileReference = null;
 
-        public TileLessContainer(BlockState blockState, LevelAccessor levelAccessor,
-                                 BlockPos blockPos) {
+        public OptionalTileContainer(BlockState blockState, LevelAccessor levelAccessor,
+                                     BlockPos blockPos) {
             super(1);
             this.state = blockState;
             this.level = levelAccessor;
@@ -318,10 +325,10 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
                 if (!item.isEmpty()) {
                     level.setBlock(pos, state.setValue(PedestalBlock.ITEM_STATUS, DisplayStatus.EMPTY), 3);
                 }
-                if (level.getBlockEntity(pos) instanceof PedestalBlockTile tile) {
+                if (level.getBlockEntity(pos) instanceof WorldlyContainer c) {
 
-                    this.tileReference = tile;
-                    tile.setDisplayedItem(item);
+                    this.tileReference = c;
+                    c.setItem(0, item);
                 }
             }
         }

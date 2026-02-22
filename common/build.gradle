@@ -58,8 +58,8 @@ dependencies {
     modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
     modCompileOnly("curse.maven:curios-309927:4581099")
     modCompileOnly("curse.maven:jade-324717:5884237")
-    modCompileOnly("curse.maven:quark-243121:5378961")
-    modCompileOnly("curse.maven:zeta-968868:5597406")
+    modCompileOnly("curse.maven:quark-243121:7640331")
+    modCompileOnly("curse.maven:zeta-968868:7640154")
 
     modImplementation("curse.maven:exposure-871755:7033927")
 

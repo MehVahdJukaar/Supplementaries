@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.chat.Component;
@@ -18,13 +19,13 @@ public class ClientPacketListenerMixin {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/Component;translatable(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;"))
     private MutableComponent supp$addCannonMessage(MutableComponent original,
                                                    @Local(ordinal = 0) Entity vehicle) {
-      if(vehicle instanceof CannonBoatEntity) {
-          Minecraft mc = Minecraft.getInstance();
-          return Component.translatable("message.supplementaries.cannon_boat",
-                  mc.options.keyShift.getTranslatedKeyMessage(),
-                  mc.options.keySprint.getTranslatedKeyMessage(),
-                  mc.options.keyJump.getTranslatedKeyMessage());
-      }
+        if (vehicle instanceof CannonBoatEntity) {
+            Minecraft mc = Minecraft.getInstance();
+            return Component.translatable("message.supplementaries.cannon_boat",
+                    mc.options.keyShift.getTranslatedKeyMessage(),
+                    mc.options.keySprint.getTranslatedKeyMessage(),
+                    mc.options.keyJump.getTranslatedKeyMessage());
+        }
         return original;
     }
 }

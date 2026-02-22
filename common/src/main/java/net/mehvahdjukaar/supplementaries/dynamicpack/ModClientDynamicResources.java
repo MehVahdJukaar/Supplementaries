@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicClientResourceProvider;
+import net.mehvahdjukaar.moonlight.api.resources.pack.PackGenerationStrategy;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.textures.*;
@@ -19,7 +20,6 @@ import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -34,10 +34,8 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -49,7 +47,9 @@ import java.util.function.Consumer;
 public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
     public ModClientDynamicResources() {
-        super(Supplementaries.res("generated_pack"), ClientConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
+        super(Supplementaries.res("generated_pack"),
+                PlatHelper.isDev() ? PackGenerationStrategy.REGEN_ON_EVERY_RELOAD :
+                        ClientConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
     }
 
     @Override
@@ -126,7 +126,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             String name = id.getPath().replace("textures/entity/banner/", "");
             ResourceLocation newPath = Supplementaries.res("entity/banner/flags/"
                     + id.getNamespace() + "/" + name.substring(0, name.length() - 4));
-            sink.addTextureIfNotPresent(manager, newPath, () -> {
+            sink.addTextureUnlessPresent(manager, newPath, () -> {
                 try (TextureImage oldText = TextureImage.open(manager, id.withPath(p -> p.replace("textures/", "")))) {
                     TextureImage newImage = TextureOps.createScaled(oldText, 0.5f, 0.25f);
                     newImage.clear();
@@ -168,7 +168,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
                 ResourceLocation textureRes = Supplementaries.res("item/way_signs/" + Utils.getID(sign).getPath());
                 sink.addTextureUnlessPresent(manager, textureRes, () ->
-                        createWaySignItemTexture(manager, wood, sign, respriter));
+                        createWaySignItemTexture(manager, wood, respriter));
             });
         } catch (Exception ex) {
             Supplementaries.LOGGER.error("Could not generate any Sign Post item texture : ", ex);
@@ -182,7 +182,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
                 var textureRes = Supplementaries.res("block/way_signs/" + Utils.getID(sign).getPath());
-                sink.addTextureIfNotPresent(manager, textureRes, () -> {
+                sink.addTextureUnlessPresent(manager, textureRes, () -> {
                     try (TextureImage plankTexture = TextureImage.open(manager,
                             RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
                         Palette palette = Palette.fromImage(plankTexture);
@@ -197,7 +197,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         }
     }
 
-    private static TextureImage createWaySignItemTexture(ResourceManager manager, WoodType wood, SignPostItem sign, Respriter respriter)
+    private static TextureImage createWaySignItemTexture(ResourceManager manager,
+                                                         WoodType wood, Respriter respriter)
             throws IOException {
         Item signItem = wood.getItemOfThis("sign");
         if (signItem != null) {
@@ -207,15 +208,19 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                          Supplementaries.res("item/way_signs/sign_board_mask"))) {
 
                 List<Palette> targetPalette = Palette.fromAnimatedImage(vanillaSign, signMask);
-                TextureImage newImage = respriter.recolor(targetPalette);
                 try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
                         Supplementaries.res("item/way_signs/sign_scribbles_mask"),
                         Supplementaries.res("item/way_signs/scribbles_template"))) {
+                    TextureImage newImage = respriter.recolor(targetPalette);
+                    boolean wasOpen = newImage.isAllocated();
                     TextureOps.applyOverlay(newImage, scribbles);
-                } catch (Exception ex) {
-                    Supplementaries.LOGGER.error("Could not properly color Sign Post item texture for {} : {}", sign, ex);
+                    if (wasOpen && !newImage.isAllocated()) {
+                        throw new RuntimeException("Texture was closed during overlay application");
+                    }
+                    return newImage;
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("Failed to apply sign scribbles overlay for {} : ", wood, e);
                 }
-                return newImage;
             }
         }
         //if it failed use plank one
@@ -291,7 +296,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
                 ResourceLocation textureRes = Supplementaries.res("entity/cannon_boat/" + wood.getTexturePath());
 
-                sink.addTextureIfNotPresent(manager, textureRes, () -> {
+                sink.addTextureUnlessPresent(manager, textureRes, () -> {
                     try (TextureImage plankTexture = TextureImage.open(manager,
                             RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
                         //Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankTexture);
@@ -319,7 +324,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, boat) -> {
                 ResourceLocation textureRes = Supplementaries.res("item/cannon_boat/" + Utils.getID(boat).getPath());
-                sink.addTextureIfNotPresent(manager, textureRes, () ->
+                sink.addTextureUnlessPresent(manager, textureRes, () ->
                         createBoatItemTexture(manager, wood, respriter));
             });
         } catch (Exception ex) {

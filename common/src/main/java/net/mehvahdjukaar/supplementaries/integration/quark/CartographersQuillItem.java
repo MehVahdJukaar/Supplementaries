@@ -1,5 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration.quark;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import org.violetmoon.quark.content.tools.item.PathfindersQuillItem;
+
+import java.util.List;
 //TODO: add back
 /*
 public class CartographersQuillItem extends PathfindersQuillItem {
@@ -22,7 +29,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     private static Thread mainThread;
 
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> comps, TooltipFlag flags) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> components, TooltipFlag flags) {
         var tag = stack.getTag();
         if (tag != null) {
             if (ItemNBTHelper.getBoolean(stack, PathfindersQuillItem.TAG_IS_SEARCHING, false))

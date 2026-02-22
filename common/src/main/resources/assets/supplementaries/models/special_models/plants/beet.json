@@ -1,4 +1,6 @@
 {
+    "required_mod": "moreminecarts",
+
     "ambientocclusion": false,
     "textures": {
         "beet": "moreminecarts:block/pot_beet",

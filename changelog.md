@@ -1,2 +1,2 @@
-- added new map markers for spawners and signs
-- minor fixes
+added back quark compat
+fixed a bug with slingshot

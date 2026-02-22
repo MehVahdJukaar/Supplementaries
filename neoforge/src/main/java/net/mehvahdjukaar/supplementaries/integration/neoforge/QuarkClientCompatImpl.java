@@ -25,7 +25,6 @@ import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.quark.api.event.UsageTickerEvent;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.ArrayList;
 import java.util.List;

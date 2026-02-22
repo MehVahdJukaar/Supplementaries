@@ -29,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -44,18 +45,18 @@ import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.components.QuarkDataComponents;
 import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import org.violetmoon.quark.content.building.block.StoolBlock;
+import org.violetmoon.quark.content.building.module.GoldBarsModule;
 import org.violetmoon.quark.content.client.module.UsesForCursesModule;
 import org.violetmoon.quark.content.management.module.ExpandedItemInteractionsModule;
-import org.violetmoon.quark.content.tools.item.SlimeInABucketItem;
 import org.violetmoon.quark.content.tools.module.SlimeInABucketModule;
 import org.violetmoon.quark.content.tweaks.module.DoubleDoorOpeningModule;
 import org.violetmoon.quark.content.tweaks.module.EnhancedLaddersModule;
 import org.violetmoon.quark.content.tweaks.module.MoreBannerLayersModule;
 import org.violetmoon.zeta.event.bus.LoadEvent;
 import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
-import org.violetmoon.zeta.util.ItemNBTHelper;
 
 import java.util.List;
 import java.util.Set;
@@ -91,7 +92,8 @@ public class QuarkCompat {
         }
 
         if (CommonConfigs.Functional.SACK_PENALTY.get() && CommonConfigs.Functional.SACK_ENABLED.get()) {
-            event.register(event.createFuriousCocktailMod(() -> false, Set.of(ModRegistry.OVERENCUMBERED.get())));
+            event.register(event.createFuriousCocktailMod(() -> false,
+                    Set.of(ModRegistry.OVERENCUMBERED)));
         }
 
         if (CommonConfigs.Functional.FLAX_ENABLED.get()) {
@@ -201,7 +203,7 @@ public class QuarkCompat {
                 ItemStack outStack = new ItemStack(SlimeInABucketModule.slime_in_a_bucket);
                 CompoundTag cmp = new CompoundTag();
                 entity.save(cmp);
-                ItemNBTHelper.setCompound(outStack, SlimeInABucketItem.TAG_ENTITY_DATA, cmp);
+                outStack.set(QuarkDataComponents.SLIME_NBT, CustomData.of(cmp));
                 return outStack;
             }
         }
@@ -260,8 +262,7 @@ public class QuarkCompat {
         }
     }
 
-    //TODO:
     public static boolean isGoldBarsOn() {
-        return true;
+        return GoldBarsModule.staticEnabled;
     }
 }

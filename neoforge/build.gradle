@@ -108,7 +108,7 @@ dependencies {
     }
     //modImplementation("curse.maven:selene-499980:7007381")
 
-    modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
+   // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 
     modCompileOnly("curse.maven:farmers-delight-398521:5772720")
 
@@ -137,8 +137,10 @@ dependencies {
     modCompileOnly("curse.maven:supermartijn642s-config-lib-438332:4715408")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modCompileOnly("curse.maven:quark-243121:5594847")
-    modCompileOnly("curse.maven:zeta-968868:5597406")
+    modImplementation("curse.maven:quark-243121:7640331")
+    modImplementation("curse.maven:zeta-968868:7640154")
+    modImplementation("curse.maven:biolith-852512:7074761")
+
     //modImplementation("curse.maven:recipe-advancements-nuker-925511:4836115")
 
     modCompileOnly("curse.maven:framedblocks-441647:3881493")
@@ -147,7 +149,7 @@ dependencies {
     modCompileOnly("curse.maven:goated-805646:4802277")
     modCompileOnly("curse.maven:enchanted-book-redesign-348076:4693221")
     modCompileOnly("com.lowdragmc.shimmer:Shimmer-forge:1.19.2-0.1.14")
-    modImplementation("curse.maven:supplementaries-squared-838411:7351827")
+    modCompileOnly("curse.maven:supplementaries-squared-838411:7351827")
     //modImplementation("curse.maven:shimmer-627824:4028644")
 
     //modImplementation("curse.maven:legendary-tooltips-532127:5591027")

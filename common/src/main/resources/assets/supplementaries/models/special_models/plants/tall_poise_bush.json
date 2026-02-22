@@ -1,4 +1,6 @@
 {
+  "required_mod": "endergetic",
+
   "parent": "supplementaries:special_models/plants/cross_template",
   "textures": {
     "plant": "endergetic:block/tall_poise_bush_pot"
