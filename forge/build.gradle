@@ -116,8 +116,10 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:22.0.0'
 
-    //modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
-    modImplementation("curse.maven:selene-499980:7388296")
+    modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}"){
+        transitive = false
+    }
+    //modImplementation("curse.maven:selene-499980:7662590")
 
     modCompileOnly("curse.maven:farmers-delight-398521:5051242")
 

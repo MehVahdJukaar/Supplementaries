@@ -40,8 +40,8 @@ dependencies {
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
     annotationProcessor 'net.fabricmc:sponge-mixin:0.12.5+mixin.0.8.5'
-    //modApi ("net.mehvahdjukaar:moonlight:${moonlight_version}")
-    modImplementation("curse.maven:selene-499980:7390196")
+    modApi ("net.mehvahdjukaar:moonlight:${moonlight_version}")
+    //modImplementation("curse.maven:selene-499980:7390196")
 
     modImplementation("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
