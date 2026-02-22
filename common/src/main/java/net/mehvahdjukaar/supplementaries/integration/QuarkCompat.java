@@ -84,7 +84,8 @@ public class QuarkCompat {
         //hackerinos
         Quark.ZETA.loadBus.subscribe(QuarkCompat.class);
     }
-
+    //Dumb zeta lost features here... commenting out.
+    /*
     @LoadEvent
     public static void gatherAdvModifiersEvent(ZGatherAdvancementModifiers event) {
         if (CommonConfigs.Tools.CANDY_ENABLED.get()) {
@@ -99,7 +100,7 @@ public class QuarkCompat {
         if (CommonConfigs.Functional.FLAX_ENABLED.get()) {
             event.register(event.createASeedyPlaceMod(Set.of(ModRegistry.FLAX.get())));
         }
-    }
+    }*/
 
     public static boolean isFastSlideModuleEnabled() {
         return Quark.ZETA.modules.isEnabled(EnhancedLaddersModule.class) && EnhancedLaddersModule.allowSliding;

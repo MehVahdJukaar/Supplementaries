@@ -4,15 +4,22 @@ import com.google.common.base.Suppliers;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
-import net.mehvahdjukaar.supplementaries.common.items.*;
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
+import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
+import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
+import net.mehvahdjukaar.supplementaries.common.items.SackItem;
+import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
+import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,6 +28,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.quark.api.event.UsageTickerEvent;
@@ -31,8 +39,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class QuarkClientCompatImpl {
-    //TODO:add back
-/*
+
     public static void initClient() {
         ClientHelper.addBlockEntityRenderersRegistration(QuarkClientCompat::registerEntityRenderers);
         NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
@@ -55,11 +62,12 @@ public class QuarkClientCompatImpl {
         if (quarkTooltip && !sbtTooltip) {
             Item item = stack.getItem();
             if (item instanceof SafeItem || item instanceof SackItem) {
-                CompoundTag cmp = ItemNBTHelper.getCompound(stack, "BlockEntityTag", false);
-                if (cmp.contains("LootTable")) return;
+
+                ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+                if (contents == null) return;
 
                 if (item instanceof SafeItem) {
-                    DUMMY_SAFE_TILE.get().load(cmp);
+                    // DUMMY_SAFE_TILE.get().load(cmp);
                     Player player = Minecraft.getInstance().player;
                     if (!(player == null || DUMMY_SAFE_TILE.get().canPlayerOpen(Minecraft.getInstance().player, false))) {
                         return;
@@ -84,23 +92,25 @@ public class QuarkClientCompatImpl {
 
 
     public static void usageTickerStack(UsageTickerEvent.GetStack event) {
-        if (event.currentRealStack.getItem() instanceof LunchBoxItem li) {
-            var data = li.getComponentKey(event.currentRealStack);
-            event.setResultStack(data.getSelected());
+        ItemStack stack = event.currentRealStack;
+        if (stack.getItem() instanceof LunchBoxItem li) {
+            LunchBaskedContent data = stack.get(li.getComponentType());
+            if (data != null) event.setResultStack(data.getSelected());
         }
     }
 
     public static void usageTickerCount(UsageTickerEvent.GetCount event) {
-        if (event.currentRealStack.getItem() instanceof LunchBoxItem li) {
-            var data = li.getComponentKey(event.currentRealStack);
-            event.setResultCount(data.getSelectedItemCount());
-        } else if (event.currentRealStack.getItem() instanceof ProjectileWeaponItem && event.currentStack != event.currentRealStack) {
+        ItemStack stack = event.currentRealStack;
+        if (stack.getItem() instanceof LunchBoxItem li) {
+            LunchBaskedContent data = stack.get(li.getComponentType());
+            if (data != null) event.setResultCount(data.getSelectedItemCount());
+        } else if (stack.getItem() instanceof ProjectileWeaponItem && event.currentStack != stack) {
             //adds missing ones from quiver
 
             if (event.player instanceof IQuiverEntity qe) {
-                var q = qe.supplementaries$getQuiver();
-                if (!q.isEmpty()) {
-                    SelectableContainerItem.AbstractData data = QuiverItem.getQuiverData(q);
+                ItemStack entityQuiver = qe.supplementaries$getQuiver();
+                if (!entityQuiver.isEmpty() && entityQuiver.getItem() instanceof QuiverItem qi) {
+                    QuiverContent data = stack.get(qi.getComponentType());
                     if (data != null) {
                         //sanity check
                         ItemStack selected = data.getSelected();
@@ -123,6 +133,6 @@ public class QuarkClientCompatImpl {
             }
         }
     }
-*/
+
 
 }
