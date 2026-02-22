@@ -13,6 +13,7 @@ import net.mehvahdjukaar.moonlight.api.resources.pack.PackGenerationStrategy;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.textures.*;
+import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -147,6 +148,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             StaticResource spBlockModel = StaticResource.getOrThrow(manager,
                     ResType.BLOCK_MODELS.getPath(Supplementaries.res("way_signs/way_sign_oak")));
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
+                if (wood == VanillaWoodTypes.OAK) return;
                 String id = Utils.getID(sign).getPath();
                 //langBuilder.addEntry(sign, wood.getVariantReadableName("way_sign"));
 
@@ -166,6 +168,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
+                if (wood == VanillaWoodTypes.OAK) return;
                 ResourceLocation textureRes = Supplementaries.res("item/way_signs/" + Utils.getID(sign).getPath());
                 sink.addTextureUnlessPresent(manager, textureRes, () ->
                         createWaySignItemTexture(manager, wood, respriter));
@@ -181,6 +184,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             Respriter respriter = Respriter.of(template);
 
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
+                if (wood == VanillaWoodTypes.OAK) return;
                 var textureRes = Supplementaries.res("block/way_signs/" + Utils.getID(sign).getPath());
                 sink.addTextureUnlessPresent(manager, textureRes, () -> {
                     try (TextureImage plankTexture = TextureImage.open(manager,
@@ -278,6 +282,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                 ResType.ITEM_MODELS.getPath(Supplementaries.res("cannon_boat_oak")));
 
         ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
+            if (wood == VanillaWoodTypes.OAK) return;
             try {
                 sink.addSimilarJsonResource(manager, itemModel, "cannon_boat_oak", wood.getVariantId("cannon_boat"));
             } catch (Exception ex) {
@@ -294,6 +299,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
             //unfortunately theres no programmatic way to get all boat textures of a given boat. also because entities might be for multiple wod types. we can only generate them from scratc
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
+                if (wood == VanillaWoodTypes.OAK) return;
                 ResourceLocation textureRes = Supplementaries.res("entity/cannon_boat/" + wood.getTexturePath());
 
                 sink.addTextureUnlessPresent(manager, textureRes, () -> {
@@ -323,6 +329,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             Respriter respriter = Respriter.ofPalette(template, palette);
 
             ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, boat) -> {
+                if (wood == VanillaWoodTypes.OAK) return;
                 ResourceLocation textureRes = Supplementaries.res("item/cannon_boat/" + Utils.getID(boat).getPath());
                 sink.addTextureUnlessPresent(manager, textureRes, () ->
                         createBoatItemTexture(manager, wood, respriter));

@@ -31,7 +31,7 @@ public class ItemsUtilImpl {
         return false;
     }
 
-    public static float getEncumbermentFromInventory(ItemStack stack, ServerPlayer player) {
+    public static float getEncumbermentFromInventory(ServerPlayer player) {
         float amount = 0;
         var inventory = player.getInventory();
 

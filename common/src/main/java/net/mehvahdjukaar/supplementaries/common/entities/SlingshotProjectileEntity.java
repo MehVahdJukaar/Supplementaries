@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import com.google.common.base.Suppliers;
-import net.mehvahdjukaar.moonlight.api.entity.IExtraClientSpawnData;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.entity.ParticleTrailEmitter;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -15,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -49,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
+
     private static final EntityDataAccessor<Byte> LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
     protected static final int MAX_AGE = 700;
 
@@ -61,7 +60,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
             .maxParticlesPerTick(5)
             .build();
 
-    private final Supplier<Integer> light = Suppliers.memoize(() -> {
+    private final Supplier<Integer> lightEmission = Suppliers.memoize(() -> {
         Item item = this.getItem().getItem();
         if (item instanceof BlockItem blockItem) {
             Block b = blockItem.getBlock();
@@ -178,6 +177,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
         }
     }
 
+    //TODO: this is terrible. rewrite
     @Override
     protected void onHitBlock(BlockHitResult hit) {
         super.onHitBlock(hit);
@@ -193,6 +193,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
             //do we even need a player here
             player = FakePlayerManager.getDefault(this, this);
         }
+
+        ItemStack oldItemInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
+        player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
         boolean success;
         success = tryDeployingProjectiles();
@@ -225,7 +228,13 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
             }
             this.isStuck = true;
         }
+
+        ItemStack returnedItem = player.getItemInHand(InteractionHand.MAIN_HAND);
+        this.setItem(returnedItem);
+        player.setItemInHand(InteractionHand.MAIN_HAND, oldItemInHand);
+
         if (success) {
+            this.dropMyItemOnGround();
             this.remove(RemovalReason.DISCARDED);
         }
     }
@@ -309,7 +318,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
 
             Level level = this.level();
             if (!success) {
-                this.spawnAtLocation(this.getItem(), 0.1f);
+                dropMyItemOnGround();
             } else {
                 level.playSound(null, playerEntity, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS,
                         0.2F, (this.random.nextFloat() - this.random.nextFloat()) * 1.4F + 2.0F);
@@ -330,9 +339,13 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
             this.setNoPhysics(true);
             this.stuckTime = 0;
         } else {
-            this.spawnAtLocation(this.getItem(), 0.1f);
+            dropMyItemOnGround();
             super.reachedEndOfLife();
         }
+    }
+
+    private void dropMyItemOnGround() {
+        this.spawnAtLocation(this.getItem(), 0.1f);
     }
 
     @Override
@@ -383,6 +396,6 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
     }
 
     public int getLightEmission() {
-        return light.get();
+        return lightEmission.get();
     }
 }

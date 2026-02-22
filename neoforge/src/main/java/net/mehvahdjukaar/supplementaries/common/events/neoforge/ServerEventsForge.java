@@ -161,15 +161,15 @@ public class ServerEventsForge {
         var level = event.getLevel();
         if (level instanceof ServerLevel serverLevel) {
             if (event.getEntity() instanceof Mob m) ServerEvents.onAddExtraGoals(m);
-        } else {
+        } else if(level.isClientSide){
             ClientEvents.onEntityLoad(event.getEntity(), event.getLevel());
         }
     }
 
     @SubscribeEvent
     public static void onPlayerTick(PlayerTickEvent.Pre event) {
-        if (!event.getEntity().level().isClientSide) {
-            ServerEvents.serverPlayerTick(event.getEntity());
+        if (event.getEntity() instanceof ServerPlayer sp) {
+            ServerEvents.serverPlayerTick(sp);
         }
     }
 

@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.component.DataComponents;
@@ -40,24 +39,6 @@ public class SackItem extends BlockItem {
     public SackItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
     }
-
-    @Override
-    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-        if (!CommonConfigs.Functional.SACK_PENALTY.get()) return;
-        if (worldIn.getGameTime() % 27L == 0L && entityIn instanceof ServerPlayer player &&
-                !player.isCreative() && !entityIn.isSpectator()) {
-            //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
-            //keep refreshing for better accuracy
-            float amount = ItemsUtil.getEncumbermentFromInventory(stack, player);
-            int inc = CommonConfigs.Functional.SACK_INCREMENT.get();
-            if (amount > inc) {
-                player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED.getHolder(),
-                        20 * 10, (((((int) amount) - 1) / inc) - 1), false, false, true));
-            }
-        }
-    }
-
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
@@ -134,6 +115,22 @@ public class SackItem extends BlockItem {
             }
         }
         return 0;
+    }
+
+    public static void applyOverencumbered(ServerPlayer player) {
+        Level level = player.level();
+        if (!CommonConfigs.Functional.SACK_PENALTY.get()) return;
+        if ((level.getGameTime() + player.tickCount) % 27L == 0L &&
+                !player.isCreative() && !player.isSpectator()) {
+            //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
+            //keep refreshing for better accuracy
+            float amount = ItemsUtil.getEncumbermentFromInventory(player);
+            int inc = CommonConfigs.Functional.SACK_INCREMENT.get();
+            if (amount > inc) {
+                player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED,
+                        20 * 10, (((((int) amount) - 1) / inc) - 1), false, false, true));
+            }
+        }
     }
 
 }

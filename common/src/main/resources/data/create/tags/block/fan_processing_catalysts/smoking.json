@@ -1,0 +1,6 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"supplementaries:fire_pit","required":false}
+  ]
+}

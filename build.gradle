@@ -112,7 +112,7 @@ subprojects {
     def modLoader = project.name
     def changelogFile = rootProject.file("changelog.md")
     def changelogText = changelogFile.exists() ? changelogFile.text : ""
-    def mcVersions = listGameVersions(minecraft_min_version, minecraft_version)
+    def mcVersions = listGameVersions(minecraft_min_version, minecraft_max_version)
     def cfToken = providers.environmentVariable("CURSEFORGE_TOKEN")
     def mrToken = providers.environmentVariable("MODRINTH_TOKEN")
 
