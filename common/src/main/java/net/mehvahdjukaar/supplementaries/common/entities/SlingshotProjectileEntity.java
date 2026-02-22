@@ -142,8 +142,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
     protected void onHitEntity(EntityHitResult entityRayTraceResult) {
         super.onHitEntity(entityRayTraceResult);
         ItemStack stack = this.getItem();
-        if (!trySplashPotStuff() &&
-                entityRayTraceResult.getEntity() instanceof EnderMan enderman) {
+        if (trySplashPotStuff()) {
+            this.remove(RemovalReason.DISCARDED);
+        } else if (entityRayTraceResult.getEntity() instanceof EnderMan enderman) {
             Item item = stack.getItem();
             if (item instanceof BlockItem bi) {
                 Block block = bi.getBlock();
@@ -233,7 +234,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                     this.setItem(craftingRemainingItem.getDefaultInstance());
                 } else shoulKill = true;
             }
-            this.isStuck = true;
+            if (!shoulKill) {
+                this.isStuck = true;
+            }
         }
         if (shoulKill) {
             this.remove(RemovalReason.DISCARDED);
