@@ -223,43 +223,38 @@ ext.replaceProperties = [
 
 ]
 
+
 // --- Utils
 static List<String> listGameVersions(String minInclusive, String maxExclusive) {
 
-    List<Integer> parse(String v) {
-        def parts = v.split('\\.')
-        if (parts.size() < 2 || parts.size() > 3) {
-            throw new IllegalArgumentException("Version must be MAJOR.MINOR or MAJOR.MINOR.PATCH")
-        }
+    def minParts = minInclusive.split('\\.')
+    def maxParts = maxExclusive.split('\\.')
 
-        try {
-            int major = parts[0] as int
-            int minor = parts[1] as int
-            int patch = (parts.size() == 3 ? parts[2] : "0") as int
-            return [major, minor, patch]
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Version parts must be integers")
-        }
+    if (minParts.size() < 2 || minParts.size() > 3 ||
+            maxParts.size() < 2 || maxParts.size() > 3) {
+        throw new IllegalArgumentException("Version must be MAJOR.MINOR or MAJOR.MINOR.PATCH")
     }
 
-    def min = parse(minInclusive)
-    def max = parse(maxExclusive)
+    def minNums = minParts.collect { it as int }
+    def maxNums = maxParts.collect { it as int }
 
-    if (min[0] != max[0] || min[1] != max[1]) {
+    while (minNums.size() < 3) minNums << 0
+    while (maxNums.size() < 3) maxNums << 0
+
+    if (minNums[0] != maxNums[0] || minNums[1] != maxNums[1]) {
         throw new IllegalArgumentException("Major and minor versions must match")
     }
 
-    if (min[2] >= max[2]) {
-        return []
-    }
+    int startPatch = minNums[2]
+    int endPatch   = maxNums[2]
 
     def versions = []
 
-    for (int i = min[2]; i < max[2]; i++) { // exclusive
+    for (int i = startPatch; i < endPatch; i++) {
         if (i == 0) {
-            versions << "${min[0]}.${min[1]}"        // no .0
+            versions << "${minNums[0]}.${minNums[1]}"
         } else {
-            versions << "${min[0]}.${min[1]}.${i}"
+            versions << "${minNums[0]}.${minNums[1]}.${i}"
         }
     }
 
