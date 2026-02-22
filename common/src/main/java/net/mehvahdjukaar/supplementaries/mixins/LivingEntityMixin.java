@@ -47,7 +47,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @ModifyReturnValue(method = "getJumpBoostPower", at = @At("RETURN"))
     private float suppl$checkOverencumbered(float original) {
-        var effect = this.getEffect(ModRegistry.OVERENCUMBERED.getHolder());
+        var effect = this.getEffect(ModRegistry.OVERENCUMBERED);
         if ((effect != null && effect.getAmplifier() > 0)) {
             original -= 0.1f;
         }

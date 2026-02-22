@@ -79,7 +79,7 @@ public class ModFluids {
                         .food(new FoodProperties.Builder()
                                 .nutrition(0).saturationModifier(0).alwaysEdible()
                                 .effect(new MobEffectInstance(MobEffects.GLOWING, CommonConfigs.Functional.GLOWING_DURATION.get(), 0), 1)
-                                .effect(new MobEffectInstance(ModRegistry.FLAMMABLE.getHolder(), CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
+                                .effect(new MobEffectInstance(ModRegistry.FLAMMABLE, CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
                                 .build())
                 ));
     }

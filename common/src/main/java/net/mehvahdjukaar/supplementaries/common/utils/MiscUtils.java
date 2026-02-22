@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.codec.CodecUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.TetraCompat;
@@ -190,11 +191,10 @@ public class MiscUtils {
         }
     }
 
-    //TODO: use ml stuff
-    public static final Codec<List<Item>> LENIENT_ITEM_OR_ITEM_LIST = Utils.lenientListOrSingleCodec(
+    public static final Codec<List<Item>> LENIENT_ITEM_OR_ITEM_LIST = CodecUtils.lenientListOrSingleCodec(
             BuiltInRegistries.ITEM.byNameCodec());
 
-    public static final Codec<List<EntityType<?>>> LENIENT_ENTITY_OR_ITEM_LIST = Utils.lenientListOrSingleCodec(
+    public static final Codec<List<EntityType<?>>> LENIENT_ENTITY_OR_ITEM_LIST = CodecUtils.lenientListOrSingleCodec(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec());
 
 

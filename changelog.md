@@ -1,2 +1,1 @@
-added back quark compat
-fixed a bug with slingshot
+re upload due to me messing up merges so last update was missing features

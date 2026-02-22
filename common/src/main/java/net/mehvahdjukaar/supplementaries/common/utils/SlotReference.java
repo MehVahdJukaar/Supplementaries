@@ -56,7 +56,7 @@ public interface SlotReference {
 
     record Hand(InteractionHand hand) implements SlotReference {
 
-        public static final StreamCodec<FriendlyByteBuf, Hand> CODEC = Utils.enumStreamCodec(InteractionHand.class)
+        public static final StreamCodec<FriendlyByteBuf, Hand> CODEC = CodecUtils.enumStreamCodec(InteractionHand.class)
                 .map(Hand::new, Hand::hand);
 
         @Override
@@ -86,7 +86,7 @@ public interface SlotReference {
     }
 
     record EqSlot(EquipmentSlot slot) implements SlotReference {
-        public static final StreamCodec<FriendlyByteBuf, EqSlot> CODEC = Utils.enumStreamCodec(EquipmentSlot.class)
+        public static final StreamCodec<FriendlyByteBuf, EqSlot> CODEC = CodecUtils.enumStreamCodec(EquipmentSlot.class)
                 .map(EqSlot::new, EqSlot::slot);
 
         @Override
