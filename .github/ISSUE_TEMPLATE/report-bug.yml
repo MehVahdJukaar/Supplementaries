@@ -2,38 +2,42 @@ name: Report Bug
 description: Found a bug? Report it.
 title: "[🐞]: "
 labels: "bug"
+
 body:
   - type: markdown
     attributes:
       value: |
-        BUG
+        ## Bug Report
+
+        ### Before Submitting
+        Please ensure that:
+
+        - You are using the latest version of the mod and its dependencies
+        - You have attached `latest.log` if the game is crashing
+        - You removed unsupported mods (Optifine, hybrid servers like Mohist/Velocity, Fabric API on Forge, etc.)
+        - You tested by isolating the issue (disable mods and re-enable 1–2 at a time)
+        - You searched existing issues to avoid duplicates
+
+        Failure to follow these steps may result in the issue being closed.
 
   - type: checkboxes
-    id: pre-report-bug
     attributes:
-      label: "Before Continuing:"
+      label: Confirmation
       options:
-        - label: "Check you are using the latest version of the mods and its dependencies"
-          required: true
-        - label: "Always include a latest.log if you are crashing"
-          required: true
-        - label: "Remove mod that enhances Minecraft: Optifine, Sodium, others. The issue persists."
-          required: true
-        - label: "If you are unsure which mod is the culprit.\nDisable all of your mods and enable them 1-2 mods each time to isolate the culprit"
-          required: true
-        - label: "Confirm that there is no existing issue with a similar description submitted in the list of issues."
+        - label: I have read and followed the steps above.
           required: true
 
   - type: dropdown
     id: version
     attributes:
-      label: Version
-      description: The Version of Minecraft?
+      label: Minecraft Version
+      description: Select the Minecraft version and loader.
       options:
+        - 1.21.1-NEOFORGE
+        - 1.21.1-FABRIC
         - 1.20.1-FORGE
         - 1.20.1-FABRIC
         - 1.19.2-FORGE
-        - 1.19.2-FABRIC
         - 1.18.2-FORGE
       default: 0
     validations:
@@ -43,25 +47,19 @@ body:
     id: supplementaries
     attributes:
       label: Supplementaries Version
-      description: The current version of supplementaries
+      description: Full mod version string.
       placeholder: ex. supplementaries-1.20-2.7.33
-    validations:
-      required: true
-     
-  - type: input
-    id: moonlight
-    attributes:
-      label: Moonlight Lib Version
-      description: The current version of Moonlight Lib
-      placeholder: ex. moonlight-1.20-2.9.7-forge
     validations:
       required: true
 
   - type: textarea
     id: issue-details
     attributes:
-      label: "Issue Detail"
-      description: "A clear and concise description of what the bug is."
-      placeholder: "TIP: Always include A log if the issue is causing a crash. These are found in your instance directory under /logs. \nTIP: If applicable, add screenshots to help explain your problem."
+      label: Describe the Issue
+      description: Provide a clear and concise description.
+      placeholder: |
+        Steps to reproduce:
+
+        Always attach the `latest.log` file from /logs.
     validations:
-        required: true
+      required: true
