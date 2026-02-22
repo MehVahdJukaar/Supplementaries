@@ -229,7 +229,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         }
         Integer duration = CommonConfigs.Functional.FLAMMABLE_FROM_LUMISENE.get();
         if (entity instanceof LivingEntity le && duration > 0) {
-            le.addEffect(new MobEffectInstance(ModRegistry.FLAMMABLE.getHolder(), duration,
+            le.addEffect(new MobEffectInstance(ModRegistry.FLAMMABLE, duration,
                     0, false, false));
         }
 

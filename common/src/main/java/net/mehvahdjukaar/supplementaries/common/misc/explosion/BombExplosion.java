@@ -44,7 +44,7 @@ public class BombExplosion {
                 (float) type.getRadius(), false, interaction,
                 ModParticles.BOMB_EXPLOSION_PARTICLE.get(),
                 ModParticles.BOMB_EXPLOSION_PARTICLE.get(),
-                ModSounds.BOMB_EXPLOSION.getHolder());
+                ModSounds.BOMB_EXPLOSION);
     }
 
     private static @NotNull DamageSource getBombDamageSource(Entity source) {

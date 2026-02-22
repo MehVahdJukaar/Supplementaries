@@ -2,7 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.events;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.serialization.Codec;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.DynamicTextureRenderer;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderableDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
@@ -125,9 +127,9 @@ public class ClientEvents {
         return false;
     }
 
-    public static FrameBufferBackedDynamicTexture requestFlatItemTexture(ResourceLocation id, Item item, int size, @Nullable Consumer<NativeImage> postProcessing, boolean updateEachFrame) {
-        return RenderedTexturesManager.requestTexture(id, size, (t) -> {
-            RenderedTexturesManager.drawAsInGUI(t, (g) -> {
+    public static RenderableDynamicTexture requestFlatItemTexture(ResourceLocation id, Item item, int size, @Nullable Consumer<NativeImage> postProcessing, boolean updateEachFrame) {
+        return DynamicTextureRenderer.requestTexture(id, size, (t) -> {
+            DynamicTextureRenderer.drawAsInGUI(t, (g) -> {
                 g.pose().translate(8, 8, 0);
                 g.pose().scale(16 / 18f, 16 / 18f, 1);
                 g.pose().translate(-8, -8, 0);
