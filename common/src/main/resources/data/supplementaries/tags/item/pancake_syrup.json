@@ -12,6 +12,10 @@
     {
       "id": "malum:unholy_syrup",
       "required": false
+    },
+    {
+      "id": "nomansland:maple_syrup_bottle",
+      "required": false
     }
   ]
 }
