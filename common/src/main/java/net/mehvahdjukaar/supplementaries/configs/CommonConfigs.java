@@ -717,6 +717,8 @@ public class CommonConfigs {
 
             builder.push("soap");
             SOAP_ENABLED = feature(builder);
+            SOAP_BLOCK_CLEANING_ENABLED = builder.comment("Allows soap to clean blocks in-world. Disable to prevent in-world block cleaning while keeping soap item and recipes functional")
+                    .define("block_cleaning_enabled", true);
             SOAP_DYE_CLEAN_BLACKLIST = builder.comment("Dyed Bock types that cannot be cleaned with soap")
                     .define("clean_blacklist", List.of("minecraft:glazed_terracotta", "botania:mystical_flower",
                             "mna:chimerite_crystal", "botania:floating_flower", ",minecraft:mushroom", "botania:mushroom",
@@ -822,6 +824,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CAGE_TAMED;
 
         public static final Supplier<Boolean> SOAP_ENABLED;
+        public static final Supplier<Boolean> SOAP_BLOCK_CLEANING_ENABLED;
         public static final Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
         public static final Supplier<Map<BlockPredicate, ResourceLocation>> SOAP_SPECIAL;
 
