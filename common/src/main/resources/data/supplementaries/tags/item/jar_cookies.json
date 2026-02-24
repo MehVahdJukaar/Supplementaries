@@ -95,6 +95,9 @@
 
     {"id":"abnormals_delight:mulberry_cookie","required":false},
 
-    {"id":"botania:mana_cookie","required":false}
+    {"id":"botania:mana_cookie","required":false},
+
+    {"id":"nomansland:honeyed_apple","required":false},
+    {"id":"nomansland:syruped_pear","required":false}
   ]
 }
