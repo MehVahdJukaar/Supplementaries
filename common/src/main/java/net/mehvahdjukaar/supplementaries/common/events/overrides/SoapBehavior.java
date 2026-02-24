@@ -27,7 +27,7 @@ class SoapBehavior implements ItemUseOnBlockBehavior {
 
     @Override
     public boolean isEnabled() {
-        return CommonConfigs.Functional.SOAP_ENABLED.get();
+        return CommonConfigs.Functional.SOAP_ENABLED.get() && CommonConfigs.Functional.SOAP_BLOCK_CLEANING_ENABLED.get();
     }
 
     @Override
