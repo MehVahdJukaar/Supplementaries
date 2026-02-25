@@ -1139,10 +1139,6 @@ public class CommonConfigs {
             DRAGON_PATTERN = feature(builder.comment("Adds dragon banner pattern made from dragon head"));
             builder.pop();
 
-            builder.push("shulker_helmet");
-            SHULKER_HELMET_ENABLED = feature(builder.comment("Allows wearing shulker shells"));
-            builder.pop();
-
             builder.push("ai_tweaks");
             USE_CANNON_BOAT = builder.comment("Allows pillagers to use cannon boats. Add more entities to the 'supplementaries:can_use_cannon_boat' tag to allow them to use cannon boats as well")
                     .define("pillagers_use_cannon_boats", true);
@@ -1298,7 +1294,6 @@ public class CommonConfigs {
         }
 
 
-        public static final Supplier<Boolean> SHULKER_HELMET_ENABLED;
         public static final Supplier<Boolean> USE_CANNON_BOAT;
         public static final Supplier<Boolean> DISMOUNT_BOAT;
         public static final Supplier<Boolean> DRAGON_PATTERN;
