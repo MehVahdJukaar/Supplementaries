@@ -139,7 +139,7 @@ public interface SlotReference {
 
     @SuppressWarnings("all")
     Registry<StreamCodec<ByteBuf, SlotReference>> TYPE_REGISTRY = Util.make(() -> {
-        var reg = RegHelper.registerRegistry(TYPE_REGISTRY_KEY, true);
+        var reg = RegHelper.registerRegistry(TYPE_REGISTRY_KEY, false);
         RegHelper.register(Supplementaries.res("hand"), () -> (StreamCodec) Hand.CODEC, TYPE_REGISTRY_KEY);
         RegHelper.register(Supplementaries.res("inv"), () -> (StreamCodec) Inv.CODEC, TYPE_REGISTRY_KEY);
         RegHelper.register(Supplementaries.res("empty"), () -> (StreamCodec) Empty.CODEC, TYPE_REGISTRY_KEY);
