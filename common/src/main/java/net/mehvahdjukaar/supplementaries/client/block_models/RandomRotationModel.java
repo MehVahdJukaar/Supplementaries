@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class RandomRotationModel implements CustomBakedModel {
 
-    private final Map<Direction, List<BakedQuad>[]> quadCache = new Object2ObjectArrayMap<>();
+    private final sync Map<Direction, List<BakedQuad>[]> quadCache = new Object2ObjectArrayMap<>();
     private final BakedModel wrapped;
 
     public RandomRotationModel(BakedModel back, ModelState modelTransform) {
