@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.block_models;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.mehvahdjukaar.moonlight.api.client.model.BakedQuadsTransformer;
 import net.mehvahdjukaar.moonlight.api.client.model.CustomBakedModel;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
@@ -19,82 +18,78 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 public class RandomRotationModel implements CustomBakedModel {
 
-    private final sync Map<Direction, List<BakedQuad>[]> quadCache = new Object2ObjectArrayMap<>();
+    // Precompute to avoid race conditions due to sodium and company
+    private final Map<Direction, List<BakedQuad>[]> quadCache = new EnumMap<>(Direction.class);
     private final BakedModel wrapped;
 
     public RandomRotationModel(BakedModel back, ModelState modelTransform) {
         this.wrapped = back;
-    }
 
-    @Override
-    public boolean useAmbientOcclusion() {
-        return wrapped.useAmbientOcclusion();
-    }
+        RandomSource rand = RandomSource.create(42); // deterministic seed
+        for (Direction side : Direction.values()) {
 
-    @Override
-    public boolean isGui3d() {
-        return wrapped.isGui3d();
-    }
+            @SuppressWarnings("unchecked")
+            List<BakedQuad>[] rotations = new List[4];
 
-    @Override
-    public boolean usesBlockLight() {
-        return wrapped.usesBlockLight();
-    }
-
-    @Override
-    public boolean isCustomRenderer() {
-        return wrapped.isCustomRenderer();
-    }
-
-    @Override
-    public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
-        return wrapped.getParticleIcon();
-    }
-
-    @Override
-    public ItemOverrides getOverrides() {
-        return wrapped.getOverrides();
-    }
-
-    @Override
-    public ItemTransforms getTransforms() {
-        return wrapped.getTransforms();
-    }
-
-    @Override
-    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType,
-                                         ExtraModelData data) {
-        int randIndex = rand.nextInt(4);
-        float angle = randIndex * 90f;
-        List<BakedQuad>[] array = quadCache.computeIfAbsent(side, d -> new List[4]);
-
-        List<BakedQuad> arr = array[randIndex];
-        if (arr == null) {
-            List<BakedQuad> newQuads = new ArrayList<>();
-            for (BakedQuad q : wrapped.getQuads(state, side, rand)) {
-                //rotate texture of each quad. very naiive. works for us bc we only have one quad that takes up the whole face
-                Direction normal = q.getDirection();
-                //apply random rotation over the normal axis
-                Quaternionf randomRot = new Quaternionf()
-                        .rotateAxis(angle * Mth.DEG_TO_RAD, normal.step());
-                Matrix4f mat = new Matrix4f();
-                mat.rotate(randomRot);
-                BakedQuadsTransformer transformer = BakedQuadsTransformer.create()
-                        .applyingTransform(mat);
-                newQuads.add(transformer.transform(q));
+            for (int i = 0; i < 4; i++) {
+                float angle = i * 90f;
+                rotations[i] = buildRotatedQuads(side, rand, angle);
             }
-            array[randIndex] = newQuads;
-            return newQuads;
+
+            quadCache.put(side, rotations);
         }
-        return array[randIndex];
     }
 
+    private List<BakedQuad> buildRotatedQuads(Direction side,
+                                              RandomSource rand,
+                                              float angle) {
 
+        List<BakedQuad> result = new ArrayList<>();
+
+        for (BakedQuad q : wrapped.getQuads(null, side, rand)) {
+
+            Direction normal = q.getDirection();
+
+            Quaternionf rotation = new Quaternionf()
+                    .rotateAxis(angle * Mth.DEG_TO_RAD, normal.step());
+
+            Matrix4f matrix = new Matrix4f().rotate(rotation);
+
+            BakedQuadsTransformer transformer =
+                    BakedQuadsTransformer.create().applyingTransform(matrix);
+
+            result.add(transformer.transform(q));
+        }
+
+        return List.copyOf(result); // immutable
+    }
+
+    @Override
+    public List<BakedQuad> getBlockQuads(BlockState state,
+                                         Direction side,
+                                         RandomSource rand,
+                                         RenderType renderType,
+                                         ExtraModelData data) {
+
+        if (side == null) {
+            return wrapped.getQuads(state, null, rand);
+        }
+
+        int index = rand.nextInt(4);
+        return quadCache.get(side)[index];
+    }
+
+    @Override public boolean useAmbientOcclusion() { return wrapped.useAmbientOcclusion(); }
+    @Override public boolean isGui3d() { return wrapped.isGui3d(); }
+    @Override public boolean usesBlockLight() { return wrapped.usesBlockLight(); }
+    @Override public boolean isCustomRenderer() { return wrapped.isCustomRenderer(); }
+    @Override public TextureAtlasSprite getBlockParticle(ExtraModelData data) { return wrapped.getParticleIcon(); }
+    @Override public ItemOverrides getOverrides() { return wrapped.getOverrides(); }
+    @Override public ItemTransforms getTransforms() { return wrapped.getTransforms(); }
 }
-
-
