@@ -1214,10 +1214,11 @@ public class CommonConfigs {
                     .define("block_map_markers", true);
             DEATH_MARKER = builder.comment("Shows a death marker on your map when you die. Requires a recovery compass in player inventory or similar")
                     .define("death_marker", DeathMarkerMode.WITH_COMPASS);
-            if (PlatHelper.getPlatform().isForge()) {
+            if (PlatHelper.getPlatform().isForge() && false) { //disabled. TODO: add back
                 QUARK_QUILL = builder.comment("If Quark is installed adventurer maps will be replaced by adventurer quills. These will not lag the server when generating")
                         .define("quill_adventurer_maps", true);
-                REPLACE_VANILLA_MAPS = builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
+                REPLACE_VANILLA_MAPS = () -> false ;
+                builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
                         .define("quill_vanilla_maps", true);
                 QUILL_MIN_SEARCH_RADIUS = builder.comment("Miminum search radius for quill. Used to incrase the radius of vanilla searches. For reference buried treasures are at 50 and locate is at 100 chunks")
                         .define("min_search_radius", 75, 10, 600);
