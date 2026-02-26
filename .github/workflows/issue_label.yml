@@ -1,0 +1,22 @@
+name: Labeling new issue
+on:
+  issues:
+    types: ['opened', 'edited']
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github/workflows/issue_label.json5
+          sparse-checkout-cone-mode: false
+      - uses: Renato66/auto-label@v3.1.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          ignore-comments: false
+          configuration-file: .github/workflows/issue_label.json5
+          labels-synonyms: false
