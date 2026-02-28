@@ -1,1 +1,2 @@
-fixed a concurrency issue
+- fixed a crash with round globes
+- random misc fixes
