@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
-import net.mehvahdjukaar.moonlight.api.misc.BiggerStreamCodecs;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.codec.BiggerStreamCodecs;
+import net.mehvahdjukaar.moonlight.api.util.codec.CodecUtils;
 import net.mehvahdjukaar.supplementaries.api.CapturedMobInstance;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
@@ -218,7 +218,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
         }
 
         public static final Codec<TickMode> CODEC = StringRepresentable.fromEnum(TickMode::values);
-        public static final StreamCodec<FriendlyByteBuf, TickMode> STREAM_CODEC = Utils.enumStreamCodec(TickMode.class);
+        public static final StreamCodec<FriendlyByteBuf, TickMode> STREAM_CODEC = CodecUtils.enumStreamCodec(TickMode.class);
 
     }
 

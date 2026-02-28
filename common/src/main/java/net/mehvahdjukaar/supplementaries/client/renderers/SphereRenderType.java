@@ -26,8 +26,8 @@ public abstract class SphereRenderType extends RenderType {
                             ShaderInstance shader = ClientRegistry.SPHERE_SHADER.get();
                             shader.safeGetUniform("SphereTexture").set(0);
                             Window mc = Minecraft.getInstance().getWindow();
-                            shader.getUniform("ScreenSize")
-                                    .set(mc.getWidth(), mc.getHeight());
+                            shader.safeGetUniform("ScreenSize")
+                                    .set(0.0f + mc.getWidth(), 0.0f + mc.getHeight());
                         },
                         () -> {
                         }))
