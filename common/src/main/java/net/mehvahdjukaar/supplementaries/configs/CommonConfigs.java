@@ -1289,6 +1289,8 @@ public class CommonConfigs {
 
             COMPASS_CLICK = builder.comment("Allow to right click with a compass to display current coordinates in numerical form")
                     .define("compass_right_click", false);
+            COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS = builder.comment("Allow these features to work in dimensions like nether or end where normally clocks don't work")
+                    .define("works_in_unnatural_dimensions", false);
             builder.pop();
 
             builder.pop();
@@ -1338,6 +1340,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
         public static final Supplier<Boolean> CLOCK_CLICK;
         public static final Supplier<Boolean> COMPASS_CLICK;
+        public static final Supplier<Boolean> COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS;
         public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
         public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;

@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ClockBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundDisplayClockTimePacket;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -71,7 +72,8 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
     }
 
     public static boolean canReadTime(Level level) {
-        return level.dimensionType().natural() ^ MiscUtils.FESTIVITY.isAprilsFool();
+        boolean naturalDim = (level.dimensionType().natural() || CommonConfigs.Tweaks.COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS.get());
+        return naturalDim ^ MiscUtils.FESTIVITY.isAprilsFool();
     }
 
     @Override
