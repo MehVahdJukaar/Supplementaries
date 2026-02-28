@@ -5,7 +5,6 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.codec.CodecUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -15,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -57,6 +57,19 @@ public class MiscUtils {
                 toPos.getY() - fromPos.getY(),
                 toPos.getZ() - fromPos.getZ()
         );
+    }
+
+    public static String truncate(String s, int maxLength) {
+        if (s == null) return null;
+        if (s.length() <= maxLength) return s;
+        return s.substring(0, maxLength);
+    }
+
+    public static Component truncateComponent(Component message, int maxLength) {
+        if (message == null) return null;
+        String s = message.getString();
+        if (s.length() <= maxLength) return message;
+        return Component.literal(s.substring(0, maxLength)).withStyle(message.getStyle());
     }
 
     public enum Festivity {

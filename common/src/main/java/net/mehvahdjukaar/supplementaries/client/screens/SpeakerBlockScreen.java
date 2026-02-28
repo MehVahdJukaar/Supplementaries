@@ -89,7 +89,7 @@ public class SpeakerBlockScreen extends Screen {
             }
         };
         this.editBox.setValue(message);
-        this.editBox.setMaxLength(CommonConfigs.Redstone.MAX_TEXT.get());
+        this.editBox.setMaxLength(CommonConfigs.Redstone.SPEAKER_BLOCK_MAX_TEXT.get());
         this.addRenderableWidget(this.editBox);
         this.setInitialFocus(this.editBox);
         this.editBox.setFocused(true);

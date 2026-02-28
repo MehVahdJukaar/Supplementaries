@@ -161,7 +161,7 @@ public class CommonConfigs {
             SPEAKER_BLOCK_ENABLED = feature(builder);
             SPEAKER_NARRATOR = builder.comment("Enable/disable speaker block narrator mode")
                     .define("narrator_enabled", true);
-            MAX_TEXT = builder.comment("Max text")
+            SPEAKER_BLOCK_MAX_TEXT = builder.comment("Max text")
                     .define("max_text", 32, 0, 10000);
             SPEAKER_RANGE = builder.comment("Maximum block range")
                     .define("range", 64, 0, 100000000);
@@ -256,7 +256,7 @@ public class CommonConfigs {
 
         public static final Supplier<Boolean> SPEAKER_BLOCK_ENABLED;
         public static final Supplier<Integer> SPEAKER_RANGE;
-        public static final Supplier<Integer> MAX_TEXT;
+        public static final Supplier<Integer> SPEAKER_BLOCK_MAX_TEXT;
         public static final Supplier<Boolean> SPEAKER_NARRATOR;
 
         public static final Supplier<Boolean> BELLOWS_ENABLED;

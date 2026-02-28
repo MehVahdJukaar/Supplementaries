@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.screens.SpeakerBlockScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.SpeakerBlock;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPlaySpeakerMessagePacket;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -90,12 +91,13 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserI
     }
 
     public void setMessage(Component message, Component filteredMessage) {
-        this.message = message;
-        this.filteredMessage = filteredMessage;
+        int maxLength = CommonConfigs.Redstone.SPEAKER_BLOCK_MAX_TEXT.get();
+        this.message = MiscUtils.truncateComponent(message, maxLength);
+        this.filteredMessage = MiscUtils.truncateComponent(filteredMessage, maxLength);
     }
 
     public void setVolume(double volume) {
-        this.volume = volume;
+        this.volume = Math.clamp(volume, 0, CommonConfigs.Redstone.SPEAKER_RANGE.get());
     }
 
     @Override
