@@ -22,14 +22,14 @@ public record AlternativeBehavior(IFireItemBehavior first,
     }
 
     @Override
-    public Data calculateData(ItemStack stack, Level level) {
+    public BallisticData calculateData(ItemStack stack, Level level) {
         if (this.first instanceof IBallisticBehavior b) {
             var d = b.calculateData(stack, level);
-            if (d != IBallisticBehavior.LINE) return d;
+            if (d != BallisticData.LINE) return d;
         }
         if (this.second instanceof IBallisticBehavior b) {
             return b.calculateData(stack, level);
         }
-        return IBallisticBehavior.LINE;
+        return BallisticData.LINE;
     }
 }

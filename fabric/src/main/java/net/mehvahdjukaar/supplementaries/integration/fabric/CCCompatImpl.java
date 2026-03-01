@@ -9,8 +9,6 @@ import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -24,8 +22,8 @@ public class CCCompatImpl {
 
     public static void setup() {
         PeripheralLookup.get().registerForBlockEntity((tile, direction) -> {
-            if (tile.ccHack == null) tile.ccHack = new CannonPeripheral(tile);
-            return (IPeripheral) tile.ccHack;
+            if (tile.ccPeripheral == null) tile.ccPeripheral = new CannonPeripheral(tile);
+            return (IPeripheral) tile.ccPeripheral;
         }, ModRegistry.CANNON_TILE.get());
 
         PeripheralLookup.get().registerForBlockEntity((tile, direction) -> {

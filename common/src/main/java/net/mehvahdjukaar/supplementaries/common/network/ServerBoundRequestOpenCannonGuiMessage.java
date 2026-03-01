@@ -13,14 +13,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 public record ServerBoundRequestOpenCannonGuiMessage(TileOrEntityTarget target) implements Message {
 
-    public ServerBoundRequestOpenCannonGuiMessage(BlockEntity tile) {
-        this(TileOrEntityTarget.of(tile));
-    }
-
-    public ServerBoundRequestOpenCannonGuiMessage(Entity entity) {
-        this(TileOrEntityTarget.of(entity));
-    }
-
     public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundRequestOpenCannonGuiMessage> CODEC = Message.makeType(
             Supplementaries.res("c2s_request_open_cannon_gui"), ServerBoundRequestOpenCannonGuiMessage::new);
 

@@ -2,21 +2,17 @@ package net.mehvahdjukaar.supplementaries.common.entities;//
 
 
 import net.mehvahdjukaar.moonlight.api.entity.IControllableVehicle;
-import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.BoatReferenceFrame;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityReferenceFrame;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.Restraint;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundUpdateCannonBoatPacket;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -31,7 +27,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -53,10 +48,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, CannonAccess, IControllableVehicle {
+public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, IControllableVehicle {
 
     private static final EntityDataAccessor<WoodType> DATA_WOOD_TYPE =
             SynchedEntityData.defineId(CannonBoatEntity.class, WoodType.ENTITY_SERIALIZER.get());
@@ -70,8 +64,10 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         super(entityType, level);
         this.cannon = new CannonBlockTile(BlockPos.ZERO, ModRegistry.CANNON.get()
                 .defaultBlockState().setValue(CannonBlock.FACING, Direction.UP));
+        this.cannon.setReferenceFrame(new BoatReferenceFrame(this));
+        this.cannon.setRestraint(new Restraint(50, 360 - 50, 0, 180));
         this.cannon.setLevel(level);
-        this.cannon.setRenderYaw(this, 0);
+        this.cannon.setRenderYaw(0);
         this.setWoodType(VanillaWoodTypes.OAK);
     }
 
@@ -264,7 +260,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         return this.isChestVehicleStillValid(player);
     }
 
-    @Override
+   // @Override
     public void openCannonGui(ServerPlayer player) {
         PlatHelper.openCustomMenu(player, this);
     }
@@ -283,7 +279,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
         //override to create boat menu
         if (inv.player.isSpectator()) return null;
-        return new CannonContainerMenu(id, inv, this);
+        return new CannonContainerMenu(id, inv, cannon);
     }
 
     @Nullable
@@ -321,128 +317,47 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.cannon.stopOpen(player);
     }
 
-    @Override
     public CannonBlockTile getInternalCannon() {
         return cannon;
     }
 
+
     @Override
-    public TileOrEntityTarget makeNetworkTarget() {
-        return TileOrEntityTarget.of(this);
+    protected void clampRotation(Entity entityToUpdate) {
+        //  if (entityToUpdate instanceof AbstractIllager) return;
+        super.clampRotation(entityToUpdate);
     }
 
     @Override
-    public void syncToServer(boolean fire, boolean removeOwner) {
-        NetworkHelper.sendToServer(new ServerBoundSyncCannonPacket(
-                cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
-                fire, false, TileOrEntityTarget.of(this)));
+    public void onInputUpdate(boolean b, boolean b1, boolean b2, boolean b3, boolean ctrl, boolean jump) {
+        if (jump && level().isClientSide) {
+            CannonController.startControlling(cannon);
+        }
+        if (ctrl && cannon.readyToFire()) {
+            cannon.syncToServer(true, false);
+        }
     }
 
     @Override
-    public void sendOpenGuiRequest() {
-        NetworkHelper.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(this));
+    public void tick() {
+        super.tick();
+        this.cannon.tick();
+
+        Entity controlling = this.getControllingPassenger();
+        if (controlling != null) {
+            cannon.setCurrentUser(controlling.getUUID());
+        }
     }
 
-    @Override
-    public Vec3 getCannonGlobalOffset() {
-        if (isBamboo) {
+
+
+    public Vec3 getCannonOffset() {
+        if (this.isBamboo()) {
             float backOff = 6 / 16f;
             return new Vec3(0, 16 / 16f, backOff);
         } else {
             float backOff = 7 / 16f;
             return new Vec3(0, 12 / 16f, backOff);
         }
-    }
-
-    @Override
-    public Vec3 getCannonGlobalPosition(float partialTicks) {
-        float yaw = getCannonGlobalYawOffset(partialTicks);
-        Vec3 vv = getCannonGlobalOffset();
-        vv = vv.yRot(Mth.DEG_TO_RAD * yaw);
-        return this.getPosition(partialTicks).add(vv);
-    }
-
-
-    //TODO:fix vanilla bug where entities rotate like shit in boats
-
-    @Override
-    protected void clampRotation(Entity entityToUpdate) {
-      //  if (entityToUpdate instanceof AbstractIllager) return;
-        super.clampRotation(entityToUpdate);
-    }
-
-    @Override
-    public float getCannonGlobalYawOffset(float partialTicks) {
-        return 180 - this.getViewYRot(partialTicks);
-    }
-
-    @Override
-    public void updateClients() {
-        NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
-                new ClientBoundUpdateCannonBoatPacket(TileOrEntityTarget.of(this),
-                        cannon.saveWithoutMetadata(this.registryAccess())));
-    }
-
-    @Override
-    public Restraint getPitchAndYawRestrains() {
-        return new Restraint(50, 360 - 50, 0, 180);
-    }
-
-    @Override
-    public Vec3 getCannonGlobalVelocity() {
-        return this.getDeltaMovement();
-    }
-
-    @Override
-    public void onInputUpdate(boolean b, boolean b1, boolean b2, boolean b3, boolean ctrl, boolean jump) {
-        if (jump && level().isClientSide) {
-            CannonController.startControlling(this);
-        }
-        if (ctrl && cannon.readyToFire()) {
-            syncToServer(true, false);
-        }
-    }
-
-    @Override
-    public boolean canManeuverFromGUI(Player player) {
-        return this.getControllingPassenger() == player;
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        this.cannon.tick(this);
-
-        Entity controlling = this.getControllingPassenger();
-        if (controlling != null){
-            cannon.setCurrentUser(controlling.getUUID());
-        }
-    }
-
-    @Override
-    public void applyRecoil() {
-        Vec3 v = getCannonRecoil();
-        if (this.hasControllingPassenger()) {
-            NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
-                    new ClientBoundSendKnockbackPacket(this.getId(), v));
-        } else this.addDeltaMovement(v);
-
-    }
-
-    public @NotNull Vec3 getCannonRecoil() {
-        float power = this.cannon.getFirePower();
-        float scale = 1;
-        Vec3 shootForce = this.getCannonGlobalFacing(1).scale(-power * scale);
-        return new Vec3(-shootForce.x, 0, -shootForce.z);
-    }
-
-    @Override
-    public boolean shouldRotatePlayerFaceWhenManeuvering() {
-        return true;
-    }
-
-    @Override
-    public boolean impedePlayerMovementWhenManeuvering() {
-        return false;
     }
 }

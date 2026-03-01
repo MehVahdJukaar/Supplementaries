@@ -1,5 +1,6 @@
 # 1.21 bugs and stuff
 
+- fix vanilla bug where entities rotate like shit in boats
 - 2 plunderers using same cannon
 - barnacles spawning inside ship hulls
 - boat facing thing

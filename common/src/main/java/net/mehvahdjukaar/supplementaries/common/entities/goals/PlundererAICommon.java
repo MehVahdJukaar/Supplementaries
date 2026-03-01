@@ -26,16 +26,15 @@ public final class PlundererAICommon {
     public static final int SHOOTING_COOLDOWN_MIN = 50;
     public static final int SHOOTING_COOLDOWN_MAX = 80;
 
-    public static boolean aimCannonAndShoot(CannonAccess access, Mob shooter, LivingEntity target, boolean canShoot) {
-        CannonBlockTile cannonTile = access.getInternalCannon();
-        if (cannonTile.isOnCooldown()) return false;
+    public static boolean aimCannonAndShoot(CannonBlockTile tile, Mob shooter, LivingEntity target, boolean canShoot) {
+        if (tile.isOnCooldown()) return false;
 
-        Vec3 cannonGlobalPosition = access.getCannonGlobalPosition(0);
+        Vec3 cannonGlobalPosition = tile.getCannonGlobalPosition(0);
         Vec3 targetLoc = target.position();
 
         //rough estimate of power needed
         byte power = 1;
-        int maxPower = cannonTile.getFuel().getCount();
+        int maxPower = tile.getFuel().getCount();
         float distance = (float) targetLoc.distanceTo(cannonGlobalPosition);
 
         if (distance > 64) {
@@ -52,28 +51,28 @@ public final class PlundererAICommon {
                 .add(0, 0.6, 0);
 
         power = (byte) Math.min(power, maxPower);
-        cannonTile.setPowerLevel(power);
+        tile.setPowerLevel(power);
 
-        var comp = CannonUtils.computeTrajectory(access, targetLoc, ShootingMode.DOWN);
+        var comp = CannonUtils.computeTrajectory(tile, targetLoc, ShootingMode.DOWN);
 
         var cannonTrajectory = comp.getFirst();
         float wantedGlobalYawDeg = comp.getSecond() * Mth.RAD_TO_DEG;
         if (cannonTrajectory != null) {
-            float cannonGlobalYawOffsetDeg = access.getCannonGlobalYawOffset(0);
+            float cannonGlobalYawOffsetDeg = tile.getCannonGlobalYawOffset(0);
             float wantedLocalYawDeg = wantedGlobalYawDeg + cannonGlobalYawOffsetDeg;
-            setCannonAnglesToFollowTrajectory(access, cannonTrajectory, wantedLocalYawDeg);
+            setCannonAnglesToFollowTrajectory(tile, cannonTrajectory, wantedLocalYawDeg);
 
             if (canShoot) {
-                float newCannonGlobalYaw = (cannonTile.getYaw() - cannonGlobalYawOffsetDeg) * Mth.DEG_TO_RAD;
+                float newCannonGlobalYaw = (tile.getYaw() - cannonGlobalYawOffsetDeg) * Mth.DEG_TO_RAD;
 
                 Vec3 hitLoc = cannonTrajectory.getHitLocation(cannonGlobalPosition, newCannonGlobalYaw);
                 //distance
                 double distance1 = hitLoc.distanceTo(targetLoc);
-                if (distance1 < 0.1 && cannonTile.readyToFire()) {
-                    cannonTile.ignite(shooter, access);
+                if (distance1 < 0.1 && tile.readyToFire()) {
+                    tile.ignite(shooter);
 
                     if (shooter instanceof ICannonShooter cs) {
-                        cs.onShotCannon(cannonTile.getBlockPos());
+                        cs.onShotCannon(tile.getBlockPos());
                     } else if (shooter instanceof Raider r) {
                         r.playSound(r.getCelebrateSound(), 2.5F, 1F);
                     }
@@ -87,20 +86,19 @@ public final class PlundererAICommon {
 
     }
 
-    private static void setCannonAnglesToFollowTrajectory(CannonAccess access, CannonTrajectory trajectory,
+    private static void setCannonAnglesToFollowTrajectory(CannonBlockTile tile, CannonTrajectory trajectory,
                                                           float wantedLocalYawDeg) {
         if (trajectory != null) {
             float followSpeed = 1;
-            CannonBlockTile cannon = access.getInternalCannon();
             //TODO: improve
-            cannon.setPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
+            tile.setPitch(Mth.rotLerp(followSpeed, tile.getPitch(),
                     trajectory.pitch() * Mth.RAD_TO_DEG));
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            cannon.setYaw(access, wantedLocalYawDeg);
+            tile.setYaw(wantedLocalYawDeg);
 
             //sync
-            cannon.setChanged();
-            access.updateClients();
+            tile.setChanged();
+            tile.updateClients();
         }
     }
 

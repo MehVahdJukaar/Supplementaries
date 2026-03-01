@@ -68,7 +68,7 @@ public class DoormatScreen extends TextHolderEditScreen<DoormatBlockTile> {
         poseStack.scale(0.010416667F, -0.010416667F, 0.010416667F);
 
         TextUtil.renderGuiText(this.tile.textHolder.getGUIRenderTextProperties(),
-                this.messages[textHolderIndex], this.font, graphics, bufferSource,
+                this.messages[textHolderIndex], this.font, graphics,
                 this.textInputUtil.getCursorPos(), this.textInputUtil.getSelectionPos(),
                 this.lineIndex, blink, DoormatBlockTileRenderer.LINE_SEPARATION);
 

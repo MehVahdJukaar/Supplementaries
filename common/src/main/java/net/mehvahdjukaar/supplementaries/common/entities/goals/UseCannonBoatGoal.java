@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -29,10 +31,11 @@ public class UseCannonBoatGoal extends Goal {
     private LivingEntity target;
     private int igniteCannonCooldown;
     private int ticksSinceShot;
-    private CannonAccess access;
+    private CannonBlockTile cannon;
 
     public UseCannonBoatGoal(Mob mob) {
-        this(mob, MAX_USE_CANNON_BOAT, MIN_CANNON_RANGE, SHOOTING_COOLDOWN_MIN, SHOOTING_COOLDOWN_MAX, MAX_TIME_WITHOUT_SHOOTING);
+        this(mob, MAX_USE_CANNON_BOAT, MIN_CANNON_RANGE,
+                SHOOTING_COOLDOWN_MIN, SHOOTING_COOLDOWN_MAX, MAX_TIME_WITHOUT_SHOOTING);
     }
 
     public UseCannonBoatGoal(Mob mob,int maxDuration, int minRange, int minShootingCooldown, int maxShootingCooldown, int maxTimeWithoutShooting) {
@@ -44,16 +47,15 @@ public class UseCannonBoatGoal extends Goal {
         this.shootingCooldownMin = minShootingCooldown;
         this.shootingCooldownMax = maxShootingCooldown;
         this.maxTimeWithoutShooting = maxTimeWithoutShooting;
-
     }
 
     @Override
     public boolean canUse() {
         if (this.mob.getNavigation().isStuck()) return false;
-        if (mob.getControlledVehicle() instanceof CannonAccess ac &&
+        if (mob.getControlledVehicle() instanceof CannonBoatEntity ac &&
                 ac.getInternalCannon().hasSomeFuelAndProjectiles() &&
                 PlundererAICommon.hasValidTargetInCannonRange(this.mob, minCannonRange)) {
-            this.access = ac;
+            this.cannon = ac.getInternalCannon();
             this.target = this.mob.getTarget();
             return true;
         }
@@ -69,7 +71,7 @@ public class UseCannonBoatGoal extends Goal {
     @Override
     public void stop() {
         this.target = null;
-        this.access = null;
+        this.cannon = null;
         this.ticksSinceShot = 0;
         this.igniteCannonCooldown = 0;
         this.time = 0;
@@ -90,7 +92,7 @@ public class UseCannonBoatGoal extends Goal {
         if (igniteCannonCooldown > 0) {
             igniteCannonCooldown--;
         }
-        if (aimCannonAndShoot(access, this.mob, this.target, igniteCannonCooldown <= 0)) {
+        if (aimCannonAndShoot(this.cannon, this.mob, this.target, igniteCannonCooldown <= 0)) {
             igniteCannonCooldown = shootCooldown();
             ticksSinceShot = 0;
         }

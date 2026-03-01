@@ -59,15 +59,15 @@ public interface CannonAccess {
         float pitch = (float) MthUtils.getPitch(direction);
         float oldYaw = cannon.getYaw(0);
         float oldPitch = cannon.getPitch(0);
-        cannon.setYaw(this, yaw);
-        cannon.setPitch(this, pitch);
+        cannon.setYaw( yaw);
+        cannon.setPitch( pitch);
         if (!ignoreIfInvalid) { //very ugly
             float newYaw = cannon.getYaw(0);
             float newPitch = cannon.getPitch(0);
             if (newYaw != yaw || newPitch != pitch) {
                 //revert
-                cannon.setYaw(this, oldYaw);
-                cannon.setPitch(this, oldPitch);
+                cannon.setYaw(oldYaw);
+                cannon.setPitch(oldPitch);
             }
         }
     }
@@ -150,7 +150,6 @@ public interface CannonAccess {
 
         @Override
         public void sendOpenGuiRequest() {
-            NetworkHelper.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(cannon));
         }
 
         @Override
@@ -189,16 +188,12 @@ public interface CannonAccess {
         return null;
     }
 
-
     static CannonAccess block(CannonBlockTile cannonBlockTile) {
         return new Block(cannonBlockTile);
     }
 
-    record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {
-    }
-
+    record Restraint(float minYaw, float maxYaw, float minPitch, float maxPitch) {}
 
     Vec3 getCannonRecoil();
-
 
 }

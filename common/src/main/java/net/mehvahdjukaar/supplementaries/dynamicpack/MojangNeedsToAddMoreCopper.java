@@ -57,7 +57,8 @@ public class MojangNeedsToAddMoreCopper {
                 try (TextureImage toRecolor = TextureImage.open(manager, relPat)) {
                     Respriter resp = Respriter.of(toRecolor);
                     var recolored = resp.recolor(textures.get(random.nextInt(textures.size())));
-                    sink.addAndCloseTexture(relPat, recolored);
+                    sink.addTexture(relPat, recolored);
+                    recolored.close();
                 } catch (Exception e) {
 
                 }

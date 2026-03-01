@@ -1,21 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.serialization.MapCodec;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.common.block.IAnalogRotatable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SlingshotBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.PlundererEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -25,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -62,7 +54,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable, IAnalogRotatable {
@@ -164,11 +155,11 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
             if (dir.getAxis() == Direction.Axis.Y) {
                 float pitch = dir == Direction.UP ? -90 : 90;
-                cannon.setPitch(cannon.selfAccess, (myDir.getOpposite() == dir ? pitch + 180 : pitch));
+                cannon.setPitch( (myDir.getOpposite() == dir ? pitch + 180 : pitch));
 
             } else {
                 float yaw = dir.toYRot();
-                cannon.setYaw(cannon.selfAccess, (myDir.getOpposite() == dir ? yaw + 180 : yaw));
+                cannon.setYaw( (myDir.getOpposite() == dir ? yaw + 180 : yaw));
             }
         }
     }
@@ -180,7 +171,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             if (wasPowered != level.hasNeighborSignal(pos)) {
                 level.setBlock(pos, state.cycle(POWERED), 2);
                 if (!wasPowered && level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
-                    tile.ignite(null, tile.selfAccess);
+                    tile.ignite(null);
                 }
             }
         }
@@ -195,11 +186,8 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return Utils.getTicker(pBlockEntityType, ModRegistry.CANNON_TILE.get(), CannonBlock::tickTile);
-    }
-
-    private static void tickTile(Level level, BlockPos pos, BlockState state, CannonBlockTile cannonBlockTile) {
-        cannonBlockTile.tick(cannonBlockTile.selfAccess);
+        return Utils.getTicker(pBlockEntityType, ModRegistry.CANNON_TILE.get(),
+                (l,p,s, tile) -> tile.tick());
     }
 
     @Override
@@ -248,7 +236,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     public void setLitUp(BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos,
                          @Nullable Entity igniter, boolean on) {
         if (levelAccessor.getBlockEntity(blockPos) instanceof CannonBlockTile tile) {
-            tile.ignite(igniter, tile.selfAccess);
+            tile.ignite(igniter);
         }
     }
 
@@ -340,12 +328,12 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                           Direction axis, @Nullable Vec3 hit) {
         if (axis.getAxis() == newState.getValue(FACING).getAxis() && world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             float angle = rotation.rotate(0, 4) * -90;
-            Vector3f currentDir = tile.selfAccess.getCannonGlobalFacing(0).toVector3f();
+            Vector3f currentDir = tile.getCannonGlobalFacing(0).toVector3f();
             Quaternionf q = new Quaternionf().rotateAxis(angle * Mth.DEG_TO_RAD, axis.step());
             currentDir.rotate(q);
             Vec3 newDir = new Vec3(currentDir);
-            tile.setYaw(tile.selfAccess, (float) MthUtils.getYaw(newDir));
-            tile.setPitch(tile.selfAccess, (float) MthUtils.getPitch(newDir));
+            tile.setYaw((float) MthUtils.getYaw(newDir));
+            tile.setPitch((float) MthUtils.getPitch(newDir));
             tile.setChanged();
             tile.getLevel().sendBlockUpdated(pos, oldState, newState, 3);
         }
@@ -358,12 +346,12 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             speed = speed * 0.01f;
             float deltaAngle = -speed * (ccw ? -1 : 1);
             Vector3f rotAxis = face.step();
-            Vector3f facingVec = tile.selfAccess.getCannonGlobalFacing(0).toVector3f();
+            Vector3f facingVec = tile.getCannonGlobalFacing(0).toVector3f();
             //this is the way we face. now a rotation is being performend on the face "face", either ccw or cw. make this vector rotate acocrdingly
             Quaternionf q = new Quaternionf().rotateAxis(deltaAngle, rotAxis);
             facingVec.rotate(q);
             Vec3 newDir = new Vec3(facingVec);
-            tile.selfAccess.setCannonGlobalFacing(newDir, true);
+            tile.setCannonGlobalFacing(newDir, true);
             tile.setChanged();
             //  level.sendBlockUpdated(pos, state, state, 3);
         }

@@ -35,7 +35,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 import java.util.stream.Collectors;
 
-@EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = Supplementaries.MOD_ID, value = Dist.CLIENT)
 public class SupplementariesForgeClient {
 
     @SubscribeEvent

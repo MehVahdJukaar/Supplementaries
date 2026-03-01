@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.ChatFormatting;
@@ -25,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 
 public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> implements ContainerListener {
 
-    private final CannonAccess access;
 
     private NumberEditBox pitchSelector;
     private NumberEditBox yawSelector;
@@ -35,7 +35,6 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         super(menu, inventory, text);
         this.imageWidth = 176;
         this.imageHeight = 166;
-        this.access = menu.access;
     }
 
     @Override
@@ -45,17 +44,18 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.titleLabelX = 8;
         int i = this.leftPos;
         int j = this.topPos;
-        boolean manActive = this.access.canManeuverFromGUI(Minecraft.getInstance().player);
+        CannonBlockTile cannon = this.menu.cannon;
+        boolean manActive = cannon.canManeuverFromGUI(Minecraft.getInstance().player);
         ManeuverButton maneuver = new ManeuverButton(i + 154, j + 10 + 6, manActive);
         this.addRenderableWidget(maneuver);
 
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
-        this.yawSelector.setNumber(access.getInternalCannon().getYaw());
+        this.yawSelector.setNumber(cannon.getYaw());
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
-        this.pitchSelector.setNumber(access.getInternalCannon().getPitch());
+        this.pitchSelector.setNumber(cannon.getPitch());
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, CannonBlock.MAX_POWER_LEVELS));
-        this.powerSelector.power = access.getInternalCannon().getPowerLevel();
+        this.powerSelector.power = cannon.getPowerLevel();
         this.menu.addSlotListener(this);
     }
 
@@ -67,7 +67,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
     private void onManeuverPressed(Button button) {
         if (button.active) {
-            CannonController.startControlling(access);
+            CannonController.startControlling(this.menu.cannon);
             //dont sync cannon and dont clear owner
             this.onClose();
         }
@@ -80,12 +80,12 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         float pitch = this.pitchSelector.getNumber();
         byte power = this.powerSelector.getPower();
         //update client immediately too
-        this.access.getInternalCannon().setAttributes(yaw, pitch, power, false, minecraft.player, this.access);
-        this.access.syncToServer(false, !CannonController.isActive());
+        this.menu.cannon.setAttributes(yaw, pitch, power, false, minecraft.player);
+        this.menu.cannon.syncToServer(false, !CannonController.isActive());
     }
 
     private int getActualPower() {
-        return Math.min(this.powerSelector.getPower(), access.getInternalCannon().getFuel().getCount());
+        return Math.min(this.powerSelector.getPower(), this.menu.cannon.getFuel().getCount());
     }
 
     @Override

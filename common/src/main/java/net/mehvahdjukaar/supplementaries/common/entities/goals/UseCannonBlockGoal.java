@@ -178,7 +178,7 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
             }
             this.mob.getLookControl().setLookAt(mob.getTarget());
 
-            if (aimCannonAndShoot(cannonTile.selfAccess, mob, mob.getTarget(), canShoot)) {
+            if (aimCannonAndShoot(cannonTile, mob, mob.getTarget(), canShoot)) {
                 igniteCannonCooldown = shootCooldown();
                 ticksSinceShot = 0;
             }

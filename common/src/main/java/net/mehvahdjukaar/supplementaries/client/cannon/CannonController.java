@@ -26,7 +26,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class CannonController {
 
-    protected static CannonAccess access;
+    protected static CannonBlockTile cannon;
 
     private static CameraType lastCameraType;
     protected static HitResult hit;
@@ -49,11 +49,11 @@ public class CannonController {
 
     protected static boolean showsTrajectory = true;
 
-    public static void startControlling(CannonAccess cannonAccess) {
+    public static void startControlling(CannonBlockTile cannon) {
         Minecraft mc = Minecraft.getInstance();
-        if (access == null) {
-            access = cannonAccess;
-            shootingMode = cannonAccess.getInternalCannon().getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
+        if (CannonController.cannon == null) {
+            CannonController.cannon = cannon;
+            shootingMode = cannon.getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
             lastCameraType = mc.options.getCameraType();
         } //if not it means we entered from manouver mode gui
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
@@ -67,14 +67,14 @@ public class CannonController {
 
     // only works if we are already controlling
     private static void stopControllingAndSync() {
-        if (access == null) return;
-        access.syncToServer(false, true);
+        if (cannon == null) return;
+        cannon.syncToServer(false, true);
         stopControlling();
     }
 
     public static void stopControlling() {
-        if (access == null) return;
-        access = null;
+        if (cannon == null) return;
+        cannon = null;
         lastCameraYaw = 0;
         lastCameraPitch = 0;
         lastZoomOut = 0;
@@ -85,14 +85,14 @@ public class CannonController {
     }
 
     public static boolean isActive() {
-        return access != null;
+        return cannon != null;
     }
 
     public static boolean setupCamera(Camera camera, BlockGetter level, Entity entity,
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
 
         if (!isActive()) return false;
-        Vec3 centerCannonPos = access.getCannonGlobalPosition(partialTick);
+        Vec3 centerCannonPos = cannon.getCannonGlobalPosition(partialTick);
 
         if (lastCameraPos == null) {
             lastCameraPos = camera.getPosition();
@@ -121,8 +121,7 @@ public class CannonController {
         pitchIncrease = 0;
 
         //TODO: no perfect solution exist: add config
-        CannonBlockTile cannonTile = access.getInternalCannon();
-        if (!cannonTile.isFiring()) {
+        if (!cannon.isFiring()) {
 
             // find hit result
             Vec3 lookDir2 = new Vec3(camera.getLookVector());
@@ -133,7 +132,7 @@ public class CannonController {
             hit = level.clip(new ClipContext(actualCameraPos, endPos,
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
 
-            var comp = CannonUtils.computeTrajectory(access, hit.getLocation(), shootingMode);
+            var comp = CannonUtils.computeTrajectory(cannon, hit.getLocation(), shootingMode);
 
             trajectory = comp.getFirst();
             float wantedYaw = comp.getSecond();
@@ -147,14 +146,12 @@ public class CannonController {
     private static void updateCannonRenderAngles(float partialTick, float wantedYaw) {
         if (trajectory != null) {
             float followSpeed = 1;
-            CannonBlockTile cannon = access.getInternalCannon();
             //TODO: improve
-            cannon.setPitch(access, Mth.rotLerp(followSpeed, cannon.getPitch(),
+            cannon.setPitch(Mth.rotLerp(followSpeed, cannon.getPitch(),
                     trajectory.pitch() * Mth.RAD_TO_DEG));
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            cannon.setRenderYaw(access,
-                    wantedYaw * Mth.RAD_TO_DEG +
-                            access.getCannonGlobalYawOffset(partialTick));
+            cannon.setRenderYaw(wantedYaw * Mth.RAD_TO_DEG +
+                            CannonController.cannon.getCannonGlobalYawOffset(partialTick));
         }
     }
 
@@ -166,7 +163,7 @@ public class CannonController {
             pitchIncrease += (float) (pitchAdd * scale);
             if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
 
-            if (access.shouldRotatePlayerFaceWhenManeuvering()) {
+            if (cannon.shouldRotatePlayerFaceWhenManeuvering()) {
                 //make player face camera while maneuvering
                 LocalPlayer player = Minecraft.getInstance().player;
                 player.turn(Mth.wrapDegrees((lastCameraYaw + yawAdd) - player.yHeadRot),
@@ -188,7 +185,7 @@ public class CannonController {
 
     private static void onKeyInventory() {
         //Disabled, too buggy
-        access.sendOpenGuiRequest();
+        cannon.sendOpenGuiRequest();
     }
 
     private static void onKeyShift() {
@@ -199,9 +196,8 @@ public class CannonController {
         if (!isActive()) return false;
 
         if (scrollDelta != 0) {
-            CannonBlockTile tile = access.getInternalCannon();
-            byte newPower = (byte) (1 + Math.floorMod((int) (tile.getPowerLevel() - 1 + scrollDelta), CannonBlockTile.MAX_POWER_LEVEL));
-            tile.setPowerLevel(newPower);
+            byte newPower = (byte) (1 + Math.floorMod((int) (cannon.getPowerLevel() - 1 + scrollDelta), CannonBlockTile.MAX_POWER_LEVEL));
+            cannon.setPowerLevel(newPower);
             needsToUpdateServer = true;
         }
         return true;
@@ -210,8 +206,8 @@ public class CannonController {
 
     public static boolean onPlayerAttack() {
         if (!isActive()) return false;
-        if (access != null && access.getInternalCannon().readyToFire()) {
-            access.syncToServer(true, false);
+        if (cannon != null && cannon.readyToFire()) {
+            cannon.syncToServer(true, false);
         }
         return true;
     }
@@ -224,7 +220,7 @@ public class CannonController {
 
     public static void onInputUpdate(Input input) {
         // resets input
-        if (access.impedePlayerMovementWhenManeuvering()) {
+        if (cannon.impedePlayerMovementWhenManeuvering()) {
             input.down = false;
             input.up = false;
             input.left = false;
@@ -240,10 +236,10 @@ public class CannonController {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         if (!isActive()) return;
-        if (access.stillValid(player)) {
+        if (cannon.stillValid(player)) {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
-                access.syncToServer(false, false);
+                cannon.syncToServer(false, false);
             }
         } else {
             stopControllingAndSync();

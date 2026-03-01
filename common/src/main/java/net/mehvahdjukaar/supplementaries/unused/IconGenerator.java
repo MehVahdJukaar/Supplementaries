@@ -1,15 +1,16 @@
 package net.mehvahdjukaar.supplementaries.unused;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.DynamicTextureRenderer;
+import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderableDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.resources.textures.TextureImage;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
@@ -52,8 +53,9 @@ public class IconGenerator {
     private static void makeTexture(String postfix, Item item, @Nullable TextureImage... overlays) {
         var model = Minecraft.getInstance().getItemRenderer().getModel(item.getDefaultInstance(), null, null, 0);
         int s = model.isGui3d() ? 16 : 1;
-        var t = RenderedTexturesManager.requestFlatItemTexture(
-                Utils.getID(item).withSuffix(postfix),
+        ResourceLocation id = Utils.getID(item).withSuffix(postfix);
+        RenderableDynamicTexture texture = DynamicTextureRenderer.requestFlatItemTexture(
+                id,
                 item,
                 18 * s, nativeImage -> {
                     //flip imaeg
@@ -80,9 +82,9 @@ public class IconGenerator {
                         });
                     }
                 }, false);
-        if (t.isInitialized()) {
+        if (texture != null) {
             try {
-                t.saveTextureToFile(PlatHelper.getGamePath().resolve("guide"));
+                texture.dumpContents(id, PlatHelper.getGamePath().resolve("guide"));
             } catch (Exception e) {
                 Supplementaries.LOGGER.error(e);
             }

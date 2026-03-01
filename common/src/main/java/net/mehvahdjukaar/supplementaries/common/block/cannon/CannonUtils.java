@@ -3,9 +3,11 @@ package net.mehvahdjukaar.supplementaries.common.block.cannon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -20,18 +22,29 @@ import org.joml.Vector4f;
 public class CannonUtils {
 
 
-    public static Pair< @Nullable CannonTrajectory, Float> computeTrajectory(
-            CannonAccess access,
+    @Nullable
+    public static CannonBlockTile cannonFromNetwork(Level level,TileOrEntityTarget target) {
+        return target.map(level, be -> {
+                    if (be instanceof CannonBlockTile cbt) return cbt;
+                    return null;
+                }, e -> {
+                    if (e instanceof CannonBoatEntity boat) return boat.getInternalCannon();
+                    return null;
+                }
+        );
+    }
+
+    public static Pair<@Nullable CannonTrajectory, Float> computeTrajectory(
+            CannonBlockTile cannon,
             Vec3 targetPos, ShootingMode shootingMode) {
-        CannonBlockTile cannonTile = access.getInternalCannon();
-        Vec3 cannonPos = access.getCannonGlobalPosition(0);
+        Vec3 cannonPos = cannon.getCannonGlobalPosition(0);
 
         Vec3 localTarget = targetPos.subtract(cannonPos);
         //so we hopefully hit the block we are looking at
         localTarget = localTarget.add(localTarget.normalize().scale(0.05f));
 
-        CannonAccess.Restraint restraints = access.getPitchAndYawRestrains();
-        IBallisticBehavior.Data ballistic = cannonTile.getTrajectoryData();
+        Restraint restraints = cannon.getPitchAndYawRestrains();
+        BallisticData ballistic = cannon.getTrajectoryData();
         float minPitch = restraints.minPitch() * Mth.DEG_TO_RAD;
         float maxPitch = restraints.maxPitch() * Mth.DEG_TO_RAD;
 
@@ -42,7 +55,7 @@ public class CannonUtils {
         CannonTrajectory trajectory = CannonTrajectory.findBest(targetPoint,
 
                 ballistic.gravity(), ballistic.drag(),
-                cannonTile.getFirePower() * ballistic.initialSpeed(),
+                cannon.getFirePower() * ballistic.initialSpeed(),
                 shootingMode,
                 minPitch, maxPitch);
         return Pair.of(trajectory, initialYaw);

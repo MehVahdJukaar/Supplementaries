@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.ModRenderTypes;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -32,12 +33,12 @@ public class CannonTrajectoryRenderer {
 
     public static void render(CannonBlockTile tile, PoseStack poseStack, MultiBufferSource buffer,
                               int packedLight, int packedOverlay, float partialTicks) {
-        if (access == null || access.getInternalCannon() != tile) return;
+        if (cannon != tile) return;
         if (hit == null || trajectory == null || !showsTrajectory) return;
 
         boolean rendersRed = !tile.readyToFire();
 
-        Vec3 cannonPos = access.getCannonGlobalPosition(partialTicks);
+        Vec3 cannonPos = cannon.getCannonGlobalPosition(partialTicks);
 
 
         Minecraft mc = Minecraft.getInstance();
@@ -67,7 +68,8 @@ public class CannonTrajectoryRenderer {
         }
 
         if (!hitAir && debug && hit instanceof BlockHitResult bh) {
-            poseStack.mulPose(Axis.YP.rotationDegrees(-access.getCannonGlobalYawOffset(partialTicks)));
+            //TODO: multiply by inverse rot
+            poseStack.mulPose(Axis.YP.rotationDegrees(-cannon.getCannonGlobalYawOffset(partialTicks)));
             renderBlockReticule(poseStack, buffer, cannonPos, bh);
         }
     }

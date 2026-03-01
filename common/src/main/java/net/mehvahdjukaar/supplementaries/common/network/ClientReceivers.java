@@ -320,9 +320,9 @@ public class ClientReceivers {
 
     public static void handleSyncCannonBoat(ClientBoundUpdateCannonBoatPacket packet) {
         withLevelDo(l -> {
-            CannonAccess access = CannonAccess.find(l, packet.target());
-            if (access != null) {
-                access.getInternalCannon().loadWithComponents(packet.tileTag(), l.registryAccess());
+            CannonBlockTile tile = CannonUtils.cannonFromNetwork(l, packet.target());
+            if (tile != null) {
+                tile.loadWithComponents(packet.tileTag(), l.registryAccess());
             }
         });
 
@@ -521,9 +521,9 @@ public class ClientReceivers {
 
     public static void handleCannonControlPacket(ClientBoundControlCannonPacket message) {
         withLevelDo(l -> {
-            CannonAccess access = CannonAccess.find(l, message.target());
-            if (access != null) {
-                CannonController.startControlling(access);
+            CannonBlockTile tile = CannonUtils.cannonFromNetwork(l, message.target());
+            if (tile != null) {
+                CannonController.startControlling(tile);
             }
         });
     }
@@ -531,42 +531,41 @@ public class ClientReceivers {
 
     public static void handleCannonAnimation(ClientBoundCannonAnimationPacket message) {
         withLevelDo(l -> {
-            CannonAccess access = CannonAccess.find(l, message.target());
-            if (access != null) {
+            CannonBlockTile tile = CannonUtils.cannonFromNetwork(l, message.target());
+            if (tile != null) {
                 if (message.fire()) {
-                    playFiringEffects(access);
+                    playFiringEffects(tile);
                 } else {
-                    playIgniteEffects(access);
+                    playIgniteEffects(tile);
                 }
             }
         });
     }
 
 
-    private static void playIgniteEffects(CannonAccess access) {
-        Level level = access.getInternalCannon().getLevel();
-        PoseStack poseStack = calculateGlobalCannonPose(access);
+    private static void playIgniteEffects(CannonBlockTile tile) {
+        Level level = tile.getLevel();
+        PoseStack poseStack = calculateGlobalCannonPose(tile);
         Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.752f, 1));
 
-        Vec3 speed = access.getCannonGlobalVelocity();
+        Vec3 speed = tile.getCannonGlobalVelocity();
         level.addParticle(ParticleTypes.CRIT,
                 p.x, p.y, p.z, speed.x, speed.y, speed.z);
 
-        Vec3 pos = access.getCannonGlobalPosition(1);
+        Vec3 pos = tile.getCannonGlobalPosition(1);
         level.playLocalSound(pos.x, pos.y, pos.z, ModSounds.CANNON_IGNITE.get(), SoundSource.BLOCKS, 0.6f,
                 1.2f + level.getRandom().nextFloat() * 0.2f, false);
     }
 
 
-    private static void playFiringEffects(CannonAccess access) {
-        PoseStack poseStack = calculateGlobalCannonPose(access);
-        CannonBlockTile cannon = access.getInternalCannon();
+    private static void playFiringEffects(CannonBlockTile cannon) {
+        PoseStack poseStack = calculateGlobalCannonPose(cannon);
         Level level = cannon.getLevel();
-        float yaw = cannon.getYaw() - access.getCannonGlobalYawOffset(1);
+        float yaw = cannon.getYaw() - cannon.getCannonGlobalYawOffset(1);
         float pitch = cannon.getPitch();
         float power = cannon.getPowerLevel();
-        Vec3 pos = access.getCannonGlobalPosition(1);
-        Vec3 speed = access.getCannonGlobalVelocity();
+        Vec3 pos = cannon.getCannonGlobalPosition(1);
+        Vec3 speed = cannon.getCannonGlobalVelocity();
         speed = speed.scale(0.3);
         var opt = new CannonFireParticle.Options(pitch, yaw, 1);
         speed = Vec3.ZERO;
@@ -583,13 +582,12 @@ public class ClientReceivers {
                 soundVolume, soundPitch, false);
     }
 
-    private static PoseStack calculateGlobalCannonPose(CannonAccess access) {
-        CannonBlockTile tile = access.getInternalCannon();
-        float yaw = tile.getYaw() - access.getCannonGlobalYawOffset(1);
-        float pitch = tile.getPitch();
-
+    private static PoseStack calculateGlobalCannonPose(CannonBlockTile cannon) {
+        float yaw = cannon.getYaw() - cannon.getCannonGlobalYawOffset(1);
+        float pitch = cannon.getPitch();
+        //TODO: change
         PoseStack poseStack = new PoseStack();
-        var pos = access.getCannonGlobalPosition(1);
+        var pos = cannon.getCannonGlobalPosition(1);
         poseStack.translate(pos.x, pos.y + 1 / 16f, pos.z);
 
         poseStack.mulPose(Axis.YP.rotationDegrees(-yaw));

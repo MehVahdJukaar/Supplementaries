@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
 import com.google.common.collect.ImmutableMap;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -19,7 +20,7 @@ import static net.mehvahdjukaar.supplementaries.common.entities.goals.PlundererA
 public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
 
     private int attackDelay;
-    private CannonAccess access;
+    private CannonBlockTile cannon;
 
     public UseCannonBoatBehavior() {
         super(ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus.VALUE_PRESENT, MemoryModuleType.LAST_WOKEN, MemoryStatus.REGISTERED));
@@ -53,7 +54,7 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
     protected void start(ServerLevel level, LivingEntity owner, long gameTime) {
         Entity boat = owner.getControlledVehicle();
         if (boat instanceof CannonBoatEntity cb) {
-            this.access = cb;
+            this.cannon = cb.getInternalCannon();
         }
     }
 
@@ -64,7 +65,7 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
 
     @Override
     protected void stop(ServerLevel level, LivingEntity entity, long gameTime) {
-        access = null;
+        cannon = null;
     }
 
 
@@ -76,7 +77,7 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
         if (attackDelay > 0) {
             attackDelay--;
         }
-        if (aimCannonAndShoot(access, (Raider) owner, livingentity, attackDelay <= 0)) {
+        if (aimCannonAndShoot(cannon, (Raider) owner, livingentity, attackDelay <= 0)) {
             attackDelay = Mth.randomBetweenInclusive(level.random, SHOOTING_COOLDOWN_MIN, SHOOTING_COOLDOWN_MAX); //random delay between shots
         }
     }

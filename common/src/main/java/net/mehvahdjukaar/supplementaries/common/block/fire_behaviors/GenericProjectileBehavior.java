@@ -27,9 +27,9 @@ import java.util.UUID;
 public class GenericProjectileBehavior implements IBallisticBehavior {
 
     @Override
-    public Data calculateData(ItemStack projectile, Level level) {
+    public BallisticData calculateData(ItemStack projectile, Level level) {
         if (projectile.isEmpty()) {
-            return IBallisticBehavior.LINE;
+            return BallisticData.LINE;
         }
         Entity proj = createEntity(projectile, IEntityInterceptFakeLevel.get(level), new Vec3(1, 0, 0));
         if (proj != null) {
@@ -44,9 +44,9 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
             var newMovement = proj.getDeltaMovement();
             float drag = (float) newMovement.x;
             float gravity = (float) -newMovement.y;
-            return new Data(drag, gravity, (float) speed);
+            return new BallisticData(drag, gravity, (float) speed);
         }
-        return IBallisticBehavior.LINE;
+        return BallisticData.LINE;
     }
 
     @Override

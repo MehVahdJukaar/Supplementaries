@@ -29,7 +29,7 @@ public class CannonChargeHud implements LayeredDraw.Layer {
         if (mc.options.hideGui) return;
         if (CannonController.isActive()) {
 
-            CannonBlockTile cannon = CannonController.access.getInternalCannon();
+            CannonBlockTile cannon = CannonController.cannon;
 
             setupOverlayRenderState();
             int screenWidth = graphics.guiWidth();

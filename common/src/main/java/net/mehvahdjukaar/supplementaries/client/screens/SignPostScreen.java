@@ -100,14 +100,14 @@ public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
 
             if (signUp.active()) {
                 var properties = tile.getTextHolder(0).getGUIRenderTextProperties();
-                TextUtil.renderGuiLine(properties, this.messages[0][0], font, graphics, bufferSource,
-                        cursorPos, selectionPos, this.textHolderIndex == 0, blink, -10);
+                TextUtil.renderGuiLine(properties, this.messages[0][0], font, graphics,
+                        cursorPos, selectionPos, this.textHolderIndex == 0, blink, -10, font.lineHeight);
             }
             if (signDown.active()) {
                 poseStack.translate(-3 * o[1], 0, 0);
                 var properties = tile.getTextHolder(1).getGUIRenderTextProperties();
-                TextUtil.renderGuiLine(properties, this.messages[1][0], font, graphics, bufferSource,
-                        cursorPos, selectionPos, this.textHolderIndex == 1, blink, 48 - 10);
+                TextUtil.renderGuiLine(properties, this.messages[1][0], font, graphics,
+                        cursorPos, selectionPos, this.textHolderIndex == 1, blink, 48 - 10, font.lineHeight);
             }
         }
 

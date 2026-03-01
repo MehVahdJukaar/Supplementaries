@@ -83,7 +83,7 @@ public class CannonBoatRenderer extends BoatRenderer {
 
         poseStack.popPose();
 
-        Vec3 offset = boat.getCannonGlobalOffset();
+        Vec3 offset = boat.getCannonOffset();
         poseStack.translate(offset.x, offset.y, offset.z);
         CannonBlockTileRenderer.renderCannonModel(
                 (CannonBlockTileRenderer) renderer,
@@ -98,7 +98,7 @@ public class CannonBoatRenderer extends BoatRenderer {
 
             var vc = buffer.getBuffer(RenderType.lines());
             poseStack.pushPose();
-            var p = boat.getCannonGlobalPosition(partialTicks);
+            var p = boat.getInternalCannon().getCannonGlobalPosition(partialTicks);
             p = p.subtract(boat.position());
             poseStack.translate(p.x, p.y, p.z);
             var pose = poseStack.last();

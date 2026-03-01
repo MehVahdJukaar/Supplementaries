@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,28 +18,27 @@ import org.jetbrains.annotations.NotNull;
 
 public class CannonContainerMenu extends AbstractContainerMenu implements IContainerProvider {
 
-    public final CannonAccess access;
+    public final CannonBlockTile cannon;
 
     @Override
     public CannonBlockTile getContainer() {
-        return access.getInternalCannon();
+        return cannon;
     }
 
     //client container factory
     public CannonContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(ModMenuTypes.CANNON.get(), id, playerInventory, CannonAccess.find(playerInventory.player.level(),
-                TileOrEntityTarget.read(packetBuffer)));
+        this(ModMenuTypes.CANNON.get(), id, playerInventory, CannonUtils.cannonFromNetwork(playerInventory.player.level(), TileOrEntityTarget.read(packetBuffer)));
     }
 
-    public <T extends CannonContainerMenu> CannonContainerMenu(int id, Inventory playerInventory, CannonAccess access) {
-        this(ModMenuTypes.CANNON.get(), id, playerInventory, access);
+    public <T extends CannonContainerMenu> CannonContainerMenu(int id, Inventory playerInventory, CannonBlockTile cannon) {
+        this(ModMenuTypes.CANNON.get(), id, playerInventory, cannon);
     }
 
-    public <T extends CannonContainerMenu> CannonContainerMenu(MenuType<T> type, int id, Inventory playerInventory, CannonAccess access) {
+    public <T extends CannonContainerMenu> CannonContainerMenu(MenuType<T> type, int id, Inventory playerInventory, CannonBlockTile cannon) {
         super(type, id);
 
         //tile inventory
-        this.access = access;
+        this.cannon = cannon;
 
         CannonBlockTile inventory = this.getContainer();
         checkContainerSize(inventory, 2);
@@ -57,7 +57,7 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return this.access.stillValid(playerIn);
+        return this.cannon.stillValid(playerIn);
     }
 
     @Override
