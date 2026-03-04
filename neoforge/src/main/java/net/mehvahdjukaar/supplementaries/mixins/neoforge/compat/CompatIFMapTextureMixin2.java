@@ -37,8 +37,8 @@ public class CompatIFMapTextureMixin2 {
 
         MoonlightClient.setMipMap(true);
         mipmap = mipmap || MoonlightClient.isMapMipMap();
-        if (!autoClose && mipmap) GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
         operation.call(instance, level, xOffset, yOffset, unpackSkipPixels, unpackSkipRows, width, height, mipmap, autoClose);
+        if (!autoClose && mipmap) GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
         MoonlightClient.setMipMap(false);
     }
 
