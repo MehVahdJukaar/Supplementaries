@@ -11,12 +11,12 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
-import net.mehvahdjukaar.supplementaries.neoforge.SupplementariesForge;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.jetbrains.annotations.NotNull;
@@ -34,8 +34,10 @@ public class CCCompatImpl {
 
 
     public static void init() {
-        SupplementariesForge.modBus.get()
-                .addListener(CCCompatImpl::registerCap);
+        var currentBus = ModLoadingContext.get().getActiveContainer().getEventBus();
+        currentBus.addListener(CCCompatImpl::registerCap);
+
+
     }
 
     public static void setup() {
@@ -169,44 +171,48 @@ public class CCCompatImpl {
 
     public static final class CannonPeripheral implements IPeripheral {
         private final CannonBlockTile tile;
-        private final CannonAccess acc;
 
         public CannonPeripheral(CannonBlockTile tile) {
             this.tile = tile;
-            this.acc = CannonAccess.find(tile.getLevel(), TileOrEntityTarget.of(tile));
         }
 
         @LuaFunction
         public void setYaw(double value) {
-            tile.setYaw(acc, (float) value);
-            acc.updateClients();
+            tile.setYaw((float) value);
+            tile.updateClients();
         }
+
         @LuaFunction
         public float getYaw() {
             return tile.getYaw();
         }
+
         @LuaFunction
         public void setPitch(double value) {
-            tile.setPitch(acc, (float) value);
-            acc.updateClients();
+            tile.setPitch((float) value);
+            tile.updateClients();
         }
+
         @LuaFunction
         public float getPitch() {
             return tile.getPitch();
         }
+
         @LuaFunction
         public void setPower(int inPower) {
             byte power = (byte) Math.min(Math.max(inPower, 1), CannonBlockTile.MAX_POWER_LEVEL);
             tile.setPowerLevel(power);
-            acc.updateClients();
+            tile.updateClients();
         }
+
         @LuaFunction
         public byte getPower() {
             return tile.getPowerLevel();
         }
+
         @LuaFunction
         public void ignite() {
-            tile.ignite(null, acc);
+            tile.ignite(null);
         }
 
         @Override

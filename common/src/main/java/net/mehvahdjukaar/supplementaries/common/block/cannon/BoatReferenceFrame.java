@@ -26,7 +26,7 @@ public class BoatReferenceFrame extends EntityReferenceFrame{
 
     @Override
     public int oldGetYawOffset(float partialTicks) {
-            return 180 - boat.getViewYRot(partialTicks);
+            return (int) (180 - boat.getViewYRot(partialTicks));
     }
 
     @Override

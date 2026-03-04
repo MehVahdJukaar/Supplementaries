@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
@@ -548,11 +547,11 @@ public class ClientReceivers {
         PoseStack poseStack = calculateGlobalCannonPose(tile);
         Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.752f, 1));
 
-        Vec3 speed = tile.getCannonGlobalVelocity();
+        Vec3 speed = tile.getGlobalVelocity();
         level.addParticle(ParticleTypes.CRIT,
                 p.x, p.y, p.z, speed.x, speed.y, speed.z);
 
-        Vec3 pos = tile.getCannonGlobalPosition(1);
+        Vec3 pos = tile.getGlobalPosition(1);
         level.playLocalSound(pos.x, pos.y, pos.z, ModSounds.CANNON_IGNITE.get(), SoundSource.BLOCKS, 0.6f,
                 1.2f + level.getRandom().nextFloat() * 0.2f, false);
     }
@@ -564,8 +563,8 @@ public class ClientReceivers {
         float yaw = cannon.getYaw() - cannon.getCannonGlobalYawOffset(1);
         float pitch = cannon.getPitch();
         float power = cannon.getPowerLevel();
-        Vec3 pos = cannon.getCannonGlobalPosition(1);
-        Vec3 speed = cannon.getCannonGlobalVelocity();
+        Vec3 pos = cannon.getGlobalPosition(1);
+        Vec3 speed = cannon.getGlobalVelocity();
         speed = speed.scale(0.3);
         var opt = new CannonFireParticle.Options(pitch, yaw, 1);
         speed = Vec3.ZERO;
@@ -587,7 +586,7 @@ public class ClientReceivers {
         float pitch = cannon.getPitch();
         //TODO: change
         PoseStack poseStack = new PoseStack();
-        var pos = cannon.getCannonGlobalPosition(1);
+        var pos = cannon.getGlobalPosition(1);
         poseStack.translate(pos.x, pos.y + 1 / 16f, pos.z);
 
         poseStack.mulPose(Axis.YP.rotationDegrees(-yaw));

@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
@@ -92,7 +91,7 @@ public class CannonController {
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
 
         if (!isActive()) return false;
-        Vec3 centerCannonPos = cannon.getCannonGlobalPosition(partialTick);
+        Vec3 centerCannonPos = cannon.getGlobalPosition(partialTick);
 
         if (lastCameraPos == null) {
             lastCameraPos = camera.getPosition();

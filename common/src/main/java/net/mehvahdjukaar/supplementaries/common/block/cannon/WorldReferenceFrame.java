@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;

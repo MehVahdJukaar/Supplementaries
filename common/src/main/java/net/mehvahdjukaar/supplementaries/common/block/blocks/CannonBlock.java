@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.serialization.MapCodec;
+import net.mehvahdjukaar.moonlight.api.block.IAnalogRotatable;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
@@ -153,14 +154,17 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             Direction dir = Direction.orderedByNearest(placer)[0];
             Direction myDir = state.getValue(FACING).getOpposite();
 
+            float wantedPitch = 0;
+            float wantedYaw = 0;
             if (dir.getAxis() == Direction.Axis.Y) {
                 float pitch = dir == Direction.UP ? -90 : 90;
-                cannon.setPitch( (myDir.getOpposite() == dir ? pitch + 180 : pitch));
+                wantedPitch = (myDir.getOpposite() == dir ? pitch + 180 : pitch);
 
             } else {
                 float yaw = dir.toYRot();
-                cannon.setYaw( (myDir.getOpposite() == dir ? yaw + 180 : yaw));
+                wantedYaw = (myDir.getOpposite() == dir ? yaw + 180 : yaw);
             }
+            cannon.setEulerAngles(wantedPitch, wantedYaw);
         }
     }
 

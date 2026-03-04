@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
@@ -29,7 +28,7 @@ public final class PlundererAICommon {
     public static boolean aimCannonAndShoot(CannonBlockTile tile, Mob shooter, LivingEntity target, boolean canShoot) {
         if (tile.isOnCooldown()) return false;
 
-        Vec3 cannonGlobalPosition = tile.getCannonGlobalPosition(0);
+        Vec3 cannonGlobalPosition = tile.getGlobalPosition(0);
         Vec3 targetLoc = target.position();
 
         //rough estimate of power needed

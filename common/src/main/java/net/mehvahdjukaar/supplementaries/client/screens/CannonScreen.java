@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -23,6 +24,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Quaternionf;
 
 public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> implements ContainerListener {
 
@@ -49,10 +51,11 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         ManeuverButton maneuver = new ManeuverButton(i + 154, j + 10 + 6, manActive);
         this.addRenderableWidget(maneuver);
 
+        EulerAngles cannonAngles = cannon.getEulerAngles(1);
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
-        this.yawSelector.setNumber(cannon.getYaw());
+        this.yawSelector.setNumber(cannonAngles.yaw());
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
-        this.pitchSelector.setNumber(cannon.getPitch());
+        this.pitchSelector.setNumber(cannonAngles.pitch());
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, CannonBlock.MAX_POWER_LEVELS));
         this.powerSelector.power = cannon.getPowerLevel();
@@ -80,6 +83,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         float pitch = this.pitchSelector.getNumber();
         byte power = this.powerSelector.getPower();
         //update client immediately too
+        Quaternionf wantedQuat = EulerAngles.of(yaw, pitch, 0).toQuaternion();
         this.menu.cannon.setAttributes(yaw, pitch, power, false, minecraft.player);
         this.menu.cannon.syncToServer(false, !CannonController.isActive());
     }

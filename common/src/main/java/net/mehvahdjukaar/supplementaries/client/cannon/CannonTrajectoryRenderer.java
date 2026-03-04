@@ -7,8 +7,8 @@ import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.ModRenderTypes;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.client.Minecraft;
@@ -38,7 +38,7 @@ public class CannonTrajectoryRenderer {
 
         boolean rendersRed = !tile.readyToFire();
 
-        Vec3 cannonPos = cannon.getCannonGlobalPosition(partialTicks);
+        Vec3 cannonPos = cannon.getGlobalPosition(partialTicks);
 
 
         Minecraft mc = Minecraft.getInstance();
@@ -47,7 +47,9 @@ public class CannonTrajectoryRenderer {
 
         poseStack.pushPose();
 
-        float yaw = tile.getYaw(partialTicks) * Mth.DEG_TO_RAD;
+        EulerAngles eulerAngles = tile.getEulerAngles(partialTicks);
+
+        float yaw = eulerAngles.yaw() * Mth.DEG_TO_RAD;
 
         //rotate so we can work in 2d
 

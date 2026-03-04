@@ -7,25 +7,26 @@ import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import org.joml.Quaternionf;
 
 public record ServerBoundSyncCannonPacket(
-        float yaw, float pitch, byte firePower, boolean fire, boolean stopControlling,
+        Quaternionf rotation, byte firePower, boolean fire, boolean stopControlling,
         TileOrEntityTarget target) implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundSyncCannonPacket> CODEC = Message.makeType(
             Supplementaries.res("c2s_sync_cannon"), ServerBoundSyncCannonPacket::new);
 
     public ServerBoundSyncCannonPacket(FriendlyByteBuf buf) {
-        this(buf.readFloat(), buf.readFloat(), buf.readByte(),
+        this(ByteBufCodecs.QUATERNIONF.decode(buf) , buf.readByte(),
                 buf.readBoolean(), buf.readBoolean(), TileOrEntityTarget.read(buf));
     }
 
     @Override
     public void write(RegistryFriendlyByteBuf buf) {
-        buf.writeFloat(this.yaw);
-        buf.writeFloat(this.pitch);
+        ByteBufCodecs.QUATERNIONF.encode(buf, rotation);
         buf.writeByte(this.firePower);
         buf.writeBoolean(this.fire);
         buf.writeBoolean(this.stopControlling);

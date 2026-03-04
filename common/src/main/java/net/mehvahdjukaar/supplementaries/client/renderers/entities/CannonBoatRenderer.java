@@ -98,7 +98,7 @@ public class CannonBoatRenderer extends BoatRenderer {
 
             var vc = buffer.getBuffer(RenderType.lines());
             poseStack.pushPose();
-            var p = boat.getInternalCannon().getCannonGlobalPosition(partialTicks);
+            var p = boat.getInternalCannon().getGlobalPosition(partialTicks);
             p = p.subtract(boat.position());
             poseStack.translate(p.x, p.y, p.z);
             var pose = poseStack.last();

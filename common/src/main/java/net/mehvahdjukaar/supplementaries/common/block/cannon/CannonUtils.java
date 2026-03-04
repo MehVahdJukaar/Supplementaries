@@ -37,7 +37,7 @@ public class CannonUtils {
     public static Pair<@Nullable CannonTrajectory, Float> computeTrajectory(
             CannonBlockTile cannon,
             Vec3 targetPos, ShootingMode shootingMode) {
-        Vec3 cannonPos = cannon.getCannonGlobalPosition(0);
+        Vec3 cannonPos = cannon.getGlobalPosition(0);
 
         Vec3 localTarget = targetPos.subtract(cannonPos);
         //so we hopefully hit the block we are looking at

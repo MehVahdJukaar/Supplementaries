@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 
+import net.mehvahdjukaar.moonlight.api.block.IAnalogRotatable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;

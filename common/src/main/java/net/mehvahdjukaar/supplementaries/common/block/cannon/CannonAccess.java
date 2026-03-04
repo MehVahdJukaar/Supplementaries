@@ -26,8 +26,6 @@ public interface CannonAccess {
 
     boolean canManeuverFromGUI(Player player);
 
-    void syncToServer(boolean fire, boolean removeOwner);
-
     Vec3 getCannonGlobalPosition(float partialTicks);
 
     float getCannonGlobalYawOffset(float partialTicks);
@@ -41,36 +39,6 @@ public interface CannonAccess {
     boolean stillValid(Player player);
 
     void updateClients();
-
-    default Vec3 getCannonGlobalFacing(float partialTicks) {
-        CannonBlockTile cannon = this.getInternalCannon();
-        return Vec3.directionFromRotation(cannon.getPitch(partialTicks),
-                cannon.getYaw(partialTicks) - this.getCannonGlobalYawOffset(partialTicks));
-    }
-
-    default void setCannonGlobalFacing(Vec3 direction) {
-        setCannonGlobalFacing(direction, false);
-    }
-
-    //shouldn't these be in cannon tile
-    default void setCannonGlobalFacing(Vec3 direction, boolean ignoreIfInvalid) {
-        CannonBlockTile cannon = this.getInternalCannon();
-        float yaw = (float) (MthUtils.getYaw(direction) + this.getCannonGlobalYawOffset(0));
-        float pitch = (float) MthUtils.getPitch(direction);
-        float oldYaw = cannon.getYaw(0);
-        float oldPitch = cannon.getPitch(0);
-        cannon.setYaw( yaw);
-        cannon.setPitch( pitch);
-        if (!ignoreIfInvalid) { //very ugly
-            float newYaw = cannon.getYaw(0);
-            float newPitch = cannon.getPitch(0);
-            if (newYaw != yaw || newPitch != pitch) {
-                //revert
-                cannon.setYaw(oldYaw);
-                cannon.setPitch(oldPitch);
-            }
-        }
-    }
 
     Restraint getPitchAndYawRestrains();
 
@@ -139,13 +107,6 @@ public interface CannonAccess {
         public void updateClients() {
             var level = cannon.getLevel();
             level.sendBlockUpdated(cannon.getBlockPos(), cannon.getBlockState(), cannon.getBlockState(), 3);
-        }
-
-        @Override
-        public void syncToServer(boolean fire, boolean removeOwner) {
-            NetworkHelper.sendToServer(new ServerBoundSyncCannonPacket(
-                    cannon.getYaw(), cannon.getPitch(), cannon.getPowerLevel(),
-                    fire, removeOwner, TileOrEntityTarget.of(this.cannon)));
         }
 
         @Override
