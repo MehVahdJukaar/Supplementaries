@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
@@ -51,7 +50,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         ManeuverButton maneuver = new ManeuverButton(i + 154, j + 10 + 6, manActive);
         this.addRenderableWidget(maneuver);
 
-        EulerAngles cannonAngles = cannon.getEulerAngles(1);
+        EulerAngles cannonAngles = cannon.getWorldEulerAngles(1);
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
         this.yawSelector.setNumber(cannonAngles.yaw());
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
@@ -84,7 +83,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         byte power = this.powerSelector.getPower();
         //update client immediately too
         Quaternionf wantedQuat = EulerAngles.of(yaw, pitch, 0).toQuaternion();
-        this.menu.cannon.setAttributes(yaw, pitch, power, false, minecraft.player);
+        this.menu.cannon.setAttributes(wantedQuat, power, false, minecraft.player);
         this.menu.cannon.syncToServer(false, !CannonController.isActive());
     }
 

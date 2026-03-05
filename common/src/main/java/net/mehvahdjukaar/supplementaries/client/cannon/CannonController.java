@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
@@ -145,12 +146,13 @@ public class CannonController {
     private static void updateCannonRenderAngles(float partialTick, float wantedYaw) {
         if (trajectory != null) {
             float followSpeed = 1;
-            //TODO: improve
-            cannon.setPitch(Mth.rotLerp(followSpeed, cannon.getPitch(),
-                    trajectory.pitch() * Mth.RAD_TO_DEG));
+            EulerAngles angles = cannon.getWorldEulerAngles(partialTick);
+
+            float newPitch = Mth.rotLerp(followSpeed, angles.pitch(),
+                    trajectory.pitch() * Mth.RAD_TO_DEG);
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            cannon.setRenderYaw(wantedYaw * Mth.RAD_TO_DEG +
-                            CannonController.cannon.getCannonGlobalYawOffset(partialTick));
+            float newYaw = wantedYaw * Mth.RAD_TO_DEG;
+            cannon.setWorldOrientation(EulerAngles.ofPitchAndYaw(newPitch, newYaw));
         }
     }
 

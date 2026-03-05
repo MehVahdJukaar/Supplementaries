@@ -177,9 +177,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
             BlockPos pos = result.getBlockPos();
             CannonballWhitelist wl = this.getItem().get(ModComponents.CANNONBALL_WHITELIST.get());
-            Set<Block> whitelist = wl != null ? wl.blocks(): null;
             //similar to level explode
-            Float exploded = explodeWithCannonball(level(), loc, pos, maxAmount, (float) radius, whitelist, movement);
+            Float exploded = explodeWithCannonball(level(), loc, pos, maxAmount, (float) radius, wl, movement);
             if (exploded == null) return;
             this.hasImpulse = true;
 
@@ -199,7 +198,8 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
         }
     }
 
-    private @Nullable Float explodeWithCannonball(Level level, Vec3 loc, BlockPos pos, float maxAmount, float radius, Set<Block> whitelist, Vec3 movement) {
+    private @Nullable Float explodeWithCannonball(Level level, Vec3 loc, BlockPos pos, float maxAmount, float radius,
+                                                  CannonballWhitelist whitelist, Vec3 movement) {
         CannonBallExplosion exp = new CannonBallExplosion(this.level(), this,
                 loc.x(), loc.y(), loc.z(), pos, maxAmount, radius, whitelist);
         if (ForgeHelper.fireOnExplosionStart(level, exp)) return null;

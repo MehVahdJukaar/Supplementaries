@@ -24,6 +24,7 @@ public class BoatReferenceFrame extends EntityReferenceFrame{
 
     }
 
+    @Deprecated(forRemoval = true)
     @Override
     public int oldGetYawOffset(float partialTicks) {
             return (int) (180 - boat.getViewYRot(partialTicks));

@@ -67,7 +67,6 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.cannon.setReferenceFrame(new BoatReferenceFrame(this));
         this.cannon.setRestraint(new Restraint(50, 360 - 50, 0, 180));
         this.cannon.setLevel(level);
-        this.cannon.setRenderYaw(0);
         this.setWoodType(VanillaWoodTypes.OAK);
     }
 

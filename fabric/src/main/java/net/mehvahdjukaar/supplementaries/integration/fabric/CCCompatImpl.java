@@ -153,7 +153,8 @@ public class CCCompatImpl {
 
         @LuaFunction
         public void setYaw(double value) {
-            tile.setYaw(acc, (float) value);
+            //TODO: cannon change
+            //tile.setYaw(acc, (float) value);
             acc.updateClients();
         }
 

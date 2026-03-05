@@ -57,12 +57,14 @@ public final class PlundererAICommon {
         var cannonTrajectory = comp.getFirst();
         float wantedGlobalYawDeg = comp.getSecond() * Mth.RAD_TO_DEG;
         if (cannonTrajectory != null) {
-            float cannonGlobalYawOffsetDeg = tile.getCannonGlobalYawOffset(0);
+            float cannonGlobalYawOffsetDeg = 0;
             float wantedLocalYawDeg = wantedGlobalYawDeg + cannonGlobalYawOffsetDeg;
             setCannonAnglesToFollowTrajectory(tile, cannonTrajectory, wantedLocalYawDeg);
 
             if (canShoot) {
-                float newCannonGlobalYaw = (tile.getYaw() - cannonGlobalYawOffsetDeg) * Mth.DEG_TO_RAD;
+                //TODO cannon change
+                float cannonYawTempCHange = 0; //tile.getYaw()
+                float newCannonGlobalYaw = (cannonYawTempCHange - cannonGlobalYawOffsetDeg) * Mth.DEG_TO_RAD;
 
                 Vec3 hitLoc = cannonTrajectory.getHitLocation(cannonGlobalPosition, newCannonGlobalYaw);
                 //distance
@@ -90,10 +92,11 @@ public final class PlundererAICommon {
         if (trajectory != null) {
             float followSpeed = 1;
             //TODO: improve
-            tile.setPitch(Mth.rotLerp(followSpeed, tile.getPitch(),
-                    trajectory.pitch() * Mth.RAD_TO_DEG));
+            //TODO: cannon change
+           // tile.setPitch(Mth.rotLerp(followSpeed, tile.getPitch(),
+             //       trajectory.pitch() * Mth.RAD_TO_DEG));
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            tile.setYaw(wantedLocalYawDeg);
+            //tile.setYaw(wantedLocalYawDeg);
 
             //sync
             tile.setChanged();

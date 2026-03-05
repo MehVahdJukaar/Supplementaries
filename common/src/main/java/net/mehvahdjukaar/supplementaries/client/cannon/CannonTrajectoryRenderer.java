@@ -47,7 +47,7 @@ public class CannonTrajectoryRenderer {
 
         poseStack.pushPose();
 
-        EulerAngles eulerAngles = tile.getEulerAngles(partialTicks);
+        EulerAngles eulerAngles = tile.getWorldEulerAngles(partialTicks);
 
         float yaw = eulerAngles.yaw() * Mth.DEG_TO_RAD;
 
@@ -71,7 +71,7 @@ public class CannonTrajectoryRenderer {
 
         if (!hitAir && debug && hit instanceof BlockHitResult bh) {
             //TODO: multiply by inverse rot
-            poseStack.mulPose(Axis.YP.rotationDegrees(-cannon.getCannonGlobalYawOffset(partialTicks)));
+            //poseStack.mulPose(Axis.YP.rotationDegrees(-cannon.getCannonGlobalYawOffset(partialTicks)));
             renderBlockReticule(poseStack, buffer, cannonPos, bh);
         }
     }

@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.*;
@@ -44,6 +44,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.UUID;
 
@@ -107,7 +108,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     private @NotNull Vec3 getCannonRecoil() {
         float power = this.getFirePower();
         float scale = 1;
-        Vec3 shootForce = this.getCannonGlobalFacing(1).scale(-power * scale);
+        Vec3 shootForce = new Vec3(this.getCannonGlobalFacing(1)).scale(-power * scale);
         return new Vec3(-shootForce.x, 0, -shootForce.z);
     }
 
@@ -335,7 +336,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
 
     protected boolean shootProjectile(ServerLevel serverLevel) {
-        Vec3 facing = this.getCannonGlobalFacing(1).scale(-1);
+        Vec3 facing = new Vec3(this.getCannonGlobalFacing(1)).scale(-1);
         ItemStack projectile = this.getProjectile().copy();
 
         if (projectile.getItem() instanceof CannonBallItem && breakWhitelist != null) {
@@ -411,43 +412,73 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     //new stuff
 
+    public void setLocalOrientation(EulerAngles angles) {
+        setLocalOrientation(angles.toQuaternion());
+    }
+
+    public void setLocalOrientation(Quaternionf localRot) {
+        //remove structure rot
+        Quaternionf structureRot = getStructureAdditionalRotation();
+        Quaternionf cannonRot = localRot.mul(structureRot.invert(new Quaternionf()));
+        //clamp
+        this.orientation.set(this.restraint.clamp(cannonRot));
+    }
+
+    public void setWorldOrientation(EulerAngles angles) {
+        setWorldOrientation(angles.toQuaternion());
+    }
+
+    public void setWorldOrientation(Quaternionf worldRot) {
+        Quaternionf referenceRot = referenceFrame.rotation(1);
+        Quaternionf inverseReferenceRot = referenceRot.invert(new Quaternionf());
+        Quaternionf localRot = worldRot.mul(inverseReferenceRot);
+        setLocalOrientation(localRot);
+    }
+
+    public Quaternionf getLocalOrientation(float partialTicks) {
+        Quaternionf rot = orientation.getRotation(partialTicks);
+        Quaternionf additionalRot = getStructureAdditionalRotation();
+        return rot.mul(additionalRot);
+    }
+
+    public Quaternionf getWorldOrientation(float partialTicks) {
+        Quaternionf localRot = getLocalOrientation(partialTicks);
+        Quaternionf referenceRot = referenceFrame.rotation(partialTicks);
+        return localRot.mul(referenceRot);
+    }
+
     public void setAttributes(Quaternionf quaternionf, byte firePower, boolean fire, Player controllingPlayer) {
-        this.orientation.set(quaternionf);
+        this.setLocalOrientation(quaternionf);
         this.setPowerLevel(firePower);
         if (fire) this.ignite(controllingPlayer);
     }
 
-    private float getStructureYaw() {
-        return this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90;
+    private Quaternionf getStructureAdditionalRotation() {
+        return RotHlpr.rot(this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
     }
 
-    public EulerAngles getEulerAngles(float partialTicks) {
-        EulerAngles angles = this.orientation.toEulerAngles(partialTicks);
-        angles = angles.add(0, getStructureYaw(), 0);
-        return angles;
+    public EulerAngles getLocalEulerAngles(float partialTicks) {
+        Quaternionf quat = this.getLocalOrientation(partialTicks);
+        return EulerAngles.fromRotation(quat);
     }
 
-    public void setEulerAngles(float pitch, float yaw) {
-        setEulerAngles(new EulerAngles(pitch, yaw, 0));
+    public EulerAngles getWorldEulerAngles(float partialTicks) {
+        Quaternionf quat = this.getWorldOrientation(partialTicks);
+        return EulerAngles.fromRotation(quat);
     }
 
-    public void setEulerAngles(EulerAngles angles) {
-        float additionalYaw = this.getStructureYaw();
-        Quaternionf q = new Quaternionf().rotateYXZ(
-                (float) Math.toRadians(angles.yaw() - additionalYaw),
-                (float) Math.toRadians(angles.pitch()),
-                (float) Math.toRadians(angles.roll()));
-        this.orientation.set(q);
+    public Vector3f getCannonGlobalFacing(float partialTicks) {
+        Quaternionf rot = getWorldOrientation(partialTicks);
+        Vector3f forward = new Vector3f(0, 0, 1);
+        rot.transform(forward);
+        return forward;
     }
 
-    public Vec3 getCannonGlobalFacing(float partialTicks) {
-        return referenceFrame.facing(partialTicks).add(this.getCannonLocalFacing(partialTicks));
-    }
-
-    private Vec3 getCannonLocalFacing(float partialTicks) {
-        float additionalYaw = this.getStructureYaw();
-        Vec3 localFacing = orientation.toForwardVector(partialTicks);
-        return localFacing.yRot(additionalYaw);
+    private Vector3f getCannonLocalFacing(float partialTicks) {
+        Quaternionf rot = getLocalOrientation(partialTicks);
+        Vector3f forward = new Vector3f(0, 0, 1);
+        rot.transform(forward);
+        return forward;
     }
 
     public Vec3 getGlobalPosition(float partialTicks) {
@@ -458,18 +489,14 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return referenceFrame.velocity();
     }
 
-    public float getCannonGlobalYawOffset(float partialTick) {
-        return referenceFrame.oldGetYawOffset(partialTick);
-    }
-
-    public Restraint getPitchAndYawRestrains() {
+    public Restraint getOrientationRestraints() {
         BlockState state = this.getBlockState();
         Direction dir = state.getValue(CannonBlock.FACING).getOpposite();
         return restraint.rotated(dir);
     }
 
-    // Network
 
+    // Network
     public void syncToServer(boolean fire, boolean removeOwner) {
         NetworkHelper.sendToServer(new ServerBoundSyncCannonPacket(
                 this.orientation.getRotation(1), this.getPowerLevel(),

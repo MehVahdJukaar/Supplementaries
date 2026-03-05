@@ -23,6 +23,22 @@ public final class Restraint {
         //TODO: use Mth and be in degrees instead of radians
     }
 
+    public float getMinYaw() {
+        return minYawDeg;
+    }
+
+    public float getMaxYaw() {
+        return maxYawDeg;
+    }
+
+    public float getMinPitch() {
+        return minPitchDeg;
+    }
+
+    public float getMaxPitch() {
+        return maxPitchDeg;
+    }
+
     public Quaternionf clamp(Quaternionf input) {
 
         Quaternionf rotation = new Quaternionf(input).normalize();

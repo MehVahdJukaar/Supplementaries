@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
+import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -35,17 +36,17 @@ public class CannonBallExplosion extends Explosion {
 
     private final BlockPos centerPos;
     private final float maxExplodedAmount;
-    private final @Nullable Set<Block> whitelist;
+    private final @Nullable CannonballWhitelist whitelist;
 
     private float explosionAmountLeft;
 
     public CannonBallExplosion(Level level, @Nullable Entity source, double toBlowX, double toBlowY, double toBlowZ,
                                BlockPos centerPos, float maxExplodedAmount, float maxRadius,
-                               @Nullable Set<Block> whitelist) {
+                               @Nullable CannonballWhitelist whitelist) {
         super(level, source, toBlowX, toBlowY, toBlowZ, maxRadius, false, BlockInteraction.DESTROY);
         this.centerPos = centerPos;
         this.maxExplodedAmount = maxExplodedAmount;
-        this.whitelist = maxRadius == 0 ? Set.of() : whitelist;
+        this.whitelist = maxRadius == 0 ? CannonballWhitelist.EMPTY : whitelist;
     }
 
     //client factory

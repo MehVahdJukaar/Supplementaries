@@ -178,24 +178,26 @@ public class CCCompatImpl {
 
         @LuaFunction
         public void setYaw(double value) {
-            tile.setYaw((float) value);
+          //  tile.setYaw((float) value); //TODO cannon change
             tile.updateClients();
         }
 
         @LuaFunction
         public float getYaw() {
-            return tile.getYaw();
+            return 0;// tile.getYaw();
         }
 
         @LuaFunction
         public void setPitch(double value) {
-            tile.setPitch((float) value);
+         //TODO cannon change
+
+        //    tile.setPitch((float) value);
             tile.updateClients();
         }
 
         @LuaFunction
         public float getPitch() {
-            return tile.getPitch();
+            return 0;// tile.getPitch();
         }
 
         @LuaFunction

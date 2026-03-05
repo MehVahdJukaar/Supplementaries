@@ -35,6 +35,10 @@ public class OrientationRig {
         this.prevRotation.set(this.rotation);
     }
 
+    public Quaternionf getRotation(float partialTicks) {
+        return new Quaternionf(prevRotation).slerp(rotation, partialTicks);
+    }
+
     public void pointToward(Vec3 target) {
         Vector3f t = target.toVector3f();
         t.normalize();
@@ -42,39 +46,10 @@ public class OrientationRig {
                 new Vector3f(t).negate(),
                 new Vector3f(0, 1, 0)
         );
-        this.rotation.set(targetRotation);
-    }
-
-    //cache?
-    public Vec3 toForwardVector(float partialTicks) {
-        Quaternionf q = getRotation(partialTicks);
-        Vector3f forward = new Vector3f(0, 0, 1);
-        q.transform(forward);
-        return new Vec3(forward);
-    }
-
-    public EulerAngles toEulerAngles(float partialTicks) {
-        Quaternionf q = getRotation(partialTicks);
-
-        Vector3f forward = new Vector3f(0, 0, 1);
-        q.transform(forward);
-
-        float yaw = (float) Math.atan2(forward.x, forward.z);
-        float pitch = (float) Math.atan2(
-                forward.y,
-                Math.sqrt(forward.x * forward.x + forward.z * forward.z)
-        );
-
-        return EulerAngles.fromRadians(pitch, yaw, 0);
-    }
-
-
-    public Quaternionf getRotation(float partialTicks) {
-        return new Quaternionf(prevRotation).slerp(rotation, partialTicks);
+        this.set(targetRotation);
     }
 
     public void set(Quaternionf quaternionf) {
         this.rotation.set(quaternionf);
-        this.prevRotation.set(quaternionf);
     }
 }

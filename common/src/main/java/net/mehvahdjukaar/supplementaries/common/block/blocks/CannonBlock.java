@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -164,7 +165,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                 float yaw = dir.toYRot();
                 wantedYaw = (myDir.getOpposite() == dir ? yaw + 180 : yaw);
             }
-            cannon.setEulerAngles(wantedPitch, wantedYaw);
+            cannon.setWorldOrientation(EulerAngles.ofPitchAndYaw(wantedPitch, wantedYaw));
         }
     }
 
@@ -332,6 +333,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                           Direction axis, @Nullable Vec3 hit) {
         if (axis.getAxis() == newState.getValue(FACING).getAxis() && world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             float angle = rotation.rotate(0, 4) * -90;
+            /*
             Vector3f currentDir = tile.getCannonGlobalFacing(0).toVector3f();
             Quaternionf q = new Quaternionf().rotateAxis(angle * Mth.DEG_TO_RAD, axis.step());
             currentDir.rotate(q);
@@ -339,7 +341,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             tile.setYaw((float) MthUtils.getYaw(newDir));
             tile.setPitch((float) MthUtils.getPitch(newDir));
             tile.setChanged();
-            tile.getLevel().sendBlockUpdated(pos, oldState, newState, 3);
+            tile.getLevel().sendBlockUpdated(pos, oldState, newState, 3);*/
         }
     }
 
@@ -348,6 +350,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     public void rotateAnalog(BlockState state, Level level, BlockPos pos, Direction face, boolean ccw, float speed) {
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             speed = speed * 0.01f;
+            /*
             float deltaAngle = -speed * (ccw ? -1 : 1);
             Vector3f rotAxis = face.step();
             Vector3f facingVec = tile.getCannonGlobalFacing(0).toVector3f();
@@ -357,6 +360,8 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             Vec3 newDir = new Vec3(facingVec);
             tile.setCannonGlobalFacing(newDir, true);
             tile.setChanged();
+
+             */
             //  level.sendBlockUpdated(pos, state, state, 3);
         }
     }

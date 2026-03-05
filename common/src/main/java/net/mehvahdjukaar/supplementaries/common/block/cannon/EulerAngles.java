@@ -17,8 +17,26 @@ public record EulerAngles(float pitch, float yaw, float roll) {
         return new EulerAngles(pitch, yaw, roll);
     }
 
+    public static EulerAngles ofPitchAndYaw(float pitch, float yaw) {
+        return of(pitch, yaw, 0);
+    }
+
     public static EulerAngles fromRadians(float pitchRad, float yawRad, float rollRad) {
         return new EulerAngles((float) Math.toDegrees(pitchRad), (float) Math.toDegrees(yawRad), (float) Math.toDegrees(rollRad));
+    }
+
+    public static EulerAngles fromRotation(Quaternionf q){
+
+        Vector3f forward = new Vector3f(0, 0, 1);
+        q.transform(forward);
+
+        float yaw = (float) Math.atan2(forward.x, forward.z);
+        float pitch = (float) Math.atan2(
+                forward.y,
+                Math.sqrt(forward.x * forward.x + forward.z * forward.z)
+        );
+
+        return EulerAngles.fromRadians(pitch, yaw, 0);
     }
 
     public Vec3 toVec3() {

@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -75,8 +76,10 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
 
-        float pitchRad = tile.getPitch(partialTick) * Mth.DEG_TO_RAD;
-        float yawRad = tile.getYaw(partialTick) * Mth.DEG_TO_RAD;
+        EulerAngles eulerAngles = tile.getLocalEulerAngles(partialTick);
+
+        float pitchRad = eulerAngles.pitch() * Mth.DEG_TO_RAD;
+        float yawRad = eulerAngles.yaw() * Mth.DEG_TO_RAD;
 
         Vector3f forward = new Vector3f(0f, 0, 1);
 

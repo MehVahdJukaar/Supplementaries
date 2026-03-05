@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
@@ -55,6 +56,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -560,13 +562,12 @@ public class ClientReceivers {
     private static void playFiringEffects(CannonBlockTile cannon) {
         PoseStack poseStack = calculateGlobalCannonPose(cannon);
         Level level = cannon.getLevel();
-        float yaw = cannon.getYaw() - cannon.getCannonGlobalYawOffset(1);
-        float pitch = cannon.getPitch();
+        EulerAngles eulerAngles = cannon.getWorldEulerAngles(1);
         float power = cannon.getPowerLevel();
         Vec3 pos = cannon.getGlobalPosition(1);
         Vec3 speed = cannon.getGlobalVelocity();
         speed = speed.scale(0.3);
-        var opt = new CannonFireParticle.Options(pitch, yaw, 1);
+        var opt = new CannonFireParticle.Options(eulerAngles.pitch(), eulerAngles.yaw(), 1);
         speed = Vec3.ZERO;
         level.addParticle(opt, pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
         RandomSource ran = level.random;
@@ -582,15 +583,11 @@ public class ClientReceivers {
     }
 
     private static PoseStack calculateGlobalCannonPose(CannonBlockTile cannon) {
-        float yaw = cannon.getYaw() - cannon.getCannonGlobalYawOffset(1);
-        float pitch = cannon.getPitch();
-        //TODO: change
+        Quaternionf globalRot = cannon.getWorldOrientation(1);
         PoseStack poseStack = new PoseStack();
         var pos = cannon.getGlobalPosition(1);
         poseStack.translate(pos.x, pos.y + 1 / 16f, pos.z);
-
-        poseStack.mulPose(Axis.YP.rotationDegrees(-yaw));
-        poseStack.mulPose(Axis.XP.rotationDegrees(pitch));
+        poseStack.mulPose(globalRot);
         poseStack.translate(0, 0, -1.4);
         return poseStack;
     }

@@ -43,10 +43,10 @@ public class CannonUtils {
         //so we hopefully hit the block we are looking at
         localTarget = localTarget.add(localTarget.normalize().scale(0.05f));
 
-        Restraint restraints = cannon.getPitchAndYawRestrains();
+        Restraint restraints = cannon.getOrientationRestraints();
         BallisticData ballistic = cannon.getTrajectoryData();
-        float minPitch = restraints.minPitch() * Mth.DEG_TO_RAD;
-        float maxPitch = restraints.maxPitch() * Mth.DEG_TO_RAD;
+        float minPitch = restraints.getMinPitch() * Mth.DEG_TO_RAD;
+        float maxPitch = restraints.getMaxPitch() * Mth.DEG_TO_RAD;
 
         var vec3ToPoint = vec3ToPoint2d(localTarget);
         Vec2 targetPoint = vec3ToPoint.getFirst();

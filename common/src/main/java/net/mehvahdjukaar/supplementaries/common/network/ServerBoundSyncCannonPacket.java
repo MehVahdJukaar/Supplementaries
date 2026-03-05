@@ -43,7 +43,7 @@ public record ServerBoundSyncCannonPacket(
             if (access != null) {
                 var cannon = access.getInternalCannon();
                 if (cannon.canBeUsedBy(BlockPos.containing(access.getCannonGlobalPosition(1)), player)) {
-                    cannon.setAttributes(this.yaw, this.pitch, this.firePower, this.fire, player);
+                    cannon.setAttributes(this.rotation, this.firePower, this.fire, player);
                     cannon.setChanged();
                     if (stopControlling) {
                         cannon.setCurrentUser(null);
