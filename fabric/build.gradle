@@ -83,9 +83,8 @@ dependencies {
 
     include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")))
 
-    modApi("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}"){
-        transitive = false
-    }
+    if (maven_backup.toBoolean()) modApi("maven.modrinth:moonlight:$moonlight_version-fabric")
+    else modApi("net.mehvahdjukaar:moonlight-fabric:$moonlight_version:fabric") { transitive = false }
 
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_version}") {
         exclude group: 'net.fabricmc.fabric-api'
@@ -119,8 +118,9 @@ dependencies {
     modCompileOnly("curse.maven:decorative-blocks-reborn-1327768:6897415")
     modCompileOnly("curse.maven:cc-tweaked-282001:5714511")
     modCompileOnly("curse.maven:jei-238222:5846878")
-    //modCompileOnly("curse.maven:amendments-896746:5791204")
-    modCompileOnly("net.mehvahdjukaar:amendments-fabric:1.21-2.0.9"){
+
+    if (maven_backup.toBoolean()) modCompileOnly("maven.modrinth:amendments:1.21-2.0.15-fabric")
+    else modCompileOnly("net.mehvahdjukaar:amendments-fabric:1.21-2.0.9"){
         transitive = false
     }
 
