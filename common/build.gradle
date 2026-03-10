@@ -40,7 +40,7 @@ dependencies {
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
     if (maven_backup.toBoolean()) modApi("maven.modrinth:moonlight:$moonlight_version-fabric")
-    else modApi("net.mehvahdjukaar:moonlight:$moonli2ht_version") { transitive = false }
+    else modApi("net.mehvahdjukaar:moonlight:$moonlight_version") { transitive = false }
 
 
     modCompileOnly("curse.maven:irisshaders-455508:5726473")
