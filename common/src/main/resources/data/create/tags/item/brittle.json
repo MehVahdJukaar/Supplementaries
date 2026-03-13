@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    {"id":"#supplementaries:candle_holders","required":false},
-    {"id":"#supplementaries:sconces","required":false},
-    {"id":"supplementaries:sconce_lever","required":false}
-  ]
-}
