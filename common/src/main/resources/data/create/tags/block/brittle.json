@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    {"id":"#supplementaries:candle_holders","required":false},
+    {"id":"#supplementaries:sconces","required":false},
+    {"id":"#supplementaries:buntings","required":false},
+    {"id":"supplementaries:ash","required":false},
+    {"id":"supplementaries:barnacles","required":false},
+    {"id":"supplementaries:crank","required":false},
+    {"id":"supplementaries:doormat","required":false},
+    {"id":"supplementaries:item_shelf","required":false},
+    {"id":"supplementaries:pancake","required":false},
+    {"id":"supplementaries:sconce_lever","required":false}
+  ]
+}
