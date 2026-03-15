@@ -2,13 +2,13 @@
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
-      "flag": "present"
+      "flag": "trapped_present"
     }
   ],
   "neoforge:conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "present"
+      "flag": "trapped_present"
     }
   ],
   "type": "minecraft:crafting_shaped",
@@ -26,7 +26,7 @@
     }
   },
   "result": {
-    "id": "supplementaries:present",
+    "id": "supplementaries:trapped_present",
     "count": 1
   }
 }
