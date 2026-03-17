@@ -9,7 +9,9 @@
     "outdated": ["out of date", "out dated"],
     "not related": ["not my issue", "report there", "100% their issue"],
     "duplicate": ["duplicate"],
-    "conflict": ["conflicted with", "is a conflict"]
+    "conflict": ["conflicted with", "is a conflict"],
+    "NEO/FORGE": ["FORGE", "NEOFORGE"],
+    "FABRIC": ["FABRIC"]
   },
   labelsNotAllowed: [
     'done',
