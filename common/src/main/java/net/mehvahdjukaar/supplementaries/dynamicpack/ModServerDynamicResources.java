@@ -158,7 +158,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
             }
             try {
                 sink.addBlockTypeSwapRecipe(manager, Supplementaries.res("cannon_boat_oak"),
-                        VanillaWoodTypes.OAK, w, Supplementaries.res("cannon_boat"));
+                        VanillaWoodTypes.OAK, w, Supplementaries.res("cannon_boat" + "_" + w.getTypeName()));
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to generate recipe for cannon boat {}:", i, e);
             }
@@ -176,7 +176,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
             }
             try {
                 sink.addBlockTypeSwapRecipe(manager, Supplementaries.res("way_sign_oak"), VanillaWoodTypes.OAK, w,
-                        Supplementaries.res("way_sign"));
+                        Supplementaries.res("way_sign" + "_" + w.getTypeName()));
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
             }
