@@ -52,10 +52,10 @@ public class ClientBoundParticlePacket implements Message {
     }
 
     public ClientBoundParticlePacket(Vec3 pos, Kind type, Integer extraData) {
-        this(pos, type, null, extraData);
+        this(pos, type, null, extraData == null ? new int[]{} : new int[]{extraData});
     }
 
-    public ClientBoundParticlePacket(Vec3 pos, Kind type, @Nullable Vec3 direction, int... extraData) {
+    public ClientBoundParticlePacket(@Nullable Vec3 pos, Kind type, @Nullable Vec3 direction, int @NotNull ... extraData) {
         this.pos = pos;
         this.type = type;
         this.dir = direction;

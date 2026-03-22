@@ -640,11 +640,8 @@ public class ModCreativeTabs {
         private void before(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemStack... items) {
             if (MOD_TAB != null) {
                 add(tab, items);
-                return;
             }
-            for (ItemStack stack : items) {
-                event.addBefore(tab, target, stack);
-            }
+            else event.addBefore(tab, target, items);
         }
 
         private void before(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemLike... items) {
@@ -655,11 +652,8 @@ public class ModCreativeTabs {
         private void after(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemStack... items) {
             if (MOD_TAB != null) {
                 add(tab, items);
-                return;
             }
-            for (ItemStack stack : items) {
-                event.addAfter(tab, target, stack);
-            }
+           else event.addAfter(tab, target, items);
         }
 
         private void after(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemLike... items) {

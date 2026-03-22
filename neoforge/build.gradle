@@ -122,7 +122,8 @@ dependencies {
     modCompileOnly("curse.maven:configured-457570:5873783")
     modCompileOnly("curse.maven:amendments-896746:6905701")
     //modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140")
-    // modRuntimeOnly("curse.maven:regions-unexplored-659110:5579932")
+  //  modRuntimeOnly("curse.maven:regions-unexplored-659110:7745476")
+//    modRuntimeOnly("curse.maven:lithostitched-936015:7731887")
 
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
     //modImplementation("curse.maven:forgified-fabric-api-889079:6289153")
