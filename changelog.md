@@ -1,2 +1,1 @@
-- fixed a crash with round globes
-- random misc fixes
+- Fixed the missing recipes for way_sign & cannon_boat - [#1924](https://github.com/MehVahdJukaar/Supplementaries/issues/1924)

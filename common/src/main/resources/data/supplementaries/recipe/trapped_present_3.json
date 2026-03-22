@@ -2,7 +2,7 @@
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
-      "flag": "present"
+      "flag": "trapped_present"
     },
     {
       "condition": "fabric:mod_loaded",
@@ -12,7 +12,7 @@
   "neoforge:conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "present"
+      "flag": "trapped_present"
     },
     {
       "type": "neoforge:mod_loaded",
@@ -27,14 +27,14 @@
   ],
   "key": {
     "0": {
-      "item": "minecraft:paper"
+      "item": "create:cardboard"
     },
     "1": {
       "item": "minecraft:tripwire_hook"
     }
   },
   "result": {
-    "id": "supplementaries:present",
+    "id": "supplementaries:trapped_present",
     "count": 1
   }
 }

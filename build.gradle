@@ -24,7 +24,7 @@ allprojects {
         flatDir { dirs "mods" }
 
         // Our publishing repo
-        maven { url = "https://registry.somethingcatchy.net/repository/maven-releases/" }
+        if (!maven_backup.toBoolean()) maven { url = "https://registry.somethingcatchy.net/repository/maven-releases/" }
 
         maven { url = "https://api.modrinth.com/maven" }
         maven { url = "https://www.cursemaven.com" }

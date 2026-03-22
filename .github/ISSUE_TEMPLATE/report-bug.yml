@@ -18,6 +18,7 @@ body:
         - You tested by isolating the issue (disable mods and re-enable 1–2 at a time)
         - You searched existing issues to avoid duplicates
 
+        NOTE: If you are using Sodium, remove it because it causes problems or crash. Use Embeddium
         Failure to follow these steps may result in the issue being closed.
 
   - type: checkboxes
