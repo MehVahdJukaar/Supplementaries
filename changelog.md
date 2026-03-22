@@ -1,2 +1,2 @@
-- fixed a crash with quivers due to a recent pr change. Slot reference registry is once again synced as such was its whole purpose
-- fixed an issue with immediately fast
+- fixed an issue with soap
+- fixed some tab ordering logic flipping otder of stuff
