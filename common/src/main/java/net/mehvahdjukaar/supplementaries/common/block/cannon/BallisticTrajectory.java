@@ -8,7 +8,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-
 public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, boolean miss,
                                   float gravity, float drag, float v0x, float v0y) {
 
@@ -54,7 +53,7 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
                     miss, gravity, drag, v0x, v0y);
         }
 
-        float tolerance = 0.001f;
+        float targetTolerance = 0.001f;
 
         float start = (float) targetAngle + 0.01f; // Initial pitch
         float end = (float) Math.PI / 2; // Maximum pitch (90 degrees)
@@ -62,8 +61,8 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
         Vec2 farAway = targetPoint.scale(1000);
         // calculate trajectory that gives max distance = global maxima. 2 roots we need are either to its right or left pitch wise
         BallisticTrajectory furthestTrajectory = findBestTrajectoryGoldenSection(farAway, gravity, drag, initialPow,
-                0.01f,
-                tolerance, start, end);
+                0.001f,
+                targetTolerance, start, end);
         float peakAngle = furthestTrajectory.pitch();
 
         // that function has 2 solutions. we need to reduce the angles we search, so we converge on the first one
@@ -71,12 +70,12 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
         BallisticTrajectory solution;
         if (mode == ShootingMode.DOWN && minPitch < peakAngle) {
             solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
-                    0.001f,
-                    tolerance, Math.max(start, minPitch), Math.min(peakAngle, maxPitch));
+                    0.0001f,
+                    targetTolerance, Math.max(start, minPitch), Math.min(peakAngle, maxPitch));
         } else {
             solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
-                    0.001f,
-                    tolerance, Math.max(peakAngle, minPitch), Math.min(end, maxPitch));
+                    0.0001f,
+                    targetTolerance, Math.max(peakAngle, minPitch), Math.min(end, maxPitch));
         }
         return new BallisticTrajectory(solution.pointHit, -solution.pitch,
                 solution.finalTime, solution.miss, solution.gravity, solution.drag, solution.v0x, solution.v0y);
@@ -239,13 +238,21 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
      * @param gravity     Gravity
      * @param drag        Drag (v multiplier)
      * @param initialPow  Initial velocity
-     * @param tolerance   Tolerance for stopping the search
+     * @param targetTolerance   Tolerance for stopping the search
      * @return Trajectory object containing the best point, pitch, time, and miss flag
      */
     private static BallisticTrajectory findBestTrajectoryGoldenSection(Vec2 targetPoint, float gravity, float drag, float initialPow,
-                                                                       float angleTolerance, float tolerance,
+                                                                       float angleTolerance, float targetTolerance,
                                                                        float start, float end) {
-        float targetSlope = targetPoint.y / targetPoint.x;
+        // ---- FIX: prevent division by zero when targetPoint.x is 0 ----
+        float targetSlope;
+        if (Math.abs(targetPoint.x) < 1e-8) {
+            // vertical line – treat as an extremely steep slope
+            targetSlope = targetPoint.y > 0 ? Float.POSITIVE_INFINITY : Float.NEGATIVE_INFINITY;
+        } else {
+            targetSlope = targetPoint.y / targetPoint.x;
+        }
+        // -------------------------------------------------------------
 
         // Define golden ratio
         final float goldenRatio = MthUtils.PHI - 1;
@@ -280,8 +287,8 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
             float v0y2 = (float) (Math.sin(midAngle2) * initialPow);
 
             // Find the intersection points for the two intermediate angles
-            var r1 = findLineIntersection(targetSlope, gravity, drag, v0x1, v0y1, tolerance);
-            var r2 = findLineIntersection(targetSlope, gravity, drag, v0x2, v0y2, tolerance);
+            var r1 = findLineIntersection(targetSlope, gravity, drag, v0x1, v0y1, targetTolerance);
+            var r2 = findLineIntersection(targetSlope, gravity, drag, v0x2, v0y2, targetTolerance);
 
             // Calculate distances from the target for the intersection points
             float distance1 = r1 != null ? targetPoint.distanceToSqr(r1.getFirst()) : Float.MAX_VALUE;
@@ -330,13 +337,9 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
                 Supplementaries.error();
             }
 
-            if (!(Math.abs(endAngle - startAngle) > angleTolerance)) {
-                int aa = 1;
-            }
-
             // Update the best result if a closer point is found
             // has to be bigger than line search tolerance otherwise we wont find a solution
-            if (lastBestDist < (tolerance * 10)) {
+            if (lastBestDist < (targetTolerance * 10)) {
                 bestPoint = targetPoint;
                 miss = false;
                 break; // Stop iterating if the difference in distances is below the tolerance
@@ -485,8 +488,9 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
      * @param V0y initial velocity
      */
     public static double arcY(double t, float g, float d, float V0y) {
-        // if (d == 1) return V0y * t - 0.5 * g * t * t;
-        if (d == 1) return V0y * t;
+        // ---- FIX: added missing gravity term for no drag case ----
+        if (d == 1) return V0y * t - 0.5 * g * t * t;
+        // ----------------------------------------------------------
         float k = g / (d - 1);
         double inLog = 1 / Math.log(d);
         return ((V0y - k) * inLog * (Math.pow(d, t) - 1) + k * t);
