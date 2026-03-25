@@ -38,6 +38,7 @@ public class OrientationRig {
     }
 
     public Quaternionf getRotation(float partialTicks) {
+        if(true)return new Quaternionf(rotation);
         return new Quaternionf(prevRotation).slerp(rotation, partialTicks);
     }
 

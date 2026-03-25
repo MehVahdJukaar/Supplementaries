@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
@@ -34,9 +33,8 @@ public class CannonUtils {
         );
     }
 
-    public static Pair<@Nullable CannonTrajectory, Float> computeTrajectory(
-            CannonBlockTile cannon,
-            Vec3 targetPos, ShootingMode shootingMode) {
+    public static BallisticTrajectory3D computeTrajectory(
+            CannonBlockTile cannon, Vec3 targetPos, ShootingMode shootingMode) {
         Vec3 cannonPos = cannon.getGlobalPosition(0);
 
         Vec3 localTarget = targetPos.subtract(cannonPos);
@@ -49,27 +47,25 @@ public class CannonUtils {
         float maxPitch = restraints.getMaxPitch() * Mth.DEG_TO_RAD;
 
         var vec3ToPoint = vec3ToPoint2d(localTarget);
-        Vec2 targetPoint = vec3ToPoint.getFirst();
-        float initialYaw = vec3ToPoint.getSecond();
 
-        CannonTrajectory trajectory = CannonTrajectory.findBest(targetPoint,
-
+        BallisticTrajectory trajectory = BallisticTrajectory.findBest(vec3ToPoint.target,
                 ballistic.gravity(), ballistic.drag(),
                 cannon.getFirePower() * ballistic.initialSpeed(),
                 shootingMode,
                 minPitch, maxPitch);
-        return Pair.of(trajectory, initialYaw);
+        return trajectory == null ? null : new BallisticTrajectory3D(trajectory, vec3ToPoint.yaw);
     }
 
+    private record Target2dAndYaw(Vec2 target, float yaw) {}
 
     public static Vec3 point2dToVec3(Vec2 point, float yaw) {
-        return new Vec3(0, point.y, -point.x).yRot(-yaw);
+        return new Vec3(0, point.y, point.x).yRot(-yaw);
     }
 
-    public static Pair<Vec2, Float> vec3ToPoint2d(Vec3 point) {
-        float yaw = Mth.PI + (float) Mth.atan2(-point.x, point.z);
+    private static Target2dAndYaw vec3ToPoint2d(Vec3 point) {
+        float yaw = (float) Mth.atan2(-point.x, point.z);
         Vec2 vec2 = new Vec2((float) Mth.length(point.x, point.z), (float) point.y);
-        return Pair.of(vec2, yaw);
+        return new Target2dAndYaw(vec2, yaw);
     }
 
     public static void spawnSmokeTrail(Level level, PoseStack poseStack, RandomSource ran, Vec3 sp) {

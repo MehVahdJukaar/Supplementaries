@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.ModRenderTypes;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -51,7 +51,7 @@ public class CannonTrajectoryRenderer {
         Quaternionf rot = tile.getWorldOrientation(partialTicks);
         EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
 
-        float yaw = eulerAngles.yaw() * Mth.DEG_TO_RAD;
+        float yaw = (eulerAngles.yaw()) * Mth.DEG_TO_RAD;
 
         //rotate so we can work in 2d
 
@@ -112,14 +112,14 @@ public class CannonTrajectoryRenderer {
         VertexConsumer consumer = buffer.getBuffer(RenderType.lines());
         var pose = poseStack.last();
         consumer.addVertex(pose, 0, 0, 0).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 1.0F, 0.0F);
-        consumer.addVertex(pose, 0, target.y, -target.x).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 1.0F, 0.0F);
-        consumer.addVertex(pose, 0.01f, target.y, -target.x).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 0.0F, 1.0F);
+        consumer.addVertex(pose, 0, target.y, target.x).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 1.0F, 0.0F);
+        consumer.addVertex(pose, 0.01f, target.y, target.x).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 0.0F, 1.0F);
         consumer.addVertex(pose, 0.01f, 0, 0).setColor(255, 0, 0, 255).setNormal(pose, 0.0F, 0.0F, 1.0F);
     }
 
 
     private static void renderArrows(PoseStack poseStack, MultiBufferSource buffer, float partialTicks,
-                                     CannonTrajectory trajectory, boolean hitAir, boolean red) {
+                                     BallisticTrajectory trajectory, boolean hitAir, boolean red) {
 
         float finalTime = (float) trajectory.finalTime();
         if (finalTime > 100000) {
@@ -150,7 +150,7 @@ public class CannonTrajectoryRenderer {
                     .setUv(5 / 16f, textureStart);
 
             double ny = trajectory.getY(t);
-            double nx = -trajectory.getX(t);
+            double nx = trajectory.getX(t);
 
             float dis = (float) (Mth.length(nx - px, ny - py)) / scale;
             float textEnd = textureStart + dis;

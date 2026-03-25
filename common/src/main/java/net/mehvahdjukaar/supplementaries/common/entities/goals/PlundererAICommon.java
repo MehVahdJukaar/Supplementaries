@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory3D;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -52,10 +53,10 @@ public final class PlundererAICommon {
         power = (byte) Math.min(power, maxPower);
         tile.setPowerLevel(power);
 
-        var comp = CannonUtils.computeTrajectory(tile, targetLoc, ShootingMode.DOWN);
+        BallisticTrajectory3D comp = CannonUtils.computeTrajectory(tile, targetLoc, ShootingMode.DOWN);
 
-        var cannonTrajectory = comp.getFirst();
-        float wantedGlobalYawDeg = comp.getSecond() * Mth.RAD_TO_DEG;
+        var cannonTrajectory = comp.trajectory();
+        float wantedGlobalYawDeg = comp.yaw() * Mth.RAD_TO_DEG;
         if (cannonTrajectory != null) {
             float cannonGlobalYawOffsetDeg = 0;
             float wantedLocalYawDeg = wantedGlobalYawDeg + cannonGlobalYawOffsetDeg;
@@ -87,7 +88,7 @@ public final class PlundererAICommon {
 
     }
 
-    private static void setCannonAnglesToFollowTrajectory(CannonBlockTile tile, CannonTrajectory trajectory,
+    private static void setCannonAnglesToFollowTrajectory(CannonBlockTile tile, BallisticTrajectory trajectory,
                                                           float wantedLocalYawDeg) {
         if (trajectory != null) {
             float followSpeed = 1;

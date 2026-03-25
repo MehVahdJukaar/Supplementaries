@@ -1,9 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonTrajectory;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.client.Camera;
@@ -40,7 +37,7 @@ public class CannonController {
     protected static ShootingMode shootingMode = ShootingMode.DOWN;
 
     @Nullable
-    protected static CannonTrajectory trajectory;
+    protected static BallisticTrajectory trajectory;
 
     // lerp camera
     private static Vec3 lastCameraPos;
@@ -133,27 +130,27 @@ public class CannonController {
             hit = level.clip(new ClipContext(actualCameraPos, endPos,
                     ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
 
-            var comp = CannonUtils.computeTrajectory(cannon, hit.getLocation(), shootingMode);
+            BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, hit.getLocation(), shootingMode);
 
-            trajectory = comp.getFirst();
-            float wantedYaw = comp.getSecond();
-
-            updateCannonRenderAngles(partialTick, wantedYaw);
+            setCannonTrajectory(partialTick, comp);
         }
 
         return true;
     }
 
-    private static void updateCannonRenderAngles(float partialTick, float wantedYaw) {
+    private static void setCannonTrajectory(float partialTick, @Nullable BallisticTrajectory3D trajectory3D) {
+        trajectory = trajectory3D == null ? null : trajectory3D.trajectory();
         if (trajectory != null) {
             float followSpeed = 1;
             Quaternionf rot = cannon.getWorldOrientation(partialTick);
             EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
 
+            //we used some flipped coordinates in trajectory calculation. we got to adjust them here.
+            //TODO: flip them in the calculation code itself
             float newPitch = Mth.rotLerp(followSpeed, eulerAngles.pitch(),
-                    trajectory.pitch() * Mth.RAD_TO_DEG);
+                    trajectory.pitch() * Mth.RAD_TO_DEG) ;
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            float newYaw = wantedYaw * Mth.RAD_TO_DEG;
+            float newYaw = trajectory3D.yaw() * Mth.RAD_TO_DEG;
             cannon.setWorldOrientation(EulerAngles.ofPitchAndYaw(newPitch, newYaw)
                     .toQuaternion());
         }

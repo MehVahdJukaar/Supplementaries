@@ -19,7 +19,7 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
                                                float minPitch, float maxPitch) {
         if (initialPow == 0) return null;
 
-        double targetAngle = -Math.atan2(targetPoint.y, targetPoint.x);
+        double targetAngle = Math.atan2(targetPoint.y, targetPoint.x);
 
         if (gravity == 0 || mode == ShootingMode.STRAIGHT) {
             float v0x = Mth.cos((float) targetAngle) * initialPow;
@@ -78,7 +78,8 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
                     0.001f,
                     tolerance, Math.max(peakAngle, minPitch), Math.min(end, maxPitch));
         }
-        return solution;
+        return new BallisticTrajectory(solution.pointHit, -solution.pitch,
+                solution.finalTime, solution.miss, solution.gravity, solution.drag, solution.v0x, solution.v0y);
     }
 
     /**

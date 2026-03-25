@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
@@ -19,6 +20,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
 public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockTile> {
@@ -62,6 +64,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         renderCannonModel(this, tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
         poseStack.popPose();
+
     }
 
     public static void renderCannonModel(CannonBlockTileRenderer renderer,
@@ -69,18 +72,26 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
                                          MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
         poseStack.pushPose();
-        Quaternionf rotation = tile.getBlockState().getValue(CannonBlock.FACING).getOpposite().getRotation();
+        Quaternionf cannonBaseRot = tile.getBlockState().getValue(CannonBlock.FACING).getOpposite().getRotation();
 
-        poseStack.mulPose(rotation);
+
+        Quaternionf cannonHeadRot = tile.getLocalOrientation(partialTick);
+
+        if (PlatHelper.isDev()) {
+            renderDebug(tile, poseStack, bufferSource, cannonHeadRot);
+        }
 
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
 
-        Quaternionf rot = tile.getLocalOrientation(partialTick);
-        EulerAngles ang = EulerAngles.fromRotation(rot);
+      //  cannonHeadRot.mul(cannonBaseRot.invert());
 
-        renderer.legs.yRot = ang.yaw() * Mth.DEG_TO_RAD;
-        renderer.pivot.xRot =ang.pitch() * Mth.DEG_TO_RAD;
-        renderer.pivot.zRot =   ang.roll() * Mth.DEG_TO_RAD;
+        EulerAngles ang = EulerAngles.fromRotation(cannonHeadRot);
+
+        poseStack.mulPose(cannonBaseRot);
+
+        renderer.legs.yRot = (180 + ang.yaw()) * Mth.DEG_TO_RAD;
+        renderer.pivot.xRot = (ang.pitch()) * Mth.DEG_TO_RAD;
+        renderer.pivot.zRot = (ang.roll()) * Mth.DEG_TO_RAD;
 
         // animation
         float cooldownCounter = tile.getCooldownAnimation(partialTick);
@@ -119,6 +130,28 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         else {
             return 0;
         }
+    }
+
+    private static void renderDebug(CannonBlockTile tile, PoseStack poseStack,
+                                    MultiBufferSource bufferSource, Quaternionf quat) {
+
+        poseStack.pushPose();
+        PoseStack.Pose pose = poseStack.last();
+        VertexConsumer vc = bufferSource.getBuffer(RenderType.lines());
+
+        EulerAngles angles = EulerAngles.fromRotation(quat);
+        float tileYaw = angles.yaw();
+        float tilePitch = angles.pitch();
+        var tileView = Vec3.directionFromRotation(tilePitch, tileYaw).normalize();
+        vc.addVertex(pose, 0, 0, 0)
+                .setColor(30, 30, 255, 255)
+                .setNormal(pose, 0, 1, 0);
+        vc.addVertex(pose, (float) tileView.x, (float) tileView.y, (float) tileView.z)
+                .setColor(30, 30, 255, 255)
+                .setNormal(pose, 0, 1, 0);
+
+
+        poseStack.popPose();
     }
 
 
