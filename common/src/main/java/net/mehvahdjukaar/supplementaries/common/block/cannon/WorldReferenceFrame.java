@@ -3,7 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.block.cannon;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 
 public class WorldReferenceFrame implements ReferenceFrame {
 
@@ -19,8 +21,8 @@ public class WorldReferenceFrame implements ReferenceFrame {
     }
 
     @Override
-    public Vec3 facing(float partialTicks) {
-        return Vec3.ZERO;
+    public Quaternionf getRotation(float partialTicks) {
+        return new Quaternionf();
     }
 
     @Override

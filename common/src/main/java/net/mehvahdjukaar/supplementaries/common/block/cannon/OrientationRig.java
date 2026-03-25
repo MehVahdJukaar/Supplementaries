@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
@@ -22,9 +23,10 @@ public class OrientationRig {
     private final Quaternionf rotation;
     private final Quaternionf prevRotation;
 
-    public OrientationRig(Quaternionf rot, Quaternionf prevRot) {
+    private OrientationRig(Quaternionf rot, Quaternionf prevRot) {
         this.rotation = rot;
         this.prevRotation = prevRot;
+        this.validateOrientation();
     }
 
     public OrientationRig() {
@@ -46,10 +48,22 @@ public class OrientationRig {
                 new Vector3f(t).negate(),
                 new Vector3f(0, 1, 0)
         );
-        this.set(targetRotation);
+        this.orient(targetRotation);
     }
 
-    public void set(Quaternionf quaternionf) {
+    public void orient(Quaternionf quaternionf) {
         this.rotation.set(quaternionf);
+        this.validateOrientation();
+    }
+
+    private void validateOrientation() {
+        if (!this.rotation.isFinite()){
+            Supplementaries.error("OrientationRig rotation is not finite");
+            this.rotation.set(new Quaternionf());
+        }
+        if (!this.prevRotation.isFinite()){
+            Supplementaries.error("OrientationRig prevRotation is not finite");
+            this.prevRotation.set(new Quaternionf());
+        }
     }
 }

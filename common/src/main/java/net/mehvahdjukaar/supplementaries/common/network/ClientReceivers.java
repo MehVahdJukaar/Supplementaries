@@ -562,7 +562,8 @@ public class ClientReceivers {
     private static void playFiringEffects(CannonBlockTile cannon) {
         PoseStack poseStack = calculateGlobalCannonPose(cannon);
         Level level = cannon.getLevel();
-        EulerAngles eulerAngles = cannon.getWorldEulerAngles(1);
+        Quaternionf rot = cannon.getWorldOrientation(1);
+        EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
         float power = cannon.getPowerLevel();
         Vec3 pos = cannon.getGlobalPosition(1);
         Vec3 speed = cannon.getGlobalVelocity();

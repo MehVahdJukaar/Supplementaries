@@ -50,11 +50,12 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         ManeuverButton maneuver = new ManeuverButton(i + 154, j + 10 + 6, manActive);
         this.addRenderableWidget(maneuver);
 
-        EulerAngles cannonAngles = cannon.getWorldEulerAngles(1);
+        Quaternionf rot = cannon.getWorldOrientation(1);
+        EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
-        this.yawSelector.setNumber(cannonAngles.yaw());
+        this.yawSelector.setNumber(eulerAngles.yaw());
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
-        this.pitchSelector.setNumber(cannonAngles.pitch());
+        this.pitchSelector.setNumber(eulerAngles.pitch());
 
         this.powerSelector = this.addRenderableWidget(new PowerSelectorWidget(i + 18, j + 24, CannonBlock.MAX_POWER_LEVELS));
         this.powerSelector.power = cannon.getPowerLevel();

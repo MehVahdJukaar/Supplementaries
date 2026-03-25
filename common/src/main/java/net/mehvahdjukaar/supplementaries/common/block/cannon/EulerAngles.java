@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -25,18 +26,10 @@ public record EulerAngles(float pitch, float yaw, float roll) {
         return new EulerAngles((float) Math.toDegrees(pitchRad), (float) Math.toDegrees(yawRad), (float) Math.toDegrees(rollRad));
     }
 
-    public static EulerAngles fromRotation(Quaternionf q){
-
-        Vector3f forward = new Vector3f(0, 0, 1);
-        q.transform(forward);
-
-        float yaw = (float) Math.atan2(forward.x, forward.z);
-        float pitch = (float) Math.atan2(
-                forward.y,
-                Math.sqrt(forward.x * forward.x + forward.z * forward.z)
-        );
-
-        return EulerAngles.fromRadians(pitch, yaw, 0);
+    public static EulerAngles fromRotation(Quaternionf q) {
+        var v = new Vector3f();
+        q.getEulerAnglesYXZ(v);
+        return EulerAngles.fromRadians(v.x, v.y, v.z);
     }
 
     public Vec3 toVec3() {
@@ -57,10 +50,15 @@ public record EulerAngles(float pitch, float yaw, float roll) {
 
     public Quaternionf toQuaternion() {
         //TODO: verify order
-        return new Quaternionf().rotationXYZ(
-                (float) Math.toRadians(pitch),
+        return new Quaternionf().rotationYXZ(
                 (float) Math.toRadians(Mth.wrapDegrees(yaw)),
+                (float) Math.toRadians(pitch),
                 (float) Math.toRadians(roll)
         );
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return "[pitch=" + pitch + ", yaw=" + yaw + ", roll=" + roll + "]";
     }
 }

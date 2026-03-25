@@ -25,6 +25,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 import static net.mehvahdjukaar.supplementaries.client.cannon.CannonController.*;
 
@@ -47,7 +48,8 @@ public class CannonTrajectoryRenderer {
 
         poseStack.pushPose();
 
-        EulerAngles eulerAngles = tile.getWorldEulerAngles(partialTicks);
+        Quaternionf rot = tile.getWorldOrientation(partialTicks);
+        EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
 
         float yaw = eulerAngles.yaw() * Mth.DEG_TO_RAD;
 
@@ -65,7 +67,7 @@ public class CannonTrajectoryRenderer {
 
         if (!hitAir && hit instanceof BlockHitResult bh) {
             if (bh.getDirection() == Direction.UP) {
-                renderTargetCircle(poseStack, buffer, rendersRed, trajectory.getHitLocation(Vec3.ZERO,yaw), partialTicks);
+                renderTargetCircle(poseStack, buffer, rendersRed, trajectory.getHitLocation(Vec3.ZERO, yaw), partialTicks);
             }
         }
 
@@ -97,7 +99,7 @@ public class CannonTrajectoryRenderer {
         Material circleMaterial = red ? ModMaterials.CANNON_TARGET_RED_MATERIAL : ModMaterials.CANNON_TARGET_MATERIAL;
         VertexConsumer circleBuilder = circleMaterial.buffer(buffer, RenderType::entityCutout);
 
-        poseStack.translate(targetPos.x, targetPos.y + 0.05, targetPos.z );
+        poseStack.translate(targetPos.x, targetPos.y + 0.05, targetPos.z);
 
         poseStack.mulPose(Axis.XP.rotationDegrees(90));
         int lu = LightTexture.FULL_BLOCK;

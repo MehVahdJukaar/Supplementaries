@@ -412,24 +412,16 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     //new stuff
 
-    public void setLocalOrientation(EulerAngles angles) {
-        setLocalOrientation(angles.toQuaternion());
-    }
-
     public void setLocalOrientation(Quaternionf localRot) {
         //remove structure rot
         Quaternionf structureRot = getStructureAdditionalRotation();
         Quaternionf cannonRot = localRot.mul(structureRot.invert(new Quaternionf()));
         //clamp
-        this.orientation.set(this.restraint.clamp(cannonRot));
-    }
-
-    public void setWorldOrientation(EulerAngles angles) {
-        setWorldOrientation(angles.toQuaternion());
+        this.orientation.orient(this.restraint.clamp(cannonRot));
     }
 
     public void setWorldOrientation(Quaternionf worldRot) {
-        Quaternionf referenceRot = referenceFrame.rotation(1);
+        Quaternionf referenceRot = referenceFrame.getRotation(1);
         Quaternionf inverseReferenceRot = referenceRot.invert(new Quaternionf());
         Quaternionf localRot = worldRot.mul(inverseReferenceRot);
         setLocalOrientation(localRot);
@@ -443,7 +435,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public Quaternionf getWorldOrientation(float partialTicks) {
         Quaternionf localRot = getLocalOrientation(partialTicks);
-        Quaternionf referenceRot = referenceFrame.rotation(partialTicks);
+        Quaternionf referenceRot = referenceFrame.getRotation(partialTicks);
         return localRot.mul(referenceRot);
     }
 
@@ -455,16 +447,6 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     private Quaternionf getStructureAdditionalRotation() {
         return RotHlpr.rot(this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
-    }
-
-    public EulerAngles getLocalEulerAngles(float partialTicks) {
-        Quaternionf quat = this.getLocalOrientation(partialTicks);
-        return EulerAngles.fromRotation(quat);
-    }
-
-    public EulerAngles getWorldEulerAngles(float partialTicks) {
-        Quaternionf quat = this.getWorldOrientation(partialTicks);
-        return EulerAngles.fromRotation(quat);
     }
 
     public Vector3f getCannonGlobalFacing(float partialTicks) {

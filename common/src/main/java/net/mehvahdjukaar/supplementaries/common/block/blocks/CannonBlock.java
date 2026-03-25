@@ -165,7 +165,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                 float yaw = dir.toYRot();
                 wantedYaw = (myDir.getOpposite() == dir ? yaw + 180 : yaw);
             }
-            cannon.setWorldOrientation(EulerAngles.ofPitchAndYaw(wantedPitch, wantedYaw));
+            cannon.setWorldOrientation(EulerAngles.ofPitchAndYaw(wantedPitch, wantedYaw).toQuaternion());
         }
     }
 

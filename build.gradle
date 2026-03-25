@@ -30,7 +30,7 @@ allprojects {
         maven { url = "https://www.cursemaven.com" }
         maven { url = "https://jitpack.io" }
 
-        maven { url = "https://maven.neoforged.net" }
+        maven { url = "https://maven.neoforged.net/releases" }
         maven { url = "https://maven.architectury.dev" }
         maven { url = "https://maven.parchmentmc.org" }
 
@@ -264,6 +264,9 @@ static List<String> listGameVersions(String minInclusive, String maxExclusive) {
 
 tasks.register('buildAndPublishAll') {
     dependsOn ':clean'
+    dependsOn ':common:clean'
+    dependsOn ':fabric:clean'
+    dependsOn ':neoforge:clean'
     dependsOn ':build'
     dependsOn ':neoforge:curseforge'
     dependsOn ':neoforge:modrinth'
@@ -274,3 +277,4 @@ tasks.register('buildAndPublishAll') {
     group = 'build'
     description = 'Runs clean, build, and publish neoforge and fabric'
 }
+

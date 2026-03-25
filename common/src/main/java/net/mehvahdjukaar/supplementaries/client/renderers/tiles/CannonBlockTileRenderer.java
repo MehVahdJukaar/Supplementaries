@@ -20,7 +20,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockTile> {
 
@@ -76,27 +75,12 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
 
-        EulerAngles eulerAngles = tile.getLocalEulerAngles(partialTick);
+        Quaternionf rot = tile.getLocalOrientation(partialTick);
+        EulerAngles ang = EulerAngles.fromRotation(rot);
 
-        float pitchRad = eulerAngles.pitch() * Mth.DEG_TO_RAD;
-        float yawRad = eulerAngles.yaw() * Mth.DEG_TO_RAD;
-
-        Vector3f forward = new Vector3f(0f, 0, 1);
-
-        forward.rotateX(Mth.PI - pitchRad);
-
-        forward.rotateY(Mth.PI - yawRad);
-        forward.rotate(rotation.invert());
-
-        yawRad = (float) Mth.atan2(forward.x, forward.z);
-
-        pitchRad = (float) Mth.atan2(-forward.y, Mth.sqrt(forward.x * forward.x + forward.z * forward.z));
-        //float rollRad = (float) Math.atan2(forward.y, forward.z);
-
-        renderer.legs.yRot = yawRad;
-        renderer.pivot.xRot = pitchRad;
-        renderer.pivot.zRot = 0;
-
+        renderer.legs.yRot = ang.yaw() * Mth.DEG_TO_RAD;
+        renderer.pivot.xRot =ang.pitch() * Mth.DEG_TO_RAD;
+        renderer.pivot.zRot =   ang.roll() * Mth.DEG_TO_RAD;
 
         // animation
         float cooldownCounter = tile.getCooldownAnimation(partialTick);

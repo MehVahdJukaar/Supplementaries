@@ -5,7 +5,9 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 
 public class EntityReferenceFrame implements ReferenceFrame {
 
@@ -21,8 +23,10 @@ public class EntityReferenceFrame implements ReferenceFrame {
     }
 
     @Override
-    public Vec3 facing(float partialTicks) {
-        return entity.getViewVector(partialTicks);
+    public Quaternionf getRotation(float partialTicks) {
+        return EulerAngles
+                .ofPitchAndYaw(entity.getViewXRot(partialTicks), entity.getViewYRot(partialTicks))
+                .toQuaternion();
     }
 
     @Override

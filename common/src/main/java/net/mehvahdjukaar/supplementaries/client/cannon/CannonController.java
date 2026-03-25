@@ -21,6 +21,7 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 
@@ -146,13 +147,15 @@ public class CannonController {
     private static void updateCannonRenderAngles(float partialTick, float wantedYaw) {
         if (trajectory != null) {
             float followSpeed = 1;
-            EulerAngles angles = cannon.getWorldEulerAngles(partialTick);
+            Quaternionf rot = cannon.getWorldOrientation(partialTick);
+            EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
 
-            float newPitch = Mth.rotLerp(followSpeed, angles.pitch(),
+            float newPitch = Mth.rotLerp(followSpeed, eulerAngles.pitch(),
                     trajectory.pitch() * Mth.RAD_TO_DEG);
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
             float newYaw = wantedYaw * Mth.RAD_TO_DEG;
-            cannon.setWorldOrientation(EulerAngles.ofPitchAndYaw(newPitch, newYaw));
+            cannon.setWorldOrientation(EulerAngles.ofPitchAndYaw(newPitch, newYaw)
+                    .toQuaternion());
         }
     }
 
