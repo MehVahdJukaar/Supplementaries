@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAnglesYX;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
@@ -563,7 +564,7 @@ public class ClientReceivers {
         PoseStack poseStack = calculateGlobalCannonPose(cannon);
         Level level = cannon.getLevel();
         Quaternionf rot = cannon.getWorldOrientation(1);
-        EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
+        EulerAnglesYX eulerAngles = EulerAnglesYX.fromQuaternion(rot);
         float power = cannon.getPowerLevel();
         Vec3 pos = cannon.getGlobalPosition(1);
         Vec3 speed = cannon.getGlobalVelocity();

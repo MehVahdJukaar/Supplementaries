@@ -18,10 +18,6 @@ public record EulerAngles(float pitch, float yaw, float roll) {
         return new EulerAngles(pitch, yaw, roll);
     }
 
-    public static EulerAngles ofPitchAndYaw(float pitch, float yaw) {
-        return of(pitch, yaw, 0);
-    }
-
     public static EulerAngles fromRadians(float pitchRad, float yawRad, float rollRad) {
         return new EulerAngles((float) Math.toDegrees(pitchRad), (float) Math.toDegrees(yawRad), (float) Math.toDegrees(rollRad));
     }

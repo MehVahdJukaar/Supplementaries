@@ -150,7 +150,7 @@ public class CannonController {
                     trajectory.pitch() * Mth.RAD_TO_DEG) ;
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
             float newYaw = trajectory3D.yaw() * Mth.RAD_TO_DEG;
-            cannon.setWorldOrientation(EulerAngles.ofPitchAndYaw(newPitch, newYaw)
+            cannon.setWorldOrientation(EulerAnglesYX.of(newPitch, newYaw)
                     .toQuaternion());
         }
     }

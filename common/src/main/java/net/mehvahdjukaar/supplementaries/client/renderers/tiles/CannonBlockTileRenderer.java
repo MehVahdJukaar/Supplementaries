@@ -103,9 +103,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         if (PlatHelper.isDev()) {
             renderDebug(poseStack, bufferSource, localRot, 0xffff00ff);
         }
-        // -------------------------------------------------
-        // CORE FIX: extract yaw + pitch from direction vector
-        // -------------------------------------------------
 
         // Canonical forward (IMPORTANT: must match your model!)
         Vector3f forward = new Vector3f(0, 0, 1);

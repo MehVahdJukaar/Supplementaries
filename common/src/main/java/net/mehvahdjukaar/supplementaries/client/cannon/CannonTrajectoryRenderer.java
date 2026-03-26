@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.ModRenderTypes;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAnglesYX;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.client.Minecraft;
@@ -50,12 +51,11 @@ public class CannonTrajectoryRenderer {
         poseStack.pushPose();
 
         Quaternionf rot = tile.getWorldOrientation(partialTicks);
-        EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
+        EulerAnglesYX eulerAngles = EulerAnglesYX.fromQuaternion(rot);
 
-        float yaw = (eulerAngles.yaw()) * Mth.DEG_TO_RAD;
+        float yaw = eulerAngles.yawRad();
 
         //rotate so we can work in 2d
-
         poseStack.mulPose(Axis.YP.rotation(yaw));
 
         boolean hitAir = shootingMode == ShootingMode.STRAIGHT || trajectory.miss() ||

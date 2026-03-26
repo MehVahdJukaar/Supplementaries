@@ -7,9 +7,8 @@ import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAnglesYX;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -165,7 +164,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                 float yaw = dir.toYRot();
                 wantedYaw = (myDir.getOpposite() == dir ? yaw + 180 : yaw);
             }
-            cannon.setWorldOrientation(EulerAngles.ofPitchAndYaw(wantedPitch, -wantedYaw).toQuaternion());
+            cannon.setWorldOrientation(EulerAnglesYX.of(wantedPitch, -wantedYaw).toQuaternion());
         }
     }
 
