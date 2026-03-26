@@ -17,10 +17,10 @@ public class ModRenderTypes extends RenderType {
 
     private static RenderType makeRenderType(ResourceLocation cannonTrajectoryRed) {
         return create("supplementaries_texture_strip",
-                DefaultVertexFormat.POSITION_TEX_COLOR,
+                DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
                 VertexFormat.Mode.QUADS, 256,
                 CompositeState.builder()
-                        .setShaderState(RenderStateShard.POSITION_TEX_SHADER)
+                        .setShaderState(RenderStateShard.POSITION_COLOR_TEX_LIGHTMAP_SHADER)
                         .setTextureState(new TextureStateShard(cannonTrajectoryRed, false, false))
                         .setCullState(NO_CULL)
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)

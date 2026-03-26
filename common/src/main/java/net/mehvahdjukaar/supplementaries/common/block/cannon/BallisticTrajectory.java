@@ -18,7 +18,7 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
                                                float minPitch, float maxPitch) {
         if (initialPow == 0) return null;
 
-        double targetAngle = Math.atan2(targetPoint.y, targetPoint.x);
+        double targetAngle = Math.atan2(-targetPoint.y, targetPoint.x);
 
         if (gravity == 0 || mode == ShootingMode.STRAIGHT) {
             float v0x = Mth.cos((float) targetAngle) * initialPow;
@@ -30,18 +30,14 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
                         true, gravity, 1, v0x, v0y);
             }
 
-            // simple line
+            // Simple line logic...
             float finalDist = targetPoint.length();
             double ld = Math.log(drag);
-
-            // inverse equation with no gravity
             double arg = 1 + finalDist * ld / initialPow;
             double t;
             boolean miss = false;
             if (arg < 0) {
-                // we cant reach
                 miss = true;
-                // that number is slope at which we stop time
                 t = Math.log(0.4 / initialPow) / Math.log(drag);
             } else t = Math.log(arg) / ld;
 
@@ -53,34 +49,35 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
                     miss, gravity, drag, v0x, v0y);
         }
 
-        float targetTolerance = 0.001f;
+        float distanceTolerance = 0.001f;
 
-        float start = (float) targetAngle + 0.01f; // Initial pitch
-        float end = (float) Math.PI / 2; // Maximum pitch (90 degrees)
+        float straightUp = (float) -Math.PI / 2;
 
-        Vec2 farAway = targetPoint.scale(1000);
-        // calculate trajectory that gives max distance = global maxima. 2 roots we need are either to its right or left pitch wise
-        BallisticTrajectory furthestTrajectory = findBestTrajectoryGoldenSection(farAway, gravity, drag, initialPow,
-                0.001f,
-                targetTolerance, start, end);
+        // We search from Straight Up to the Target Angle to find the "Furthest" point
+        // Note: numerically, straightUp (-1.57) is less than targetAngle (e.g., -0.78)
+        BallisticTrajectory furthestTrajectory = findBestTrajectoryGoldenSection(targetPoint.scale(1000),
+                gravity, drag, initialPow, 0.001f, distanceTolerance,
+                straightUp, (float) targetAngle - 0.01f);
+
         float peakAngle = furthestTrajectory.pitch();
 
-        // that function has 2 solutions. we need to reduce the angles we search, so we converge on the first one
-        // we can do this by using as max pitch the pitch that yields the highest distance (global maxima of the distance function)
         BallisticTrajectory solution;
-        if (mode == ShootingMode.DOWN && minPitch < peakAngle) {
-            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
-                    0.0001f,
-                    targetTolerance, Math.max(start, minPitch), Math.min(peakAngle, maxPitch));
-        } else {
-            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
-                    0.0001f,
-                    targetTolerance, Math.max(peakAngle, minPitch), Math.min(end, maxPitch));
-        }
-        return new BallisticTrajectory(solution.pointHit, -solution.pitch,
-                solution.finalTime, solution.miss, solution.gravity, solution.drag, solution.v0x, solution.v0y);
-    }
 
+        if (mode == ShootingMode.DOWN) {
+            // Low Arc: Between Peak and Target
+            float lowStart = Math.max(peakAngle, minPitch);
+            float lowEnd = Math.min((float)targetAngle, maxPitch);
+            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
+                    0.0001f, distanceTolerance, lowStart, lowEnd);
+        } else {
+            // High Arc: Between Straight Up and Peak
+            float highStart = Math.max(straightUp, minPitch);
+            float highEnd = Math.min(peakAngle, maxPitch);
+            solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
+                    0.0001f, distanceTolerance, highStart, highEnd);
+        }
+        return solution;
+    }
     /**
      * calculate the best pitch to shoot a projectile at to hit a target, maximising distance to target point
      *
@@ -213,7 +210,6 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
                 distToTarget = distance2;
             }
 
-            bestDistance = distToTarget;
             // Check if the distance increase is below the tolerance. Good enough result
             float distanceIncrease = Math.abs(distance1 - distance2);
 
@@ -282,9 +278,9 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
             iterNumber++;
             // Calculate the velocities for the two intermediate angles
             float v0x1 = (float) (Math.cos(midAngle1) * initialPow);
-            float v0y1 = (float) (Math.sin(midAngle1) * initialPow);
+            float v0y1 = (float) (Math.sin(-midAngle1) * initialPow); // Use -midAngle here
             float v0x2 = (float) (Math.cos(midAngle2) * initialPow);
-            float v0y2 = (float) (Math.sin(midAngle2) * initialPow);
+            float v0y2 = (float) (Math.sin(-midAngle2) * initialPow); // Use -midAngle here
 
             // Find the intersection points for the two intermediate angles
             var r1 = findLineIntersection(targetSlope, gravity, drag, v0x1, v0y1, targetTolerance);

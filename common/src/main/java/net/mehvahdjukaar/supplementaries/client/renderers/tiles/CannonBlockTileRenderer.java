@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockTile> {
 
@@ -83,15 +84,15 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
 
-      //  cannonHeadRot.mul(cannonBaseRot.invert());
-
-        EulerAngles ang = EulerAngles.fromRotation(cannonHeadRot);
-
         poseStack.mulPose(cannonBaseRot);
 
-        renderer.legs.yRot = (180 + ang.yaw()) * Mth.DEG_TO_RAD;
-        renderer.pivot.xRot = (ang.pitch()) * Mth.DEG_TO_RAD;
-        renderer.pivot.zRot = (ang.roll()) * Mth.DEG_TO_RAD;
+        Quaternionf q = cannonBaseRot.invert().mul(cannonHeadRot);
+
+        Vector3f eulerAngles = q.getEulerAnglesZYX(new Vector3f());
+
+        renderer.legs.yRot =  Mth.PI -  eulerAngles.y();
+        renderer.legs.xRot =eulerAngles.x();
+        renderer.legs.zRot =   Mth.PI -   eulerAngles.z();
 
         // animation
         float cooldownCounter = tile.getCooldownAnimation(partialTick);
