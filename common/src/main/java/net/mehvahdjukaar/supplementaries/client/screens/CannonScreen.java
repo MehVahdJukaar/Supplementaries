@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAnglesYX;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
@@ -51,7 +51,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.addRenderableWidget(maneuver);
 
         Quaternionf rot = cannon.getWorldOrientation(1);
-        EulerAnglesYX eulerAngles = EulerAnglesYX.fromQuaternion(rot);
+        EntityAngles eulerAngles = EntityAngles.fromQuaternion(rot);
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
         this.yawSelector.setNumber(eulerAngles.yaw());
         this.pitchSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 29 + 6, 18, 10));
@@ -83,7 +83,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         float pitch = this.pitchSelector.getNumber();
         byte power = this.powerSelector.getPower();
         //update client immediately too
-        Quaternionf wantedQuat = EulerAnglesYX.of( pitch, yaw).toQuaternion();
+        Quaternionf wantedQuat = EntityAngles.of( pitch, yaw).toQuaternion();
         this.menu.cannon.setAttributes(wantedQuat, power, false, minecraft.player);
         this.menu.cannon.syncToServer(false, !CannonController.isActive());
     }

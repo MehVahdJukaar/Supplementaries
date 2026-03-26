@@ -5,12 +5,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.ModRenderTypes;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAnglesYX;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.client.Minecraft;
@@ -51,12 +49,12 @@ public class CannonTrajectoryRenderer {
         poseStack.pushPose();
 
         Quaternionf rot = tile.getWorldOrientation(partialTicks);
-        EulerAnglesYX eulerAngles = EulerAnglesYX.fromQuaternion(rot);
+        EntityAngles eulerAngles = EntityAngles.fromQuaternion(rot);
 
         float yaw = eulerAngles.yawRad();
 
-        //rotate so we can work in 2d
-        poseStack.mulPose(Axis.YP.rotation(yaw));
+        //rotate so we can work in 2d. yaw is entity like so its inverted
+        poseStack.mulPose(Axis.YP.rotation(-yaw));
 
         boolean hitAir = shootingMode == ShootingMode.STRAIGHT || trajectory.miss() ||
                 mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();

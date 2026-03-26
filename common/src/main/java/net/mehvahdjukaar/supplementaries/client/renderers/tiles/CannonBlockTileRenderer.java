@@ -7,7 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAnglesYX;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -110,15 +110,15 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         // Rotate into base-local space
         localRot.transform(forward);
 
-        EulerAnglesYX angles = EulerAnglesYX.fromQuaternion(localRot);
+        EntityAngles angles = EntityAngles.fromQuaternion(localRot);
 
         float yaw = angles.yawRad();
         float pitch = angles.pitchRad();
 
-        renderer.legs.yRot = yaw;
+        renderer.legs.yRot = -yaw;
 
         // negative depends on your model convention (likely correct)
-        renderer.pivot.xRot = -pitch;
+        renderer.pivot.xRot = pitch;
 
         // roll is physically impossible → force zero
         renderer.pivot.zRot = 0;

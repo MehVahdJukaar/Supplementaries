@@ -145,12 +145,11 @@ public class CannonController {
             EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
 
             //we used some flipped coordinates in trajectory calculation. we got to adjust them here.
-            //TODO: flip them in the calculation code itself
             float newPitch = Mth.rotLerp(followSpeed, eulerAngles.pitch(),
                     trajectory.pitch() * Mth.RAD_TO_DEG) ;
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
             float newYaw = trajectory3D.yaw() * Mth.RAD_TO_DEG;
-            cannon.setWorldOrientation(EulerAnglesYX.of(newPitch, newYaw)
+            cannon.setWorldOrientation(EntityAngles.of(newPitch, newYaw)
                     .toQuaternion());
         }
     }

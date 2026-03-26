@@ -8,7 +8,7 @@ import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAnglesYX;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
@@ -51,8 +51,6 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
-import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Optional;
@@ -164,7 +162,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                 float yaw = dir.toYRot();
                 wantedYaw = (myDir.getOpposite() == dir ? yaw + 180 : yaw);
             }
-            cannon.setWorldOrientation(EulerAnglesYX.of(wantedPitch, -wantedYaw).toQuaternion());
+            cannon.setWorldOrientation(EntityAngles.of(wantedPitch, wantedYaw).toQuaternion());
         }
     }
 
