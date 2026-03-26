@@ -118,7 +118,6 @@ public class CannonController {
         yawIncrease = 0;
         pitchIncrease = 0;
 
-        //TODO: no perfect solution exist: add config
         if (!cannon.isFiring()) {
 
             // find hit result

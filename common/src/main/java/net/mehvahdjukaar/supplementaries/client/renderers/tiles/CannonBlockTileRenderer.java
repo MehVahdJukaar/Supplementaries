@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAnglesYX;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -84,7 +85,10 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         // Debug (world space)
         if (PlatHelper.isDev()) {
-            renderDebug( poseStack, bufferSource, cannonHeadRot, 0xff00ffff);
+            poseStack.pushPose();
+            poseStack.translate(0, 0.02, 0);
+            renderDebug(poseStack, bufferSource, cannonHeadRot, 0xff00ffff);
+            poseStack.popPose();
         }
 
         // Move into base space
@@ -109,19 +113,10 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         // Rotate into base-local space
         localRot.transform(forward);
 
-        // Normalize for safety (important for numerical stability)
-        forward.normalize();
+        EulerAnglesYX angles = EulerAnglesYX.fromQuaternion(localRot);
 
-        // --- YAW (turntable) ---
-        float yaw = -(float) Math.atan2(-forward.x, forward.z);
-
-        // --- PITCH (elevation) ---
-        float horizontalLen = (float) Math.sqrt(forward.x * forward.x + forward.z * forward.z);
-        float pitch = (float) Math.atan2(forward.y, horizontalLen);
-
-        // -------------------------------------------------
-        // APPLY TO MODEL
-        // -------------------------------------------------
+        float yaw = angles.yawRad();
+        float pitch = angles.pitchRad();
 
         renderer.legs.yRot = yaw;
 
@@ -138,7 +133,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         float fireCounter = tile.getFiringAnimation(partialTick);
 
         //write equation of sawtooth wave with same period as that sine wave
-        float squish = triangle(1 - cooldownCounter, 0.01f, 0.15f) * 0.2f;
+        float squish = triangleWave(1 - cooldownCounter, 0.01f, 0.15f) * 0.2f;
 
         float wobble = Mth.sin(fireCounter * 20f * (float) Math.PI) * 0.005f;
         float scale = wobble + 1f + squish * 0.7f;
@@ -153,7 +148,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         poseStack.popPose();
     }
 
-    public static float triangle(float cooldownCounter, float mid, float end) {
+    private static float triangleWave(float cooldownCounter, float mid, float end) {
         if (cooldownCounter <= mid) {
             // Calculate the slope for the rising part
             float slope = 1 / mid;
@@ -174,7 +169,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
     }
 
     private static void renderDebug(PoseStack poseStack, MultiBufferSource bufferSource, Quaternionf quat, int color) {
-
         poseStack.pushPose();
         PoseStack.Pose pose = poseStack.last();
         VertexConsumer vc = bufferSource.getBuffer(RenderType.lines());
@@ -187,7 +181,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         vc.addVertex(pose, forward.x, forward.y, forward.z)
                 .setColor(color)
                 .setNormal(pose, 0, 1, 0);
-
 
         poseStack.popPose();
     }
@@ -205,12 +198,12 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         PartDefinition head = legs.addOrReplaceChild("head_pivot", CubeListBuilder.create(),
                 PartPose.offsetAndRotation(0.0F, -1.0F, 0.0F, -0.1745F, 0.0F, 0.0F));
 
-        PartDefinition bone = head.addOrReplaceChild("head", CubeListBuilder.create()
+        head.addOrReplaceChild("head", CubeListBuilder.create()
                         .texOffs(0, 46).addBox(-6.0F, -6.0F, -6.5F, 12.0F, 12.0F, 6.0F)
                         .texOffs(0, 18).addBox(-6.0F, -6.0F, -6.5F, 12.0F, 12.0F, 13.0F, new CubeDeformation(-0.3125F)),
                 PartPose.ZERO);
 
-        PartDefinition base = partdefinition.addOrReplaceChild("base", CubeListBuilder.create()
+        partdefinition.addOrReplaceChild("base", CubeListBuilder.create()
                         .texOffs(0, 0)
                         .addBox(-8.0F, 6.0F, -8.0F, 16.0F, 2.0F, 16.0F),
                 PartPose.ZERO);
