@@ -7,7 +7,6 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EulerAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -20,7 +19,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -73,27 +71,68 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
                                          MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 
         poseStack.pushPose();
-        Quaternionf cannonBaseRot = tile.getBlockState().getValue(CannonBlock.FACING).getOpposite().getRotation();
 
+        // Base rotation (block orientation)
+        Quaternionf cannonBaseRot =
+                tile.getBlockState()
+                        .getValue(CannonBlock.FACING)
+                        .getOpposite()
+                        .getRotation();
 
+        // Head rotation (world or global)
         Quaternionf cannonHeadRot = tile.getLocalOrientation(partialTick);
 
+        // Debug (world space)
         if (PlatHelper.isDev()) {
-            renderDebug(tile, poseStack, bufferSource, cannonHeadRot);
+            renderDebug( poseStack, bufferSource, cannonHeadRot, 0xff00ffff);
         }
 
-        VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
-
+        // Move into base space
         poseStack.mulPose(cannonBaseRot);
 
-        Quaternionf q = cannonBaseRot.invert().mul(cannonHeadRot);
+        // Compute head rotation relative to base
+        Quaternionf localRot = new Quaternionf(cannonBaseRot)
+                .invert()
+                .mul(cannonHeadRot);
 
-        Vector3f eulerAngles = q.getEulerAnglesZYX(new Vector3f());
+        // Debug (should overlap with world debug)
+        if (PlatHelper.isDev()) {
+            renderDebug(poseStack, bufferSource, localRot, 0xffff00ff);
+        }
+        // -------------------------------------------------
+        // CORE FIX: extract yaw + pitch from direction vector
+        // -------------------------------------------------
 
-        renderer.legs.yRot =  Mth.PI -  eulerAngles.y();
-        renderer.legs.xRot =eulerAngles.x();
-        renderer.legs.zRot =   Mth.PI -   eulerAngles.z();
+        // Canonical forward (IMPORTANT: must match your model!)
+        Vector3f forward = new Vector3f(0, 0, 1);
 
+        // Rotate into base-local space
+        localRot.transform(forward);
+
+        // Normalize for safety (important for numerical stability)
+        forward.normalize();
+
+        // --- YAW (turntable) ---
+        float yaw = -(float) Math.atan2(-forward.x, forward.z);
+
+        // --- PITCH (elevation) ---
+        float horizontalLen = (float) Math.sqrt(forward.x * forward.x + forward.z * forward.z);
+        float pitch = (float) Math.atan2(forward.y, horizontalLen);
+
+        // -------------------------------------------------
+        // APPLY TO MODEL
+        // -------------------------------------------------
+
+        renderer.legs.yRot = yaw;
+
+        // negative depends on your model convention (likely correct)
+        renderer.pivot.xRot = -pitch;
+
+        // roll is physically impossible → force zero
+        renderer.pivot.zRot = 0;
+
+        // fixed adjustment if your model needs it
+        renderer.head.yRot = Mth.PI;
         // animation
         float cooldownCounter = tile.getCooldownAnimation(partialTick);
         float fireCounter = tile.getFiringAnimation(partialTick);
@@ -109,6 +148,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         renderer.head.zScale = 1 - squish;
         renderer.head.z = squish * 5.675f;
 
+        VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
         renderer.model.render(poseStack, builder, packedLight, packedOverlay);
         poseStack.popPose();
     }
@@ -133,22 +173,19 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         }
     }
 
-    private static void renderDebug(CannonBlockTile tile, PoseStack poseStack,
-                                    MultiBufferSource bufferSource, Quaternionf quat) {
+    private static void renderDebug(PoseStack poseStack, MultiBufferSource bufferSource, Quaternionf quat, int color) {
 
         poseStack.pushPose();
         PoseStack.Pose pose = poseStack.last();
         VertexConsumer vc = bufferSource.getBuffer(RenderType.lines());
 
-        EulerAngles angles = EulerAngles.fromRotation(quat);
-        float tileYaw = angles.yaw();
-        float tilePitch = angles.pitch();
-        var tileView = Vec3.directionFromRotation(tilePitch, tileYaw).normalize();
+        Vector3f forward = new Vector3f(0, 0, 2);
+        forward.rotate(quat);
         vc.addVertex(pose, 0, 0, 0)
-                .setColor(30, 30, 255, 255)
+                .setColor(color)
                 .setNormal(pose, 0, 1, 0);
-        vc.addVertex(pose, (float) tileView.x, (float) tileView.y, (float) tileView.z)
-                .setColor(30, 30, 255, 255)
+        vc.addVertex(pose, forward.x, forward.y, forward.z)
+                .setColor(color)
                 .setNormal(pose, 0, 1, 0);
 
 

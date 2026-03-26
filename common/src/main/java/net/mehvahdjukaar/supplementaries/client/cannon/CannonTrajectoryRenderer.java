@@ -56,7 +56,7 @@ public class CannonTrajectoryRenderer {
 
         //rotate so we can work in 2d
 
-        poseStack.mulPose(Axis.YP.rotation(-yaw));
+        poseStack.mulPose(Axis.YP.rotation(yaw));
 
         boolean hitAir = shootingMode == ShootingMode.STRAIGHT || trajectory.miss() ||
                 mc.level.getBlockState(trajectory.getHitPos(cannonPos, yaw)).isAir();

@@ -63,7 +63,7 @@ public class CannonUtils {
     }
 
     private static Target2dAndYaw vec3ToPoint2d(Vec3 point) {
-        float yaw = (float) Mth.atan2(-point.x, point.z);
+        float yaw = (float) -Mth.atan2(-point.x, point.z);
         Vec2 vec2 = new Vec2((float) Mth.length(point.x, point.z), (float) point.y);
         return new Target2dAndYaw(vec2, yaw);
     }
