@@ -26,6 +26,7 @@ public record EntityAngles(float pitch, float yaw) {
      */
     public static EntityAngles fromRadians(float pitchRad, float yawRad) {
         return new EntityAngles(
+                EulerAngles
                 (float) Math.toDegrees(pitchRad),
                 (float) Math.toDegrees(yawRad)
         );
@@ -72,8 +73,8 @@ public record EntityAngles(float pitch, float yaw) {
     /**
      * Apply pitch/yaw clamping
      */
-    public EntityAngles clamp(float minPitch, float maxPitch) {
-        return new EntityAngles(Math.max(minPitch, Math.min(maxPitch, pitch)), yaw);
+    public EntityAngles clamped(float minPitch, float maxPitch, float minYaw, float maxYaw) {
+        return EntityAngles.of(Mth.clamp(pitch, minPitch, maxPitch), Mth.clamp(yaw, minYaw, maxYaw));
     }
 
     @Override

@@ -14,8 +14,6 @@ public interface ReferenceFrame {
 
     void applyRecoil(Vec3 recoil);
 
-    void updateClients();
-
     TileOrEntityTarget makeNetworkTarget();
 
     int oldGetYawOffset(float partialTicks);

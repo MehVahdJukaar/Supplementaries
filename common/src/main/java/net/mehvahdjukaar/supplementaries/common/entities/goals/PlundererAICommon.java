@@ -101,7 +101,7 @@ public final class PlundererAICommon {
 
             //sync
             tile.setChanged();
-            tile.updateClients();
+            tile.syncToClients();
         }
     }
 

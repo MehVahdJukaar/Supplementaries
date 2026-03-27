@@ -6,7 +6,10 @@ import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.*;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.OrientationRig;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.ReferenceFrame;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.WorldReferenceFrame;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.YawPitchRestraint;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticData;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
@@ -16,7 +19,7 @@ import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonAnimationPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
-import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSyncCannonPacket;
+import net.mehvahdjukaar.supplementaries.common.network.SyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -57,7 +60,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public Object ccPeripheral = null;
     @Nullable
     private CannonballWhitelist breakWhitelist = null;
-    private OrientationRig orientation = new OrientationRig();
+    private final OrientationRig orientation = new OrientationRig();
 
     // both from 0 to config value. in tick
     private int cooldownTimer = 0;
@@ -80,6 +83,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public CannonBlockTile(BlockPos pos, BlockState blockState) {
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
+        this.setRestraint(new YawPitchRestraint(-360f, 360f, -360, 20));
     }
 
     public void setRestraint(YawPitchRestraint restraint) {
@@ -130,7 +134,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
                     projectile.shrink(1);
                     this.setProjectile(projectile);
                     this.setChanged();
-                    referenceFrame.updateClients();
+                    this.syncToClients();
 
                     level.gameEvent(p, GameEvent.EXPLODE, this.getGlobalPosition(1));
                 }
@@ -333,7 +337,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
         this.setChanged();
         //update other clients
-        referenceFrame.updateClients();
+        this.syncToClients();
     }
 
 
@@ -414,7 +418,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     //new stuff
 
-    public void snapToWantedRotationInstantly(){
+    public void snapToWantedRotationInstantly() {
         this.orientation.tick();
     }
 
@@ -486,17 +490,22 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     // Network
     public void syncToServer(boolean fire, boolean removeOwner) {
-        NetworkHelper.sendToServer(new ServerBoundSyncCannonPacket(
+        NetworkHelper.sendToServer(new SyncCannonPacket(
                 this.orientation.getRotation(1), this.getPowerLevel(),
                 fire, removeOwner, referenceFrame.makeNetworkTarget()));
     }
 
-    public void sendOpenGuiRequest() {
-        NetworkHelper.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(referenceFrame.makeNetworkTarget()));
+    public void syncToClients() {
+        if (level instanceof ServerLevel sl) {
+            NetworkHelper.sendToAllClientPlayersInDefaultRange(sl,
+                    BlockPos.containing(referenceFrame.position(1)), new SyncCannonPacket(
+                            this.orientation.getRotation(1), this.getPowerLevel(),
+                            false, false, referenceFrame.makeNetworkTarget()));
+        }
     }
 
-    public void updateClients() {
-        referenceFrame.updateClients();
+    public void sendOpenGuiRequest() {
+        NetworkHelper.sendToServer(new ServerBoundRequestOpenCannonGuiMessage(referenceFrame.makeNetworkTarget()));
     }
 
     public boolean shouldRotatePlayerFaceWhenManeuvering() {

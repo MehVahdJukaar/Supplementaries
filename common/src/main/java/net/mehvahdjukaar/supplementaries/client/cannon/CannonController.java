@@ -142,7 +142,7 @@ public class CannonController {
         if (trajectory != null) {
             float followSpeed = 1;
             Quaternionf rot = cannon.getWorldOrientation(partialTick);
-            EulerAngles eulerAngles = EulerAngles.fromRotation(rot);
+            EntityAngles eulerAngles = EntityAngles.fromQuaternion(rot);
 
             //we used some flipped coordinates in trajectory calculation. we got to adjust them here.
             float newPitch = Mth.rotLerp(followSpeed, eulerAngles.pitch(),

@@ -6,9 +6,7 @@ import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.media.items.PrintoutData;
 import dan200.computercraft.shared.media.items.PrintoutItem;
-import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -179,7 +177,7 @@ public class CCCompatImpl {
         @LuaFunction
         public void setYaw(double value) {
           //  tile.setYaw((float) value); //TODO cannon change
-            tile.updateClients();
+            tile.syncToClients();
         }
 
         @LuaFunction
@@ -192,7 +190,7 @@ public class CCCompatImpl {
          //TODO cannon change
 
         //    tile.setPitch((float) value);
-            tile.updateClients();
+            tile.syncToClients();
         }
 
         @LuaFunction
@@ -204,7 +202,7 @@ public class CCCompatImpl {
         public void setPower(int inPower) {
             byte power = (byte) Math.min(Math.max(inPower, 1), CannonBlockTile.MAX_POWER_LEVEL);
             tile.setPowerLevel(power);
-            tile.updateClients();
+            tile.syncToClients();
         }
 
         @LuaFunction

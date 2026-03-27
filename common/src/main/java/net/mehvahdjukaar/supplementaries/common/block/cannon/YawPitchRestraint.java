@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import org.joml.Quaternionf;
 
 public final class YawPitchRestraint {
@@ -39,15 +38,12 @@ public final class YawPitchRestraint {
 
 
     public Quaternionf clamp(Quaternionf input) {
-        if(true)return input;
         Quaternionf rotation = new Quaternionf(input).normalize();
 
         EntityAngles angles = EntityAngles.fromQuaternion(rotation);
+        angles = angles.clamped(minPitchDeg, maxPitchDeg, minYawDeg, maxYawDeg);
 
-        float clampedYaw = Mth.clamp(Mth.wrapDegrees(angles.yaw()), minYawDeg, maxYawDeg);
-        float clampedPitch = Mth.clamp(Mth.wrapDegrees(angles.pitch()), minPitchDeg, maxPitchDeg);
-
-        return EntityAngles.of(clampedPitch, clampedYaw).toQuaternion();
+        return angles.toQuaternion();
     }
 
     public YawPitchRestraint rotated(Direction direction) {

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import com.mojang.math.Axis;
 import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.block.IAnalogRotatable;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
@@ -355,8 +356,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             Vector3f rotAxis = face.step();
             Quaternionf cannonRot = tile.getWorldOrientation(1);
             //this is the way we face. now a rotation is being performend on the face "face", either ccw or cw. make this vector rotate acocrdingly
-            Quaternionf rotation = new Quaternionf().rotateAxis(deltaAngle, rotAxis);
-            cannonRot =  cannonRot.mul(rotation);
+            cannonRot =  new Quaternionf().rotateAxis(deltaAngle, rotAxis).mul(cannonRot);
             tile.setWorldOrientation(cannonRot);
             tile.setChanged();
             //  level.sendBlockUpdated(pos, state, state, 3);

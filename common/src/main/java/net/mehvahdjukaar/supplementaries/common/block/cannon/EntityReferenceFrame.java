@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.cannon;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
+import net.mehvahdjukaar.supplementaries.common.network.SyncCannonPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -39,11 +40,6 @@ public class EntityReferenceFrame implements ReferenceFrame {
             NetworkHelper.sendToAllClientPlayersTrackingEntity(entity,
                     new ClientBoundSendKnockbackPacket(entity.getId(), recoil));
         } else entity.addDeltaMovement(recoil);
-    }
-
-    @Override
-    public void updateClients() {
-
     }
 
     @Override

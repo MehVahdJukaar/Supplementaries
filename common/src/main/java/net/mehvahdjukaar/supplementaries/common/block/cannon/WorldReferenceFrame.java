@@ -35,11 +35,6 @@ public class WorldReferenceFrame implements ReferenceFrame {
     }
 
     @Override
-    public void updateClients() {
-
-    }
-
-    @Override
     public TileOrEntityTarget makeNetworkTarget() {
         return TileOrEntityTarget.of(be);
     }
