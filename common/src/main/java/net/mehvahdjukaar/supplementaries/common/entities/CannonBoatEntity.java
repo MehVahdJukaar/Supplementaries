@@ -9,8 +9,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BoatReferenceFrame;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityReferenceFrame;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.Restraint;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.YawPitchRestraint;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -65,7 +64,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.cannon = new CannonBlockTile(BlockPos.ZERO, ModRegistry.CANNON.get()
                 .defaultBlockState().setValue(CannonBlock.FACING, Direction.UP));
         this.cannon.setReferenceFrame(new BoatReferenceFrame(this));
-        this.cannon.setRestraint(new Restraint(50, 360 - 50, 0, 180));
+        this.cannon.setRestraint(new YawPitchRestraint(50, 360 - 50, 0, 180));
         this.cannon.setLevel(level);
         this.setWoodType(VanillaWoodTypes.OAK);
     }

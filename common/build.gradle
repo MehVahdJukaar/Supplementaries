@@ -84,6 +84,7 @@ dependencies {
     modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("curse.maven:buzzier-bees-355458:4776328")
     modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
+    modCompileOnly("curse.maven:the-twilight-forest-227639:7398100")
 
     if (maven_backup.toBoolean()) modCompileOnly("maven.modrinth:amendments:1.21-2.0.15-fabric")
     else modCompileOnly("net.mehvahdjukaar:amendments-fabric:1.21-2.0.9") { transitive = false }

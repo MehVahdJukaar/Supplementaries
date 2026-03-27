@@ -51,6 +51,8 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Optional;
@@ -163,6 +165,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                 wantedYaw = (myDir.getOpposite() == dir ? yaw + 180 : yaw);
             }
             cannon.setWorldOrientation(EntityAngles.of(wantedPitch, wantedYaw).toQuaternion());
+            cannon.snapToWantedRotationInstantly();
         }
     }
 
@@ -347,18 +350,15 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     public void rotateAnalog(BlockState state, Level level, BlockPos pos, Direction face, boolean ccw, float speed) {
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             speed = speed * 0.01f;
-            /*
+
             float deltaAngle = -speed * (ccw ? -1 : 1);
             Vector3f rotAxis = face.step();
-            Vector3f facingVec = tile.getCannonGlobalFacing(0).toVector3f();
+            Quaternionf cannonRot = tile.getWorldOrientation(1);
             //this is the way we face. now a rotation is being performend on the face "face", either ccw or cw. make this vector rotate acocrdingly
-            Quaternionf q = new Quaternionf().rotateAxis(deltaAngle, rotAxis);
-            facingVec.rotate(q);
-            Vec3 newDir = new Vec3(facingVec);
-            tile.setCannonGlobalFacing(newDir, true);
+            Quaternionf rotation = new Quaternionf().rotateAxis(deltaAngle, rotAxis);
+            cannonRot =  cannonRot.mul(rotation);
+            tile.setWorldOrientation(cannonRot);
             tile.setChanged();
-
-             */
             //  level.sendBlockUpdated(pos, state, state, 3);
         }
     }

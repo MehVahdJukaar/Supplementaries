@@ -41,7 +41,7 @@ public class CannonUtils {
         //so we hopefully hit the block we are looking at
         localTarget = localTarget.add(localTarget.normalize().scale(0.05f));
 
-        Restraint restraints = cannon.getOrientationRestraints();
+        YawPitchRestraint restraints = cannon.getOrientationRestraints();
         BallisticData ballistic = cannon.getTrajectoryData();
         float minPitch = restraints.getMinPitch() * Mth.DEG_TO_RAD;
         float maxPitch = restraints.getMaxPitch() * Mth.DEG_TO_RAD;

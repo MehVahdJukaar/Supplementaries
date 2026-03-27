@@ -11,6 +11,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
@@ -22,23 +25,29 @@ import net.minecraft.world.level.block.state.properties.RailShape;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 
 public class TurnTableBlockTile extends BlockEntity {
-    private int cooldown = 5;
-    private boolean canRotate = true;
-    // private long tickedGameTime;
+    private int timeUntilNextRotation = 5;
     private int catTimer = 0;
 
     public TurnTableBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.TURN_TABLE_TILE.get(), pos, state);
     }
 
-    public void tryRotate() {
-        this.canRotate = true;
-        //updates correct cooldown
-        this.cooldown = TurnTableBlock.getPeriod(this.getBlockState());
-        // allows for a rotation try nedxt period
+    public void startRotation() {
+        this.timeUntilNextRotation = TurnTableBlock.getPeriod(this.getBlockState());
+        this.level.setBlock(worldPosition, getBlockState().setValue(TurnTableBlock.ROTATING, true), 3);
+
+        this.setChanged();
+    }
+
+    public void stopRotation() {
+        this.timeUntilNextRotation = 0;
+        this.level.setBlock(worldPosition, getBlockState().setValue(TurnTableBlock.ROTATING, false), 3);
+
+        this.setChanged();
     }
 
     public int getCatTimer() {
@@ -52,34 +61,32 @@ public class TurnTableBlockTile extends BlockEntity {
     //server only
     public static void tick(Level level, BlockPos pos, BlockState state, TurnTableBlockTile tile) {
         tile.catTimer = Math.max(tile.catTimer - 1, 0);
-        // cd > 0
+        if (!state.getValue(TurnTableBlock.ROTATING)) return;
+
+        int power = state.getValue(TurnTableBlock.POWER);
+        boolean isPowered = power != 0;
+
         Direction dir = state.getValue(TurnTableBlock.FACING);
         boolean ccw = state.getValue(TurnTableBlock.INVERTED) ^ (state.getValue(TurnTableBlock.FACING) == Direction.DOWN);
         BlockPos targetPos = pos.relative(dir);
         BlockState above = level.getBlockState(targetPos);
-        boolean rotateAnalog = above.getBlock() instanceof IAnalogRotatable ar &&
-                ar.canRotateAnalog(above, level, targetPos, dir);
-        if (tile.cooldown == 0) {
-            if (rotateAnalog) {
-                tile.canRotate = true;
+
+        if (above.getBlock() instanceof IAnalogRotatable ar && ar.canRotateAnalog(above, level, targetPos, dir)) {
+            if (isPowered) {
+                ar.rotateAnalog(above, level, targetPos, dir, ccw, power);
             } else {
-                boolean rotSuccess = tile.performRotation(level, pos, state, dir, ccw, targetPos);
-                tile.cooldown = TurnTableBlock.getPeriod(state);
-                // if it didn't rotate last block that means that block is immovable
-                int power = state.getValue(TurnTableBlock.POWER);
-                tile.canRotate = (rotSuccess && power != 0);
-                //change blockstate after rotation if is powered off
-                if (power == 0) {
-                    level.setBlock(pos, state.setValue(TurnTableBlock.ROTATING, false), 3);
-                }
+                tile.stopRotation();
             }
-        } else if (tile.canRotate) {
-            tile.cooldown--;
+            return;
         }
-        if (tile.canRotate) {
-            if (rotateAnalog) {
-                int power = state.getValue(TurnTableBlock.POWER);
-                ((IAnalogRotatable) above.getBlock()).rotateAnalog(above, level, targetPos, dir, ccw, power);
+        if (tile.timeUntilNextRotation != 0) {
+            tile.timeUntilNextRotation--;
+        } else {
+            tile.timeUntilNextRotation = TurnTableBlock.getPeriod(state);
+            tile.performRotation(level, pos, state, dir, ccw, targetPos);
+            // if it didn't rotate last block that means that block is immovable
+            if (!isPowered) {
+                tile.stopRotation();
             }
         }
     }
@@ -137,17 +144,25 @@ public class TurnTableBlockTile extends BlockEntity {
     }
 
     @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.cooldown = tag.getInt("Cooldown");
-        this.canRotate = tag.getBoolean("CanRotate");
+        this.timeUntilNextRotation = tag.getInt("Cooldown");
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.putInt("Cooldown", this.cooldown);
-        tag.putBoolean("CanRotate", this.canRotate);
+        tag.putInt("Cooldown", this.timeUntilNextRotation);
     }
 
 }

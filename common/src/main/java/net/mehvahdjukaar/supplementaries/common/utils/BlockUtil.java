@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.integration.TFCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -175,6 +176,12 @@ public class BlockUtil {
                 if (verticalPlanks != null) return Optional.of(verticalPlanks.defaultBlockState());
             }
         }
+        if (CompatHandler.TWILIGHTFOREST) {
+            BlockState newState = TFCompat.tryRotateHollowLog( state, dir);
+            if (newState != null) {
+                return Optional.of(newState);
+            }
+        }
         return Optional.empty();
     }
 
@@ -220,6 +227,7 @@ public class BlockUtil {
     }
 
 
+    //wrench only
     private static Optional<Direction> tryRotatingSpecial(Direction face, boolean ccw, BlockPos pos, Level level, BlockState state, Vec3 hit) {
         Block b = state.getBlock();
         Rotation rot = ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90;
@@ -246,6 +254,7 @@ public class BlockUtil {
             //TODO: add
             //level.setBlockAndUpdate(state.rotate(level, pos, rot));
         }
+
         if (CompatHandler.QUARK && QuarkCompat.tryRotateStool(level, state, pos)) {
             return Optional.of(face);
         }

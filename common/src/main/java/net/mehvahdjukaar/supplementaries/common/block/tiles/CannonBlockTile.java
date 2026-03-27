@@ -30,6 +30,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -75,13 +76,13 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     //delegate all position and rotation logic to this object which is basically a transform object
     private ReferenceFrame referenceFrame = new WorldReferenceFrame(this);
-    private Restraint restraint = Restraint.UNBOUND;
+    private YawPitchRestraint restraint = YawPitchRestraint.UNBOUND;
 
     public CannonBlockTile(BlockPos pos, BlockState blockState) {
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
     }
 
-    public void setRestraint(Restraint restraint) {
+    public void setRestraint(YawPitchRestraint restraint) {
         this.restraint = restraint;
     }
 
@@ -108,7 +109,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     private @NotNull Vec3 getCannonRecoil() {
         float power = this.getFirePower();
         float scale = 1;
-        Vec3 shootForce = new Vec3(this.getCannonGlobalFacing(1)).scale(-power * scale);
+        Vec3 shootForce = new Vec3(this.getGlobalFacing(1)).scale(-power * scale);
         return new Vec3(-shootForce.x, 0, -shootForce.z);
     }
 
@@ -156,7 +157,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         if (breakWhitelist != null) {
             tag.put("break_whitelist", CannonballWhitelist.CODEC.encodeStart(ops, breakWhitelist).getOrThrow());
         }
-        tag.put("orientation", OrientationRig.CODEC.encodeStart(ops, orientation).getOrThrow());
+        tag.put("orientation", ExtraCodecs.QUATERNIONF.encodeStart(ops, orientation.getRotation(1)).getOrThrow());
         tag.put("trajectory", BallisticData.CODEC.encodeStart(ops, trajectoryData).getOrThrow());
     }
 
@@ -173,7 +174,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         if (tag.contains("break_whitelist")) {
             this.breakWhitelist = CannonballWhitelist.CODEC.parse(NbtOps.INSTANCE, tag.get("break_whitelist")).getOrThrow();
         }
-        this.orientation = OrientationRig.CODEC.parse(ops, tag.get("orientation")).getOrThrow();
+        Quaternionf quat = ExtraCodecs.QUATERNIONF.parse(ops, tag.get("orientation")).getOrThrow();
+        this.orientation.orient(quat);
         this.trajectoryData = BallisticData.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory")).getOrThrow();
     }
 
@@ -336,7 +338,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
 
     protected boolean shootProjectile(ServerLevel serverLevel) {
-        Vec3 facing = new Vec3(this.getCannonGlobalFacing(1)).scale(-1);
+        Vec3 facing = new Vec3(this.getGlobalFacing(1)).scale(-1);
         ItemStack projectile = this.getProjectile().copy();
 
         if (projectile.getItem() instanceof CannonBallItem && breakWhitelist != null) {
@@ -412,6 +414,10 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     //new stuff
 
+    public void snapToWantedRotationInstantly(){
+        this.orientation.tick();
+    }
+
     public void setLocalOrientation(Quaternionf localRot) {
         //remove structure rot
         Quaternionf structureRot = getStructureAdditionalRotation();
@@ -449,7 +455,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return RotHlpr.rot(this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
     }
 
-    public Vector3f getCannonGlobalFacing(float partialTicks) {
+    public Vector3f getGlobalFacing(float partialTicks) {
         Quaternionf rot = getWorldOrientation(partialTicks);
         Vector3f forward = new Vector3f(0, 0, 1);
         rot.transform(forward);
@@ -471,7 +477,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return referenceFrame.velocity();
     }
 
-    public Restraint getOrientationRestraints() {
+    public YawPitchRestraint getOrientationRestraints() {
         BlockState state = this.getBlockState();
         Direction dir = state.getValue(CannonBlock.FACING).getOpposite();
         return restraint.rotated(dir);

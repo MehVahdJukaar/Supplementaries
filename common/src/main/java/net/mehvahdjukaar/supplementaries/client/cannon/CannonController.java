@@ -151,6 +151,7 @@ public class CannonController {
             float newYaw = trajectory3D.yaw() * Mth.RAD_TO_DEG;
             cannon.setWorldOrientation(EntityAngles.of(newPitch, newYaw)
                     .toQuaternion());
+            cannon.snapToWantedRotationInstantly();
         }
     }
 

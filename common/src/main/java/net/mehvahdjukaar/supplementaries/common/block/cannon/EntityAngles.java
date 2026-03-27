@@ -10,6 +10,7 @@ import org.joml.Vector3f;
 import java.util.List;
 
 // Degrees.
+// These apply first yaw then pitch. Used to convert from and to quaternion
 // These hold pitch and yaw in an entity like fashion. so yaw is inverted. pitch is inverted too...
 public record EntityAngles(float pitch, float yaw) {
 
