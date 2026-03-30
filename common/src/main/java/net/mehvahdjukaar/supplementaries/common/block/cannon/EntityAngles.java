@@ -26,7 +26,6 @@ public record EntityAngles(float pitch, float yaw) {
      */
     public static EntityAngles fromRadians(float pitchRad, float yawRad) {
         return new EntityAngles(
-                EulerAngles
                 (float) Math.toDegrees(pitchRad),
                 (float) Math.toDegrees(yawRad)
         );

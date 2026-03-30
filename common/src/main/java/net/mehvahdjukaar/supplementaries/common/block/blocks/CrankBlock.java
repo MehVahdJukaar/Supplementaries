@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -32,15 +33,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.EnumMap;
 import java.util.function.BiConsumer;
 
 public class CrankBlock extends WaterBlock {
-    protected static final VoxelShape SHAPE_DOWN = Block.box(2, 11, 2, 14, 16, 14);
-    protected static final VoxelShape SHAPE_UP = Block.box(2, 0, 2, 14, 5, 14);
-    protected static final VoxelShape SHAPE_NORTH = Block.box(2, 2, 11, 14, 14, 16);
-    protected static final VoxelShape SHAPE_SOUTH = Block.box(2, 2, 0, 14, 14, 5);
-    protected static final VoxelShape SHAPE_EAST = Block.box(0, 2, 2, 5, 14, 14);
-    protected static final VoxelShape SHAPE_WEST = Block.box(11, 2, 2, 16, 14, 14);
+
+    protected static final EnumMap<Direction, VoxelShape> SHAPES =
+            MthUtils.getAllRotatedVoxelShapes(Block.box(2, 2, 11, 14, 14, 16));
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
@@ -175,14 +174,7 @@ public class CrankBlock extends WaterBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            case NORTH -> SHAPE_NORTH;
-            case WEST -> SHAPE_WEST;
-            case EAST -> SHAPE_EAST;
-            case UP -> SHAPE_UP;
-            case DOWN -> SHAPE_DOWN;
-            default -> SHAPE_SOUTH;
-        };
+        return SHAPES.get(state.getValue(FACING));
     }
 
     @Override

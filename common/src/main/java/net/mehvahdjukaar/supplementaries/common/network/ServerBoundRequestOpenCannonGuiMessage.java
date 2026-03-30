@@ -1,13 +1,15 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -29,9 +31,9 @@ public record ServerBoundRequestOpenCannonGuiMessage(TileOrEntityTarget target) 
     public void handle(Context context) {
         if (context.getPlayer() instanceof ServerPlayer player) {
             Level level = player.level();
-            CannonAccess access = CannonAccess.find(level, target);
-            if (access != null) {
-                access.openCannonGui(player);
+
+            if ( target.getTarget(level) instanceof MenuProvider mp) {
+                Utils.openGuiIfPossible().openCustomMenu(mp);
             }
         }
     }

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -11,6 +11,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.joml.Quaternionf;
 
 public record SyncCannonPacket(
@@ -40,16 +41,15 @@ public record SyncCannonPacket(
         Player player = context.getPlayer();
         Level level = player.level();
 
-        CannonAccess access = CannonAccess.find(level, this.target);
-        if (access != null) {
-            var cannon = access.getInternalCannon();
-            if (cannon.canBeUsedBy(BlockPos.containing(access.getCannonGlobalPosition(1)), player)) {
+        BlockEntity be = this.target.findTileOrContainedTile(level);
+        if (be instanceof CannonBlockTile cannon) {
+            if (cannon.canBeUsedBy(BlockPos.containing(cannon.getGlobalPosition(1)), player)) {
                 cannon.setAttributes(this.rotation, this.firePower, this.fire, player);
                 cannon.setChanged();
                 if (stopControlling) {
                     cannon.setCurrentUser(null);
                 }
-                if (!level.isClientSide) access.updateClients();
+                if (!level.isClientSide) cannon.syncToClients();
             } else {
                 Supplementaries.LOGGER.warn("Player tried to control cannon {} without permission: {}", player.getName().getString(), this.target);
             }

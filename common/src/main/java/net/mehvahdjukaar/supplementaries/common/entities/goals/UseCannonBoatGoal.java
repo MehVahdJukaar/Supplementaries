@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.util.Mth;

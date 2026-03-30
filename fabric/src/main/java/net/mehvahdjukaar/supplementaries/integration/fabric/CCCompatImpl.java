@@ -6,7 +6,6 @@ import dan200.computercraft.api.peripheral.PeripheralLookup;
 import dan200.computercraft.shared.media.items.PrintoutData;
 import dan200.computercraft.shared.media.items.PrintoutItem;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -144,18 +143,16 @@ public class CCCompatImpl {
 
     public static final class CannonPeripheral implements IPeripheral {
         private final CannonBlockTile tile;
-        private final CannonAccess acc;
 
         public CannonPeripheral(CannonBlockTile tile) {
             this.tile = tile;
-            this.acc = CannonAccess.find(tile.getLevel(), TileOrEntityTarget.of(tile));
         }
 
         @LuaFunction
         public void setYaw(double value) {
             //TODO: cannon change
             //tile.setYaw(acc, (float) value);
-            acc.updateClients();
+            ca.updateClients();
         }
 
         @LuaFunction

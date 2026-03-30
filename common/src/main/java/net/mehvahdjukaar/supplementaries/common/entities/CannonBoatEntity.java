@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.entities;//
 
 
 import net.mehvahdjukaar.moonlight.api.entity.IControllableVehicle;
+import net.mehvahdjukaar.moonlight.api.entity.ITileEntityCarry;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
@@ -18,6 +20,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -44,12 +47,13 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, IControllableVehicle {
+public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, IControllableVehicle, ITileEntityCarry {
 
     private static final EntityDataAccessor<WoodType> DATA_WOOD_TYPE =
             SynchedEntityData.defineId(CannonBoatEntity.class, WoodType.ENTITY_SERIALIZER.get());
@@ -76,6 +80,11 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.yo = y;
         this.zo = z;
         this.setWoodType(type);
+    }
+
+    @Override
+    public BlockEntity getCarriedTileEntity() {
+        return cannon;
     }
 
     public boolean isBamboo() {

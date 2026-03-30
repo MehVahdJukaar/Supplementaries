@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import com.mojang.math.Axis;
 import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.block.IAnalogRotatable;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
@@ -8,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -33,7 +33,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -55,6 +57,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,12 +66,8 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     public static final int MAX_POWER_LEVELS = 4;
     public static final MapCodec<CannonBlock> CODEC = simpleCodec(CannonBlock::new);
 
-    protected static final VoxelShape SHAPE_DOWN = Block.box(0.0, 0.0, 0.0, 16.0, 2.0, 16.0);
-    protected static final VoxelShape SHAPE_UP = Block.box(0.0, 14.0, 0.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape SHAPE_SOUTH = Block.box(0.0, 0.0, 14.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape SHAPE_NORTH = Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 2.0);
-    protected static final VoxelShape SHAPE_EAST = Block.box(14.0, 0.0, 0.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape SHAPE_WEST = Block.box(0.0, 0.0, 0.0, 2.0, 16.0, 16.0);
+    protected static final EnumMap<Direction, VoxelShape> SHAPES = MthUtils.getAllRotatedVoxelShapes(
+            Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 2.0));
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final EnumProperty<Rotation> ROTATE_TILE = ModBlockProperties.ROTATE_TILE;
@@ -193,7 +192,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
         return Utils.getTicker(pBlockEntityType, ModRegistry.CANNON_TILE.get(),
-                (l,p,s, tile) -> tile.tick());
+                (l, p, s, tile) -> tile.tick());
     }
 
     @Override
@@ -253,14 +252,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public VoxelShape getOcclusionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return switch (state.getValue(FACING).getOpposite()) {
-            case UP -> SHAPE_UP;
-            case DOWN -> SHAPE_DOWN;
-            case NORTH -> SHAPE_NORTH;
-            case SOUTH -> SHAPE_SOUTH;
-            case WEST -> SHAPE_WEST;
-            case EAST -> SHAPE_EAST;
-        };
+        return SHAPES.get(state.getValue(FACING).getOpposite());
     }
 
     @Override
@@ -282,14 +274,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            case UP -> SHAPE_UP;
-            case DOWN -> SHAPE_DOWN;
-            case NORTH -> SHAPE_NORTH;
-            case SOUTH -> SHAPE_SOUTH;
-            case WEST -> SHAPE_WEST;
-            case EAST -> SHAPE_EAST;
-        };
+        return SHAPES.get (state.getValue(FACING));
     }
 
     @Override
@@ -334,15 +319,13 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
                           Direction axis, @Nullable Vec3 hit) {
         if (axis.getAxis() == newState.getValue(FACING).getAxis() && world.getBlockEntity(pos) instanceof CannonBlockTile tile) {
             float angle = rotation.rotate(0, 4) * -90;
-            /*
-            Vector3f currentDir = tile.getCannonGlobalFacing(0).toVector3f();
+            Quaternionf currentDir = tile.getWorldOrientation(1);
             Quaternionf q = new Quaternionf().rotateAxis(angle * Mth.DEG_TO_RAD, axis.step());
-            currentDir.rotate(q);
-            Vec3 newDir = new Vec3(currentDir);
-            tile.setYaw((float) MthUtils.getYaw(newDir));
-            tile.setPitch((float) MthUtils.getPitch(newDir));
+            q.mul(currentDir);
+            tile.setWorldOrientation(q);
+            tile.snapToWantedRotationInstantly();
             tile.setChanged();
-            tile.getLevel().sendBlockUpdated(pos, oldState, newState, 3);*/
+            tile.getLevel().sendBlockUpdated(pos, oldState, newState, 3);
         }
     }
 
@@ -356,7 +339,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
             Vector3f rotAxis = face.step();
             Quaternionf cannonRot = tile.getWorldOrientation(1);
             //this is the way we face. now a rotation is being performend on the face "face", either ccw or cw. make this vector rotate acocrdingly
-            cannonRot =  new Quaternionf().rotateAxis(deltaAngle, rotAxis).mul(cannonRot);
+            cannonRot = new Quaternionf().rotateAxis(deltaAngle, rotAxis).mul(cannonRot);
             tile.setWorldOrientation(cannonRot);
             tile.setChanged();
             //  level.sendBlockUpdated(pos, state, state, 3);
@@ -365,7 +348,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public boolean canRotateAnalog(BlockState state, Level level, BlockPos pos, Direction face) {
-        return state.getValue(FACING).getAxis() != face.getAxis();
+        return true;
     }
 
 }

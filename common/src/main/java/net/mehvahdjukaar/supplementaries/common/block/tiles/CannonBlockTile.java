@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.tiles;
 import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
@@ -30,6 +31,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -83,7 +85,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public CannonBlockTile(BlockPos pos, BlockState blockState) {
         super(ModRegistry.CANNON_TILE.get(), pos, blockState, 2);
-        this.setRestraint(new YawPitchRestraint(-360f, 360f, -360, 20));
+        this.setRestraint(new YawPitchRestraint(-360f, 360f, -360, 40));
     }
 
     public void setRestraint(YawPitchRestraint restraint) {
@@ -93,7 +95,6 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public void setReferenceFrame(ReferenceFrame mount) {
         this.referenceFrame = mount;
     }
-
 
     public void tick() {
         this.orientation.tick();
@@ -108,7 +109,6 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             }
         }
     }
-
 
     private @NotNull Vec3 getCannonRecoil() {
         float power = this.getFirePower();
@@ -377,6 +377,11 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     @Override
     public UUID getCurrentUser() {
         return controllingEntity;
+    }
+
+    @ForgeOverride
+    public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {
+        //Unused. PlatHelper.openCUstomMenu writes more data ontop of that. only problem is spectator...
     }
 
     @Override

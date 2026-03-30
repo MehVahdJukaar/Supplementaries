@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
 import com.google.common.collect.ImmutableMap;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.server.level.ServerLevel;

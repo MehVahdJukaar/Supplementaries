@@ -2,9 +2,10 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonAccess;
+import net.mehvahdjukaar.moonlight.api.entity.ITileEntityCarry;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -43,11 +44,11 @@ public class CannonChargeHud implements LayeredDraw.Layer {
 
             renderTrajectoryIcons(graphics, screenWidth, screenHeight);
 
-        } else if (mc.player.getVehicle() instanceof CannonAccess be) {
+        } else if (mc.player.getVehicle() instanceof ITileEntityCarry tc && tc.getCarriedTileEntity() instanceof CannonBlockTile cbt) {
             setupOverlayRenderState();
             int screenWidth = graphics.guiWidth();
             int screenHeight = graphics.guiHeight();
-            renderBar(graphics, screenWidth, screenHeight, be.getInternalCannon(), deltaTracker.getGameTimeDeltaPartialTick(false));
+            renderBar(graphics, screenWidth, screenHeight, cbt, deltaTracker.getGameTimeDeltaPartialTick(false));
         }
     }
 

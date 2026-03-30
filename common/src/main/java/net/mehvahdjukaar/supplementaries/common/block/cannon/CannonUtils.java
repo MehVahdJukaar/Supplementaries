@@ -22,7 +22,7 @@ public class CannonUtils {
 
 
     @Nullable
-    public static CannonBlockTile cannonFromNetwork(Level level,TileOrEntityTarget target) {
+    public static CannonBlockTile cannonFromNetwork(Level level, TileOrEntityTarget target) {
         return target.map(level, be -> {
                     if (be instanceof CannonBlockTile cbt) return cbt;
                     return null;
@@ -43,8 +43,8 @@ public class CannonUtils {
 
         YawPitchRestraint restraints = cannon.getOrientationRestraints();
         BallisticData ballistic = cannon.getTrajectoryData();
-        float minPitch = restraints.getMinPitch() * Mth.DEG_TO_RAD;
-        float maxPitch = restraints.getMaxPitch() * Mth.DEG_TO_RAD;
+        float minPitch = restraints.minPitchDeg() * Mth.DEG_TO_RAD;
+        float maxPitch = restraints.maxPitchDeg() * Mth.DEG_TO_RAD;
 
         var vec3ToPoint = vec3ToPoint2d(localTarget);
 

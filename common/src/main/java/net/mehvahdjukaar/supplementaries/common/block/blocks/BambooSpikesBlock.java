@@ -12,6 +12,7 @@ import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.PotionBottleType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -61,6 +62,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -68,13 +70,8 @@ import java.util.function.Supplier;
 import static net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem.getPotion;
 
 public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, EntityBlock, IWashable, IPistonMotionReact {
-    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
-    protected static final VoxelShape SHAPE_UP = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.0D, 16.0D);
-    protected static final VoxelShape SHAPE_DOWN = Block.box(0.0D, 15.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 1.0D);
-    protected static final VoxelShape SHAPE_WEST = Block.box(15.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape SHAPE_EAST = Block.box(0.0D, 0.0D, 0.0D, 1.0D, 16.0D, 16.0D);
+    protected static final EnumMap<Direction,VoxelShape> SHAPES = MthUtils.getAllRotatedVoxelShapes(
+            Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D));
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty TIPPED = ModBlockProperties.TIPPED;
@@ -127,14 +124,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            case DOWN -> SHAPE_DOWN;
-            case UP -> SHAPE_UP;
-            case EAST -> SHAPE_EAST;
-            case WEST -> SHAPE_WEST;
-            case NORTH -> SHAPE_NORTH;
-            case SOUTH -> SHAPE_SOUTH;
-        };
+        return SHAPES.get (state.getValue(FACING));
     }
 
     @Override

@@ -3,39 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.block.cannon;
 import net.minecraft.core.Direction;
 import org.joml.Quaternionf;
 
-public final class YawPitchRestraint {
-
-    private final float minYawDeg;
-    private final float maxYawDeg;
-    private final float minPitchDeg;
-    private final float maxPitchDeg;
+public record YawPitchRestraint(float minYawDeg, float maxYawDeg, float minPitchDeg, float maxPitchDeg) {
 
     public static final YawPitchRestraint UNBOUND = new YawPitchRestraint(-360f, 360f, -360f, 360f);
-
-    public YawPitchRestraint(float minYawDeg, float maxYawDeg, float minPitchDeg, float maxPitchDeg) {
-
-        this.minYawDeg = minYawDeg;
-        this.maxYawDeg = maxYawDeg;
-        this.minPitchDeg = minPitchDeg;
-        this.maxPitchDeg = maxPitchDeg;
-    }
-
-    public float getMinYaw() {
-        return minYawDeg;
-    }
-
-    public float getMaxYaw() {
-        return maxYawDeg;
-    }
-
-    public float getMinPitch() {
-        return minPitchDeg;
-    }
-
-    public float getMaxPitch() {
-        return maxPitchDeg;
-    }
-
 
     public Quaternionf clamp(Quaternionf input) {
         Quaternionf rotation = new Quaternionf(input).normalize();
