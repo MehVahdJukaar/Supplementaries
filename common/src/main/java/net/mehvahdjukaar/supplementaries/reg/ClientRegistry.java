@@ -299,7 +299,7 @@ public class ClientRegistry {
                 (stack, world, entity, s) -> TrappedPresentBlockTile.isPrimed(stack) ? 1.0F : 0F));
 
         ItemProperties.register(ModRegistry.CANDY_ITEM.get(), Supplementaries.res("wrapping"),
-                (stack, world, entity, s) -> MiscUtils.FESTIVITY.getCandyWrappingIndex());
+                (stack, world, entity, s) -> MiscUtils.getFestivity().getCandyWrappingIndex());
 
         ItemProperties.register(ModRegistry.QUIVER_ITEM.get(), Supplementaries.res("dyed"),
                 (stack, world, entity, s) -> stack.has(DataComponents.DYED_COLOR) ? 1 : 0);

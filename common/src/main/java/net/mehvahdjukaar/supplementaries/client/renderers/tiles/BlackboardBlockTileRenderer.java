@@ -38,7 +38,7 @@ public class BlackboardBlockTileRenderer implements BlockEntityRenderer<Blackboa
 
     public BlackboardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.mc = Minecraft.getInstance();
-        this.noise = MiscUtils.FESTIVITY.isAprilsFool();
+        this.noise = MiscUtils.getFestivity().isAprilsFool();
     }
 
     @Override

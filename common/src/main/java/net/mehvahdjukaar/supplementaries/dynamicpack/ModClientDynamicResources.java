@@ -105,7 +105,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                     ResType.BLOCK_TEXTURES.getPath(Supplementaries.res("gold_gate_top")), false);
         }
 
-        if (MiscUtils.FESTIVITY.isChristmas()) {
+        if (MiscUtils.getFestivity().isChristmas()) {
             sink.copyResource(manager, ResType.ITEM_TEXTURES.getPath(Supplementaries.res("party_hat")),
                     ResType.ITEM_TEXTURES.getPath(Supplementaries.res("party_hat_christmas")), false);
         }

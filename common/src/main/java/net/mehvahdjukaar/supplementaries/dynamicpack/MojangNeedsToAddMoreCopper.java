@@ -23,7 +23,7 @@ public class MojangNeedsToAddMoreCopper {
 
 
     public static void run(ResourceManager manager, ResourceSink sink) {
-        if (!MiscUtils.FESTIVITY.isAprilsFool()) return;
+        if (!MiscUtils.getFestivity().isAprilsFool()) return;
 
         try (TextureImage c0 = TextureImage.open(manager, RPUtils.findFirstBlockTextureLocation(manager, Blocks.COPPER_BLOCK));
              TextureImage c1 = TextureImage.open(manager, RPUtils.findFirstBlockTextureLocation(manager, Blocks.EXPOSED_COPPER));
@@ -121,7 +121,7 @@ public class MojangNeedsToAddMoreCopper {
     }
 
     public static void runTranslations(AfterLanguageLoadEvent lang) {
-        if (!MiscUtils.FESTIVITY.isAprilsFool()) return;
+        if (!MiscUtils.getFestivity().isAprilsFool()) return;
         Random random = new Random();
         try {
             @Deprecated(forRemoval = true)

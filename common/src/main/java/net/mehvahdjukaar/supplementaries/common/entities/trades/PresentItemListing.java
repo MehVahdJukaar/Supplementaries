@@ -28,7 +28,7 @@ public record PresentItemListing(ModItemListing original) implements ModItemList
 
         MerchantOffer originalOffer = original.getOffer(entity, random);
         if (originalOffer == null) return null;
-        if (MiscUtils.FESTIVITY.isChristmas() && CommonConfigs.Functional.PRESENT_ENABLED.get()) {
+        if (MiscUtils.getFestivity().isChristmas() && CommonConfigs.Functional.PRESENT_ENABLED.get()) {
             Block randomPresent = ModRegistry.PRESENTS.get(DyeColor.values()[
                     random.nextInt(DyeColor.values().length)]).get();
             PresentBlockTile dummyTile = new PresentBlockTile(BlockPos.ZERO,

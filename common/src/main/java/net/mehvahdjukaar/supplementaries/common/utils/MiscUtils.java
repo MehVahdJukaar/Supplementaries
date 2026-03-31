@@ -139,7 +139,14 @@ public class MiscUtils {
         }
     }
 
-    public static final Festivity FESTIVITY = Festivity.compute();
+    private static Festivity cachedFestivity;
+
+    public static Festivity getFestivity() {
+        if (cachedFestivity == null) {
+            cachedFestivity = Festivity.compute();
+        }
+        return cachedFestivity;
+    }
 
     public static boolean isSword(Item i) {
         if (i.builtInRegistryHolder().is(ModTags.STATUE_SWORDS)) return true;

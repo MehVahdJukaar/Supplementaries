@@ -33,7 +33,7 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
                                   ResourceLocation texture, float height, Direction dir) {
 
         int color = 0xffffff;
-        if (MiscUtils.FESTIVITY.isAprilsFool()) {
+        if (MiscUtils.getFestivity().isAprilsFool()) {
             color = ColorHelper.getRainbowColor(1);
             texture = ModTextures.WHITE_CONCRETE_TEXTURE;
         }

@@ -96,7 +96,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     }
 
     public static Song setCurrentlyPlaying(UUID id, String songKey) {
-        if (MiscUtils.FESTIVITY.isAprilsFool()) songKey = "rickroll";
+        if (MiscUtils.getFestivity().isAprilsFool()) songKey = "rickroll";
         Song song = SONGS.getOrDefault(songKey, Song.EMPTY);
         CURRENTLY_PAYING.put(id, song);
         song.validatePlayReady();
@@ -109,7 +109,7 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
 
     @NotNull
     private static String selectRandomSong(RandomSource random) {
-        if (MiscUtils.FESTIVITY.isChristmas() && random.nextFloat() > 0.8) {
+        if (MiscUtils.getFestivity().isChristmas() && random.nextFloat() > 0.8) {
             return CAROLS.get(random.nextInt(CAROLS.size()));
         }
         Optional<WeightedEntry.Wrapper<String>> song = WeightedRandom.getRandomItem(random, SONG_WEIGHTED_LIST);
