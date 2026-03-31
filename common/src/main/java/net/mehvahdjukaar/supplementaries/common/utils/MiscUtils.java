@@ -139,13 +139,16 @@ public class MiscUtils {
         }
     }
 
-    private static Festivity cachedFestivity;
+
+    @Deprecated(forRemoval = true)
+    private static Festivity FESTIVITY = Festivity.NONE;
+    private static Festivity festivity;
 
     public static Festivity getFestivity() {
-        if (cachedFestivity == null) {
-            cachedFestivity = Festivity.compute();
+        if (festivity == null) {
+            festivity = Festivity.compute();
         }
-        return cachedFestivity;
+        return festivity;
     }
 
     public static boolean isSword(Item i) {
