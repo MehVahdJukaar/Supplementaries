@@ -151,7 +151,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
 
     @Override
     public void animateTick(BlockState stateIn, Level level, BlockPos pos, RandomSource rand) {
-        if (MiscUtils.FESTIVITY.isEarthDay() && level.isClientSide) {
+        if (MiscUtils.getFestivity().isEarthDay() && level.isClientSide) {
             int x = pos.getX();
             int y = pos.getY();
             int z = pos.getZ();

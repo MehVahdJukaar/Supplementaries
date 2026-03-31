@@ -178,7 +178,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
         poseStack.pushPose();
         poseStack.translate(0, 0.5, 0.008);
 
-        if (MiscUtils.FESTIVITY.isAprilsFool()) {
+        if (MiscUtils.getFestivity().isAprilsFool()) {
             float d0 = ColorUtils.getShading(dir.step());
             TextUtils.renderBeeMovie(poseStack, buffer, frontLight, font, d0);
             poseStack.popPose();

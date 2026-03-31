@@ -129,7 +129,7 @@ public abstract class RedMerchantSpawnerMixin {
         diff *= dragon;
 
         //ho ho ho
-        if (MiscUtils.FESTIVITY.isChristmas()) diff *= 15;
+        if (MiscUtils.getFestivity().isChristmas()) diff *= 15;
 
         return diff;
     }

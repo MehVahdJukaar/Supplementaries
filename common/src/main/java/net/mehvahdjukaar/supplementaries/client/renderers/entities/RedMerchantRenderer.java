@@ -30,7 +30,7 @@ public class RedMerchantRenderer extends MobRenderer<RedMerchantEntity, Villager
     public ResourceLocation getTextureLocation(RedMerchantEntity entity) {
         return entity.getDisplayName().getString().toLowerCase(Locale.ROOT).equals("morshu") ?
                 ModTextures.ORANGE_MERCHANT :
-                MiscUtils.FESTIVITY.isChristmas() ? ModTextures.RED_MERCHANT_CHRISTMAS : ModTextures.RED_MERCHANT;
+                MiscUtils.getFestivity().isChristmas() ? ModTextures.RED_MERCHANT_CHRISTMAS : ModTextures.RED_MERCHANT;
     }
 
     @Override

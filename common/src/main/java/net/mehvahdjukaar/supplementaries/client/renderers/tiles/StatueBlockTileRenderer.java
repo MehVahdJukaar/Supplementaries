@@ -105,7 +105,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
         StatueBlockTile.StatuePose pose = tile.getPose();
         ItemStack stack = tile.getDisplayedItem();
 
-        if (MiscUtils.FESTIVITY.isHalloween()) {
+        if (MiscUtils.getFestivity().isHalloween()) {
             this.model.head.visible = false;
             this.model.hat.visible = false;
             if (pose == StatueBlockTile.StatuePose.STANDING) {
@@ -120,8 +120,8 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                         combinedLightIn, combinedOverlayIn, poseStack, bufferIn, tile.getLevel(), 0);
                 poseStack.popPose();
             }
-        } else if (MiscUtils.FESTIVITY.isChristmas() || MiscUtils.FESTIVITY.isBirthday() ||
-                MiscUtils.FESTIVITY.isAprilsFool()) {
+        } else if (MiscUtils.getFestivity().isChristmas() || MiscUtils.getFestivity().isBirthday() ||
+                MiscUtils.getFestivity().isAprilsFool()) {
             poseStack.pushPose();
             float scale = 0.5f;
             poseStack.translate(0, -1/16f, 0);

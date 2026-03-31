@@ -73,7 +73,7 @@ public class ClockBlock extends WaterBlock implements EntityBlock {
 
     public static boolean canReadTime(Level level) {
         boolean naturalDim = (level.dimensionType().natural() || CommonConfigs.Tweaks.COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS.get());
-        return naturalDim ^ MiscUtils.FESTIVITY.isAprilsFool();
+        return naturalDim ^ MiscUtils.getFestivity().isAprilsFool();
     }
 
     @Override

@@ -109,7 +109,7 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         models.put(GlobeManager.Model.SNOW, special.getChild("snow"));
         models.put(GlobeManager.Model.SHEARED, special.getChild("sheared"));
         INSTANCE = this;
-        this.noise = MiscUtils.FESTIVITY.isAprilsFool();
+        this.noise = MiscUtils.getFestivity().isAprilsFool();
 
     }
 

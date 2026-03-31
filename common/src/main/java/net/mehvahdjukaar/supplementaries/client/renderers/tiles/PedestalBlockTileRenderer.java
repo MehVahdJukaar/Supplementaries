@@ -157,7 +157,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
             }
 
 
-            if (MiscUtils.FESTIVITY.isAprilsFool()) stack = new ItemStack(Items.DIRT);
+            if (MiscUtils.getFestivity().isAprilsFool()) stack = new ItemStack(Items.DIRT);
             this.itemRenderer.renderStatic(stack, transform, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn, tile.getLevel(), 0);
 
             matrixStackIn.popPose();

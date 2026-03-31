@@ -349,9 +349,9 @@ public class GlobeTextureGenerator {
         generateMushrooms();
         generateIcebergs2();
 
-        if (MiscUtils.FESTIVITY.isChristmas()) {
+        if (MiscUtils.getFestivity().isChristmas()) {
             christmas();
-        } else if (MiscUtils.FESTIVITY.isEarthDay()) {
+        } else if (MiscUtils.getFestivity().isEarthDay()) {
             meltice();
         }
     }

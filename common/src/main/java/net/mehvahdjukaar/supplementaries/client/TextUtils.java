@@ -32,7 +32,7 @@ public class TextUtils {
         float lx = 1 - (2 * 0.125f);
 
         CREDITS.addAll(Minecraft.getInstance().font.split(TextUtil.parseText(text, null), Mth.floor(lx * SCALING_FACTOR)));
-        String b = !MiscUtils.FESTIVITY.isAprilsFool() ? "" :
+        String b = !MiscUtils.getFestivity().isAprilsFool() ? "" :
                 """
                 THE BEE MOVIE§r
 
