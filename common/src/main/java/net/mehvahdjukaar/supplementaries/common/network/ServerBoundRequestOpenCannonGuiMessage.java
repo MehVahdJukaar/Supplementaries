@@ -33,7 +33,7 @@ public record ServerBoundRequestOpenCannonGuiMessage(TileOrEntityTarget target) 
             Level level = player.level();
 
             if ( target.getTarget(level) instanceof MenuProvider mp) {
-                Utils.openGuiIfPossible().openCustomMenu(mp);
+               // Utils.openGuiIfPossible().openCustomMenu(mp);
             }
         }
     }

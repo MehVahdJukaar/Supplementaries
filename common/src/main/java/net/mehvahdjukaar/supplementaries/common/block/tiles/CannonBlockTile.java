@@ -521,7 +521,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return referenceFrame.impedePlayerMovementWhenManeuvering();
     }
 
-    public boolean canManeuverFromGUI(LocalPlayer player) {
+    public boolean canManeuverFromGUI(Player player) {
         return referenceFrame.canManeuverFromGUI(player);
     }
 }

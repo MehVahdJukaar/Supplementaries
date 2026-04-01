@@ -141,12 +141,13 @@ public class MiscUtils {
 
 
     @Deprecated(forRemoval = true)
-    private static Festivity FESTIVITY = Festivity.NONE;
-    private static Festivity festivity;
+    public static Festivity FESTIVITY = Festivity.NONE;
+    private static Festivity festivity = null;
 
     public static Festivity getFestivity() {
         if (festivity == null) {
             festivity = Festivity.compute();
+            FESTIVITY = festivity;
         }
         return festivity;
     }

@@ -260,7 +260,7 @@ public class ClientConfigs {
                     .define("placeable_tooltips", true);
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                     .define("custom_configured_screen", true);
-            UNFUNNY = builder.comment("unfunny").define("I am very boring", false);
+            UNFUNNY = builder.comment("unfunny").define("I am very boring and I don't want any Easter Egg", false);
 
 
 
