@@ -152,30 +152,32 @@ public class CCCompatImpl {
         public void setYaw(double value) {
             //TODO: cannon change
             //tile.setYaw(acc, (float) value);
-            ca.updateClients();
+         //   ca.updateClients();
         }
 
         @LuaFunction
         public float getYaw() {
-            return tile.getYaw();
+           return 0;
+            // return tile.getYaw();
         }
 
         @LuaFunction
         public void setPitch(double value) {
-            tile.setPitch(acc, (float) value);
-            acc.updateClients();
+           // tile.setPitch(acc, (float) value);
+            //acc.updateClients();
         }
 
         @LuaFunction
         public float getPitch() {
-            return tile.getPitch();
+            return 0;
+          //  return tile.getPitch();
         }
 
         @LuaFunction
         public void setPower(int inPower) {
             byte power = (byte) Math.min(Math.max(inPower, 1), CannonBlockTile.MAX_POWER_LEVEL);
             tile.setPowerLevel(power);
-            acc.updateClients();
+          //  acc.updateClients();
         }
 
         @LuaFunction
@@ -185,7 +187,7 @@ public class CCCompatImpl {
 
         @LuaFunction
         public void ignite() {
-            tile.ignite(null, acc);
+           // tile.ignite(null, acc);
         }
 
         @Override

@@ -114,7 +114,7 @@ public class MiscUtils {
             };
         }
 
-        private static Festivity compute() {
+        public static Festivity compute() {
             if (PlatHelper.isDev()) {
                 Random rand = new Random();
                 if (rand.nextFloat() < 0.3f) {

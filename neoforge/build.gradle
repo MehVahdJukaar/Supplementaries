@@ -129,6 +129,10 @@ dependencies {
     modImplementation("curse.maven:exposure-871755:7033927")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:5714512")
+    modImplementation("curse.maven:minecolonies-245506:7858226")
+    modImplementation("curse.maven:domum-ornamentum-527361:7812603")
+    modImplementation("curse.maven:blockui-522992:7790469")
+    modImplementation("curse.maven:structurize-298744:7822250")
     modCompileOnly("curse.maven:curios-309927:5296876")
     modCompileOnly("curse.maven:soul-fire-d-662413:5821523")
     modCompileOnly("curse.maven:cobweb-968456:5441209")

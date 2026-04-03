@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// Credits to Twilight Forest
+// Credits to Twilight Forest, used as inspirtaion for this class
 public class WelcomeMessageScreen extends Screen {
     private final Screen lastScreen;
     private final Component text;
@@ -137,14 +137,6 @@ public class WelcomeMessageScreen extends Screen {
     private static final Component AM_URL = Component.translatable("gui.supplementaries.amendments.suggestions")
             .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).applyFormat(ChatFormatting.UNDERLINE)
                     .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://legacy.curseforge.com/minecraft/mc-mods/amendments")));
-
-    private static final Component AM_TITLE = Component.translatable("gui.supplementaries.amendments.title")
-            .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
-
-    public static WelcomeMessageScreen createAmendments(Screen screen) {
-        return new WelcomeMessageScreen(screen, 100, AM_TITLE, AM_TEXT,
-                AM_URL, SuppPlatformStuff::disableAMWarn);
-    }
 
     private static final Component IM_TITLE = Component.translatable("gui.supplementaries.incompatible_mods.title")
             .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);

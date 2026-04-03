@@ -14,6 +14,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
 public class FluidsUtilImpl {
 
@@ -97,7 +99,7 @@ public class FluidsUtilImpl {
                 int actualAmount = (int) (extracted / BOTTLE);
                 if (actualAmount <= 0) continue;
 
-                SoftFluidStack softFluid = SoftFluidStackImpl.fromFabricFluid(resource, actualAmount);
+                SoftFluidStack softFluid = SoftFluidStackImpl.fromFabricFluid(resource, actualAmount, level.registryAccess());
                 if (!softFluid.isEmpty()) {
                     return FluidOffer.of(softFluid, actualAmount);
                 }

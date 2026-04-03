@@ -76,7 +76,7 @@ public class ModRegistry {
 
     //data
     public static final WorldSavedDataType<GlobeData> GLOBE_DATA = RegHelper.registerWorldSavedData(
-            res("globe_data"), GlobeData::createFromLevel, GlobeData.CODEC, GlobeData.STREAM_CODEC
+            res("globe_data"), GlobeData::createFromLevel, ()->GlobeData.CODEC, ()->GlobeData.STREAM_CODEC
     );
 
     //effects

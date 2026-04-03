@@ -1,29 +1,28 @@
 package net.mehvahdjukaar.supplementaries.common.events;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.DynamicTextureRenderer;
-import net.mehvahdjukaar.moonlight.api.client.texture_renderer.FrameBufferBackedDynamicTexture;
 import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderableDynamicTexture;
-import net.mehvahdjukaar.moonlight.api.client.texture_renderer.RenderedTexturesManager;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
+import net.mehvahdjukaar.supplementaries.client.screens.FunnyScreen;
 import net.mehvahdjukaar.supplementaries.client.screens.WelcomeMessageScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -33,7 +32,6 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.texture.SpriteTicker;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -104,10 +102,10 @@ public class ClientEvents {
             }
             if (!disabled) newScreen = WelcomeMessageScreen.createOptifine(newScreen);
         }
-        /*
-        if (!CompatHandler.AMENDMENTS && !ClientConfigs.General.NO_AMENDMENTS_WARN.get()) {
-            newScreen = WelcomeMessageScreen.createAmendments(newScreen);
-        }*/
+        boolean unfunny = ClientConfigs.General.UNFUNNY.get();
+        if (MiscUtils.Festivity.compute().isAprilsFool()) {
+            newScreen = new FunnyScreen(newScreen, unfunny);
+        }
         if (!ClientConfigs.General.NO_INCOMPATIBLE_MODS.get() && WelcomeMessageScreen.hasIncompat() && !PlatHelper.isDev()) {
             newScreen = WelcomeMessageScreen.createIncompatibleMods(newScreen);
         }
@@ -118,7 +116,7 @@ public class ClientEvents {
     @EventCalled()
     public static boolean onMouseScrolled(double dy) {
         if (SelectableContainerItemHud.getInstance().onMouseScrolled(dy)) {
-           return true;
+            return true;
         }
         if (CannonController.onMouseScrolled(dy)) {
             return true;
@@ -163,6 +161,7 @@ public class ClientEvents {
     private static boolean isOnRope;
 
     private static double wobble; // from 0 to 1
+
     public static double getRopeWobble(double partialTicks) {
         Player p = Minecraft.getInstance().player;
         if (p != null && !Minecraft.getInstance().isPaused() && !p.isSpectator()) {
@@ -225,8 +224,6 @@ public class ClientEvents {
             }
         }
     }
-
-
 
 
 }

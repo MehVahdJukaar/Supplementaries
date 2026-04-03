@@ -15,14 +15,17 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class MojangNeedsToAddMoreCopper {
 
+    public static final Boolean CAN_ACTIVATE = false;
 
     public static void run(ResourceManager manager, ResourceSink sink) {
+        if (!CAN_ACTIVATE) return;
         if (!MiscUtils.getFestivity().isAprilsFool()) return;
 
         try (TextureImage c0 = TextureImage.open(manager, RPUtils.findFirstBlockTextureLocation(manager, Blocks.COPPER_BLOCK));
@@ -121,23 +124,25 @@ public class MojangNeedsToAddMoreCopper {
     }
 
     public static void runTranslations(AfterLanguageLoadEvent lang) {
+        if (!CAN_ACTIVATE) return;
         if (!MiscUtils.getFestivity().isAprilsFool()) return;
         Random random = new Random();
         try {
-            @Deprecated(forRemoval = true)
             Field f = lang.getClass().getDeclaredField("languageLines");
             f.setAccessible(true);
             Map<String, String> ll = (Map<String, String>) f.get(lang);
             List<String> prefix = List.of("Copper ", "Slightly Weathered Copper ", "Weathered Copper ", "Exposed Copper ", "Oxidized Copper ");
 
+            Map<String, String> toAdd =new HashMap<>();
             for (var b : BuiltInRegistries.ITEM) {
                 var id = b.getDescriptionId();
                 var existing = lang.getEntry(id);
                 if (existing != null) {
                     var pr = prefix.get(random.nextInt(prefix.size()));
-                    ll.put(id, pr + existing);
+                    toAdd.put(id, pr + existing);
                 }
             }
+            ll.putAll(toAdd);
         } catch (Exception ignored) {
 
         }
