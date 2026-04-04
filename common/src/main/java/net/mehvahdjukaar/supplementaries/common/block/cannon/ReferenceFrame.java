@@ -16,8 +16,7 @@ public interface ReferenceFrame {
 
     TileOrEntityTarget makeNetworkTarget();
 
-    int oldGetYawOffset(float partialTicks);
-
+    boolean isStillValid(Player player);
 
     boolean shouldRotatePlayerFaceWhenManeuvering();
 

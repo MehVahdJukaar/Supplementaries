@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.minecraft.core.Holder;
 
+@Deprecated(forRemoval = true)
 public record FluidOffer(SoftFluidStack fluid, int minAmount) {
     //min amount is minimum amount that offer will consume regardless of what happens if successful of course
 

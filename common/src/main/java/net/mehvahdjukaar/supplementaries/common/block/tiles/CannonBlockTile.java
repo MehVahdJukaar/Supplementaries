@@ -25,7 +25,6 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -108,6 +107,11 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
                 this.fire();
             }
         }
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return referenceFrame.isStillValid(player);
     }
 
     private @NotNull Vec3 getCannonRecoil() {

@@ -14,6 +14,10 @@ public class BoatReferenceFrame extends EntityReferenceFrame{
         this.boat = boat;
     }
 
+    @Override
+    public boolean isStillValid(Player player) {
+        return boat.stillValid(player);
+    }
 
     @Override
     public Vec3 position(float partialTicks) {
@@ -22,12 +26,6 @@ public class BoatReferenceFrame extends EntityReferenceFrame{
         vv = vv.yRot(Mth.DEG_TO_RAD * yaw);
         return boat.getPosition(partialTicks).add(vv);
 
-    }
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public int oldGetYawOffset(float partialTicks) {
-            return (int) (180 - boat.getViewYRot(partialTicks));
     }
 
     @Override

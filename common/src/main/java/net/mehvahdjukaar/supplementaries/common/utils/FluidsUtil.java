@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
+@Deprecated(forRemoval = true)
 public class FluidsUtil {
 
     @Contract

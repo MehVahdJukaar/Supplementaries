@@ -35,6 +35,11 @@ public class EntityReferenceFrame implements ReferenceFrame {
     }
 
     @Override
+    public boolean isStillValid(Player player) {
+        return !entity.isRemoved();
+    }
+
+    @Override
     public void applyRecoil(Vec3 recoil) {
         if (entity.hasControllingPassenger()) {
             NetworkHelper.sendToAllClientPlayersTrackingEntity(entity,
@@ -45,11 +50,6 @@ public class EntityReferenceFrame implements ReferenceFrame {
     @Override
     public TileOrEntityTarget makeNetworkTarget() {
         return TileOrEntityTarget.of(entity);
-    }
-
-    @Override
-    public int oldGetYawOffset(float partialTicks) {
-        return 0;
     }
 
     @Override

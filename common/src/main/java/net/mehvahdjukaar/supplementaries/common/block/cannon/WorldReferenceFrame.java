@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
@@ -40,11 +40,9 @@ public class WorldReferenceFrame implements ReferenceFrame {
     }
 
     @Override
-    public int oldGetYawOffset(float partialTicks) {
-        return 0;
+    public boolean isStillValid(Player player) {
+        return Container.stillValidBlockEntity(be, player);
     }
-
-
 
     @Override
     public boolean shouldRotatePlayerFaceWhenManeuvering() {
