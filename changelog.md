@@ -1,6 +1,1 @@
-- rewrote turn table logic
-- rewrote and greatly improved cannon rotational logic
-- turn table cna now rotate cannons smoothly and properly
-- turn tables can rotate twilight forest hollow logs
-- added fabric fluid api support for jar fluids
-- added a new flute song
+- added back a fix from previous version that was accidentally removed this update
