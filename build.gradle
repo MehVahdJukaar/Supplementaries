@@ -273,6 +273,7 @@ tasks.register('buildAndPublishAll') {
     dependsOn ':fabric:curseforge'
     dependsOn ':fabric:modrinth'
     dependsOn ':publish'
+    dependsOn ':publishToMavenLocal'
     finalizedBy ':gitTag'
 
     group = 'build'
