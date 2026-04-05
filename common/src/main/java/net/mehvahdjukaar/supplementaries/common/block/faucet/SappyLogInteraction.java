@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.faucet;
 
+import net.mehvahdjukaar.moonlight.api.fluids.FluidOffer;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModSoftFluids;

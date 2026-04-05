@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
+import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.minecraft.core.Direction;
 import org.joml.Quaternionf;
 

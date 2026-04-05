@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.block.cannon;
 
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSendKnockbackPacket;
 import net.mehvahdjukaar.supplementaries.common.network.SyncCannonPacket;
 import net.minecraft.world.entity.Entity;

@@ -39,7 +39,7 @@ public class ModMenuTypes {
             Supplementaries.res(PULLEY_BLOCK_NAME), PulleyContainerMenu::new);
 
     public static final Supplier<MenuType<CannonContainerMenu>> CANNON = RegHelper.registerMenuType(
-            Supplementaries.res(CANNON_NAME), CannonContainerMenu::new);
+            Supplementaries.res(CANNON_NAME), CannonContainerMenu::create);
 
     public static final Supplier<MenuType<RedMerchantMenu>> RED_MERCHANT = RegHelper.registerMenuType(
             Supplementaries.res(RED_MERCHANT_NAME), RedMerchantMenu::new);

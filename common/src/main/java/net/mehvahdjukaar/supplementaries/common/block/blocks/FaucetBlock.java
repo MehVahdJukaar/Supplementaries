@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
+import net.mehvahdjukaar.moonlight.api.fluids.FluidsHelper;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FaucetBlockTile;
-import net.mehvahdjukaar.supplementaries.common.utils.FluidsUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -145,7 +145,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
         else if (downState.is(ModTags.FAUCET_CONNECTION_BLACKLIST)) return false;
         else if (downState.is(ModTags.FAUCET_CONNECTION_WHITELIST)) return false;
         else if (downState.hasProperty(BlockStateProperties.LEVEL_HONEY)) return true;
-        return world instanceof Level level && FluidsUtil.hasFluidHandler(level, pos, dir);
+        return world instanceof Level level && FluidsHelper.hasFluidHandler(level, pos, dir);
     }
 
     @Override

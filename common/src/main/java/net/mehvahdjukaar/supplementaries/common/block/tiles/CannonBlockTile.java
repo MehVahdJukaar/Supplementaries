@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
+import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
-import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.OrientationRig;
@@ -181,13 +182,23 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         }
         if (tag.contains("break_whitelist")) {
             this.breakWhitelist = CannonballWhitelist.CODEC.parse(NbtOps.INSTANCE,
-                    tag.get("break_whitelist")).resultOrPartial(Supplementaries.LOGGER::warn)
+                            tag.get("break_whitelist")).resultOrPartial(Supplementaries.LOGGER::error)
                     .orElse(CannonballWhitelist.EMPTY);
         }
-        Quaternionf quat = ExtraCodecs.QUATERNIONF.parse(ops, tag.get("orientation")).getOrThrow();
+        Quaternionf quat;
+        //backwards compat
+        if (tag.contains("yaw")) {
+            float yaw = 180 + tag.getFloat("yaw");
+            float pitch = tag.getFloat("pitch");
+            quat = EntityAngles.of(pitch, yaw).toQuaternion();
+        } else {
+            quat = ExtraCodecs.QUATERNIONF.parse(ops, tag.get("orientation"))
+                    .resultOrPartial(Supplementaries.LOGGER::error).orElse(new Quaternionf());
+        }
         this.orientation.orient(quat);
+        this.snapToWantedRotationInstantly();
         this.trajectoryData = BallisticData.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
-                .resultOrPartial(Supplementaries.LOGGER::warn)
+                .resultOrPartial(Supplementaries.LOGGER::error)
                 .orElse(BallisticData.LINE);
     }
 
@@ -469,7 +480,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     private Quaternionf getStructureAdditionalRotation() {
-        return RotHlpr.rot(this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
+        return Axis.YP.rotationDegrees(-this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
     }
 
     public Vector3f getGlobalFacing(float partialTicks) {

@@ -4,10 +4,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
+import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.model.geom.ModelPart;
@@ -130,7 +131,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         float fireCounter = tile.getFiringAnimation(partialTick);
 
         //write equation of sawtooth wave with same period as that sine wave
-        float squish = asymmetricTriangleWave(1 - cooldownCounter, 0.01f, 0.15f) * 0.2f;
+        float squish = MthUtils.asymmetricTriangleWave(1 - cooldownCounter, 0.01f, 0.15f) * 0.2f;
 
         float wobble = Mth.sin(fireCounter * 20f * (float) Math.PI) * 0.005f;
         float scale = wobble + 1f + squish * 0.7f;
@@ -143,27 +144,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
         renderer.model.render(poseStack, builder, packedLight, packedOverlay);
         poseStack.popPose();
-    }
-
-    @Deprecated(forRemoval = true)
-    private static float asymmetricTriangleWave(float t, float mid, float end) {
-        if (t <= mid) {
-            // Calculate the slope for the rising part
-            float slope = 1 / mid;
-            // Calculate the y-coordinate based on the slope
-            return slope * t;
-        }
-        // Check if t is within the range of mid to end
-        else if (t <= end) {
-            // Calculate the slope for the falling part
-            float slope = -1 / (end - mid);
-            // Calculate the y-coordinate based on the slope and offset by 1 to start from 1
-            return slope * (t - mid) + 1;
-        }
-        // If cooldownCounter is greater than f, return 0
-        else {
-            return 0;
-        }
     }
 
     private static void renderDebug(PoseStack poseStack, MultiBufferSource bufferSource, Quaternionf quat, int color) {

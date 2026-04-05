@@ -6,8 +6,8 @@ import dan200.computercraft.api.lua.LuaFunction;
 import dan200.computercraft.api.peripheral.IPeripheral;
 import dan200.computercraft.shared.media.items.PrintoutData;
 import dan200.computercraft.shared.media.items.PrintoutItem;
+import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -180,7 +180,7 @@ public class CCCompatImpl {
         public void setYaw(double value) {
             Quaternionf orientation = tile.getLocalOrientation(1);
             EntityAngles angles = EntityAngles.fromQuaternion(orientation);
-            angles = angles.withYaw(value);
+            angles = angles.withYaw((float) value);
 
             tile.setLocalOrientation(angles.toQuaternion());
             tile.syncToClients(false);
@@ -190,7 +190,7 @@ public class CCCompatImpl {
         public void setPitch(double value) {
             Quaternionf orientation = tile.getLocalOrientation(1);
             EntityAngles angles = EntityAngles.fromQuaternion(orientation);
-            angles = angles.withPitch(value);
+            angles = angles.withPitch((float) value);
 
             tile.setLocalOrientation(angles.toQuaternion());
 

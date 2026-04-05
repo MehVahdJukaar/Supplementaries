@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
+import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
@@ -25,8 +26,13 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
     }
 
     //client container factory
-    public CannonContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(ModMenuTypes.CANNON.get(), id, playerInventory, CannonUtils.cannonFromNetwork(playerInventory.player.level(), TileOrEntityTarget.read(packetBuffer)));
+    public static CannonContainerMenu create(Integer id, Inventory playerInventory, FriendlyByteBuf friendlyByteBuf) {
+        TileOrEntityTarget target = TileOrEntityTarget.read(friendlyByteBuf);
+        CannonBlockTile tile = CannonUtils.cannonFromNetwork(playerInventory.player.level(), target);
+        if (tile == null) {
+            throw new IllegalStateException("Tile or entity target is null");
+        }
+        return new CannonContainerMenu(ModMenuTypes.CANNON.get(), id, playerInventory, tile);
     }
 
     public <T extends CannonContainerMenu> CannonContainerMenu(int id, Inventory playerInventory, CannonBlockTile cannon) {
@@ -37,7 +43,8 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
         super(type, id);
 
         //tile inventory
-        this.cannon = cannon;
+        this.cannon = Preconditions.checkNotNull(cannon);
+
 
         CannonBlockTile inventory = this.getContainer();
         checkContainerSize(inventory, 2);
@@ -96,5 +103,6 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
         super.removed(playerIn);
         this.getContainer().stopOpen(playerIn);
     }
+
 
 }
