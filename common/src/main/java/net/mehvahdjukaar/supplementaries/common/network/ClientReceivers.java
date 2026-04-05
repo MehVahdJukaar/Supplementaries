@@ -4,14 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityAngles;
-import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.particles.CannonFireParticle;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlintBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -20,6 +19,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBallEntity;
 import net.mehvahdjukaar.supplementaries.common.entities.IFluteParrot;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
+import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
@@ -545,8 +545,8 @@ public class ClientReceivers {
 
     private static void playIgniteEffects(CannonBlockTile tile) {
         Level level = tile.getLevel();
-        PoseStack poseStack = calculateGlobalCannonPose(tile);
-        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1.752f, 1));
+        PoseStack poseStack = calculateGlobalCannonNozzleTransform(tile);
+        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, -0.85f, 1));
 
         Vec3 speed = tile.getGlobalVelocity();
         level.addParticle(ParticleTypes.CRIT,
@@ -559,7 +559,7 @@ public class ClientReceivers {
 
 
     private static void playFiringEffects(CannonBlockTile cannon) {
-        PoseStack poseStack = calculateGlobalCannonPose(cannon);
+        PoseStack poseStack = calculateGlobalCannonNozzleTransform(cannon);
         Level level = cannon.getLevel();
         Quaternionf rot = cannon.getWorldOrientation(1);
         EntityAngles eulerAngles = EntityAngles.fromQuaternion(rot);
@@ -582,15 +582,14 @@ public class ClientReceivers {
                 soundVolume, soundPitch, false);
     }
 
-    private static PoseStack calculateGlobalCannonPose(CannonBlockTile cannon) {
-        Quaternionf globalRot = cannon.getWorldOrientation(1);
+    private static PoseStack calculateGlobalCannonNozzleTransform(CannonBlockTile cannon) {
         PoseStack poseStack = new PoseStack();
-        var pos = cannon.getGlobalPosition(1);
+        Quaternionf globalRot = cannon.getWorldOrientation(1);
+        Vec3 pos = cannon.getGlobalPosition(1);
         poseStack.translate(pos.x, pos.y + 1 / 16f, pos.z);
         poseStack.mulPose(globalRot);
-        poseStack.translate(0, 0, -1.4);
+        poseStack.translate(0, 0, 0.4);
         return poseStack;
     }
-
 
 }

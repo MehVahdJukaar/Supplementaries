@@ -75,12 +75,12 @@ public class CannonUtils {
             poseStack.pushPose();
 
             Vector4f speed = poseStack.last().pose().transform(new Vector4f(0, 0,
-                    -MthUtils.nextWeighted(ran, 0.5f, 1, 0.06f), 0));
+                    MthUtils.nextWeighted(ran, 0.5f, 1, 0.06f), 0));
 
             float aperture = 0.5f;
             poseStack.translate(-aperture / 2 + ran.nextFloat() * aperture, -aperture / 2 + ran.nextFloat() * aperture, 0);
 
-            Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
+            Vector4f p = poseStack.last().pose().transform(new Vector4f());
 
             level.addParticle(ParticleTypes.SMOKE,
                     p.x, p.y, p.z,
@@ -92,7 +92,7 @@ public class CannonUtils {
     public static void spawnDustRing(Level level, PoseStack poseStack, Vec3 sp) {
         poseStack.pushPose();
 
-        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, 1, 1));
+        Vector4f p = poseStack.last().pose().transform(new Vector4f());
 
         int dustCount = 16;
         for (int i = 0; i < dustCount; i += 1) {

@@ -96,8 +96,7 @@ public class CannonFireParticle extends TextureSheetParticle {
 
         drawDoubleQuad(buffer, mat, 1, 0, u0, u1, v0, v1, light);
 
-        mat.translate(0, 0, -0.25f);
-        mat.rotate(RotHlpr.YN90);
+        mat.translate(0, 0, 0.25f);
 
         float U0 = boomSprite.getU0();
         float U1 = boomSprite.getU1();

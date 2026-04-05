@@ -350,7 +350,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
 
     protected boolean shootProjectile(ServerLevel serverLevel) {
-        Vec3 facing = new Vec3(this.getGlobalFacing(1)).scale(-1);
+        Vec3 facing = new Vec3(this.getGlobalFacing(1));
         ItemStack projectile = this.getProjectile().copy();
 
         if (projectile.getItem() instanceof CannonBallItem && breakWhitelist != null) {

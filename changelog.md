@@ -1,1 +1,2 @@
-- added back a fix from previous version that was accidentally removed this update
+- fixed cannons shooting backwards
+- fixed old cannons failing to load
