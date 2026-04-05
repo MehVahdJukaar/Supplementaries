@@ -81,7 +81,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
                         .getOpposite()
                         .getRotation();
 
-        // Head rotation (world or global)
+        // Head local rot
         Quaternionf cannonHeadRot = tile.getLocalOrientation(partialTick);
 
         // Debug (world space)
@@ -106,7 +106,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         }
 
         // Canonical forward (IMPORTANT: must match your model!)
-        Vector3f forward = new Vector3f(0, 0, 1);
+        Vector3f forward = new Vector3f(0, 0, -1);
 
         // Rotate into base-local space
         localRot.transform(forward);

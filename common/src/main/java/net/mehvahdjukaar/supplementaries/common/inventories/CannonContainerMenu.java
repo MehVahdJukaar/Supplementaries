@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,6 +12,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -28,11 +28,12 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
     //client container factory
     public static CannonContainerMenu create(Integer id, Inventory playerInventory, FriendlyByteBuf friendlyByteBuf) {
         TileOrEntityTarget target = TileOrEntityTarget.read(friendlyByteBuf);
-        CannonBlockTile tile = CannonUtils.cannonFromNetwork(playerInventory.player.level(), target);
-        if (tile == null) {
-            throw new IllegalStateException("Tile or entity target is null");
+        Level level = playerInventory.player.level();
+        var tile = target.findTileOrContainedTile(level);
+        if (tile instanceof CannonBlockTile ct) {
+            return new CannonContainerMenu(ModMenuTypes.CANNON.get(), id, playerInventory, ct);
         }
-        return new CannonContainerMenu(ModMenuTypes.CANNON.get(), id, playerInventory, tile);
+        throw new IllegalStateException("Could not find tile or contained tile for tile " + target);
     }
 
     public <T extends CannonContainerMenu> CannonContainerMenu(int id, Inventory playerInventory, CannonBlockTile cannon) {

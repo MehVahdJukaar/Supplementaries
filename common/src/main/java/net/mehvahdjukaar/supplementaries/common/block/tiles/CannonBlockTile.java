@@ -116,10 +116,9 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     private @NotNull Vec3 getCannonRecoil() {
-        float power = this.getFirePower();
-        float scale = 1;
-        Vec3 shootForce = new Vec3(this.getGlobalFacing(1)).scale(-power * scale);
-        return new Vec3(-shootForce.x, 0, -shootForce.z);
+        float power = -this.getFirePower();
+        return new Vec3(this.getGlobalFacing(1))
+                .multiply(power, 0, power);
     }
 
     private void fire() {
@@ -485,14 +484,14 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public Vector3f getGlobalFacing(float partialTicks) {
         Quaternionf rot = getWorldOrientation(partialTicks);
-        Vector3f forward = new Vector3f(0, 0, 1);
+        Vector3f forward = new Vector3f(0, 0, -1);
         rot.transform(forward);
         return forward;
     }
 
-    private Vector3f getCannonLocalFacing(float partialTicks) {
+    private Vector3f getLocalFacing(float partialTicks) {
         Quaternionf rot = getLocalOrientation(partialTicks);
-        Vector3f forward = new Vector3f(0, 0, 1);
+        Vector3f forward = new Vector3f(0, 0, -1);
         rot.transform(forward);
         return forward;
     }

@@ -48,7 +48,7 @@ public class CannonTrajectoryRenderer {
 
         poseStack.pushPose();
 
-        Quaternionf rot = tile.getWorldOrientation(partialTicks);
+        Quaternionf rot = tile.getLocalOrientation(partialTicks);
         EntityAngles eulerAngles = EntityAngles.fromQuaternion(rot);
 
         float yaw = eulerAngles.yawRad();

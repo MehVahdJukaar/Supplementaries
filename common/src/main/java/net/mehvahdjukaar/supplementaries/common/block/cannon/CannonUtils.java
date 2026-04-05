@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -19,19 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector4f;
 
 public class CannonUtils {
-
-
-    @Nullable
-    public static CannonBlockTile cannonFromNetwork(Level level, TileOrEntityTarget target) {
-        return target.map(level, be -> {
-                    if (be instanceof CannonBlockTile cbt) return cbt;
-                    return null;
-                }, e -> {
-                    if (e instanceof CannonBoatEntity boat) return boat.getInternalCannon();
-                    return null;
-                }
-        );
-    }
 
     public static BallisticTrajectory3D computeTrajectory(
             CannonBlockTile cannon, Vec3 targetPos, ShootingMode shootingMode) {
@@ -56,7 +43,8 @@ public class CannonUtils {
         return trajectory == null ? null : new BallisticTrajectory3D(trajectory, vec3ToPoint.yaw);
     }
 
-    private record Target2dAndYaw(Vec2 target, float yaw) {}
+    private record Target2dAndYaw(Vec2 target, float yaw) {
+    }
 
     public static Vec3 point2dToVec3(Vec2 point, float yaw) {
         return new Vec3(0, point.y, point.x).yRot(-yaw);

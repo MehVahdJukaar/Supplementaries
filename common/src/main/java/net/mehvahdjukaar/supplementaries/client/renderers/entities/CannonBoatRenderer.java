@@ -4,11 +4,13 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CannonBlockTileRenderer;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -48,7 +50,7 @@ public class CannonBoatRenderer extends BoatRenderer {
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 
         CannonBoatEntity boat = (CannonBoatEntity) entity;
-        var cannon = boat.getInternalCannon();
+        CannonBlockTile cannon = boat.getInternalCannon();
         var renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher()
                 .getRenderer(cannon);
         if (renderer == null) return;
@@ -83,29 +85,36 @@ public class CannonBoatRenderer extends BoatRenderer {
 
         poseStack.popPose();
 
+
+        poseStack.pushPose();
         Vec3 offset = boat.getCannonOffset();
         poseStack.translate(offset.x, offset.y, offset.z);
+        poseStack.mulPose(RotHlpr.Y180);
+
         CannonBlockTileRenderer.renderCannonModel(
                 (CannonBlockTileRenderer) renderer,
                 cannon, partialTicks, poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY
         );
         CannonTrajectoryRenderer.render(cannon, poseStack, buffer, packedLight, OverlayTexture.NO_OVERLAY, partialTicks);
-        // poseStack.mulPose(RotHlpr.X180);
-        // poseStack.mulPose(RotHlpr.Z90);
 
         poseStack.popPose();
-        if (this.entityRenderDispatcher.shouldRenderHitBoxes()) {
+
+        poseStack.popPose();
+
+        if (this.entityRenderDispatcher.shouldRenderHitBoxes() || PlatHelper.isDev()) {
+            poseStack.pushPose();
 
             var vc = buffer.getBuffer(RenderType.lines());
-            poseStack.pushPose();
-            var p = boat.getInternalCannon().getGlobalPosition(partialTicks);
-            p = p.subtract(boat.position());
-            poseStack.translate(p.x, p.y, p.z);
+            Vec3 worldPos = boat.getInternalCannon().getGlobalPosition(1);
+            Vec3 boatPos = boat.position();
+            //translate is in world grid
+            poseStack.translate(-boatPos.x, -boatPos.y, -boatPos.z);
+            poseStack.translate(worldPos.x, worldPos.y, worldPos.z);
             var pose = poseStack.last();
             vc.addVertex(pose, 0.0F, 0 + 0.25f, 0.0F)
                     .setColor(255, 0, 255, 255)
                     .setNormal(pose, 0, 1, 0);
-            vc.addVertex(pose, 0, (float) (0 + 0.25f + 1), 0)
+            vc.addVertex(pose, 0, (0 + 0.25f + 1), 0)
                     .setColor(255, 0, 255, 255)
                     .setNormal(pose, 0, 1, 0);
 

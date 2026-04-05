@@ -5,7 +5,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
-public class BoatReferenceFrame extends EntityReferenceFrame{
+public class BoatReferenceFrame extends EntityReferenceFrame {
 
     private final CannonBoatEntity boat;
 
@@ -23,7 +23,7 @@ public class BoatReferenceFrame extends EntityReferenceFrame{
     public Vec3 position(float partialTicks) {
         float yaw = boat.getViewYRot(partialTicks);
         Vec3 vv = boat.getCannonOffset();
-        vv = vv.yRot(Mth.DEG_TO_RAD * yaw);
+        vv = vv.yRot(-(Mth.DEG_TO_RAD * (yaw + 180)));
         return boat.getPosition(partialTicks).add(vv);
 
     }

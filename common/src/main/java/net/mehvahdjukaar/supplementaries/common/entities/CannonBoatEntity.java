@@ -51,6 +51,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, IControllableVehicle, ITileEntityCarry {
@@ -60,6 +61,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
     private static final EntityDataAccessor<ItemStack> BANNER_ITEM = SynchedEntityData.defineId(
             CannonBoatEntity.class, EntityDataSerializers.ITEM_STACK);
 
+    @NotNull
     private final CannonBlockTile cannon;
     private boolean isBamboo;
 

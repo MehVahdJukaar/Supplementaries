@@ -26,7 +26,7 @@ public class EntityReferenceFrame implements ReferenceFrame {
     @Override
     public Quaternionf getRotation(float partialTicks) {
         return EntityAngles
-                .of(entity.getViewXRot(partialTicks), -entity.getViewYRot(partialTicks))
+                .of(entity.getViewXRot(partialTicks), entity.getViewYRot(partialTicks))
                 .toQuaternion();
     }
 
