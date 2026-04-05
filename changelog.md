@@ -1,2 +1,3 @@
 - fixed cannons shooting backwards
 - fixed old cannons failing to load
+- note: cannon boats rotation is currently broken

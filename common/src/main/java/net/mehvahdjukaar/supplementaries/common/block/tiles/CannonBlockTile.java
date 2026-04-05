@@ -138,7 +138,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
                     projectile.shrink(1);
                     this.setProjectile(projectile);
                     this.setChanged();
-                    this.syncToClients();
+                    this.syncToClients(false);
 
                     level.gameEvent(p, GameEvent.EXPLODE, this.getGlobalPosition(1));
                 }
@@ -345,7 +345,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
         this.setChanged();
         //update other clients
-        this.syncToClients();
+        this.syncToClients(true);
     }
 
 
@@ -502,18 +502,18 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
 
     // Network
-    public void syncToServer(boolean fire, boolean removeOwner) {
+    public void syncToServer(boolean ignite, boolean removeOwner) {
         NetworkHelper.sendToServer(new SyncCannonPacket(
                 this.orientation.getRotation(1), this.getPowerLevel(),
-                fire, removeOwner, referenceFrame.makeNetworkTarget()));
+                ignite, removeOwner, referenceFrame.makeNetworkTarget()));
     }
 
-    public void syncToClients() {
+    public void syncToClients(boolean ignite) {
         if (level instanceof ServerLevel sl) {
             NetworkHelper.sendToAllClientPlayersInDefaultRange(sl,
                     BlockPos.containing(referenceFrame.position(1)), new SyncCannonPacket(
                             this.orientation.getRotation(1), this.getPowerLevel(),
-                            false, false, referenceFrame.makeNetworkTarget()));
+                            ignite, false, referenceFrame.makeNetworkTarget()));
         }
     }
 

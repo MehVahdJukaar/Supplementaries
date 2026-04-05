@@ -130,7 +130,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         float fireCounter = tile.getFiringAnimation(partialTick);
 
         //write equation of sawtooth wave with same period as that sine wave
-        float squish = triangleWave(1 - cooldownCounter, 0.01f, 0.15f) * 0.2f;
+        float squish = asymmetricTriangleWave(1 - cooldownCounter, 0.01f, 0.15f) * 0.2f;
 
         float wobble = Mth.sin(fireCounter * 20f * (float) Math.PI) * 0.005f;
         float scale = wobble + 1f + squish * 0.7f;
@@ -138,26 +138,27 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         renderer.head.yScale = scale;
 
         renderer.head.zScale = 1 - squish;
-        renderer.head.z = squish * 5.675f;
+        renderer.head.z = 1 - squish * 5.675f;
 
         VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
         renderer.model.render(poseStack, builder, packedLight, packedOverlay);
         poseStack.popPose();
     }
 
-    private static float triangleWave(float cooldownCounter, float mid, float end) {
-        if (cooldownCounter <= mid) {
+    @Deprecated(forRemoval = true)
+    private static float asymmetricTriangleWave(float t, float mid, float end) {
+        if (t <= mid) {
             // Calculate the slope for the rising part
             float slope = 1 / mid;
             // Calculate the y-coordinate based on the slope
-            return slope * cooldownCounter;
+            return slope * t;
         }
-        // Check if cooldownCounter is within the range of mid to end
-        else if (cooldownCounter <= end) {
+        // Check if t is within the range of mid to end
+        else if (t <= end) {
             // Calculate the slope for the falling part
             float slope = -1 / (end - mid);
             // Calculate the y-coordinate based on the slope and offset by 1 to start from 1
-            return slope * (cooldownCounter - mid) + 1;
+            return slope * (t - mid) + 1;
         }
         // If cooldownCounter is greater than f, return 0
         else {

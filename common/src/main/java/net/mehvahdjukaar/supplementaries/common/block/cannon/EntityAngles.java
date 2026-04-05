@@ -12,6 +12,7 @@ import java.util.List;
 // Degrees.
 // These apply first yaw then pitch. Used to convert from and to quaternion
 // These hold pitch and yaw in an entity like fashion. so yaw is inverted. pitch is inverted too...
+@Deprecated(forRemoval = true)
 public record EntityAngles(float pitch, float yaw) {
 
     private static final Codec<Vector2f> VEC2 = Codec.FLOAT.listOf()
@@ -79,5 +80,13 @@ public record EntityAngles(float pitch, float yaw) {
     @Override
     public String toString() {
         return "[pitch=" + pitch + ", yaw=" + yaw + "]";
+    }
+
+    public EntityAngles withYaw(double value) {
+        return  new EntityAngles(pitch, yaw);
+    }
+
+    public EntityAngles withPitch(double value) {
+        return  new EntityAngles(pitch, yaw);
     }
 }

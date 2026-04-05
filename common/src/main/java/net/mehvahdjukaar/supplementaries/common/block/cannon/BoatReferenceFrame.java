@@ -30,7 +30,7 @@ public class BoatReferenceFrame extends EntityReferenceFrame{
 
     @Override
     public boolean shouldRotatePlayerFaceWhenManeuvering() {
-        return true;
+        return false;
     }
 
     @Override
