@@ -180,11 +180,15 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");
         }
         if (tag.contains("break_whitelist")) {
-            this.breakWhitelist = CannonballWhitelist.CODEC.parse(NbtOps.INSTANCE, tag.get("break_whitelist")).getOrThrow();
+            this.breakWhitelist = CannonballWhitelist.CODEC.parse(NbtOps.INSTANCE,
+                    tag.get("break_whitelist")).resultOrPartial(Supplementaries.LOGGER::warn)
+                    .orElse(CannonballWhitelist.EMPTY);
         }
         Quaternionf quat = ExtraCodecs.QUATERNIONF.parse(ops, tag.get("orientation")).getOrThrow();
         this.orientation.orient(quat);
-        this.trajectoryData = BallisticData.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory")).getOrThrow();
+        this.trajectoryData = BallisticData.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
+                .resultOrPartial(Supplementaries.LOGGER::warn)
+                .orElse(BallisticData.LINE);
     }
 
     @Override
