@@ -96,6 +96,12 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         this.referenceFrame = mount;
     }
 
+    @Override
+    public BlockPos getBlockPos() {
+        return isInWorld() ? super.getBlockPos() :
+                BlockPos.containing(this.referenceFrame.position(1));
+    }
+
     public void tick() {
         this.orientation.tick();
 
@@ -412,7 +418,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     @Override
     public void unpackLootTable(@Nullable Player player) {
         ResourceKey<LootTable> resourceKey = this.getLootTable();
-        super.unpackLootTable(player);
+        if (resourceKey != null) super.unpackLootTable(player);
         //fix loot table shit. it doesnt even check if stuff can go in a slot. thanks mojank
         if (resourceKey != getLootTable()) {
             //if has just unpacked
@@ -541,5 +547,9 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public boolean canManeuverFromGUI(Player player) {
         return referenceFrame.canManeuverFromGUI(player);
+    }
+
+    public boolean isInWorld() {
+        return referenceFrame instanceof WorldReferenceFrame;
     }
 }

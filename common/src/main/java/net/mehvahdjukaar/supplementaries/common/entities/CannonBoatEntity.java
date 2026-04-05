@@ -128,6 +128,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         }
     }
 
+
     public WoodType getWoodType() {
         return entityData.get(DATA_WOOD_TYPE);
     }

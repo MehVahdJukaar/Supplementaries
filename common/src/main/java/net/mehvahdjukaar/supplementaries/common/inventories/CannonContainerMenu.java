@@ -46,10 +46,10 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
         //tile inventory
         this.cannon = Preconditions.checkNotNull(cannon);
 
-
         CannonBlockTile inventory = this.getContainer();
         checkContainerSize(inventory, 2);
-        inventory.startOpen(playerInventory.player);
+        //TODO: fix scheduling in unloaded chunks properly
+        if (this.cannon.isInWorld()) inventory.startOpen(playerInventory.player);
 
         this.addSlot(new DelegatingSlot(inventory, 0, 38, 35, this));
         this.addSlot(new DelegatingSlot(inventory, 1, 85, 35, this));
@@ -102,7 +102,7 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
     @Override
     public void removed(@NotNull Player playerIn) {
         super.removed(playerIn);
-        this.getContainer().stopOpen(playerIn);
+        if (this.cannon.isInWorld()) this.getContainer().stopOpen(playerIn);
     }
 
 

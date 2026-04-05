@@ -1,4 +1,6 @@
 - fixed cannons shooting backwards
 - fixed old cannons failing to load
 - fixed cannon shoot anim being broken
+- fixed cannon not converting from old saves
+- fixed a crash with galleons
 - note: cannon boats rotation is currently broken

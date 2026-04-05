@@ -320,9 +320,10 @@ public class ClientReceivers {
 
     public static void handleSyncCannonBoat(ClientBoundUpdateCannonBoatPacket packet) {
         withLevelDo(l -> {
-            CannonBlockTile tile = CannonUtils.cannonFromNetwork(l, packet.target());
-            if (tile != null) {
-                tile.loadWithComponents(packet.tileTag(), l.registryAccess());
+            if (packet.target().findTileOrContainedTile(l) instanceof CannonBlockTile ct) {
+                ct.loadWithComponents(packet.tileTag(), l.registryAccess());
+            } else {
+                Supplementaries.LOGGER.error("Could not find tile or contained tile for tile {}", packet.tileTag());
             }
         });
 
@@ -521,9 +522,8 @@ public class ClientReceivers {
 
     public static void handleCannonControlPacket(ClientBoundControlCannonPacket message) {
         withLevelDo(l -> {
-            CannonBlockTile tile = CannonUtils.cannonFromNetwork(l, message.target());
-            if (tile != null) {
-                CannonController.startControlling(tile);
+            if (message.target().findTileOrContainedTile(l) instanceof CannonBlockTile ct) {
+                CannonController.startControlling(ct);
             }
         });
     }
@@ -531,12 +531,11 @@ public class ClientReceivers {
 
     public static void handleCannonAnimation(ClientBoundCannonAnimationPacket message) {
         withLevelDo(l -> {
-            CannonBlockTile tile = CannonUtils.cannonFromNetwork(l, message.target());
-            if (tile != null) {
+            if (message.target().findTileOrContainedTile(l) instanceof CannonBlockTile ct) {
                 if (message.fire()) {
-                    playFiringEffects(tile);
+                    playFiringEffects(ct);
                 } else {
-                    playIgniteEffects(tile);
+                    playIgniteEffects(ct);
                 }
             }
         });
