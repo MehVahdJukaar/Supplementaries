@@ -116,9 +116,15 @@ dependencies {
 
     implementation 'org.jetbrains:annotations:22.0.0'
 
-    modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}"){
-        transitive = false
-    }
+    //modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
+    //modImplementation("net.mehvahdjukaar:moonlight-forge:${moonlight_version}")
+    modImplementation("curse.maven:selene-499980:7664875")
+
+
+    modImplementation ("curse.maven:amendments-896746:7470401")
+
+    modImplementation ("curse.maven:athena-841890:5176879")
+
     //modImplementation("curse.maven:selene-499980:7662590")
 
     modCompileOnly("curse.maven:farmers-delight-398521:5051242")
@@ -129,8 +135,6 @@ dependencies {
 
     modCompileOnly("curse.maven:jei-238222:3928388")
     modImplementation ("curse.maven:configured-457570:5180900")
-    modCompileOnly ("curse.maven:amendments-896746:5692774")
-    modImplementation ("curse.maven:athena-841890:5176879")
     modImplementation ("curse.maven:forgified-fabric-api-889079:6169304")
     modImplementation ("curse.maven:legendary-survival-overhaul-840254:6423363")
     modRuntimeOnly ("curse.maven:vmp-forge-892037:4657678")
