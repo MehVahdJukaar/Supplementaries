@@ -13,6 +13,7 @@ import static net.mehvahdjukaar.supplementaries.reg.ModFluids.LUMISENE_MAX_LAYER
 public class ModFluidsImpl {
 
     public static BucketItem createLumiseneBucket() {
+
         return new LumiseneBucketItem(ModFluids.LUMISENE_FLUID.get(), new Item.Properties()
                 .stacksTo(1)
                 .craftRemainder(Items.BUCKET), LUMISENE_MAX_LAYERS);

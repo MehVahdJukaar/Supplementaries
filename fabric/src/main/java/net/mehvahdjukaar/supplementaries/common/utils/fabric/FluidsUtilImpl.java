@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.fluids.fabric.SoftFluidStackImpl;
-import net.mehvahdjukaar.supplementaries.common.block.faucet.FluidOffer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -19,8 +18,7 @@ public class FluidsUtilImpl {
 
     private static final long BOTTLE = FluidConstants.BOTTLE;
 
-    @Nullable
-    private static Storage<FluidVariant> findStorage(Level level, BlockPos pos, Direction dir, @Nullable BlockEntity blockEntity) {
+    private static Storage<FluidVariant> findStorage(Level level, BlockPos pos, Direction dir, BlockEntity blockEntity) {
         return FluidStorage.SIDED.find(level, pos, level.getBlockState(pos), blockEntity, dir);
     }
 
@@ -77,8 +75,6 @@ public class FluidsUtilImpl {
         }
     }
 
-    @Nullable
-    @Contract
     public static FluidOffer getFluidInTank(Level level, BlockPos pos, Direction dir, BlockEntity source) {
         Storage<FluidVariant> storage = findStorage(level, pos, dir, source);
         if (storage == null) return null;
