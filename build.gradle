@@ -51,12 +51,7 @@ allprojects {
         maven { url = "https://maven.misterpemodder.com/libs-release/" } // ShulkerBoxTooltip
         maven { url = "https://maven.firstdarkdev.xyz/snapshots" } // FirstDarkDev (snapshots)
         maven { url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven" } // NeoForge config API port
-
-        maven { // Reach Entity Attributes
-            url = "https://maven.jamieswhiteshirt.com/libs-release"
-            content { includeGroup("com.jamieswhiteshirt") }
-        }
-
+        maven { url = "https://maven.jamieswhiteshirt.com/libs-release"} // Reach Entity Attributes
     }
     java {
         toolchain {

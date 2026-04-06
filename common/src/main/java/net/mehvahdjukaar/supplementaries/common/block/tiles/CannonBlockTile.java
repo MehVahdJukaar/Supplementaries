@@ -419,9 +419,9 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public void unpackLootTable(@Nullable Player player) {
         ResourceKey<LootTable> resourceKey = this.getLootTable();
         if (resourceKey != null) super.unpackLootTable(player);
-        //fix loot table shit. it doesnt even check if stuff can go in a slot. thanks mojank
+        //fix loot table shit. it doesn't even check if stuff can go in a slot. thanks mojank
         if (resourceKey != getLootTable()) {
-            //if has just unpacked
+            //if it has just unpacked
             ItemStack currentAmmo = this.getProjectile();
             ItemStack currentFuel = this.getFuel();
             //consolidate
