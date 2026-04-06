@@ -122,7 +122,7 @@ subprojects {
         modrinth {
             projectId = mod_id
             uploadFile = tasks.remapJar
-            gameVersions = [rootProject.minecraft_version]
+            gameVersions = mcVersions
             if (modLoader == "forge") {
                 loaders = [modLoader, "neoforge"]
             } else {
@@ -227,6 +227,15 @@ ext.replaceProperties = [
 ]
 
 
+tasks.compileJava {
+    options.compilerArgs += [
+            "--add-exports", "jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+            "--add-exports", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+            "--add-exports", "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
+    ]
+}
+
+
 // --- Utils
 static List<String> listGameVersions(String minInclusive, String maxExclusive) {
 
@@ -265,10 +274,58 @@ static List<String> listGameVersions(String minInclusive, String maxExclusive) {
 }
 
 
-tasks.compileJava {
-    options.compilerArgs += [
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED"
-    ]
+tasks.register('buildAndPublishAll') {
+    dependsOn ':clean'
+    dependsOn ':common:clean'
+    dependsOn ':fabric:clean'
+    dependsOn ':forge:clean'
+    dependsOn ':build'
+    dependsOn ':forge:build'
+    dependsOn ':fabric:build'
+    dependsOn ':forge:curseforge'
+    dependsOn ':forge:modrinth'
+    dependsOn ':fabric:curseforge'
+    dependsOn ':fabric:modrinth'
+    dependsOn ':publishToMavenLocal'
+    dependsOn ':forge:publishToMavenLocal'
+    dependsOn ':fabric:publishToMavenLocal'
+    dependsOn ':publish'
+    dependsOn ':forge:publish'
+    dependsOn ':fabric:publish'
+    finalizedBy ':gitTag'
+
+    group = 'build'
+    description = 'Runs clean, build, and publish neoforge and fabric'
+}
+
+
+tasks.register('gitTag') {
+    group = 'build'
+    description = 'Create and push git tag from project version'
+
+    doLast {
+        def tag = project.version.toString()
+
+        // check if tag already exists
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'tag', '-l', tag
+            standardOutput = stdout
+        }
+
+        if (!stdout.toString().trim().isEmpty()) {
+            logger.warn("Git tag '${tag}' already exists")
+        } else {
+
+            // create annotated tag
+            exec {
+                commandLine 'git', 'tag', '-a', tag, '-m', "Release ${tag}"
+            }
+
+            // push tag
+            exec {
+                commandLine 'git', 'push', 'origin', tag
+            }
+        }
+    }
 }
