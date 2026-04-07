@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
+import org.joml.Vector3f;
 
 public class VertexModels {
 
@@ -169,5 +170,24 @@ public class VertexModels {
         }
     }
 
+
+    public static void renderDebugLine(PoseStack pose, MultiBufferSource bufferSource,
+                                       int color, Vector3f forward) {
+        renderDebugLine(pose, bufferSource, color, forward.x, forward.y, forward.z);
+    }
+
+    public static void renderDebugLine(PoseStack pose, MultiBufferSource buffer,
+                                       int color, float x, float y, float z) {
+        var vc = buffer.getBuffer(RenderType.lines());
+
+        PoseStack.Pose last = pose.last();
+        vc.addVertex(last, 0.0F, 0, 0.0F)
+                .setColor(color)
+                .setNormal(last, 0, 1, 0);
+        vc.addVertex(last, x, y, z)
+                .setColor(color)
+                .setNormal(last, 0, 1, 0);
+
+    }
 
 }

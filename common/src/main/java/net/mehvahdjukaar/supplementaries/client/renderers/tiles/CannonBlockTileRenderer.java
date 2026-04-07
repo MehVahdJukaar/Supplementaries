@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexModels;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -148,18 +149,9 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
     private static void renderDebug(PoseStack poseStack, MultiBufferSource bufferSource, Quaternionf quat, int color) {
         poseStack.pushPose();
-        PoseStack.Pose pose = poseStack.last();
-        VertexConsumer vc = bufferSource.getBuffer(RenderType.lines());
-
         Vector3f forward = new Vector3f(0, 0, 2);
         forward.rotate(quat);
-        vc.addVertex(pose, 0, 0, 0)
-                .setColor(color)
-                .setNormal(pose, 0, 1, 0);
-        vc.addVertex(pose, forward.x, forward.y, forward.z)
-                .setColor(color)
-                .setNormal(pose, 0, 1, 0);
-
+        VertexModels.renderDebugLine(poseStack, bufferSource, color, forward);
         poseStack.popPose();
     }
 

@@ -1,8 +1,8 @@
 {
 	"fabric:load_conditions": [
 		{
-			"condition": "supplementaries:flag",
-			"flag": "quiver"
+			"flag": "quiver",
+			"condition": "supplementaries:flag"
 		}
 	],
 	"neoforge:conditions": [

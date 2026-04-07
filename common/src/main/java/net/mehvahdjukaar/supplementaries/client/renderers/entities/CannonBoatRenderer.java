@@ -9,12 +9,12 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
+import net.mehvahdjukaar.supplementaries.client.renderers.VertexModels;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.CannonBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.BoatRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -25,6 +25,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -104,19 +106,18 @@ public class CannonBoatRenderer extends BoatRenderer {
         if (this.entityRenderDispatcher.shouldRenderHitBoxes() || PlatHelper.isDev()) {
             poseStack.pushPose();
 
-            var vc = buffer.getBuffer(RenderType.lines());
             Vec3 worldPos = boat.getInternalCannon().getGlobalPosition(1);
             Vec3 boatPos = boat.position();
             //translate is in world grid
             poseStack.translate(-boatPos.x, -boatPos.y, -boatPos.z);
             poseStack.translate(worldPos.x, worldPos.y, worldPos.z);
-            var pose = poseStack.last();
-            vc.addVertex(pose, 0.0F, 0 + 0.25f, 0.0F)
-                    .setColor(255, 0, 255, 255)
-                    .setNormal(pose, 0, 1, 0);
-            vc.addVertex(pose, 0, (0 + 0.25f + 1), 0)
-                    .setColor(255, 0, 255, 255)
-                    .setNormal(pose, 0, 1, 0);
+            poseStack.translate(0, 0.5, 0);
+            VertexModels.renderDebugLine(poseStack, buffer, 0xff00aa33, 0, 1, 0);
+
+            Quaternionf rot = cannon.getReferenceFrame().getRotation(1);
+            Vector3f v = rot.transform(new Vector3f(0,0, 1));
+
+            VertexModels.renderDebugLine(poseStack, buffer, 0xffaa0033, v);
 
             poseStack.popPose();
         }

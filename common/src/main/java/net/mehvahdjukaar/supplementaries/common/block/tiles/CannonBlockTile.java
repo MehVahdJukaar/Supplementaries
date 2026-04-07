@@ -36,6 +36,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -47,6 +48,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
@@ -90,6 +92,12 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public void setRestraint(YawPitchRestraint restraint) {
         this.restraint = restraint;
+    }
+
+    @VisibleForDebug
+    @ApiStatus.Internal
+    public ReferenceFrame getReferenceFrame() {
+        return this.referenceFrame ;
     }
 
     public void setReferenceFrame(ReferenceFrame mount) {
@@ -462,7 +470,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public void setWorldOrientation(Quaternionf worldRot) {
         Quaternionf referenceRot = referenceFrame.getRotation(1);
         Quaternionf inverseReferenceRot = referenceRot.invert(new Quaternionf());
-        Quaternionf localRot = worldRot.mul(inverseReferenceRot);
+        Quaternionf localRot = inverseReferenceRot.mul(worldRot, new Quaternionf());
         setLocalOrientation(localRot);
     }
 
@@ -490,14 +498,14 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public Vector3f getGlobalFacing(float partialTicks) {
         Quaternionf rot = getWorldOrientation(partialTicks);
-        Vector3f forward = new Vector3f(0, 0, -1);
+        Vector3f forward = new Vector3f(0, 0, 1);
         rot.transform(forward);
         return forward;
     }
 
     private Vector3f getLocalFacing(float partialTicks) {
         Quaternionf rot = getLocalOrientation(partialTicks);
-        Vector3f forward = new Vector3f(0, 0, -1);
+        Vector3f forward = new Vector3f(0, 0, 1);
         rot.transform(forward);
         return forward;
     }
