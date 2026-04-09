@@ -35,8 +35,14 @@ public class TntBehavior extends GenericProjectileBehavior {
         return null;
     }
 
-    public static boolean isTNTLikeBlock(BlockState tntState) {
-        return tntState.is(ModTags.CANNON_TNTS) || tntState.getBlock() instanceof TntBlock;
+    //creates tnt entity
+    public static boolean explodesWhenHitByFlamingArrow(BlockState tntState) {
+        return  tntState.getBlock() instanceof TntBlock || tntState.is(ModTags.CANNON_TNTS);
+    }
+
+    //might not create an entry but should be blown as such will make it explodes
+    public static boolean explodesWhenExploded(BlockState tntState){
+      return  tntState.getBlock() instanceof TntBlock || tntState.is(ModTags.IGNITED_BY_EXPLOSION);
     }
 
     public static void igniteTntHack(BlockState tntState, Level level, BlockPos pos) {

@@ -4,16 +4,13 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
-import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.supplementaries.client.tooltip.SelectableContainerTooltip;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.GunpowderExplosion;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientBundleTooltip;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -262,20 +259,18 @@ public class GunpowderBlock extends LightUpBlock {
         return state.isFaceSturdy(world, pos, Direction.UP) || state.is(Blocks.HOPPER);
     }
 
-    // same as can connect but just applies to blocks over and up from it
+    // same as can connect but more strict as it just applies to blocks over and up from it
     protected boolean canClimbTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         Block b = state.getBlock();
         return state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) ||
-                b instanceof ILightable || b instanceof TntBlock ||
+                b instanceof ILightable ||
+                TntBehavior.explodesWhenExploded(state) ||
+                TntBehavior.explodesWhenHitByFlamingArrow(state) ||
                 b instanceof AbstractCandleBlock;
     }
 
-    @SuppressWarnings("ConstantConditions")
     protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
-        Block b = state.getBlock();
-        return state.is(ModTags.LIGHTS_GUNPOWDER) || state.is(ModTags.LIGHTABLE_BY_GUNPOWDER) ||
-                b instanceof ILightable || b instanceof TntBlock ||
-                b instanceof AbstractCandleBlock;
+        return state.is(ModTags.LIGHTS_GUNPOWDER) || canClimbTo(state, world, pos, dir);
     }
 
     @Override

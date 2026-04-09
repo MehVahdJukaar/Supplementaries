@@ -138,9 +138,9 @@ public class GunpowderExplosion extends Explosion {
 
 
             if (ForgeHelper.getExplosionResistance(state, this.level, pos, this) == 0) {
-                if (state.getBlock() instanceof TntBlock) {
+                if (TntBehavior.explodesWhenExploded(state)) {
                     getToBlow().add(pos);
-                } else if (TntBehavior.isTNTLikeBlock(state)) {
+                } else if (TntBehavior.explodesWhenHitByFlamingArrow(state)) {
                     TntBehavior.igniteTntHack(state, this.level, pos);
                 }
             }

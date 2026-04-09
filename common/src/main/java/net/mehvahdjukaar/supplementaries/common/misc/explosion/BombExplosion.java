@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.misc.explosion;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.reg.ModDamageSources;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
@@ -64,7 +64,7 @@ public class BombExplosion {
                 case ALL -> true;
                 case WEAK -> state.canBeReplaced(Fluids.WATER) ||
                         state.is(ModTags.BOMB_BREAKABLE) ||
-                        state.getBlock() instanceof TntBlock;
+                        TntBehavior.explodesWhenExploded(state);
                 default -> false;
             };
         }

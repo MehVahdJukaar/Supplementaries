@@ -61,7 +61,7 @@ public class FireBehaviorsManager {
         IFireItemBehavior cannonBall = new SimpleProjectileBehavior<>(ModEntities.CANNONBALL.get(), ProjectileStats.CANNONBALL_SPEED);
 
         for (Item i : access.registryOrThrow(Registries.ITEM)) {
-            if (i instanceof BlockItem bi && TntBehavior.isTNTLikeBlock(bi.getBlock().defaultBlockState())) {
+            if (i instanceof BlockItem bi && TntBehavior.explodesWhenHitByFlamingArrow(bi.getBlock().defaultBlockState())) {
                 registerPresentBehavior(i, tnt);
                 if (CommonConfigs.Functional.CANNON_EXPLODE_TNT.get() == CommonConfigs.TNTMode.IGNITE) {
                     registerCannonBehavior(i, tnt);
