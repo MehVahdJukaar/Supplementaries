@@ -24,16 +24,16 @@ public class DrippingLiquidParticle extends TextureSheetParticle {
         this.zo = this.z;
         this.ageParticle();
         if (!this.removed) {
-            this.yd -=  this.gravity;
+            this.yd -= this.gravity;
             this.move(this.xd, this.yd, this.zd);
             this.updateMotion();
             if (!this.removed) {
-                this.xd *=  0.98F;
-                this.yd *=  0.98F;
-                this.zd *=  0.98F;
+                this.xd *= 0.98F;
+                this.yd *= 0.98F;
+                this.zd *= 0.98F;
                 BlockPos blockpos = BlockPos.containing(this.x, this.y, this.z);
                 FluidState fluidstate = this.level.getFluidState(blockpos);
-                if (!fluidstate.isEmpty() && this.y <  ( blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
+                if (!fluidstate.isEmpty() && this.y < (blockpos.getY() + fluidstate.getHeight(this.level, blockpos))) {
                     this.remove();
                 }
 

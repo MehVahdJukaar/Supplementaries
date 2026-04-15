@@ -43,8 +43,8 @@ public class SelectableContainerTooltip implements ClientTooltipComponent {
         guiGraphics.blitSprite(ModTextures.QUIVER_TOOLTIP_BACKGROUND_SPRITE, mouseX, mouseY, this.backgroundWidth(), this.backgroundHeight());
         int k = 0;
 
-        for(int l = 0; l < j; ++l) {
-            for(int m = 0; m < i; ++m) {
+        for (int l = 0; l < j; ++l) {
+            for (int m = 0; m < i; ++m) {
                 int n = mouseX + m * 18 + 1;
                 int o = mouseY + l * 20 + 1;
                 this.renderSlot(n, o, k++, guiGraphics, font);

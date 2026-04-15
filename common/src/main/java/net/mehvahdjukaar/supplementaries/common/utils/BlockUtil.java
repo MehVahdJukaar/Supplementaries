@@ -177,7 +177,7 @@ public class BlockUtil {
             }
         }
         if (CompatHandler.TWILIGHTFOREST) {
-            BlockState newState = TFCompat.tryRotateHollowLog( state, dir);
+            BlockState newState = TFCompat.tryRotateHollowLog(state, dir);
             if (newState != null) {
                 return Optional.of(newState);
             }

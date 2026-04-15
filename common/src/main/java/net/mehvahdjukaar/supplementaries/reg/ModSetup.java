@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehavio
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
-import net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.FlowerPotUtils;
 import net.mehvahdjukaar.supplementaries.common.worldgen.RemoveDisabledBlocksProcessor;
 import net.mehvahdjukaar.supplementaries.common.worldgen.RoadSignStructure;
@@ -106,13 +105,13 @@ public class ModSetup {
         RegHelper.registerBlockFlammability(ModRegistry.GUNPOWDER_BLOCK.get(), 200, 0);
         RegHelper.registerBlockFlammability(ModFluids.LUMISENE_BLOCK.get(), 200, 0);
         RegHelper.registerBlockFlammability(ModRegistry.WICKER_FENCE.get(), 30, 60);
-        for(var f : ModRegistry.FLAGS.values()){
-            RegHelper.registerBlockFlammability(f.get(),60,60);
+        for (var f : ModRegistry.FLAGS.values()) {
+            RegHelper.registerBlockFlammability(f.get(), 60, 60);
         }
-        for(var b : ModRegistry.BUNTING_BLOCKS.values()){
+        for (var b : ModRegistry.BUNTING_BLOCKS.values()) {
             RegHelper.registerBlockFlammability(b.get(), 60, 100);
         }
-        for(var b : ModRegistry.BUNTING_WALL_BLOCKS.values()){
+        for (var b : ModRegistry.BUNTING_WALL_BLOCKS.values()) {
             RegHelper.registerBlockFlammability(b.get(), 60, 100);
         }
         for (var a : ModRegistry.AWNINGS.values()) {

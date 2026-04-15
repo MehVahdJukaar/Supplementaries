@@ -7,7 +7,6 @@ import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.components.PresentAddress;
-import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.mehvahdjukaar.supplementaries.integration.neoforge.CreateCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -28,7 +27,7 @@ public class PresentRecipientAttribute implements ItemAttribute {
     public static final StreamCodec<ByteBuf, PresentRecipientAttribute> STREAM_CODEC =
             ByteBufCodecs.STRING_UTF8.map(PresentRecipientAttribute::new, att -> att.recipient);
 
-private final String recipient;
+    private final String recipient;
 
     public PresentRecipientAttribute(String recipient) {
         this.recipient = recipient;

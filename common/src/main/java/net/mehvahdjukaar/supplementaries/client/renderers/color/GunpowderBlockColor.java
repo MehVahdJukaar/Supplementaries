@@ -40,11 +40,11 @@ public class GunpowderBlockColor implements BlockColor {
     }
 
     @Override
-    public int getColor(BlockState state, @Nullable BlockAndTintGetter reader,@Nullable BlockPos pos, int color) {
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter reader, @Nullable BlockPos pos, int color) {
         return COLORS[state.getValue(GunpowderBlock.BURNING)];
     }
 
     public static int getColor(float f) {
-        return COLORS[Mth.clamp((int) (f * 8),0,8)];
+        return COLORS[Mth.clamp((int) (f * 8), 0, 8)];
     }
 }

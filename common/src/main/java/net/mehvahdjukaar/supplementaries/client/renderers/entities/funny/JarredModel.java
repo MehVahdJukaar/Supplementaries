@@ -57,7 +57,6 @@ public class JarredModel<T extends LivingEntity> extends PlayerModel<T> {
                 , PartPose.offset(0.0F, 5.0F, 0.0F));
 
 
-
         head.addOrReplaceChild("left_eye", CubeListBuilder.create()
                         .texOffs(30, 6)
                         .addBox(-3.0F, -1.0F, -2.499F, 2.0F, 2.0F, 2.0F, false)

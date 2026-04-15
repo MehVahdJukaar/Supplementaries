@@ -4,8 +4,6 @@ import net.mehvahdjukaar.supplementaries.client.RopeSlideSoundInstance;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Final;
@@ -21,7 +19,8 @@ public class ClientLevelMixin {
     @Shadow
     @Final
     private Minecraft minecraft;
-//use event instead
+
+    //use event instead
     //TODO: use event instead 1.21
     @Inject(method = "addEntity", at = @At("RETURN"))
     private void supp$addRopeSoundInstance(Entity entity, CallbackInfo ci) {

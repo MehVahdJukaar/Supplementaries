@@ -144,7 +144,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
             putVertex(builder, x + width, y, u1, v0, color);
             putVertex(builder, x, y, u0, v0, color);
             putVertex(builder, x, y + height, u0, v1, color);
-            
+
             if (emissive) builder.lightEmission(15);
         } catch (Exception e) {
             Supplementaries.error();
@@ -160,7 +160,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
         posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
         builder.addVertex(posV.x, posV.y, posV.z);
         builder.setColor(color);
-        builder.setUv(u/16, v/16);
+        builder.setUv(u / 16, v / 16);
         builder.setNormal(0, 0, -1);
     }
 

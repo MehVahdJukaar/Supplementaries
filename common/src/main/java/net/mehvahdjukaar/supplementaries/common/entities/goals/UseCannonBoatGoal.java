@@ -37,7 +37,7 @@ public class UseCannonBoatGoal extends Goal {
                 SHOOTING_COOLDOWN_MIN, SHOOTING_COOLDOWN_MAX, MAX_TIME_WITHOUT_SHOOTING);
     }
 
-    public UseCannonBoatGoal(Mob mob,int maxDuration, int minRange, int minShootingCooldown, int maxShootingCooldown, int maxTimeWithoutShooting) {
+    public UseCannonBoatGoal(Mob mob, int maxDuration, int minRange, int minShootingCooldown, int maxShootingCooldown, int maxTimeWithoutShooting) {
         this.mob = mob;
         this.maxUseTime = maxDuration;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
@@ -97,8 +97,8 @@ public class UseCannonBoatGoal extends Goal {
         }
     }
 
-    private int shootCooldown(){
-        return Mth.randomBetweenInclusive(mob.getRandom(), shootingCooldownMin,shootingCooldownMax);
+    private int shootCooldown() {
+        return Mth.randomBetweenInclusive(mob.getRandom(), shootingCooldownMin, shootingCooldownMax);
     }
 
 }

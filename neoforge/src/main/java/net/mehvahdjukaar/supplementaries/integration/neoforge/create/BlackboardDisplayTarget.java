@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.mehvahdjukaar.supplementaries.integration.neoforge.CreateCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.network.chat.MutableComponent;

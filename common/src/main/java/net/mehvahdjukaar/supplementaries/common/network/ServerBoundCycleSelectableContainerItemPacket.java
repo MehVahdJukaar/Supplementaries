@@ -9,14 +9,15 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 
-public record ServerBoundCycleSelectableContainerItemPacket(int amount,SlotReference slotReference, boolean setSlot) implements Message {
+public record ServerBoundCycleSelectableContainerItemPacket(int amount, SlotReference slotReference,
+                                                            boolean setSlot) implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundCycleSelectableContainerItemPacket> CODEC = Message.makeType(
             Supplementaries.res("c2s_cycle_selectable_container_item"),
             ServerBoundCycleSelectableContainerItemPacket::new);
 
     public ServerBoundCycleSelectableContainerItemPacket(RegistryFriendlyByteBuf buf) {
-        this(buf.readInt(), SlotReference.STREAM_CODEC.decode(buf) ,buf.readBoolean());
+        this(buf.readInt(), SlotReference.STREAM_CODEC.decode(buf), buf.readBoolean());
     }
 
     public ServerBoundCycleSelectableContainerItemPacket(int amount, SlotReference slot) {

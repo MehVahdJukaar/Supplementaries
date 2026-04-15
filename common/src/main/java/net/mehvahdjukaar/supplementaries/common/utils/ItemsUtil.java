@@ -74,7 +74,7 @@ public class ItemsUtil {
         var placement = AdditionalItemPlacementsAPI.getBehavior(item);
         if (placement != null) return placement.overridePlace(pContext);
         if (item instanceof BlockItem bi) {
-            return SuppPlatformStuff.placeBlockItem(bi,pContext);
+            return SuppPlatformStuff.placeBlockItem(bi, pContext);
         }
         return InteractionResult.PASS;
     }

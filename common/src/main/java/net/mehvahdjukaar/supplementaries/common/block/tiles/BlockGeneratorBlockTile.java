@@ -43,8 +43,8 @@ public class BlockGeneratorBlockTile extends BlockEntity {
             tile.firstTick = false;
 
             tile.threadResult = CompletableFuture.supplyAsync(() -> StructureLocator.findNearestStructures(
-                    (ServerLevel) level, ModTags.ROAD_SIGN_DESTINATIONS, pos, 250,
-                    false, 2, CommonConfigs.Building.ROAD_SIGN_MAX_SEARCHES.get(),
+                            (ServerLevel) level, ModTags.ROAD_SIGN_DESTINATIONS, pos, 250,
+                            false, 2, CommonConfigs.Building.ROAD_SIGN_MAX_SEARCHES.get(),
                             CommonConfigs.Building.ROAD_SIGN_EXIT_EARLY.get()),
                     EXECUTORS).exceptionally(exception -> {
                 throwError(pos, exception);

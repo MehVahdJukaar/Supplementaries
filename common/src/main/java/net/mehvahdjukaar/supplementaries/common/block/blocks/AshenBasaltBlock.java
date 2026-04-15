@@ -20,7 +20,7 @@ public class AshenBasaltBlock extends Block {
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos currentPos, BlockPos neighborPos) {
-        if(direction == Direction.UP && !neighborState.is(ModRegistry.ASH_BLOCK.get())){
+        if (direction == Direction.UP && !neighborState.is(ModRegistry.ASH_BLOCK.get())) {
             return Blocks.BASALT.defaultBlockState();
         }
         return super.updateShape(state, direction, neighborState, level, currentPos, neighborPos);

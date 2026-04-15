@@ -19,19 +19,24 @@ public abstract class AbstractArrowMixin extends Entity {
         super(entityType, level);
     }
 
-    @Shadow protected abstract ItemStack getPickupItem();
+    @Shadow
+    protected abstract ItemStack getPickupItem();
 
-    @Shadow protected boolean inGround;
+    @Shadow
+    protected boolean inGround;
 
-    @Shadow public abstract boolean isNoPhysics();
+    @Shadow
+    public abstract boolean isNoPhysics();
 
-    @Shadow public int shakeTime;
+    @Shadow
+    public int shakeTime;
 
-    @Shadow public AbstractArrow.Pickup pickup;
+    @Shadow
+    public AbstractArrow.Pickup pickup;
 
     @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
-    public void onPlayerTouch(Player player, CallbackInfo ci){
-        if(!this.level().isClientSide) {
+    public void onPlayerTouch(Player player, CallbackInfo ci) {
+        if (!this.level().isClientSide) {
             if ((this.inGround || this.isNoPhysics()) && this.pickup == AbstractArrow.Pickup.ALLOWED && this.shakeTime <= 0 &&
                     ServerEvents.onArrowPickup((AbstractArrow) (Object) this, player, this::getPickupItem)) {
                 ci.cancel();

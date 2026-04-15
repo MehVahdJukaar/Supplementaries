@@ -8,7 +8,7 @@ public class MapAtlasCompat {
 
     @ExpectPlatform
     @Contract
-    public static boolean canPlayerSeeDeathMarker(Player player){
+    public static boolean canPlayerSeeDeathMarker(Player player) {
         throw new AssertionError();
     }
 }

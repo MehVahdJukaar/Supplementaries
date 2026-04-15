@@ -19,8 +19,8 @@ public class SugarCaneBlockMixin {
             shift = At.Shift.BEFORE,
             target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z"), cancellable = true)
     public void supp$surviveOnPlanter(BlockState state, LevelReader level, BlockPos pos, CallbackInfoReturnable<Boolean> cir,
-                                      @Local(ordinal = 1) BlockState belowState){
-        if(belowState.getBlock() instanceof PlanterBlock){
+                                      @Local(ordinal = 1) BlockState belowState) {
+        if (belowState.getBlock() instanceof PlanterBlock) {
             cir.setReturnValue(true);
         }
     }

@@ -159,8 +159,8 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
             } else if (this.packed) {
                 texture = ModTextures.TRAPPED_PRESENT_BUTTON_DISABLED_SPRITE;
             } else if (this.isHovered) {
-               texture = ModTextures.TRAPPED_PRESENT_BUTTON_HIGHLIGHTED_SPRITE;
-            }else{
+                texture = ModTextures.TRAPPED_PRESENT_BUTTON_HIGHLIGHTED_SPRITE;
+            } else {
                 texture = ModTextures.TRAPPED_PRESENT_BUTTON_SPRITE;
             }
             graphics.blitSprite(texture, this.getX(), this.getY(), this.width, this.height);

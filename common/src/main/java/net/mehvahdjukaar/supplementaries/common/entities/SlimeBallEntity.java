@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileS
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ItemParticleOption;
@@ -76,7 +75,7 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
         Direction hitDirection = result.getDirection();
         Vector3f surfaceNormal = hitDirection.step();
         BlockState hitState = level().getBlockState(result.getBlockPos());
-        if(hitDirection == Direction.UP && hitState.getBlock() instanceof AwningBlock){
+        if (hitDirection == Direction.UP && hitState.getBlock() instanceof AwningBlock) {
             surfaceNormal = AwningBlock.getNormalVector(hitState);
         }
 
@@ -132,7 +131,7 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
     protected void onHitEntity(EntityHitResult result) {
         super.onHitEntity(result);
         Entity entity = result.getEntity();
-        if(entity instanceof LivingEntity le && le.isBlocking()){
+        if (entity instanceof LivingEntity le && le.isBlocking()) {
             Vec3 hit = result.getLocation();
             Vec3 entityView = le.getViewVector(1.0F);
             Vec3 normal = hit.vectorTo(le.position()).normalize();
@@ -143,14 +142,13 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
                 return;
             }
         }
-        if (entity instanceof LivingEntity le  && le.attackable()) {
+        if (entity instanceof LivingEntity le && le.attackable()) {
             //sets on both but also sends packet just because lmao
             SlimedData slimedData = ModEntities.SLIMED_DATA.getOrCreate(le);
             slimedData.setSlimedTicks(le, CommonConfigs.Tweaks.SLIME_DURATION.get());
-        }
-        else if (entity instanceof EndCrystal) {
+        } else if (entity instanceof EndCrystal) {
             entity.hurt(this.damageSources().thrown(this, this.getOwner()), 0);
-        }else {
+        } else {
             //somehow allows entity event to be received before entity is broken
             this.hasImpulse = true;
             addParticleEffects();

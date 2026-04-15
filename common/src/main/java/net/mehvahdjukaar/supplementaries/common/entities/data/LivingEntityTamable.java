@@ -13,7 +13,7 @@ import java.util.UUID;
 
 //Like TamableAnimal but in component form and not just for players
 public class LivingEntityTamable {
-    public static final Codec<LivingEntityTamable> CODEC =  UUIDUtil.CODEC.optionalFieldOf("owner")
+    public static final Codec<LivingEntityTamable> CODEC = UUIDUtil.CODEC.optionalFieldOf("owner")
             .xmap(u -> new LivingEntityTamable(u.orElse(null)), lo -> Optional.ofNullable(lo.owner)).codec();
 
     @Nullable
@@ -39,7 +39,7 @@ public class LivingEntityTamable {
     @Nullable
     public LivingEntity getOwner(Mob myEntity) {
         var e = ((ServerLevel) myEntity.level()).getEntity(this.owner);
-        if (e instanceof LivingEntity le && le.isAlive() && (!(myEntity instanceof TamableAnimal t) || t.getOwner() == null) ) {
+        if (e instanceof LivingEntity le && le.isAlive() && (!(myEntity instanceof TamableAnimal t) || t.getOwner() == null)) {
             return le;
         }
         this.owner = null;

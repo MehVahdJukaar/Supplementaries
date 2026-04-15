@@ -73,11 +73,11 @@ public class CompatObjects {
     //public static final RegistryObject<Block> ENDER_CHANDELIER2 = getCompatObject()
 
     private static <T> OptRegSupplier<@Nullable T> builtin(String name, ResourceKey<Registry<T>> registry) {
-        return  OptRegSupplier.of(ResourceLocation.tryParse(name), registry);
+        return OptRegSupplier.of(ResourceLocation.tryParse(name), registry);
     }
 
     private static <T> OptHolderRef<@Nullable T> datapack(String name, ResourceKey<Registry<T>> registry) {
-        return  OptHolderRef.of(ResourceLocation.tryParse(name), registry);
+        return OptHolderRef.of(ResourceLocation.tryParse(name), registry);
     }
 
 }

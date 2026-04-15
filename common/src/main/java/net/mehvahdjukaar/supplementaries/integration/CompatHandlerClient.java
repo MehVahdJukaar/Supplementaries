@@ -35,7 +35,7 @@ public class CompatHandlerClient {
     }
 
     @ExpectPlatform
-    public static void doInit(){
+    public static void doInit() {
         throw new AssertionError();
     }
 }

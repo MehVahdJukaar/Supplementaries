@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
@@ -12,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.hud.SlimedOverlayHud;
-import net.mehvahdjukaar.supplementaries.client.hud.fabric.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
@@ -26,7 +24,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.EntityType;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
 

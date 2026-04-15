@@ -33,9 +33,9 @@ public class DispenserMinecartItem extends Item {
             Direction direction = pSource.state().getValue(DispenserBlock.FACING);
             Level level = pSource.level();
             Vec3 center = pSource.center();
-            double d0 = center.x() +  direction.getStepX() * 1.125D;
-            double d1 = Math.floor(center.y()) +  direction.getStepY();
-            double d2 = center.z() +  direction.getStepZ() * 1.125D;
+            double d0 = center.x() + direction.getStepX() * 1.125D;
+            double d1 = Math.floor(center.y()) + direction.getStepY();
+            double d2 = center.z() + direction.getStepZ() * 1.125D;
             BlockPos blockpos = pSource.pos().relative(direction);
             BlockState blockstate = level.getBlockState(blockpos);
             RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock railBlock ? ForgeHelper.getRailDirection(railBlock, blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
@@ -52,7 +52,7 @@ public class DispenserMinecartItem extends Item {
                 }
 
                 BlockState blockstate1 = level.getBlockState(blockpos.below());
-                RailShape railshape1 = blockstate1.getBlock() instanceof BaseRailBlock railBlock? blockstate1.getValue(railBlock.getShapeProperty()) : RailShape.NORTH_SOUTH;
+                RailShape railshape1 = blockstate1.getBlock() instanceof BaseRailBlock railBlock ? blockstate1.getValue(railBlock.getShapeProperty()) : RailShape.NORTH_SOUTH;
                 if (direction != Direction.DOWN && railshape1.isAscending()) {
                     d3 = -0.4D;
                 } else {
@@ -93,13 +93,13 @@ public class DispenserMinecartItem extends Item {
         } else {
             ItemStack itemstack = pContext.getItemInHand();
             if (!level.isClientSide) {
-                RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock railBlock? ForgeHelper.getRailDirection(railBlock,blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
+                RailShape railshape = blockstate.getBlock() instanceof BaseRailBlock railBlock ? ForgeHelper.getRailDirection(railBlock, blockstate, level, blockpos, null) : RailShape.NORTH_SOUTH;
                 double d0 = 0.0D;
                 if (railshape.isAscending()) {
                     d0 = 0.5D;
                 }
 
-                AbstractMinecart abstractminecart = new DispenserMinecartEntity(level,  blockpos.getX() + 0.5D,  blockpos.getY() + 0.0625D + d0,  blockpos.getZ() + 0.5D);
+                AbstractMinecart abstractminecart = new DispenserMinecartEntity(level, blockpos.getX() + 0.5D, blockpos.getY() + 0.0625D + d0, blockpos.getZ() + 0.5D);
 
                 level.addFreshEntity(abstractminecart);
                 level.gameEvent(pContext.getPlayer(), GameEvent.ENTITY_PLACE, blockpos);

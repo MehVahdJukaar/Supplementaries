@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -32,7 +31,7 @@ public class NoticeBoardContainerMenu extends AbstractContainerMenu implements I
         checkContainerSize(container, 1);
         container.startOpen(playerInventory.player);
 
-        this.addSlot(new DelegatingSlot( container, 0, 35, 33, this));
+        this.addSlot(new DelegatingSlot(container, 0, 35, 33, this));
 
         for (int si = 0; si < 3; ++si)
             for (int sj = 0; sj < 9; ++sj)

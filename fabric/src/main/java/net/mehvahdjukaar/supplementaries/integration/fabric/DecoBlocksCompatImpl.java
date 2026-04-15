@@ -18,7 +18,6 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -30,7 +29,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootParams;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class DecoBlocksCompatImpl {
@@ -92,7 +90,7 @@ public class DecoBlocksCompatImpl {
             world.setBlock(facingPos, SOUL_CHANDELIER_ROPE.get().defaultBlockState(), 3);
         } else if (CompatObjects.ENDER_CHANDELIER.is(b)) {
             world.setBlock(facingPos, ENDER_CHANDELIER_ROPE.get().defaultBlockState(), 3);
-        } else if ( CompatObjects.GLOW_CHANDELIER.is(b)) {
+        } else if (CompatObjects.GLOW_CHANDELIER.is(b)) {
             world.setBlock(facingPos, GLOW_CHANDELIER_ROPE.get().defaultBlockState(), 3);
         }
     }
@@ -131,7 +129,7 @@ public class DecoBlocksCompatImpl {
 
         @Override
         public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
-            return defMimic.get().getDrops( builder);
+            return defMimic.get().getDrops(builder);
         }
 
         @Override

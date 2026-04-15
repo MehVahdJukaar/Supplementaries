@@ -160,7 +160,6 @@ public class ClientConfigs {
     public static class Tweaks {
 
 
-
         private static void init() {
         }
 
@@ -186,7 +185,8 @@ public class ClientConfigs {
                     .push("tweaks");
 
             PROJECTILE_WEAPON_OVERLAY = builder.comment("Adds an overlay to projectile weapons in gui displaying currently selected ammo")
-                    .define("projectile_weapon_overlay", true);   BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books" +
+                    .define("projectile_weapon_overlay", true);
+            BOOK_GLINT = builder.comment("Renders an enchantment glint on placeable enchanted books" +
                             "Note that turning this on will make book piles use tile renderer instead of baked models making them slower to render")
                     .define("placeable_books_glint", false);
             BANNER_PATTERN_TOOLTIP = builder.comment("Enables banner pattern tooltip image preview")
@@ -202,7 +202,7 @@ public class ClientConfigs {
             DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
                     .define("send_chat_on_death", true);
             HEAD_VANILLA = builder.comment("Makes enderman and spider heads use vanilla texture. Enable for texture pack support")
-                            .define("enderman_and_spider_head_texture_pack_support", true);
+                    .define("enderman_and_spider_head_texture_pack_support", true);
             SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
                     .define("slime_effect_overlay", true);
 
@@ -261,7 +261,6 @@ public class ClientConfigs {
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
                     .define("custom_configured_screen", true);
             UNFUNNY = builder.comment("unfunny").define("I am very boring and I don't want any Easter Egg", false);
-
 
 
             builder.pop();

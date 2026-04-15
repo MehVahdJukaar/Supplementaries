@@ -10,8 +10,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.IllagerRenderer;
-import net.minecraft.client.renderer.entity.layers.ParrotOnShoulderLayer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class PlundererRenderer extends IllagerRenderer<PlundererEntity> {

@@ -22,7 +22,6 @@ import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.IdentityHashMap;
@@ -75,7 +74,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
             poseStack.pushPose();
             poseStack.translate(0.5, 0.5, 0.5);
 
-            float offset =(tile.getOffset()-0.5f+1/16f);
+            float offset = (tile.getOffset() - 0.5f + 1 / 16f);
 
             if (up) {
 

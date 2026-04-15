@@ -11,7 +11,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public final class FlanCompat  {
+public final class FlanCompat {
 
     public static boolean canBreak(@NotNull Player player, @NotNull BlockPos pos) {
         if (!(player instanceof ServerPlayer sp)) return true; //should only be used from server but client can call too

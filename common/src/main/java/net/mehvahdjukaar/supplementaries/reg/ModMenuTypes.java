@@ -11,7 +11,7 @@ import static net.mehvahdjukaar.supplementaries.reg.ModConstants.*;
 
 public class ModMenuTypes {
 
-    public static void init(){
+    public static void init() {
     }
 
     //menu
@@ -29,7 +29,7 @@ public class ModMenuTypes {
                     new VariableSizeContainerMenu(ModMenuTypes.LUNCH_BASKET.get(), integer, inventory, buf));
 
     public static final Supplier<MenuType<VariableSizeContainerMenu>> SACK = RegHelper.registerMenuType(
-            Supplementaries.res("sack"),(integer, inventory, buf) ->
+            Supplementaries.res("sack"), (integer, inventory, buf) ->
                     new VariableSizeContainerMenu(ModMenuTypes.SACK.get(), integer, inventory, buf));
 
     public static final Supplier<MenuType<SafeContainerMenu>> SAFE = RegHelper.registerMenuType(

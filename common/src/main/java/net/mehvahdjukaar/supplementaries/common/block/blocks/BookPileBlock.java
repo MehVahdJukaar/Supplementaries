@@ -59,7 +59,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
 
     @Override
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
-        if(player.isCreative()){
+        if (player.isCreative()) {
             player.awardStat(Stats.BLOCK_MINED.get(this));
             player.causeFoodExhaustion(0.005F);
             return;

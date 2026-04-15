@@ -41,7 +41,7 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
     public UseCannonBlockGoal(PathfinderMob mob, double speedModifier, int searchRange,
                               int maxTimeWithoutShooting, int minCannonRange,
                               int maxStayTime, int maxGoToTime,
-                              int shootingCooldownMax,int shootingCooldownMin,
+                              int shootingCooldownMax, int shootingCooldownMin,
                               int goalInterval) {
         super(mob, speedModifier, searchRange);
         this.searchRange = searchRange;

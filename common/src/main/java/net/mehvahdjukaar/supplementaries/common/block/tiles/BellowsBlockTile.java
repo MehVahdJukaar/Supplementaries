@@ -93,7 +93,7 @@ public class BellowsBlockTile extends BlockEntity {
                         entity.move(MoverType.SHULKER_BOX, new Vec3(
                                 (progressDelta.getXsize() + f) * dir.getStepX(),
                                 (progressDelta.getYsize() + f) * dir.getStepY(),
-                                (progressDelta.getZsize() + f) *  dir.getStepZ()));
+                                (progressDelta.getZsize() + f) * dir.getStepZ()));
                         entity.setOnGround(true);
                     }
                 }
@@ -107,7 +107,7 @@ public class BellowsBlockTile extends BlockEntity {
         double velocity = CommonConfigs.Redstone.BELLOWS_BASE_VEL_SCALING.get() / period; // Affects acceleration
         double maxVelocity = CommonConfigs.Redstone.BELLOWS_MAX_VEL.get(); // Affects max speed
 
-        AABB facingBox = AABB.encapsulatingFullBlocks(worldPosition, worldPosition.relative(facing, (int)range));
+        AABB facingBox = AABB.encapsulatingFullBlocks(worldPosition, worldPosition.relative(facing, (int) range));
 
         List<Entity> list = level.getEntitiesOfClass(Entity.class, facingBox);
 

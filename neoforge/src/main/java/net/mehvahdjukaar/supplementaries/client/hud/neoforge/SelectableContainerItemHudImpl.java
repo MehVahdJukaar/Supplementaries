@@ -6,14 +6,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
-public class SelectableContainerItemHudImpl extends SelectableContainerItemHud  {
+public class SelectableContainerItemHudImpl extends SelectableContainerItemHud {
 
     protected SelectableContainerItemHudImpl() {
         super(Minecraft.getInstance());
@@ -51,7 +50,6 @@ public class SelectableContainerItemHudImpl extends SelectableContainerItemHud  
         }
         RenderSystem.disableBlend();
     }
-
 
 
 }

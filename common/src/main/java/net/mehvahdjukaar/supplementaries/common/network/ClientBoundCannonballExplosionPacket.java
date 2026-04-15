@@ -13,7 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public record ClientBoundCannonballExplosionPacket(ExplosionType explosionType, Vec3 pos, float power, List<BlockPos> toBlow,
+public record ClientBoundCannonballExplosionPacket(ExplosionType explosionType, Vec3 pos, float power,
+                                                   List<BlockPos> toBlow,
                                                    @Nullable Vec3 knockback, int getId) implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundCannonballExplosionPacket> CODEC = Message.makeType(

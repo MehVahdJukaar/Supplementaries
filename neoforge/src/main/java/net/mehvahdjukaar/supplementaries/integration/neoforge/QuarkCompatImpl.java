@@ -1,10 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration.neoforge;
 
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandler;
 import org.violetmoon.quark.addons.oddities.item.BackpackItem;
 
 public class QuarkCompatImpl {

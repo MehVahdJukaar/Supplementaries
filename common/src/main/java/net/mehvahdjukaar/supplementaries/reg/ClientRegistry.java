@@ -13,6 +13,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager;
 import net.mehvahdjukaar.supplementaries.client.block_models.*;
@@ -44,7 +45,6 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.BannerP
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.PaintingTooltip;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTooltip;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
-import net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;

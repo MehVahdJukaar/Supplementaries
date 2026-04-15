@@ -74,7 +74,7 @@ public class BombItem extends Item implements ProjectileItem {
     @Override
     public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
         var bomb = new BombEntity(level, pos.x(), pos.y(), pos.z(), type);
-        ItemStack s= stack.copy();
+        ItemStack s = stack.copy();
         s.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(1));
         bomb.setItem(stack);
         return bomb;

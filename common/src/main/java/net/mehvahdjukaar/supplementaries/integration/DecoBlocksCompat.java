@@ -23,7 +23,7 @@ public class DecoBlocksCompat {
     }
 
     @ExpectPlatform
-    public static void setupClient(){
-        throw  new AssertionError();
+    public static void setupClient() {
+        throw new AssertionError();
     }
 }

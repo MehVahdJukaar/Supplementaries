@@ -22,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 public class TrinketsCompat {
 
     @SuppressWarnings("all")
-    public static void init(){
+    public static void init() {
         RegHelper.register(Supplementaries.res("trinket"), () -> (StreamCodec) Trinket.CODEC, SlotReference.TYPE_REGISTRY_KEY);
 
     }

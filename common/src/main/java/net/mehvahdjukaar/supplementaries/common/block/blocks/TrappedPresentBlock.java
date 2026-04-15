@@ -3,10 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.AlternativeBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.SpitItemBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,9 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -30,9 +24,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.IdentityHashMap;
-import java.util.Map;
 
 public class TrappedPresentBlock extends AbstractPresentBlock implements ILightable {
 

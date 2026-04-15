@@ -33,7 +33,7 @@ public class ColorHelper {
 
     public static int getRandomBrightColor(RandomSource random) {
         float h = random.nextFloat();
-        HSLColor hsl = prettyfyColor(new HSLColor(h, 0.62f + random.nextFloat() * 0.3f, 0.43f + random.nextFloat() * 0.15f,1));
+        HSLColor hsl = prettyfyColor(new HSLColor(h, 0.62f + random.nextFloat() * 0.3f, 0.43f + random.nextFloat() * 0.15f, 1));
         return hsl.asRGB().toInt();
     }
 
@@ -88,7 +88,7 @@ public class ColorHelper {
     }
 
     public static void refreshBubbleColors(ResourceManager manager) {
-        var c = SpriteUtils. parsePaletteStrip(manager, ResType.TEXTURES.getPath(ModTextures.BUBBLE_BLOCK_COLORS_TEXTURE), 6);
+        var c = SpriteUtils.parsePaletteStrip(manager, ResType.TEXTURES.getPath(ModTextures.BUBBLE_BLOCK_COLORS_TEXTURE), 6);
         //int[] c = new int[]{0xd3a4f7, 0xf3c1f0, 0xd3a4f7, 0xa2c0f8, 0xa2f8df, 0xa2c0f8,};
         float[][] temp = new float[c.size()][];
         for (int i = 0; i < c.size(); i++) {

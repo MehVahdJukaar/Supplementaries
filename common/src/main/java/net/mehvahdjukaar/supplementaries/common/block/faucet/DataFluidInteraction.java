@@ -6,9 +6,6 @@ import net.mehvahdjukaar.moonlight.api.fluids.FluidOffer;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
@@ -29,7 +26,7 @@ public record DataFluidInteraction(RuleTest target, SoftFluidStack softFluid,
     @Override
     public FluidOffer getProvidedFluid(Level level, BlockPos pos, Direction dir, BlockState state) {
         if (target.test(state, level.random)) {
-            return FluidOffer.of(softFluid.copy(),softFluid.getCount());
+            return FluidOffer.of(softFluid.copy(), softFluid.getCount());
         }
         return null;
     }

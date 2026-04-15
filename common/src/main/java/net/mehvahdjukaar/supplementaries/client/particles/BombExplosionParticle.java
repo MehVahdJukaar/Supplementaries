@@ -5,7 +5,6 @@ import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 
 
-
 public class BombExplosionParticle extends TextureSheetParticle {
     private final SpriteSet spriteWithAge;
 
@@ -16,11 +15,12 @@ public class BombExplosionParticle extends TextureSheetParticle {
         this.rCol = f;
         this.gCol = f;
         this.bCol = f;
-        this.quadSize = 1F * (1.0F - (float)scale * 0.8F);
+        this.quadSize = 1F * (1.0F - (float) scale * 0.8F);
         this.spriteWithAge = spriteWithAge;
         this.setSpriteFromAge(spriteWithAge);
 
     }
+
     @Override
     public int getLightColor(float partialTick) {
         return 15728880;
@@ -46,13 +46,14 @@ public class BombExplosionParticle extends TextureSheetParticle {
 
     public static class Factory implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteSet;
+
         public Factory(SpriteSet sprite) {
             this.spriteSet = sprite;
         }
 
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed,
-                                     double zSpeed) {
+                                       double zSpeed) {
             return new BombExplosionParticle(worldIn, x, y, z, xSpeed, this.spriteSet);
         }
     }

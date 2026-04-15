@@ -17,7 +17,7 @@ public class LiquidBlockRendererMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/material/Fluid;isSame(Lnet/minecraft/world/level/material/Fluid;)Z"))
     public boolean supplementaries$modifyLumiseneHeight(Fluid instance, Fluid above, Operation<Boolean> original) {
-       return original.call(instance, above) || above.isSame(ModFluids.LUMISENE_FLUID.get());
+        return original.call(instance, above) || above.isSame(ModFluids.LUMISENE_FLUID.get());
     }
 
     @WrapOperation(method = "getLightColor",

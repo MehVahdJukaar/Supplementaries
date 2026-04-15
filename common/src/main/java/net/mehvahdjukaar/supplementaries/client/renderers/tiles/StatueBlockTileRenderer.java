@@ -124,7 +124,7 @@ public class StatueBlockTileRenderer implements BlockEntityRenderer<StatueBlockT
                 MiscUtils.getFestivity().isAprilsFool()) {
             poseStack.pushPose();
             float scale = 0.5f;
-            poseStack.translate(0, -1/16f, 0);
+            poseStack.translate(0, -1 / 16f, 0);
             poseStack.scale(-scale, -scale, scale);
 
             itemRenderer.renderStatic(ModRegistry.CONFETTI_POPPER.get().getDefaultInstance(),

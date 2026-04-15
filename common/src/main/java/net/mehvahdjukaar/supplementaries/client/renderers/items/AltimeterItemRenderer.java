@@ -108,7 +108,6 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
     }
 
 
-
     private static class AltimeterModel implements BakedModel {
 
         private final List<BakedQuad> quads = new ArrayList<>();

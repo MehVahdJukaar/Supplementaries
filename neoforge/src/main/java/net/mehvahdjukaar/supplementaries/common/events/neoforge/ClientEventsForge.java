@@ -35,8 +35,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.Optional;
-
 public class ClientEventsForge {
 
     public static void init() {
@@ -165,7 +163,7 @@ public class ClientEventsForge {
         if (stack.isEmpty()) return;
 
         Item i = stack.getItem();
-        if(ClientConfigs.Tweaks.SHERDS_TOOLTIPS.get()) {
+        if (ClientConfigs.Tweaks.SHERDS_TOOLTIPS.get()) {
             var pattern = DecoratedPotPatterns.getPatternFromItem(i);
             if (pattern != null && i != Items.BRICK) {
                 event.getTooltipElements().add(Either.right(new SherdTooltip(pattern)));

@@ -97,7 +97,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     @VisibleForDebug
     @ApiStatus.Internal
     public ReferenceFrame getReferenceFrame() {
-        return this.referenceFrame ;
+        return this.referenceFrame;
     }
 
     public void setReferenceFrame(ReferenceFrame mount) {

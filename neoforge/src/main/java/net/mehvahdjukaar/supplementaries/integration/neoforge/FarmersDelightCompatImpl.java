@@ -1,7 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration.neoforge;
 
-import vectorwing.farmersdelight.common.Configuration;
-
 public class FarmersDelightCompatImpl {
     public static boolean isTomatoVineClimbingConfigOn() {
 

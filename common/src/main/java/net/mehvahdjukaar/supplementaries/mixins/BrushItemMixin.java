@@ -29,7 +29,7 @@ public class BrushItemMixin {
                                      @Local Player livingEntity) {
         if (state.getBlock() instanceof ISimpleBrushable sb) {
             BrushItem.DustParticlesDelta d = BrushItem.DustParticlesDelta.fromDirection(viewVec, hit.getDirection());
-            if (sb.brush(state, pos, level, stack,  livingEntity, arm, hit, new Vec3(d.xd(), d.yd(), d.zd()))) {
+            if (sb.brush(state, pos, level, stack, livingEntity, arm, hit, new Vec3(d.xd(), d.yd(), d.zd()))) {
                 return;
             }
         }

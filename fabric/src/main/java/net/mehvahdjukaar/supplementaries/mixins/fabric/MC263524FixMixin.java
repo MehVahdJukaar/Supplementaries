@@ -9,13 +9,15 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(value = SpriteCoordinateExpander.class, priority = 500)
-public abstract class MC263524FixMixin implements VertexConsumer{
+public abstract class MC263524FixMixin implements VertexConsumer {
 
     @Shadow
     @Final
     private VertexConsumer delegate;
 
-    @Shadow @Final private TextureAtlasSprite sprite;
+    @Shadow
+    @Final
+    private TextureAtlasSprite sprite;
 
     /**
      * @author MehVahdJukaar

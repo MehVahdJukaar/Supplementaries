@@ -43,7 +43,7 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);
-        Quaternionf q = dir .getRotation();
+        Quaternionf q = dir.getRotation();
 
         poseStack.mulPose(q);
 
@@ -56,10 +56,10 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
             poseStack.mulPose(q);
             poseStack.translate(0, -0.125, 0);
             float h1 = height * 0.25f;
-            VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.25f, h1,  combinedLightIn, color);
+            VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.25f, h1, combinedLightIn, color);
             if (dir == Direction.DOWN) {
                 poseStack.translate(0, -h1 - 0.25f, 0);
-                VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.0625f, h1 + 0.25f,  combinedLightIn, color,
+                VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.0625f, h1 + 0.25f, combinedLightIn, color,
                         1, false, false, false);
             }
             poseStack.popPose();
@@ -70,10 +70,10 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
             poseStack.mulPose(q);
             poseStack.translate(0, -0.125, 0);
             float h2 = (1 - height) * 0.25f;
-            VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.25f, h2,  combinedLightIn, color);
+            VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.25f, h2, combinedLightIn, color);
             if (dir == Direction.UP) {
                 poseStack.translate(0, -h2 - 0.25, 0);
-                VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.0625f, h2 + 0.25f,  combinedLightIn, color,
+                VertexUtil.addCube(builder, poseStack, 0.375f, 0.3125f, 0.0625f, h2 + 0.25f, combinedLightIn, color,
                         1, false, false, false);
             }
             poseStack.popPose();

@@ -26,7 +26,7 @@ public class RedMerchantMenu extends AbstractContainerMenu {
     private boolean canRestock;
 
     public RedMerchantMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id,playerInventory);
+        this(id, playerInventory);
     }
 
     public RedMerchantMenu(int i, Inventory inventory) {
@@ -42,13 +42,13 @@ public class RedMerchantMenu extends AbstractContainerMenu {
         this.addSlot(new MerchantResultSlot(inventory.player, merchant, this.tradeContainer, 2, 220, 37));
 
         int j;
-        for(j = 0; j < 3; ++j) {
-            for(int k = 0; k < 9; ++k) {
+        for (j = 0; j < 3; ++j) {
+            for (int k = 0; k < 9; ++k) {
                 this.addSlot(new Slot(inventory, k + j * 9 + 9, 108 + k * 18, 84 + j * 18));
             }
         }
 
-        for(j = 0; j < 9; ++j) {
+        for (j = 0; j < 9; ++j) {
             this.addSlot(new Slot(inventory, j, 108 + j * 18, 142));
         }
 
@@ -148,7 +148,7 @@ public class RedMerchantMenu extends AbstractContainerMenu {
 
     private void playTradeSound() {
         if (!this.trader.isClientSide()) {
-            Entity entity = (Entity)this.trader;
+            Entity entity = (Entity) this.trader;
             entity.level().playLocalSound(entity.getX(), entity.getY(), entity.getZ(), this.trader.getNotifyTradeSound(), SoundSource.NEUTRAL, 1.0F, 1.0F, false);
         }
 
@@ -209,7 +209,7 @@ public class RedMerchantMenu extends AbstractContainerMenu {
 
     private void moveFromInventoryToPaymentSlot(int paymentSlotIndex, ItemStack paymentSlot) {
         if (!paymentSlot.isEmpty()) {
-            for(int i = 3; i < 39; ++i) {
+            for (int i = 3; i < 39; ++i) {
                 ItemStack itemStack = (this.slots.get(i)).getItem();
                 if (!itemStack.isEmpty() && ItemStack.isSameItemSameComponents(paymentSlot, itemStack)) {
                     ItemStack itemStack2 = this.tradeContainer.getItem(paymentSlotIndex);

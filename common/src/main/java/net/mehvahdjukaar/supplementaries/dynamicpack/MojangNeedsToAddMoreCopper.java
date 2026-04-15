@@ -46,7 +46,7 @@ public class MojangNeedsToAddMoreCopper {
                 ResourceLocation relPat = r.getKey().withPath(p -> p.replace("textures/", "").replace(".png", ""));
                 try (TextureImage toRecolor = TextureImage.open(manager, relPat)) {
                     Respriter resp = Respriter.of(toRecolor);
-                    try(TextureImage recolored = resp.recolor(textures.get(random.nextInt(textures.size())))) {
+                    try (TextureImage recolored = resp.recolor(textures.get(random.nextInt(textures.size())))) {
                         sink.addTexture(relPat, recolored);
                     }
                 } catch (Exception ignored) {
@@ -72,7 +72,7 @@ public class MojangNeedsToAddMoreCopper {
                 ResourceLocation relPat = r.getKey().withPath(p -> p.replace("textures/", "").replace(".png", ""));
                 try (TextureImage toRecolor = TextureImage.open(manager, relPat)) {
                     Respriter resp = Respriter.of(toRecolor);
-                   try(TextureImage recolored = resp.recolor(textures.get(random.nextInt(textures.size())))){
+                    try (TextureImage recolored = resp.recolor(textures.get(random.nextInt(textures.size())))) {
                         sink.addTexture(relPat, recolored);
                     }
                 } catch (Exception ignored) {
@@ -133,7 +133,7 @@ public class MojangNeedsToAddMoreCopper {
             Map<String, String> ll = (Map<String, String>) f.get(lang);
             List<String> prefix = List.of("Copper ", "Slightly Weathered Copper ", "Weathered Copper ", "Exposed Copper ", "Oxidized Copper ");
 
-            Map<String, String> toAdd =new HashMap<>();
+            Map<String, String> toAdd = new HashMap<>();
             for (var b : BuiltInRegistries.ITEM) {
                 var id = b.getDescriptionId();
                 var existing = lang.getEntry(id);

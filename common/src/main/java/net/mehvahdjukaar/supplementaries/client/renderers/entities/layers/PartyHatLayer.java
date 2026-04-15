@@ -65,7 +65,7 @@ public abstract class PartyHatLayer<E extends LivingEntity, M extends EntityMode
                 .texOffs(0, 0)
                 .addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F,
                         CubeDeformation.NONE), PartPose.ZERO);
-        if(PlatHelper.getPlatform().isFabric()) {
+        if (PlatHelper.getPlatform().isFabric()) {
             partDefinition.addOrReplaceChild("hat_1", CubeListBuilder.create()
                             .texOffs(0, 32 - 9)
                             .addBox(-4.0F, -16.0F, 0.0F, 8.0F, 9.0F, 0.0F,

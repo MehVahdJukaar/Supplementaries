@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.mob_container;
 
 import com.mojang.serialization.Codec;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.codec.CodecUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -28,7 +27,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
     protected float prevJumpY = 0;
     protected float yVel = 0;
 
-    void tick(T mob, Level world, BlockPos pos){
+    void tick(T mob, Level world, BlockPos pos) {
         if (world.isClientSide) {
             mob.yOld = mob.getY();
             float dy = jumpY - prevJumpY;
@@ -40,22 +39,23 @@ public abstract class BuiltinAnimation<T extends Entity> {
     }
 
     @Nullable
-    public static <E extends Entity> BuiltinAnimation<E> get(E entity, Type type){
-        if(type == Type.BUILTIN){
-            if(entity instanceof Slime slime)return new SlimeAnim(slime);
-            else if(entity instanceof Chicken chicken)return new ChickenAnim(chicken);
-            else if(entity instanceof Rabbit rabbit)return new RabbitAnim(rabbit);
-            else if(entity instanceof Parrot parrot)return new ParrotAnim(parrot);
-            else if(entity instanceof Endermite endermite)return new EndermiteAnim(endermite);
-        }else if(type == Type.FLOATING){
-           return new FloatingAnim<>(entity);
+    public static <E extends Entity> BuiltinAnimation<E> get(E entity, Type type) {
+        if (type == Type.BUILTIN) {
+            if (entity instanceof Slime slime) return new SlimeAnim(slime);
+            else if (entity instanceof Chicken chicken) return new ChickenAnim(chicken);
+            else if (entity instanceof Rabbit rabbit) return new RabbitAnim(rabbit);
+            else if (entity instanceof Parrot parrot) return new ParrotAnim(parrot);
+            else if (entity instanceof Endermite endermite) return new EndermiteAnim(endermite);
+        } else if (type == Type.FLOATING) {
+            return new FloatingAnim<>(entity);
         }
         return null;
     }
 
     private static class FloatingAnim<M extends Entity> extends BuiltinAnimation<M> {
 
-        FloatingAnim(M entity){}
+        FloatingAnim(M entity) {
+        }
 
         @Override
         public void tick(M mob, Level world, BlockPos pos) {
@@ -67,7 +67,8 @@ public abstract class BuiltinAnimation<T extends Entity> {
 
     private static class SlimeAnim<M extends Slime> extends BuiltinAnimation<M> {
 
-        SlimeAnim(M slime){}
+        SlimeAnim(M slime) {
+        }
 
         @Override
         public void tick(M mob, Level world, BlockPos pos) {
@@ -168,7 +169,7 @@ public abstract class BuiltinAnimation<T extends Entity> {
         }
 
         @Override
-        public void tick(M mob, Level world, BlockPos pos){
+        public void tick(M mob, Level world, BlockPos pos) {
             if (world.isClientSide) {
 
                 mob.aiStep();

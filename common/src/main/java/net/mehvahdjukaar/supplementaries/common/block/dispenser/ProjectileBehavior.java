@@ -31,7 +31,7 @@ abstract class ProjectileBehavior extends DispenserHelper.AdditionalDispenserBeh
         if (!world.getBlockState(frontPos).getCollisionShape(world, frontPos).isEmpty()) {
             return InteractionResultHolder.fail(stack);
         }
-        Projectile projectileEntity = this.getProjectileEntity(source, dispensePosition,  stack);
+        Projectile projectileEntity = this.getProjectileEntity(source, dispensePosition, stack);
         projectileEntity.shoot(direction.getStepX(), direction.getStepY() + 0.1F, direction.getStepZ(), this.getProjectileVelocity(), this.getProjectileInaccuracy());
         world.addFreshEntity(projectileEntity);
         stack.shrink(1);

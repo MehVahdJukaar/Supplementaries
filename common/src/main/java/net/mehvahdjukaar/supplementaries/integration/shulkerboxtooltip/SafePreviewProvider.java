@@ -14,7 +14,7 @@ import java.util.function.Supplier;
 public final class SafePreviewProvider extends BlockEntityPreviewProvider {
 
     private static final Supplier<SafeBlockTile> DUMMY_SAFE_TILE = Suppliers.memoize(() -> new SafeBlockTile(BlockPos.ZERO,
-        ModRegistry.SAFE.get().defaultBlockState()));
+            ModRegistry.SAFE.get().defaultBlockState()));
 
     public SafePreviewProvider() {
         super(27, true);

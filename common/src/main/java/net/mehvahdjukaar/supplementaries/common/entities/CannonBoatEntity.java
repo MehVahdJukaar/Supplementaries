@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.entities;//
 
 import net.mehvahdjukaar.moonlight.api.entity.IControllableVehicle;
 import net.mehvahdjukaar.moonlight.api.entity.ITileEntityCarry;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
@@ -11,7 +10,6 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BoatReferenceFrame;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.YawPitchRestraint;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -20,7 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -270,7 +267,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         return this.isChestVehicleStillValid(player);
     }
 
-   // @Override
+    // @Override
     public void openCannonGui(ServerPlayer player) {
         PlatHelper.openCustomMenu(player, this);
     }
@@ -358,7 +355,6 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
             cannon.setCurrentUser(controlling.getUUID());
         }
     }
-
 
 
     public Vec3 getCannonOffset() {

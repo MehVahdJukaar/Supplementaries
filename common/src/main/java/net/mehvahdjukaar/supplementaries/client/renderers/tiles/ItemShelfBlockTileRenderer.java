@@ -51,14 +51,15 @@ public class ItemShelfBlockTileRenderer implements BlockEntityRenderer<ItemShelf
                 matrixStackIn.mulPose(Axis.YP.rotationDegrees(-yaw));
                 Component name = tile.getItem(0).getHoverName();
 
-                PedestalBlockTileRenderer.renderName(name,0.625f, matrixStackIn, bufferIn, combinedLightIn);
+                PedestalBlockTileRenderer.renderName(name, 0.625f, matrixStackIn, bufferIn, combinedLightIn);
                 matrixStackIn.popPose();
             }
 
             ItemStack stack = tile.getDisplayedItem();
             if (MiscUtils.getFestivity().isAprilsFool()) stack = new ItemStack(Items.SALMON);
             BakedModel model = itemRenderer.getModel(stack, tile.getLevel(), null, 0);
-            if (model.usesBlockLight() && ClientConfigs.Blocks.SHELF_TRANSLATE.get()) matrixStackIn.translate(0, -0.25, 0);
+            if (model.usesBlockLight() && ClientConfigs.Blocks.SHELF_TRANSLATE.get())
+                matrixStackIn.translate(0, -0.25, 0);
 
 
             itemRenderer.render(stack, ItemDisplayContext.FIXED, true, matrixStackIn,

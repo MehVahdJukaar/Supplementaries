@@ -13,8 +13,6 @@ import io.github.mortuusars.exposure.world.item.component.album.AlbumPage;
 import io.github.mortuusars.exposure.world.item.util.ItemAndStack;
 import net.mehvahdjukaar.moonlight.api.misc.TField;
 import net.mehvahdjukaar.moonlight.api.misc.TMethod;
-import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

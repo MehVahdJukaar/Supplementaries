@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
+
 /**
  * Author: MehVahdJukaar
  * You can copy this class into your mod and implement this interface into your entity class

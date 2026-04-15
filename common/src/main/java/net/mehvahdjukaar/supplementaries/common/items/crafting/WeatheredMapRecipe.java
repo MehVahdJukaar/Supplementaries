@@ -22,7 +22,7 @@ import java.lang.ref.WeakReference;
 public class WeatheredMapRecipe extends CustomRecipe {
 
     private final Ingredient ink;
-    private final boolean setAntique ;
+    private final boolean setAntique;
 
     public WeatheredMapRecipe(CraftingBookCategory category, Ingredient ink, boolean setAntique) {
         super(category);
@@ -107,7 +107,7 @@ public class WeatheredMapRecipe extends CustomRecipe {
         private static final StreamCodec<RegistryFriendlyByteBuf, WeatheredMapRecipe> STREAM_CODEC = StreamCodec.composite(
                 CraftingBookCategory.STREAM_CODEC, CraftingRecipe::category,
                 Ingredient.CONTENTS_STREAM_CODEC, recipe -> recipe.ink,
-                ByteBufCodecs.BOOL,recipe ->recipe.setAntique,
+                ByteBufCodecs.BOOL, recipe -> recipe.setAntique,
                 WeatheredMapRecipe::new);
 
         @Override

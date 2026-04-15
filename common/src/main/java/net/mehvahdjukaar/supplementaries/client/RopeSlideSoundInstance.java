@@ -81,7 +81,7 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
     @Override
     protected void stop() {
         //insert moe bar meme
-       // this.soundManager.queueTickingSound(this);
+        // this.soundManager.queueTickingSound(this);
         this.stopToggle = true;
     }
 

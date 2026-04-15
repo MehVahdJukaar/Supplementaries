@@ -11,7 +11,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -70,7 +69,7 @@ public class StatueBlockTile extends ItemDisplayTile {
 
     // skull code
     public void setPlayerSkin(@Nullable ResolvableProfile owner) {
-        synchronized(this) {
+        synchronized (this) {
             this.playerSkin = owner;
         }
 
@@ -90,7 +89,7 @@ public class StatueBlockTile extends ItemDisplayTile {
             Pair<UUID, String> profile = Credits.INSTANCE.statues().get(name);
             if (profile != null) {
                 this.setPlayerSkin(new ResolvableProfile(
-                        Optional.empty(), Optional.of(profile.getFirst()),  new PropertyMap()));
+                        Optional.empty(), Optional.of(profile.getFirst()), new PropertyMap()));
             }
         } else this.playerSkin = null;
 

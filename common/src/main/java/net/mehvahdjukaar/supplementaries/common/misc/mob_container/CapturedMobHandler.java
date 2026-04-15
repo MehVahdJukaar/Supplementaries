@@ -63,7 +63,7 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         var list = new ArrayList<DataDefinedCatchableMob>();
         jsons.forEach((key, json) -> {
             var data = codec.parse(ops, json).getOrThrow();
-            if(data.isPresent()) {
+            if (data.isPresent()) {
                 if (key.getPath().equals("generic_fish")) {
                     moddedFishProperty = data.get();
                 } else {

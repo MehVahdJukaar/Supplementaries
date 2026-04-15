@@ -15,8 +15,8 @@ public class InkSackMixin {
 
     @Inject(method = "tryApplyToSign", at = @At("HEAD"), cancellable = true)
     public void supp$clearAntiqueInk(Level level, SignBlockEntity signBlockEntity,
-                                                boolean bl, Player player, CallbackInfoReturnable<Boolean> cir){
-        if(AntiqueInkItem.toggleAntiqueInkOnSigns(level, player, signBlockEntity.getBlockPos(), signBlockEntity, false)){
+                                     boolean bl, Player player, CallbackInfoReturnable<Boolean> cir) {
+        if (AntiqueInkItem.toggleAntiqueInkOnSigns(level, player, signBlockEntity.getBlockPos(), signBlockEntity, false)) {
             cir.setReturnValue(true);
         }
     }

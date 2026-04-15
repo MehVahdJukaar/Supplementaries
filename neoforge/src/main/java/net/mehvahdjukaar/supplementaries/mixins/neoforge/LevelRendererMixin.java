@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
-import net.mehvahdjukaar.supplementaries.reg.neoforge.ModFluidsImpl;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;

@@ -1,8 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.block.IOptionalEntityBlock;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PedestalBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -11,11 +9,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 
 public class PedestalBlockTile extends ItemDisplayTile {
     //needed on servers for crystals
@@ -24,7 +19,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
     public PedestalBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PEDESTAL_TILE.get(), pos, state);
     }
-    
+
     public DisplayType getDisplayType() {
         return type;
     }
@@ -39,7 +34,7 @@ public class PedestalBlockTile extends ItemDisplayTile {
                 .setValue(PedestalBlock.UP, PedestalBlock.canConnectTo(level.getBlockState(worldPosition.above()), worldPosition, level, Direction.UP, hasItem));
         if (state != newState) {
             this.level.setBlock(this.worldPosition, newState, 3);
-            if(!state.getValue(PedestalBlock.ITEM_STATUS).hasTile()){
+            if (!state.getValue(PedestalBlock.ITEM_STATUS).hasTile()) {
                 this.level.removeBlockEntity(this.worldPosition);
             }
         }

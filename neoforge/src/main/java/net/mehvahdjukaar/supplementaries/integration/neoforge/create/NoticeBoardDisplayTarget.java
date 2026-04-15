@@ -28,7 +28,7 @@ public class NoticeBoardDisplayTarget extends DisplayTarget {
                 }
 
                 WrittenBookContent content = book.get(DataComponents.WRITTEN_BOOK_CONTENT);
-                if(content != null){
+                if (content != null) {
                     /*
                     boolean changed = false;
                     content.pages()

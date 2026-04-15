@@ -15,7 +15,7 @@ interface BlockUseBehavior {
     /**
      * Used for permission checks on flan compat
      */
-    default boolean altersWorld(){
+    default boolean altersWorld() {
         return false;
     }
 

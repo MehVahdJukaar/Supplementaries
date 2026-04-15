@@ -3,23 +3,16 @@ package net.mehvahdjukaar.supplementaries.common.items.crafting;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.emi.emi.screen.RecipeDisplay;
-import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.supplementaries.common.items.components.ConfettiColors;
-import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRecipes;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class ConfettiDyeRecipe extends CustomRecipe {
 
@@ -43,10 +36,10 @@ public class ConfettiDyeRecipe extends CustomRecipe {
                 if (confetti.test(itemstack)) {
                     ++i;
                     var existing = itemstack.get(ModComponents.CONFETTI_COLORS.get());
-                    if (existing != null && existing.size()>=maxColors) return false;
+                    if (existing != null && existing.size() >= maxColors) return false;
 
                 } else {
-                    if (ConfettiColors. getRgbColor(itemstack) == null) {
+                    if (ConfettiColors.getRgbColor(itemstack) == null) {
                         return false;
                     }
 

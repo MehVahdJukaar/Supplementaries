@@ -24,10 +24,10 @@ public class BottlingXpParticle extends TextureSheetParticle {
         if (this.random.nextInt(3) != 0) {
             this.setColor(0.65F + this.random.nextFloat() * 0.25F, 0.85F + this.random.nextFloat() * 0.15F, this.random.nextFloat() * 0.2F);
         } else {
-            this.setColor(0.3F + this.random.nextFloat() * 0.2F, 0.8F + this.random.nextFloat() * 0.2F, 0.1f+this.random.nextFloat() * 0.25F);
+            this.setColor(0.3F + this.random.nextFloat() * 0.2F, 0.8F + this.random.nextFloat() * 0.2F, 0.1f + this.random.nextFloat() * 0.25F);
         }
 
-        this.lifetime = (int)(Math.random() * 8.0D) + 5;
+        this.lifetime = (int) (Math.random() * 8.0D) + 5;
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BottlingXpParticle extends TextureSheetParticle {
         if (this.age++ >= this.lifetime) {
             this.remove();
         } else {
-            float f = (float)this.age / (float)this.lifetime;
+            float f = (float) this.age / (float) this.lifetime;
             float f1 = -f + (f * f * 2.0F);
             float f2 = 1.0F - f1;
             this.x = this.xStart + this.xd * f2;

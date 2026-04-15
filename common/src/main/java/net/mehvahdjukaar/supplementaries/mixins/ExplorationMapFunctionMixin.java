@@ -79,7 +79,7 @@ public abstract class ExplorationMapFunctionMixin extends LootItemConditionalFun
 
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;findNearestMapStructure(Lnet/minecraft/tags/TagKey;Lnet/minecraft/core/BlockPos;IZ)Lnet/minecraft/core/BlockPos;"), cancellable = true)
     public void supp$turnToQuill(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir, @Local Vec3 pos,
-                            @Local ServerLevel level) {
+                                 @Local ServerLevel level) {
         if (supplementaries$customDecoration != null ||
                 (CompatHandler.QUARK && CommonConfigs.Tweaks.REPLACE_VANILLA_MAPS.get())) {
             var targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE)

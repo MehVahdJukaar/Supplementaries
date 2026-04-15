@@ -41,7 +41,7 @@ public class SlingshotParticle extends TextureSheetParticle {
         BlockPos pos = BlockPos.containing(this.x, this.y, this.z);
         VoxelShape shape = this.level.getBlockState(pos)
                 .getCollisionShape(level, pos);
-        if(!shape.isEmpty() && shape.toAabbs().contains(this.getBoundingBox())){
+        if (!shape.isEmpty() && shape.toAabbs().contains(this.getBoundingBox())) {
             this.remove();
         }
     }

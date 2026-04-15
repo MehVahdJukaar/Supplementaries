@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(targets = "net.minecraft.world.inventory.LoomMenu$3")
-public abstract class LoomInputSlotMixin  {
+public abstract class LoomInputSlotMixin {
 
     @Inject(method = {"mayPlace(Lnet/minecraft/world/item/ItemStack;)Z"}, at = @At("HEAD"), cancellable = true)
     private void supp$allowFlags(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {

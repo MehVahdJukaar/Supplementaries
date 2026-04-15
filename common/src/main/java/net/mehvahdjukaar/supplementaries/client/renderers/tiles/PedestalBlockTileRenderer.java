@@ -42,7 +42,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
     @ForgeOverride
     public AABB getRenderBoundingBox(BlockEntity tile) {
-        return new AABB(tile.getBlockPos()).expandTowards(0,1,0);
+        return new AABB(tile.getBlockPos()).expandTowards(0, 1, 0);
     }
 
     protected boolean canRenderName(ItemStack item, PedestalBlockTile tile, PedestalBlockTile.DisplayType type) {

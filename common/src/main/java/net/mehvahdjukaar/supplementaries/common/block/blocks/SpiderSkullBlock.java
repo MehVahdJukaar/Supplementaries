@@ -1,13 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.supplementaries.common.block.tiles.EndermanSkullBlockTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpiderSkullBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SpiderSkullBlock extends SkullBlock{
+public class SpiderSkullBlock extends SkullBlock {
 
     public static final SkullBlock.Type TYPE = () -> "supplementaries_spider_skull";
 

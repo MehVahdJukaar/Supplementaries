@@ -48,7 +48,7 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
         super.onExplosionHit(state, level, pos, explosion, dropConsumer);
         if (explosion.canTriggerBlocks() && level.getBlockEntity(pos) instanceof WindVaneBlockTile tile) {
 
-           level.blockEvent(pos,this, 1,0);
+            level.blockEvent(pos, this, 1, 0);
         }
     }
 

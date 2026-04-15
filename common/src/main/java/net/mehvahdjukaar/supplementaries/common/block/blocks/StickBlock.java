@@ -121,7 +121,8 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (stack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
             if (CommonConfigs.Building.FLAG_POLE.get()) {
-                if (this != ModRegistry.STICK_BLOCK.get()) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                if (this != ModRegistry.STICK_BLOCK.get())
+                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
                 if (level.isClientSide) return ItemInteractionResult.SUCCESS;
                 else {
                     Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;
@@ -180,7 +181,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
     @Override
     public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor level, BlockPos pos, Rotation rotation, Direction axis, @org.jetbrains.annotations.Nullable Vec3 hit) {
-        if(rotation == Rotation.CLOCKWISE_180)return Optional.empty();
+        if (rotation == Rotation.CLOCKWISE_180) return Optional.empty();
         boolean x = state.getValue(AXIS_X);
         boolean y = state.getValue(AXIS_Y);
         boolean z = state.getValue(AXIS_Z);
@@ -189,7 +190,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
             case X -> state.setValue(AXIS_Y, z).setValue(AXIS_Z, y);
             case Z -> state.setValue(AXIS_X, y).setValue(AXIS_Y, x);
         };
-        if(newState != state)return Optional.of(newState);
+        if (newState != state) return Optional.of(newState);
         return Optional.empty();
     }
 
@@ -210,9 +211,9 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor levelIn, BlockPos currentPos, BlockPos facingPos) {
         if (this == ModRegistry.STICK_BLOCK.get()) {
-          //  if (facing == Direction.DOWN && !levelIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
-          //     FarmersDelightCompat.tryTomatoLogging(facingState, levelIn, facingPos,false);
-          //  }
+            //  if (facing == Direction.DOWN && !levelIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
+            //     FarmersDelightCompat.tryTomatoLogging(facingState, levelIn, facingPos,false);
+            //  }
         }
 
         return super.updateShape(stateIn, facing, facingState, levelIn, currentPos, facingPos);

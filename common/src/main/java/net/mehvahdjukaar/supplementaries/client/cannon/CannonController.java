@@ -1,7 +1,10 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.*;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory3D;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.minecraft.client.Camera;
@@ -147,7 +150,7 @@ public class CannonController {
 
             //we used some flipped coordinates in trajectory calculation. we got to adjust them here.
             float newPitch = Mth.rotLerp(followSpeed, eulerAngles.pitch(),
-                    trajectory.pitch() * Mth.RAD_TO_DEG) ;
+                    trajectory.pitch() * Mth.RAD_TO_DEG);
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
             float newYaw = trajectory3D.yaw() * Mth.RAD_TO_DEG;
             cannon.setWorldOrientation(EntityAngles.of(newPitch, newYaw)

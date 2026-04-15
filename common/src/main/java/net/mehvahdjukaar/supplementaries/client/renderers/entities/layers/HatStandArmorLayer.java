@@ -18,7 +18,7 @@ public class HatStandArmorLayer<T extends HatStandEntity, A extends HumanoidMode
     @Override
     public void setPartVisibility(A modelIn, EquipmentSlot slotIn) {
         modelIn.setAllVisible(false);
-        if(slotIn == EquipmentSlot.HEAD){
+        if (slotIn == EquipmentSlot.HEAD) {
             modelIn.head.visible = true;
             modelIn.hat.visible = true;
         }

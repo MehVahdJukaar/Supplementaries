@@ -13,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -38,7 +37,7 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        if(this.level != null && !this.level.isClientSide){
+        if (this.level != null && !this.level.isClientSide) {
             boolean empty = this.getItem(0).isEmpty();
             this.level.setBlock(this.getBlockPos(),
                     this.getBlockState().setValue(PresentBlock.PACKED, !empty), 3);

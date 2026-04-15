@@ -23,7 +23,7 @@ public class PulleyContainerMenu extends AbstractContainerMenu implements IConta
     }
 
     public PulleyContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        this(id,playerInventory);
+        this(id, playerInventory);
     }
 
     public PulleyContainerMenu(int id, Inventory playerInventory) {
@@ -40,7 +40,7 @@ public class PulleyContainerMenu extends AbstractContainerMenu implements IConta
         this.addSlot(new Slot(inventory, 0, 79, 39) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return PulleyBlockTile.getContentType(stack.getItem())!= ModBlockProperties.Winding.NONE;
+                return PulleyBlockTile.getContentType(stack.getItem()) != ModBlockProperties.Winding.NONE;
             }
         });
 
@@ -53,11 +53,11 @@ public class PulleyContainerMenu extends AbstractContainerMenu implements IConta
     }
 
 
-
     @Override
     public boolean stillValid(Player playerIn) {
         return this.inventory.stillValid(playerIn);
     }
+
     /**
      * Handle when the stack in invSlot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).

@@ -29,22 +29,22 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
         root.addOrReplaceChild("center", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-2.0F, -2.0F, -8.0F, 4.0F, 1.0F, 1.0F)
-                .texOffs(0, 2)
-                .addBox(-2.0F, 1.0F, -8.0F, 4.0F, 1.0F, 1.0F)
-                .texOffs(0, 19)
-                .addBox(-8.0F, -1.0F, -8.0F, 16.0F, 2.0F, 16.0F),
+                        .texOffs(0, 0)
+                        .addBox(-2.0F, -2.0F, -8.0F, 4.0F, 1.0F, 1.0F)
+                        .texOffs(0, 2)
+                        .addBox(-2.0F, 1.0F, -8.0F, 4.0F, 1.0F, 1.0F)
+                        .texOffs(0, 19)
+                        .addBox(-8.0F, -1.0F, -8.0F, 16.0F, 2.0F, 16.0F),
                 PartPose.ZERO);
 
         root.addOrReplaceChild("top", CubeListBuilder.create()
-                .texOffs(0, 0)
-                .addBox(-8.0F, 5.0F, -8.0F, 16.0F, 3.0F, 16.0F),
+                        .texOffs(0, 0)
+                        .addBox(-8.0F, 5.0F, -8.0F, 16.0F, 3.0F, 16.0F),
                 PartPose.ZERO);
 
         root.addOrReplaceChild("leather", CubeListBuilder.create()
-                .texOffs(0, 37)
-                .addBox(-7.0F, -5.0F, -7.0F, 14.0F, 10.0F, 14.0F),
+                        .texOffs(0, 37)
+                        .addBox(-7.0F, -5.0F, -7.0F, 14.0F, 10.0F, 14.0F),
                 PartPose.ZERO);
 
         return LayerDefinition.create(mesh, 64, 64);
@@ -76,14 +76,14 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
 
         Direction dir = tile.getDirection();
         poseStack.mulPose(RotHlpr.rot(dir));
-        poseStack.scale(-1,-1,1);
+        poseStack.scale(-1, -1, 1);
 
         center.render(poseStack, builder, combinedLightIn, combinedOverlayIn);
 
 
         poseStack.pushPose();
 
-        poseStack.translate(0, -1+(3/16d)-dh, 0);
+        poseStack.translate(0, -1 + (3 / 16d) - dh, 0);
 
         top.render(poseStack, builder, combinedLightIn, combinedOverlayIn);
 
@@ -91,7 +91,7 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
 
         poseStack.pushPose();
 
-        poseStack.translate(0, dh,0);
+        poseStack.translate(0, dh, 0);
 
         top.render(poseStack, builder, combinedLightIn, combinedOverlayIn);
 
@@ -99,7 +99,7 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
 
         float j = 3.2f;
 
-        poseStack.scale(1, 1+j*dh, 1);
+        poseStack.scale(1, 1 + j * dh, 1);
 
         leather.render(poseStack, builder, combinedLightIn, combinedOverlayIn);
 

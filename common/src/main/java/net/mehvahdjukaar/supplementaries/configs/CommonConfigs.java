@@ -1220,7 +1220,7 @@ public class CommonConfigs {
             if (PlatHelper.getPlatform().isForge() && false) { //disabled. TODO: add back
                 QUARK_QUILL = builder.comment("If Quark is installed adventurer maps will be replaced by adventurer quills. These will not lag the server when generating")
                         .define("quill_adventurer_maps", true);
-                REPLACE_VANILLA_MAPS = () -> false ;
+                REPLACE_VANILLA_MAPS = () -> false;
                 builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
                         .define("quill_vanilla_maps", true);
                 QUILL_MIN_SEARCH_RADIUS = builder.comment("Miminum search radius for quill. Used to incrase the radius of vanilla searches. For reference buried treasures are at 50 and locate is at 100 chunks")

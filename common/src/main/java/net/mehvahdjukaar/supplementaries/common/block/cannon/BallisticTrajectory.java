@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+
 public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, boolean miss,
                                   float gravity, float drag, float v0x, float v0y) {
 
@@ -66,7 +67,7 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
         if (mode == ShootingMode.DOWN) {
             // Low Arc: Between Peak and Target
             float lowStart = Math.max(peakAngle, minPitch);
-            float lowEnd = Math.min((float)targetAngle, maxPitch);
+            float lowEnd = Math.min((float) targetAngle, maxPitch);
             solution = findBestTrajectoryGoldenSection(targetPoint, gravity, drag, initialPow,
                     0.0001f, distanceTolerance, lowStart, lowEnd);
         } else {
@@ -78,6 +79,7 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
         }
         return solution;
     }
+
     /**
      * calculate the best pitch to shoot a projectile at to hit a target, maximising distance to target point
      *
@@ -230,11 +232,11 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
      * Calculate the best pitch such that the resulting trajectory is closest to the target point
      * Uses Golden-section search
      *
-     * @param targetPoint Target point
-     * @param gravity     Gravity
-     * @param drag        Drag (v multiplier)
-     * @param initialPow  Initial velocity
-     * @param targetTolerance   Tolerance for stopping the search
+     * @param targetPoint     Target point
+     * @param gravity         Gravity
+     * @param drag            Drag (v multiplier)
+     * @param initialPow      Initial velocity
+     * @param targetTolerance Tolerance for stopping the search
      * @return Trajectory object containing the best point, pitch, time, and miss flag
      */
     private static BallisticTrajectory findBestTrajectoryGoldenSection(Vec2 targetPoint, float gravity, float drag, float initialPow,

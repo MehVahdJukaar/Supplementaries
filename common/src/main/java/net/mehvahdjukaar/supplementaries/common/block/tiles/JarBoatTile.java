@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class JarBoatTile extends BlockEntity{
+public class JarBoatTile extends BlockEntity {
     public JarBoatTile(BlockPos pos, BlockState state) {
         super(ModRegistry.JAR_BOAT_TILE.get(), pos, state);
     }

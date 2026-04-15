@@ -36,7 +36,7 @@ public class ClientBoundSyncAmbientLightPacket implements Message {
             }
             if (type != null) {
                 // for dimensions with no skylight like nether we render fullbright
-                float light = type.hasSkyLight() ?  type.ambientLight() : 1;
+                float light = type.hasSkyLight() ? type.ambientLight() : 1;
                 ambientLight.put(d.getKey(), Mth.ceil(light * 15));
             }
         }

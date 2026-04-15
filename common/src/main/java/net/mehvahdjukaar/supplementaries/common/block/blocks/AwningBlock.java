@@ -133,7 +133,7 @@ public class AwningBlock extends WaterBlock implements IColored {
 
     @Override
     public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return  state.getValue(BOTTOM) ? BOTTOM_INTERACTION : TOP_INTERACTION;
+        return state.getValue(BOTTOM) ? BOTTOM_INTERACTION : TOP_INTERACTION;
     }
 
     @Override
@@ -142,7 +142,7 @@ public class AwningBlock extends WaterBlock implements IColored {
         if (CommonConfigs.Building.AWNING_FALL_THROUGH.get() && context instanceof EntityCollisionContext ec && ec.getEntity() != null) {
             if (context.isDescending() || !context.isAbove(bottom ? TOP_COLLISION : BOTTOM_COLLISION,
                     bottom ? pos.below() : pos, false)) {
-               return Shapes.empty();
+                return Shapes.empty();
             }
         }
         return super.getCollisionShape(state, level, pos, context);
@@ -264,7 +264,7 @@ public class AwningBlock extends WaterBlock implements IColored {
     }
 
     public static @NotNull Vector3f getNormalVector(BlockState state) {
-        if (!state.getValue(SLANTED)){
+        if (!state.getValue(SLANTED)) {
             return new Vector3f(0, 1, 0);
         }
         Direction dir = state.getValue(FACING);

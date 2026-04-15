@@ -117,7 +117,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
                 dropResources(state, worldIn, pos, null, player, player.getMainHandItem());
             }
         }
-      return   super.playerWillDestroy(worldIn, pos, state, player);
+        return super.playerWillDestroy(worldIn, pos, state, player);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        Preconditions.checkArgument( state.is(this), "Some mod passed a block that is not this own to the use method. This is bad!");
+        Preconditions.checkArgument(state.is(this), "Some mod passed a block that is not this own to the use method. This is bad!");
         InteractionResult old = super.useWithoutItem(state, level, pos, player, hitResult);
         if (!old.consumesAction() && !this.isSingle(state) && state.getValue(HALF) == DoubleBlockHalf.UPPER) {
             // calls use event on lower block

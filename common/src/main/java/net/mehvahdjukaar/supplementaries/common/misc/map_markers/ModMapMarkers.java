@@ -113,9 +113,9 @@ public class ModMapMarkers {
 
     @Nullable
     private static SimpleMapMarker sign(Holder<MLMapDecorationType<?, ?>> type,
-                                            BlockGetter level, BlockPos pos) {
+                                        BlockGetter level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof SignBlockEntity tile && tile.getBlockState().is(BlockTags.ALL_SIGNS) &&
-        !tile.getBlockState().is(BlockTags.ALL_HANGING_SIGNS)) {
+                !tile.getBlockState().is(BlockTags.ALL_HANGING_SIGNS)) {
             return getSignMarker(type, pos, tile);
         } else {
             return null;
@@ -124,7 +124,7 @@ public class ModMapMarkers {
 
     @Nullable
     private static SimpleMapMarker hangingSign(Holder<MLMapDecorationType<?, ?>> type,
-                                        BlockGetter level, BlockPos pos) {
+                                               BlockGetter level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof SignBlockEntity tile && tile.getBlockState().is(BlockTags.ALL_HANGING_SIGNS)) {
             return getSignMarker(type, pos, tile);
         } else {

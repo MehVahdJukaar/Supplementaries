@@ -85,11 +85,38 @@ public class RandomRotationModel implements CustomBakedModel {
         return quadCache.get(side)[index];
     }
 
-    @Override public boolean useAmbientOcclusion() { return wrapped.useAmbientOcclusion(); }
-    @Override public boolean isGui3d() { return wrapped.isGui3d(); }
-    @Override public boolean usesBlockLight() { return wrapped.usesBlockLight(); }
-    @Override public boolean isCustomRenderer() { return wrapped.isCustomRenderer(); }
-    @Override public TextureAtlasSprite getBlockParticle(ExtraModelData data) { return wrapped.getParticleIcon(); }
-    @Override public ItemOverrides getOverrides() { return wrapped.getOverrides(); }
-    @Override public ItemTransforms getTransforms() { return wrapped.getTransforms(); }
+    @Override
+    public boolean useAmbientOcclusion() {
+        return wrapped.useAmbientOcclusion();
+    }
+
+    @Override
+    public boolean isGui3d() {
+        return wrapped.isGui3d();
+    }
+
+    @Override
+    public boolean usesBlockLight() {
+        return wrapped.usesBlockLight();
+    }
+
+    @Override
+    public boolean isCustomRenderer() {
+        return wrapped.isCustomRenderer();
+    }
+
+    @Override
+    public TextureAtlasSprite getBlockParticle(ExtraModelData data) {
+        return wrapped.getParticleIcon();
+    }
+
+    @Override
+    public ItemOverrides getOverrides() {
+        return wrapped.getOverrides();
+    }
+
+    @Override
+    public ItemTransforms getTransforms() {
+        return wrapped.getTransforms();
+    }
 }

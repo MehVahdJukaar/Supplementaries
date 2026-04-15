@@ -13,7 +13,7 @@ public class ModSlider extends AbstractSliderButton implements ISlider {
 
     public ModSlider(int x, int y, int width, int height, Component component,
                      Component suffix, double minValue, double maxValue, double currentValue) {
-        super(x, y, width, height, component, (currentValue- minValue)/(maxValue-minValue));
+        super(x, y, width, height, component, (currentValue - minValue) / (maxValue - minValue));
         this.minValue = minValue;
         this.maxValue = maxValue;
         this.prefix = component;
@@ -28,7 +28,7 @@ public class ModSlider extends AbstractSliderButton implements ISlider {
 
     @Override
     protected void updateMessage() {
-        this.setMessage(Component.literal("").append(prefix).append(String.valueOf((int)this.getValue())).append(suffix));
+        this.setMessage(Component.literal("").append(prefix).append(String.valueOf((int) this.getValue())).append(suffix));
     }
 
     @Override

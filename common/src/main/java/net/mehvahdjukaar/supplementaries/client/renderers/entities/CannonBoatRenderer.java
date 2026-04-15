@@ -115,7 +115,7 @@ public class CannonBoatRenderer extends BoatRenderer {
             VertexModels.renderDebugLine(poseStack, buffer, 0xff00aa33, 0, 1, 0);
 
             Quaternionf rot = cannon.getReferenceFrame().getRotation(1);
-            Vector3f v = rot.transform(new Vector3f(0,0, 1));
+            Vector3f v = rot.transform(new Vector3f(0, 0, 1));
 
             VertexModels.renderDebugLine(poseStack, buffer, 0xffaa0033, v);
 

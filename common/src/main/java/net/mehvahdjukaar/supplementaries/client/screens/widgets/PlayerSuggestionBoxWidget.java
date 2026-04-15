@@ -205,7 +205,7 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
 
             float c = this.isOnline ? 1 : 0.5f;
             RenderSystem.setShaderColor(1, c, c, 1);
-        PlayerSkin skin = Minecraft.getInstance().getSkinManager().getInsecureSkin(this.profile);
+            PlayerSkin skin = Minecraft.getInstance().getSkinManager().getInsecureSkin(this.profile);
             ResourceLocation resourceLocation = skin.texture();
             //face and overlay
             graphics.blit(resourceLocation, i, y, SKIN_SIZE, SKIN_SIZE, 8.0F, 8.0F, 8, 8, 64, 64);

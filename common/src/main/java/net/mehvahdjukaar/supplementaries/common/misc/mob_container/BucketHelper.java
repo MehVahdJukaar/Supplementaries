@@ -85,7 +85,7 @@ public class BucketHelper {
             }
         }
         //associate for backward map. we don't query this map here because we had not only an entity explosionType but entity itself so we have more precise methods to use
-        if(!bucket.isEmpty()){
+        if (!bucket.isEmpty()) {
             associateMobToBucketIfAbsent(entity.getType(), bucket.getItem());
         }
         return bucket;
@@ -119,7 +119,6 @@ public class BucketHelper {
 
         return bucket;
     }
-
 
 
     public static Collection<Item> getValidBuckets() {

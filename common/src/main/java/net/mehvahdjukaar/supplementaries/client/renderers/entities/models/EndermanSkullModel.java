@@ -20,7 +20,7 @@ public class EndermanSkullModel extends SkullWithEyesModel {
     }
 
     public void setupJawAnimation(float mouthAnim) {
-        this.head.y =  mouthAnim * -6;
+        this.head.y = mouthAnim * -6;
         this.hat.y = 0;
     }
 

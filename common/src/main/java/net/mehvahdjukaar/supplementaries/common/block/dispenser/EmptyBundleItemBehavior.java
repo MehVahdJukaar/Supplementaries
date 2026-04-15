@@ -20,8 +20,8 @@ class EmptyBundleItemBehavior extends DispenserHelper.AdditionalDispenserBehavio
 
     @Override
     protected InteractionResultHolder<ItemStack> customBehavior(BlockSource source, ItemStack stack) {
-        BundleContents content  = stack.get(DataComponents.BUNDLE_CONTENTS);
-        if(content != null) {
+        BundleContents content = stack.get(DataComponents.BUNDLE_CONTENTS);
+        if (content != null) {
             var mutable = new BundleContents.Mutable(content);
             ItemStack extracted = mutable.removeOne();
             if (extracted != null) {

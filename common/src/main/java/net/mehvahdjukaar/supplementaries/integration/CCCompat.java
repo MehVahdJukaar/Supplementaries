@@ -23,6 +23,7 @@ public class CCCompat {
     public static int getPages(ItemStack itemstack) {
         throw new AssertionError();
     }
+
     @ExpectPlatform
     public static String[] getText(ItemStack itemstack) {
         throw new AssertionError();

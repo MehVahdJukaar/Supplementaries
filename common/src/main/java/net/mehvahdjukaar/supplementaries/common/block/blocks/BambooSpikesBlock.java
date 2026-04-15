@@ -70,7 +70,7 @@ import java.util.function.Supplier;
 import static net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem.getPotion;
 
 public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, EntityBlock, IWashable, IPistonMotionReact {
-    protected static final EnumMap<Direction,VoxelShape> SHAPES = MthUtils.getAllRotatedVoxelShapes(
+    protected static final EnumMap<Direction, VoxelShape> SHAPES = MthUtils.getAllRotatedVoxelShapes(
             Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D));
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -124,7 +124,7 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return SHAPES.get (state.getValue(FACING));
+        return SHAPES.get(state.getValue(FACING));
     }
 
     @Override

@@ -1,16 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration.neoforge;
 
 
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
-import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.world.item.component.ItemContainerContents;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.client.module.ChestSearchingModule;
 
@@ -23,7 +19,7 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
     private final ItemContainerContents contents;
     private final int[] dimensions;
     private final int size;
-    private  boolean locked;
+    private boolean locked;
     protected ChestSearchingModule module = Quark.ZETA.modules.get(ChestSearchingModule.class);
 
     public InventoryTooltipComponent(InventoryViewTooltip tooltip) {

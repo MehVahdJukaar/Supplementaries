@@ -17,7 +17,7 @@ interface ItemUseOnBlockBehavior extends ItemUseBehavior {
         return appliesToItem(item);
     }
 
-    default boolean placesBlock(){
+    default boolean placesBlock() {
         return false;
     }
 }

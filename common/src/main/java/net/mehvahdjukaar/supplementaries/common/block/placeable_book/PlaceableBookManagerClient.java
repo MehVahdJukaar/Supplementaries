@@ -23,7 +23,7 @@ import java.util.Map;
 import static net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener.scanDirectory;
 
 public class PlaceableBookManagerClient {
-    private static final Gson GSON =  new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     //client
     //static, just 1 instance exists
     private static final MapRegistry<List<BookModelVisuals.VariantModelList>> bookVisuals = new MapRegistry<>("placeable_books_visuals");

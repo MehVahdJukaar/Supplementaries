@@ -77,12 +77,12 @@ public class FairRingIterator implements Iterator<FairRingIterator.Ring>, Iterab
             pq.add(gr);
         }
         int commonIterations = commonIterations();
-        if(gr.iterations <= commonIterations) {
+        if (gr.iterations <= commonIterations) {
             gr.iterations++;
             commonIterations = commonIterations();
         }
 
-        return new Ring(gr.gridSize, snapped , commonIterations);
+        return new Ring(gr.gridSize, snapped, commonIterations);
     }
 
     @Override

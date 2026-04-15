@@ -47,7 +47,7 @@ public class FunnyScreen extends Screen {
                                 (isEvenFunnier ?
                                         "net.mehvahdjukaar.supplementaries.code_that_makes_the_game_crash.GameIsKilException" :
                                         "net.mehvahdjukaar.supplementaries.code_that_purposefully_crashes_modpack.GameIsKillException")
-                        +": Something went wrong! Too bad!"
+                                + ": Something went wrong! Too bad!"
                 )
         );
         this.errorHeader = Component.literal(ChatFormatting.RED +

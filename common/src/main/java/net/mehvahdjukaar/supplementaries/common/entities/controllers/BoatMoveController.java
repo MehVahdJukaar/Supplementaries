@@ -104,7 +104,7 @@ public class BoatMoveController extends MoveControl {
         float moveAmount = (float) (speed / (0.1f) * 0.04f);
         //same as player
         float scalar = 0.25f; //arbitrary slow down
-        amount += (moveAmount* scalar);
+        amount += (moveAmount * scalar);
 
 
         Vec3 oldMovement = boat.getDeltaMovement();

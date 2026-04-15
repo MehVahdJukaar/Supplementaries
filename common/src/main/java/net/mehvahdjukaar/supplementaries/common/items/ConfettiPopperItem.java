@@ -56,7 +56,6 @@ public class ConfettiPopperItem extends BlockItem {
         ItemStack heldItem = player.getItemInHand(hand);
 
 
-
         //no clue why im doing this from server side
         Vec3 pos = player.getEyePosition().add(player.getLookAngle().scale(0.2)).add(0d, -0.25, 0d);
         //hack

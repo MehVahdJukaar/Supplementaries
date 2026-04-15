@@ -56,7 +56,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushable{
+public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushable {
     public static final MapCodec<AshLayerBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter((coloredFallingBlock) -> coloredFallingBlock.dustColor),
             propertiesCodec()).apply(instance, AshLayerBlock::new));
@@ -106,11 +106,11 @@ public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushab
         Vec3 pos = hitResult.getLocation();
 
         del = del.scale(0.1f);
-        for(int k = 0; k < j; ++k) {
-            level.addParticle(particles, pos.x - (double)(direction == Direction.WEST ? 1.0E-6F : 0.0F),
-                    pos.y, pos.z - (double)(direction == Direction.NORTH ? 1.0E-6F : 0.0F),
-                    del.x() * (double)i * 3.0 * level.getRandom().nextDouble(),
-                    0.0, del.z() * (double)i * 3.0 * level.getRandom().nextDouble());
+        for (int k = 0; k < j; ++k) {
+            level.addParticle(particles, pos.x - (double) (direction == Direction.WEST ? 1.0E-6F : 0.0F),
+                    pos.y, pos.z - (double) (direction == Direction.NORTH ? 1.0E-6F : 0.0F),
+                    del.x() * (double) i * 3.0 * level.getRandom().nextDouble(),
+                    0.0, del.z() * (double) i * 3.0 * level.getRandom().nextDouble());
         }
 
     }

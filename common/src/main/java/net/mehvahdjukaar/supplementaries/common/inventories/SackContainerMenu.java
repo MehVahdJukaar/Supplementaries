@@ -14,11 +14,11 @@ public class SackContainerMenu extends VariableSizeContainerMenu {
     }
 
     public SackContainerMenu(int id, Inventory playerInventory, Container container, int unlockedSlots) {
-        super(ModMenuTypes.SACK.get(),id, playerInventory, container, unlockedSlots);
+        super(ModMenuTypes.SACK.get(), id, playerInventory, container, unlockedSlots);
     }
 
     public SackContainerMenu(int id, Inventory playerInventory, Container container) {
-        super(ModMenuTypes.SACK.get(),id, playerInventory, container, container.getContainerSize());
+        super(ModMenuTypes.SACK.get(), id, playerInventory, container, container.getContainerSize());
     }
 }
 

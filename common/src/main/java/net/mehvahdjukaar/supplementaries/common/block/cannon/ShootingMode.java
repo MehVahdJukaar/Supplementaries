@@ -5,8 +5,8 @@ public enum ShootingMode {
     UP,
     STRAIGHT;
 
-    public ShootingMode cycle(){
-        return switch(this){
+    public ShootingMode cycle() {
+        return switch (this) {
             case DOWN -> UP;
             case UP -> STRAIGHT;
             case STRAIGHT -> DOWN;

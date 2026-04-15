@@ -16,9 +16,9 @@ public class ShulkerBoxTooltipCompat implements ShulkerBoxTooltipApi {
     @Override
     public void registerProviders(PreviewProviderRegistry registry) {
         registry.register(Supplementaries.res(ModConstants.SAFE_NAME), new SafePreviewProvider(),
-            ModRegistry.SAFE_ITEM.get());
+                ModRegistry.SAFE_ITEM.get());
         registry.register(Supplementaries.res(ModConstants.SACK_NAME), new SackPreviewProvider(),
-            ModRegistry.SACK_ITEM.get());
+                ModRegistry.SACK_ITEM.get());
         registry.register(Supplementaries.res(ModConstants.LUNCH_BASKET_NAME), new LunchBasketPreviewProvider(),
                 ModRegistry.LUNCH_BASKET_ITEM.get());
     }

@@ -4,15 +4,10 @@ import net.mehvahdjukaar.supplementaries.common.fluids.FiniteFluid;
 import net.mehvahdjukaar.supplementaries.common.fluids.FlammableLiquidBlock;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -96,7 +91,8 @@ public class LumiseneBucketItem extends BucketItem {
         } else if (containedFluidStack.isPresent() && content.getFluidType().isVaporizedOnPlacement(level, pos, containedFluidStack.get())) {
             content.getFluidType().onVaporize(player, level, pos, containedFluidStack.get());
             return true;
-        } if (blockAt instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(player, level, pos, stateAt, content)) {
+        }
+        if (blockAt instanceof LiquidBlockContainer lc && lc.canPlaceLiquid(player, level, pos, stateAt, content)) {
             lc.placeLiquid(level, pos, stateAt, content.defaultFluidState()
                     .setValue(FiniteFluid.LEVEL, capacity));
             this.playEmptySound(player, level, pos);

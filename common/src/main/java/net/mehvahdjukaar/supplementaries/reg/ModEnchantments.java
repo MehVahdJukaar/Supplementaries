@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
-import net.mehvahdjukaar.moonlight.api.misc.HolderReference;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;

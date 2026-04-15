@@ -4,9 +4,6 @@ import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.frozenblock.lib.item.api.ItemBlockStateTagUtils;
-import net.frozenblock.lib.item.api.removable.RemovableItemTags;
-import net.mehvahdjukaar.moonlight.api.map.decoration.MLJsonMapDecorationType;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -27,7 +24,7 @@ public class DifferentProspectiveItemRenderer implements BuiltinItemRendererRegi
     private final Set<ItemDisplayContext> isFirst;
 
     public DifferentProspectiveItemRenderer(ModelResourceLocation first, ModelResourceLocation second,
-                                            Set<ItemDisplayContext> isFirst){
+                                            Set<ItemDisplayContext> isFirst) {
         this.model2d = first;
         this.model3d = second;
         this.isFirst = isFirst;

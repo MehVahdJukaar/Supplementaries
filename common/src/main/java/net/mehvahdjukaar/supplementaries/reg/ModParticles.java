@@ -61,7 +61,7 @@ public class ModParticles {
             Function<ParticleType<T>, MapCodec<T>> codecGetter,
             Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodecGetter) {
 
-        return RegHelper.registerParticle(Supplementaries.res(string),false, codecGetter, streamCodecGetter);
+        return RegHelper.registerParticle(Supplementaries.res(string), false, codecGetter, streamCodecGetter);
     }
 
     private static RegSupplier<SimpleParticleType> reg(String string) {

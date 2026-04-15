@@ -274,7 +274,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
 
     @Override
     public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPES.get (state.getValue(FACING));
+        return SHAPES.get(state.getValue(FACING));
     }
 
     @Override

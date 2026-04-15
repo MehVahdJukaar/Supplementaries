@@ -67,7 +67,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
                     pr.shoot(facing.x, facing.y, facing.z,
                             scalePower, inaccuracy);
-                }else{
+                } else {
                     entity.setDeltaMovement(facing.scale(scalePower));
                 }
 

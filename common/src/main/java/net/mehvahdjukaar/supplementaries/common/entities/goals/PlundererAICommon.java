@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
-import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory3D;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory3D;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -94,8 +94,8 @@ public final class PlundererAICommon {
             float followSpeed = 1;
             //TODO: improve
             //TODO: cannon change
-           // tile.setPitch(Mth.rotLerp(followSpeed, tile.getPitch(),
-             //       trajectory.pitch() * Mth.RAD_TO_DEG));
+            // tile.setPitch(Mth.rotLerp(followSpeed, tile.getPitch(),
+            //       trajectory.pitch() * Mth.RAD_TO_DEG));
             // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
             //tile.setYaw(wantedLocalYawDeg);
 

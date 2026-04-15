@@ -18,7 +18,7 @@ public class DefaultWaterColor implements ItemColor, BlockColor {
     }
 
     @Override
-    public int getColor(BlockState state, @Nullable BlockAndTintGetter reader,@Nullable BlockPos pos, int tint) {
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter reader, @Nullable BlockPos pos, int tint) {
         if (tint != 1) return -1;
         return reader != null && pos != null ? BiomeColors.getAverageWaterColor(reader, pos) : -1;
     }

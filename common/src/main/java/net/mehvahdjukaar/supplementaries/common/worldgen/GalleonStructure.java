@@ -150,11 +150,11 @@ public class GalleonStructure extends Structure implements ISpawnBoxStructure {
         int y = generator.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, levelHeightAccessor, randomState) + 1;
 
         int seaLevel = context.chunkGenerator().getSeaLevel();
-        if (this.requireSeaLevel && y != seaLevel){
+        if (this.requireSeaLevel && y != seaLevel) {
             return Optional.empty();
         }
         Climate.TargetPoint paramAtPos = context.randomState().sampler().sample(QuartPos.fromBlock(x), QuartPos.fromBlock(y), QuartPos.fromBlock(z));
-        if (this.biomePoint.isPresent() && !containsPoint(this.biomePoint.get(), paramAtPos)){
+        if (this.biomePoint.isPresent() && !containsPoint(this.biomePoint.get(), paramAtPos)) {
             return Optional.empty();
         }
 

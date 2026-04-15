@@ -6,9 +6,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.quark.TaterInAJarBlock;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -55,11 +53,8 @@ import org.violetmoon.quark.content.tools.module.SlimeInABucketModule;
 import org.violetmoon.quark.content.tweaks.module.DoubleDoorOpeningModule;
 import org.violetmoon.quark.content.tweaks.module.EnhancedLaddersModule;
 import org.violetmoon.quark.content.tweaks.module.MoreBannerLayersModule;
-import org.violetmoon.zeta.event.bus.LoadEvent;
-import org.violetmoon.zeta.event.load.ZGatherAdvancementModifiers;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
 
 public class QuarkCompat {

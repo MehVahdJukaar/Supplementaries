@@ -15,6 +15,7 @@ public abstract class SelfGunpowderMixin extends LightUpBlock {
     }
 
     // TODO fabric
+
     /**
      * Called upon the block being destroyed by an explosion
      */

@@ -89,7 +89,7 @@ public class HourglassBehavior implements MovementBehaviour {
 
         float h = Mth.lerp(partialTicks, prevProgress, progress);
         Direction dir = context.state.getValue(HourGlassBlock.FACING);
-        HourGlassBlockTileRenderer.renderSand(matrices.getModelViewProjection(), buffer, light,  cachedTexture, h, dir);
+        HourGlassBlockTileRenderer.renderSand(matrices.getModelViewProjection(), buffer, light, cachedTexture, h, dir);
     }
 
 }

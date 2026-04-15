@@ -7,11 +7,8 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import org.joml.Vector3f;
 
 public class LumiseneFluidRenderPropertiesImpl extends LumiseneFluidRenderProperties implements IClientFluidTypeExtensions {
@@ -33,7 +30,7 @@ public class LumiseneFluidRenderPropertiesImpl extends LumiseneFluidRenderProper
 
     @Override
     public Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
-        return new Vector3f(1F, 246/255f, 208/255f);
+        return new Vector3f(1F, 246 / 255f, 208 / 255f);
     }
 
     @Override

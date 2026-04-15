@@ -70,11 +70,11 @@ public class StatueEntityModel extends Model {
     }
 
     public void renderCloak(PoseStack poseStack, VertexConsumer consumer, int light, int overlay, StatueBlockTile tile, float partialTick) {
-        BlockPos pos=tile.getBlockPos();
+        BlockPos pos = tile.getBlockPos();
         long gameTime = tile.getLevel() == null ? 0 : tile.getLevel().getGameTime();
-        float time = ((float)Math.floorMod((pos.getX() * 7L + pos.getY() * 9L + pos.getZ() * 13L) + gameTime, 100L) + partialTick) / 100.0F;
+        float time = ((float) Math.floorMod((pos.getX() * 7L + pos.getY() * 9L + pos.getZ() * 13L) + gameTime, 100L) + partialTick) / 100.0F;
         this.cloak.xRot = (-0.04F + 0.01F * Mth.cos((float) (Math.PI * 2) * time)) * (float) Math.PI;
-       this.cloak.yRot = Mth.PI;
+        this.cloak.yRot = Mth.PI;
         this.cloak.z = 2;
         this.cloak.render(poseStack, consumer, light, overlay);
     }

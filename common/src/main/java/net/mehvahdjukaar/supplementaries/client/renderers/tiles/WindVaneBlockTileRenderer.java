@@ -31,7 +31,7 @@ public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBl
                        int combinedOverlayIn) {
         matrixStackIn.pushPose();
         matrixStackIn.translate(0.5, 0.5, 0.5);
-        matrixStackIn.scale(1,-1,-1);
+        matrixStackIn.scale(1, -1, -1);
 
         model.yRot = Mth.DEG_TO_RAD * tile.getYaw(partialTicks);
         model.render(matrixStackIn, ModMaterials.WIND_VANE_MATERIAL.buffer(bufferIn, RenderType::entityCutout),

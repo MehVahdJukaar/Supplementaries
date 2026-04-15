@@ -35,7 +35,7 @@ public class OverencumberedEffect extends MobEffect {
     @Override
     public void addAttributeModifiers(AttributeMap attributeMap, int amplifier) {
         if (amplifier > 1) {
-            super.addAttributeModifiers(attributeMap, amplifier-2);
+            super.addAttributeModifiers(attributeMap, amplifier - 2);
         }
     }
 }

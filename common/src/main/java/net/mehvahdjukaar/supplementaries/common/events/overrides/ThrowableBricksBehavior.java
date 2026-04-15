@@ -44,12 +44,12 @@ class ThrowableBricksBehavior implements ItemUseBehavior {
             var projectile = new ThrowableBrickEntity(player);
             projectile.setItem(stack);
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F,
-                    projectile.getDefaultShootVelocity() , 1.0F);
+                    projectile.getDefaultShootVelocity(), 1.0F);
             //TODO:fix accuracy speed and drag of all these
             projectile.setDeltaMovement(projectile.getDeltaMovement().scale(1));
             world.addFreshEntity(projectile);
         }
-        
+
         if (!player.getAbilities().instabuild) {
             stack.shrink(1);
         }

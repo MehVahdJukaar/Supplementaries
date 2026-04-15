@@ -40,7 +40,7 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu {
         boolean apple1 = stack1.getItem() == Items.ENCHANTED_GOLDEN_APPLE;
         boolean apple2 = stack2.getItem() == Items.ENCHANTED_GOLDEN_APPLE;
 
-        if((apple1 && stack2.isEmpty()) || (apple2 && stack1.isEmpty()) || (apple1 && apple2)) {
+        if ((apple1 && stack2.isEmpty()) || (apple2 && stack1.isEmpty()) || (apple1 && apple2)) {
             int count = stack1.getCount() + stack2.getCount();
             if (count <= Items.GOLDEN_APPLE.getDefaultMaxStackSize()) {
                 this.resultSlots.setItem(0, new ItemStack(Items.GOLDEN_APPLE, count));
@@ -52,7 +52,7 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu {
         boolean bomb1 = stack1.getItem() == ModRegistry.BOMB_BLUE_ITEM.get();
         boolean bomb2 = stack2.getItem() == ModRegistry.BOMB_BLUE_ITEM.get();
 
-        if((bomb1 && stack2.isEmpty()) || (bomb2 && stack1.isEmpty()) || (bomb1 && bomb2)) {
+        if ((bomb1 && stack2.isEmpty()) || (bomb2 && stack1.isEmpty()) || (bomb1 && bomb2)) {
             int count = stack1.getCount() + stack2.getCount();
             if (count <= ModRegistry.BOMB_BLUE_ITEM.get().getDefaultMaxStackSize()) {
                 this.resultSlots.setItem(0, new ItemStack(ModRegistry.BOMB_ITEM.get(), count));

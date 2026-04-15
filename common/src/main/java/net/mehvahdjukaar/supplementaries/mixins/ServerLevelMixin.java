@@ -77,8 +77,8 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
             List<LivingEntity> l = this.getEntitiesOfClass(LivingEntity.class, aabb, (e) ->
                     e != null && e.isAlive() && this.canSeeSky(e.blockPosition()) && (
                             e.hasEffect(MobEffects.UNLUCK) ||
-                            e.getItemInHand(InteractionHand.MAIN_HAND).is(ModTags.CAUSES_LIGHTNING_WHEN_HELD) ||
-                            e.getItemInHand(InteractionHand.OFF_HAND).is(ModTags.CAUSES_LIGHTNING_WHEN_HELD)
+                                    e.getItemInHand(InteractionHand.MAIN_HAND).is(ModTags.CAUSES_LIGHTNING_WHEN_HELD) ||
+                                    e.getItemInHand(InteractionHand.OFF_HAND).is(ModTags.CAUSES_LIGHTNING_WHEN_HELD)
                     )
             );
             if (!l.isEmpty()) {

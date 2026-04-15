@@ -18,7 +18,7 @@ public abstract class GrindstoneInputSlotMixin {
     @Inject(method = {"mayPlace"}, at = @At("HEAD"), cancellable = true)
     private void supp$allowApples(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         Item i = stack.getItem();
-        if ((i == Items.ENCHANTED_GOLDEN_APPLE || i == ModRegistry.BOMB_BLUE_ITEM.get())&& CommonConfigs.Tweaks.APPLE_DISENCHANT.get()) {
+        if ((i == Items.ENCHANTED_GOLDEN_APPLE || i == ModRegistry.BOMB_BLUE_ITEM.get()) && CommonConfigs.Tweaks.APPLE_DISENCHANT.get()) {
             cir.setReturnValue(true);
             cir.cancel();
         }

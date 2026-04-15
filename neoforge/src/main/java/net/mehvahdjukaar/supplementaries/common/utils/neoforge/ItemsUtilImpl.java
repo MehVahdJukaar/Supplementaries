@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.utils.neoforge;
 
 import net.mehvahdjukaar.supplementaries.common.block.IKeyLockable;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.common.items.components.SafeOwner;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.SafeOwner;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -158,7 +158,7 @@ public class ItemsUtilImpl {
     }
 
     public static ItemStack tryAddingItem(ItemStack stack, Level level, Direction dir,
-                                          BlockPos pos, BlockState state, @Nullable  BlockEntity be) {
+                                          BlockPos pos, BlockState state, @Nullable BlockEntity be) {
         IItemHandler itemHandler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, state, be, dir);
         if (itemHandler != null) {
             return ItemHandlerHelper.insertItem(itemHandler, stack, false);

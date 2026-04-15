@@ -32,15 +32,15 @@ public class JarBoatTileRenderer implements BlockEntityRenderer<JarBoatTile> {
         matrixStackIn.translate(0.5, 0.5, 0.5);
         matrixStackIn.mulPose(RotHlpr.rot((int) -tile.getBlockState().getValue(JarBlock.FACING).getOpposite().toYRot()));
 
-        matrixStackIn.translate(0, -3/16f, 0);
+        matrixStackIn.translate(0, -3 / 16f, 0);
         //TODO: use world time here!!
         float t = ((System.currentTimeMillis() % 360000) / 1000f);
-        matrixStackIn.mulPose(Axis.XP.rotationDegrees(Mth.sin(t)*1.7f));
+        matrixStackIn.mulPose(Axis.XP.rotationDegrees(Mth.sin(t) * 1.7f));
 
         matrixStackIn.translate(-0.5, 0, -0.5);
 
 
-       RenderUtil.renderModel(ClientRegistry.BOAT_MODEL, matrixStackIn, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, false);
+        RenderUtil.renderModel(ClientRegistry.BOAT_MODEL, matrixStackIn, bufferIn, blockRenderer, combinedLightIn, combinedOverlayIn, false);
         matrixStackIn.popPose();
 
     }

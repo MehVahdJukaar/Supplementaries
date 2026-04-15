@@ -24,6 +24,7 @@ public class FramedBlocksCompat {
     public static Block tryGettingFramedBlock(Block targetBlock, Level world, BlockPos blockpos) {
         throw new AssertionError();
     }
+
     @ExpectPlatform
     public static boolean interactWithFramedSignPost(SignPostBlockTile tile, Player player, InteractionHand handIn, ItemStack itemstack, Level level, BlockPos pos) {
         throw new AssertionError();

@@ -60,10 +60,10 @@ public abstract class MapItemMixin {
             require = 1,
             cancellable = true)
     public void supp$checkHeightLock(Level level, Entity viewer, MapItemSavedData data, CallbackInfo ci,
-                                @Local(ordinal = 5) LocalIntRef range,
-                                @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
-                                @Share("customLightMap") LocalRef<Map<Vector2i, List<Vector2i>>> lightMap,
-                                @Share("heightLock") LocalIntRef height) {
+                                     @Local(ordinal = 5) LocalIntRef range,
+                                     @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
+                                     @Share("customLightMap") LocalRef<Map<Vector2i, List<Vector2i>>> lightMap,
+                                     @Share("heightLock") LocalIntRef height) {
         int mapHeight = DepthDataHandler.getMapHeight(data).orElse(Integer.MAX_VALUE);
         height.set(mapHeight);
         colorMap.set(CommonConfigs.Tweaks.TINTED_MAP.get() ? new HashMap<>() : null);
@@ -92,15 +92,15 @@ public abstract class MapItemMixin {
             ordinal = 3,
             target = "Lnet/minecraft/world/level/block/state/BlockState;getMapColor(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/material/MapColor;"))
     public MapColor supp$removeXrayAndAddAccurateColor(BlockState instance, BlockGetter level, BlockPos pos, Operation<MapColor> operation,
-                                                  @Local(argsOnly = true) Level l,
-                                                  @Local LevelChunk chunk,
-                                                  @Local(ordinal = 14) int w,
-                                                  @Local(ordinal = 0) BlockState state,
-                                                  @Local(ordinal = 6) int k1,
-                                                  @Local(ordinal = 7) int l1,
-                                                  @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
-                                                  @Share("customLightMap") LocalRef<Map<Vector2i, List<Vector2i>>> lightMap,
-                                                  @Share("heightLock") LocalIntRef height) {
+                                                       @Local(argsOnly = true) Level l,
+                                                       @Local LevelChunk chunk,
+                                                       @Local(ordinal = 14) int w,
+                                                       @Local(ordinal = 0) BlockState state,
+                                                       @Local(ordinal = 6) int k1,
+                                                       @Local(ordinal = 7) int l1,
+                                                       @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
+                                                       @Share("customLightMap") LocalRef<Map<Vector2i, List<Vector2i>>> lightMap,
+                                                       @Share("heightLock") LocalIntRef height) {
         MapColor cutoffColor = null;
         if ((height.get() != Integer.MAX_VALUE && height.get() <= w)) {
             cutoffColor = DepthDataHandler.getCutoffColor(pos, chunk);
@@ -129,11 +129,11 @@ public abstract class MapItemMixin {
             target = "Lnet/minecraft/world/level/saveddata/maps/MapItemSavedData;updateColor(IIB)Z"
     ))
     public boolean supp$updateCustomColor(boolean original,
-                                     Level level, Entity viewer, MapItemSavedData data,
-                                     @Local(ordinal = 6) int x,
-                                     @Local(ordinal = 7) int z,
-                                     @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
-                                     @Share("customLightMap") LocalRef<Map<Vector2i, List<Vector2i>>> lightMap) {
+                                          Level level, Entity viewer, MapItemSavedData data,
+                                          @Local(ordinal = 6) int x,
+                                          @Local(ordinal = 7) int z,
+                                          @Share("customColorMap") LocalRef<Map<Vector2i, Pair<BlockPos, Multiset<Block>>>> colorMap,
+                                          @Share("customLightMap") LocalRef<Map<Vector2i, List<Vector2i>>> lightMap) {
         if (colorMap.get() != null) {
             var l = colorMap.get().get(new Vector2i(x, z));
             if (l != null) {

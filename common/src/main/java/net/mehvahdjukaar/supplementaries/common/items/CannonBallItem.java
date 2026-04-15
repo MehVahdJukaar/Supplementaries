@@ -25,7 +25,7 @@ public class CannonBallItem extends BlockItem {
         ItemStack itemstack = player.getItemInHand(handIn);
         if (!level.isClientSide) {
 
-            CannonBallEntity bombEntity = new CannonBallEntity( player);
+            CannonBallEntity bombEntity = new CannonBallEntity(player);
             float pitch = -10;//player.isSneaking()?0:-20;
             bombEntity.shootFromRotation(player, player.getXRot(), player.getYRot(),
                     pitch, bombEntity.getDefaultShootVelocity(), 1);

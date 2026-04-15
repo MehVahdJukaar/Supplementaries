@@ -193,11 +193,11 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
         if (Math.abs(m12) < 0.999f) {
             // Standard case
-            yaw  = (float) Math.atan2(m02, m22);  // rotation around Y
+            yaw = (float) Math.atan2(m02, m22);  // rotation around Y
             roll = (float) Math.atan2(m10, m11);  // rotation around Z
         } else {
             // Gimbal lock case (pitch ~ ±90°)
-            yaw  = (float) Math.atan2(-m20, m00);
+            yaw = (float) Math.atan2(-m20, m00);
             roll = 0.0f;
         }
 

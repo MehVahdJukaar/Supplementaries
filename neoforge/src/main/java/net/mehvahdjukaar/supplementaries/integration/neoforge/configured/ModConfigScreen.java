@@ -5,12 +5,10 @@ import com.mrcrayfish.configured.api.IModConfig;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigScreen;
 import net.mehvahdjukaar.moonlight.api.integration.configured.CustomConfigSelectScreen;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
-import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -115,7 +113,7 @@ public class ModConfigScreen extends CustomConfigScreen {
         if (this.config.getFileName().contains("common")) {
             //TODO: fix. this work but shouldnt be needed and might break servers
             //TODO: configured should have something for this
-          //  ConfigUtils.clientRequestServerConfigReload();
+            //  ConfigUtils.clientRequestServerConfigReload();
         }
     }
 

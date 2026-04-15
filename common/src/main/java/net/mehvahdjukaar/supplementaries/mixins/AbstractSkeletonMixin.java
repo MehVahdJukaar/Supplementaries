@@ -33,7 +33,7 @@ public abstract class AbstractSkeletonMixin extends Monster {
     public void supp$finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
         if (this.getType() == EntityType.SKELETON || this.getType() == EntityType.STRAY && CommonConfigs.Tools.QUIVER_ENABLED.get()) {
             double chance = CommonConfigs.Tools.QUIVER_SKELETON_SPAWN.get() * (
-                    CommonConfigs.Tools.QUIVER_DEPEND_ON_GLOBAL_DIFFICULTY.get() ? difficulty.getSpecialMultiplier() :0.1);
+                    CommonConfigs.Tools.QUIVER_DEPEND_ON_GLOBAL_DIFFICULTY.get() ? difficulty.getSpecialMultiplier() : 0.1);
             if (random.nextFloat() < chance) {
                 ((IQuiverEntity) this).supplementaries$setQuiver(
                         RandomArrowFunction.createRandomQuiver(level.getRandom(), difficulty.getSpecialMultiplier()));
@@ -50,7 +50,7 @@ public abstract class AbstractSkeletonMixin extends Monster {
             //ignore offhand as it has priority over quiver
             if (!quiver.isEmpty() && this.getItemInHand(InteractionHand.OFF_HAND).getItem() != arrow.getItem()) {
                 var data = quiver.get(ModComponents.QUIVER_CONTENT.get());
-                if (data != null){
+                if (data != null) {
                     var mutable = data.toMutable();
                     mutable.getSelected().shrink(1);
                     quiver.set(ModComponents.QUIVER_CONTENT.get(), mutable.toImmutable());

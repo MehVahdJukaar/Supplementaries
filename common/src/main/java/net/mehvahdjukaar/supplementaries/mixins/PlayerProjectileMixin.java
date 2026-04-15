@@ -25,7 +25,7 @@ public abstract class PlayerProjectileMixin extends LivingEntity {
 
     // a bit more efficent than using the event. stil we might want to switch to that
     @Inject(method = "getProjectile",
-            at = @At(value = "INVOKE_ASSIGN", target =  "Ljava/util/function/Predicate;test(Ljava/lang/Object;)Z",
+            at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/function/Predicate;test(Ljava/lang/Object;)Z",
                     shift = At.Shift.BEFORE),
             cancellable = true
     )

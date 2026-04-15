@@ -26,7 +26,7 @@ public class BlackboardItemRenderer extends ItemStackRenderer {
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         matrixStackIn.pushPose();
-        matrixStackIn.translate(0,0,-0.34375);
+        matrixStackIn.translate(0, 0, -0.34375);
 
         var blockRenderer = Minecraft.getInstance().getBlockRenderer();
         var model = ClientHelper.getModel(blockRenderer.getBlockModelShaper().getModelManager(),

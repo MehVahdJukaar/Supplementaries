@@ -38,6 +38,7 @@ public class GlobeData extends WorldSavedData {
         this.globePixels = flattenedPixels;
         this.seed = seed;
     }
+
     public static GlobeData createFromLevel(ServerLevel level) {
         return GlobeData.createFromSeed(level.getSeed());
     }

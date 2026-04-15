@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -61,7 +60,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
     }
 
     public float getProgress(float partialTicks) {
-       return Mth.lerp(partialTicks, this.prevProgress, this.progress);
+        return Mth.lerp(partialTicks, this.prevProgress, this.progress);
     }
 
     public ResourceLocation getTexture() {

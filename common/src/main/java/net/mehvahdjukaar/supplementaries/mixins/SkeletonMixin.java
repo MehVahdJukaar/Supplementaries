@@ -89,7 +89,7 @@ public abstract class SkeletonMixin extends AbstractSkeleton implements IQuiverE
         if (!level().isClientSide) {
             //only needed when entity is alraedy spawned
             NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
-                    new SyncEquippedQuiverPacket( this));
+                    new SyncEquippedQuiverPacket(this));
         }
     }
 

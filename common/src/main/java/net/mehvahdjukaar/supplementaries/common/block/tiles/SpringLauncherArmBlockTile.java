@@ -111,7 +111,7 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
                 }
             }
         } else {
-            tile.age ++;
+            tile.age++;
             tile.prevOffset = tile.offset;
             tile.offset += tile.increment;
             if (extending) {

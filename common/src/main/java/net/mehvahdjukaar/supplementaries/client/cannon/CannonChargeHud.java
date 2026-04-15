@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.moonlight.api.entity.ITileEntityCarry;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
-import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -97,9 +96,9 @@ public class CannonChargeHud implements LayeredDraw.Layer {
 
         if (f > 0) {
             f = 1 - f;
-            float red = Math.min(f * 0.4F + min,1);
+            float red = Math.min(f * 0.4F + min, 1);
 
-            float green = Math.min(min - f * 0.4f * min,1);
+            float green = Math.min(min - f * 0.4f * min, 1);
             float blue = min;
 
             RenderSystem.setShaderColor(red, green, min - f * blue, 1.0F);

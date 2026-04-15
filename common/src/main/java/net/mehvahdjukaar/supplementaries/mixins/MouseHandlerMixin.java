@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MouseHandler.class)
 public abstract class MouseHandlerMixin {
 
-    @Shadow private double accumulatedDX;
+    @Shadow
+    private double accumulatedDX;
 
     @WrapWithCondition(method = "turnPlayer",
             at = @At(target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V", value = "INVOKE")

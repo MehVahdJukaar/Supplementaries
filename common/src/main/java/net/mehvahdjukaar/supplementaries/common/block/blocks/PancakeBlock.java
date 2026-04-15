@@ -72,8 +72,8 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack,BlockState state, Level level, BlockPos pos, Player player,
-                                     InteractionHand handIn, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                           InteractionHand handIn, BlockHitResult hit) {
         Item item = stack.getItem();
         var found = Topping.fromItem(stack, level.registryAccess());
         if (setTopping(state, level, pos, found.getFirst())) {

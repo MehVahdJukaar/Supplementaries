@@ -190,10 +190,10 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
 
             if (!b1 && !b2 && !b3 && !b4) wood = plank;
 
-           this.placeSidePillar(level, box, minX, minY, minZ, maxY - 1, wood);
-           this.placeSidePillar(level, box, minX, minY, maxZ, maxY - 1, wood);
-           this.placeSidePillar(level, box, maxX, minY, minZ, maxY - 1, wood);
-           this.placeSidePillar(level, box, maxX, minY, maxZ, maxY - 1, wood);
+            this.placeSidePillar(level, box, minX, minY, minZ, maxY - 1, wood);
+            this.placeSidePillar(level, box, minX, minY, maxZ, maxY - 1, wood);
+            this.placeSidePillar(level, box, maxX, minY, minZ, maxY - 1, wood);
+            this.placeSidePillar(level, box, maxX, minY, maxZ, maxY - 1, wood);
 
             for (int j = minX; j <= maxX; ++j) {
                 for (int k = minZ; k <= maxZ; ++k) {
@@ -374,7 +374,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
 
         BlockState chest = (hasRope ? ModRegistry.SACK.get() : Blocks.CHEST).defaultBlockState();
         this.placeBlock(level, chest, minX + 2, maxY - 2, minZ + 2, box);
-        if(isInterior(level,minX + 2, maxY - 2, minZ + 2, box)){
+        if (isInterior(level, minX + 2, maxY - 2, minZ + 2, box)) {
             //if we placed the tile
             if (level.getBlockEntity(new BlockPos(minX + 2, maxY - 2, minZ + 2)) instanceof RandomizableContainerBlockEntity tile) {
                 tile.setLootTable(BuiltInLootTables.ABANDONED_MINESHAFT, random.nextLong());

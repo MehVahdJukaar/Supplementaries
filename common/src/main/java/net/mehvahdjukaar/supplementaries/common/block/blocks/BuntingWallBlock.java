@@ -25,7 +25,7 @@ public class BuntingWallBlock extends HorizontalDirectionalBlock implements ICol
             BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BuntingWallBlock::properties)
     ).apply(i, BuntingWallBlock::new));
 
-    protected static final VoxelShape SHAPE_NORTH= Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
     protected static final VoxelShape SHAPE_EAST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
     protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);

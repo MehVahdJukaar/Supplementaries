@@ -16,7 +16,7 @@ public class LivingEntityMixin {
             target = "Lnet/minecraft/world/entity/LivingEntity;isInFluidType(Lnet/minecraft/world/level/material/FluidState;)Z"))
     public boolean supp$onTravel(LivingEntity instance, FluidState state, Operation<Boolean> original) {
         boolean or = original.call(instance, state);
-        if(or && state.getType() instanceof FiniteFluid ff){
+        if (or && state.getType() instanceof FiniteFluid ff) {
             return ff.shouldSlowDown(state);
         }
         return or;

@@ -53,7 +53,7 @@ public abstract class CartographyTableMixin extends AbstractContainerMenu {
 
             slot.onTake(player, itemStack2);
             this.broadcastChanges();
-            cir.setReturnValue( itemStack);
+            cir.setReturnValue(itemStack);
 
         }
 

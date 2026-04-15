@@ -52,7 +52,7 @@ public class SlimedOverlayHud implements LayeredDraw.Layer {
 
     public void blit(GuiGraphics gui, ResourceLocation atlasLocation, float x1, float x2, float y1, float y2, int blitOffset,
                      float uWidth, float vHeight, float uOffset, float vOffset, int textureWidth, int textureHeight) {
-        innerBlit(gui, atlasLocation, x1, x2, y1, y2, blitOffset, (uOffset + 0.0F) / (float)textureWidth, (uOffset + (float)uWidth) / (float)textureWidth, (vOffset + 0.0F) / (float)textureHeight, (vOffset + (float)vHeight) / (float)textureHeight);
+        innerBlit(gui, atlasLocation, x1, x2, y1, y2, blitOffset, (uOffset + 0.0F) / (float) textureWidth, (uOffset + (float) uWidth) / (float) textureWidth, (vOffset + 0.0F) / (float) textureHeight, (vOffset + (float) vHeight) / (float) textureHeight);
     }
 
     public void innerBlit(GuiGraphics gui, ResourceLocation atlasLocation, float x1, float x2, float y1, float y2,

@@ -148,7 +148,7 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
         if (tag.contains("Recipient")) this.recipient = tag.getString("Recipient");
         if (tag.contains("Sender")) this.sender = tag.getString("Sender");
         if (tag.contains("Description")) this.description = tag.getString("Description");
-        if(this.level != null && !this.level.isClientSide){
+        if (this.level != null && !this.level.isClientSide) {
             boolean empty = this.getItem(0).isEmpty();
             this.level.setBlock(this.getBlockPos(),
                     this.getBlockState().setValue(PresentBlock.PACKED, !empty), 3);

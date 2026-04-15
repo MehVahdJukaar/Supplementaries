@@ -1,14 +1,10 @@
 package net.mehvahdjukaar.supplementaries.neoforge;
 
 import com.mojang.serialization.MapCodec;
-import com.teamabnormals.blueprint.client.renderer.BlueprintBoatRenderer;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ClientEventsForge;
 import net.mehvahdjukaar.supplementaries.common.events.neoforge.ServerEventsForge;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -20,7 +16,6 @@ import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-import java.lang.ref.WeakReference;
 import java.util.function.Supplier;
 
 /**

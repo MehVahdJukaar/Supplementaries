@@ -98,9 +98,9 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
         Vector4f newPivot = new Vector4f(dummyHead.x, dummyHead.y, dummyHead.z, 1);
 
         PoseStack poseStack = new PoseStack();
-     //   Vec3 distanceVec = Minecraft.getInstance().player.position().subtract(entity.position()).normalize();
-      //  float targetYRot = distanceVec.toVector3f().angleSigned(new Vector3f(1, 0, 0), new Vector3f(0, 1, 0));
-     //   float targetXRot = distanceVec.toVector3f().angleSigned(new Vector3f(0, 1, 0), new Vector3f(1, 0, 0));
+        //   Vec3 distanceVec = Minecraft.getInstance().player.position().subtract(entity.position()).normalize();
+        //  float targetYRot = distanceVec.toVector3f().angleSigned(new Vector3f(1, 0, 0), new Vector3f(0, 1, 0));
+        //   float targetXRot = distanceVec.toVector3f().angleSigned(new Vector3f(0, 1, 0), new Vector3f(1, 0, 0));
 
         translateAndRotate(neckJoint, poseStack);
         poseStack.last().pose().transform(newPivot);

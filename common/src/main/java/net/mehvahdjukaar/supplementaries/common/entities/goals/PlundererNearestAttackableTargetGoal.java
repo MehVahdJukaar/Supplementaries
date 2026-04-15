@@ -27,6 +27,6 @@ public class PlundererNearestAttackableTargetGoal<A extends LivingEntity> extend
 
     @Override
     protected double getFollowDistance() {
-        return Math.max(((PlundererEntity)mob).getSpyglassMaxSeeDistance(), super.getFollowDistance());
+        return Math.max(((PlundererEntity) mob).getSpyglassMaxSeeDistance(), super.getFollowDistance());
     }
 }

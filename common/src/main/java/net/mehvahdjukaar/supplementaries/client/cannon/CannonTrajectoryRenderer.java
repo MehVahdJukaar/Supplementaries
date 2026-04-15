@@ -121,7 +121,7 @@ public class CannonTrajectoryRenderer {
                                      BallisticTrajectory trajectory, boolean hitAir, boolean red) {
 
         float finalTime = (float) trajectory.finalTime();
-        finalTime = Math.clamp( finalTime, 1, 100000);
+        finalTime = Math.clamp(finalTime, 1, 100000);
 
         poseStack.pushPose();
 
@@ -133,7 +133,7 @@ public class CannonTrajectoryRenderer {
         float py = 0;
         float px = 0;
         float scrollAmount = -(System.currentTimeMillis() % 1000) / 1000f;
-        float step =  finalTime / (int) finalTime;
+        float step = finalTime / (int) finalTime;
         float maxT = finalTime + (hitAir ? 0 : step);
         for (float segmentTime = step; segmentTime < maxT; segmentTime += step) {
 

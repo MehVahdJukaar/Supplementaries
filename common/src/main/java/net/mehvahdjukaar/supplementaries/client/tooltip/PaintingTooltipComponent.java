@@ -8,9 +8,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.resources.PaintingTextureManager;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.world.entity.decoration.Painting;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 
 public class PaintingTooltipComponent implements ClientTooltipComponent {

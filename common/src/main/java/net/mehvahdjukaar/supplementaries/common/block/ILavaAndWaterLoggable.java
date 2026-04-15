@@ -46,8 +46,7 @@ public interface ILavaAndWaterLoggable extends BucketPickup, LiquidBlockContaine
     }
 
 
-
-    default ItemStack pickupBlock(@Nullable Player player,LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+    default ItemStack pickupBlock(@Nullable Player player, LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
         if (pState.getValue(BlockStateProperties.WATERLOGGED)) {
             pLevel.setBlock(pPos, pState.setValue(BlockStateProperties.WATERLOGGED, Boolean.FALSE), 3);
             if (!pState.canSurvive(pLevel, pPos)) {

@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.codec.CodecUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;

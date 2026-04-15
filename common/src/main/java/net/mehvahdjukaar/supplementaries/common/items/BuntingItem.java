@@ -51,8 +51,7 @@ public class BuntingItem extends StandingAndWallBlockItem implements IColored {
                 var ret = s.useItemOn(context.getItemInHand(), level, context.getPlayer(), context.getHand(), hit);
                 if (!ret.consumesAction()) {
                     level.setBlockAndUpdate(pos, state);
-                }
-                else return ret.result();
+                } else return ret.result();
             }
         }
         return super.useOn(context);

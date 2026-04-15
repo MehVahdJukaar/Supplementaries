@@ -37,7 +37,7 @@ public class SparkleParticle extends TextureSheetParticle {
         int total = super.getLightColor(partialTick);
         int block = LightTexture.block(total);
         int sky = LightTexture.sky(total);
-        return LightTexture.pack(Math.max(block, 11),sky);
+        return LightTexture.pack(Math.max(block, 11), sky);
     }
 
     @Override

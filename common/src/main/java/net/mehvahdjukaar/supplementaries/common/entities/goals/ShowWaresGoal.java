@@ -45,9 +45,9 @@ public class ShowWaresGoal extends LookAtPlayerGoal {
     public boolean canContinueToUse() {
         if (!this.lookAt.isAlive()) {
             return false;
-        } else if(this.villager.isTrading()){
+        } else if (this.villager.isTrading()) {
             return false;
-        } else if (this.mob.distanceToSqr(this.lookAt) > (double)(this.lookDistance * this.lookDistance)) {
+        } else if (this.mob.distanceToSqr(this.lookAt) > (double) (this.lookDistance * this.lookDistance)) {
             return false;
         } else {
             return this.lookTime > 0;
@@ -107,7 +107,7 @@ public class ShowWaresGoal extends LookAtPlayerGoal {
     }
 
     private void updateDisplayItems() {
-        for(MerchantOffer merchantoffer : villager.getOffers()) {
+        for (MerchantOffer merchantoffer : villager.getOffers()) {
             if (!merchantoffer.isOutOfStock() && this.playerItemStackMatchesCostOfOffer(merchantoffer)) {
                 this.displayItems.add(merchantoffer.getResult());
             }

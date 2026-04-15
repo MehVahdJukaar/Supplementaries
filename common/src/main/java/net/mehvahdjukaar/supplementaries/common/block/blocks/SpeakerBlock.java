@@ -128,7 +128,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
                 }
             }
             if (player instanceof ServerPlayer serverPlayer) {
-                Utils.openGuiIfPossible(tile, serverPlayer  , stack, hitResult.getDirection(), hitResult.getLocation());
+                Utils.openGuiIfPossible(tile, serverPlayer, stack, hitResult.getDirection(), hitResult.getLocation());
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }

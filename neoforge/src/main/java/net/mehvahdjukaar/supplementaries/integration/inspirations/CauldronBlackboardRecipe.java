@@ -18,7 +18,7 @@ package net.mehvahdjukaar.supplementaries.integration.inspirations;//package net
 //import java.util.List;
 //import java.util.stream.Stream;
 //
-///**
+/// **
 // * Recipe to clear a dyeable
 // */
 //public class CauldronBlackboardRecipe extends DyeableCauldronRecipe {

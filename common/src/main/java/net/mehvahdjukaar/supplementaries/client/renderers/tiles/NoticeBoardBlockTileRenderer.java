@@ -155,7 +155,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
         int lu = VertexUtil.lightU(frontLight);
         int lv = VertexUtil.lightV(frontLight);
         poseStack.translate(0, 0, 0.008f);
-        VertexUtil.addQuad(builder, poseStack, -0.5f,-0.5f, 0.5f, 0.5f, lu, lv);
+        VertexUtil.addQuad(builder, poseStack, -0.5f, -0.5f, 0.5f, 0.5f, lu, lv);
     }
 
     private static void renderBannerPattern(NoticeBoardBlockTile tile, PoseStack poseStack, MultiBufferSource buffer, int frontLight, Material pattern) {

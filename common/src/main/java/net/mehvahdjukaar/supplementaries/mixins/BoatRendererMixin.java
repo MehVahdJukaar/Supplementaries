@@ -12,14 +12,16 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(BoatRenderer.class)
 public abstract class BoatRendererMixin {
 
-    @Shadow @Deprecated public abstract ResourceLocation getTextureLocation(Boat entity);
+    @Shadow
+    @Deprecated
+    public abstract ResourceLocation getTextureLocation(Boat entity);
 
     // here so we use the vanilla render code with another texture for best compatibility. alternative was copy pasting that
     @ModifyExpressionValue(method = "render(Lnet/minecraft/world/entity/vehicle/Boat;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-    at = @At(value = "INVOKE", target = "Lcom/mojang/datafixers/util/Pair;getFirst()Ljava/lang/Object;"))
-    public Object supp$changeTexture(Object original, Boat boat){
-        if(boat.getClass() == CannonBoatEntity.class ){
-           return this.getTextureLocation(boat);
+            at = @At(value = "INVOKE", target = "Lcom/mojang/datafixers/util/Pair;getFirst()Ljava/lang/Object;"))
+    public Object supp$changeTexture(Object original, Boat boat) {
+        if (boat.getClass() == CannonBoatEntity.class) {
+            return this.getTextureLocation(boat);
         }
         return original;
     }

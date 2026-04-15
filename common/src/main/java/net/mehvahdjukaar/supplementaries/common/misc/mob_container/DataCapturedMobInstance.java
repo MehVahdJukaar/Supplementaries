@@ -42,7 +42,7 @@ public class DataCapturedMobInstance<T extends Entity> extends CapturedMobInstan
     public void onContainerWaterlogged(boolean waterlogged, float containerWidth, float containerHeight) {
         var f = this.properties.renderFluid.orElse(null);
         if (!waterlogged && f != null && MLBuiltinSoftFluids.WATER.is(f)) {
-           super.onContainerWaterlogged(true, containerWidth, containerHeight);
+            super.onContainerWaterlogged(true, containerWidth, containerHeight);
         } else super.onContainerWaterlogged(waterlogged, containerWidth, containerHeight);
     }
 

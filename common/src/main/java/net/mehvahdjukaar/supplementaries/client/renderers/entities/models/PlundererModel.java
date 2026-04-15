@@ -8,8 +8,6 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 public class PlundererModel extends IllagerModel<PlundererEntity> {
     private final ModelPart skirt;

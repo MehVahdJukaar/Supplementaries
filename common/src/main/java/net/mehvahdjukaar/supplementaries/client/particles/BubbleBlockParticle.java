@@ -39,7 +39,7 @@ public class BubbleBlockParticle extends TextureSheetParticle {
         this.setAlpha(Mth.lerp(0.05F, this.alpha, 1.0F));
     }
 
-    public void updateSprite(){
+    public void updateSprite() {
         this.setSpriteFromAge(this.sprites);
     }
 

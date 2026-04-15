@@ -44,7 +44,7 @@ public class CageBlock extends WaterBlock implements EntityBlock {
     public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
 
     public CageBlock(Properties properties) {
-        super(properties.lightLevel(state->state.getValue(LIGHT_LEVEL)));
+        super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(LIGHT_LEVEL, 0).setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 

@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 //TODO: simplify /use glm
 public class LootTablesInjects {
 
-    public static void init(){
+    public static void init() {
         RegHelper.addLootTableInjects(LootTablesInjects::injectLootPools);
     }
 
@@ -90,65 +90,77 @@ public class LootTablesInjects {
     }
 
     private static final String FISHING_TREASURE = BuiltInLootTables.FISHING_TREASURE.location().toString();
+
     private static boolean isFishTreasure(String name) {
         return name.equals(FISHING_TREASURE);
     }
 
     private static final String MANSION = BuiltInLootTables.WOODLAND_MANSION.location().toString();
+
     private static boolean isMansion(String name) {
         return name.equals(MANSION) || RS && name.contains("repurposed_structures:chests/mansion");
     }
 
     private static final Pattern RS_SHIPWRECK = Pattern.compile("repurposed_structures:chests/shipwreck/\\w*/treasure_chest");
     private static final String SHIPWRECK_TREASURE = BuiltInLootTables.SHIPWRECK_TREASURE.location().toString();
+
     private static boolean isShipwreck(String s) {
         return s.equals(SHIPWRECK_TREASURE) || RS && RS_SHIPWRECK.matcher(s).matches();
     }
 
     private static final Pattern RS_SHIPWRECK_STORAGE = Pattern.compile("repurposed_structures:chests/shipwreck/\\w*/supply_chest");
     private static final String SHIPWRECK_SUPPLY = BuiltInLootTables.SHIPWRECK_SUPPLY.location().toString();
+
     private static boolean isShipwreckStorage(String s) {
         return s.equals(SHIPWRECK_SUPPLY) || RS && RS_SHIPWRECK_STORAGE.matcher(s).matches();
     }
 
     private static final String ABANDONED_MINESHAFT = BuiltInLootTables.ABANDONED_MINESHAFT.location().toString();
+
     private static boolean isMineshaft(String s) {
         return s.equals(ABANDONED_MINESHAFT) || RS && s.contains("repurposed_structures:chests/mineshaft");
     }
 
     private static final String PILLAGER_OUTPOST = BuiltInLootTables.PILLAGER_OUTPOST.location().toString();
+
     private static boolean isOutpost(String s) {
         return s.equals(PILLAGER_OUTPOST) || RS && s.contains("repurposed_structures:chests/outpost");
     }
 
     private static final String DUNGEON = BuiltInLootTables.SIMPLE_DUNGEON.location().toString();
+
     private static boolean isDungeon(String s) {
         return s.equals(DUNGEON) || RS && s.contains("repurposed_structures:chests/dungeon");
     }
 
     private static final Pattern RS_TEMPLE = Pattern.compile("repurposed_structures:chests/temple/\\w*_chest");
     private static final String JUNGLE_TEMPLE = BuiltInLootTables.JUNGLE_TEMPLE.location().toString();
+
     private static boolean isTemple(String s) {
         return s.equals(JUNGLE_TEMPLE) || RS && RS_TEMPLE.matcher(s).matches();
     }
 
     private static final Pattern RS_TEMPLE_DISPENSER = Pattern.compile("repurposed_structures:chests/temple/\\w*_dispenser");
     private static final String JUNGLE_TEMPLE_DISPENSER = BuiltInLootTables.JUNGLE_TEMPLE_DISPENSER.location().toString();
+
     private static boolean isTempleDispenser(String s) {
         return s.equals(JUNGLE_TEMPLE_DISPENSER) || RS && RS_TEMPLE_DISPENSER.matcher(s).matches();
     }
 
     private static final String STRONGHOLD_CROSSING = BuiltInLootTables.STRONGHOLD_CROSSING.location().toString();
+
     private static boolean isStronghold(String s) {
         return s.equals(STRONGHOLD_CROSSING) || RS && s.contains("repurposed_structures:chests/stronghold/nether_storage_room");
     }
 
     private static final String NETHER_BRIDGE = BuiltInLootTables.NETHER_BRIDGE.location().toString();
+
     private static boolean isFortress(String s) {
         return s.equals(NETHER_BRIDGE) || RS && s.contains("repurposed_structures:chests/fortress");
     }
 
     private static final String END_CITY_TREASURE = BuiltInLootTables.END_CITY_TREASURE.location().toString();
+
     private static boolean isEndCity(String s) {
         return s.equals(END_CITY_TREASURE);
     }

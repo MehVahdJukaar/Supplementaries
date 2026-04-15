@@ -1,8 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-
 public interface ISpyglassMob {
 
     default float getSpyglassMaxSeeDistance() {

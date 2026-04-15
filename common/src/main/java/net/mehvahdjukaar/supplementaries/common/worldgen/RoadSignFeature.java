@@ -240,7 +240,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
         reader.setBlock(pos.above(), ModRegistry.BLOCK_GENERATOR.get().defaultBlockState(), 2);
         if (reader.getBlockEntity(pos.above()) instanceof BlockGeneratorBlockTile t) {
             t.setConfig(c);
-        }else {
+        } else {
             Supplementaries.LOGGER.error("Failed to get Road Sign Block Entity during generation. How did this happen?");
         }
         return true;

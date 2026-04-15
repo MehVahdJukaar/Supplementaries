@@ -41,7 +41,7 @@ public class BarnaclesMultifaceGrowthFeature extends Feature<BarnaclesMultifaceG
         RandomSource randomSource = context.random();
         Config config = context.config();
         BlockState startState = worldGenLevel.getBlockState(startPos);
-        if(startState.is(config.placeBlock)) {
+        if (startState.is(config.placeBlock)) {
             //TODO: change
             config.placeBlock.getSpreader().spreadFromRandomFaceTowardRandomDirection(
                     startState, worldGenLevel, startPos, randomSource);

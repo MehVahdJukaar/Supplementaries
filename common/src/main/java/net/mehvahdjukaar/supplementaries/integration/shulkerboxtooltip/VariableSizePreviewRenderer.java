@@ -104,7 +104,7 @@ public class VariableSizePreviewRenderer implements PreviewRenderer {
 
         graphics.blit(texture, x, y + bEdgeOffset, 0, 159, rEdgeOffset, 7);
         graphics.blit(texture, x + rEdgeOffset, y + bEdgeOffset, 7 + 9 * 18, 159,
-            7, 7);
+                7, 7);
     }
 
     private void renderSlots(int x, int y, GuiGraphics graphics, Font font, int mouseX, int mouseY) {
@@ -159,8 +159,8 @@ public class VariableSizePreviewRenderer implements PreviewRenderer {
     }
 
     private void renderInnerTooltip(
-        int x, int y, GuiGraphics graphics, Font font, int mouseX,
-        int mouseY
+            int x, int y, GuiGraphics graphics, Font font, int mouseX,
+            int mouseY
     ) {
         ItemStack stack = this.getStackAt(mouseX - x, mouseY - y);
 

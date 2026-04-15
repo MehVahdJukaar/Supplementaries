@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class GrindstoneTestSlotMixin {
 
     @Inject(method = {"getExperienceFromItem"}, at = @At("HEAD"), cancellable = true)
-    private void supp$getAppleXP(ItemStack stack, CallbackInfoReturnable<Integer> cir){
+    private void supp$getAppleXP(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         Item i = stack.getItem();
-        if(i == Items.ENCHANTED_GOLDEN_APPLE || i == ModRegistry.BOMB_BLUE_ITEM.get()){
+        if (i == Items.ENCHANTED_GOLDEN_APPLE || i == ModRegistry.BOMB_BLUE_ITEM.get()) {
             cir.setReturnValue(500);
         }
     }

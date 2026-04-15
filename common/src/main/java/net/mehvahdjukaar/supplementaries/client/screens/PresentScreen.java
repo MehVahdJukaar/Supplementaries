@@ -168,7 +168,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
             int l = this.topPos;
             Slot slot = this.menu.getSlot(0);
 
-            graphics.blitSprite(ModTextures.PRESENT_OVERLAY_SPRITE, k + slot.x, l + slot.y,  16, 16);
+            graphics.blitSprite(ModTextures.PRESENT_OVERLAY_SPRITE, k + slot.x, l + slot.y, 16, 16);
         }
     }
 
@@ -232,7 +232,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
             } else {
                 texture = ModTextures.PRESENT_BUTTON_SPRITE;
             }
-            graphics.blitSprite(texture, this.getX(),this.getY(), this.width, this.height);
+            graphics.blitSprite(texture, this.getX(), this.getY(), this.width, this.height);
         }
 
         public void setState(boolean hasItem, boolean packed) {

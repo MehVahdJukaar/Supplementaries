@@ -28,6 +28,7 @@ public class FlaxBaleBlock extends Block {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getClickedFace());
     }
+
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float height) {
         entity.causeFallDamage(height, 0.2F, level.damageSources().fall());

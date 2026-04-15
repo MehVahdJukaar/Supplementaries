@@ -77,7 +77,7 @@ public class SpeakerBlockScreen extends Screen {
             this.toggleMode();
             this.updateMode();
         }).bounds(this.width / 2 - 75, this.height / 4 + 50, 150, 20).build());
-        
+
         if (!CommonConfigs.Redstone.SPEAKER_NARRATOR.get()) {
             this.modeBtn.active = false;
         }

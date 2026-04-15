@@ -48,7 +48,7 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
         return inventory;
     }
 
-    public VariableSizeContainerMenu(MenuType<?>type, int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+    public VariableSizeContainerMenu(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(type, id, playerInventory, getContainerFromPacket(playerInventory, packetBuffer),
                 packetBuffer.readInt());
     }
@@ -66,7 +66,7 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
         throw new UnsupportedOperationException("Cannot find container associated with entity ");
     }
 
-    public VariableSizeContainerMenu(MenuType<?>type, int id, Inventory playerInventory, Container container, int unlockedSlots) {
+    public VariableSizeContainerMenu(MenuType<?> type, int id, Inventory playerInventory, Container container, int unlockedSlots) {
         super(type, id);
         //tile container
         this.inventory = container;

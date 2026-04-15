@@ -10,13 +10,11 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class SpawnMobBehavior implements IFireItemBehavior {
 
@@ -38,8 +36,8 @@ public class SpawnMobBehavior implements IFireItemBehavior {
             if (e != null) {
                 level.gameEvent(null, GameEvent.ENTITY_PLACE, BlockPos.containing(firePos));
                 //update client velocity
-               /// NetworkHelper.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(firePos),
-               //         new ClientBoundSendKnockbackPacket(e.getDeltaMovement(), e.getId()));
+                /// NetworkHelper.sendToAllClientPlayersInDefaultRange(level, BlockPos.containing(firePos),
+                //         new ClientBoundSendKnockbackPacket(e.getDeltaMovement(), e.getId()));
                 return true;
             }
         } catch (Exception exception) {

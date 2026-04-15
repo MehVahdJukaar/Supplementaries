@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -56,7 +55,7 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
         entityEffects.clear();
         myShaders.clear();
         for (var entry : object.entrySet()) {
-         //   RegistryOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, null, this);
+            //   RegistryOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, null, this);
 
             var effect = MobHeadEffect.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow();
 
@@ -164,7 +163,7 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
 
         public static final Codec<MobHeadEffect> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
-                        MiscUtils. LENIENT_ITEM_OR_ITEM_LIST.lenientOptionalFieldOf("items", List.of()).
+                        MiscUtils.LENIENT_ITEM_OR_ITEM_LIST.lenientOptionalFieldOf("items", List.of()).
                                 forGetter(MobHeadEffect::items),
                         MiscUtils.LENIENT_ENTITY_OR_ITEM_LIST.lenientOptionalFieldOf("entity_types", List.of()).
                                 forGetter(MobHeadEffect::entityTypes),

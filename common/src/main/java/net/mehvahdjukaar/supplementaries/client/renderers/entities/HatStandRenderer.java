@@ -39,7 +39,7 @@ public class HatStandRenderer extends LivingEntityRenderer<HatStandEntity, HatSt
 
     @Override
     public Vec3 getRenderOffset(HatStandEntity entity, float partialTicks) {
-        if(entity.isNoBasePlate())return new Vec3(0,-1/16f,0);
+        if (entity.isNoBasePlate()) return new Vec3(0, -1 / 16f, 0);
         return super.getRenderOffset(entity, partialTicks);
     }
 

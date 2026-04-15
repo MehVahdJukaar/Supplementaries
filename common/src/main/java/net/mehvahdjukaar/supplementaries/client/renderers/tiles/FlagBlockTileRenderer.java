@@ -43,7 +43,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
     @ForgeOverride
     public AABB getRenderBoundingBox(BlockEntity tile) {
-        Direction dir = ((FlagBlockTile)tile).getDirection();
+        Direction dir = ((FlagBlockTile) tile).getDirection();
         return new AABB(0.25, 0, 0.25, 0.75, 1, 0.75).expandTowards(
                 dir.getStepX() * 1.35f, 0, dir.getStepZ() * 1.35f).move(tile.getBlockPos());
     }
@@ -54,7 +54,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     }
 
     public static void renderBanner(ModelPart bannerModel, float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay,
-                              BannerPatternLayers patterns, DyeColor baseColor) {
+                                    BannerPatternLayers patterns, DyeColor baseColor) {
         matrixStack.pushPose();
         matrixStack.scale(0.6666667F, -0.6666667F, -0.6666667F);
         matrixStack.mulPose(Axis.YP.rotationDegrees(0.05f * ang));

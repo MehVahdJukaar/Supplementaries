@@ -149,7 +149,6 @@ public class LegacyStructureLocator {
                 int innerRing = k * maxSpacing;
 
 
-
                 //<> madness
                 //groups and orders all possible feature chunks ordered by RELATIVE ChunkPos. TreeMap is RB tree for fast additions
                 TreeMap<Vector2i, List<Pair<RandomSpreadStructurePlacement, Set<Holder<Structure>>>>> possiblePositions = new TreeMap<>(COMPARATOR);
@@ -161,7 +160,7 @@ public class LegacyStructureLocator {
                     //checks all features in the area where the structure with the biggest spacing can spawn
                     for (int r = innerRing; r < outerRing; r += spacing) {
                         addAllPossibleFeatureChunksAtDistance(chunkX, chunkZ, r, seed, placement, c -> {
-                         //   Supplementaries.LOGGER.info("potential structure at chunk {}", c);
+                            //   Supplementaries.LOGGER.info("potential structure at chunk {}", c);
 
                             //converts chunkpos to relative pos, so they are ordered by distance already
                             var v = new Vector2i(c.x - chunkX, c.z - chunkZ);
@@ -172,7 +171,7 @@ public class LegacyStructureLocator {
                                     o -> new ArrayList<>());
 
                             if (ll.contains(p)) {
-                             //   Supplementaries.error();
+                                //   Supplementaries.error();
                                 //TODO: this should never be called... fix
                             } else ll.add(p);
                         });
@@ -279,7 +278,7 @@ public class LegacyStructureLocator {
         }
         for (LocatedStruct foundStructures1 : foundStructures) {
             Holder<Structure> targetStructures = foundStructures1.structure;
-          //  Supplementaries.LOGGER.info("Found structure {} at {}, chunk {}",
+            //  Supplementaries.LOGGER.info("Found structure {} at {}, chunk {}",
             //        targetStructures.getRegisteredName(), foundStructures1.pos, chunkpos);
         }
         return foundStructures;

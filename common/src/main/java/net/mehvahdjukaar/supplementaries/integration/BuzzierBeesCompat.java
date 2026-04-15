@@ -23,7 +23,7 @@ public class BuzzierBeesCompat {
     public static final List<Supplier<? extends Block>> BB_CANDLES = new ArrayList<>();
 
 
-    public static void registerCandle(ResourceLocation id,  Function<BlockState, List<Vec3>> particleOffsets) {
+    public static void registerCandle(ResourceLocation id, Function<BlockState, List<Vec3>> particleOffsets) {
         registerCandle(id, "_soul", CompatObjects.SMALL_SOUL_FLAME, particleOffsets);
 
         if (CompatHandler.ENDERGETIC) {

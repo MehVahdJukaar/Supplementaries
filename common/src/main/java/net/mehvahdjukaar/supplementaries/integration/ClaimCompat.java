@@ -6,15 +6,17 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ClaimCompat {
-    private static  ClaimCompat INSTANCE ;
-    public static  boolean ON;
+    private static ClaimCompat INSTANCE;
+    public static boolean ON;
+
     static {
         if (CompatHandler.FLAN) {
             ON = true;
             //INSTANCE = new FlanCompat();
         } else {
             ON = false;
-            INSTANCE = new ClaimCompat(){};
+            INSTANCE = new ClaimCompat() {
+            };
         }
     }
 

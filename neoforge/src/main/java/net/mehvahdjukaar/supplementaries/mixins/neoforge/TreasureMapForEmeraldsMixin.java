@@ -16,7 +16,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
 import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Locale;
 import java.util.Optional;
 
 @Mixin(targets = {"net.minecraft.world.entity.npc.VillagerTrades$TreasureMapForEmeralds"})
@@ -61,7 +59,7 @@ public abstract class TreasureMapForEmeraldsMixin {
                 map.set(DataComponents.CUSTOM_NAME, Component.translatable(this.displayName));
                 int uses = 2;
                 int xp = (int) ((this.villagerXp * this.maxUses) / (float) uses);
-                int cost =  (this.emeraldCost * 1);
+                int cost = (this.emeraldCost * 1);
                 cir.setReturnValue(new MerchantOffer(new ItemCost(Items.EMERALD, cost),
                         Optional.of(new ItemCost(Items.COMPASS)), map, uses, xp, 0.2F));
             }

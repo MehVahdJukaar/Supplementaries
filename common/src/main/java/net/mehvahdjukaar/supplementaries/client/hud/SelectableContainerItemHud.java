@@ -200,7 +200,7 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
         }
 
         ItemStack stack = getItemUsed();
-        if (stack.isEmpty() ||! (stack.getItem() instanceof SelectableContainerItem<?,?> sc)) {
+        if (stack.isEmpty() || !(stack.getItem() instanceof SelectableContainerItem<?, ?> sc)) {
             closeHud();
             return;
         }
@@ -234,8 +234,8 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
         py += ClientConfigs.Items.QUIVER_GUI_Y.get();
 
         graphics.blitSprite(ModTextures.SELECTABLE_ITEM_BAR, 182, 22, 0, 0, centerX - px, py, uWidth - 1, 22);
-        graphics.blitSprite(ModTextures.SELECTABLE_ITEM_BAR, 182, 22, 181, 0, centerX + px - 1, py,1, 22);
-        graphics.blitSprite(ModTextures.SELECTABLE_ITEM_OVERLAY, centerX - px - 1 + selected * 20, py - 1,  24, 24);
+        graphics.blitSprite(ModTextures.SELECTABLE_ITEM_BAR, 182, 22, 181, 0, centerX + px - 1, py, 1, 22);
+        graphics.blitSprite(ModTextures.SELECTABLE_ITEM_OVERLAY, centerX - px - 1 + selected * 20, py - 1, 24, 24);
 
         poseStack.popPose();
 

@@ -8,7 +8,7 @@ public class ShulkerBoxTooltipCompatImpl {
 
     public static void setup() {
         ModLoadingContext.get().registerExtensionPoint(ShulkerBoxTooltipPlugin.class,
-            () -> new ShulkerBoxTooltipPlugin(ShulkerBoxTooltipCompat::new));
+                () -> new ShulkerBoxTooltipPlugin(ShulkerBoxTooltipCompat::new));
     }
 
 }

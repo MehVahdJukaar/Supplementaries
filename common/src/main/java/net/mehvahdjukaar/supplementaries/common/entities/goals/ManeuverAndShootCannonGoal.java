@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.world.entity.Mob;
 
 import static net.mehvahdjukaar.supplementaries.common.entities.goals.PlundererAICommon.*;

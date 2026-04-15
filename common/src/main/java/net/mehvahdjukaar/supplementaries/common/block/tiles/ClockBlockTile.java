@@ -54,7 +54,7 @@ public class ClockBlockTile extends BlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-      if(level.isClientSide)  updateInitialTime();
+        if (level.isClientSide) updateInitialTime();
     }
 
     public void updateInitialTime() {
@@ -65,7 +65,7 @@ public class ClockBlockTile extends BlockEntity {
         this.sPrevRoll = this.sTargetRoll;
     }
 
-    public static int calculateHour(int time){
+    public static int calculateHour(int time) {
         return Mth.clamp(time / 1000, 0, 24);
     }
 

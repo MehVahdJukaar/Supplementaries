@@ -2,17 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.events.fabric;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
-import net.fabricmc.fabric.api.item.v1.EnchantmentEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.mehvahdjukaar.moonlight.core.Moonlight;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RakedGravelBlock;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
@@ -28,11 +24,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -78,7 +71,7 @@ public class ServerEventsFabric {
                     GenerationStep.Decoration.UNDERGROUND_DECORATION,
                     ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("basalt_ash")));
         }
-        if(CommonConfigs.Building.BARNACLES_ENABLED.get()){
+        if (CommonConfigs.Building.BARNACLES_ENABLED.get()) {
             BiomeModifications.addFeature(BiomeSelectors.tag(ModTags.HAS_BARNACLES),
                     GenerationStep.Decoration.VEGETAL_DECORATION,
                     ResourceKey.create(Registries.PLACED_FEATURE, Supplementaries.res("shore_barnacles")));

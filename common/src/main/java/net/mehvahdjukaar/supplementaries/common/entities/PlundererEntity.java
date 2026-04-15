@@ -1,14 +1,11 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
-import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.NoticeBoardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatMoveController;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatPathNavigation;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.LookControlWithSpyglass;
 import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.*;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistryAccess;
@@ -19,7 +16,6 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.DifficultyInstance;
@@ -36,8 +32,8 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.Parrot;
-import net.minecraft.world.entity.animal.Pig;
-import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.InventoryCarrier;
 import net.minecraft.world.entity.player.Player;
@@ -46,7 +42,6 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.providers.EnchantmentProvider;
 import net.minecraft.world.item.enchantment.providers.VanillaEnchantmentProviders;
@@ -124,7 +119,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         //TODO: go to boat,leave boat, switch to captain, soot cannon
         //this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1, 20));
 
-        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6){
+        this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.6) {
             @Override
             public boolean canContinueToUse() {
                 return super.canContinueToUse();

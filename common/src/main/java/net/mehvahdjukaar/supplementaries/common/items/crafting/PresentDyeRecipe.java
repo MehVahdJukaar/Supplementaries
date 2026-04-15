@@ -65,7 +65,7 @@ public class PresentDyeRecipe extends CustomRecipe {
                 }
             }
         }
-        return itemstack.transmuteCopy(BlocksColorAPI.changeColor(itemstack.getItem(), dyecolor),1);
+        return itemstack.transmuteCopy(BlocksColorAPI.changeColor(itemstack.getItem(), dyecolor), 1);
     }
 
     @Override

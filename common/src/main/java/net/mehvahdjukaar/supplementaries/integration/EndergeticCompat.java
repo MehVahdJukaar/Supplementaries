@@ -19,7 +19,7 @@ import static net.mehvahdjukaar.supplementaries.reg.RegUtils.regItem;
 
 public class EndergeticCompat {
 
-    public static void init(){
+    public static void init() {
         ModRegistry.SCONCES.add(SCONCE_ITEM_ENDER);
     }
 

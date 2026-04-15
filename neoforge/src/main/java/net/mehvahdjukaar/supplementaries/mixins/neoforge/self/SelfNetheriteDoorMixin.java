@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.neoforge.self;
 
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;

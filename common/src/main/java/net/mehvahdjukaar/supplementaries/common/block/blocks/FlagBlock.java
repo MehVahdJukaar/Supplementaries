@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
 
-    private static final MapCodec<FlagBlock> CODEC = RecordCodecBuilder.mapCodec(i ->i.group(
+    private static final MapCodec<FlagBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             DyeColor.CODEC.fieldOf("color").forGetter(FlagBlock::getColor),
             BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(FlagBlock::properties)
     ).apply(i, FlagBlock::new));

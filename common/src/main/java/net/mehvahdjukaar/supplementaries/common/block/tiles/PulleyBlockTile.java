@@ -9,7 +9,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -106,7 +105,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
             level.playSound(null, worldPosition, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
             if (addNewItem) this.setDisplayedItem(stack);
-            else if(addItem)stack.grow(1);
+            else if (addItem) stack.grow(1);
             this.setChanged();
         }
         return success;
@@ -126,7 +125,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
             level.playSound(null, worldPosition, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            if(removeItem) {
+            if (removeItem) {
                 stack.shrink(1);
                 this.setChanged();
             }
@@ -161,7 +160,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         int maxSideDist = 7;
         for (var d : order) {
             if (RopeHelper.isCorrectRope(ropeBlock, level.getBlockState(worldPosition.relative(d)), d)) {
-                if (moveConnected( retracting, maxSideDist, d)) {
+                if (moveConnected(retracting, maxSideDist, d)) {
                     return true;
                 }
                 //returns if we found a rope but failed
@@ -169,7 +168,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
             } else remaining.add(d);
         }
         for (var d : remaining) {
-            if (moveConnected( retracting, maxSideDist, d)) {
+            if (moveConnected(retracting, maxSideDist, d)) {
                 return true;
             }
         }

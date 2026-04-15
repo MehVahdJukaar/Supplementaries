@@ -17,7 +17,7 @@ public abstract class CameraMixin {
             target = "Lnet/minecraft/world/entity/Entity;getViewYRot(F)F"),
             cancellable = true)
     public void supp$setupCannonCamera(BlockGetter level, Entity entity, boolean detached,
-                                                  boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
+                                       boolean thirdPersonReverse, float partialTick, CallbackInfo ci) {
         if (CannonController.setupCamera((Camera) (Object) this,
                 level, entity, detached, thirdPersonReverse, partialTick)) {
             ci.cancel();

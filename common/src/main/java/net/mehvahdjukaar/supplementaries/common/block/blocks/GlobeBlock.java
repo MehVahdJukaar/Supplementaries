@@ -106,7 +106,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
         ItemStack stack = super.getCloneItemStack(level, pos, state);
-        if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile&& tile.hasCustomName()) {
+        if (level.getBlockEntity(pos) instanceof GlobeBlockTile tile && tile.hasCustomName()) {
             stack.set(DataComponents.CUSTOM_NAME, tile.getCustomName());
         }
         return stack;

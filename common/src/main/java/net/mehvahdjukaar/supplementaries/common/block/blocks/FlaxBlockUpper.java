@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class FlaxBlockUpper extends Block{
+public class FlaxBlockUpper extends Block {
     private static final VoxelShape[] SHAPES_TOP = new VoxelShape[]{
             Block.box(2, 0, 2, 14, 3, 14),
             Block.box(1, 0, 1, 15, 7, 15),
@@ -38,11 +38,11 @@ public class FlaxBlockUpper extends Block{
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
 
-        if(facing == Direction.DOWN && isValidLowerStage(facingState)){
+        if (facing == Direction.DOWN && isValidLowerStage(facingState)) {
             int ageBelow = facingState.getValue(FlaxBlock.AGE);
-            if(ageBelow>=FlaxBlock.DOUBLE_AGE){
+            if (ageBelow >= FlaxBlock.DOUBLE_AGE) {
                 int targetAge = ageBelow - FlaxBlock.DOUBLE_AGE;
-                if(stateIn.getValue(AGE) != targetAge){
+                if (stateIn.getValue(AGE) != targetAge) {
                     //follow lower stage growth
                     return stateIn.setValue(AGE, targetAge);
                 }
@@ -57,7 +57,7 @@ public class FlaxBlockUpper extends Block{
         return isValidLowerStage(worldIn.getBlockState(pos.below()));
     }
 
-    public boolean isValidLowerStage(BlockState state){
+    public boolean isValidLowerStage(BlockState state) {
         return state.getBlock() instanceof FlaxBlock;
     }
 

@@ -29,7 +29,7 @@ public class SlidyBlockRenderer implements BlockEntityRenderer<MovingSlidyBlockE
             BlockPos blockPos = blockEntity.getBlockPos().relative(blockEntity.getMovementDirection().getOpposite());
             BlockState blockState = blockEntity.getMovedState();
             if (!blockState.isAir()) {
-               // ModelBlockRenderer.enableCaching();
+                // ModelBlockRenderer.enableCaching();
                 poseStack.pushPose();
                 poseStack.translate(blockEntity.getXOff(partialTick), blockEntity.getYOff(partialTick), blockEntity.getZOff(partialTick));
 
@@ -37,7 +37,7 @@ public class SlidyBlockRenderer implements BlockEntityRenderer<MovingSlidyBlockE
                 this.renderBlock(blockPos, blockState, poseStack, bufferSource, level, false, packedOverlay);
 
                 poseStack.popPose();
-               // ModelBlockRenderer.clearCache();
+                // ModelBlockRenderer.clearCache();
                 return;
             }
         }

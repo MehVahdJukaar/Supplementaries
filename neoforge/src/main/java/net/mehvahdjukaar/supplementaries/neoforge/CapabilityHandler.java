@@ -2,8 +2,6 @@ package net.mehvahdjukaar.supplementaries.neoforge;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
-import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.fluids.neoforge.SoftFluidStackImpl;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
@@ -18,8 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.*;
-import net.neoforged.neoforge.client.gui.LoadingErrorScreen;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
@@ -133,7 +129,7 @@ public class CapabilityHandler {
                 new FluidBucketWrapper(stack), ModFluids.LUMISENE_BUCKET.get());
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, ctx) ->
-                new FluidHandlerItemCap(stack, 250, Items.GLASS_BOTTLE, ModFluids.LUMISENE_FLUID.get()),
+                        new FluidHandlerItemCap(stack, 250, Items.GLASS_BOTTLE, ModFluids.LUMISENE_FLUID.get()),
                 ModFluids.LUMISENE_BOTTLE.get());
 
         //if compat handler computer craft add cap to speaker block

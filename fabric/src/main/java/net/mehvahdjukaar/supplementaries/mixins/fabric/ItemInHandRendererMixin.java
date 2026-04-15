@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.fabric;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.fabricmc.fabric.mixin.client.rendering.InGameHudMixin;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.ItemInHandRenderer;

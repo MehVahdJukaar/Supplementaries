@@ -124,7 +124,7 @@ public class BlackboardTextureManager {
             int totalG = FastColor.ARGB32.green(pixel);
             int totalR = FastColor.ARGB32.red(pixel);
             //image has them inverted
-            return FastColor.ARGB32.color(255, totalR * tintR / 255,totalG * tintG / 255, totalB * tintB / 255);
+            return FastColor.ARGB32.color(255, totalR * tintR / 255, totalG * tintG / 255, totalB * tintB / 255);
         }
 
         @NotNull

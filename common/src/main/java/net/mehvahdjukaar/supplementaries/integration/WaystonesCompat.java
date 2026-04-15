@@ -10,6 +10,7 @@ public class WaystonesCompat {
     public static boolean isWaystone(@Nullable BlockEntity te) {
         throw new ArrayStoreException();
     }
+
     @Nullable
     @ExpectPlatform
     public static Component getName(BlockEntity te) {

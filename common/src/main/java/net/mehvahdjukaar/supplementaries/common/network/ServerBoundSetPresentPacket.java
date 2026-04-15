@@ -39,7 +39,7 @@ public record ServerBoundSetPresentPacket(
     @Override
     public void handle(Context context) {
         // server level
-        if(context.getPlayer() instanceof ServerPlayer player) {
+        if (context.getPlayer() instanceof ServerPlayer player) {
             Level level = player.level();
 
             if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof PresentBlockTile present) {

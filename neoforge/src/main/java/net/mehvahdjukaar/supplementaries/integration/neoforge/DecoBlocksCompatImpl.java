@@ -19,7 +19,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -127,7 +126,7 @@ public class DecoBlocksCompatImpl {
 
         @Override
         public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
-            return defMimic.get().getCloneItemStack( target, level, pos, player);
+            return defMimic.get().getCloneItemStack(target, level, pos, player);
         }
 
         @Override
@@ -163,7 +162,6 @@ public class DecoBlocksCompatImpl {
         }
 
     }
-
 
 
     public static void setupClient() {

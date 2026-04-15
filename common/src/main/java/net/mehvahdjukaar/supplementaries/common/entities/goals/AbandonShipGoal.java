@@ -81,7 +81,7 @@ public class AbandonShipGoal extends Goal {
                 if (bl3) {
                     level.gameEvent(GameEvent.TELEPORT, oldPos, GameEvent.Context.of(em));
                     if (!em.isSilent()) {
-                        level.playSound( null, em.xo, em.yo, em.zo, SoundEvents.ENDERMAN_TELEPORT, em.getSoundSource(), 1.0F, 1.0F);
+                        level.playSound(null, em.xo, em.yo, em.zo, SoundEvents.ENDERMAN_TELEPORT, em.getSoundSource(), 1.0F, 1.0F);
                         em.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
                     }
                 }

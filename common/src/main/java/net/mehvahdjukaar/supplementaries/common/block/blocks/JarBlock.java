@@ -75,7 +75,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof JarBlockTile tile ) {
+        if (level.getBlockEntity(pos) instanceof JarBlockTile tile) {
             // make te do the work
             if (tile.handleInteraction(player, hand, level, pos)) {
                 if (!level.isClientSide()) {
@@ -132,7 +132,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        Preconditions.checkArgument(pState.is(this), "Invalid blockstate for block "+this+ " HOW? who passed it?");
+        Preconditions.checkArgument(pState.is(this), "Invalid blockstate for block " + this + " HOW? who passed it?");
         return new JarBlockTile(pPos, pState);
     }
 

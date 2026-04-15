@@ -12,7 +12,7 @@ public class TrappedPresentContainerMenu extends PresentContainerMenu {
     public TrappedPresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(id, playerInventory,
                 TileOrEntityTarget.read(packetBuffer).getBlockEntityOrThrow(playerInventory.player.level(),
-                ModRegistry.TRAPPED_PRESENT_TILE.get()));
+                        ModRegistry.TRAPPED_PRESENT_TILE.get()));
     }
 
     public TrappedPresentContainerMenu(int id, Inventory playerInventory, AbstractPresentBlockTile inventory) {

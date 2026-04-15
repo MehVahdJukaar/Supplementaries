@@ -81,7 +81,7 @@ public class FarmersDelightCompat {
                 return toPlace;
             } else if (state.is(ModRegistry.STICK_BLOCK.get())) {
                 toPlace = STICK_TOMATOES.get().defaultBlockState();
-               return toPlace;
+                return toPlace;
             }
         }
         return null;
@@ -106,7 +106,7 @@ public class FarmersDelightCompat {
 
         @Override
         public void attemptRopeClimb(ServerLevel level, BlockPos pos, RandomSource random) {
-       super.attemptRopeClimb(level, pos, random);
+            super.attemptRopeClimb(level, pos, random);
         }
 
         @Override
@@ -280,7 +280,7 @@ public class FarmersDelightCompat {
         @Override
         public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource rand) {
             //hax
-            if(CommonConfigs.Building.FD_PLANTER.get()) {
+            if (CommonConfigs.Building.FD_PLANTER.get()) {
                 richSoilDelegate.get().randomTick(worldIn, pos, rand);
             }
         }

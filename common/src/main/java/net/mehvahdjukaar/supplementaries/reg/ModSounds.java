@@ -9,7 +9,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.JukeboxSong;
-import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 
 import java.util.function.Supplier;
 

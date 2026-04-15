@@ -16,8 +16,8 @@ public class SafeRecipe extends CustomRecipe {
     private final Ingredient requiredShulker;
     private final Ingredient requiredIngot;
 
-    public SafeRecipe( CraftingBookCategory category, Ingredient shulker, Ingredient ingot) {
-        super( category);
+    public SafeRecipe(CraftingBookCategory category, Ingredient shulker, Ingredient ingot) {
+        super(category);
         this.requiredShulker = shulker;
         this.requiredIngot = ingot;
     }

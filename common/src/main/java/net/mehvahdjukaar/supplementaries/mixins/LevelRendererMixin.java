@@ -48,6 +48,4 @@ public abstract class LevelRendererMixin {
     }
 
 
-
-
 }
