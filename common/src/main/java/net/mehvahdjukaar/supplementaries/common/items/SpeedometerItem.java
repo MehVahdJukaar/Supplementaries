@@ -35,6 +35,14 @@ public class SpeedometerItem extends Item {
         return shifted / magnitude;
     }
 
+    private static double getBPS(Entity entity) {
+        Entity mount = entity.getVehicle();
+        Entity e = entity;
+        if (mount != null) e = mount;
+        Vec3 v = e.getDeltaMovement();
+        if (e.onGround()) v = v.subtract(0, v.y, 0);
+        return v.length() * 20;
+    }
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand hand) {
@@ -49,16 +57,6 @@ public class SpeedometerItem extends Item {
         double s = roundToSignificantFigures(speed, 3);
         player.displayClientMessage(Component.translatable("message.supplementaries.speedometer", s), true);
     }
-
-    private static double getBPS(Entity entity) {
-        Entity mount = entity.getVehicle();
-        Entity e = entity;
-        if (mount != null) e = mount;
-        Vec3 v = e.getDeltaMovement();
-        if (e.onGround()) v = v.subtract(0, v.y, 0);
-        return v.length() * 20;
-    }
-
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {

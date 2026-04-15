@@ -60,6 +60,12 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         this.isAquarium = aquarium;
     }
 
+    private static List<?> getEntitiesInRange(Mob e) {
+        double d0 = e.getAttributeValue(Attributes.FOLLOW_RANGE);
+        AABB aabb = AABB.unitCubeFromLowerCorner(e.position()).inflate(d0, 10.0D, d0);
+        return e.level().getEntitiesOfClass(e.getClass(), aabb, EntitySelector.NO_SPECTATORS);
+    }
+
     @Override
     public boolean canFitInsideContainerItems() {
         return false;
@@ -94,10 +100,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     public void playReleaseSound(Level world, Vec3 v) {
     }
 
-    public boolean isFull(ItemStack stack) {
-        return stack.has(ModComponents.MOB_HOLDER_CONTENT.get());
-    }
-
     //called from event for better compat
     /*
     @Override
@@ -106,6 +108,10 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         if (this.isFull(stack)) return InteractionResult.PASS;
         return this.doInteract(stack, player, entity, hand);
     }*/
+
+    public boolean isFull(ItemStack stack) {
+        return stack.has(ModComponents.MOB_HOLDER_CONTENT.get());
+    }
 
     //@Override
     @ForgeOverride
@@ -283,12 +289,6 @@ public abstract class AbstractMobContainerItem extends BlockItem {
             optional.ifPresent(entities -> entities.findAll(ReputationEventHandler.class::isInstance).forEach((e) ->
                     serverLevel.onReputationEvent(ReputationEventType.VILLAGER_HURT, player, (ReputationEventHandler) e)));
         }
-    }
-
-    private static List<?> getEntitiesInRange(Mob e) {
-        double d0 = e.getAttributeValue(Attributes.FOLLOW_RANGE);
-        AABB aabb = AABB.unitCubeFromLowerCorner(e.position()).inflate(d0, 10.0D, d0);
-        return e.level().getEntitiesOfClass(e.getClass(), aabb, EntitySelector.NO_SPECTATORS);
     }
 
     /**

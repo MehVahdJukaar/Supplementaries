@@ -28,26 +28,6 @@ public class WindVaneBlockTile extends BlockEntity {
         super(ModRegistry.WIND_VANE_TILE.get(), pos, state);
     }
 
-    @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        this.windChargedTicks = tag.getInt("wind_charged_ticks");
-
-
-        float tp = (float) (Math.PI * 2);
-        this.offset = 400 * (Mth.sin((0.005f * this.worldPosition.getX()) % tp) + Mth.sin((0.005f * this.worldPosition.getZ()) % tp) + Mth.sin((0.005f * this.worldPosition.getY()) % tp));
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.putInt("wind_charged_ticks", this.windChargedTicks);
-    }
-
-    public float getYaw(float partialTicks) {
-        return yaw;//Mth.lerp(partialTicks, prevYaw, yaw);
-    }
-
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, WindVaneBlockTile tile) {
 
         float currentYaw = tile.yaw;
@@ -122,6 +102,26 @@ public class WindVaneBlockTile extends BlockEntity {
             // After the end, return 0
             return 0f;
         }
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.windChargedTicks = tag.getInt("wind_charged_ticks");
+
+
+        float tp = (float) (Math.PI * 2);
+        this.offset = 400 * (Mth.sin((0.005f * this.worldPosition.getX()) % tp) + Mth.sin((0.005f * this.worldPosition.getZ()) % tp) + Mth.sin((0.005f * this.worldPosition.getY()) % tp));
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("wind_charged_ticks", this.windChargedTicks);
+    }
+
+    public float getYaw(float partialTicks) {
+        return yaw;//Mth.lerp(partialTicks, prevYaw, yaw);
     }
 
     public void setWindCharged() {

@@ -28,11 +28,6 @@ import static net.mehvahdjukaar.supplementaries.reg.ModFluids.LUMISENE_MAX_LAYER
 
 public class ModFluidsImpl {
 
-    public static BucketItem createLumiseneBucket() {
-        return new LumiseneBucketItem(ModFluids.LUMISENE_FLUID, new Item.Properties().stacksTo(1)
-                .craftRemainder(Items.BUCKET), LUMISENE_MAX_LAYERS);
-    }
-
     public static final Supplier<FluidType> LUMISENE_FLUID_TYPE = registerFluidType("lumisene", () -> new FluidType(FluidType.Properties.create()
             .descriptionId("block.supplementaries.lumisene")
             .fallDistanceModifier(1)
@@ -55,6 +50,10 @@ public class ModFluidsImpl {
         }
     });
 
+    public static BucketItem createLumiseneBucket() {
+        return new LumiseneBucketItem(ModFluids.LUMISENE_FLUID, new Item.Properties().stacksTo(1)
+                .craftRemainder(Items.BUCKET), LUMISENE_MAX_LAYERS);
+    }
 
     public static Supplier<FluidType> registerFluidType(String name, Supplier<FluidType> fluidSupplier) {
         return RegHelper.register(Supplementaries.res(name), fluidSupplier,

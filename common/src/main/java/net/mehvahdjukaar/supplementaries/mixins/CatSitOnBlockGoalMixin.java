@@ -17,12 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(CatSitOnBlockGoal.class)
 public abstract class CatSitOnBlockGoalMixin extends MoveToBlockGoal {
 
+    @Unique
+    private boolean supplementaries$doormat = false;
+
     protected CatSitOnBlockGoalMixin(PathfinderMob creature, double speedIn, int length) {
         super(creature, speedIn, length);
     }
-
-    @Unique
-    private boolean supplementaries$doormat = false;
 
     @Inject(method = "isValidTarget", at = @At("HEAD"), cancellable = true)
     protected void supp$shouldMoveToCarpet(LevelReader worldIn, BlockPos pos, CallbackInfoReturnable<Boolean> info) {

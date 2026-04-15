@@ -21,6 +21,16 @@ import java.util.List;
 
 public class ExposureCompatClient {
 
+    //why not public?
+    private static final TMethod<ImageRenderer, RenderedImageInstance> GET_OR_CREATE_INSTANCE =
+            TMethod.of(ImageRenderer.class, "getOrCreateInstance", RenderableImage.class);
+    private static final TField<RenderedImageInstance, Boolean> REQUIRES_UPLOAD =
+            TField.of(RenderedImageInstance.class, "requiresUpload");
+    private static final TField<RenderedImageInstance, ResourceLocation> TEXTURE_LOCATION =
+            TField.of(RenderedImageInstance.class, "textureLocation");
+    private static final TMethod<RenderedImageInstance, Void> UPDATE_TEXTURE =
+            TMethod.of(RenderedImageInstance.class, "updateTexture");
+
     private static ResourceLocation getFrameTexture(ItemStack stack, Frame frame) {
         PhotographStyle style = PhotographStyle.of(stack);
         RenderableImage image = style.process(ExposureClient.renderedExposures().getOrCreate(frame));
@@ -80,15 +90,5 @@ public class ExposureCompatClient {
         }
         return null;
     }
-
-    //why not public?
-    private static final TMethod<ImageRenderer, RenderedImageInstance> GET_OR_CREATE_INSTANCE =
-            TMethod.of(ImageRenderer.class, "getOrCreateInstance", RenderableImage.class);
-    private static final TField<RenderedImageInstance, Boolean> REQUIRES_UPLOAD =
-            TField.of(RenderedImageInstance.class, "requiresUpload");
-    private static final TField<RenderedImageInstance, ResourceLocation> TEXTURE_LOCATION =
-            TField.of(RenderedImageInstance.class, "textureLocation");
-    private static final TMethod<RenderedImageInstance, Void> UPDATE_TEXTURE =
-            TMethod.of(RenderedImageInstance.class, "updateTexture");
 
 }

@@ -56,22 +56,6 @@ public class SignPostItem extends WoodBasedBlockItem {
         return AttachType.WALL;
     }
 
-    private enum AttachType {
-        FENCE, STICK, WALL, WAY_SIGN_POST, WAY_SIGN_WALL;
-
-        int getRot(UseOnContext context) {
-            return Mth.floor(((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
-        }
-
-        public boolean needsConversion() {
-            return this == FENCE || this == STICK;
-        }
-
-        public boolean isSign() {
-            return (this == WAY_SIGN_POST || this == WAY_SIGN_WALL);
-        }
-    }
-
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Player player = context.getPlayer();
@@ -136,6 +120,22 @@ public class SignPostItem extends WoodBasedBlockItem {
         }
 
         return InteractionResult.PASS;
+    }
+
+    private enum AttachType {
+        FENCE, STICK, WALL, WAY_SIGN_POST, WAY_SIGN_WALL;
+
+        int getRot(UseOnContext context) {
+            return Mth.floor(((180.0F + context.getRotation()) * 16.0F / 360.0F) + 0.5D) & 15;
+        }
+
+        public boolean needsConversion() {
+            return this == FENCE || this == STICK;
+        }
+
+        public boolean isSign() {
+            return (this == WAY_SIGN_POST || this == WAY_SIGN_WALL);
+        }
     }
 
 

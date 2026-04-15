@@ -24,10 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BambooSpikesBehavior implements MovementBehaviour {
 
-    @Override
-    public boolean isActive(MovementContext context) {
-        return MovementBehaviour.super.isActive(context) && !isVecPointingTowards(context.relativeMotion, (context.state.getValue(BambooSpikesBlock.FACING)));
-    }
+    private static final BambooSpikesBlockTile DUMMY = new BambooSpikesBlockTile(BlockPos.ZERO, ModRegistry.BAMBOO_SPIKES.get().defaultBlockState());
 
     //from VecHelper since i cant find where that class is from
     public static boolean isVecPointingTowards(Vec3 vec, Direction direction) {
@@ -42,6 +39,11 @@ public class BambooSpikesBehavior implements MovementBehaviour {
     //     if (!stateVisited.isRedstoneConductor(world, pos))
     //        damageEntities(context, pos, world);
     //}
+
+    @Override
+    public boolean isActive(MovementContext context) {
+        return MovementBehaviour.super.isActive(context) && !isVecPointingTowards(context.relativeMotion, (context.state.getValue(BambooSpikesBlock.FACING)));
+    }
 
     @Override
     public void tick(MovementContext context) {
@@ -86,9 +88,6 @@ public class BambooSpikesBehavior implements MovementBehaviour {
             }
         }
     }
-
-
-    private static final BambooSpikesBlockTile DUMMY = new BambooSpikesBlockTile(BlockPos.ZERO, ModRegistry.BAMBOO_SPIKES.get().defaultBlockState());
 
     private void doTileStuff(MovementContext context, @NotNull Level world, LivingEntity le) {
         CompoundTag com = context.blockEntityData;

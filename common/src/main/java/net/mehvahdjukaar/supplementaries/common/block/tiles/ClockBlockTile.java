@@ -35,75 +35,12 @@ public class ClockBlockTile extends BlockEntity {
         super(ModRegistry.CLOCK_BLOCK_TILE.get(), pos, state);
     }
 
-    public int getPower() {
-        return power;
-    }
-
-    @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        this.power = tag.getInt("Power");
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.putInt("Power", this.power);
-    }
-
-    @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-        if (level.isClientSide) updateInitialTime();
-    }
-
-    public void updateInitialTime() {
-        this.updateTargetTime();
-        this.roll = this.targetRoll;
-        this.prevRoll = this.targetRoll;
-        this.sRoll = this.sTargetRoll;
-        this.sPrevRoll = this.sTargetRoll;
-    }
-
     public static int calculateHour(int time) {
         return Mth.clamp(time / 1000, 0, 24);
     }
 
     private static int calculateMinute(int time) {
         return Mth.clamp((time % 1000) / 20, 0, 50);
-    }
-
-    protected void updateTargetTime() {
-        BlockState state = this.getBlockState();
-        Level level = this.level;
-        BlockPos pos = this.worldPosition;
-        int time = (int) (level.getDayTime() % 24000);
-        //minute here are 1 rl second -> 50m in a minecraft hour
-        int minute = calculateMinute(time);
-        int hour = calculateHour(time);
-
-        //server
-        if (!level.isClientSide) {
-            if (level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
-                if (hour != state.getValue(ClockBlock.HOUR)) {
-                    //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
-                    level.setBlock(pos, state.setValue(ClockBlock.HOUR, hour), 3);
-                }
-                int p = Mth.clamp(time / 1500, 0, 15);
-                if (p != this.power) {
-                    this.power = p;
-                    level.updateNeighbourForOutputSignal(pos, this.getBlockState().getBlock());
-                }
-                this.level.playSound(null, this.worldPosition,
-                        (minute % 2 == 0 ? ModSounds.CLOCK_TICK_1 : ModSounds.CLOCK_TICK_2).get(), SoundSource.BLOCKS,
-                        0.08f, MthUtils.nextWeighted(level.random, 0.1f) + 0.95f);
-            }
-        } else {
-            //hours
-            this.targetRoll = (hour * 30) % 360;
-            //minutes
-            this.sTargetRoll = (minute * 7.2f + 180) % 360f;
-        }
     }
 
     public static void tick(Level level, BlockPos pPos, BlockState pState, ClockBlockTile tile) {
@@ -166,6 +103,69 @@ public class ClockBlockTile extends BlockEntity {
             tile.sRota += (float) (tile.sTargetRoll * 0.1);
             tile.sRota *= 0.8F;
             tile.sRoll = Mth.positiveModulo(tile.sRoll + tile.sRota, 360);
+        }
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.power = tag.getInt("Power");
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("Power", this.power);
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        if (level.isClientSide) updateInitialTime();
+    }
+
+    public void updateInitialTime() {
+        this.updateTargetTime();
+        this.roll = this.targetRoll;
+        this.prevRoll = this.targetRoll;
+        this.sRoll = this.sTargetRoll;
+        this.sPrevRoll = this.sTargetRoll;
+    }
+
+    protected void updateTargetTime() {
+        BlockState state = this.getBlockState();
+        Level level = this.level;
+        BlockPos pos = this.worldPosition;
+        int time = (int) (level.getDayTime() % 24000);
+        //minute here are 1 rl second -> 50m in a minecraft hour
+        int minute = calculateMinute(time);
+        int hour = calculateHour(time);
+
+        //server
+        if (!level.isClientSide) {
+            if (level.getGameRules().getBoolean(GameRules.RULE_DAYLIGHT)) {
+                if (hour != state.getValue(ClockBlock.HOUR)) {
+                    //if they are sent to the client the animation gets broken. Side effect is that you can't see hour with f3
+                    level.setBlock(pos, state.setValue(ClockBlock.HOUR, hour), 3);
+                }
+                int p = Mth.clamp(time / 1500, 0, 15);
+                if (p != this.power) {
+                    this.power = p;
+                    level.updateNeighbourForOutputSignal(pos, this.getBlockState().getBlock());
+                }
+                this.level.playSound(null, this.worldPosition,
+                        (minute % 2 == 0 ? ModSounds.CLOCK_TICK_1 : ModSounds.CLOCK_TICK_2).get(), SoundSource.BLOCKS,
+                        0.08f, MthUtils.nextWeighted(level.random, 0.1f) + 0.95f);
+            }
+        } else {
+            //hours
+            this.targetRoll = (hour * 30) % 360;
+            //minutes
+            this.sTargetRoll = (minute * 7.2f + 180) % 360f;
         }
     }
 

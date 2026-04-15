@@ -48,18 +48,12 @@ import java.util.function.Supplier;
 
 public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
 
-    private static final EntityDataAccessor<Byte> LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
     protected static final int MAX_AGE = 700;
-
-    //these are used on both sides...need to be synced on creation. Could use only clientside tbh
-    private float xRotInc;
-    private float yRotInc;
-
+    private static final EntityDataAccessor<Byte> LOYALTY = SynchedEntityData.defineId(SlingshotProjectileEntity.class, EntityDataSerializers.BYTE);
     private final ParticleTrailEmitter trailEmitter = ParticleTrailEmitter.builder()
             .spacing(3)
             .maxParticlesPerTick(5)
             .build();
-
     private final Supplier<Integer> lightEmission = Suppliers.memoize(() -> {
         Item item = this.getItem().getItem();
         if (item instanceof BlockItem blockItem) {
@@ -68,6 +62,9 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
         }
         return 0;
     });
+    //these are used on both sides...need to be synced on creation. Could use only clientside tbh
+    private float xRotInc;
+    private float yRotInc;
 
     public SlingshotProjectileEntity(Level world, ItemStack item, ItemStack throwerStack,
                                      @Nullable LivingEntity thrower) {
@@ -133,12 +130,12 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
         tag.putByte("Loyalty", this.getLoyalty());
     }
 
-    private void setLoyalty(byte loyalty) {
-        this.entityData.set(LOYALTY, loyalty);
-    }
-
     public byte getLoyalty() {
         return this.entityData.get(LOYALTY);
+    }
+
+    private void setLoyalty(byte loyalty) {
+        this.entityData.set(LOYALTY, loyalty);
     }
 
     @Override

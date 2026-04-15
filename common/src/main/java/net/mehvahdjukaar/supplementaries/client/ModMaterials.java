@@ -56,7 +56,15 @@ public class ModMaterials {
                     .toShortLanguageKey().replace(":", "/").replace(".", "/"))
             ));
     public static final Material FLAG_BASE_MATERIAL = new Material(BANNER_SHEET, Supplementaries.res("entity/banner/flags/base"));
+    public static final Function<ResourceLocation, ModelResourceLocation> TO_STANDALONE_MODEL = Util.memoize(
+            RenderUtil::getStandaloneModelLocation
+    );
+    private static final Map<BannerPatternItem, BannerPattern> ITEM_TO_PATTERNS = new IdentityHashMap<>();
 
+
+    private static final Cache<ResourceLocation, Material> CACHED_MATERIALS = CacheBuilder.newBuilder()
+            .expireAfterAccess(2, TimeUnit.MINUTES)
+            .build();
 
     @Nullable
     public static Material getFlagMaterialForPatternItem(Level level, BannerPatternItem item) {
@@ -71,13 +79,6 @@ public class ModMaterials {
         } else return FLAG_MATERIALS.apply(p);
     }
 
-    private static final Map<BannerPatternItem, BannerPattern> ITEM_TO_PATTERNS = new IdentityHashMap<>();
-
-
-    private static final Cache<ResourceLocation, Material> CACHED_MATERIALS = CacheBuilder.newBuilder()
-            .expireAfterAccess(2, TimeUnit.MINUTES)
-            .build();
-
     //cached materials
     public static Material get(ResourceLocation bockTexture) {
         try {
@@ -86,9 +87,5 @@ public class ModMaterials {
             throw new RuntimeException(e);
         }
     }
-
-    public static final Function<ResourceLocation, ModelResourceLocation> TO_STANDALONE_MODEL = Util.memoize(
-            RenderUtil::getStandaloneModelLocation
-    );
 
 }

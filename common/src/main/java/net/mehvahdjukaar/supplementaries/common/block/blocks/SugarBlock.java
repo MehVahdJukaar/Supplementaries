@@ -28,6 +28,14 @@ public class SugarBlock extends ConcretePowderBlock {
         super(Blocks.WATER, properties);
     }
 
+    private static void turnIntoWater(Level level, BlockPos pos) {
+        if (CompatHandler.BUMBLEZONE) {
+            BumblezoneCompat.turnToSugarWater(level, pos);
+        } else {
+            level.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
+        }
+    }
+
     @Override
     public void onLand(Level level, BlockPos pos, BlockState blockState, BlockState blockState2, FallingBlockEntity fallingBlock) {
         if (level instanceof ServerLevel serverLevel) {
@@ -69,14 +77,6 @@ public class SugarBlock extends ConcretePowderBlock {
             return true;
         }
         return super.triggerEvent(state, level, pos, id, param);
-    }
-
-    private static void turnIntoWater(Level level, BlockPos pos) {
-        if (CompatHandler.BUMBLEZONE) {
-            BumblezoneCompat.turnToSugarWater(level, pos);
-        } else {
-            level.setBlockAndUpdate(pos, Blocks.WATER.defaultBlockState());
-        }
     }
 
     private boolean shouldTurnToWater(Level level, BlockPos pos) {

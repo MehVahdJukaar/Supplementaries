@@ -25,6 +25,12 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
     public final ModelPart hourHand;
     public final ModelPart minuteHand;
 
+    public ClockBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+        ModelPart model = context.bakeLayer(ClientRegistry.CLOCK_HANDS_MODEL);
+        this.minuteHand = model.getChild("minute");
+        this.hourHand = model.getChild("hour");
+    }
+
     public static LayerDefinition createMesh() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
@@ -39,12 +45,6 @@ public class ClockBlockTileRenderer implements BlockEntityRenderer<ClockBlockTil
                 PartPose.offset(0, 24, 0));
 
         return LayerDefinition.create(mesh, 16, 16);
-    }
-
-    public ClockBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        ModelPart model = context.bakeLayer(ClientRegistry.CLOCK_HANDS_MODEL);
-        this.minuteHand = model.getChild("minute");
-        this.hourHand = model.getChild("hour");
     }
 
     @Override

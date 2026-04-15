@@ -33,12 +33,12 @@ public class RedMerchantScreen extends AbstractContainerScreen<RedMerchantMenu> 
 
     private static final Component LEVEL_SEPARATOR = Component.literal(" - ");
     private static final Component DEPRECATED_TOOLTIP = Component.translatable("merchant.deprecated");
+    private final TradeOfferButton[] tradeOfferButtons = new TradeOfferButton[7];
+    int scrollOff;
     /**
      * The integer value corresponding to the currently selected merchant recipe.
      */
     private int shopItem;
-    private final TradeOfferButton[] tradeOfferButtons = new TradeOfferButton[7];
-    int scrollOff;
     private boolean isDragging;
 
     public RedMerchantScreen(RedMerchantMenu merchantMenu, Inventory inventory, Component component) {

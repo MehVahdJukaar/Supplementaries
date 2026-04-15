@@ -63,8 +63,6 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
                     SoftFluid.STREAM_CODEC.apply(ByteBufCodecs::optional), p -> p.renderFluid,
                     (r, w, h, l, s, f, a, t, sf) -> new DataDefinedCatchableMob(r, w, h, l, s, f, a, t, sf, Optional.empty())
             );
-
-    private final List<ResourceLocation> owners;
     final float widthIncrement;
     final float heightIncrement;
     final int lightLevel;
@@ -74,6 +72,7 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
     final TickMode tickMode;
     final Optional<LootParam> loot;
     final Optional<Holder<SoftFluid>> renderFluid;
+    private final List<ResourceLocation> owners;
 
     private DataDefinedCatchableMob(List<ResourceLocation> owners, float widthIncrement, float heightIncrement, int lightLevel,
                                     Optional<CaptureSettings> captureSettings,
@@ -139,6 +138,28 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
     }
 
 
+    enum TickMode implements StringRepresentable {
+        NONE, SERVER, CLIENT, BOTH;
+
+        public static final Codec<TickMode> CODEC = StringRepresentable.fromEnum(TickMode::values);
+        public static final StreamCodec<FriendlyByteBuf, TickMode> STREAM_CODEC = CodecUtils.enumStreamCodec(TickMode.class);
+
+        boolean isValid(Level level) {
+            return switch (this) {
+                case NONE -> false;
+                case CLIENT -> level.isClientSide;
+                case SERVER -> !level.isClientSide;
+                case BOTH -> true;
+            };
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name().toLowerCase(Locale.ROOT);
+        }
+
+    }
+
     protected record CaptureSettings(CatchMode jarMode, CatchMode cageMode) {
         private static final Codec<CaptureSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 CatchMode.CODEC.fieldOf("jar").forGetter(CaptureSettings::jarMode),
@@ -198,28 +219,6 @@ public final class DataDefinedCatchableMob implements ICatchableMob {
                 //ItemsUtil.addToInventory(serverLevel, pos.below(), );
             }
         }
-    }
-
-    enum TickMode implements StringRepresentable {
-        NONE, SERVER, CLIENT, BOTH;
-
-        boolean isValid(Level level) {
-            return switch (this) {
-                case NONE -> false;
-                case CLIENT -> level.isClientSide;
-                case SERVER -> !level.isClientSide;
-                case BOTH -> true;
-            };
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name().toLowerCase(Locale.ROOT);
-        }
-
-        public static final Codec<TickMode> CODEC = StringRepresentable.fromEnum(TickMode::values);
-        public static final StreamCodec<FriendlyByteBuf, TickMode> STREAM_CODEC = CodecUtils.enumStreamCodec(TickMode.class);
-
     }
 
 }

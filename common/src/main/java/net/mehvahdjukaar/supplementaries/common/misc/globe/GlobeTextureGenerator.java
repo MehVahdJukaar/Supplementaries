@@ -13,21 +13,8 @@ public class GlobeTextureGenerator {
     private static final int WIDTH = SIDE * 4;
     private static final int HEIGHT = SIDE * 2;
     private static final int SCALE = 20;
-
-
-    public static byte[][] generate(long seed) {
-        GlobeTextureGenerator gen = new GlobeTextureGenerator(new Random(seed));
-        gen.generateLand();
-        gen.applyEffects();
-
-        gen.fixBottomFace();
-        return gen.getByteMatrix();
-    }
-
-
     private final Random rand;
     private final Pixel[][] pixels;
-
     private GlobeTextureGenerator(Random random) {
         this.rand = random;
         this.pixels = new Pixel[WIDTH][HEIGHT];
@@ -38,121 +25,26 @@ public class GlobeTextureGenerator {
         }
     }
 
-    private enum Biome {
-        TEMPERATE, HOT, COLD, MUSHROOM, MOUNTAIN, MESA
+    public static byte[][] generate(long seed) {
+        GlobeTextureGenerator gen = new GlobeTextureGenerator(new Random(seed));
+        gen.generateLand();
+        gen.applyEffects();
+
+        gen.fixBottomFace();
+        return gen.getByteMatrix();
     }
 
-    private enum Feature {
-        NORMAL, SUNKEN, ICEBERG, MUSHROOM
-    }
-
-    private enum TerrainType {
-        NULL, LAND, WATER
-    }
-
-    private enum Face {
-        F1, F2, F3, F4, TOP, BOT, NA
-    }
-
-    private static class Col {
-        public static final byte BLACK = 0;
-        public static final byte WATER = 1;
-        public static final byte WATER_S = 2;
-        public static final byte WATER_D = 3;
-        public static final byte SUNKEN = 4;
-        public static final byte GREEN = 5;
-        public static final byte GREEN_S = 6;
-        public static final byte HOT_S = 7;
-        public static final byte HOT = 8;
-        public static final byte COLD = 9;
-        public static final byte COLD_S = 10;
-        public static final byte ICEBERG = 11;
-        public static final byte MUSHROOM = 12;
-        public static final byte MUSHROOM_S = 13;
-
-
-        public static final byte TAIGA = 14;
-        public static final byte MESA = 15;
-        public static final byte MESA_S = 16;
-        public static final byte MOUNTAIN = 17;
-        public static final byte MOUNTAIN_S = 18;
-    }
-
-
-    private record Pos(int x, int y) {
-
-        public Pos up() {
-            Face f = getFace(x, y);
-            if (f == Face.NA) return this;
-            //border
-            if (y == SIDE) {
-                return switch (f) {
-                    case F2 -> new Pos(x, y - 1);
-                    case F3 -> new Pos(2 * SIDE - 1, (3 * SIDE) - x - 1);
-                    case F4 -> new Pos((5 * SIDE) - x - 1, 0);
-                    default -> new Pos(SIDE, x);
-                };
-            }
-            if (y == 0) {
-                //top face
-                if (f == Face.TOP) {
-                    return new Pos((5 * SIDE) - x - 1, SIDE);
-                } else {
-                    return new Pos(x - SIDE, 2 * SIDE - 1);
-                }
-            }
-            return new Pos(x, y - 1);
-        }
-
-        private Pos down() {
-            Face f = getFace(x, y);
-            if (f == Face.NA) return this;
-            //border
-            if (y == (2 * SIDE) - 1) {
-                return switch (f) {
-                    case F2 -> new Pos(SIDE + x, 0);
-                    case F3 -> new Pos(3 * SIDE - 1, x - (2 * SIDE));
-                    case F4 -> new Pos((6 * SIDE) - x - 1, SIDE - 1);
-                    default -> new Pos(2 * SIDE, SIDE - x - 1);
-                };
-            }
-            if (y == SIDE - 1) {
-                //top face
-                if (f == Face.TOP) {
-                    return new Pos(x, y + 1);
-                } else {
-                    return new Pos((6 * SIDE) - x - 1, 2 * SIDE - 1);
-                }
-            }
-            return new Pos(x, y + 1);
-        }
-
-        public Pos left() {
-            Face f = getFace(x, y);
-            if (f == Face.NA) return this;
-
-            if (x == SIDE && f == Face.TOP)
-                return new Pos(y, SIDE);
-            else if (x == 2 * SIDE && f == Face.BOT)
-                return new Pos(SIDE - y, 2 * SIDE - 1);
-
-            int nx = x;
-            if (x == 0) nx = 4 * SIDE;
-            return new Pos(nx - 1, y);
-        }
-
-        public Pos right() {
-            Face f = getFace(x, y);
-            if (f == Face.NA) return this;
-
-            if (x == 2 * SIDE - 1 && f == Face.TOP)
-                return new Pos(3 * SIDE - y, SIDE);
-            else if (x == 3 * SIDE - 1 && f == Face.BOT)
-                return new Pos(2 * SIDE + y, 2 * SIDE - 1);
-
-            int nx = x;
-            if (x == 4 * SIDE - 1) nx = -1;
-            return new Pos(nx + 1, y);
+    private static Face getFace(int x, int y) {
+        if (y < SIDE) {
+            if (x < SIDE) return Face.NA;
+            else if (x < 2 * SIDE) return Face.TOP;
+            else if (x < 3 * SIDE) return Face.BOT;
+            else return Face.NA;
+        } else {
+            if (x < SIDE) return Face.F1;
+            else if (x < 2 * SIDE) return Face.F2;
+            else if (x < 3 * SIDE) return Face.F3;
+            else return Face.F4;
         }
     }
 
@@ -227,112 +119,6 @@ public class GlobeTextureGenerator {
             }
         }
         return matrix;
-    }
-
-
-    private static class Pixel {
-        private TerrainType terrain = TerrainType.WATER;
-        private Biome biome = Biome.TEMPERATE;
-        private boolean shaded = false;
-        private Feature specialFeature = Feature.NORMAL;
-
-        public Pixel(boolean isnull) {
-            if (isnull)
-                this.terrain = TerrainType.NULL;
-        }
-
-        public int getTemp() {
-            if (this.biome == Biome.TEMPERATE) {
-                return this.isShaded() ? 1 : 0;
-            }
-            return this.isShaded() ? 3 : 2;
-
-        }
-
-        public void setLand() {
-            this.terrain = TerrainType.LAND;
-
-        }
-
-        public void setWater() {
-            this.terrain = TerrainType.WATER;
-        }
-
-        public boolean isIceberg() {
-            return this.specialFeature == Feature.ICEBERG;
-        }
-
-        public boolean isMushroom() {
-            return this.specialFeature == Feature.MUSHROOM;
-        }
-
-        public boolean isSunken() {
-            return this.specialFeature == Feature.SUNKEN;
-        }
-
-        public boolean isShaded() {
-            return shaded;
-        }
-
-        public boolean isLand() {
-            return this.terrain == TerrainType.LAND;
-        }
-
-        public boolean isHot() {
-            return this.biome == Biome.HOT;
-        }
-
-        public boolean isTemperate() {
-            return this.biome == Biome.TEMPERATE;
-        }
-
-        public boolean isCold() {
-            return this.biome == Biome.COLD;
-        }
-
-        public boolean isWater() {
-            return this.terrain == TerrainType.WATER;
-        }
-
-        public boolean isNull() {
-            return this.terrain == TerrainType.NULL;
-        }
-
-        public byte getColor() {
-            boolean s = this.isShaded();
-            if (this.isSunken()) return Col.SUNKEN;
-            else if (this.isIceberg()) return Col.ICEBERG;
-            else if (this.isMushroom()) return Col.MUSHROOM;
-            switch (this.terrain) {
-                case LAND:
-                    if (this.isLand()) {
-                        return switch (this.biome) {
-                            case HOT -> s ? Col.HOT_S : Col.HOT;
-                            case COLD -> s ? Col.COLD_S : Col.COLD;
-                            case MUSHROOM -> s ? Col.MUSHROOM_S : Col.MUSHROOM;
-                            default -> s ? Col.GREEN_S : Col.GREEN;
-                        };
-                    }
-                case WATER:
-                    return s ? Col.WATER_S : Col.WATER;
-                default:
-                    return Col.BLACK;
-            }
-        }
-    }
-
-    private static Face getFace(int x, int y) {
-        if (y < SIDE) {
-            if (x < SIDE) return Face.NA;
-            else if (x < 2 * SIDE) return Face.TOP;
-            else if (x < 3 * SIDE) return Face.BOT;
-            else return Face.NA;
-        } else {
-            if (x < SIDE) return Face.F1;
-            else if (x < 2 * SIDE) return Face.F2;
-            else if (x < 3 * SIDE) return Face.F3;
-            else return Face.F4;
-        }
     }
 
     public void applyEffects() {
@@ -446,7 +232,6 @@ public class GlobeTextureGenerator {
         }
     }
 
-
     public void generateHotBiomes() {
         //sides
         int min = 6;
@@ -512,7 +297,6 @@ public class GlobeTextureGenerator {
         }
         return false;
     }
-
 
     public void generateHot() {
         int j = 4 + rand.nextInt(2);
@@ -645,7 +429,6 @@ public class GlobeTextureGenerator {
         }
     }
 
-
     public void generateIce() {
         for (int x = 0; x < pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
@@ -700,7 +483,6 @@ public class GlobeTextureGenerator {
         }
     }
 
-
     public void shadeWater() {
         for (int x = 0; x < pixels.length; x++) {
             for (int y = 0; y < pixels[x].length; y++) {
@@ -753,6 +535,216 @@ public class GlobeTextureGenerator {
         setLand(p.left(), dist - rand.nextInt(10));
         setLand(p.right(), dist - rand.nextInt(10));
         //TODO: apply this fix to other gens
+    }
+
+
+    private enum Biome {
+        TEMPERATE, HOT, COLD, MUSHROOM, MOUNTAIN, MESA
+    }
+
+    private enum Feature {
+        NORMAL, SUNKEN, ICEBERG, MUSHROOM
+    }
+
+    private enum TerrainType {
+        NULL, LAND, WATER
+    }
+
+
+    private enum Face {
+        F1, F2, F3, F4, TOP, BOT, NA
+    }
+
+    private static class Col {
+        public static final byte BLACK = 0;
+        public static final byte WATER = 1;
+        public static final byte WATER_S = 2;
+        public static final byte WATER_D = 3;
+        public static final byte SUNKEN = 4;
+        public static final byte GREEN = 5;
+        public static final byte GREEN_S = 6;
+        public static final byte HOT_S = 7;
+        public static final byte HOT = 8;
+        public static final byte COLD = 9;
+        public static final byte COLD_S = 10;
+        public static final byte ICEBERG = 11;
+        public static final byte MUSHROOM = 12;
+        public static final byte MUSHROOM_S = 13;
+
+
+        public static final byte TAIGA = 14;
+        public static final byte MESA = 15;
+        public static final byte MESA_S = 16;
+        public static final byte MOUNTAIN = 17;
+        public static final byte MOUNTAIN_S = 18;
+    }
+
+    private record Pos(int x, int y) {
+
+        public Pos up() {
+            Face f = getFace(x, y);
+            if (f == Face.NA) return this;
+            //border
+            if (y == SIDE) {
+                return switch (f) {
+                    case F2 -> new Pos(x, y - 1);
+                    case F3 -> new Pos(2 * SIDE - 1, (3 * SIDE) - x - 1);
+                    case F4 -> new Pos((5 * SIDE) - x - 1, 0);
+                    default -> new Pos(SIDE, x);
+                };
+            }
+            if (y == 0) {
+                //top face
+                if (f == Face.TOP) {
+                    return new Pos((5 * SIDE) - x - 1, SIDE);
+                } else {
+                    return new Pos(x - SIDE, 2 * SIDE - 1);
+                }
+            }
+            return new Pos(x, y - 1);
+        }
+
+        private Pos down() {
+            Face f = getFace(x, y);
+            if (f == Face.NA) return this;
+            //border
+            if (y == (2 * SIDE) - 1) {
+                return switch (f) {
+                    case F2 -> new Pos(SIDE + x, 0);
+                    case F3 -> new Pos(3 * SIDE - 1, x - (2 * SIDE));
+                    case F4 -> new Pos((6 * SIDE) - x - 1, SIDE - 1);
+                    default -> new Pos(2 * SIDE, SIDE - x - 1);
+                };
+            }
+            if (y == SIDE - 1) {
+                //top face
+                if (f == Face.TOP) {
+                    return new Pos(x, y + 1);
+                } else {
+                    return new Pos((6 * SIDE) - x - 1, 2 * SIDE - 1);
+                }
+            }
+            return new Pos(x, y + 1);
+        }
+
+        public Pos left() {
+            Face f = getFace(x, y);
+            if (f == Face.NA) return this;
+
+            if (x == SIDE && f == Face.TOP)
+                return new Pos(y, SIDE);
+            else if (x == 2 * SIDE && f == Face.BOT)
+                return new Pos(SIDE - y, 2 * SIDE - 1);
+
+            int nx = x;
+            if (x == 0) nx = 4 * SIDE;
+            return new Pos(nx - 1, y);
+        }
+
+        public Pos right() {
+            Face f = getFace(x, y);
+            if (f == Face.NA) return this;
+
+            if (x == 2 * SIDE - 1 && f == Face.TOP)
+                return new Pos(3 * SIDE - y, SIDE);
+            else if (x == 3 * SIDE - 1 && f == Face.BOT)
+                return new Pos(2 * SIDE + y, 2 * SIDE - 1);
+
+            int nx = x;
+            if (x == 4 * SIDE - 1) nx = -1;
+            return new Pos(nx + 1, y);
+        }
+    }
+
+    private static class Pixel {
+        private TerrainType terrain = TerrainType.WATER;
+        private Biome biome = Biome.TEMPERATE;
+        private boolean shaded = false;
+        private Feature specialFeature = Feature.NORMAL;
+
+        public Pixel(boolean isnull) {
+            if (isnull)
+                this.terrain = TerrainType.NULL;
+        }
+
+        public int getTemp() {
+            if (this.biome == Biome.TEMPERATE) {
+                return this.isShaded() ? 1 : 0;
+            }
+            return this.isShaded() ? 3 : 2;
+
+        }
+
+        public void setLand() {
+            this.terrain = TerrainType.LAND;
+
+        }
+
+        public void setWater() {
+            this.terrain = TerrainType.WATER;
+        }
+
+        public boolean isIceberg() {
+            return this.specialFeature == Feature.ICEBERG;
+        }
+
+        public boolean isMushroom() {
+            return this.specialFeature == Feature.MUSHROOM;
+        }
+
+        public boolean isSunken() {
+            return this.specialFeature == Feature.SUNKEN;
+        }
+
+        public boolean isShaded() {
+            return shaded;
+        }
+
+        public boolean isLand() {
+            return this.terrain == TerrainType.LAND;
+        }
+
+        public boolean isHot() {
+            return this.biome == Biome.HOT;
+        }
+
+        public boolean isTemperate() {
+            return this.biome == Biome.TEMPERATE;
+        }
+
+        public boolean isCold() {
+            return this.biome == Biome.COLD;
+        }
+
+        public boolean isWater() {
+            return this.terrain == TerrainType.WATER;
+        }
+
+        public boolean isNull() {
+            return this.terrain == TerrainType.NULL;
+        }
+
+        public byte getColor() {
+            boolean s = this.isShaded();
+            if (this.isSunken()) return Col.SUNKEN;
+            else if (this.isIceberg()) return Col.ICEBERG;
+            else if (this.isMushroom()) return Col.MUSHROOM;
+            switch (this.terrain) {
+                case LAND:
+                    if (this.isLand()) {
+                        return switch (this.biome) {
+                            case HOT -> s ? Col.HOT_S : Col.HOT;
+                            case COLD -> s ? Col.COLD_S : Col.COLD;
+                            case MUSHROOM -> s ? Col.MUSHROOM_S : Col.MUSHROOM;
+                            default -> s ? Col.GREEN_S : Col.GREEN;
+                        };
+                    }
+                case WATER:
+                    return s ? Col.WATER_S : Col.WATER;
+                default:
+                    return Col.BLACK;
+            }
+        }
     }
 
 }

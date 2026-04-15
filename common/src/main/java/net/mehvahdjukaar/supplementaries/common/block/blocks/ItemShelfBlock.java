@@ -32,12 +32,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class ItemShelfBlock extends WaterBlock implements EntityBlock {
 
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     protected static final VoxelShape SHAPE_NORTH = Block.box(0D, 1.0D, 13.0D, 16.0D, 4.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
     protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
     protected static final VoxelShape SHAPE_EAST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
-
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public ItemShelfBlock(Properties properties) {
         super(properties);

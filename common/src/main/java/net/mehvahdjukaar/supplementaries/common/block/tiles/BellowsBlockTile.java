@@ -54,6 +54,69 @@ public class BellowsBlockTile extends BlockEntity {
         super(ModRegistry.BELLOWS_TILE.get(), pos, state);
     }
 
+    //TODO: optimize this (also for flywheel)
+    public static void tick(Level level, BlockPos pos, BlockState state, BellowsBlockTile tile) {
+        int power = state.getValue(BellowsBlock.POWER);
+        tile.prevHeight = tile.height;
+
+        if (power != 0 && !(tile.startTime == 0 && tile.height != 0)) {
+            long time = level.getGameTime();
+            if (tile.startTime == 0) {
+                tile.startTime = time;
+            }
+
+            float period = tile.getPeriodForPower(power);
+
+            //slope of animation. for particles and pushing entities
+            float arg = (float) Math.PI * 2 * (((time - tile.startTime) / period) % 1);
+            float sin = Mth.sin(arg);
+            float cos = Mth.cos(arg);
+
+            float half = MAX_COMPRESSION / 2f;
+            tile.height = half * cos - half;
+
+            tile.pushAir(level, pos, state, power, time, period, sin);
+
+            //sound
+            boolean blowing = Mth.sin(arg - 0.8f) > 0;
+            if (tile.lastBlowing != blowing) {
+                level.playSound(null, pos,
+                        blowing ? ModSounds.BELLOWS_BLOW.get() : ModSounds.BELLOWS_RETRACT.get(),
+                        SoundSource.BLOCKS, 0.1f,
+                        MthUtils.nextWeighted(level.random, 0.1f) + 0.85f + 0.6f * power / 15f);
+            }
+
+            tile.lastBlowing = blowing;
+
+        } else if (tile.isPressed) {
+            float minH = -MAX_COMPRESSION;
+            tile.height = Math.max(tile.height - 0.01f, minH);
+
+            if (tile.height > minH) {
+                long time = level.getGameTime();
+                //when operated by a mob it behaves like a constant with 7 power
+                int p = 7;
+                float period = tile.getPeriodForPower(p);
+
+                tile.pushAir(level, pos, state, p, time, period, 0.8f);
+            }
+        }
+        //resets counter when powered off
+        else {
+            tile.startTime = 0;
+            if (tile.height < 0) {
+                tile.height = Math.min(tile.height + 0.01f, 0);
+            }
+        }
+        if (tile.prevHeight != 0 && tile.height != 0) {
+            tile.moveCollidedEntities(level);
+        }
+        if (tile.manualPress > 0) {
+            tile.manualPress--;
+            tile.isPressed = true;
+        } else tile.isPressed = false;
+    }
+
     public float getHeight(float partialTicks) {
         return Mth.lerp(partialTicks, this.prevHeight, this.height);
     }
@@ -63,6 +126,8 @@ public class BellowsBlockTile extends BlockEntity {
         this.setChanged();
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
     }
+
+    //TODO: rewrite some of this
 
     private AABB getProgressDeltaAabb(Direction dir) {
         var bb = new AABB(BlockPos.ZERO);
@@ -77,8 +142,6 @@ public class BellowsBlockTile extends BlockEntity {
             case WEST -> bb.setMaxX(max).setMinX(min);
         }).move(worldPosition);
     }
-
-    //TODO: rewrite some of this
 
     //TODO: make this act on player on client side
     private void moveCollidedEntities(Level level) {
@@ -194,10 +257,6 @@ public class BellowsBlockTile extends BlockEntity {
         }
     }
 
-    protected enum AirType {
-        AIR, BUBBLE, SOAP
-    }
-
     @SuppressWarnings("unchecked")
     private <T extends BlockEntity> void tickFurnaces(BlockPos frontPos, BlockState frontState, Level level, T tile) {
         if (tile != null) {
@@ -236,69 +295,6 @@ public class BellowsBlockTile extends BlockEntity {
 
     private float getPeriodForPower(int power) {
         return ((float) CommonConfigs.Redstone.BELLOWS_PERIOD.get()) - (power - 1) * ((float) CommonConfigs.Redstone.BELLOWS_POWER_SCALING.get());
-    }
-
-    //TODO: optimize this (also for flywheel)
-    public static void tick(Level level, BlockPos pos, BlockState state, BellowsBlockTile tile) {
-        int power = state.getValue(BellowsBlock.POWER);
-        tile.prevHeight = tile.height;
-
-        if (power != 0 && !(tile.startTime == 0 && tile.height != 0)) {
-            long time = level.getGameTime();
-            if (tile.startTime == 0) {
-                tile.startTime = time;
-            }
-
-            float period = tile.getPeriodForPower(power);
-
-            //slope of animation. for particles and pushing entities
-            float arg = (float) Math.PI * 2 * (((time - tile.startTime) / period) % 1);
-            float sin = Mth.sin(arg);
-            float cos = Mth.cos(arg);
-
-            float half = MAX_COMPRESSION / 2f;
-            tile.height = half * cos - half;
-
-            tile.pushAir(level, pos, state, power, time, period, sin);
-
-            //sound
-            boolean blowing = Mth.sin(arg - 0.8f) > 0;
-            if (tile.lastBlowing != blowing) {
-                level.playSound(null, pos,
-                        blowing ? ModSounds.BELLOWS_BLOW.get() : ModSounds.BELLOWS_RETRACT.get(),
-                        SoundSource.BLOCKS, 0.1f,
-                        MthUtils.nextWeighted(level.random, 0.1f) + 0.85f + 0.6f * power / 15f);
-            }
-
-            tile.lastBlowing = blowing;
-
-        } else if (tile.isPressed) {
-            float minH = -MAX_COMPRESSION;
-            tile.height = Math.max(tile.height - 0.01f, minH);
-
-            if (tile.height > minH) {
-                long time = level.getGameTime();
-                //when operated by a mob it behaves like a constant with 7 power
-                int p = 7;
-                float period = tile.getPeriodForPower(p);
-
-                tile.pushAir(level, pos, state, p, time, period, 0.8f);
-            }
-        }
-        //resets counter when powered off
-        else {
-            tile.startTime = 0;
-            if (tile.height < 0) {
-                tile.height = Math.min(tile.height + 0.01f, 0);
-            }
-        }
-        if (tile.prevHeight != 0 && tile.height != 0) {
-            tile.moveCollidedEntities(level);
-        }
-        if (tile.manualPress > 0) {
-            tile.manualPress--;
-            tile.isPressed = true;
-        } else tile.isPressed = false;
     }
 
     private void pushAir(Level level, BlockPos pos, BlockState state, int power, long time, float period, float airIntensity) {
@@ -416,5 +412,9 @@ public class BellowsBlockTile extends BlockEntity {
         if (b > 0.8 && this.getBlockState().getValue(BellowsBlock.FACING).getAxis() != Direction.Axis.Y) {
             this.isPressed = true;
         }
+    }
+
+    protected enum AirType {
+        AIR, BUBBLE, SOAP
     }
 }

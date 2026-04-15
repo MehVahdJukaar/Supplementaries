@@ -16,11 +16,11 @@ import net.minecraft.sounds.SoundEvents;
 
 
 public abstract class BlackboardButton implements GuiEventListener, Renderable, NarratableEntry {
-    protected final BlackBoardScreen parent;
-    private final ResourceLocation outlineTexture;
     public final int size;
     public final int x;
     public final int y;
+    protected final BlackBoardScreen parent;
+    private final ResourceLocation outlineTexture;
     protected boolean shouldDrawOverlay;
     protected byte color;
     protected boolean focused;

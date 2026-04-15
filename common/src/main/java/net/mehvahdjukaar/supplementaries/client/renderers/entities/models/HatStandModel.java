@@ -34,17 +34,6 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
         this.dummyHead.visible = false;
     }
 
-    @Override
-    public ModelPart getRoot() {
-        return root;
-    }
-
-    @Override
-    public ModelPart getHead() {
-        return head;
-    }
-
-
     public static LayerDefinition createMesh() {
         int f = 20;
         MeshDefinition meshDefinition = HumanoidModel.createMesh(CubeDeformation.NONE, f);
@@ -80,6 +69,16 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
     public static LayerDefinition createArmorMesh() {
         MeshDefinition meshDefinition = HumanoidModel.createMesh(new CubeDeformation(1), 0);
         return LayerDefinition.create(meshDefinition, 64, 32);
+    }
+
+    @Override
+    public ModelPart getRoot() {
+        return root;
+    }
+
+    @Override
+    public ModelPart getHead() {
+        return head;
     }
 
     @Override

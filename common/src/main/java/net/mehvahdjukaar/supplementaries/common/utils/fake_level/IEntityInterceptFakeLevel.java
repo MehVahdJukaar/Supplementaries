@@ -11,15 +11,15 @@ import org.jetbrains.annotations.Nullable;
 
 public interface IEntityInterceptFakeLevel {
 
-    void setup();
-
-    @Nullable
-    Entity getIntercepted();
-
     static <L extends Level & IEntityInterceptFakeLevel> L get(Level level) {
         return (L) FakeLevelManager.get("projectile_test_level", level, ClientSide::new,
                 ServerSide::new);
     }
+
+    void setup();
+
+    @Nullable
+    Entity getIntercepted();
 
     Level cast();
 

@@ -50,10 +50,23 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
             Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
 
     private static final Set<Consumer<IFaucetEvent>> SERVER_LISTENERS = new HashSet<>();
-    private static final SidedInstance<FaucetBehaviorsManager> INSTANCES = SidedInstance.of(FaucetBehaviorsManager::new);
-
+    private final List<FaucetSource.BlState> blockInteractions = new ArrayList<>();
     public static FaucetBehaviorsManager getInstance(HolderLookup.Provider ra) {
         return INSTANCES.get(ra);
+    }    private static final SidedInstance<FaucetBehaviorsManager> INSTANCES = SidedInstance.of(FaucetBehaviorsManager::new);
+    private final List<FaucetSource.Tile> tileInteraction = new ArrayList<>();
+    private final List<FaucetSource.Fluid> sourceFluidInteractions = new ArrayList<>();
+    private final List<FaucetItemSource> itemInteractions = new ArrayList<>();
+    private final List<FaucetTarget.BlState> targetBlockInteractions = new ArrayList<>();
+    private final List<FaucetTarget.Tile> targetTileInteractions = new ArrayList<>();
+    private final List<FaucetTarget.Fluid> targetFluidInteractions = new ArrayList<>();
+    private final HolderLookup.Provider registryAccess;
+    public FaucetBehaviorsManager(HolderLookup.Provider ra) {
+        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
+                "faucet_interactions");
+        this.registryAccess = ra;
+
+        INSTANCES.set(ra, this);
     }
 
     public static FaucetBehaviorsManager getInstance(@NotNull Level level) {
@@ -61,31 +74,16 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         return getInstance(level.registryAccess());
     }
 
-    public interface IFaucetEvent {
-        void registerInteraction(Object interaction);
-    }
-
     synchronized public static void addRegisterFaucetInteractions(Consumer<IFaucetEvent> listener) {
         SERVER_LISTENERS.add(listener);
     }
 
-    private final List<FaucetSource.BlState> blockInteractions = new ArrayList<>();
-    private final List<FaucetSource.Tile> tileInteraction = new ArrayList<>();
-    private final List<FaucetSource.Fluid> sourceFluidInteractions = new ArrayList<>();
-    private final List<FaucetItemSource> itemInteractions = new ArrayList<>();
-    private final List<FaucetTarget.BlState> targetBlockInteractions = new ArrayList<>();
-    private final List<FaucetTarget.Tile> targetTileInteractions = new ArrayList<>();
-    private final List<FaucetTarget.Fluid> targetFluidInteractions = new ArrayList<>();
+    @Deprecated(forRemoval = true)
+    public static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, SoftFluid softFluid, @Nullable CompoundTag tag) {
+    }
 
-
-    private final HolderLookup.Provider registryAccess;
-
-    public FaucetBehaviorsManager(HolderLookup.Provider ra) {
-        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
-                "faucet_interactions");
-        this.registryAccess = ra;
-
-        INSTANCES.set(ra, this);
+    public interface IFaucetEvent {
+        void registerInteraction(Object interaction);
     }
 
     public Iterable<FaucetSource.BlState> getBlockInteractions() {
@@ -242,9 +240,8 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
             throw new UnsupportedOperationException("Unsupported faucet interaction class: " + interaction.getClass().getSimpleName());
     }
 
-    @Deprecated(forRemoval = true)
-    public static void prepareToTransferBottle(SoftFluidTank tempFluidHolder, SoftFluid softFluid, @Nullable CompoundTag tag) {
-    }
+
+
 
 }
 

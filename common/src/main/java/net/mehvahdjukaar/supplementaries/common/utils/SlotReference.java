@@ -23,13 +23,22 @@ import org.jetbrains.annotations.NotNull;
 
 public interface SlotReference {
 
-    default Item getItem(LivingEntity player) {
-        return this.get(player).getItem();
-    }
-
-    ItemStack get(LivingEntity player);
-
     Empty EMPTY = new Empty();
+    ResourceKey<Registry<StreamCodec<ByteBuf, SlotReference>>> TYPE_REGISTRY_KEY =
+            ResourceKey.createRegistryKey(Supplementaries.res("slot_reference_type"));
+    @SuppressWarnings("all")
+    Registry<StreamCodec<ByteBuf, SlotReference>> TYPE_REGISTRY = Util.make(() -> {
+        var reg = RegHelper.registerRegistry(TYPE_REGISTRY_KEY, true);
+        RegHelper.register(Supplementaries.res("hand"), () -> (StreamCodec) Hand.CODEC, TYPE_REGISTRY_KEY);
+        RegHelper.register(Supplementaries.res("inv"), () -> (StreamCodec) Inv.CODEC, TYPE_REGISTRY_KEY);
+        RegHelper.register(Supplementaries.res("empty"), () -> (StreamCodec) Empty.CODEC, TYPE_REGISTRY_KEY);
+        RegHelper.register(Supplementaries.res("eq_slot"), () -> (StreamCodec) EqSlot.CODEC, TYPE_REGISTRY_KEY);
+        RegHelper.register(Supplementaries.res("quiver"), () -> (StreamCodec) Quiver.CODEC, TYPE_REGISTRY_KEY);
+        return reg;
+    });
+    @SuppressWarnings("all")
+    StreamCodec<RegistryFriendlyByteBuf, SlotReference> STREAM_CODEC = ByteBufCodecs.registry(TYPE_REGISTRY_KEY)
+            .dispatch(o -> (StreamCodec) o.getCodec(), c -> c);
 
     static SlotReference hand(InteractionHand pUsedHand) {
         return new Hand(pUsedHand);
@@ -47,6 +56,11 @@ public interface SlotReference {
         return Quiver.INSTANCE;
     }
 
+    default Item getItem(LivingEntity player) {
+        return this.get(player).getItem();
+    }
+
+    ItemStack get(LivingEntity player);
 
     default boolean isEmpty() {
         return this == EMPTY;
@@ -132,25 +146,6 @@ public interface SlotReference {
             return CODEC;
         }
     }
-
-    ResourceKey<Registry<StreamCodec<ByteBuf, SlotReference>>> TYPE_REGISTRY_KEY =
-            ResourceKey.createRegistryKey(Supplementaries.res("slot_reference_type"));
-
-    @SuppressWarnings("all")
-    Registry<StreamCodec<ByteBuf, SlotReference>> TYPE_REGISTRY = Util.make(() -> {
-        var reg = RegHelper.registerRegistry(TYPE_REGISTRY_KEY, true);
-        RegHelper.register(Supplementaries.res("hand"), () -> (StreamCodec) Hand.CODEC, TYPE_REGISTRY_KEY);
-        RegHelper.register(Supplementaries.res("inv"), () -> (StreamCodec) Inv.CODEC, TYPE_REGISTRY_KEY);
-        RegHelper.register(Supplementaries.res("empty"), () -> (StreamCodec) Empty.CODEC, TYPE_REGISTRY_KEY);
-        RegHelper.register(Supplementaries.res("eq_slot"), () -> (StreamCodec) EqSlot.CODEC, TYPE_REGISTRY_KEY);
-        RegHelper.register(Supplementaries.res("quiver"), () -> (StreamCodec) Quiver.CODEC, TYPE_REGISTRY_KEY);
-        return reg;
-    });
-
-
-    @SuppressWarnings("all")
-    StreamCodec<RegistryFriendlyByteBuf, SlotReference> STREAM_CODEC = ByteBufCodecs.registry(TYPE_REGISTRY_KEY)
-            .dispatch(o -> (StreamCodec) o.getCodec(), c -> c);
 
 
 }

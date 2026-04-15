@@ -53,11 +53,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
-    protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 15D, 14);
-
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty ROTATION = ModBlockProperties.ROTATION_4;
+    protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 15D, 14);
 
     public GlobeBlock(Properties properties) {
         super(properties);

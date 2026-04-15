@@ -12,9 +12,6 @@ import java.util.function.Supplier;
 public class ModRecipes {
 
 
-    public static void init() {
-    }
-
     //recipes
     public static final Supplier<RecipeSerializer<SusRecipe>> SUS_CRAFTING = reg(
             "sus_crafting", SusRecipe.Serializer::new);
@@ -42,6 +39,8 @@ public class ModRecipes {
             "item_lore", ItemLoreRecipe.Serializer::new);
     public static final Supplier<RecipeSerializer<SafeRecipe>> SAFE = reg("safe", SafeRecipe.Serializer::new);
 
+    public static void init() {
+    }
 
     private static <T extends CraftingRecipe> Supplier<RecipeSerializer<T>> reg(String name, SimpleCraftingRecipeSerializer.Factory<T> factory) {
         return RegHelper.registerSpecialRecipe(Supplementaries.res(name), factory);

@@ -18,9 +18,29 @@ public interface IKeyLockable {
 
     int MAX_ITEM_NAME_LEN = 50;
 
-    void setPassword(String password);
+    static KeyLockableTile.KeyStatus getKeyStatus(ItemStack key, String password) {
+        String correct = getKeyPassword(key);
+        if (correct != null) {
+            if (correct.equals(password)) return KeyLockableTile.KeyStatus.CORRECT_KEY;
+            else return KeyLockableTile.KeyStatus.INCORRECT_KEY;
+        }
+        return KeyLockableTile.KeyStatus.NO_KEY;
+    }
+
+    @Nullable
+    static String getKeyPassword(ItemStack key) {
+        if (key.getItem() instanceof KeyItem k) {
+            return k.getPassword(key);
+        } else if (key.is(ModTags.KEYS)) {
+            //default get name behavior
+            return ModRegistry.KEY_ITEM.get().getPassword(key);
+        }
+        return null;
+    }
 
     String getPassword();
+
+    void setPassword(String password);
 
     void clearPassword();
 
@@ -30,7 +50,6 @@ public interface IKeyLockable {
         player.level().playSound(null, pos,
                 SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.5F, 1.5F);
     }
-
 
     default boolean shouldShowPassword() {
         String password = this.getPassword();
@@ -53,27 +72,6 @@ public interface IKeyLockable {
 
     default KeyLockableTile.KeyStatus getKeyInInventoryStatus(Player player) {
         return ItemsUtil.getPlayerKeyStatus(player, this.getPassword());
-    }
-
-
-    static KeyLockableTile.KeyStatus getKeyStatus(ItemStack key, String password) {
-        String correct = getKeyPassword(key);
-        if (correct != null) {
-            if (correct.equals(password)) return KeyLockableTile.KeyStatus.CORRECT_KEY;
-            else return KeyLockableTile.KeyStatus.INCORRECT_KEY;
-        }
-        return KeyLockableTile.KeyStatus.NO_KEY;
-    }
-
-    @Nullable
-    static String getKeyPassword(ItemStack key) {
-        if (key.getItem() instanceof KeyItem k) {
-            return k.getPassword(key);
-        } else if (key.is(ModTags.KEYS)) {
-            //default get name behavior
-            return ModRegistry.KEY_ITEM.get().getPassword(key);
-        }
-        return null;
     }
 
 

@@ -24,9 +24,9 @@ public class ClientBoundParticlePacket implements Message {
     public final Kind type;
     @Nullable
     public final Vec3 pos;
-    private final int @NotNull [] extraData;
     @Nullable
     public final Vec3 dir;
+    private final int @NotNull [] extraData;
 
     public ClientBoundParticlePacket(RegistryFriendlyByteBuf buffer) {
         this.type = buffer.readEnum(Kind.class);

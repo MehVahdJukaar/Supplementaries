@@ -24,14 +24,18 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 
 public class BarnaclesBlock extends MultifaceBlock implements BonemealableBlock, SimpleWaterloggedBlock {
-    public static final MapCodec<BarnaclesBlock> CODEC = simpleCodec(BarnaclesBlock::new);
     private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-
+    public static final MapCodec<BarnaclesBlock> CODEC = simpleCodec(BarnaclesBlock::new);
     private final MultifaceSpreader spreader = new MultifaceSpreader(new UnderwaterSpreadConfig(this));
 
     public BarnaclesBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
+    }
+
+    private static BlockState removeFace(BlockState state, BooleanProperty faceProp) {
+        BlockState blockState = state.setValue(faceProp, false);
+        return hasAnyFace(blockState) ? blockState : Blocks.AIR.defaultBlockState();
     }
 
     //can attach to stuff
@@ -75,11 +79,6 @@ public class BarnaclesBlock extends MultifaceBlock implements BonemealableBlock,
         } else {
             return hasFace(state, direction) && !canBeAttachTo(level, direction, neighborPos, neighborState) ? removeFace(state, getFaceProperty(direction)) : state;
         }
-    }
-
-    private static BlockState removeFace(BlockState state, BooleanProperty faceProp) {
-        BlockState blockState = state.setValue(faceProp, false);
-        return hasAnyFace(blockState) ? blockState : Blocks.AIR.defaultBlockState();
     }
 
     @Override

@@ -57,12 +57,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushable {
+    public static final IntegerProperty LAYERS = BlockStateProperties.LAYERS;
     public static final MapCodec<AshLayerBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
             ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter((coloredFallingBlock) -> coloredFallingBlock.dustColor),
             propertiesCodec()).apply(instance, AshLayerBlock::new));
-
+    //thanks mojang
+    public static final ThreadLocal<Boolean> RECURSION_HACK = ThreadLocal.withInitial(() -> false);
+    //TODO: add this
+    public static final int GRASS_SPREAD_WIDTH = 3;
     private static final int MAX_LAYERS = 8;
-    public static final IntegerProperty LAYERS = BlockStateProperties.LAYERS;
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[MAX_LAYERS + 1];
 
     static {
@@ -73,6 +76,67 @@ public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushab
     public AshLayerBlock(ColorRGBA color, Properties properties) {
         super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(LAYERS, 1));
+    }
+
+    @EventCalled
+    public static void tryConvertToAsh(IFireConsumeBlockEvent event) {
+        double chance = CommonConfigs.Building.ASH_BURN_CHANCE.get();
+        BlockState state = event.getState();
+
+        //no ash from non-solid blocks
+        if (chance != 0 && state.isSolid()) {
+            LevelAccessor level = event.getLevel();
+            BlockPos pos = event.getPos();
+
+            //IW stuff
+            if (event.getFinalState() != null) return;
+
+            Item i = state.getBlock().asItem();
+            int count = PlatHelper.getBurnTime(i.getDefaultInstance()) / 100;
+            if (i.builtInRegistryHolder().is(ItemTags.LOGS_THAT_BURN)) count += 2;
+
+            if (count > 0) {
+                int layers = Mth.clamp(level.getRandom().nextInt(count), 1, 8);
+                if (layers != 0) {
+                    if (level instanceof ServerLevel sl) {
+                        sl.sendParticles(ModParticles.ASH_PARTICLE.get(), pos.getX() + 0.5D,
+                                pos.getY() + 0.5D, pos.getZ() + 0.5D, 10 + layers,
+                                0.5D, 0.5D, 0.5D, 0.0D);
+                    }
+                    event.setFinalState(ModRegistry.ASH_BLOCK.get().defaultBlockState()
+                            .setValue(AshLayerBlock.LAYERS, layers));
+                }
+            }
+        }
+    }
+
+    //TODO: bonemeal thing
+    public static boolean applyBonemeal(ItemStack stack, Level level, BlockPos pos, Player player) {
+        BlockState blockstate = level.getBlockState(pos);
+        if (blockstate.getBlock() instanceof BonemealableBlock bonemealableblock) {
+            if (bonemealableblock.isValidBonemealTarget(level, pos, blockstate)) {
+
+                if (level instanceof ServerLevel serverLevel) {
+                    if (bonemealableblock.isBonemealSuccess(level, level.random, pos, blockstate)) {
+                        bonemealableblock.performBonemeal(serverLevel, level.random, pos, blockstate);
+                    }
+
+                    stack.shrink(1);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean updateBasaltBelow(BlockPos selfPos, Level level) {
+        if (level.getBlockState(selfPos.below()) == Blocks.BASALT.defaultBlockState()) {
+            level.setBlock(selfPos.below(), ModRegistry.ASHEN_BASALT.get().defaultBlockState(), 2);
+            return true;
+        }
+        return false;
     }
 
     @SuppressWarnings("all")
@@ -253,9 +317,6 @@ public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushab
         else level.removeBlock(pos, false);
     }
 
-    //thanks mojang
-    public static final ThreadLocal<Boolean> RECURSION_HACK = ThreadLocal.withInitial(() -> false);
-
     @Override
     public boolean canBeReplaced(BlockState pState, BlockPlaceContext useContext) {
         int i = pState.getValue(LAYERS);
@@ -277,38 +338,6 @@ public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushab
     @Override
     public boolean canBeReplaced(BlockState state, Fluid fluid) {
         return true;
-    }
-
-    @EventCalled
-    public static void tryConvertToAsh(IFireConsumeBlockEvent event) {
-        double chance = CommonConfigs.Building.ASH_BURN_CHANCE.get();
-        BlockState state = event.getState();
-
-        //no ash from non-solid blocks
-        if (chance != 0 && state.isSolid()) {
-            LevelAccessor level = event.getLevel();
-            BlockPos pos = event.getPos();
-
-            //IW stuff
-            if (event.getFinalState() != null) return;
-
-            Item i = state.getBlock().asItem();
-            int count = PlatHelper.getBurnTime(i.getDefaultInstance()) / 100;
-            if (i.builtInRegistryHolder().is(ItemTags.LOGS_THAT_BURN)) count += 2;
-
-            if (count > 0) {
-                int layers = Mth.clamp(level.getRandom().nextInt(count), 1, 8);
-                if (layers != 0) {
-                    if (level instanceof ServerLevel sl) {
-                        sl.sendParticles(ModParticles.ASH_PARTICLE.get(), pos.getX() + 0.5D,
-                                pos.getY() + 0.5D, pos.getZ() + 0.5D, 10 + layers,
-                                0.5D, 0.5D, 0.5D, 0.0D);
-                    }
-                    event.setFinalState(ModRegistry.ASH_BLOCK.get().defaultBlockState()
-                            .setValue(AshLayerBlock.LAYERS, layers));
-                }
-            }
-        }
     }
 
     private void addParticle(Entity entity, BlockPos pos, Level level, int layers, float upSpeed) {
@@ -344,51 +373,19 @@ public class AshLayerBlock extends ColoredFallingBlock implements ISimpleBrushab
         }
     }
 
-    //TODO: bonemeal thing
-    public static boolean applyBonemeal(ItemStack stack, Level level, BlockPos pos, Player player) {
-        BlockState blockstate = level.getBlockState(pos);
-        if (blockstate.getBlock() instanceof BonemealableBlock bonemealableblock) {
-            if (bonemealableblock.isValidBonemealTarget(level, pos, blockstate)) {
-
-                if (level instanceof ServerLevel serverLevel) {
-                    if (bonemealableblock.isBonemealSuccess(level, level.random, pos, blockstate)) {
-                        bonemealableblock.performBonemeal(serverLevel, level.random, pos, blockstate);
-                    }
-
-                    stack.shrink(1);
-                }
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public static boolean updateBasaltBelow(BlockPos selfPos, Level level) {
-        if (level.getBlockState(selfPos.below()) == Blocks.BASALT.defaultBlockState()) {
-            level.setBlock(selfPos.below(), ModRegistry.ASHEN_BASALT.get().defaultBlockState(), 2);
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @org.jetbrains.annotations.Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
         updateBasaltBelow(pos, level);
     }
 
+    //TODO: ash pahtfinding
+
     @Override
     public void onLand(Level level, BlockPos pos, BlockState state, BlockState replaceableState, FallingBlockEntity fallingBlock) {
         super.onLand(level, pos, state, replaceableState, fallingBlock);
         updateBasaltBelow(pos, level);
     }
-
-    //TODO: ash pahtfinding
-
-    //TODO: add this
-    public static final int GRASS_SPREAD_WIDTH = 3;
     /*
     public void performBonemeal(ServerLevel level, Random random, BlockPos pos, BlockState state) {
         BlockPos blockpos = pos.above();

@@ -19,15 +19,6 @@ import static net.mehvahdjukaar.supplementaries.reg.RegUtils.regItem;
 
 public class InfernalExpCompat {
 
-    public static void init() {
-        ModRegistry.SCONCES.add(SCONCE_ITEM_GLOW);
-    }
-
-    public static void setupClient() {
-        ClientHelper.registerRenderType(SCONCE_GLOW.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(SCONCE_WALL_GLOW.get(), RenderType.cutout());
-    }
-
     //glow
     public static final Supplier<Block> SCONCE_GLOW = regBlock(SCONCE_NAME_GLOW, () -> new SconceBlock(
             BlockBehaviour.Properties.ofFullCopy(ModRegistry.SCONCE.get()), 13,
@@ -38,4 +29,13 @@ public class InfernalExpCompat {
             CompatObjects.GLOW_FLAME));
     public static final Supplier<Item> SCONCE_ITEM_GLOW = regItem(SCONCE_NAME_GLOW, () -> new StandingAndWallBlockItem(
             SCONCE_GLOW.get(), SCONCE_WALL_GLOW.get(), new Item.Properties(), Direction.DOWN));
+
+    public static void init() {
+        ModRegistry.SCONCES.add(SCONCE_ITEM_GLOW);
+    }
+
+    public static void setupClient() {
+        ClientHelper.registerRenderType(SCONCE_GLOW.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(SCONCE_WALL_GLOW.get(), RenderType.cutout());
+    }
 }

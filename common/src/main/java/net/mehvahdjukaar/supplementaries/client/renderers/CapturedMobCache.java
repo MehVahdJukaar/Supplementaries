@@ -25,13 +25,12 @@ public class CapturedMobCache {
                     return null;
                 }
             });
+    private static UUID crystalID = UUID.randomUUID();
+    private static boolean updateCrystal = false;
 
     private static void addToCache(Entity e) {
         if (e != null) MOB_CACHE.put(e.getUUID(), e);
     }
-
-    private static UUID crystalID = UUID.randomUUID();
-    private static boolean updateCrystal = false;
 
     @Nullable
     public static Entity getOrCreateCachedMob(@NotNull Level level, UUID id, CompoundTag tag) {

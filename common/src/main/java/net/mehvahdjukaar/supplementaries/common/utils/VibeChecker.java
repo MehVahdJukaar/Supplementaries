@@ -16,11 +16,11 @@ import net.minecraft.world.phys.Vec3;
 
 public class VibeChecker {
 
+    private static boolean checkedOnce = false;
+
     @ExpectPlatform
     public static void checkVibe() {
     }
-
-    private static boolean checkedOnce = false;
 
     public static void checkVibe(ServerPlayer player) {
 

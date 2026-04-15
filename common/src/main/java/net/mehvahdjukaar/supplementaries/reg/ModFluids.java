@@ -32,19 +32,12 @@ import java.util.function.Supplier;
 
 public class ModFluids {
 
-    public static void init() {
-    }
-
     public static final int LUMISENE_MAX_LAYERS = 16;
-
     public static final int LUMISENE_FAKE_LIGHT_EMISSION = 11;// quad emissivity and actual light value for the block. Lumisene does not propagate light (like magma blocks)
-
-
     public static final Supplier<FiniteFluid> LUMISENE_FLUID;
     public static final RegSupplier<FlammableLiquidBlock> LUMISENE_BLOCK;
     public static final Supplier<BucketItem> LUMISENE_BUCKET;
     public static final Supplier<Item> LUMISENE_BOTTLE;
-
     public static final HolderRef<SoftFluid> LUMISENE_SOFT_FLUID = HolderRef.of(
             Supplementaries.res(ModConstants.LUMISENE_NAME), SoftFluidRegistry.KEY);
 
@@ -80,6 +73,9 @@ public class ModFluids {
                                 .effect(new MobEffectInstance(ModRegistry.FLAMMABLE, CommonConfigs.Functional.FLAMMABLE_DURATION.get(), 0), 1)
                                 .build())
                 ));
+    }
+
+    public static void init() {
     }
 
     @ExpectPlatform

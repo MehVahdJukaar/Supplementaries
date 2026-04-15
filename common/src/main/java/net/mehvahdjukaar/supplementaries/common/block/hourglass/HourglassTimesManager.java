@@ -28,7 +28,18 @@ import java.util.*;
 //make a data map?
 public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
 
+    private final Map<Item, HourglassTimeData> dustsMap = new Object2ObjectOpenHashMap<>();
     private static final SidedInstance<HourglassTimesManager> INSTANCES = SidedInstance.of(HourglassTimesManager::new);
+    private final Set<HourglassTimeData> dusts = new HashSet<>();
+    private final HolderLookup.Provider registryAccess;
+
+    public HourglassTimesManager(HolderLookup.Provider registryAccess) {
+        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
+                "hourglass_dusts");
+        this.registryAccess = registryAccess;
+
+        INSTANCES.set(registryAccess, this);
+    }
 
     public static HourglassTimesManager getInstance(HolderLookup.Provider ra) {
         return INSTANCES.get(ra);
@@ -39,16 +50,9 @@ public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
         return getInstance(level.registryAccess());
     }
 
-    private final Map<Item, HourglassTimeData> dustsMap = new Object2ObjectOpenHashMap<>();
-    private final Set<HourglassTimeData> dusts = new HashSet<>();
-    private final HolderLookup.Provider registryAccess;
-
-    public HourglassTimesManager(HolderLookup.Provider registryAccess) {
-        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
-                "hourglass_dusts");
-        this.registryAccess = registryAccess;
-
-        INSTANCES.set(registryAccess, this);
+    public static void sendDataToClient(ServerPlayer player) {
+        HourglassTimesManager instance = getInstance(player.level());
+        NetworkHelper.sendToClientPlayer(player, new ClientBoundSendHourglassDataPacket(instance.dusts));
     }
 
     @Override
@@ -90,9 +94,5 @@ public class HourglassTimesManager extends SimpleJsonResourceReloadListener {
         return dustsMap.getOrDefault(item, HourglassTimeData.EMPTY);
     }
 
-    public static void sendDataToClient(ServerPlayer player) {
-        HourglassTimesManager instance = getInstance(player.level());
-        NetworkHelper.sendToClientPlayer(player, new ClientBoundSendHourglassDataPacket(instance.dusts));
-    }
 
 }

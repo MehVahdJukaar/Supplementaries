@@ -51,6 +51,10 @@ public class FirePitBlock extends LightUpWaterBlock {
                 .setValue(HANGING, false));
     }
 
+    private static Direction getDir(BlockState state) {
+        return state.getValue(HANGING) ? Direction.DOWN : Direction.UP;
+    }
+
     @ForgeOverride
     public PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
         if (isLitUp(state, level, pos)) return PathType.DAMAGE_FIRE;
@@ -62,7 +66,6 @@ public class FirePitBlock extends LightUpWaterBlock {
         if (isLitUp(state, level, pos)) return PathType.DAMAGE_FIRE;
         else return null;
     }
-
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
@@ -99,10 +102,6 @@ public class FirePitBlock extends LightUpWaterBlock {
             stateIn = stateIn.setValue(HANGING, IRopeConnection.isSupportingCeiling(currentPos.above(), level));
         }
         return getDir(stateIn).getOpposite() == facing && !stateIn.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, level, currentPos, facingPos);
-    }
-
-    private static Direction getDir(BlockState state) {
-        return state.getValue(HANGING) ? Direction.DOWN : Direction.UP;
     }
 
     @Override

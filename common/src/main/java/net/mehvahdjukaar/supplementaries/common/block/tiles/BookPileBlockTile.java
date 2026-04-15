@@ -40,12 +40,12 @@ import java.util.Random;
 
 public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDataProvider {
 
+    public static final ModelDataKey<BooksList> BOOKS_KEY = ModBlockProperties.BOOKS_KEY;
+    private static final RandomSource rand = RandomSource.create();
     public final boolean horizontal;
-    private float enchantPower = 0;
-
     //client only
     public final BooksList booksVisuals = new BooksList();
-    public static final ModelDataKey<BooksList> BOOKS_KEY = ModBlockProperties.BOOKS_KEY;
+    private float enchantPower = 0;
 
     public BookPileBlockTile(BlockPos pos, BlockState state) {
         this(pos, state, false);
@@ -60,8 +60,6 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     public void addExtraModelData(ExtraModelData.Builder builder) {
         builder.with(BOOKS_KEY, booksVisuals);
     }
-
-    private static final RandomSource rand = RandomSource.create();
 
     private void displayRandomColoredBooks(int i, HolderLookup.Provider provider) {
         for (int j = 0; j < i; j++) {
@@ -172,6 +170,21 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         return enchantPower;
     }
 
+    @Override
+    public boolean canTakeItem(Container container, int i, ItemStack itemStack) {
+        return false;
+    }
+
+    @Override
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public boolean canOpen(Player player) {
+        return false;
+    }
+
     //only client
     public static class BookVisualData {
         private final float yAngle;
@@ -255,22 +268,6 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         public int size() {
             return books.size();
         }
-    }
-
-
-    @Override
-    public boolean canTakeItem(Container container, int i, ItemStack itemStack) {
-        return false;
-    }
-
-    @Override
-    public boolean canPlaceItem(int index, ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public boolean canOpen(Player player) {
-        return false;
     }
 
 }

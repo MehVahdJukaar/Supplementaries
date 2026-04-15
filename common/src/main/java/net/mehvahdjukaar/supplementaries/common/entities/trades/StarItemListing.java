@@ -32,6 +32,8 @@ public record StarItemListing(ItemCost emeralds, Optional<ItemCost> priceSeconda
             ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("price_multiplier", 0.05f).forGetter(StarItemListing::priceMult),
             Codec.intRange(1, 5).optionalFieldOf("level", 1).forGetter(StarItemListing::level)
     ).apply(instance, StarItemListing::createDefault));
+    private static final DyeColor[] VIBRANT_COLORS = new DyeColor[]{DyeColor.WHITE, DyeColor.ORANGE, DyeColor.MAGENTA, DyeColor.LIGHT_BLUE,
+            DyeColor.YELLOW, DyeColor.LIME, DyeColor.PINK, DyeColor.CYAN, DyeColor.PURPLE, DyeColor.BLUE, DyeColor.GREEN, DyeColor.RED};
 
     public static StarItemListing createDefault(ItemCost price, Optional<ItemCost> price2, int rockets,
                                                 int maxTrades, Optional<Integer> xp, float priceMult,
@@ -39,27 +41,6 @@ public record StarItemListing(ItemCost emeralds, Optional<ItemCost> priceSeconda
         return new StarItemListing(price, price2, rockets, maxTrades, xp.orElse(ModItemListing.defaultXp(false, level)),
                 priceMult, level);
     }
-
-    @Override
-    public MerchantOffer getOffer(Entity entity, RandomSource random) {
-        ItemStack star = new ItemStack(Items.FIREWORK_STAR, stars);
-        star.set(DataComponents.FIREWORK_EXPLOSION, createRandomFireworkStar(random, List.of()));
-        return new MerchantOffer(emeralds, priceSecondary, star, maxTrades, xp, priceMult);
-    }
-
-    @Override
-    public int getLevel() {
-        return level;
-    }
-
-    @Override
-    public MapCodec<? extends ModItemListing> getCodec() {
-        return CODEC;
-    }
-
-
-    private static final DyeColor[] VIBRANT_COLORS = new DyeColor[]{DyeColor.WHITE, DyeColor.ORANGE, DyeColor.MAGENTA, DyeColor.LIGHT_BLUE,
-            DyeColor.YELLOW, DyeColor.LIME, DyeColor.PINK, DyeColor.CYAN, DyeColor.PURPLE, DyeColor.BLUE, DyeColor.GREEN, DyeColor.RED};
 
     public static FireworkExplosion createRandomFireworkStar(RandomSource random, List<FireworkExplosion.Shape> usedShapes) {
         ArrayList<FireworkExplosion.Shape> possible = new ArrayList<>(List.of(FireworkExplosion.Shape.values()));
@@ -88,6 +69,23 @@ public record StarItemListing(ItemCost emeralds, Optional<ItemCost> priceSeconda
             } while (random.nextFloat() < 0.42f && colorCount < 9);
         }
         return new FireworkExplosion(shape, colors, fadeColors, trail, twinkle);
+    }
+
+    @Override
+    public MerchantOffer getOffer(Entity entity, RandomSource random) {
+        ItemStack star = new ItemStack(Items.FIREWORK_STAR, stars);
+        star.set(DataComponents.FIREWORK_EXPLOSION, createRandomFireworkStar(random, List.of()));
+        return new MerchantOffer(emeralds, priceSecondary, star, maxTrades, xp, priceMult);
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
+    }
+
+    @Override
+    public MapCodec<? extends ModItemListing> getCodec() {
+        return CODEC;
     }
 
 }

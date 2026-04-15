@@ -64,10 +64,6 @@ public class StructureLocator {
                 stopSearchWhenFound);
     }
 
-
-    private record StructureAndPlacement(Holder<Structure> structure, RandomSpreadStructurePlacement placement) {
-    }
-
     public static List<LocatedStructure> findNearestStructures(
             ServerLevel level, HolderSet<Structure> targetStructureSet, BlockPos searchCenter,
             int maximumChunkSearchRadius, boolean findNewlyGeneratedOnly, int requiredStructureCount,
@@ -263,7 +259,6 @@ public class StructureLocator {
         candidatePosThisIteration.clear();
     }
 
-
     // Gets all structures of given types that are located at a specific chunk position
     @Nullable
     private static LocatedStructure getStructureThatWillSpawnAt(
@@ -308,7 +303,6 @@ public class StructureLocator {
         return foundStructures;
     }
 
-
     // Used for map items to find a random structure
     @Nullable
     public BlockPos findRandomStructure(TagKey<Structure> structureTag, BlockPos searchCenter,
@@ -333,6 +327,9 @@ public class StructureLocator {
                 return foundPair != null ? foundPair.getFirst() : null;
             }
         }
+    }
+
+    private record StructureAndPlacement(Holder<Structure> structure, RandomSpreadStructurePlacement placement) {
     }
 
 }

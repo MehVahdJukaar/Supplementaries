@@ -19,8 +19,8 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
     private final ItemContainerContents contents;
     private final int[] dimensions;
     private final int size;
-    private boolean locked;
     protected ChestSearchingModule module = Quark.ZETA.modules.get(ChestSearchingModule.class);
+    private boolean locked;
 
     public InventoryTooltipComponent(InventoryViewTooltip tooltip) {
         this.contents = tooltip.contents();

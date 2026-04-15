@@ -17,27 +17,16 @@ import java.util.*;
 public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
 
     private static final Map<UUID, String> USERNAME_CACHE = new HashMap<>();
-
-    public static void setUsernameCache(Map<UUID, String> usernameCache) {
-        USERNAME_CACHE.clear();
-        USERNAME_CACHE.putAll(usernameCache);
-    }
-
     private static final Component EMPTY_SEARCH = (Component.translatable("gui.supplementaries.present.send"))
             .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.ITALIC);
-
-
     private final List<SimplePlayerEntry> allPlayers = new ArrayList<>();
     private final List<SimplePlayerEntry> filtered = new ArrayList<>();
-
     private SimplePlayerEntry selectedPlayer = null;
     //missing lines
     @Nullable
     private String suggestion;
     //basically value + suggestion but formatted
     private String fullSuggestion = "";
-
-
     public PlayerSuggestionBoxWidget(Minecraft mc, int x, int y, int width, int height) {
         super(mc, x, y, width, height);
 
@@ -58,6 +47,11 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
         }
 
         this.filtered.addAll(allPlayers);
+    }
+
+    public static void setUsernameCache(Map<UUID, String> usernameCache) {
+        USERNAME_CACHE.clear();
+        USERNAME_CACHE.putAll(usernameCache);
     }
 
     @Override

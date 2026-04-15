@@ -21,50 +21,30 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class VariableSizeContainerMenu extends AbstractContainerMenu implements IContainerProvider {
+    private static final int[][] TARGET_RATIOS = new int[][]{
+            {1, 1},
+            {2, 2},
+            {3, 2},
+            {3, 3},
+            {4, 2},
+            {5, 2},
+            {6, 2},
+            {7, 2},
+            {5, 3},
+            {8, 2},
+            {6, 3},
+            {7, 3},
+            {8, 3},
+            {9, 3}
+    };
     public final Container inventory;
     public final int unlockedSlots;
-
-    //for tile
-    public static <C extends BlockEntity & Container & MenuProvider> void openTileMenu(ServerPlayer player, C tile) {
-        TileOrEntityTarget target = TileOrEntityTarget.of(tile);
-        PlatHelper.openCustomMenu(player, tile, p -> {
-            target.write(p);
-            p.writeInt(tile.getContainerSize());
-        });
-    }
-
-    //for entity
-    public static <C extends Entity & Container & MenuProvider> void openEntityMenu(ServerPlayer player, C entity) {
-        TileOrEntityTarget target = TileOrEntityTarget.of(entity);
-        PlatHelper.openCustomMenu(player, entity, p -> {
-            target.write(p);
-            p.writeInt(entity.getContainerSize());
-        });
-    }
-
-
-    @Override
-    public Container getContainer() {
-        return inventory;
-    }
 
     public VariableSizeContainerMenu(MenuType<?> type, int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(type, id, playerInventory, getContainerFromPacket(playerInventory, packetBuffer),
                 packetBuffer.readInt());
     }
 
-    //hack for snowy spirit sleds entities
-    @NotNull
-    private static Container getContainerFromPacket(Inventory playerInventory, FriendlyByteBuf packetBuffer) {
-        var target = TileOrEntityTarget.read(packetBuffer);
-        Level level = playerInventory.player.level();
-        var obj = target.getTarget(level);
-        if (obj instanceof Container c) return c;
-        else if (obj instanceof IContainerProvider cp) {
-            return cp.getContainer();
-        }
-        throw new UnsupportedOperationException("Cannot find container associated with entity ");
-    }
 
     public VariableSizeContainerMenu(MenuType<?> type, int id, Inventory playerInventory, Container container, int unlockedSlots) {
         super(type, id);
@@ -103,6 +83,52 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
             this.addSlot(new Slot(playerInventory, si, 8 + si * 18, 142));
     }
 
+    //for tile
+    public static <C extends BlockEntity & Container & MenuProvider> void openTileMenu(ServerPlayer player, C tile) {
+        TileOrEntityTarget target = TileOrEntityTarget.of(tile);
+        PlatHelper.openCustomMenu(player, tile, p -> {
+            target.write(p);
+            p.writeInt(tile.getContainerSize());
+        });
+    }
+
+    //for entity
+    public static <C extends Entity & Container & MenuProvider> void openEntityMenu(ServerPlayer player, C entity) {
+        TileOrEntityTarget target = TileOrEntityTarget.of(entity);
+        PlatHelper.openCustomMenu(player, entity, p -> {
+            target.write(p);
+            p.writeInt(entity.getContainerSize());
+        });
+    }
+
+    //hack for snowy spirit sleds entities
+    @NotNull
+    private static Container getContainerFromPacket(Inventory playerInventory, FriendlyByteBuf packetBuffer) {
+        var target = TileOrEntityTarget.read(packetBuffer);
+        Level level = playerInventory.player.level();
+        var obj = target.getTarget(level);
+        if (obj instanceof Container c) return c;
+        else if (obj instanceof IContainerProvider cp) {
+            return cp.getContainer();
+        }
+        throw new UnsupportedOperationException("Cannot find container associated with entity ");
+    }
+
+    public static int[] getRatio(int maxSize) {
+        int[] dims = {Math.min(maxSize, 23), Math.max(maxSize / 23, 1)};
+        for (int[] testAgainst : TARGET_RATIOS) {
+            if (testAgainst[0] * testAgainst[1] == maxSize) {
+                dims = testAgainst;
+                break;
+            }
+        }
+        return dims;
+    }
+
+    @Override
+    public Container getContainer() {
+        return inventory;
+    }
 
     @Override
     public boolean stillValid(Player playerIn) {
@@ -139,7 +165,6 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
         return itemstack;
     }
 
-
     /**
      * Called when the container is closed.
      */
@@ -148,36 +173,6 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
     }
-
-
-    public static int[] getRatio(int maxSize) {
-        int[] dims = {Math.min(maxSize, 23), Math.max(maxSize / 23, 1)};
-        for (int[] testAgainst : TARGET_RATIOS) {
-            if (testAgainst[0] * testAgainst[1] == maxSize) {
-                dims = testAgainst;
-                break;
-            }
-        }
-        return dims;
-    }
-
-
-    private static final int[][] TARGET_RATIOS = new int[][]{
-            {1, 1},
-            {2, 2},
-            {3, 2},
-            {3, 3},
-            {4, 2},
-            {5, 2},
-            {6, 2},
-            {7, 2},
-            {5, 3},
-            {8, 2},
-            {6, 3},
-            {7, 3},
-            {8, 3},
-            {9, 3}
-    };
 
 
 }

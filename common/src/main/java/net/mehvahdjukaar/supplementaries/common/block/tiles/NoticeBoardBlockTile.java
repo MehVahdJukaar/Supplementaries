@@ -71,6 +71,14 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         this.textHolder = new TextHolder(1, 90);
     }
 
+    @SuppressWarnings("ConstantConditions")
+    private static boolean canPlaceInNoticeBoard(Item item) {
+        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) ||
+                item instanceof MapItem || item instanceof BannerPatternItem ||
+                (CompatHandler.EXPOSURE && ExposureCompat.isPictureItem(item)) ||
+                (CompatHandler.COMPUTERCRAFT && CCCompat.isPrintedBook(item));
+    }
+
     //refreshTextures blockState and plays sound. server side
     @Override
     public void updateTileOnInventoryChanged() {
@@ -212,14 +220,6 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
         return this.isEmpty() && (CommonConfigs.Building.NOTICE_BOARDS_UNRESTRICTED.get() || canPlaceInNoticeBoard(stack.getItem()));
     }
 
-    @SuppressWarnings("ConstantConditions")
-    private static boolean canPlaceInNoticeBoard(Item item) {
-        return item.builtInRegistryHolder().is(ItemTags.LECTERN_BOOKS) ||
-                item instanceof MapItem || item instanceof BannerPatternItem ||
-                (CompatHandler.EXPOSURE && ExposureCompat.isPictureItem(item)) ||
-                (CompatHandler.COMPUTERCRAFT && CCCompat.isPrintedBook(item));
-    }
-
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
         return this.canPlaceItem(index, stack);
@@ -326,13 +326,13 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     @Override
-    public void setCurrentUser(@Nullable UUID uuid) {
-        this.playerWhoMayEdit = uuid;
+    public UUID getCurrentUser() {
+        return playerWhoMayEdit;
     }
 
     @Override
-    public UUID getCurrentUser() {
-        return playerWhoMayEdit;
+    public void setCurrentUser(@Nullable UUID uuid) {
+        this.playerWhoMayEdit = uuid;
     }
 
     @Override

@@ -40,9 +40,6 @@ public class CannonUtils {
         return trajectory == null ? null : new BallisticTrajectory3D(trajectory, vec3ToPoint.yaw);
     }
 
-    private record Target2dAndYaw(Vec2 target, float yaw) {
-    }
-
     public static Vec3 point2dToVec3(Vec2 point, float yaw) {
         return new Vec3(0, point.y, point.x).yRot(-yaw);
     }
@@ -99,6 +96,9 @@ public class CannonUtils {
         }
 
         poseStack.popPose();
+    }
+
+    private record Target2dAndYaw(Vec2 target, float yaw) {
     }
 
 

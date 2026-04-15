@@ -34,6 +34,17 @@ public class FrameBlockTile extends MimicBlockTile {
         super(ModRegistry.TIMBER_FRAME_TILE.get(), pos, state);
     }
 
+    public static boolean isValidBlock(@Nullable BlockState state, BlockPos pos, Level world) {
+        if (state == null) return false;
+        Block b = state.getBlock();
+
+        if (b.builtInRegistryHolder().is(ModTags.FRAME_BLOCK_BLACKLIST) || b instanceof EntityBlock) {
+            return false;
+        }
+        if (b instanceof FeatherBlock || b instanceof SoulSandBlock) return true;
+        return state.isSolidRender(world, pos) && Block.isShapeFullBlock(state.getCollisionShape(world, pos));
+    }
+
     @Override
     public boolean setHeldBlock(BlockState state) {
         this.mimic = state;
@@ -73,14 +84,6 @@ public class FrameBlockTile extends MimicBlockTile {
         }
 
         return state;
-    }
-
-    public static class SelfPlacementContext extends BlockPlaceContext {
-
-        public SelfPlacementContext(Player player, InteractionHand interactionHand, ItemStack itemStack, BlockHitResult blockHitResult) {
-            super(player, interactionHand, itemStack, blockHitResult);
-            this.replaceClicked = true;
-        }
     }
 
     public ItemInteractionResult interactWithPlayer(Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace,
@@ -123,15 +126,12 @@ public class FrameBlockTile extends MimicBlockTile {
         return ItemInteractionResult.FAIL;
     }
 
-    public static boolean isValidBlock(@Nullable BlockState state, BlockPos pos, Level world) {
-        if (state == null) return false;
-        Block b = state.getBlock();
+    public static class SelfPlacementContext extends BlockPlaceContext {
 
-        if (b.builtInRegistryHolder().is(ModTags.FRAME_BLOCK_BLACKLIST) || b instanceof EntityBlock) {
-            return false;
+        public SelfPlacementContext(Player player, InteractionHand interactionHand, ItemStack itemStack, BlockHitResult blockHitResult) {
+            super(player, interactionHand, itemStack, blockHitResult);
+            this.replaceClicked = true;
         }
-        if (b instanceof FeatherBlock || b instanceof SoulSandBlock) return true;
-        return state.isSolidRender(world, pos) && Block.isShapeFullBlock(state.getCollisionShape(world, pos));
     }
 }
 

@@ -32,7 +32,8 @@ import net.minecraft.world.scores.Scoreboard;
 public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, JarredModel<AbstractClientPlayer>> {
 
     public static JarredRenderer INSTANCE = null;
-
+    protected float axisFacing = 0;
+    protected boolean wasCrouching = false;
     public JarredRenderer(EntityRendererProvider.Context context) {
         super(context, new JarredModel<>(context.bakeLayer(ClientRegistry.JARVIS_MODEL)), 0);
         this.shadowStrength = 0;
@@ -46,77 +47,6 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
         this.addLayer(new ArrowLayer<>(context, this));
         this.addLayer(new PickleModel.PickleElytra<>(this, context.getModelSet()));
         this.addLayer(new BeeStingerLayer<>(this));
-    }
-
-    protected float axisFacing = 0;
-    protected boolean wasCrouching = false;
-
-
-    @Override
-    public ResourceLocation getTextureLocation(AbstractClientPlayer player) {
-        return ModTextures.JAR_MAN;
-    }
-
-    @Override
-    protected boolean shouldShowName(AbstractClientPlayer player) {
-        return !player.isCrouching() && super.shouldShowName(player);
-    }
-
-    @Override
-    protected void scale(AbstractClientPlayer player, PoseStack stack, float partialTickTime) {
-        stack.scale(1f, 1f, 1f);
-    }
-
-    @Override
-    public void render(AbstractClientPlayer player, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight) {
-        this.setModelProperties(player);
-
-        if (this.wasCrouching) {
-            float f = (Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot) + axisFacing) % 360;
-            matrixStack.mulPose(Axis.YP.rotationDegrees(f));
-            matrixStack.translate(0, -0.125, 0);
-        }
-        super.render(player, entityYaw, partialTicks, matrixStack, bufferSource, packedLight);
-    }
-
-    @Override
-    public Vec3 getRenderOffset(AbstractClientPlayer player, float partialTicks) {
-        return player.isCrouching() ? new Vec3(0.0D, -0.5D, 0.0D) : new Vec3(0.0D, -0.25D, 0.0D);
-    }
-
-
-    private void setModelProperties(AbstractClientPlayer player) {
-        PlayerModel<AbstractClientPlayer> playermodel = this.getModel();
-        playermodel.setAllVisible(false);
-        boolean c = player.isCrouching();
-        playermodel.body.visible = true;
-        playermodel.head.visible = true;
-        //playermodel.leftArm.visible = !c;
-        //playermodel.rightArm.visible = !c;
-        playermodel.leftLeg.visible = !c;
-        playermodel.rightLeg.visible = !c;
-
-
-        if (this.wasCrouching != c && c) this.axisFacing = -player.getDirection().toYRot();
-        this.wasCrouching = c;
-
-        //playermodel.crouching = player.isCrouching();
-
-        HumanoidModel.ArmPose poseRightArm = getArmPose(player, InteractionHand.MAIN_HAND);
-        HumanoidModel.ArmPose poseLeftArm = getArmPose(player, InteractionHand.OFF_HAND);
-
-        if (poseRightArm.isTwoHanded()) {
-            poseLeftArm = player.getOffhandItem().isEmpty() ? HumanoidModel.ArmPose.EMPTY : HumanoidModel.ArmPose.ITEM;
-        }
-
-        if (player.getMainArm() == HumanoidArm.RIGHT) {
-            playermodel.rightArmPose = poseRightArm;
-            playermodel.leftArmPose = poseLeftArm;
-        } else {
-            playermodel.rightArmPose = poseLeftArm;
-            playermodel.leftArmPose = poseRightArm;
-        }
-
     }
 
     protected static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
@@ -151,6 +81,72 @@ public class JarredRenderer extends LivingEntityRenderer<AbstractClientPlayer, J
 
             return HumanoidModel.ArmPose.ITEM;
         }
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(AbstractClientPlayer player) {
+        return ModTextures.JAR_MAN;
+    }
+
+    @Override
+    protected boolean shouldShowName(AbstractClientPlayer player) {
+        return !player.isCrouching() && super.shouldShowName(player);
+    }
+
+    @Override
+    protected void scale(AbstractClientPlayer player, PoseStack stack, float partialTickTime) {
+        stack.scale(1f, 1f, 1f);
+    }
+
+    @Override
+    public void render(AbstractClientPlayer player, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferSource, int packedLight) {
+        this.setModelProperties(player);
+
+        if (this.wasCrouching) {
+            float f = (Mth.rotLerp(partialTicks, player.yBodyRotO, player.yBodyRot) + axisFacing) % 360;
+            matrixStack.mulPose(Axis.YP.rotationDegrees(f));
+            matrixStack.translate(0, -0.125, 0);
+        }
+        super.render(player, entityYaw, partialTicks, matrixStack, bufferSource, packedLight);
+    }
+
+    @Override
+    public Vec3 getRenderOffset(AbstractClientPlayer player, float partialTicks) {
+        return player.isCrouching() ? new Vec3(0.0D, -0.5D, 0.0D) : new Vec3(0.0D, -0.25D, 0.0D);
+    }
+
+    private void setModelProperties(AbstractClientPlayer player) {
+        PlayerModel<AbstractClientPlayer> playermodel = this.getModel();
+        playermodel.setAllVisible(false);
+        boolean c = player.isCrouching();
+        playermodel.body.visible = true;
+        playermodel.head.visible = true;
+        //playermodel.leftArm.visible = !c;
+        //playermodel.rightArm.visible = !c;
+        playermodel.leftLeg.visible = !c;
+        playermodel.rightLeg.visible = !c;
+
+
+        if (this.wasCrouching != c && c) this.axisFacing = -player.getDirection().toYRot();
+        this.wasCrouching = c;
+
+        //playermodel.crouching = player.isCrouching();
+
+        HumanoidModel.ArmPose poseRightArm = getArmPose(player, InteractionHand.MAIN_HAND);
+        HumanoidModel.ArmPose poseLeftArm = getArmPose(player, InteractionHand.OFF_HAND);
+
+        if (poseRightArm.isTwoHanded()) {
+            poseLeftArm = player.getOffhandItem().isEmpty() ? HumanoidModel.ArmPose.EMPTY : HumanoidModel.ArmPose.ITEM;
+        }
+
+        if (player.getMainArm() == HumanoidArm.RIGHT) {
+            playermodel.rightArmPose = poseRightArm;
+            playermodel.leftArmPose = poseLeftArm;
+        } else {
+            playermodel.rightArmPose = poseLeftArm;
+            playermodel.leftArmPose = poseRightArm;
+        }
+
     }
 
     // same as player. no idea why we are not extending

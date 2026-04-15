@@ -44,16 +44,15 @@ import net.minecraft.world.phys.Vec3;
 public class BombEntity extends ImprovedProjectileEntity implements IExtraClientSpawnData {
 
     private final boolean hasFuse = CommonConfigs.Tools.BOMB_FUSE.get() != 0;
-    private BombType type = BombType.NORMAL;
-    private boolean active = true;
-    private int changeTimer = -1;
-    private boolean superCharged = false;
-
     private final ParticleTrailEmitter trailEmitter = ParticleTrailEmitter.builder()
             .spacing(0.25)
             .maxParticlesPerTick(20)
             .minParticlesPerTick(1)
             .build();
+    private BombType type = BombType.NORMAL;
+    private boolean active = true;
+    private int changeTimer = -1;
+    private boolean superCharged = false;
 
 
     public BombEntity(EntityType<? extends BombEntity> type, Level world) {

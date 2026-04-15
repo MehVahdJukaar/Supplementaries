@@ -51,14 +51,21 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ColoredMapHandler {
 
-    public static void init() {
-    }
-
-    protected static final int DITHERING = 1;
-
     public static final CustomMapData.Type<Patch, ColorData> COLOR_DATA =
             MapDataRegistry.registerCustomMapSavedData(Supplementaries.res("color_data"), ColorData::new,
                     Patch.STREAM_CODEC);
+    protected static final int DITHERING = 1;
+    //probably very dumb idea
+    private static final Map<Block, Integer> BLOCK_IDS_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Integer, Block> IDS_TO_BLOCK_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Holder<Biome>, Integer> BIOME_IDS_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Integer, Holder<Biome>> IDS_TO_BIOME_CACHE = new ConcurrentHashMap<>();
+    // brightness index to block-biome pair mapping to a color
+    private static final Map<Pair<BlockAndBiome, Integer>, Integer> GLOBAL_COLOR_CACHE = new Object2IntOpenHashMap<>();
+    private static final int[] IND2COLOR_BUFFER = new int[256 * 4];
+
+    public static void init() {
+    }
 
     public static ColorData getColorData(MapItemSavedData data) {
         return COLOR_DATA.get(data);
@@ -84,6 +91,40 @@ public class ColoredMapHandler {
             return block;
         }
         return null;
+    }
+
+    public static void clearCache() {
+        GLOBAL_COLOR_CACHE.clear();
+        System.arraycopy(new int[256 * 4], 0, IND2COLOR_BUFFER, 0, 256 * 4);
+    }
+
+    public static void clearIdCache() {
+        IDS_TO_BLOCK_CACHE.clear();
+        BLOCK_IDS_CACHE.clear();
+        IDS_TO_BIOME_CACHE.clear();
+        BIOME_IDS_CACHE.clear();
+    }
+
+    private static int getBlockId(Block block) {
+        return BLOCK_IDS_CACHE.computeIfAbsent(block, BuiltInRegistries.BLOCK::getId);
+    }
+
+    private static Block getBlockFromId(int id) {
+        return IDS_TO_BLOCK_CACHE.computeIfAbsent(id, BuiltInRegistries.BLOCK::byId);
+    }
+
+    private static int getBiomeId(Holder<Biome> biome, RegistryAccess registryAccess) {
+        return BIOME_IDS_CACHE.computeIfAbsent(biome, r -> {
+            var biomeReg = registryAccess.registryOrThrow(Registries.BIOME);
+            return biomeReg.getId(r.value());
+        });
+    }
+
+    private static Holder<Biome> getBiomeFromId(int id, RegistryAccess registryAccess) {
+        return IDS_TO_BIOME_CACHE.computeIfAbsent(id, r -> {
+            var biomeReg = registryAccess.registryOrThrow(Registries.BIOME);
+            return biomeReg.getHolder(r).orElseThrow();
+        });
     }
 
     public static class Counter implements CustomMapData.DirtyCounter {
@@ -131,49 +172,6 @@ public class ColoredMapHandler {
         }
     }
 
-    //probably very dumb idea
-    private static final Map<Block, Integer> BLOCK_IDS_CACHE = new ConcurrentHashMap<>();
-    private static final Map<Integer, Block> IDS_TO_BLOCK_CACHE = new ConcurrentHashMap<>();
-    private static final Map<Holder<Biome>, Integer> BIOME_IDS_CACHE = new ConcurrentHashMap<>();
-    private static final Map<Integer, Holder<Biome>> IDS_TO_BIOME_CACHE = new ConcurrentHashMap<>();
-    // brightness index to block-biome pair mapping to a color
-    private static final Map<Pair<BlockAndBiome, Integer>, Integer> GLOBAL_COLOR_CACHE = new Object2IntOpenHashMap<>();
-    private static final int[] IND2COLOR_BUFFER = new int[256 * 4];
-
-    public static void clearCache() {
-        GLOBAL_COLOR_CACHE.clear();
-        System.arraycopy(new int[256 * 4], 0, IND2COLOR_BUFFER, 0, 256 * 4);
-    }
-
-    public static void clearIdCache() {
-        IDS_TO_BLOCK_CACHE.clear();
-        BLOCK_IDS_CACHE.clear();
-        IDS_TO_BIOME_CACHE.clear();
-        BIOME_IDS_CACHE.clear();
-    }
-
-    private static int getBlockId(Block block) {
-        return BLOCK_IDS_CACHE.computeIfAbsent(block, BuiltInRegistries.BLOCK::getId);
-    }
-
-    private static Block getBlockFromId(int id) {
-        return IDS_TO_BLOCK_CACHE.computeIfAbsent(id, BuiltInRegistries.BLOCK::byId);
-    }
-
-    private static int getBiomeId(Holder<Biome> biome, RegistryAccess registryAccess) {
-        return BIOME_IDS_CACHE.computeIfAbsent(biome, r -> {
-            var biomeReg = registryAccess.registryOrThrow(Registries.BIOME);
-            return biomeReg.getId(r.value());
-        });
-    }
-
-    private static Holder<Biome> getBiomeFromId(int id, RegistryAccess registryAccess) {
-        return IDS_TO_BIOME_CACHE.computeIfAbsent(id, r -> {
-            var biomeReg = registryAccess.registryOrThrow(Registries.BIOME);
-            return biomeReg.getHolder(r).orElseThrow();
-        });
-    }
-
     public record BlockAndBiome(Block block, Holder<Biome> biome) {
         public static BlockAndBiome of(Block block, Holder<Biome> biome) {
             return new BlockAndBiome(block, biome);
@@ -186,15 +184,38 @@ public class ColoredMapHandler {
         public static final String MIN_X = "min_x";
         public static final String MAX_X = "max_x";
         public static final String MIN_Z = "min_z";
-
-        private byte[][] data = null;
         private final List<Holder<Biome>> biomesIndexesPalette = new ArrayList<>();
         private final List<Block> blockIndexesPalette = new ArrayList<>();
+        private byte[][] data = null;
 
         //client local values
-
         private BlockAndBiome lastEntryHack;
 
+        private static int postProcessTint(boolean tg, byte packedId, Block block, int tint) {
+
+            float lumIncrease = 1.3f;
+            MapColor mapColor = MapColor.byId((packedId & 255) >> 2);
+            if (mapColor == MapColor.WATER) {
+                lumIncrease = 2f;
+            }
+        /*
+        else if(mapColor == MapColor.PLANT){
+            if(tint == blockColors.getColor(Blocks.GRASS.defaultBlockState(), this, pos, 0)){
+                 packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
+            }
+        }*/
+            else if (mapColor == MapColor.PLANT && block instanceof BushBlock && tg) {
+                packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
+            }
+            int color = MapColor.getColorFromPackedId(packedId);
+
+            tint = ColorUtils.swapFormat(tint);
+            RGBColor tintColor = new RGBColor(tint);
+            LABColor c = new RGBColor(color).asLAB();
+            RGBColor gray = c.multiply(lumIncrease, 0, 0, 1).asRGB();
+            return gray.multiply(tintColor.red(), tintColor.green(), tintColor.blue(), 1)
+                    .asHSL().multiply(1, 1.3f, 1, 1).asRGB().toInt();
+        }
 
         @Nullable
         private BlockAndBiome getEntry(int x, int z) {
@@ -267,7 +288,6 @@ public class ColoredMapHandler {
 
             this.setDirty(md, counter -> counter.markDirty(x, z, changedBiome, changedBlock));
         }
-
 
         @Override
         public void load(CompoundTag tag, HolderLookup.Provider provider) {
@@ -484,7 +504,6 @@ public class ColoredMapHandler {
             return entry == null ? Blocks.AIR.defaultBlockState() : entry.block.defaultBlockState();
         }
 
-
         @Override
         public FluidState getFluidState(BlockPos pos) {
             return getBlockState(pos).getFluidState();
@@ -499,7 +518,6 @@ public class ColoredMapHandler {
         public int getMinBuildHeight() {
             return 0;
         }
-
 
         @Environment(EnvType.CLIENT)
         public void processTexture(NativeImage texture, int startX, int startY, byte[] colors) {
@@ -557,32 +575,6 @@ public class ColoredMapHandler {
                     }
                 }
             }
-        }
-
-        private static int postProcessTint(boolean tg, byte packedId, Block block, int tint) {
-
-            float lumIncrease = 1.3f;
-            MapColor mapColor = MapColor.byId((packedId & 255) >> 2);
-            if (mapColor == MapColor.WATER) {
-                lumIncrease = 2f;
-            }
-        /*
-        else if(mapColor == MapColor.PLANT){
-            if(tint == blockColors.getColor(Blocks.GRASS.defaultBlockState(), this, pos, 0)){
-                 packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
-            }
-        }*/
-            else if (mapColor == MapColor.PLANT && block instanceof BushBlock && tg) {
-                packedId = MapColor.GRASS.getPackedId(MapColor.Brightness.byId(packedId & 3));
-            }
-            int color = MapColor.getColorFromPackedId(packedId);
-
-            tint = ColorUtils.swapFormat(tint);
-            RGBColor tintColor = new RGBColor(tint);
-            LABColor c = new RGBColor(color).asLAB();
-            RGBColor gray = c.multiply(lumIncrease, 0, 0, 1).asRGB();
-            return gray.multiply(tintColor.red(), tintColor.green(), tintColor.blue(), 1)
-                    .asHSL().multiply(1, 1.3f, 1, 1).asRGB().toInt();
         }
 
         @Override

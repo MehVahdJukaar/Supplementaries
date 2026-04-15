@@ -53,11 +53,77 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                         ClientConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
     }
 
+    private static TextureImage createWaySignItemTexture(ResourceManager manager,
+                                                         WoodType wood, Respriter respriter)
+            throws IOException {
+        Item signItem = wood.getItemOfThis("sign");
+        if (signItem != null) {
+            try (TextureImage vanillaSign = TextureImage.open(manager,
+                    RPUtils.findFirstItemTextureLocation(manager, signItem));
+                 TextureImage signMask = TextureImage.open(manager,
+                         Supplementaries.res("item/way_signs/sign_board_mask"))) {
+
+                List<Palette> targetPalette = Palette.fromAnimatedImage(vanillaSign, signMask);
+                try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
+                        Supplementaries.res("item/way_signs/sign_scribbles_mask"),
+                        Supplementaries.res("item/way_signs/scribbles_template"))) {
+                    TextureImage newImage = respriter.recolor(targetPalette);
+                    boolean wasOpen = newImage.isAllocated();
+                    TextureOps.applyOverlay(newImage, scribbles);
+                    if (wasOpen && !newImage.isAllocated()) {
+                        throw new RuntimeException("Texture was closed during overlay application");
+                    }
+                    return newImage;
+                } catch (Exception e) {
+                    Supplementaries.LOGGER.error("Failed to apply sign scribbles overlay for {} : ", wood, e);
+                }
+            }
+        }
+        //if it failed use plank one
+        try (TextureImage plankPalette = TextureImage.open(manager,
+                RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
+            Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
+            return respriter.recolor(targetPalette);
+        }
+    }
+    //-------------resource pack dependant textures-------------
+
+    private static void generateTagTranslations() {
+        JsonObject jo = new JsonObject();
+        for (var e : ModServerDynamicResources.TAG_TRANSLATION_HACK.entrySet()) {
+            ResourceLocation id = e.getKey();
+            if (id.getNamespace().equals("supplementaries")) {
+                String path = id.getPath();
+                path = path.replace("tags/", "").replace(".json", "");
+                String tr = path.substring(path.lastIndexOf("/") + 1);
+                jo.addProperty("supplementaries:" + path, LangBuilder.getReadableName(tr));
+            }
+        }
+    }
+
+    /**
+     * helper method.
+     * recolors the template image with the color grabbed from the given image restrained to its mask, if possible
+     */
+    @Nullable
+    private static TextureImage recolorFromVanilla(ResourceManager manager,
+                                                   TextureImage vanillaTexture,
+                                                   ResourceLocation vanillaMask,
+                                                   ResourceLocation templateTexture) {
+        try (TextureImage scribbleMask = TextureImage.open(manager, vanillaMask);
+             TextureImage template = TextureImage.open(manager, templateTexture)) {
+            Respriter respriter = Respriter.of(template);
+            Palette palette = Palette.fromImage(vanillaTexture, scribbleMask);
+            return respriter.recolor(palette);
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
     @Override
     protected Collection<String> gatherSupportedNamespaces() {
         return List.of("minecraft");
     }
-    //-------------resource pack dependant textures-------------
 
     @Override
     public boolean needsToRegenerate() {
@@ -95,7 +161,6 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         executor.accept(this::addWaySignsAssets);
         executor.accept(this::addBoatTextures);
     }
-
 
     private void moveGates(ResourceManager manager, ResourceSink sink) {
         if (CompatHandler.QUARK && !CommonConfigs.Building.GOLD_BARS_ENABLED.get()) {
@@ -198,40 +263,6 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             });
         } catch (Exception ex) {
             Supplementaries.LOGGER.error("Could not generate any Way Sign block texture : ", ex);
-        }
-    }
-
-    private static TextureImage createWaySignItemTexture(ResourceManager manager,
-                                                         WoodType wood, Respriter respriter)
-            throws IOException {
-        Item signItem = wood.getItemOfThis("sign");
-        if (signItem != null) {
-            try (TextureImage vanillaSign = TextureImage.open(manager,
-                    RPUtils.findFirstItemTextureLocation(manager, signItem));
-                 TextureImage signMask = TextureImage.open(manager,
-                         Supplementaries.res("item/way_signs/sign_board_mask"))) {
-
-                List<Palette> targetPalette = Palette.fromAnimatedImage(vanillaSign, signMask);
-                try (TextureImage scribbles = recolorFromVanilla(manager, vanillaSign,
-                        Supplementaries.res("item/way_signs/sign_scribbles_mask"),
-                        Supplementaries.res("item/way_signs/scribbles_template"))) {
-                    TextureImage newImage = respriter.recolor(targetPalette);
-                    boolean wasOpen = newImage.isAllocated();
-                    TextureOps.applyOverlay(newImage, scribbles);
-                    if (wasOpen && !newImage.isAllocated()) {
-                        throw new RuntimeException("Texture was closed during overlay application");
-                    }
-                    return newImage;
-                } catch (Exception e) {
-                    Supplementaries.LOGGER.error("Failed to apply sign scribbles overlay for {} : ", wood, e);
-                }
-            }
-        }
-        //if it failed use plank one
-        try (TextureImage plankPalette = TextureImage.open(manager,
-                RPUtils.findFirstBlockTextureLocation(manager, wood.planks))) {
-            Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankPalette);
-            return respriter.recolor(targetPalette);
         }
     }
 
@@ -366,40 +397,6 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             }
         }
         return newImage;
-    }
-
-
-    private static void generateTagTranslations() {
-        JsonObject jo = new JsonObject();
-        for (var e : ModServerDynamicResources.TAG_TRANSLATION_HACK.entrySet()) {
-            ResourceLocation id = e.getKey();
-            if (id.getNamespace().equals("supplementaries")) {
-                String path = id.getPath();
-                path = path.replace("tags/", "").replace(".json", "");
-                String tr = path.substring(path.lastIndexOf("/") + 1);
-                jo.addProperty("supplementaries:" + path, LangBuilder.getReadableName(tr));
-            }
-        }
-    }
-
-
-    /**
-     * helper method.
-     * recolors the template image with the color grabbed from the given image restrained to its mask, if possible
-     */
-    @Nullable
-    private static TextureImage recolorFromVanilla(ResourceManager manager,
-                                                   TextureImage vanillaTexture,
-                                                   ResourceLocation vanillaMask,
-                                                   ResourceLocation templateTexture) {
-        try (TextureImage scribbleMask = TextureImage.open(manager, vanillaMask);
-             TextureImage template = TextureImage.open(manager, templateTexture)) {
-            Respriter respriter = Respriter.of(template);
-            Palette palette = Palette.fromImage(vanillaTexture, scribbleMask);
-            return respriter.recolor(palette);
-        } catch (Exception ignored) {
-        }
-        return null;
     }
 
 

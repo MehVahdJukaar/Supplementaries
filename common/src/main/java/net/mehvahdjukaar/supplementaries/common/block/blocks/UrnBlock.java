@@ -61,11 +61,9 @@ import java.util.List;
 
 public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterloggedBlock {
 
-    public static final MapCodec<UrnBlock> CODEC = simpleCodec(UrnBlock::new);
-
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty TREASURE = ModBlockProperties.TREASURE;
-
+    public static final MapCodec<UrnBlock> CODEC = simpleCodec(UrnBlock::new);
     private static final VoxelShape SHAPE = Shapes.or(box(4, 0, 4, 12, 10, 12),
             box(5, 10, 5, 11, 12, 11),
             box(4, 12, 4, 12, 14, 12));
@@ -74,6 +72,25 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(WATERLOGGED, false).setValue(TREASURE, false));
+    }
+
+    private static int getFortuneLevel(ItemStack stack, Level level) {
+        var holder = HolderRef.of(Enchantments.FORTUNE);
+        return EnchantmentHelper.getItemEnchantmentLevel(holder.getHolder(level), stack);
+    }
+
+    public static void spawnExtraBrokenParticles(BlockState state, BlockPos pos, Level level) {
+        if (level.isClientSide && state.getValue(TREASURE)) {
+            level.addDestroyBlockEffect(pos, state);
+            if (level.random.nextInt(20) == 0) { //TODO: server sync
+                double x = pos.getX() + 0.5;
+                double y = pos.getY() + 0.3125;
+                double z = pos.getZ() + 0.5;
+                level.addParticle(ParticleTypes.SOUL, x, y, z, 0, 0.05, 0);
+                float f = level.random.nextFloat() * 0.4F + level.random.nextFloat() > 0.9F ? 0.6F : 0.0F;
+                level.playSound(null, x, y, z, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, f, 0.6F + level.random.nextFloat() * 0.4F);
+            }
+        }
     }
 
     @Override
@@ -103,7 +120,6 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
-
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
@@ -204,31 +220,12 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
         return super.getDrops(state, builder);
     }
 
-    private static int getFortuneLevel(ItemStack stack, Level level) {
-        var holder = HolderRef.of(Enchantments.FORTUNE);
-        return EnchantmentHelper.getItemEnchantmentLevel(holder.getHolder(level), stack);
-    }
-
     @Override
     public BlockState playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
         if (pLevel.isClientSide && getFortuneLevel(pPlayer.getUseItem(), pPlayer.level()) == 0) {
             spawnExtraBrokenParticles(pState, pPos, pLevel);
         }
         return super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
-    }
-
-    public static void spawnExtraBrokenParticles(BlockState state, BlockPos pos, Level level) {
-        if (level.isClientSide && state.getValue(TREASURE)) {
-            level.addDestroyBlockEffect(pos, state);
-            if (level.random.nextInt(20) == 0) { //TODO: server sync
-                double x = pos.getX() + 0.5;
-                double y = pos.getY() + 0.3125;
-                double z = pos.getZ() + 0.5;
-                level.addParticle(ParticleTypes.SOUL, x, y, z, 0, 0.05, 0);
-                float f = level.random.nextFloat() * 0.4F + level.random.nextFloat() > 0.9F ? 0.6F : 0.0F;
-                level.playSound(null, x, y, z, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, f, 0.6F + level.random.nextFloat() * 0.4F);
-            }
-        }
     }
 
     @Override

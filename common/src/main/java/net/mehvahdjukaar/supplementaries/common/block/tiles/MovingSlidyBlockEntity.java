@@ -29,23 +29,14 @@ import org.joml.Vector3f;
 public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
 
 
+    private static final ThreadLocal<Boolean> SUPPRESS_OBSERVER_HACK = ThreadLocal.withInitial(() -> false);
+
     public MovingSlidyBlockEntity(BlockPos pos, BlockState blockState) {
         super(pos, blockState);
     }
 
     public MovingSlidyBlockEntity(BlockPos pos, BlockState blockState, BlockState movedState, Direction direction, boolean extending, boolean isSourcePiston) {
         super(pos, blockState, movedState, direction, extending, isSourcePiston);
-    }
-
-    @Override
-    public BlockEntityType<?> getType() {
-        return ModRegistry.MOVING_SLIDY_BLOCK_TILE.get();
-    }
-
-    @PlatformOnly(value = PlatformOnly.FABRIC)
-    @Override
-    public boolean isValidBlockState(BlockState blockState) {
-        return this.getType().isValid(blockState);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, MovingSlidyBlockEntity t) {
@@ -120,6 +111,29 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
         }
     }
 
+    //so bad
+    public static boolean shouldCancelObserverUpdateHack(BlockState neighbor) {
+        Block block = neighbor.getBlock();
+        if (block instanceof MovingSlidyBlockSource) {
+            return true;
+        }
+        if (block == Blocks.AIR) {
+            return SUPPRESS_OBSERVER_HACK.get();
+        }
+        return false;
+    }
+
+    @Override
+    public BlockEntityType<?> getType() {
+        return ModRegistry.MOVING_SLIDY_BLOCK_TILE.get();
+    }
+
+    @PlatformOnly(value = PlatformOnly.FABRIC)
+    @Override
+    public boolean isValidBlockState(BlockState blockState) {
+        return this.getType().isValid(blockState);
+    }
+
     private void spawnSlidyParticles(Level level, BlockPos pos) {
         //funny particles
         RandomSource rand = level.random;
@@ -149,20 +163,6 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
     public void addOffset(float offset) {
         this.progressO = this.progress;
         this.progress += offset;
-    }
-
-    private static final ThreadLocal<Boolean> SUPPRESS_OBSERVER_HACK = ThreadLocal.withInitial(() -> false);
-
-    //so bad
-    public static boolean shouldCancelObserverUpdateHack(BlockState neighbor) {
-        Block block = neighbor.getBlock();
-        if (block instanceof MovingSlidyBlockSource) {
-            return true;
-        }
-        if (block == Blocks.AIR) {
-            return SUPPRESS_OBSERVER_HACK.get();
-        }
-        return false;
     }
 
 }

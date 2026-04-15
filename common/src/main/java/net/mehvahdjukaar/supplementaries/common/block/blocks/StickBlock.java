@@ -41,6 +41,11 @@ import java.util.Map;
 import java.util.Optional;
 
 public class StickBlock extends WaterBlock implements IRotatable { // IRotationLockable,
+    public static final BooleanProperty AXIS_X = ModBlockProperties.AXIS_X;
+    public static final BooleanProperty AXIS_Y = ModBlockProperties.AXIS_Y;
+    public static final BooleanProperty AXIS_Z = ModBlockProperties.AXIS_Z;
+    public static final Map<Direction.Axis, BooleanProperty> AXIS2PROPERTY =
+            Map.of(Direction.Axis.X, AXIS_X, Direction.Axis.Y, AXIS_Y, Direction.Axis.Z, AXIS_Z);
     protected static final VoxelShape Y_AXIS_AABB = Block.box(7D, 0.0D, 7D, 9D, 16.0D, 9D);
     protected static final VoxelShape Z_AXIS_AABB = Block.box(7D, 7D, 0.0D, 9D, 9D, 16.0D);
     protected static final VoxelShape X_AXIS_AABB = Block.box(0.0D, 7D, 7D, 16.0D, 9D, 9D);
@@ -49,30 +54,9 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
     protected static final VoxelShape X_Z_AXIS_AABB = Shapes.or(X_AXIS_AABB, Z_AXIS_AABB);
     protected static final VoxelShape X_Y_Z_AXIS_AABB = Shapes.or(X_AXIS_AABB, Y_AXIS_AABB, Z_AXIS_AABB);
 
-    public static final BooleanProperty AXIS_X = ModBlockProperties.AXIS_X;
-    public static final BooleanProperty AXIS_Y = ModBlockProperties.AXIS_Y;
-    public static final BooleanProperty AXIS_Z = ModBlockProperties.AXIS_Z;
-
-    public static final Map<Direction.Axis, BooleanProperty> AXIS2PROPERTY =
-            Map.of(Direction.Axis.X, AXIS_X, Direction.Axis.Y, AXIS_Y, Direction.Axis.Z, AXIS_Z);
-
     public StickBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, Boolean.FALSE).setValue(AXIS_Y, true).setValue(AXIS_X, false).setValue(AXIS_Z, false));
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(AXIS_X, AXIS_Y, AXIS_Z);
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
-        boolean x = state.getValue(AXIS_X);
-        boolean y = state.getValue(AXIS_Y);
-        boolean z = state.getValue(AXIS_Z);
-        return getStickShape(x, y, z);
     }
 
     public static VoxelShape getStickShape(boolean x, boolean y, boolean z) {
@@ -88,51 +72,6 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
             return Z_AXIS_AABB;
         }
         return Y_AXIS_AABB;
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
-        BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
-        if (blockstate.is(this) || (CompatHandler.FARMERS_DELIGHT && FarmersDelightCompat.canAddStickToTomato(blockstate, axis))) {
-            return blockstate.setValue(axis, true);
-        } else {
-            return super.getStateForPlacement(context).setValue(AXIS_Y, false).setValue(axis, true);
-        }
-    }
-
-
-    @Override
-    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
-        if (!context.isSecondaryUseActive() && context.getItemInHand().is(this.asItem())) {
-            BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
-            if (!state.getValue(axis)) return true;
-        }
-        return super.canBeReplaced(state, context);
-    }
-
-    @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
-        return super.isPathfindable(state, pathComputationType);
-    }
-
-    @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
-            if (CommonConfigs.Building.FLAG_POLE.get()) {
-                if (this != ModRegistry.STICK_BLOCK.get())
-                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-                if (level.isClientSide) return ItemInteractionResult.SUCCESS;
-                else {
-                    Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;
-                    findConnectedFlag(level, pos, Direction.UP, moveDir, 0);
-                    findConnectedFlag(level, pos, Direction.DOWN, moveDir, 0);
-                }
-                return ItemInteractionResult.CONSUME;
-            }
-        }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     private static boolean isVertical(BlockState state) {
@@ -164,6 +103,64 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
             }
         }
         return false;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(AXIS_X, AXIS_Y, AXIS_Z);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
+        boolean x = state.getValue(AXIS_X);
+        boolean y = state.getValue(AXIS_Y);
+        boolean z = state.getValue(AXIS_Z);
+        return getStickShape(x, y, z);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos());
+        BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
+        if (blockstate.is(this) || (CompatHandler.FARMERS_DELIGHT && FarmersDelightCompat.canAddStickToTomato(blockstate, axis))) {
+            return blockstate.setValue(axis, true);
+        } else {
+            return super.getStateForPlacement(context).setValue(AXIS_Y, false).setValue(axis, true);
+        }
+    }
+
+    @Override
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+        if (!context.isSecondaryUseActive() && context.getItemInHand().is(this.asItem())) {
+            BooleanProperty axis = AXIS2PROPERTY.get(context.getClickedFace().getAxis());
+            if (!state.getValue(axis)) return true;
+        }
+        return super.canBeReplaced(state, context);
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return super.isPathfindable(state, pathComputationType);
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (stack.isEmpty() && hand == InteractionHand.MAIN_HAND) {
+            if (CommonConfigs.Building.FLAG_POLE.get()) {
+                if (this != ModRegistry.STICK_BLOCK.get())
+                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+                else {
+                    Direction moveDir = player.isShiftKeyDown() ? Direction.DOWN : Direction.UP;
+                    findConnectedFlag(level, pos, Direction.UP, moveDir, 0);
+                    findConnectedFlag(level, pos, Direction.DOWN, moveDir, 0);
+                }
+                return ItemInteractionResult.CONSUME;
+            }
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     //quark

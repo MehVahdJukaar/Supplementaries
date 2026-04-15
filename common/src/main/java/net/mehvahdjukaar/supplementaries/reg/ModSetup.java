@@ -27,6 +27,14 @@ import java.util.List;
 //Merge with supplementaries main class
 public class ModSetup {
 
+    private static final List<Runnable> MOD_SETUP_WORK = List.of(
+            CompatHandler::setup,
+            RegUtils::registerAdditionalPlacements,
+            FlowerPotUtils::setup,
+            ModSetup::registerFlammables,
+            CauldronBehaviorsManager::registerBehaviors,
+            () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkExplosion.Shape.CREEPER)
+    );
     //damn I hate this. If setup fails forge doesn't do anything, and it keeps on going quietly
     private static boolean hasFinishedSetup = false;
     private static int setupStage = 0;
@@ -39,15 +47,6 @@ public class ModSetup {
 
 
     }
-
-    private static final List<Runnable> MOD_SETUP_WORK = List.of(
-            CompatHandler::setup,
-            RegUtils::registerAdditionalPlacements,
-            FlowerPotUtils::setup,
-            ModSetup::registerFlammables,
-            CauldronBehaviorsManager::registerBehaviors,
-            () -> FireworkStarRecipe.SHAPE_BY_ITEM.put(ModRegistry.ENDERMAN_SKULL_ITEM.get(), FireworkExplosion.Shape.CREEPER)
-    );
 
     @EventCalled
     public static void asyncSetup() {

@@ -33,10 +33,9 @@ public class FiniteLiquidBlock extends Block implements BucketPickup, LiquidBloc
 
     public static final VoxelShape STABLE_SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 8.0, 16.0);
     public static final IntegerProperty MISSING_LEVELS = BlockStateProperties.LEVEL;
-
+    public final int maxLevel;
     private final List<FluidState> stateCache;
     private final FiniteFluid fluid;
-    public final int maxLevel;
     private boolean fluidStateCacheInitialized = false;
 
 

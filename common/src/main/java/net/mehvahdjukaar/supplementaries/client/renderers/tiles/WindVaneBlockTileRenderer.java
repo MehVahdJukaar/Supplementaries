@@ -26,6 +26,18 @@ public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBl
         this.model = context.bakeLayer(ClientRegistry.WIND_VANE_MODEL);
     }
 
+    public static LayerDefinition createMesh() {
+        MeshDefinition meshdefinition = new MeshDefinition();
+        PartDefinition partdefinition = meshdefinition.getRoot();
+
+        partdefinition.addOrReplaceChild("chicken",
+                CubeListBuilder.create().texOffs(0, -11)
+                        .addBox(0.0F, -8.0F, -5.5F, 0.0F, 11.0F, 11.0F),
+                PartPose.ZERO);
+
+        return LayerDefinition.create(meshdefinition, 32, 32);
+    }
+
     @Override
     public void render(WindVaneBlockTile tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
                        int combinedOverlayIn) {
@@ -41,17 +53,5 @@ public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBl
 
         matrixStackIn.popPose();
 
-    }
-
-    public static LayerDefinition createMesh() {
-        MeshDefinition meshdefinition = new MeshDefinition();
-        PartDefinition partdefinition = meshdefinition.getRoot();
-
-        partdefinition.addOrReplaceChild("chicken",
-                CubeListBuilder.create().texOffs(0, -11)
-                        .addBox(0.0F, -8.0F, -5.5F, 0.0F, 11.0F, 11.0F),
-                PartPose.ZERO);
-
-        return LayerDefinition.create(meshdefinition, 32, 32);
     }
 }

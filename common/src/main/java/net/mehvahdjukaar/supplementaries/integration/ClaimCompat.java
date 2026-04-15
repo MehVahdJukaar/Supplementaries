@@ -6,8 +6,8 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ClaimCompat {
-    private static ClaimCompat INSTANCE;
     public static boolean ON;
+    private static ClaimCompat INSTANCE;
 
     static {
         if (CompatHandler.FLAN) {

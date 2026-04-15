@@ -22,9 +22,8 @@ public class ServerBoundSetTextHolderPacket implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundSetTextHolderPacket> CODEC = Message.makeType(
             Supplementaries.res("c2s_set_text_holder"), ServerBoundSetTextHolderPacket::new);
-
-    private final BlockPos pos;
     public final String[][] textHolderLines;
+    private final BlockPos pos;
 
     public ServerBoundSetTextHolderPacket(FriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();

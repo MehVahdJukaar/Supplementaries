@@ -54,15 +54,6 @@ import static net.minecraft.world.level.block.entity.SignBlockEntity.createComma
 public class TextHolder implements IAntiquable {
 
     private static final Int2ObjectArrayMap<Codec<Component[]>> CODEC_CACHE = new Int2ObjectArrayMap<>();
-    private boolean renderMessagedFiltered;
-
-    private static Codec<Component[]> compCodec(int size) {
-        return CODEC_CACHE.computeIfAbsent(size, s -> ComponentSerialization.CODEC.listOf()
-                .comapFlatMap((list) -> Util.fixedSize(list, s)
-                                .map(l -> l.toArray(Component[]::new)),
-                        components -> Arrays.stream(components).toList()));
-    }
-
     private final int lines;
     private final int maxWidth;
     //text
@@ -70,10 +61,10 @@ public class TextHolder implements IAntiquable {
     private final Component[] filteredMessages;
     //text that gets rendered
     private final FormattedCharSequence[] renderMessages;
+    private boolean renderMessagedFiltered;
     private DyeColor color = DyeColor.BLACK;
     private boolean hasGlowingText = false;
     private boolean hasAntiqueInk = false;
-
     public TextHolder(int size, int maxWidth) {
         this.lines = size;
         this.maxWidth = maxWidth;
@@ -82,6 +73,13 @@ public class TextHolder implements IAntiquable {
         this.filteredMessages = new Component[size];
         Arrays.fill(this.messages, CommonComponents.EMPTY);
         Arrays.fill(this.filteredMessages, CommonComponents.EMPTY);
+    }
+
+    private static Codec<Component[]> compCodec(int size) {
+        return CODEC_CACHE.computeIfAbsent(size, s -> ComponentSerialization.CODEC.listOf()
+                .comapFlatMap((list) -> Util.fixedSize(list, s)
+                                .map(l -> l.toArray(Component[]::new)),
+                        components -> Arrays.stream(components).toList()));
     }
 
     public int getMaxLineCharacters() {

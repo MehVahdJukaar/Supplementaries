@@ -30,10 +30,8 @@ import java.util.Set;
 //cloned from WalkNodeEvaluator. adjusted for variable malus that doesnt ask the mob to handle water internally and stuff
 public class BoatNodeEvaluator extends NodeEvaluator {
 
-    private static final float ON_LAND_MALUS = 1000.0F;
-
-
     public static final double SPACE_BETWEEN_WALL_POSTS = 0.5;
+    private static final float ON_LAND_MALUS = 1000.0F;
     private static final double DEFAULT_MOB_JUMP_HEIGHT = 1.125;
     private final Long2ObjectMap<PathType> pathTypesByPosCacheByMob = new Long2ObjectOpenHashMap<>();
     private final Object2BooleanMap<AABB> collisionCache = new Object2BooleanOpenHashMap<>();
@@ -42,6 +40,81 @@ public class BoatNodeEvaluator extends NodeEvaluator {
     public BoatNodeEvaluator() {
         super();
         this.canFloat = true;
+    }
+
+    //like WalkNodeEvaluator.getFloorLevel
+    public static double getWaterHeightLevel(BlockGetter level, BlockPos pos) {
+        BlockPos belowPos = pos.below();
+        BlockState stateBelow = level.getBlockState(belowPos);
+        FluidState fluidState = stateBelow.getFluidState();
+        VoxelShape voxelShape = stateBelow.getCollisionShape(level, belowPos);
+        double solidShape = belowPos.getY() + (voxelShape.isEmpty() ? 0.0 : voxelShape.max(Direction.Axis.Y));
+        float fluidHeight = fluidState.getHeight(level, belowPos);
+        return Math.max(solidShape, fluidHeight);
+    }
+
+    private static boolean doesBlockHavePartialCollision(PathType pathType) {
+        return pathType == PathType.FENCE || pathType == PathType.DOOR_WOOD_CLOSED || pathType == PathType.DOOR_IRON_CLOSED;
+    }
+
+    public static double getFloorLevel(BlockGetter level, BlockPos pos) {
+        BlockPos blockPos = pos.below();
+        VoxelShape voxelShape = level.getBlockState(blockPos).getCollisionShape(level, blockPos);
+        return blockPos.getY() + (voxelShape.isEmpty() ? 0.0 : voxelShape.max(Direction.Axis.Y));
+    }
+
+    public static PathType getPathTypeStatic(Mob mob, BlockPos pos) {
+        return getPathTypeStatic(new PathfindingContext(mob.level(), mob), pos.mutable());
+    }
+
+    public static PathType getPathTypeStatic(PathfindingContext context, BlockPos.MutableBlockPos pos) {
+        int i = pos.getX();
+        int j = pos.getY();
+        int k = pos.getZ();
+        PathType pathType = context.getPathTypeFromState(i, j, k);
+        if (pathType == PathType.OPEN && j >= context.level().getMinBuildHeight() + 1) {
+            return switch (context.getPathTypeFromState(i, j - 1, k)) {
+                case OPEN, WATER, LAVA, WALKABLE -> PathType.OPEN;
+                case DAMAGE_FIRE -> PathType.DAMAGE_FIRE;
+                case DAMAGE_OTHER -> PathType.DAMAGE_OTHER;
+                case STICKY_HONEY -> PathType.STICKY_HONEY;
+                case POWDER_SNOW -> PathType.DANGER_POWDER_SNOW;
+                case DAMAGE_CAUTIOUS -> PathType.DAMAGE_CAUTIOUS;
+                case TRAPDOOR -> PathType.DANGER_TRAPDOOR;
+                default -> checkNeighbourBlocks(context, i, j, k, PathType.WALKABLE);
+            };
+        } else {
+            return pathType;
+        }
+    }
+
+    public static PathType checkNeighbourBlocks(PathfindingContext context, int x, int y, int z, PathType pathType) {
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                for (int k = -1; k <= 1; k++) {
+                    if (i != 0 || k != 0) {
+                        PathType pathType2 = context.getPathTypeFromState(x + i, y + j, z + k);
+                        if (pathType2 == PathType.DAMAGE_OTHER) {
+                            return PathType.DANGER_OTHER;
+                        }
+
+                        if (pathType2 == PathType.DAMAGE_FIRE || pathType2 == PathType.LAVA) {
+                            return PathType.DANGER_FIRE;
+                        }
+
+                        if (pathType2 == PathType.WATER) {
+                            return PathType.WATER_BORDER;
+                        }
+
+                        if (pathType2 == PathType.DAMAGE_CAUTIOUS) {
+                            return PathType.DAMAGE_CAUTIOUS;
+                        }
+                    }
+                }
+            }
+        }
+
+        return pathType;
     }
 
     //decouple from mob
@@ -60,17 +133,6 @@ public class BoatNodeEvaluator extends NodeEvaluator {
         }
         float malus = mob.getPathfindingMalus(type);
         return malus == -1 ? -1 : malus + ON_LAND_MALUS; //-1 is sentinel for ignore node. Stay on water as ma
-    }
-
-    //like WalkNodeEvaluator.getFloorLevel
-    public static double getWaterHeightLevel(BlockGetter level, BlockPos pos) {
-        BlockPos belowPos = pos.below();
-        BlockState stateBelow = level.getBlockState(belowPos);
-        FluidState fluidState = stateBelow.getFluidState();
-        VoxelShape voxelShape = stateBelow.getCollisionShape(level, belowPos);
-        double solidShape = belowPos.getY() + (voxelShape.isEmpty() ? 0.0 : voxelShape.max(Direction.Axis.Y));
-        float fluidHeight = fluidState.getHeight(level, belowPos);
-        return Math.max(solidShape, fluidHeight);
     }
 
     @Override
@@ -229,10 +291,6 @@ public class BoatNodeEvaluator extends NodeEvaluator {
         }
     }
 
-    private static boolean doesBlockHavePartialCollision(PathType pathType) {
-        return pathType == PathType.FENCE || pathType == PathType.DOOR_WOOD_CLOSED || pathType == PathType.DOOR_IRON_CLOSED;
-    }
-
     private boolean canReachWithoutCollision(Node node) {
         AABB aABB = this.mob.getBoundingBox();
         Vec3 vec3 = new Vec3(
@@ -249,12 +307,6 @@ public class BoatNodeEvaluator extends NodeEvaluator {
         }
 
         return true;
-    }
-
-    public static double getFloorLevel(BlockGetter level, BlockPos pos) {
-        BlockPos blockPos = pos.below();
-        VoxelShape voxelShape = level.getBlockState(blockPos).getCollisionShape(level, blockPos);
-        return blockPos.getY() + (voxelShape.isEmpty() ? 0.0 : voxelShape.max(Direction.Axis.Y));
     }
 
     protected boolean isAmphibious() {
@@ -468,60 +520,6 @@ public class BoatNodeEvaluator extends NodeEvaluator {
     @Override
     public PathType getPathType(PathfindingContext context, int x, int y, int z) {
         return getPathTypeStatic(context, new BlockPos.MutableBlockPos(x, y, z));
-    }
-
-    public static PathType getPathTypeStatic(Mob mob, BlockPos pos) {
-        return getPathTypeStatic(new PathfindingContext(mob.level(), mob), pos.mutable());
-    }
-
-    public static PathType getPathTypeStatic(PathfindingContext context, BlockPos.MutableBlockPos pos) {
-        int i = pos.getX();
-        int j = pos.getY();
-        int k = pos.getZ();
-        PathType pathType = context.getPathTypeFromState(i, j, k);
-        if (pathType == PathType.OPEN && j >= context.level().getMinBuildHeight() + 1) {
-            return switch (context.getPathTypeFromState(i, j - 1, k)) {
-                case OPEN, WATER, LAVA, WALKABLE -> PathType.OPEN;
-                case DAMAGE_FIRE -> PathType.DAMAGE_FIRE;
-                case DAMAGE_OTHER -> PathType.DAMAGE_OTHER;
-                case STICKY_HONEY -> PathType.STICKY_HONEY;
-                case POWDER_SNOW -> PathType.DANGER_POWDER_SNOW;
-                case DAMAGE_CAUTIOUS -> PathType.DAMAGE_CAUTIOUS;
-                case TRAPDOOR -> PathType.DANGER_TRAPDOOR;
-                default -> checkNeighbourBlocks(context, i, j, k, PathType.WALKABLE);
-            };
-        } else {
-            return pathType;
-        }
-    }
-
-    public static PathType checkNeighbourBlocks(PathfindingContext context, int x, int y, int z, PathType pathType) {
-        for (int i = -1; i <= 1; i++) {
-            for (int j = -1; j <= 1; j++) {
-                for (int k = -1; k <= 1; k++) {
-                    if (i != 0 || k != 0) {
-                        PathType pathType2 = context.getPathTypeFromState(x + i, y + j, z + k);
-                        if (pathType2 == PathType.DAMAGE_OTHER) {
-                            return PathType.DANGER_OTHER;
-                        }
-
-                        if (pathType2 == PathType.DAMAGE_FIRE || pathType2 == PathType.LAVA) {
-                            return PathType.DANGER_FIRE;
-                        }
-
-                        if (pathType2 == PathType.WATER) {
-                            return PathType.WATER_BORDER;
-                        }
-
-                        if (pathType2 == PathType.DAMAGE_CAUTIOUS) {
-                            return PathType.DAMAGE_CAUTIOUS;
-                        }
-                    }
-                }
-            }
-        }
-
-        return pathType;
     }
 }
 

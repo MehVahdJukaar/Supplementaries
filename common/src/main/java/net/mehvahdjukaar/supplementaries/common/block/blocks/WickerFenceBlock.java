@@ -30,19 +30,18 @@ public class WickerFenceBlock extends WaterBlock {
     public static final EnumProperty<WallSide> SOUTH_WALL = BlockStateProperties.SOUTH_WALL;
     public static final EnumProperty<WallSide> WEST_WALL = BlockStateProperties.WEST_WALL;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    private final Map<BlockState, VoxelShape> shapeByIndex;
-    private final Map<BlockState, VoxelShape> collisionShapeByIndex;
-    private static final VoxelShape NORTH_TEST = Block.box(7.0, 0.0, 0.0, 9.0, 16.0, 9.0);
-    private static final VoxelShape SOUTH_TEST = Block.box(7.0, 0.0, 7.0, 9.0, 16.0, 16.0);
-    private static final VoxelShape WEST_TEST = Block.box(0.0, 0.0, 7.0, 9.0, 16.0, 9.0);
-    private static final VoxelShape EAST_TEST = Block.box(7.0, 0.0, 7.0, 16.0, 16.0, 9.0);
-
     public static final Map<Direction, EnumProperty<WallSide>> PROPERTY_BY_DIRECTION = ImmutableMap.copyOf(Util.make(Maps.newEnumMap(Direction.class), enumMap -> {
         enumMap.put(Direction.NORTH, NORTH_WALL);
         enumMap.put(Direction.EAST, EAST_WALL);
         enumMap.put(Direction.SOUTH, SOUTH_WALL);
         enumMap.put(Direction.WEST, WEST_WALL);
     }));
+    private static final VoxelShape NORTH_TEST = Block.box(7.0, 0.0, 0.0, 9.0, 16.0, 9.0);
+    private static final VoxelShape SOUTH_TEST = Block.box(7.0, 0.0, 7.0, 9.0, 16.0, 16.0);
+    private static final VoxelShape WEST_TEST = Block.box(0.0, 0.0, 7.0, 9.0, 16.0, 9.0);
+    private static final VoxelShape EAST_TEST = Block.box(7.0, 0.0, 7.0, 16.0, 16.0, 9.0);
+    private final Map<BlockState, VoxelShape> shapeByIndex;
+    private final Map<BlockState, VoxelShape> collisionShapeByIndex;
 
     public WickerFenceBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -59,6 +58,14 @@ public class WickerFenceBlock extends WaterBlock {
         } else {
             return height == WallSide.LOW ? Shapes.or(baseShape, lowShape) : baseShape;
         }
+    }
+
+    private static boolean isConnected(BlockState state, Property<WallSide> heightProperty) {
+        return state.getValue(heightProperty) != WallSide.NONE;
+    }
+
+    private static boolean isCovered(VoxelShape firstShape, VoxelShape secondShape) {
+        return !Shapes.joinIsNotEmpty(secondShape, firstShape, BooleanOp.ONLY_FIRST);
     }
 
     private Map<BlockState, VoxelShape> makeShapes(float width, float depth, float wallPostHeight, float wallMinY, float wallLowHeight, float wallTallHeight) {
@@ -161,7 +168,6 @@ public class WickerFenceBlock extends WaterBlock {
         return this.getCorrectShape(levelReader, state, abovePos, aboveState, north, east, south, weast);
     }
 
-
     private BlockState getCorrectShape(LevelReader level, BlockState state, BlockPos pos, BlockState upState, boolean northConnection, boolean eastConnection, boolean southConnection, boolean westConnection) {
         VoxelShape voxelShape = upState.getCollisionShape(level, pos).getFaceShape(Direction.DOWN);
         return this.updateSides(state, northConnection, eastConnection, southConnection, westConnection, voxelShape);
@@ -175,14 +181,6 @@ public class WickerFenceBlock extends WaterBlock {
             case UP -> this.topUpdate(level, state, neighborPos, neighborState);
             default -> this.allUpdate(state, currentPos, level);
         };
-    }
-
-    private static boolean isConnected(BlockState state, Property<WallSide> heightProperty) {
-        return state.getValue(heightProperty) != WallSide.NONE;
-    }
-
-    private static boolean isCovered(VoxelShape firstShape, VoxelShape secondShape) {
-        return !Shapes.joinIsNotEmpty(secondShape, firstShape, BooleanOp.ONLY_FIRST);
     }
 
     private BlockState topUpdate(LevelReader level, BlockState state, BlockPos pos, BlockState secondState) {

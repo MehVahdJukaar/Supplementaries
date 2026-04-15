@@ -31,6 +31,22 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
         };
     }
 
+    private static int getProcessedColor(int rgb, int tint) {
+        var hsl = new RGBColor(rgb).asHSL();
+        float h = hsl.hue();
+        if (tint == 1) {
+            boolean b = h > 0.16667f && h < 0.6667f;
+            float i = b ? -0.04f : +0.04f;
+            h = (h + i) % 1f;
+        }
+
+        hsl = ColorHelper.prettyfyColor(hsl.withHue(h));
+        float s = hsl.saturation();
+        //0.7,0.6
+        s = tint == 0 ? (s * 0.81f) : s * 0.74f;
+        return hsl.withSaturation(s).asRGB().toInt();
+    }
+
     @Override
     public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tint) {
         if (world != null && pos != null) {
@@ -55,21 +71,5 @@ public class TippedSpikesColor implements BlockColor, ItemColor {
     public int getColor(ItemStack stack, int tint) {
         if (tint == 0) return 0xffffff;
         return getCachedColor(stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).getColor(), tint);
-    }
-
-    private static int getProcessedColor(int rgb, int tint) {
-        var hsl = new RGBColor(rgb).asHSL();
-        float h = hsl.hue();
-        if (tint == 1) {
-            boolean b = h > 0.16667f && h < 0.6667f;
-            float i = b ? -0.04f : +0.04f;
-            h = (h + i) % 1f;
-        }
-
-        hsl = ColorHelper.prettyfyColor(hsl.withHue(h));
-        float s = hsl.saturation();
-        //0.7,0.6
-        s = tint == 0 ? (s * 0.81f) : s * 0.74f;
-        return hsl.withSaturation(s).asRGB().toInt();
     }
 }

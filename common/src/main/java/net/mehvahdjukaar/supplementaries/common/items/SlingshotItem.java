@@ -48,6 +48,60 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
         super(properties);
     }
 
+    private static float applyPowerModifiers(ItemStack stack, float power) {
+        boolean noGravity = EnchantmentHelper.has(stack, ModEnchantments.PROJECTILE_NO_GRAVITY.get());
+        power *= (float) ((CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (noGravity ? 0.5 : 0)) * 1.1);
+        return power;
+    }
+
+    private static Vector3f getShootVector(LivingEntity shooter, float angle) {
+        Vector3f vector3f;
+        Vec3 vec3 = shooter.getUpVector(1.0F);
+        Quaternionf quaternionf = new Quaternionf().setAngleAxis((angle * (float) (Math.PI / 180.0)), vec3.x, vec3.y, vec3.z);
+        Vec3 vec32 = shooter.getViewVector(1.0F);
+        vector3f = vec32.toVector3f().rotate(quaternionf);
+        return vector3f;
+    }
+
+    private static Vector3f getProjectileShotVector(LivingEntity shooter, Vec3 distance, float angle) {
+        Vector3f vector3f = distance.toVector3f().normalize();
+        Vector3f vector3f2 = new Vector3f(vector3f).cross(new Vector3f(0.0F, 1.0F, 0.0F));
+        if ((double) vector3f2.lengthSquared() <= 1.0E-7) {
+            Vec3 vec3 = shooter.getUpVector(1.0F);
+            vector3f2 = new Vector3f(vector3f).cross(vec3.toVector3f());
+        }
+
+        Vector3f vector3f3 = new Vector3f(vector3f).rotateAxis((float) (Math.PI / 2), vector3f2.x, vector3f2.y, vector3f2.z);
+        return new Vector3f(vector3f).rotateAxis(angle * (float) (Math.PI / 180.0), vector3f3.x, vector3f3.y, vector3f3.z);
+    }
+
+    //shoot pitches for multi shot
+    private static float getShotPitch(RandomSource random, int index) {
+        return index == 0 ? 1.0F : getRandomShotPitch((index & 1) == 1, random);
+    }
+
+    private static float getRandomShotPitch(boolean isHighPitched, RandomSource random) {
+        float f = isHighPitched ? 0.63F : 0.43F;
+        return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
+    }
+
+    // same as bow but with float argument AND variable charge duration
+    public static float getPowerForTime(float charge, ItemStack stack, LivingEntity entity) {
+        float f = charge / getChargeDuration(stack, entity);
+        f = (f * f + f * 2.0F) / 3.0F;
+        if (f > 1.0F) {
+            f = 1.0F;
+        }
+
+        return f;
+    }
+
+    //actual use duration, in seconds i guess
+    public static int getChargeDuration(ItemStack stack, LivingEntity shooter) {
+        float f = EnchantmentHelper.modifyCrossbowChargingTime(stack, shooter, CommonConfigs.Tools.SLINGSHOT_CHARGE.get()) / 20f;
+        return Mth.floor(f * 20.0F);
+    }
+
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity entity, int timeCharged) {
         //same as bow
@@ -71,14 +125,6 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
             }
         }
     }
-
-
-    private static float applyPowerModifiers(ItemStack stack, float power) {
-        boolean noGravity = EnchantmentHelper.has(stack, ModEnchantments.PROJECTILE_NO_GRAVITY.get());
-        power *= (float) ((CommonConfigs.Tools.SLINGSHOT_RANGE.get() + (noGravity ? 0.5 : 0)) * 1.1);
-        return power;
-    }
-
 
     @Override
     protected Projectile createProjectile(Level level, LivingEntity shooter, ItemStack weapon, ItemStack ammo, boolean isCrit) {
@@ -107,59 +153,10 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
                 ModSounds.SLINGSHOT_SHOOT.get(), shooter.getSoundSource(), 1.0F, pitch);
     }
 
-    private static Vector3f getShootVector(LivingEntity shooter, float angle) {
-        Vector3f vector3f;
-        Vec3 vec3 = shooter.getUpVector(1.0F);
-        Quaternionf quaternionf = new Quaternionf().setAngleAxis((angle * (float) (Math.PI / 180.0)), vec3.x, vec3.y, vec3.z);
-        Vec3 vec32 = shooter.getViewVector(1.0F);
-        vector3f = vec32.toVector3f().rotate(quaternionf);
-        return vector3f;
-    }
-
-    private static Vector3f getProjectileShotVector(LivingEntity shooter, Vec3 distance, float angle) {
-        Vector3f vector3f = distance.toVector3f().normalize();
-        Vector3f vector3f2 = new Vector3f(vector3f).cross(new Vector3f(0.0F, 1.0F, 0.0F));
-        if ((double) vector3f2.lengthSquared() <= 1.0E-7) {
-            Vec3 vec3 = shooter.getUpVector(1.0F);
-            vector3f2 = new Vector3f(vector3f).cross(vec3.toVector3f());
-        }
-
-        Vector3f vector3f3 = new Vector3f(vector3f).rotateAxis((float) (Math.PI / 2), vector3f2.x, vector3f2.y, vector3f2.z);
-        return new Vector3f(vector3f).rotateAxis(angle * (float) (Math.PI / 180.0), vector3f3.x, vector3f3.y, vector3f3.z);
-    }
-
-
-    //shoot pitches for multi shot
-    private static float getShotPitch(RandomSource random, int index) {
-        return index == 0 ? 1.0F : getRandomShotPitch((index & 1) == 1, random);
-    }
-
-    private static float getRandomShotPitch(boolean isHighPitched, RandomSource random) {
-        float f = isHighPitched ? 0.63F : 0.43F;
-        return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
-    }
-
     //this is max use time
     @Override
     public int getUseDuration(ItemStack itemStack, LivingEntity livingEntity) {
         return 72000;
-    }
-
-    // same as bow but with float argument AND variable charge duration
-    public static float getPowerForTime(float charge, ItemStack stack, LivingEntity entity) {
-        float f = charge / getChargeDuration(stack, entity);
-        f = (f * f + f * 2.0F) / 3.0F;
-        if (f > 1.0F) {
-            f = 1.0F;
-        }
-
-        return f;
-    }
-
-    //actual use duration, in seconds i guess
-    public static int getChargeDuration(ItemStack stack, LivingEntity shooter) {
-        float f = EnchantmentHelper.modifyCrossbowChargingTime(stack, shooter, CommonConfigs.Tools.SLINGSHOT_CHARGE.get()) / 20f;
-        return Mth.floor(f * 20.0F);
     }
 
     @Override

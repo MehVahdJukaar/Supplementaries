@@ -32,8 +32,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 public class FodderBlock extends WaterBlock {
-    private static final int MAX_LAYERS = 8;
     public static final IntegerProperty LAYERS = BlockStateProperties.LAYERS;
+    private static final int MAX_LAYERS = 8;
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[MAX_LAYERS];
 
     static {

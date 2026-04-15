@@ -26,18 +26,6 @@ public class RemoveDisabledBlocksProcessor extends StructureProcessor {
 
     public static final RemoveDisabledBlocksProcessor INSTANCE = new RemoveDisabledBlocksProcessor();
     public static final MapCodec<RemoveDisabledBlocksProcessor> CODEC = MapCodec.unit(() -> INSTANCE);
-
-    private record Replacement(String config, UnaryOperator<BlockState> transformer) {
-
-        public boolean isEnabled() {
-            return CommonConfigs.isEnabled(config);
-        }
-
-        public BlockState transform(BlockState state) {
-            return transformer.apply(state);
-        }
-    }
-
     private static final Map<Block, Replacement> REPLACEMENTS = new HashMap<>();
 
     public static void setup() {
@@ -95,6 +83,17 @@ public class RemoveDisabledBlocksProcessor extends StructureProcessor {
         } else {
             BlockState blockState2 = replacement.transform(blockState);
             return new StructureTemplate.StructureBlockInfo(relativeBlockInfo.pos(), blockState2, relativeBlockInfo.nbt());
+        }
+    }
+
+    private record Replacement(String config, UnaryOperator<BlockState> transformer) {
+
+        public boolean isEnabled() {
+            return CommonConfigs.isEnabled(config);
+        }
+
+        public BlockState transform(BlockState state) {
+            return transformer.apply(state);
         }
     }
 }

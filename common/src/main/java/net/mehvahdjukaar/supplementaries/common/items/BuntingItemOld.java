@@ -20,6 +20,20 @@ public class BuntingItemOld extends Item {
         super(properties);
     }
 
+    public static DyeColor getColor(ItemStack item) {
+        return item.getOrDefault(DataComponents.BASE_COLOR, DyeColor.WHITE);
+    }
+
+    public static void setColor(ItemStack item, DyeColor color) {
+        item.set(DataComponents.BASE_COLOR, color);
+    }
+
+    public static ItemStack getColored(DyeColor color) {
+        ItemStack stack = new ItemStack(ModRegistry.BUNTING_OLD.get());
+        setColor(stack, color);
+        return stack;
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
@@ -38,20 +52,6 @@ public class BuntingItemOld extends Item {
     @Override
     public String getDescriptionId(ItemStack stack) {
         return "block.supplementaries_bunting_" + getColor(stack).getName();
-    }
-
-    public static DyeColor getColor(ItemStack item) {
-        return item.getOrDefault(DataComponents.BASE_COLOR, DyeColor.WHITE);
-    }
-
-    public static void setColor(ItemStack item, DyeColor color) {
-        item.set(DataComponents.BASE_COLOR, color);
-    }
-
-    public static ItemStack getColored(DyeColor color) {
-        ItemStack stack = new ItemStack(ModRegistry.BUNTING_OLD.get());
-        setColor(stack, color);
-        return stack;
     }
 
 }

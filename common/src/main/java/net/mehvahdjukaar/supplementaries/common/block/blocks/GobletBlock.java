@@ -34,9 +34,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class GobletBlock extends WaterBlock implements EntityBlock {
-    protected static final VoxelShape SHAPE = Block.box(5, 0, 5, 11, 9, 11);
-
     public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
+    protected static final VoxelShape SHAPE = Block.box(5, 0, 5, 11, 9, 11);
 
     public GobletBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));

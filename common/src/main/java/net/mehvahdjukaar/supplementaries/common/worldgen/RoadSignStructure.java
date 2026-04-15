@@ -46,15 +46,7 @@ public class RoadSignStructure extends Structure {
                     DimensionPadding.CODEC.optionalFieldOf("dimension_padding", JigsawStructure.DEFAULT_DIMENSION_PADDING).forGetter(structure -> structure.dimensionPadding),
                     LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings)
             ).apply(instance, RoadSignStructure::new));
-
-
-    public static class Type implements StructureType<RoadSignStructure> {
-        @Override
-        public MapCodec<RoadSignStructure> codec() {
-            return CODEC;
-        }
-    }
-
+    private static final Set<Holder<Biome>> VALID_BIOMES = new WeakHashSet<>();
     private final Holder<StructureTemplatePool> startPool;
     private final Optional<ResourceLocation> startJigsawName;
     private final int minY;
@@ -74,6 +66,48 @@ public class RoadSignStructure extends Structure {
         this.maxY = maxY;
         this.dimensionPadding = dimensionPadding;
         this.liquidSettings = liquidSettings;
+    }
+
+    private static boolean isPosNotValid(ChunkGenerator gen, int x, int z, IntList heightMap,
+                                         LevelHeightAccessor heightLimitView, RandomState randomState) {
+        // Grab height of land. Will stop at first non-air block.
+        int y = gen.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, heightLimitView, randomState);
+
+        NoiseColumn noisecolumn = gen.getBaseColumn(x, z, heightLimitView, randomState);
+
+        // Grabs column of blocks at given position. In overworld, this column will be made of stone, water, and air.
+        // In nether, it will be netherrack, lava, and air. End will only be endstone and air. It depends on what block
+        // the chunk generator will place for that dimension.
+
+        // Combine the column of blocks with land height and you get the top block itself which you can spawnParticleOnBoundingBox.
+
+        BlockState state = noisecolumn.getBlock(y);
+
+        /*
+        if (types.isOpaque().test(state)){
+            heightMap.add(y);
+            return true;
+        }
+        */
+        try {
+            if (state.getFluidState().isEmpty()) {
+                heightMap.add(y);
+                return false;
+            }
+        } catch (Exception e) {
+            return true;
+        }
+        return true;
+    }
+
+    public static void recomputeValidStructureCache(RegistryAccess access) {
+        for (var s : access.registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(ModTags.ROAD_SIGN_DESTINATIONS)) {
+            VALID_BIOMES.addAll(s.value().biomes().stream().toList());
+        }
+    }
+
+    public static void clearCache() {
+        VALID_BIOMES.clear();
     }
 
     @Override
@@ -110,7 +144,6 @@ public class RoadSignStructure extends Structure {
                 this.liquidSettings);  // Optional thing to control whether the structure will be waterlogged when replacing pre-existing water in the world.
 
     }
-
 
     /**
      * gets spawning position or empty if not suitable
@@ -161,50 +194,11 @@ public class RoadSignStructure extends Structure {
         return Optional.of(new BlockPos(x, Math.round(sum / 5f) + 1, z));
     }
 
-    private static boolean isPosNotValid(ChunkGenerator gen, int x, int z, IntList heightMap,
-                                         LevelHeightAccessor heightLimitView, RandomState randomState) {
-        // Grab height of land. Will stop at first non-air block.
-        int y = gen.getFirstOccupiedHeight(x, z, Heightmap.Types.WORLD_SURFACE_WG, heightLimitView, randomState);
-
-        NoiseColumn noisecolumn = gen.getBaseColumn(x, z, heightLimitView, randomState);
-
-        // Grabs column of blocks at given position. In overworld, this column will be made of stone, water, and air.
-        // In nether, it will be netherrack, lava, and air. End will only be endstone and air. It depends on what block
-        // the chunk generator will place for that dimension.
-
-        // Combine the column of blocks with land height and you get the top block itself which you can spawnParticleOnBoundingBox.
-
-        BlockState state = noisecolumn.getBlock(y);
-
-        /*
-        if (types.isOpaque().test(state)){
-            heightMap.add(y);
-            return true;
+    public static class Type implements StructureType<RoadSignStructure> {
+        @Override
+        public MapCodec<RoadSignStructure> codec() {
+            return CODEC;
         }
-        */
-        try {
-            if (state.getFluidState().isEmpty()) {
-                heightMap.add(y);
-                return false;
-            }
-        } catch (Exception e) {
-            return true;
-        }
-        return true;
-    }
-
-
-    private static final Set<Holder<Biome>> VALID_BIOMES = new WeakHashSet<>();
-
-
-    public static void recomputeValidStructureCache(RegistryAccess access) {
-        for (var s : access.registryOrThrow(Registries.STRUCTURE).getTagOrEmpty(ModTags.ROAD_SIGN_DESTINATIONS)) {
-            VALID_BIOMES.addAll(s.value().biomes().stream().toList());
-        }
-    }
-
-    public static void clearCache() {
-        VALID_BIOMES.clear();
     }
 
 }

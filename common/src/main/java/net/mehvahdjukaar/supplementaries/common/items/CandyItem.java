@@ -27,6 +27,10 @@ public class CandyItem extends Item {
 
     private static final Object2IntMap<UUID> SWEET_TOOTH_COUNTER = PlatHelper.getPhysicalSide().isServer() ? new Object2IntOpenHashMap<>() : new Object2IntArrayMap<>();
 
+    public CandyItem(Properties properties) {
+        super(properties.food(CANDIE_FOOD));
+    }
+
     @ApiStatus.Internal
     public static void tickSweetTooth(ServerPlayer entity) {
         UUID id = entity.getUUID();
@@ -34,16 +38,6 @@ public class CandyItem extends Item {
         if (newValue <= 0) {
             SWEET_TOOTH_COUNTER.removeInt(id);
         }
-    }
-
-    public CandyItem(Properties properties) {
-        super(properties.food(CANDIE_FOOD));
-    }
-
-    @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
-        increaseSweetTooth(world, entity, SUGAR_PER_CANDY);
-        return super.finishUsingItem(stack, world, entity);
     }
 
     // call for other candies from other mods
@@ -55,5 +49,11 @@ public class CandyItem extends Item {
                 entity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 400));
             }
         }
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
+        increaseSweetTooth(world, entity, SUGAR_PER_CANDY);
+        return super.finishUsingItem(stack, world, entity);
     }
 }

@@ -110,13 +110,6 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.entityData.set(BANNER_ITEM, stack);
     }
 
-    public void setWoodType(WoodType type) {
-        this.entityData.set(DATA_WOOD_TYPE, type);
-        Type vanillaBoatOrOak = type.toVanillaBoatOrOak();
-        this.isBamboo = vanillaBoatOrOak == Type.BAMBOO;
-        this.setVariant(vanillaBoatOrOak);
-    }
-
     @Override
     public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
         super.onSyncedDataUpdated(dataAccessor);
@@ -125,9 +118,15 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         }
     }
 
-
     public WoodType getWoodType() {
         return entityData.get(DATA_WOOD_TYPE);
+    }
+
+    public void setWoodType(WoodType type) {
+        this.entityData.set(DATA_WOOD_TYPE, type);
+        Type vanillaBoatOrOak = type.toVanillaBoatOrOak();
+        this.isBamboo = vanillaBoatOrOak == Type.BAMBOO;
+        this.setVariant(vanillaBoatOrOak);
     }
 
     @Override

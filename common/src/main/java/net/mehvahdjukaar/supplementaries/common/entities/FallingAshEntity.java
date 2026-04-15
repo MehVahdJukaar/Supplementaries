@@ -51,6 +51,10 @@ public class FallingAshEntity extends ImprovedFallingBlockEntity {
         return entity;
     }
 
+    public static boolean isFree(BlockState pState) {
+        return pState.isAir() || pState.is(BlockTags.FIRE) || pState.liquid() || (pState.canBeReplaced() && !(pState.getBlock() instanceof AshLayerBlock));
+    }
+
     @Nullable
     @Override
     public ItemEntity spawnAtLocation(ItemLike pItem) {
@@ -162,11 +166,6 @@ public class FallingAshEntity extends ImprovedFallingBlockEntity {
             this.setDeltaMovement(this.getDeltaMovement().scale(0.98D));
         }
     }
-
-    public static boolean isFree(BlockState pState) {
-        return pState.isAir() || pState.is(BlockTags.FIRE) || pState.liquid() || (pState.canBeReplaced() && !(pState.getBlock() instanceof AshLayerBlock));
-    }
-
 
     private void dropBlockContent(BlockState state, BlockPos pos) {
         Block.dropResources(state, level(), pos, null, null, ItemStack.EMPTY);

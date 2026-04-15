@@ -60,6 +60,9 @@ public class ClientEvents {
 
     protected static final MutableComponent PLACEABLE_TOOLTIP = Component.translatable("message.supplementaries.placeable")
             .withStyle(ChatFormatting.DARK_GRAY).withStyle(ChatFormatting.ITALIC);
+    private static boolean isOnRope;
+    private static double wobble; // from 0 to 1
+    private static boolean preventShiftTillNextKeyUp = false;
 
     @EventCalled
     public static void onItemTooltip(ItemStack itemStack, Item.TooltipContext tooltipContext, TooltipFlag tooltipFlag, List<Component> components) {
@@ -143,7 +146,6 @@ public class ClientEvents {
         }, updateEachFrame);
     }
 
-
     @EventCalled
     public static void onClientTick(Minecraft minecraft) {
         if (minecraft.isPaused() || minecraft.level == null) return;
@@ -157,10 +159,6 @@ public class ClientEvents {
         MobHeadShadersManager.INSTANCE.applyMobHeadShaders(p, minecraft);
         CannonController.onClientTick(minecraft);
     }
-
-    private static boolean isOnRope;
-
-    private static double wobble; // from 0 to 1
 
     public static double getRopeWobble(double partialTicks) {
         Player p = Minecraft.getInstance().player;
@@ -179,13 +177,13 @@ public class ClientEvents {
         return 0;
     }
 
+    //TODO: this isnt ideal. Improve
+
     private static void checkIfOnRope(Player p) {
         BlockState state = p.getBlockStateOn();
         isOnRope = (p.getX() != p.xOld || p.getZ() != p.zOld) && state.getBlock() instanceof AbstractRopeBlock rb && !rb.hasConnection(Direction.UP, state) &&
                 (p.getY() + 500) % 1 >= AbstractRopeBlock.COLLISION_SHAPE.max(Direction.Axis.Y);
     }
-
-    //TODO: this isnt ideal. Improve
 
     public static void onEntityLoad(Entity entity, Level clientLevel) {
         if (entity instanceof AbstractSkeleton && entity instanceof IQuiverEntity q) {
@@ -204,13 +202,10 @@ public class ClientEvents {
         //      }
     }
 
-
     public static boolean cancelKeyPress(int key, int scancode, int action, int modifiers) {
         return SelectableContainerItemHud.getInstance().onKeyPressed(key, action, modifiers) ||
                 CannonController.onEarlyKeyPress(key, scancode, action, modifiers);
     }
-
-    private static boolean preventShiftTillNextKeyUp = false;
 
     public static void modifyInputUpdate(Input instance, LocalPlayer player) {
         if (CannonController.isActive()) {

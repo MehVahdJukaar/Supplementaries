@@ -37,6 +37,10 @@ public class SconceLeverBlock extends SconceWallBlock {
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(LIT, true));
     }
 
+    protected static Direction getFacing(BlockState state) {
+        return state.getValue(FACING);
+    }
+
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.isClientSide) {
@@ -103,10 +107,6 @@ public class SconceLeverBlock extends SconceWallBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(POWERED);
-    }
-
-    protected static Direction getFacing(BlockState state) {
-        return state.getValue(FACING);
     }
 
     @Override

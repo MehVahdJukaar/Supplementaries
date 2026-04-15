@@ -38,10 +38,9 @@ import java.util.List;
 
 public class CageBlock extends WaterBlock implements EntityBlock {
 
-    protected static final VoxelShape SHAPE = Block.box(1D, 0D, 1D, 15.0D, 16.0D, 15.0D);
-
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
+    protected static final VoxelShape SHAPE = Block.box(1D, 0D, 1D, 15.0D, 16.0D, 15.0D);
 
     public CageBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));

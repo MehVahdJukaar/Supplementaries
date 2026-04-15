@@ -27,14 +27,14 @@ import java.util.Optional;
 
 public class DepthDataHandler {
     private static final String DEPTH_LOCK_KEY = "depth_lock";
-
-    public static void init() {
-    }
-
     public static final CustomMapData.Type<Optional<Integer>, DepthMapData> DEPTH_DATA_KEY = MapDataRegistry.registerCustomMapSavedData(
             Supplementaries.res(DEPTH_LOCK_KEY), DepthMapData::new,
             ByteBufCodecs.optional(ByteBufCodecs.VAR_INT)
     );
+    private static final RandomSource RAND = RandomSource.createNewThreadLocalInstance();
+
+    public static void init() {
+    }
 
     public static Optional<Integer> getMapHeight(MapItemSavedData data) {
         return DEPTH_DATA_KEY.get(data).getValue();
@@ -66,8 +66,6 @@ public class DepthDataHandler {
     public static double getRangeMultiplier() {
         return CommonConfigs.Tools.SLICE_MAP_RANGE.get();
     }
-
-    private static final RandomSource RAND = RandomSource.createNewThreadLocalInstance();
 
     public static boolean canPlayerSee(int targetY, Entity entity) {
         Level level = entity.level();

@@ -65,6 +65,16 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         MODEL_CACHE.clear();
     }
 
+    private static double calculateDepthIndex(@Nullable ClientLevel level, int textureH) {
+        int min = level == null ? -64 : level.getMinBuildHeight();
+        int max = level == null ? 312 : level.getMaxBuildHeight();
+
+        LocalPlayer player = Minecraft.getInstance().player;
+        double depth = player == null ? 64 : player.position().y;
+        //from 0 to 1
+        double normDepth = Mth.clamp((depth - min) / (max - min), 0, 1);
+        return (normDepth * (textureH - 6));
+    }
 
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
@@ -95,18 +105,6 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
                 false, poseStack, buffer, packedLight, packedOverlay, model);
         poseStack.popPose();
     }
-
-    private static double calculateDepthIndex(@Nullable ClientLevel level, int textureH) {
-        int min = level == null ? -64 : level.getMinBuildHeight();
-        int max = level == null ? 312 : level.getMaxBuildHeight();
-
-        LocalPlayer player = Minecraft.getInstance().player;
-        double depth = player == null ? 64 : player.position().y;
-        //from 0 to 1
-        double normDepth = Mth.clamp((depth - min) / (max - min), 0, 1);
-        return (normDepth * (textureH - 6));
-    }
-
 
     private static class AltimeterModel implements BakedModel {
 
@@ -154,6 +152,23 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
             this.transforms = copy.getTransforms();
         }
 
+        private static void addScaledQuad(BakedQuadBuilder builder, PoseStack ps,
+                                          float shrink,
+                                          boolean top,
+                                          float x0, float y0,
+                                          float x1, float y1,
+                                          float u0, float v0, float u1, float v1) {
+            float ix0 = shrink * (x0 - 0.5f) * 2;
+            float ix1 = shrink * (x1 - 0.5f) * 2;
+            float iy0 = top ? 0 : shrink * (y0 - 0.5f) * 2;
+            float iy1 = !top ? 0 : shrink * (y1 - 0.5f) * 2;
+            VertexUtil.addQuad(builder, ps,
+                    x0 + ix0, y0 + iy0, x1 + ix1, y1 + iy1,
+                    u0 / 16f, v0 / 16f, u1 / 16f, v1 / 16f,
+                    255, 255, 255, 255,
+                    0, 0);
+        }
+
         @Override
         public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, RandomSource random) {
             return direction == null ? quads : List.of();
@@ -192,24 +207,6 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
         @Override
         public ItemOverrides getOverrides() {
             return overrides;
-        }
-
-
-        private static void addScaledQuad(BakedQuadBuilder builder, PoseStack ps,
-                                          float shrink,
-                                          boolean top,
-                                          float x0, float y0,
-                                          float x1, float y1,
-                                          float u0, float v0, float u1, float v1) {
-            float ix0 = shrink * (x0 - 0.5f) * 2;
-            float ix1 = shrink * (x1 - 0.5f) * 2;
-            float iy0 = top ? 0 : shrink * (y0 - 0.5f) * 2;
-            float iy1 = !top ? 0 : shrink * (y1 - 0.5f) * 2;
-            VertexUtil.addQuad(builder, ps,
-                    x0 + ix0, y0 + iy0, x1 + ix1, y1 + iy1,
-                    u0 / 16f, v0 / 16f, u1 / 16f, v1 / 16f,
-                    255, 255, 255, 255,
-                    0, 0);
         }
     }
 }

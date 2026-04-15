@@ -27,11 +27,10 @@ import java.util.function.BiConsumer;
 
 public class PlanterBlock extends WaterBlock {
 
+    public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED;
     protected static final VoxelShape SHAPE = Shapes.or(Shapes.box(0.125D, 0D, 0.125D, 0.875D, 0.687D, 0.875D),
             Shapes.box(0D, 0.687D, 0D, 1D, 1D, 1D));
     protected static final VoxelShape SHAPE_C = Shapes.or(Shapes.box(0, 0, 0, 1, 0.9375, 1));
-
-    public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED;
 
     public PlanterBlock(Properties properties) {
         super(properties);

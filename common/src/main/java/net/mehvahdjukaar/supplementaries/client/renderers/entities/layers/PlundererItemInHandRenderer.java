@@ -19,9 +19,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class PlundererItemInHandRenderer<T extends PlundererEntity, M extends EntityModel<T> & ArmedModel & HeadedModel> extends ItemInHandLayer<T, M> {
-    private final ItemInHandRenderer itemInHandRenderer;
     private static final float X_ROT_MIN = -0.5235988F;
     private static final float X_ROT_MAX = 1.5707964F;
+    private final ItemInHandRenderer itemInHandRenderer;
 
     public PlundererItemInHandRenderer(RenderLayerParent<T, M> renderer, ItemInHandRenderer itemInHandRenderer) {
         super(renderer, itemInHandRenderer);

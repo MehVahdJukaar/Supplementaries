@@ -31,9 +31,15 @@ import java.util.List;
 
 public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
 
-    //deadlock prevention
-    private static class Holder {
-        private static final SelectableContainerItemHud INSTANCE = makeInstance();
+    protected final Minecraft mc;
+    //behold states
+    @Nullable
+    private SelectableContainerItem<?, ?> itemUsed;
+    private SlotReference stackSlot;
+    private boolean usingKey = false; //false if just using
+    private double lastCumulativeMouseDx = 0;
+    protected SelectableContainerItemHud(Minecraft minecraft) {
+        this.mc = minecraft;
     }
 
     public static SelectableContainerItemHud getInstance() {
@@ -43,19 +49,6 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
     @ExpectPlatform
     public static SelectableContainerItemHud makeInstance() {
         throw new AssertionError();
-    }
-
-    protected final Minecraft mc;
-    //behold states
-    @Nullable
-    private SelectableContainerItem<?, ?> itemUsed;
-    private SlotReference stackSlot;
-    private boolean usingKey = false; //false if just using
-    private double lastCumulativeMouseDx = 0;
-
-
-    protected SelectableContainerItemHud(Minecraft minecraft) {
-        this.mc = minecraft;
     }
 
     public boolean isActive() {
@@ -141,7 +134,6 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
             });
         }
     }
-
 
     @EventCalled
     public boolean onKeyPressed(int key, int action, int modifiers) {
@@ -255,7 +247,6 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
         poseStack.popPose();
     }
 
-
     private void renderSlot(GuiGraphics graphics, int pX, int pY, ItemStack pStack, int seed, Font font) {
         if (!pStack.isEmpty()) {
             graphics.renderItem(pStack, pX, pY, seed);
@@ -264,8 +255,12 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
         }
     }
 
-
     protected abstract void drawHighlight(GuiGraphics graphics, int screenWidth, int py, ItemStack selectedArrow);
+
+    //deadlock prevention
+    private static class Holder {
+        private static final SelectableContainerItemHud INSTANCE = makeInstance();
+    }
 
 
 }

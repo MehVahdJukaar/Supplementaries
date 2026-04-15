@@ -64,6 +64,7 @@ public class QuarkCompat {
     public static final Supplier<Block> TATER_IN_A_JAR;
     public static final Supplier<BlockEntityType<TaterInAJarBlock.Tile>> TATER_IN_A_JAR_TILE;
     public static final Supplier<Item> CARTOGRAPHERS_QUILL;
+    private static Boolean oldFenceValue = null;
 
     static {
         TATER_IN_A_JAR = RegUtils.regWithItem(TATER_IN_A_JAR_NAME, TaterInAJarBlock::new,
@@ -73,11 +74,6 @@ public class QuarkCompat {
                 TaterInAJarBlock.Tile::new, TATER_IN_A_JAR.get()).build(null));
 
         CARTOGRAPHERS_QUILL = null;// RegUtils.regItem("cartographers_quill", CartographersQuillItem::new);
-    }
-
-    public static void init() {
-        //hackerinos
-        Quark.ZETA.loadBus.subscribe(QuarkCompat.class);
     }
     //Dumb zeta lost features here... commenting out.
     /*
@@ -96,6 +92,11 @@ public class QuarkCompat {
             event.register(event.createASeedyPlaceMod(Set.of(ModRegistry.FLAX.get())));
         }
     }*/
+
+    public static void init() {
+        //hackerinos
+        Quark.ZETA.loadBus.subscribe(QuarkCompat.class);
+    }
 
     public static boolean isFastSlideModuleEnabled() {
         return Quark.ZETA.modules.isEnabled(EnhancedLaddersModule.class) && EnhancedLaddersModule.allowSliding;
@@ -245,8 +246,6 @@ public class QuarkCompat {
         */
         return null;
     }
-
-    private static Boolean oldFenceValue = null;
 
     public static void disableFenceGateStuff() {
         oldFenceValue = DoubleDoorOpeningModule.enableFenceGates;

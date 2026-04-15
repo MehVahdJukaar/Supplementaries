@@ -25,41 +25,6 @@ public class GoldDoorBlock extends DoorBlock {
         super(BlockSetType.GOLD, builder);
     }
 
-    public boolean canBeOpened(BlockState state) {
-        return !state.getValue(POWERED);
-    }
-
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (this.canBeOpened(state)) {
-            tryOpenDoubleDoor(level, state, pos);
-
-            state = state.cycle(OPEN);
-            level.setBlock(pos, state, 10);
-            this.playSound(player, level, pos, state.getValue(OPEN));
-            return InteractionResult.sidedSuccess(level.isClientSide);
-        }
-        return InteractionResult.PASS;
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        boolean hasPower = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
-        if (blockIn != this && hasPower != state.getValue(POWERED)) {
-            worldIn.setBlock(pos, state.setValue(POWERED, hasPower), 2);
-        }
-
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState state = super.getStateForPlacement(context);
-        if (state != null) state.setValue(OPEN, false);
-        return state;
-    }
-
-    //double door stuff
-
     @SuppressWarnings("ConstantConditions")
     public static void tryOpenDoubleDoor(Level world, BlockState state, BlockPos pos) {
         if ((CompatHandler.QUARK && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.DOUBLEDOORS)) {
@@ -93,5 +58,40 @@ public class GoldDoorBlock extends DoorBlock {
                 }
             }
         }
+    }
+
+    public boolean canBeOpened(BlockState state) {
+        return !state.getValue(POWERED);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if (this.canBeOpened(state)) {
+            tryOpenDoubleDoor(level, state, pos);
+
+            state = state.cycle(OPEN);
+            level.setBlock(pos, state, 10);
+            this.playSound(player, level, pos, state.getValue(OPEN));
+            return InteractionResult.sidedSuccess(level.isClientSide);
+        }
+        return InteractionResult.PASS;
+    }
+
+    //double door stuff
+
+    @Override
+    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        boolean hasPower = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.relative(state.getValue(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
+        if (blockIn != this && hasPower != state.getValue(POWERED)) {
+            worldIn.setBlock(pos, state.setValue(POWERED, hasPower), 2);
+        }
+
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState state = super.getStateForPlacement(context);
+        if (state != null) state.setValue(OPEN, false);
+        return state;
     }
 }

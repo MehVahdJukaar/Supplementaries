@@ -24,11 +24,6 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
     public HourGlassBlockTileRenderer(BlockEntityRendererProvider.Context context) {
     }
 
-    @Override
-    public int getViewDistance() {
-        return 48;
-    }
-
     public static void renderSand(PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
                                   ResourceLocation texture, float height, Direction dir) {
 
@@ -79,6 +74,11 @@ public class HourGlassBlockTileRenderer implements BlockEntityRenderer<HourGlass
             poseStack.popPose();
         }
         poseStack.popPose();
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 48;
     }
 
     @Override

@@ -24,6 +24,13 @@ public class GravelBricksBlock extends Block {
         super(properties);
     }
 
+    private static boolean hasEnergyToBreak(Entity entity) {
+        if (!CommonConfigs.Building.GRAVEL_BRICKS_BREAKING.get()) {
+            return false;
+        }
+        return entity.getBoundingBox().getSize() > 0.5 && (entity instanceof LivingEntity || entity instanceof FallingBlockEntity);
+    }
+
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         if (context instanceof EntityCollisionContext ec && ec.getEntity() instanceof Player) {
@@ -44,7 +51,6 @@ public class GravelBricksBlock extends Block {
         }
     }
 
-
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (!level.isClientSide) {
@@ -57,12 +63,5 @@ public class GravelBricksBlock extends Block {
             }
         }
         super.entityInside(state, level, pos, entity);
-    }
-
-    private static boolean hasEnergyToBreak(Entity entity) {
-        if (!CommonConfigs.Building.GRAVEL_BRICKS_BREAKING.get()) {
-            return false;
-        }
-        return entity.getBoundingBox().getSize() > 0.5 && (entity instanceof LivingEntity || entity instanceof FallingBlockEntity);
     }
 }

@@ -21,6 +21,9 @@ public abstract class FontRendererMixin implements IAntiquable {
 
     @Unique
     private boolean supplementaries$antique = false;
+    @Final
+    @Shadow
+    private Function<ResourceLocation, FontSet> fonts;
 
     @Override
     public boolean supplementaries$isAntique() {
@@ -31,10 +34,6 @@ public abstract class FontRendererMixin implements IAntiquable {
     public void supplementaries$setAntique(boolean hasInk) {
         supplementaries$antique = hasInk;
     }
-
-    @Final
-    @Shadow
-    private Function<ResourceLocation, FontSet> fonts;
 
     @Inject(method = "getFontSet", at = @At("HEAD"), cancellable = true)
     private void supp$setAntiqueFont(ResourceLocation resourceLocation, CallbackInfoReturnable<FontSet> cir) {

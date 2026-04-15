@@ -95,25 +95,25 @@ public class CCCompatImpl {
         }
 
         @LuaFunction
+        public String getMessage() {
+            return tile.getMessage(false).getString();
+        }
+
+        @LuaFunction
         public void setMessage(String message) {
             tile.setMessage(Component.literal(message));
             tile.setChanged();
         }
 
         @LuaFunction
-        public String getMessage() {
-            return tile.getMessage(false).getString();
+        public String getName() {
+            return tile.getName().getString();
         }
 
         @LuaFunction
         public void setName(String name) {
             tile.setCustomName(Component.literal(name));
             tile.setChanged();
-        }
-
-        @LuaFunction
-        public String getName() {
-            return tile.getName().getString();
         }
 
         @LuaFunction
@@ -177,6 +177,13 @@ public class CCCompatImpl {
         }
 
         @LuaFunction
+        public float getYaw() {
+            Quaternionf orientation = tile.getLocalOrientation(1);
+            EntityAngles angles = EntityAngles.fromQuaternion(orientation);
+            return angles.yaw();
+        }
+
+        @LuaFunction
         public void setYaw(double value) {
             Quaternionf orientation = tile.getLocalOrientation(1);
             EntityAngles angles = EntityAngles.fromQuaternion(orientation);
@@ -184,6 +191,13 @@ public class CCCompatImpl {
 
             tile.setLocalOrientation(angles.toQuaternion());
             tile.syncToClients(false);
+        }
+
+        @LuaFunction
+        public float getPitch() {
+            Quaternionf orientation = tile.getLocalOrientation(1);
+            EntityAngles angles = EntityAngles.fromQuaternion(orientation);
+            return angles.pitch();
         }
 
         @LuaFunction
@@ -198,17 +212,8 @@ public class CCCompatImpl {
         }
 
         @LuaFunction
-        public float getYaw() {
-            Quaternionf orientation = tile.getLocalOrientation(1);
-            EntityAngles angles = EntityAngles.fromQuaternion(orientation);
-            return angles.yaw();
-        }
-
-        @LuaFunction
-        public float getPitch() {
-            Quaternionf orientation = tile.getLocalOrientation(1);
-            EntityAngles angles = EntityAngles.fromQuaternion(orientation);
-            return angles.pitch();
+        public byte getPower() {
+            return tile.getPowerLevel();
         }
 
         @LuaFunction
@@ -216,11 +221,6 @@ public class CCCompatImpl {
             byte power = (byte) Math.min(Math.max(inPower, 1), CannonBlockTile.MAX_POWER_LEVEL);
             tile.setPowerLevel(power);
             tile.syncToClients(false);
-        }
-
-        @LuaFunction
-        public byte getPower() {
-            return tile.getPowerLevel();
         }
 
         @LuaFunction

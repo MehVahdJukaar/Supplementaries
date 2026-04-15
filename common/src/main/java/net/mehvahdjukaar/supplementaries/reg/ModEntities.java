@@ -21,6 +21,109 @@ import static net.mehvahdjukaar.supplementaries.reg.ModConstants.*;
 
 public class ModEntities {
 
+    //entities
+    public static final Supplier<EntityType<PearlMarker>> PEARL_MARKER = regEntity("pearl_marker",
+            PearlMarker::new, MobCategory.MISC, 0.999F, 0.999F, 4, false, -1);
+    //dispenser minecart
+    public static final Supplier<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME, () ->
+            EntityType.Builder.<DispenserMinecartEntity>of(DispenserMinecartEntity::new, MobCategory.MISC)
+                    .sized(0.98F, 0.7F).clientTrackingRange(8));
+    //hat stand
+    public static final Supplier<EntityType<HatStandEntity>> HAT_STAND = regEntity(HAT_STAND_NAME,
+            HatStandEntity::new, MobCategory.MISC, 10 / 16f, 0.75f, 10, false, 3);
+    //red trader
+    public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
+            RedMerchantEntity::new, MobCategory.CREATURE, 0.6F, 1.95F, 10, true, 3);
+    //plunderer
+    public static final Supplier<EntityType<PlundererEntity>> PLUNDERER = regEntity(PLUNDERER_NAME,
+            () -> EntityType.Builder.of(PlundererEntity::new, MobCategory.MONSTER)
+                    .canSpawnFarFromPlayer()
+                    .sized(0.6F, 1.95F)
+                    .passengerAttachments(2.0F)
+                    .ridingOffset(-0.6F)
+                    .clientTrackingRange(8));
+    //urn
+    public static final Supplier<EntityType<FallingUrnEntity>> FALLING_URN = regEntity(FALLING_URN_NAME, () ->
+            EntityType.Builder.<FallingUrnEntity>of(FallingUrnEntity::new, MobCategory.MISC)
+                    .sized(0.98F, 0.98F)
+                    .clientTrackingRange(10)
+                    .updateInterval(20));
+    //ash
+    public static final Supplier<EntityType<FallingAshEntity>> FALLING_ASH = regEntity(FALLING_ASH_NAME, () ->
+            EntityType.Builder.<FallingAshEntity>of(FallingAshEntity::new, MobCategory.MISC)
+                    .sized(0.98F, 0.98F)
+                    .clientTrackingRange(10)
+                    .updateInterval(20));
+    //sack
+    public static final Supplier<EntityType<ImprovedFallingBlockEntity>> FALLING_SACK = regEntity(FALLING_SACK_NAME, () ->
+            EntityType.Builder.<ImprovedFallingBlockEntity>of(ImprovedFallingBlockEntity::new, MobCategory.MISC)
+                    .sized(0.98F, 0.98F)
+                    .clientTrackingRange(10)
+                    .updateInterval(20));
+    //TODO:check update interval and client tracking range
+    //brick
+    public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME, () ->
+            EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F)
+                    .clientTrackingRange(6)
+                    .updateInterval(5));
+    //slimeball
+    public static final Supplier<EntityType<SlimeBallEntity>> THROWABLE_SLIMEBALL = regEntity(THROWABLE_SLIMEBALL_NAME, () ->
+            EntityType.Builder.<SlimeBallEntity>of(SlimeBallEntity::new, MobCategory.MISC)
+                    .sized(0.25F, 0.25F)
+                    .clientTrackingRange(6)
+                    .updateInterval(5));
+    //bomb
+    public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME, () ->
+            EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(8)
+                    .updateInterval(5));
+    //cannonball
+    public static final Supplier<EntityType<CannonBallEntity>> CANNONBALL = regEntity(CANNONBALL_NAME, () ->
+            EntityType.Builder.<CannonBallEntity>of(CannonBallEntity::new, MobCategory.MISC)
+                    .sized(0.75F, 0.75F)
+                    .clientTrackingRange(10)
+                    .updateInterval(1));
+    //rope arrow
+    public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = regEntity(ROPE_ARROW_NAME, () ->
+            EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(6)
+                    .updateInterval(20));
+    //slingshot projectile
+    public static final Supplier<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = regEntity(SLINGSHOT_PROJECTILE_NAME, () ->
+            EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, MobCategory.MISC)
+                    .sized(0.5F, 0.5F)
+                    .clientTrackingRange(6)
+                    .updateInterval(1)); //STOP GETTING IT OUT OF SYNC! either 1 or infinity aparently
+    public static final Supplier<EntityType<CannonBoatEntity>> CANNON_BOAT = regEntity(CANNON_BOAT_NAME, () ->
+            EntityType.Builder.<CannonBoatEntity>of(CannonBoatEntity::new, MobCategory.MISC)
+                    .sized(1.375F, 0.5625F)
+                    .eyeHeight(0.5625F)
+                    .clientTrackingRange(10)
+    );
+    //simply used to iterate over nearby poi more quickly. We don't actually occupy these
+    public static final RegSupplier<? extends PoiType> USABLE_CANNON = RegHelper.registerPOI(
+            Supplementaries.res("cannon"), 1, 1, ModRegistry.CANNON);
+    public static final IAttachmentType<SlimedData, LivingEntity> SLIMED_DATA = RegHelper.registerDataAttachment(
+            res("slimed_data"),
+            () -> RegHelper.AttachmentBuilder.create(SlimedData::new)
+                    .syncWith(SlimedData.STREAM_CODEC)
+                    .persistent(SlimedData.CODEC),
+            LivingEntity.class
+    );
+
+    //poi
+    public static final IAttachmentType<LivingEntityTamable, LivingEntity> LIVING_TAMABLE = RegHelper.registerDataAttachment(
+            res("living_tamable"),
+            () -> RegHelper.AttachmentBuilder.create(LivingEntityTamable::new)
+                    .persistent(LivingEntityTamable.CODEC),
+            LivingEntity.class
+    );
+
+    //attachments
+
     public static void init() {
         RegHelper.addAttributeRegistration(ModEntities::registerEntityAttributes);
     }
@@ -31,126 +134,6 @@ public class ModEntities {
         event.register(ModEntities.PLUNDERER.get(), PlundererEntity.createAttributes());
         event.register(ModEntities.HAT_STAND.get(), LivingEntity.createLivingAttributes());
     }
-
-    //entities
-    public static final Supplier<EntityType<PearlMarker>> PEARL_MARKER = regEntity("pearl_marker",
-            PearlMarker::new, MobCategory.MISC, 0.999F, 0.999F, 4, false, -1);
-
-    //dispenser minecart
-    public static final Supplier<EntityType<DispenserMinecartEntity>> DISPENSER_MINECART = regEntity(DISPENSER_MINECART_NAME, () ->
-            EntityType.Builder.<DispenserMinecartEntity>of(DispenserMinecartEntity::new, MobCategory.MISC)
-                    .sized(0.98F, 0.7F).clientTrackingRange(8));
-
-    //hat stand
-    public static final Supplier<EntityType<HatStandEntity>> HAT_STAND = regEntity(HAT_STAND_NAME,
-            HatStandEntity::new, MobCategory.MISC, 10 / 16f, 0.75f, 10, false, 3);
-
-    //red trader
-    public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
-            RedMerchantEntity::new, MobCategory.CREATURE, 0.6F, 1.95F, 10, true, 3);
-
-    //plunderer
-    public static final Supplier<EntityType<PlundererEntity>> PLUNDERER = regEntity(PLUNDERER_NAME,
-            () -> EntityType.Builder.of(PlundererEntity::new, MobCategory.MONSTER)
-                    .canSpawnFarFromPlayer()
-                    .sized(0.6F, 1.95F)
-                    .passengerAttachments(2.0F)
-                    .ridingOffset(-0.6F)
-                    .clientTrackingRange(8));
-
-    //urn
-    public static final Supplier<EntityType<FallingUrnEntity>> FALLING_URN = regEntity(FALLING_URN_NAME, () ->
-            EntityType.Builder.<FallingUrnEntity>of(FallingUrnEntity::new, MobCategory.MISC)
-                    .sized(0.98F, 0.98F)
-                    .clientTrackingRange(10)
-                    .updateInterval(20));
-
-    //ash
-    public static final Supplier<EntityType<FallingAshEntity>> FALLING_ASH = regEntity(FALLING_ASH_NAME, () ->
-            EntityType.Builder.<FallingAshEntity>of(FallingAshEntity::new, MobCategory.MISC)
-                    .sized(0.98F, 0.98F)
-                    .clientTrackingRange(10)
-                    .updateInterval(20));
-
-    //sack
-    public static final Supplier<EntityType<ImprovedFallingBlockEntity>> FALLING_SACK = regEntity(FALLING_SACK_NAME, () ->
-            EntityType.Builder.<ImprovedFallingBlockEntity>of(ImprovedFallingBlockEntity::new, MobCategory.MISC)
-                    .sized(0.98F, 0.98F)
-                    .clientTrackingRange(10)
-                    .updateInterval(20));
-
-    //TODO:check update interval and client tracking range
-    //brick
-    public static final Supplier<EntityType<ThrowableBrickEntity>> THROWABLE_BRICK = regEntity(THROWABLE_BRICK_NAME, () ->
-            EntityType.Builder.<ThrowableBrickEntity>of(ThrowableBrickEntity::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F)
-                    .clientTrackingRange(6)
-                    .updateInterval(5));
-
-    //slimeball
-    public static final Supplier<EntityType<SlimeBallEntity>> THROWABLE_SLIMEBALL = regEntity(THROWABLE_SLIMEBALL_NAME, () ->
-            EntityType.Builder.<SlimeBallEntity>of(SlimeBallEntity::new, MobCategory.MISC)
-                    .sized(0.25F, 0.25F)
-                    .clientTrackingRange(6)
-                    .updateInterval(5));
-
-    //bomb
-    public static final Supplier<EntityType<BombEntity>> BOMB = regEntity(BOMB_NAME, () ->
-            EntityType.Builder.<BombEntity>of(BombEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
-                    .clientTrackingRange(8)
-                    .updateInterval(5));
-
-    //cannonball
-    public static final Supplier<EntityType<CannonBallEntity>> CANNONBALL = regEntity(CANNONBALL_NAME, () ->
-            EntityType.Builder.<CannonBallEntity>of(CannonBallEntity::new, MobCategory.MISC)
-                    .sized(0.75F, 0.75F)
-                    .clientTrackingRange(10)
-                    .updateInterval(1));
-
-    //rope arrow
-    public static final Supplier<EntityType<RopeArrowEntity>> ROPE_ARROW = regEntity(ROPE_ARROW_NAME, () ->
-            EntityType.Builder.<RopeArrowEntity>of(RopeArrowEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
-                    .clientTrackingRange(6)
-                    .updateInterval(20));
-
-    //slingshot projectile
-    public static final Supplier<EntityType<SlingshotProjectileEntity>> SLINGSHOT_PROJECTILE = regEntity(SLINGSHOT_PROJECTILE_NAME, () ->
-            EntityType.Builder.<SlingshotProjectileEntity>of(SlingshotProjectileEntity::new, MobCategory.MISC)
-                    .sized(0.5F, 0.5F)
-                    .clientTrackingRange(6)
-                    .updateInterval(1)); //STOP GETTING IT OUT OF SYNC! either 1 or infinity aparently
-
-    public static final Supplier<EntityType<CannonBoatEntity>> CANNON_BOAT = regEntity(CANNON_BOAT_NAME, () ->
-            EntityType.Builder.<CannonBoatEntity>of(CannonBoatEntity::new, MobCategory.MISC)
-                    .sized(1.375F, 0.5625F)
-                    .eyeHeight(0.5625F)
-                    .clientTrackingRange(10)
-    );
-
-    //poi
-
-    //simply used to iterate over nearby poi more quickly. We don't actually occupy these
-    public static final RegSupplier<? extends PoiType> USABLE_CANNON = RegHelper.registerPOI(
-            Supplementaries.res("cannon"), 1, 1, ModRegistry.CANNON);
-
-    //attachments
-
-    public static final IAttachmentType<SlimedData, LivingEntity> SLIMED_DATA = RegHelper.registerDataAttachment(
-            res("slimed_data"),
-            () -> RegHelper.AttachmentBuilder.create(SlimedData::new)
-                    .syncWith(SlimedData.STREAM_CODEC)
-                    .persistent(SlimedData.CODEC),
-            LivingEntity.class
-    );
-
-    public static final IAttachmentType<LivingEntityTamable, LivingEntity> LIVING_TAMABLE = RegHelper.registerDataAttachment(
-            res("living_tamable"),
-            () -> RegHelper.AttachmentBuilder.create(LivingEntityTamable::new)
-                    .persistent(LivingEntityTamable.CODEC),
-            LivingEntity.class
-    );
 
     //firefly
 
@@ -165,7 +148,6 @@ public class ModEntities {
 //    public static final Supplier<Item> FIREFLY_SPAWN_EGG_ITEM = regItem(FIREFLY_NAME + "_spawn_egg", () ->
 //            new ForgeSpawnEggItem(FIREFLY_TYPE, -5048018, -14409439, //-4784384, -16777216,
 //                    new Item.Properties().tab(getTab(CreativeModeTab.TAB_MISC, FIREFLY_NAME))));
-
 
     public static <T extends Entity> Supplier<EntityType<T>> regEntity(String name, Supplier<EntityType.Builder<T>> builder) {
         return RegHelper.registerEntityType(Supplementaries.res(name), builder.get());

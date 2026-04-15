@@ -24,6 +24,12 @@ import java.util.function.Supplier;
 @Mod(Supplementaries.MOD_ID)
 public class SupplementariesForge {
 
+    public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");
+    public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(
+            NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Supplementaries.MOD_ID);
+    public static final Supplier<MapCodec<ReplaceRopeByConfigModifier>> REPLACE_ROPE =
+            LOOT_MODIFIERS.register("replace_rope", ReplaceRopeByConfigModifier.CODEC);
+
     public SupplementariesForge(IEventBus bus) {
         bus.register(this);
         Supplementaries.commonInit();
@@ -52,15 +58,6 @@ public class SupplementariesForge {
     public void setup(FMLCommonSetupEvent event) {
         VillagerScareStuff.setup();
     }
-
-    public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");
-
-
-    public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(
-            NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Supplementaries.MOD_ID);
-
-    public static final Supplier<MapCodec<ReplaceRopeByConfigModifier>> REPLACE_ROPE =
-            LOOT_MODIFIERS.register("replace_rope", ReplaceRopeByConfigModifier.CODEC);
 
 
 }

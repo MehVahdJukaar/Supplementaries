@@ -27,29 +27,6 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
         super(blockIn, builder);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltips, tooltipFlag);
-        getPotion(stack).addPotionTooltip(tooltips::add, BambooSpikesBlockTile.POTION_MULTIPLIER, context.tickRate());
-    }
-
-    @Override
-    public int getBarColor(ItemStack stack) {
-        return getPotion(stack).getColor();
-    }
-
-    @Override
-    public boolean isBarVisible(ItemStack stack) {
-        return !CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get();
-    }
-
-    @Override
-    public String getDescriptionId(ItemStack stack) {
-        PotionContents p = getPotion(stack);
-        return Potion.getName(p.potion(),
-                "item.supplementaries.bamboo_spikes_tipped.effect.");
-    }
-
     public static boolean isPotionValid(PotionContents potion) {
         if (!potion.hasEffects()) return false;
         Boolean alternativeMode = CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get();
@@ -75,5 +52,28 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
 
     public static @NotNull PotionContents getPotion(SoftFluidStack stack) {
         return stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltips, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltips, tooltipFlag);
+        getPotion(stack).addPotionTooltip(tooltips::add, BambooSpikesBlockTile.POTION_MULTIPLIER, context.tickRate());
+    }
+
+    @Override
+    public int getBarColor(ItemStack stack) {
+        return getPotion(stack).getColor();
+    }
+
+    @Override
+    public boolean isBarVisible(ItemStack stack) {
+        return !CommonConfigs.Functional.ONLY_ALLOW_HARMFUL_INFINITE.get();
+    }
+
+    @Override
+    public String getDescriptionId(ItemStack stack) {
+        PotionContents p = getPotion(stack);
+        return Potion.getName(p.potion(),
+                "item.supplementaries.bamboo_spikes_tipped.effect.");
     }
 }

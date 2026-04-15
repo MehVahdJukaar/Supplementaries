@@ -229,15 +229,15 @@ public class RedMerchantMenu extends AbstractContainerMenu {
 
     }
 
+    public MerchantOffers getOffers() {
+        return this.trader.getOffers();
+    }
+
     /**
      * {@link net.minecraft.client.multiplayer.ClientPacketListener} uses this to set offers for the client side MerchantContainer.
      */
     public void setOffers(MerchantOffers offers) {
         this.trader.overrideOffers(offers);
-    }
-
-    public MerchantOffers getOffers() {
-        return this.trader.getOffers();
     }
 
     public boolean showProgressBar() {

@@ -33,6 +33,14 @@ public class PresentRecipientAttribute implements ItemAttribute {
         this.recipient = recipient;
     }
 
+    private static String readRecipient(ItemStack itemStack) {
+        PresentAddress address = itemStack.get(ModComponents.ADDRESS.get());
+        if (address != null && address.isPublic()) {
+            return address.recipient();
+        }
+        return PresentBlockTile.PUBLIC_KEY;
+    }
+
     @Override
     public boolean appliesTo(ItemStack itemStack, Level level) {
         return readRecipient(itemStack).equals(recipient);
@@ -51,14 +59,6 @@ public class PresentRecipientAttribute implements ItemAttribute {
     @Override
     public Object[] getTranslationParameters() {
         return new Object[]{recipient};
-    }
-
-    private static String readRecipient(ItemStack itemStack) {
-        PresentAddress address = itemStack.get(ModComponents.ADDRESS.get());
-        if (address != null && address.isPublic()) {
-            return address.recipient();
-        }
-        return PresentBlockTile.PUBLIC_KEY;
     }
 
     public static class Type implements ItemAttributeType {

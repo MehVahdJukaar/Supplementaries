@@ -13,10 +13,10 @@ import java.util.List;
 
 public class ShowWaresGoal extends LookAtPlayerGoal {
     protected final AbstractVillager villager;
-    private Player player;
     private final int minDuration;
     private final int maxDuration;
     private final List<ItemStack> displayItems = Lists.newArrayList();
+    private Player player;
     @Nullable
     private ItemStack playerItemStack;
 

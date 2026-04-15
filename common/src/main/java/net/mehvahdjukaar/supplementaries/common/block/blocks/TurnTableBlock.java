@@ -55,6 +55,24 @@ public class TurnTableBlock extends Block implements EntityBlock {
                 .setValue(POWER, 0).setValue(INVERTED, false).setValue(ROTATING, false));
     }
 
+    private static Vec3 rotateY(Vec3 vec, float deg) {
+        if (deg == 0)
+            return vec;
+        if (vec == Vec3.ZERO)
+            return vec;
+        double x = vec.x;
+        double y = vec.y;
+        double z = vec.z;
+        float angle = deg * Mth.DEG_TO_RAD;
+        double s = Math.sin(angle);
+        double c = Math.cos(angle);
+        return new Vec3(x * c + z * s, y, z * c - x * s);
+    }
+
+    public static int getPeriod(BlockState state) {
+        return (60 - state.getValue(POWER) * 4) + 4;
+    }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWER, INVERTED, ROTATING);
@@ -122,24 +140,6 @@ public class TurnTableBlock extends Block implements EntityBlock {
         // if power changed and is powered or facing block changed
         if (world.getBlockState(pos).getValue(POWER) != 0 && (powerChanged || fromPos.equals(pos.relative(state.getValue(FACING)))))
             this.tryRotate(world, pos);
-    }
-
-    private static Vec3 rotateY(Vec3 vec, float deg) {
-        if (deg == 0)
-            return vec;
-        if (vec == Vec3.ZERO)
-            return vec;
-        double x = vec.x;
-        double y = vec.y;
-        double z = vec.z;
-        float angle = deg * Mth.DEG_TO_RAD;
-        double s = Math.sin(angle);
-        double c = Math.cos(angle);
-        return new Vec3(x * c + z * s, y, z * c - x * s);
-    }
-
-    public static int getPeriod(BlockState state) {
-        return (60 - state.getValue(POWER) * 4) + 4;
     }
 
     // rotate entities

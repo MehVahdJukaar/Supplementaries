@@ -22,14 +22,13 @@ import java.util.List;
 @Mixin(Parrot.class)
 public abstract class ParrotMixin extends Entity implements IFluteParrot {
 
+    @Unique
+    private final List<Player> supp$fluteEntities = new ArrayList<>();
     @Shadow
     private boolean partyParrot;
     @Shadow
     @Nullable
     private BlockPos jukebox;
-
-    @Unique
-    private final List<Player> supp$fluteEntities = new ArrayList<>();
 
     public ParrotMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);

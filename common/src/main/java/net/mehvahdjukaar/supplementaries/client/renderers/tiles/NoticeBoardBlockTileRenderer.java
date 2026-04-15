@@ -52,11 +52,11 @@ import java.util.Locale;
 
 
 public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeBoardBlockTile> {
+    private static final float PAPER_X_MARGIN = 0.1875f;
+    private static final float PAPER_Y_MARGIN = 0.125f;
     private final ItemRenderer itemRenderer;
     private final MapRenderer mapRenderer;
     private final Font font;
-    private static final float PAPER_X_MARGIN = 0.1875f;
-    private static final float PAPER_Y_MARGIN = 0.125f;
 
     public NoticeBoardBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         Minecraft minecraft = Minecraft.getInstance();
@@ -64,45 +64,6 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
         mapRenderer = minecraft.gameRenderer.getMapRenderer();
         font = context.getFont();
     }
-
-    public int getFrontLight(Level world, BlockPos pos, Direction dir) {
-        return LevelRenderer.getLightColor(world, pos.relative(dir));
-    }
-
-    @Override
-    public void render(NoticeBoardBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer,
-                       int combinedLightIn, int overlay) {
-
-        if (!tile.shouldSkipTileRenderer()) {
-            Level level = tile.getLevel();
-            if (level == null) return;
-
-            ItemStack stack = tile.getDisplayedItem();
-            if (stack.isEmpty()) return;
-
-            Direction dir = tile.getDirection();
-
-            float yaw = -dir.toYRot();
-            BlockPos pos = tile.getBlockPos();
-            LOD lod = LOD.at(tile);
-            if (lod.isPlaneCulled(dir, 0, 0)) return;
-
-            int frontLight = this.getFrontLight(level, pos, dir);
-
-            poseStack.pushPose();
-            poseStack.translate(0.5, 0.5, 0.5);
-            poseStack.mulPose(RotHlpr.rot((int) yaw));
-            poseStack.translate(0, 0, 0.5);
-
-
-            renderNoticeBoardContent(mapRenderer, font, itemRenderer, tile, poseStack, buffer, frontLight, overlay,
-                    stack, dir, lod);
-
-
-            poseStack.popPose();
-        }
-    }
-
 
     public static void renderNoticeBoardContent(MapRenderer mapRenderer, Font font, ItemRenderer itemRenderer,
                                                 NoticeBoardBlockTile tile, PoseStack poseStack, MultiBufferSource buffer,
@@ -264,6 +225,44 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
                 text, paperWidth, paperHeight);
         tile.setFontScale(p.getSecond());
         tile.setCachedPageLines(p.getFirst());
+    }
+
+    public int getFrontLight(Level world, BlockPos pos, Direction dir) {
+        return LevelRenderer.getLightColor(world, pos.relative(dir));
+    }
+
+    @Override
+    public void render(NoticeBoardBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer,
+                       int combinedLightIn, int overlay) {
+
+        if (!tile.shouldSkipTileRenderer()) {
+            Level level = tile.getLevel();
+            if (level == null) return;
+
+            ItemStack stack = tile.getDisplayedItem();
+            if (stack.isEmpty()) return;
+
+            Direction dir = tile.getDirection();
+
+            float yaw = -dir.toYRot();
+            BlockPos pos = tile.getBlockPos();
+            LOD lod = LOD.at(tile);
+            if (lod.isPlaneCulled(dir, 0, 0)) return;
+
+            int frontLight = this.getFrontLight(level, pos, dir);
+
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.5, 0.5);
+            poseStack.mulPose(RotHlpr.rot((int) yaw));
+            poseStack.translate(0, 0, 0.5);
+
+
+            renderNoticeBoardContent(mapRenderer, font, itemRenderer, tile, poseStack, buffer, frontLight, overlay,
+                    stack, dir, lod);
+
+
+            poseStack.popPose();
+        }
     }
 
 }

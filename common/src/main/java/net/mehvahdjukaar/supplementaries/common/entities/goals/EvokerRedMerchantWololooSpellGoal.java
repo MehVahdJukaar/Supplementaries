@@ -23,6 +23,8 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
 
     private final Evoker evoker;
     private final ISuppEvoker suppEvoker;
+    protected int attackWarmupDelay;
+    protected int nextAttackTickCount;
 
     public EvokerRedMerchantWololooSpellGoal(Evoker evoker) {
         super();
@@ -102,10 +104,6 @@ public class EvokerRedMerchantWololooSpellGoal extends Goal {
     protected SpellcasterIllager.IllagerSpell getSpell() {
         return SpellcasterIllager.IllagerSpell.WOLOLO;
     }
-
-
-    protected int attackWarmupDelay;
-    protected int nextAttackTickCount;
 
     @Override
     public void start() {

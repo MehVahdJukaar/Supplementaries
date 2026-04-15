@@ -59,13 +59,11 @@ import java.util.UUID;
 public class CannonBlockTile extends OpenableContainerBlockTile implements IOneUserInteractable {
 
     public static final int MAX_POWER_LEVEL = 4;
-
+    private final OrientationRig orientation = new OrientationRig();
     @Nullable
     public Object ccPeripheral = null;
     @Nullable
     private CannonballWhitelist breakWhitelist = null;
-    private final OrientationRig orientation = new OrientationRig();
-
     // both from 0 to config value. in tick
     private int cooldownTimer = 0;
     private int fuseTimer = 0;
@@ -400,15 +398,15 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return level.getPlayerByUUID(uuid);
     }
 
-    @Override
-    public void setCurrentUser(@Nullable UUID uuid) {
-        this.controllingEntity = uuid;
-    }
-
     @Nullable
     @Override
     public UUID getCurrentUser() {
         return controllingEntity;
+    }
+
+    @Override
+    public void setCurrentUser(@Nullable UUID uuid) {
+        this.controllingEntity = uuid;
     }
 
     @ForgeOverride

@@ -33,18 +33,6 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
 
     }
 
-    @Override
-    public boolean shouldRender(BookPileBlockTile blockEntity, Vec3 cameraPos) {
-        return ClientConfigs.Tweaks.BOOK_GLINT.get();
-    }
-
-    @Override
-    public void render(BookPileBlockTile tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int light,
-                       int overlay) {
-        BlockState state = tile.getBlockState();
-        renderBookPile(tile.horizontal, tile.booksVisuals, matrixStack, v -> v.getBuilder(bufferIn), light, overlay, state);
-    }
-
     public static void renderBookPile(boolean horizontal, BooksList books, PoseStack matrixStack,
                                       Function<BookPileBlockTile.BookVisualData, VertexConsumer> bufferIn,
                                       int light, int overlay, BlockState state) {
@@ -153,6 +141,18 @@ public class BookPileBlockTileRenderer implements BlockEntityRenderer<BookPileBl
                 Supplementaries.error();
             }
         }
+    }
+
+    @Override
+    public boolean shouldRender(BookPileBlockTile blockEntity, Vec3 cameraPos) {
+        return ClientConfigs.Tweaks.BOOK_GLINT.get();
+    }
+
+    @Override
+    public void render(BookPileBlockTile tile, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int light,
+                       int overlay) {
+        BlockState state = tile.getBlockState();
+        renderBookPile(tile.horizontal, tile.booksVisuals, matrixStack, v -> v.getBuilder(bufferIn), light, overlay, state);
     }
 
 }

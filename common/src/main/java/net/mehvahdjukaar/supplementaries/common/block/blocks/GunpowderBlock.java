@@ -70,14 +70,6 @@ public class GunpowderBlock extends LightUpBlock {
     private final Map<BlockState, VoxelShape> SHAPES_CACHE;
     private final BlockState crossState;
 
-    private static int getDelay() {
-        return CommonConfigs.Tweaks.GUNPOWDER_BURN_SPEED.get();
-    }
-
-    private static int getSpreadAge() {
-        return CommonConfigs.Tweaks.GUNPOWDER_SPREAD_AGE.get();
-    }
-
     public GunpowderBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(NORTH, RedstoneSide.NONE)
@@ -94,6 +86,48 @@ public class GunpowderBlock extends LightUpBlock {
             }
         }
         this.SHAPES_CACHE = builder.build();
+    }
+
+    private static int getDelay() {
+        return CommonConfigs.Tweaks.GUNPOWDER_BURN_SPEED.get();
+    }
+
+    private static int getSpreadAge() {
+        return CommonConfigs.Tweaks.GUNPOWDER_SPREAD_AGE.get();
+    }
+
+    private static boolean isCross(BlockState state) {
+        return state.getValue(NORTH).isConnected() && state.getValue(SOUTH).isConnected() && state.getValue(EAST).isConnected() && state.getValue(WEST).isConnected();
+    }
+
+    private static boolean isDot(BlockState state) {
+        return !state.getValue(NORTH).isConnected() && !state.getValue(SOUTH).isConnected() && !state.getValue(EAST).isConnected() && !state.getValue(WEST).isConnected();
+    }
+
+    @Deprecated(forRemoval = true)
+    public static void createMiniExplosion(Level world, BlockPos pos, boolean alwaysFire) {
+        if (world instanceof ServerLevel sl)
+            GunpowderExplosion.explode(sl, pos);
+    }
+
+    public static boolean canBlockLightMeOnFire(BlockState state, BlockGetter level, BlockPos pos) {
+        Block b = state.getBlock();
+        if (state.is(ModTags.LIGHTS_GUNPOWDER)) {
+            if (state.getBlock() instanceof ILightable l) return l.isLitUp(state, level, pos);
+            if (state.hasProperty(BlockStateProperties.LIT)) return state.getValue(BlockStateProperties.LIT);
+            return true;
+        }
+        if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
+            return true;
+        return false;
+    }
+
+    //-----connection logic------
+
+    public static boolean canBlockLightMeOnFire(LevelAccessor world, BlockPos pos) {
+        //wires handled separately
+        BlockState state = world.getBlockState(pos);
+        return canBlockLightMeOnFire(state, world, pos);
     }
 
     @Override
@@ -124,8 +158,6 @@ public class GunpowderBlock extends LightUpBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.getConnectionState(context.getLevel(), this.crossState, context.getClickedPos());
     }
-
-    //-----connection logic------
 
     private BlockState getConnectionState(BlockGetter world, BlockState state, BlockPos pos) {
         boolean isDot = isDot(state);
@@ -186,14 +218,6 @@ public class GunpowderBlock extends LightUpBlock {
         return newState;
     }
 
-    private static boolean isCross(BlockState state) {
-        return state.getValue(NORTH).isConnected() && state.getValue(SOUTH).isConnected() && state.getValue(EAST).isConnected() && state.getValue(WEST).isConnected();
-    }
-
-    private static boolean isDot(BlockState state) {
-        return !state.getValue(NORTH).isConnected() && !state.getValue(SOUTH).isConnected() && !state.getValue(EAST).isConnected() && !state.getValue(WEST).isConnected();
-    }
-
     //used to connect diagonally
     @Override
     public void updateIndirectNeighbourShapes(BlockState state, LevelAccessor world, BlockPos pos, int var1, int var2) {
@@ -226,7 +250,6 @@ public class GunpowderBlock extends LightUpBlock {
         }
 
     }
-
 
     //gets connection to blocks diagonally above
     private RedstoneSide getConnectingSide(BlockGetter world, BlockPos pos, Direction dir) {
@@ -269,6 +292,9 @@ public class GunpowderBlock extends LightUpBlock {
                 b instanceof AbstractCandleBlock;
     }
 
+
+    //-----redstone------
+
     protected boolean canConnectTo(BlockState state, BlockGetter world, BlockPos pos, @Nullable Direction dir) {
         return state.is(ModTags.LIGHTS_GUNPOWDER) || canClimbTo(state, world, pos, dir);
     }
@@ -294,9 +320,6 @@ public class GunpowderBlock extends LightUpBlock {
             default -> super.mirror(state, mirror);
         };
     }
-
-
-    //-----redstone------
 
     @Override
     public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean moving) {
@@ -353,6 +376,9 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
+
+    //-----explosion-stuff------
+
     private void checkCornerChangeAt(Level world, BlockPos pos) {
         if (world.getBlockState(pos).is(this)) {
             world.updateNeighborsAt(pos, this);
@@ -392,9 +418,6 @@ public class GunpowderBlock extends LightUpBlock {
 
     }
 
-
-    //-----explosion-stuff------
-
     @Override
     public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         int burning = state.getValue(BURNING);
@@ -425,12 +448,6 @@ public class GunpowderBlock extends LightUpBlock {
         }
     }
 
-    @Deprecated(forRemoval = true)
-    public static void createMiniExplosion(Level world, BlockPos pos, boolean alwaysFire) {
-        if (world instanceof ServerLevel sl)
-            GunpowderExplosion.explode(sl, pos);
-    }
-
     @Override
     public boolean tryLightUp(Entity entity, BlockState state, BlockPos pos, LevelAccessor world, FireSoundType fireSourceType) {
         boolean ret = super.tryLightUp(entity, state, pos, world, fireSourceType);
@@ -443,7 +460,6 @@ public class GunpowderBlock extends LightUpBlock {
         }
         return ret;
     }
-
 
     //for gunpowder -> gunpowder
     private void lightUpByWire(BlockState state, BlockPos pos, LevelAccessor level) {
@@ -480,24 +496,6 @@ public class GunpowderBlock extends LightUpBlock {
                 this.lightUpByWire(neighbourState, p, world);
             }
         }
-    }
-
-    public static boolean canBlockLightMeOnFire(BlockState state, BlockGetter level, BlockPos pos) {
-        Block b = state.getBlock();
-        if (state.is(ModTags.LIGHTS_GUNPOWDER)) {
-            if (state.getBlock() instanceof ILightable l) return l.isLitUp(state, level, pos);
-            if (state.hasProperty(BlockStateProperties.LIT)) return state.getValue(BlockStateProperties.LIT);
-            return true;
-        }
-        if (b instanceof TorchBlock && !(b instanceof RedstoneTorchBlock))
-            return true;
-        return false;
-    }
-
-    public static boolean canBlockLightMeOnFire(LevelAccessor world, BlockPos pos) {
-        //wires handled separately
-        BlockState state = world.getBlockState(pos);
-        return canBlockLightMeOnFire(state, world, pos);
     }
 
     //TODO: this is not working

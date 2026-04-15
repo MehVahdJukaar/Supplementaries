@@ -34,6 +34,15 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
         super(ModRegistry.TRAPPED_PRESENT_TILE.get(), pos, state);
     }
 
+    public static boolean isPrimed(ItemStack stack) {
+        var beData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (beData != null) {
+            CompoundTag tag = beData.getUnsafe().getCompound("BlockEntityTag");
+            return tag.contains("Items");
+        }
+        return false;
+    }
+
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
@@ -47,15 +56,6 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
     @Override
     public boolean canHoldItems() {
         return this.isPrimed();
-    }
-
-    public static boolean isPrimed(ItemStack stack) {
-        var beData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
-        if (beData != null) {
-            CompoundTag tag = beData.getUnsafe().getCompound("BlockEntityTag");
-            return tag.contains("Items");
-        }
-        return false;
     }
 
     public boolean isPrimed() {

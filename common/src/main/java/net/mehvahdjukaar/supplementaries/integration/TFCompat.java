@@ -11,10 +11,10 @@ import twilightforest.block.HorizontalHollowLogBlock;
 
 public class TFCompat {
 
-    private static final TagKey<Block> VERTICAL = TagKey.create(Registries.BLOCK,
-            ResourceLocation.fromNamespaceAndPath("twilightforest", "hollow_logs_vertical"));
     public static final TagKey<Block> HORIZONTAL = TagKey.create(Registries.BLOCK,
             ResourceLocation.fromNamespaceAndPath("twilightforest", "hollow_logs_horizontal"));
+    private static final TagKey<Block> VERTICAL = TagKey.create(Registries.BLOCK,
+            ResourceLocation.fromNamespaceAndPath("twilightforest", "hollow_logs_vertical"));
 
     public static BlockState tryRotateHollowLog(BlockState state, Direction face) {
         if (state.is(VERTICAL) && face.getAxis() != Direction.Axis.Y) {

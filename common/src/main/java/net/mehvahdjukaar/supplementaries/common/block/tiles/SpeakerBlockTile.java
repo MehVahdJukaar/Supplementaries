@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserInteractable, IScreenProvider {
+    public Object ccHack = null;
     private Component message = Component.empty();
     private Component filteredMessage = Component.empty();
     private Mode mode = Mode.CHAT;
@@ -46,14 +47,8 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserI
     @Nullable
     private UUID playerWhoMayEdit = null;
 
-    public Object ccHack = null;
-
     public SpeakerBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.SPEAKER_BLOCK_TILE.get(), pos, state);
-    }
-
-    public void setCustomName(Component name) {
-        this.customName = name;
     }
 
     @Override
@@ -66,6 +61,10 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserI
         return this.customName;
     }
 
+    public void setCustomName(Component name) {
+        this.customName = name;
+    }
+
     public Component getDefaultName() {
         return this.getBlockState().getBlock().getName();
     }
@@ -74,16 +73,20 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserI
         return volume;
     }
 
+    public void setVolume(double volume) {
+        this.volume = Math.clamp(volume, 0, CommonConfigs.Redstone.SPEAKER_RANGE.get());
+    }
+
     public Mode getMode() {
         return mode;
     }
 
-    public Component getMessage(boolean filtered) {
-        return filtered ? filteredMessage : message;
-    }
-
     public void setMode(Mode mode) {
         this.mode = mode;
+    }
+
+    public Component getMessage(boolean filtered) {
+        return filtered ? filteredMessage : message;
     }
 
     public void setMessage(Component message) {
@@ -94,10 +97,6 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserI
         int maxLength = CommonConfigs.Redstone.SPEAKER_BLOCK_MAX_TEXT.get();
         this.message = MiscUtils.truncateComponent(message, maxLength);
         this.filteredMessage = MiscUtils.truncateComponent(filteredMessage, maxLength);
-    }
-
-    public void setVolume(double volume) {
-        this.volume = Math.clamp(volume, 0, CommonConfigs.Redstone.SPEAKER_RANGE.get());
     }
 
     @Override
@@ -204,13 +203,13 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserI
     }
 
     @Override
-    public void setCurrentUser(UUID playerWhoMayEdit) {
-        this.playerWhoMayEdit = playerWhoMayEdit;
+    public UUID getCurrentUser() {
+        return playerWhoMayEdit;
     }
 
     @Override
-    public UUID getCurrentUser() {
-        return playerWhoMayEdit;
+    public void setCurrentUser(UUID playerWhoMayEdit) {
+        this.playerWhoMayEdit = playerWhoMayEdit;
     }
 
     @Override

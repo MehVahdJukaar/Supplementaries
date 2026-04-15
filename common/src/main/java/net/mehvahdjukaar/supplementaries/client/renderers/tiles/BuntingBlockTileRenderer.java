@@ -38,35 +38,6 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
         BOX = MODEL.getChild("box");
     }
 
-    @ForgeOverride
-    public AABB getRenderBoundingBox(BlockEntity tile) {
-        return new AABB(tile.getBlockPos());
-    }
-
-    @Override
-    public boolean shouldRender(BuntingBlockTile blockEntity, Vec3 cameraPos) {
-        return blockEntity.shouldRenderFancy();
-    }
-
-    @Override
-    public void render(BuntingBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn,
-                       int combinedLightIn, int combinedOverlayIn) {
-        poseStack.pushPose();
-        poseStack.translate(0.5, 0.5, 0.5);
-        BlockPos pos = tile.getBlockPos();
-        long l = tile.getLevel().getGameTime();
-        for (Direction d : Direction.Plane.HORIZONTAL) {
-            DyeColor color = tile.getBunting(d);
-            if (color == null) continue;
-            renderBunting(color, d, partialTicks, poseStack,
-                    null, bufferIn, combinedLightIn,
-                    combinedOverlayIn, pos, l);
-        }
-
-        poseStack.popPose();
-
-    }
-
     public static void renderBunting(DyeColor color, Direction dir, float partialTicks, PoseStack poseStack,
                                      @Nullable VertexConsumer vertexConsumer, @Nullable MultiBufferSource buffer,
                                      int combinedLightIn,
@@ -118,6 +89,35 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
                 PartPose.offsetAndRotation(0.0F, -3.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 32, 16);
+    }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox(BlockEntity tile) {
+        return new AABB(tile.getBlockPos());
+    }
+
+    @Override
+    public boolean shouldRender(BuntingBlockTile blockEntity, Vec3 cameraPos) {
+        return blockEntity.shouldRenderFancy();
+    }
+
+    @Override
+    public void render(BuntingBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn,
+                       int combinedLightIn, int combinedOverlayIn) {
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0.5, 0.5);
+        BlockPos pos = tile.getBlockPos();
+        long l = tile.getLevel().getGameTime();
+        for (Direction d : Direction.Plane.HORIZONTAL) {
+            DyeColor color = tile.getBunting(d);
+            if (color == null) continue;
+            renderBunting(color, d, partialTicks, poseStack,
+                    null, bufferIn, combinedLightIn,
+                    combinedOverlayIn, pos, l);
+        }
+
+        poseStack.popPose();
+
     }
 
 }

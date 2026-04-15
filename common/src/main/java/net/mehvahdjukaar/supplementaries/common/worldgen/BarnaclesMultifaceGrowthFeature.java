@@ -34,6 +34,49 @@ public class BarnaclesMultifaceGrowthFeature extends Feature<BarnaclesMultifaceG
         super(Config.CODEC);
     }
 
+    public static boolean placeGrowthIfPossible(WorldGenLevel level, BlockPos pos, BlockState state, Config config, RandomSource random, Collection<Direction> directions) {
+        BlockPos.MutableBlockPos mutableBlockPos = pos.mutable();
+        Iterator<Direction> sides = directions.iterator();
+
+        Direction direction;
+        BlockState blockState;
+        do {
+            if (!sides.hasNext()) {
+                return false;
+            }
+
+            direction = sides.next();
+            blockState = level.getBlockState(mutableBlockPos.setWithOffset(pos, direction));
+        } while (cantBePlacedOn(blockState, config));
+
+        BlockState blockState2 = config.placeBlock.getStateForPlacement(state, level, pos, direction);
+        if (blockState2 == null) {
+            return false;
+        } else {
+            level.setBlock(pos, blockState2, 3);
+            if (random.nextFloat() < config.chanceOfSpreading) {
+                config.placeBlock.getSpreader().spreadFromFaceTowardRandomDirection(blockState2, level, pos,
+                        direction, random, false);
+            }
+            return true;
+        }
+    }
+
+    private static boolean cantBePlacedOn(BlockState state, Config config) {
+        return state.is(config.cantBePlacedOn) || isAirOrWater(state);
+    }
+
+    private static boolean isAirOrWater(BlockState state) {
+        return state.isAir() || state.is(Blocks.WATER);
+    }
+
+    private static boolean isCliffFace(BlockPos pos, Level leve, Direction myFace) {
+        if (myFace.getAxis().isVertical()) return false;
+        BlockState onBlock = leve.getBlockState(pos.relative(myFace.getOpposite()));
+
+        return false;
+    }
+
     @Override
     public boolean place(FeaturePlaceContext<Config> context) {
         WorldGenLevel worldGenLevel = context.level();
@@ -81,50 +124,18 @@ public class BarnaclesMultifaceGrowthFeature extends Feature<BarnaclesMultifaceG
         }
     }
 
-    public static boolean placeGrowthIfPossible(WorldGenLevel level, BlockPos pos, BlockState state, Config config, RandomSource random, Collection<Direction> directions) {
-        BlockPos.MutableBlockPos mutableBlockPos = pos.mutable();
-        Iterator<Direction> sides = directions.iterator();
 
-        Direction direction;
-        BlockState blockState;
-        do {
-            if (!sides.hasNext()) {
-                return false;
-            }
+    private enum PlacementEnvironment implements StringRepresentable {
+        ANY,
+        CLIFFS;
 
-            direction = sides.next();
-            blockState = level.getBlockState(mutableBlockPos.setWithOffset(pos, direction));
-        } while (cantBePlacedOn(blockState, config));
+        public static final Codec<PlacementEnvironment> CODEC = StringRepresentable.fromEnum(PlacementEnvironment::values);
 
-        BlockState blockState2 = config.placeBlock.getStateForPlacement(state, level, pos, direction);
-        if (blockState2 == null) {
-            return false;
-        } else {
-            level.setBlock(pos, blockState2, 3);
-            if (random.nextFloat() < config.chanceOfSpreading) {
-                config.placeBlock.getSpreader().spreadFromFaceTowardRandomDirection(blockState2, level, pos,
-                        direction, random, false);
-            }
-            return true;
+        @Override
+        public String getSerializedName() {
+            return this.name().toLowerCase(Locale.ROOT);
         }
     }
-
-    private static boolean cantBePlacedOn(BlockState state, Config config) {
-        return state.is(config.cantBePlacedOn) || isAirOrWater(state);
-    }
-
-    private static boolean isAirOrWater(BlockState state) {
-        return state.isAir() || state.is(Blocks.WATER);
-    }
-
-
-    private static boolean isCliffFace(BlockPos pos, Level leve, Direction myFace) {
-        if (myFace.getAxis().isVertical()) return false;
-        BlockState onBlock = leve.getBlockState(pos.relative(myFace.getOpposite()));
-
-        return false;
-    }
-
 
     public record Config(MultifaceBlock placeBlock,
                          int searchRange,
@@ -158,17 +169,5 @@ public class BarnaclesMultifaceGrowthFeature extends Feature<BarnaclesMultifaceG
         public Collection<Direction> getShuffledDirections(RandomSource random) {
             return Direction.allShuffled(random);
         }
-    }
-
-    private enum PlacementEnvironment implements StringRepresentable {
-        ANY,
-        CLIFFS;
-
-        @Override
-        public String getSerializedName() {
-            return this.name().toLowerCase(Locale.ROOT);
-        }
-
-        public static final Codec<PlacementEnvironment> CODEC = StringRepresentable.fromEnum(PlacementEnvironment::values);
     }
 }

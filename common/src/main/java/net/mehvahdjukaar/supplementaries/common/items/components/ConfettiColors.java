@@ -28,28 +28,34 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ConfettiColors implements TooltipProvider {
-    protected static final HashBiMap<DyeColor, Integer> COLOR_TO_DIFFUSE = Arrays.stream(DyeColor.values())
-            .collect(Collectors.toMap(Function.identity(), ConfettiColors::dyeToRGB,
-                    (color, color2) -> color2, HashBiMap::create));
-
-    private static int dyeToRGB(DyeColor dyeColor) {
-        return ColorHelper.prettyfyColor(new RGBColor(dyeColor.getTextColor()).asHSL())
-                .asRGB().toInt();
-    }
-
     public static final Codec<ConfettiColors> CODEC = Codec.INT.listOf().xmap(
             list -> new ConfettiColors(list.stream().mapToInt(i -> i).toArray()),
             colors -> colors.colors
     );
-
     public static final StreamCodec<RegistryFriendlyByteBuf, ConfettiColors> STREAM_CODEC =
             StreamCodec.composite(
                     ByteBufCodecs.INT.apply(ByteBufCodecs.list()),
                     v -> v.colors,
                     ConfettiColors::new
             );
-
     public static final ConfettiColors EMPTY = new ConfettiColors();
+    protected static final HashBiMap<DyeColor, Integer> COLOR_TO_DIFFUSE = Arrays.stream(DyeColor.values())
+            .collect(Collectors.toMap(Function.identity(), ConfettiColors::dyeToRGB,
+                    (color, color2) -> color2, HashBiMap::create));
+    private final IntList colors;
+
+    ConfettiColors(List<Integer> colors) {
+        this(colors.stream().mapToInt(i -> i).toArray());
+    }
+
+    ConfettiColors(int... colors) {
+        this.colors = IntList.of(colors);
+    }
+
+    private static int dyeToRGB(DyeColor dyeColor) {
+        return ColorHelper.prettyfyColor(new RGBColor(dyeColor.getTextColor()).asHSL())
+                .asRGB().toInt();
+    }
 
     public static ConfettiColors of(int... colors) {
         return new ConfettiColors(colors);
@@ -76,16 +82,6 @@ public class ConfettiColors implements TooltipProvider {
             return dyeToRGB(c);
         }
         return null;
-    }
-
-    private final IntList colors;
-
-    ConfettiColors(List<Integer> colors) {
-        this(colors.stream().mapToInt(i -> i).toArray());
-    }
-
-    ConfettiColors(int... colors) {
-        this.colors = IntList.of(colors);
     }
 
     public Collection<Integer> getColors() {

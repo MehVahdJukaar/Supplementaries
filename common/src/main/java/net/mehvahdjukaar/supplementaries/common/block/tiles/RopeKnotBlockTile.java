@@ -21,6 +21,7 @@ import static net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRope
 
 public class RopeKnotBlockTile extends MimicBlockTile {
 
+    private static final VoxelShape DOWN_SHAPE = Block.box(6, 0, 6, 10, 6, 10);
     private VoxelShape cachedCollisionShape = null;
     private VoxelShape cachedShape = null;
 
@@ -40,8 +41,6 @@ public class RopeKnotBlockTile extends MimicBlockTile {
         //might cause issue in worldgen so better be sure
         return Objects.requireNonNullElseGet(cachedShape, Shapes::block);
     }
-
-    private static final VoxelShape DOWN_SHAPE = Block.box(6, 0, 6, 10, 6, 10);
 
     public void recalculateShapes(BlockState state) {
         try {

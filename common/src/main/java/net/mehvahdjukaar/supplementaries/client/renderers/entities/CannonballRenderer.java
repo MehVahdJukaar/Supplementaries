@@ -31,6 +31,15 @@ public class CannonballRenderer<T extends Projectile> extends EntityRenderer<T> 
         this.scale = scale;
     }
 
+    public static LayerDefinition createMesh() {
+        MeshDefinition meshDefinition = new MeshDefinition();
+        meshDefinition.getRoot().addOrReplaceChild("ball", CubeListBuilder.create().texOffs(0, 0)
+                        .addBox(-3.5F, -3.5F, -3.5F, 7, 7, 7),
+                PartPose.ZERO);
+
+        return LayerDefinition.create(meshDefinition, 32, 16);
+    }
+
     @Override
     public void render(T entity, float pEntityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int light) {
         if (entity.tickCount < 2 && this.entityRenderDispatcher.camera.getPosition().distanceToSqr(entity.position()) < MIN_CAMERA_DISTANCE_SQUARED) {
@@ -54,15 +63,6 @@ public class CannonballRenderer<T extends Projectile> extends EntityRenderer<T> 
     @Override
     public ResourceLocation getTextureLocation(T entity) {
         return ModTextures.CANNONBALL_TEXTURE;
-    }
-
-    public static LayerDefinition createMesh() {
-        MeshDefinition meshDefinition = new MeshDefinition();
-        meshDefinition.getRoot().addOrReplaceChild("ball", CubeListBuilder.create().texOffs(0, 0)
-                        .addBox(-3.5F, -3.5F, -3.5F, 7, 7, 7),
-                PartPose.ZERO);
-
-        return LayerDefinition.create(meshDefinition, 32, 16);
     }
 }
 

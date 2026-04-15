@@ -360,11 +360,6 @@ public class ClientReceivers {
         });
     }
 
-    //triangle distribution?
-    private double r(RandomSource random, double a) {
-        return a * (random.nextFloat() + random.nextFloat() - 1);
-    }
-
     public static Vector3f randomizeVector(RandomSource random, Vec3 mean, float spread) {
         Vector3f facing = mean.toVector3f();
         Vector3f ort = findOrthogonalVector(facing);
@@ -528,7 +523,6 @@ public class ClientReceivers {
         });
     }
 
-
     public static void handleCannonAnimation(ClientBoundCannonAnimationPacket message) {
         withLevelDo(l -> {
             if (message.target().findTileOrContainedTile(l) instanceof CannonBlockTile ct) {
@@ -540,7 +534,6 @@ public class ClientReceivers {
             }
         });
     }
-
 
     private static void playIgniteEffects(CannonBlockTile tile) {
         Level level = tile.getLevel();
@@ -555,7 +548,6 @@ public class ClientReceivers {
         level.playLocalSound(pos.x, pos.y, pos.z, ModSounds.CANNON_IGNITE.get(), SoundSource.BLOCKS, 0.6f,
                 1.2f + level.getRandom().nextFloat() * 0.2f, false);
     }
-
 
     private static void playFiringEffects(CannonBlockTile cannon) {
         PoseStack poseStack = calculateGlobalCannonNozzleTransform(cannon);
@@ -589,6 +581,11 @@ public class ClientReceivers {
         poseStack.mulPose(globalRot);
         poseStack.translate(0, 0, 0.4);
         return poseStack;
+    }
+
+    //triangle distribution?
+    private double r(RandomSource random, double a) {
+        return a * (random.nextFloat() + random.nextFloat() - 1);
     }
 
 }

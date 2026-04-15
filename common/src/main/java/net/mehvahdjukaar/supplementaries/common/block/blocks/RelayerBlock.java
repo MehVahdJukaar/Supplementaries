@@ -22,10 +22,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class RelayerBlock extends DirectionalBlock {
 
-    private static final MapCodec<RelayerBlock> CODEC = simpleCodec(RelayerBlock::new);
-
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    private static final MapCodec<RelayerBlock> CODEC = simpleCodec(RelayerBlock::new);
 
     public RelayerBlock(Properties properties) {
         super(properties);

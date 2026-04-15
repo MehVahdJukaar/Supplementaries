@@ -22,12 +22,9 @@ import java.util.function.Supplier;
 public class ClientConfigs {
 
 
-    public static void init() {
-    }
-
     public static final ModConfigHolder CONFIG_HOLDER;
-
     static final WeakReference<ConfigBuilder> builderReference;
+    private static float signColorMult = 1;
 
     static {
         if (!PlatHelper.getPhysicalSide().isClient()) {
@@ -53,23 +50,26 @@ public class ClientConfigs {
         CONFIG_HOLDER.forceLoad();
     }
 
+    public static void init() {
+    }
+
     private static void onChange() {
         Double b = ModSharedVariables.getDouble("color_multiplier");
         signColorMult = (float) (b == null ? 1 : b);
     }
-
-    private static float signColorMult = 1;
 
     public static float getSignColorMult() {
         return signColorMult;
     }
 
 
+    public enum GraphicsFanciness {
+        FAST,
+        FANCY,
+        FABULOUS
+    }
+
     public static class Items {
-
-        private static void init() {
-
-        }
 
         public static final Supplier<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;
         public static final Supplier<QuiverLayer.QuiverMode> QUIVER_SKELETON_RENDER_MODE;
@@ -155,13 +155,14 @@ public class ClientConfigs {
 
             builder.pop();
         }
+
+        private static void init() {
+
+        }
     }
 
     public static class Tweaks {
 
-
-        private static void init() {
-        }
 
         public static final Supplier<Boolean> BOOK_GLINT;
         public static final Supplier<Boolean> BANNER_PATTERN_TOOLTIP;
@@ -176,7 +177,6 @@ public class ClientConfigs {
         public static final Supplier<Boolean> ACCURATE_COLORED_MAPS;
         public static final Supplier<Boolean> PROJECTILE_WEAPON_OVERLAY;
         public static final Supplier<Boolean> HEAD_VANILLA;
-
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -219,12 +219,12 @@ public class ClientConfigs {
             builder.pop();
             builder.pop();
         }
-    }
-
-    public static class General {
 
         private static void init() {
         }
+    }
+
+    public static class General {
 
         public static final Supplier<Boolean> CONFIG_BUTTON;
         public static final Supplier<Integer> CONFIG_BUTTON_Y_OFF;
@@ -234,7 +234,6 @@ public class ClientConfigs {
         public static final Supplier<Boolean> NO_OPTIFINE_WARN;
         public static final Supplier<Boolean> NO_AMENDMENTS_WARN;
         public static final Supplier<Boolean> NO_INCOMPATIBLE_MODS;
-
         public static final Supplier<Boolean> UNFUNNY;
         public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
 
@@ -265,18 +264,12 @@ public class ClientConfigs {
 
             builder.pop();
         }
-    }
-
-    public enum GraphicsFanciness {
-        FAST,
-        FANCY,
-        FABULOUS
-    }
-
-    public static class Blocks {
 
         private static void init() {
         }
+    }
+
+    public static class Blocks {
 
         public static final Supplier<Double> BUBBLE_BLOCK_WOBBLE;
         public static final Supplier<Double> BUBBLE_BLOCK_GROW_SPEED;
@@ -291,7 +284,6 @@ public class ClientConfigs {
         public static final Supplier<Double> WIND_VANE_PERIOD_2;
         public static final Supplier<Boolean> CLOCK_24H;
         public static final Supplier<Boolean> GLOBE_RANDOM;
-
         public static final Supplier<GraphicsFanciness> FLAG_FANCINESS;
         public static final Supplier<Boolean> FLAG_BANNER;
         public static final Supplier<Integer> FLAG_PERIOD;
@@ -299,17 +291,13 @@ public class ClientConfigs {
         public static final Supplier<Double> FLAG_AMPLITUDE;
         public static final Supplier<Double> FLAG_AMPLITUDE_INCREMENT;
         public static final Supplier<List<String>> TICKABLE_MOBS;
-
         public static final Supplier<Boolean> NOTICE_BOARD_CENTERED_TEXT;
         public static final Supplier<Boolean> FAST_BUNTINGS;
-
         public static final Supplier<PendulumAnimation.Config> HAT_STAND_CONFIG;
-
         public static final Supplier<Boolean> TURN_TABLE_PARTICLES;
         public static final Supplier<Boolean> SPEAKER_BLOCK_MUTE;
         public static final Supplier<Double> ROPE_WOBBLE_AMPLITUDE;
         public static final Supplier<Double> ROPE_WOBBLE_PERIOD;
-
 
         static {
 
@@ -430,13 +418,13 @@ public class ClientConfigs {
 
             builder.pop();
         }
+
+        private static void init() {
+        }
     }
 
 
     public static class Particles {
-
-        private static void init() {
-        }
 
         public static final Supplier<Integer> TURN_INITIAL_COLOR;
         public static final Supplier<Integer> TURN_FADE_COLOR;
@@ -459,6 +447,9 @@ public class ClientConfigs {
             builder.pop();
 
             builder.pop();
+        }
+
+        private static void init() {
         }
     }
 

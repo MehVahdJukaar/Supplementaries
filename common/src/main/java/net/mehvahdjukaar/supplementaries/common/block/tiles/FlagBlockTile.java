@@ -25,9 +25,9 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
 
     //client side param
     public final float offset;
+    private final DyeColor baseColor;
     @Nullable
     private Component name;
-    private final DyeColor baseColor;
     private BannerPatternLayers patterns;
 
     public FlagBlockTile(BlockPos pos, BlockState state) {
@@ -39,10 +39,6 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
         this.baseColor = color;
         this.offset = 3f * (Mth.sin(this.worldPosition.getX()) + Mth.sin(this.worldPosition.getZ()));
         this.patterns = BannerPatternLayers.EMPTY;
-    }
-
-    public void setCustomName(Component component) {
-        this.name = component;
     }
 
     public BannerPatternLayers getPatterns() {
@@ -119,6 +115,10 @@ public class FlagBlockTile extends BlockEntity implements Nameable, IColored {
     @Nullable
     public Component getCustomName() {
         return this.name;
+    }
+
+    public void setCustomName(Component component) {
+        this.name = component;
     }
 
     @Nullable

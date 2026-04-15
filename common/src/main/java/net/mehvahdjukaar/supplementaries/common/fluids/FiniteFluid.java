@@ -29,9 +29,8 @@ import java.util.function.Supplier;
 public abstract class FiniteFluid extends Fluid {
 
     public static final IntegerProperty LEVEL = ModBlockProperties.FINITE_FLUID_LEVEL;
-    private final Map<FluidState, VoxelShape> shapes = Maps.newIdentityHashMap();
-
     protected final int maxLayers;
+    private final Map<FluidState, VoxelShape> shapes = Maps.newIdentityHashMap();
     private final Supplier<? extends BucketItem> bucket;
     private final Supplier<? extends Block> block;
 
@@ -40,6 +39,10 @@ public abstract class FiniteFluid extends Fluid {
         this.block = block;
         this.bucket = bucket;
         this.registerDefaultState(this.stateDefinition.any().setValue(LEVEL, maxLayers));
+    }
+
+    private static boolean hasSameAbove(FluidState fluidState, BlockGetter level, BlockPos pos) {
+        return fluidState.getType().isSame(level.getFluidState(pos.above()).getType());
     }
 
     public int getLayersPerBlock() {
@@ -61,7 +64,6 @@ public abstract class FiniteFluid extends Fluid {
     public Vec3 getFlow(BlockGetter blockReader, BlockPos pos, FluidState fluidState) {
         return Vec3.ZERO;
     }
-
 
     // where the magic happens
     private void spreadToSides(Level level, BlockPos pos, FluidState fluidState, BlockState blockState) {
@@ -157,7 +159,6 @@ public abstract class FiniteFluid extends Fluid {
         return list;
     }
 
-
     @Override
     public void tick(Level level, BlockPos pos, FluidState state) {
         if (state.isEmpty()) return;
@@ -205,10 +206,6 @@ public abstract class FiniteFluid extends Fluid {
             }
         }
         return false;
-    }
-
-    private static boolean hasSameAbove(FluidState fluidState, BlockGetter level, BlockPos pos) {
-        return fluidState.getType().isSame(level.getFluidState(pos.above()).getType());
     }
 
     public float getHeight(FluidState state, BlockGetter level, BlockPos pos) {

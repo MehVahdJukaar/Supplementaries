@@ -13,6 +13,15 @@ import net.minecraft.world.item.ItemStack;
 
 public class ShulkerBoxTooltipCompat implements ShulkerBoxTooltipApi {
 
+    public static boolean hasPreviewProvider(ItemStack stack) {
+        return ShulkerBoxTooltipApi.getPreviewProviderForStack(stack) != null;
+    }
+
+    @ExpectPlatform
+    public static void setup() {
+        throw new AssertionError();
+    }
+
     @Override
     public void registerProviders(PreviewProviderRegistry registry) {
         registry.register(Supplementaries.res(ModConstants.SAFE_NAME), new SafePreviewProvider(),
@@ -21,15 +30,6 @@ public class ShulkerBoxTooltipCompat implements ShulkerBoxTooltipApi {
                 ModRegistry.SACK_ITEM.get());
         registry.register(Supplementaries.res(ModConstants.LUNCH_BASKET_NAME), new LunchBasketPreviewProvider(),
                 ModRegistry.LUNCH_BASKET_ITEM.get());
-    }
-
-    public static boolean hasPreviewProvider(ItemStack stack) {
-        return ShulkerBoxTooltipApi.getPreviewProviderForStack(stack) != null;
-    }
-
-    @ExpectPlatform
-    public static void setup() {
-        throw new AssertionError();
     }
 
 }

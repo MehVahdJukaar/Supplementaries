@@ -36,6 +36,7 @@ import static net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.
 
 public class EndermanSkullBlockTile extends SkullBlockEntity {
 
+    private static final WeakHashMap<Level, EnderMan> FAKE_ENDERMAN = new WeakHashMap<>();
     private float prevMouthAnim;
     private float mouthAnim;
     //server
@@ -43,22 +44,6 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
 
     public EndermanSkullBlockTile(BlockPos blockPos, BlockState blockState) {
         super(blockPos, blockState);
-    }
-
-    @Override
-    public BlockEntityType<?> getType() {
-        return ModRegistry.ENDERMAN_SKULL_TILE.get();
-    }
-
-    //thanks mojank
-    @PlatformOnly(value = PlatformOnly.FABRIC)
-    @Override
-    public boolean isValidBlockState(BlockState blockState) {
-        return this.getType().isValid(blockState);
-    }
-
-    public float getMouthAnimation(float partialTicks) {
-        return Mth.lerp(partialTicks, prevMouthAnim, mouthAnim);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, EndermanSkullBlockTile tile) {
@@ -81,8 +66,6 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
             }
         }
     }
-
-    private static final WeakHashMap<Level, EnderMan> FAKE_ENDERMAN = new WeakHashMap<>();
 
     public static void clearCache() {
         FAKE_ENDERMAN.clear();
@@ -112,7 +95,6 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
         return false;
     }
 
-
     private static boolean isLookingAtFace(BlockPos pos, BlockState state, Vec3 location, Direction face) {
         if (CommonConfigs.Redstone.ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE.get()) return true;
         if (face.getAxis() == Direction.Axis.Y) return false;
@@ -129,6 +111,22 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
             if (relative.z > 0) return false;
         }
         return true;
+    }
+
+    @Override
+    public BlockEntityType<?> getType() {
+        return ModRegistry.ENDERMAN_SKULL_TILE.get();
+    }
+
+    //thanks mojank
+    @PlatformOnly(value = PlatformOnly.FABRIC)
+    @Override
+    public boolean isValidBlockState(BlockState blockState) {
+        return this.getType().isValid(blockState);
+    }
+
+    public float getMouthAnimation(float partialTicks) {
+        return Mth.lerp(partialTicks, prevMouthAnim, mouthAnim);
     }
 
     @Override

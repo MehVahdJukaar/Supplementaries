@@ -57,6 +57,10 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
         return sender;
     }
 
+    public void setSender(String sender) {
+        this.sender = sender.trim();
+    }
+
     public String getDescription() {
         return description;
     }
@@ -64,10 +68,6 @@ public class PresentBlockTile extends AbstractPresentBlockTile {
     public String getRecipient() {
         if (this.recipient.equalsIgnoreCase(PUBLIC_KEY)) return "";
         return recipient;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender.trim();
     }
 
     public void setRecipient(String recipient) {

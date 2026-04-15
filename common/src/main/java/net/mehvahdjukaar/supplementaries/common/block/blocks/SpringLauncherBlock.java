@@ -28,15 +28,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class SpringLauncherBlock extends Block {
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // is base only?
     protected static final VoxelShape PISTON_BASE_EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 12.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_BASE_WEST_AABB = Block.box(4.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_BASE_SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 12.0D);
     protected static final VoxelShape PISTON_BASE_NORTH_AABB = Block.box(0.0D, 0.0D, 4.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_BASE_UP_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
     protected static final VoxelShape PISTON_BASE_DOWN_AABB = Block.box(0.0D, 4.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final BooleanProperty EXTENDED = BlockStateProperties.EXTENDED; // is base only?
 
     public SpringLauncherBlock(Properties properties) {
         super(properties);

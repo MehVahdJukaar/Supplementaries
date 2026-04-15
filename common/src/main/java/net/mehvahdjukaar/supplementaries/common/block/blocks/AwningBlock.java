@@ -68,6 +68,20 @@ public class AwningBlock extends WaterBlock implements IColored {
                 .setValue(FACING, Direction.NORTH));
     }
 
+    public static @NotNull Vector3f getNormalVector(BlockState state) {
+        if (!state.getValue(SLANTED)) {
+            return new Vector3f(0, 1, 0);
+        }
+        Direction dir = state.getValue(FACING);
+        Vector3f normal = new Vector3f(0, 1, 0);
+        if (state.getValue(SLANTED)) {
+            double angleDeg = CommonConfigs.Building.AWNINGS_BOUNCE_ANGLE.get();
+            normal.rotate(Axis.XP.rotationDegrees((float) (90 - angleDeg)));
+        }
+        normal.rotate(Axis.YP.rotationDegrees(-dir.toYRot()));
+        return normal;
+    }
+
     @Override
     public boolean canBeReplaced(BlockState state, Fluid fluid) {
         return true;
@@ -224,7 +238,6 @@ public class AwningBlock extends WaterBlock implements IColored {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
-
     @Override
     public void fallOn(Level level, BlockState state, BlockPos pos, Entity entity, float fallDistance) {
         if (entity.isSuppressingBounce()) {
@@ -261,20 +274,6 @@ public class AwningBlock extends WaterBlock implements IColored {
             }
         }
         super.stepOn(level, pos, state, entity);
-    }
-
-    public static @NotNull Vector3f getNormalVector(BlockState state) {
-        if (!state.getValue(SLANTED)) {
-            return new Vector3f(0, 1, 0);
-        }
-        Direction dir = state.getValue(FACING);
-        Vector3f normal = new Vector3f(0, 1, 0);
-        if (state.getValue(SLANTED)) {
-            double angleDeg = CommonConfigs.Building.AWNINGS_BOUNCE_ANGLE.get();
-            normal.rotate(Axis.XP.rotationDegrees((float) (90 - angleDeg)));
-        }
-        normal.rotate(Axis.YP.rotationDegrees(-dir.toYRot()));
-        return normal;
     }
 
     @Override

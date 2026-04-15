@@ -43,19 +43,53 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         super(properties);
     }
 
+    @Environment(EnvType.CLIENT)
+    private static void addClientTooltip(List<Component> list) {
+        list.add(Component.translatable("message.supplementaries.lunch_box.tooltip",
+                        Minecraft.getInstance().options.keyAttack.getTranslatedKeyMessage())
+                .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+    }
+
+    private static boolean swapWithSelected(LivingEntity livingEntity, ItemStack result, LunchBaskedContent.Mutable data, ItemStack currentStack) {
+        boolean success = false;
+        if (result.isEmpty()) {
+            data.getSelected().shrink(1);
+            success = true;
+        } else if (!ItemStack.isSameItemSameComponents(result, currentStack)) {
+            data.getSelected().shrink(1);
+            ItemStack remaining = data.tryAdding(result);
+            success = true;
+
+            if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
+                p.drop(remaining, false);
+            }
+        }
+        return success;
+    }
+
+    @NotNull
+    public static ItemStack findActiveLunchBox(LivingEntity entity) {
+        return findActiveLunchBoxSlot(entity).get(entity);
+    }
+
+    @NotNull
+    public static SlotReference findActiveLunchBoxSlot(LivingEntity entity) {
+        return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof LunchBoxItem);
+    }
+
+    public static boolean canAcceptItem(ItemStack toInsert) {
+        if (!toInsert.getItem().canFitInsideContainerItems()) return false;
+        if (toInsert.is(ModTags.LUNCH_BASKET_BLACKLIST)) return false;
+        var animation = toInsert.getItem().getUseAnimation(toInsert);
+        return animation == UseAnim.DRINK || animation == UseAnim.EAT;
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         if (MiscUtils.showsHints(tooltipFlag)) {
             addClientTooltip(tooltipComponents);
         }
-    }
-
-    @Environment(EnvType.CLIENT)
-    private static void addClientTooltip(List<Component> list) {
-        list.add(Component.translatable("message.supplementaries.lunch_box.tooltip",
-                        Minecraft.getInstance().options.keyAttack.getTranslatedKeyMessage())
-                .withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
@@ -130,7 +164,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         return false;
     }
 
-
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity livingEntity) {
         var data = stack.get(getComponentType());
@@ -148,7 +181,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         }
         return super.getUseAnimation(stack);
     }
-
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
@@ -193,7 +225,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         */
     }
 
-
     @ForgeOverride
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         var data = stack.get(getComponentType());
@@ -204,24 +235,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
             SuppPlatformStuff.releaseUsingItem(selected, entity);
         }
     }
-
-    private static boolean swapWithSelected(LivingEntity livingEntity, ItemStack result, LunchBaskedContent.Mutable data, ItemStack currentStack) {
-        boolean success = false;
-        if (result.isEmpty()) {
-            data.getSelected().shrink(1);
-            success = true;
-        } else if (!ItemStack.isSameItemSameComponents(result, currentStack)) {
-            data.getSelected().shrink(1);
-            ItemStack remaining = data.tryAdding(result);
-            success = true;
-
-            if (!remaining.isEmpty() && livingEntity instanceof Player p && !p.getInventory().add(remaining)) {
-                p.drop(remaining, false);
-            }
-        }
-        return success;
-    }
-
 
     @Override
     protected void playInsertSound(Entity pEntity) {
@@ -238,23 +251,6 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
     @Override
     public int getMaxSlots() {
         return CommonConfigs.Tools.LUNCH_BOX_SLOTS.get();
-    }
-
-    @NotNull
-    public static ItemStack findActiveLunchBox(LivingEntity entity) {
-        return findActiveLunchBoxSlot(entity).get(entity);
-    }
-
-    @NotNull
-    public static SlotReference findActiveLunchBoxSlot(LivingEntity entity) {
-        return SuppPlatformStuff.getFirstInInventory(entity, i -> i.getItem() instanceof LunchBoxItem);
-    }
-
-    public static boolean canAcceptItem(ItemStack toInsert) {
-        if (!toInsert.getItem().canFitInsideContainerItems()) return false;
-        if (toInsert.is(ModTags.LUNCH_BASKET_BLACKLIST)) return false;
-        var animation = toInsert.getItem().getUseAnimation(toInsert);
-        return animation == UseAnim.DRINK || animation == UseAnim.EAT;
     }
 
 

@@ -29,27 +29,21 @@ import org.lwjgl.glfw.GLFW;
 public class CannonController {
 
     protected static CannonBlockTile cannon;
-
-    private static CameraType lastCameraType;
     protected static HitResult hit;
-
+    protected static ShootingMode shootingMode = ShootingMode.DOWN;
+    @Nullable
+    protected static BallisticTrajectory trajectory;
+    protected static boolean showsTrajectory = true;
+    private static CameraType lastCameraType;
     // values controlled by player mouse movement. Not actually what camera uses
     private static float yawIncrease;
     private static float pitchIncrease;
-
     private static boolean needsToUpdateServer;
-    protected static ShootingMode shootingMode = ShootingMode.DOWN;
-
-    @Nullable
-    protected static BallisticTrajectory trajectory;
-
     // lerp camera
     private static Vec3 lastCameraPos;
     private static float lastZoomOut = 0;
     private static float lastCameraYaw = 0;
     private static float lastCameraPitch = 0;
-
-    protected static boolean showsTrajectory = true;
 
     public static void startControlling(CannonBlockTile cannon) {
         Minecraft mc = Minecraft.getInstance();

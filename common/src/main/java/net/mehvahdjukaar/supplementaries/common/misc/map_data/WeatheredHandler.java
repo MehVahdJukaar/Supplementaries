@@ -42,10 +42,46 @@ import java.util.Optional;
 
 public class WeatheredHandler {
 
+    public static final MapColor ANTIQUE_LIGHT;
+    public static final MapColor ANTIQUE_DARK;
     private static final String ANTIQUE_KEY = "antique";
-
     private static final CustomMapData.Type<Boolean, WeatheredMapData> ANTIQUE_DATA_KEY = MapDataRegistry.registerCustomMapSavedData(
             Supplementaries.res(ANTIQUE_KEY), WeatheredMapData::new, ByteBufCodecs.BOOL);
+    private static final Object2ObjectArrayMap<MapColor, MapColor> ANTIQUE_COLORS = new Object2ObjectArrayMap<>();
+
+    static {
+        MapColor mc1;
+        MapColor mc;
+        try {
+            Class<MapColor> cl = MapColor.class;
+
+            Constructor<MapColor> cons = cl.getDeclaredConstructor(int.class, int.class);
+            cons.setAccessible(true);
+
+            mc = cons.newInstance(62, 0xd3a471);
+            mc1 = cons.newInstance(63, 0xa77e52);
+        } catch (Exception e) {
+            mc = MapColor.TERRACOTTA_WHITE;
+            mc1 = MapColor.RAW_IRON;
+            Supplementaries.LOGGER.warn("Failed to add custom map colors for antique map: ", e);
+        }
+        ANTIQUE_DARK = mc1;
+        ANTIQUE_LIGHT = mc;
+        ANTIQUE_COLORS.put(MapColor.STONE, MapColor.DIRT);
+        ANTIQUE_COLORS.put(MapColor.DEEPSLATE, MapColor.DIRT);
+        ANTIQUE_COLORS.put(MapColor.PLANT, MapColor.COLOR_BROWN);
+        ANTIQUE_COLORS.put(MapColor.DIRT, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.WOOD, MapColor.WOOD);
+        ANTIQUE_COLORS.put(MapColor.COLOR_GRAY, MapColor.COLOR_BROWN);
+        ANTIQUE_COLORS.put(MapColor.TERRACOTTA_BLACK, MapColor.TERRACOTTA_BLACK);
+        ANTIQUE_COLORS.put(MapColor.COLOR_BLACK, MapColor.TERRACOTTA_BLACK);
+        ANTIQUE_COLORS.put(MapColor.SAND, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.QUARTZ, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.SNOW, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.METAL, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.WOOL, ANTIQUE_LIGHT);
+        ANTIQUE_COLORS.put(MapColor.COLOR_BROWN, MapColor.TERRACOTTA_BROWN);
+    }
 
     public static void init() {
     }
@@ -54,10 +90,59 @@ public class WeatheredHandler {
         return ANTIQUE_DATA_KEY.get(data);
     }
 
+    public static void setAntique(Level level, ItemStack stack, boolean on) {
+        setAntique(level, stack, on, false);
+    }
+
+    public static void setAntique(Level level, ItemStack stack, boolean on, boolean replaceOld) {
+        MapItemSavedData mapitemsaveddata = MapItem.getSavedData(stack, level);
+        MapId mapId = createAntiqueMapData(mapitemsaveddata, level, on, replaceOld);
+        if (mapId != null) stack.set(DataComponents.MAP_ID, mapId);
+
+    }
+
+    public static MapId createAntiqueMapData(MapItemSavedData mapitemsaveddata, Level level, boolean on, boolean replaceOld) {
+        if (mapitemsaveddata instanceof ExpandedMapData data) {
+
+            MapItemSavedData newData = replaceOld ? mapitemsaveddata : data.ml$copy();
+            WeatheredMapData instance = getAntiqueData(newData);
+            var colorData = ColoredMapHandler.getColorData(newData);
+            colorData.clear();
+            var lightData = MapLightHandler.getLightData(newData);
+            lightData.clear();
+
+            instance.set(on);
+            instance.setDirty(newData, CustomMapData.SimpleDirtyCounter::markDirty);
+            if (!replaceOld) {
+                MapId mapId = level.getFreeMapId();
+                level.setMapData(mapId, newData);
+                return mapId;
+            }
+        }
+        return null;
+    }
+
     public static class WeatheredMapData extends CustomMapData.Simple<Boolean> {
 
         public WeatheredMapData() {
             super(false);
+        }
+
+        private static boolean isHasCeiling(Level level, Optional<Integer> mapHeight) {
+            boolean original = level.dimensionType().hasCeiling();
+            if (original && mapHeight.isPresent() && CommonConfigs.Tools.SLICE_MAP_ENABLED.get()) {
+                return false;
+            }
+            return original;
+        }
+
+        private static boolean isWaterAt(Level level, Map<BlockPos, Boolean> map, int scale, int x, int z) {
+            BlockPos pos = new BlockPos(x, 0, z);
+            return map.computeIfAbsent(pos, p -> {
+                        int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1;
+                        return level.getFluidState(pos.above(y)).isEmpty();
+                    }
+            );
         }
 
         public boolean isAntique() {
@@ -297,97 +382,9 @@ public class WeatheredHandler {
             return true;
         }
 
-        private static boolean isHasCeiling(Level level, Optional<Integer> mapHeight) {
-            boolean original = level.dimensionType().hasCeiling();
-            if (original && mapHeight.isPresent() && CommonConfigs.Tools.SLICE_MAP_ENABLED.get()) {
-                return false;
-            }
-            return original;
-        }
-
-
         public void set(boolean on) {
             this.value = on;
         }
 
-        private static boolean isWaterAt(Level level, Map<BlockPos, Boolean> map, int scale, int x, int z) {
-            BlockPos pos = new BlockPos(x, 0, z);
-            return map.computeIfAbsent(pos, p -> {
-                        int y = level.getHeight(Heightmap.Types.WORLD_SURFACE, x, z) - 1;
-                        return level.getFluidState(pos.above(y)).isEmpty();
-                    }
-            );
-        }
-
-    }
-
-    public static final MapColor ANTIQUE_LIGHT;
-    public static final MapColor ANTIQUE_DARK;
-    private static final Object2ObjectArrayMap<MapColor, MapColor> ANTIQUE_COLORS = new Object2ObjectArrayMap<>();
-
-    static {
-        MapColor mc1;
-        MapColor mc;
-        try {
-            Class<MapColor> cl = MapColor.class;
-
-            Constructor<MapColor> cons = cl.getDeclaredConstructor(int.class, int.class);
-            cons.setAccessible(true);
-
-            mc = cons.newInstance(62, 0xd3a471);
-            mc1 = cons.newInstance(63, 0xa77e52);
-        } catch (Exception e) {
-            mc = MapColor.TERRACOTTA_WHITE;
-            mc1 = MapColor.RAW_IRON;
-            Supplementaries.LOGGER.warn("Failed to add custom map colors for antique map: ", e);
-        }
-        ANTIQUE_DARK = mc1;
-        ANTIQUE_LIGHT = mc;
-        ANTIQUE_COLORS.put(MapColor.STONE, MapColor.DIRT);
-        ANTIQUE_COLORS.put(MapColor.DEEPSLATE, MapColor.DIRT);
-        ANTIQUE_COLORS.put(MapColor.PLANT, MapColor.COLOR_BROWN);
-        ANTIQUE_COLORS.put(MapColor.DIRT, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MapColor.WOOD, MapColor.WOOD);
-        ANTIQUE_COLORS.put(MapColor.COLOR_GRAY, MapColor.COLOR_BROWN);
-        ANTIQUE_COLORS.put(MapColor.TERRACOTTA_BLACK, MapColor.TERRACOTTA_BLACK);
-        ANTIQUE_COLORS.put(MapColor.COLOR_BLACK, MapColor.TERRACOTTA_BLACK);
-        ANTIQUE_COLORS.put(MapColor.SAND, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MapColor.QUARTZ, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MapColor.SNOW, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MapColor.METAL, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MapColor.WOOL, ANTIQUE_LIGHT);
-        ANTIQUE_COLORS.put(MapColor.COLOR_BROWN, MapColor.TERRACOTTA_BROWN);
-    }
-
-    public static void setAntique(Level level, ItemStack stack, boolean on) {
-        setAntique(level, stack, on, false);
-    }
-
-    public static void setAntique(Level level, ItemStack stack, boolean on, boolean replaceOld) {
-        MapItemSavedData mapitemsaveddata = MapItem.getSavedData(stack, level);
-        MapId mapId = createAntiqueMapData(mapitemsaveddata, level, on, replaceOld);
-        if (mapId != null) stack.set(DataComponents.MAP_ID, mapId);
-
-    }
-
-    public static MapId createAntiqueMapData(MapItemSavedData mapitemsaveddata, Level level, boolean on, boolean replaceOld) {
-        if (mapitemsaveddata instanceof ExpandedMapData data) {
-
-            MapItemSavedData newData = replaceOld ? mapitemsaveddata : data.ml$copy();
-            WeatheredMapData instance = getAntiqueData(newData);
-            var colorData = ColoredMapHandler.getColorData(newData);
-            colorData.clear();
-            var lightData = MapLightHandler.getLightData(newData);
-            lightData.clear();
-
-            instance.set(on);
-            instance.setDirty(newData, CustomMapData.SimpleDirtyCounter::markDirty);
-            if (!replaceOld) {
-                MapId mapId = level.getFreeMapId();
-                level.setMapData(mapId, newData);
-                return mapId;
-            }
-        }
-        return null;
     }
 }

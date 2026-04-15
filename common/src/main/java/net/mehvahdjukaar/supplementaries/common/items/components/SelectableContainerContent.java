@@ -34,6 +34,24 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         this.empty = stacks.stream().allMatch(ItemStack::isEmpty);
     }
 
+    private static int computeSelectedItemCount(List<ItemStack> stacks, int sel) {
+        ItemStack selected = stacks.get(sel);
+        int amount = 0;
+        for (var item : stacks) {
+
+            if (ItemStack.isSameItemSameComponents(selected, item)) {
+                amount += item.getCount();
+            }
+        }
+        return amount;
+    }
+
+    protected static void validateSlotIndex(int slot, List<?> list) {
+        if (slot < 0 || slot >= list.size()) {
+            throw new RuntimeException("Slot " + slot + " not in valid range - [0," + list.size() + ")");
+        }
+    }
+
     public abstract M toMutable();
 
     public int getSelectedSlot() {
@@ -91,24 +109,6 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
 
     }
 
-    private static int computeSelectedItemCount(List<ItemStack> stacks, int sel) {
-        ItemStack selected = stacks.get(sel);
-        int amount = 0;
-        for (var item : stacks) {
-
-            if (ItemStack.isSameItemSameComponents(selected, item)) {
-                amount += item.getCount();
-            }
-        }
-        return amount;
-    }
-
-    protected static void validateSlotIndex(int slot, List<?> list) {
-        if (slot < 0 || slot >= list.size()) {
-            throw new RuntimeException("Slot " + slot + " not in valid range - [0," + list.size() + ")");
-        }
-    }
-
     public int getBarSize() {
         return Math.min(1 + 12 * selectedItemCount /
                 (stacks.get(selectedSlot).getMaxStackSize() * getSize()), 13);
@@ -118,6 +118,19 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         return empty;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SelectableContainerContent<?> that = (SelectableContainerContent<?>) o;
+        return selectedSlot == that.selectedSlot && selectedItemCount == that.selectedItemCount &&
+                ItemStack.listMatches(stacks, that.stacks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ItemStack.hashStackList(stacks), selectedSlot);
+    }
 
     public abstract static class Mut<T extends SelectableContainerContent<?>> {
 
@@ -351,19 +364,5 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             }
             Supplementaries.error("Failed to consume from SelectableContainerContent, not enough items");
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SelectableContainerContent<?> that = (SelectableContainerContent<?>) o;
-        return selectedSlot == that.selectedSlot && selectedItemCount == that.selectedItemCount &&
-                ItemStack.listMatches(stacks, that.stacks);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(ItemStack.hashStackList(stacks), selectedSlot);
     }
 }

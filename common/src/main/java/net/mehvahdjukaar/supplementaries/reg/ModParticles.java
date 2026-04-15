@@ -18,10 +18,6 @@ import java.util.function.Supplier;
 
 public class ModParticles {
 
-    public static void init() {
-        //touch
-    }
-
     //particles
     public static final Supplier<SimpleParticleType> SPEAKER_SOUND = reg("speaker_sound");
     public static final Supplier<SimpleParticleType> GREEN_FLAME = reg("green_flame");
@@ -55,6 +51,9 @@ public class ModParticles {
             RegHelper.registerParticle(Supplementaries.res("cannon_fire"),
                     CannonFireParticle.Options.CODEC, CannonFireParticle.Options.STREAM_CODEC);
 
+    public static void init() {
+        //touch
+    }
 
     private static <T extends ParticleOptions> RegSupplier<ParticleType<T>> regComplex(
             String string,

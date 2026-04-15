@@ -24,7 +24,34 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
     private static final Component WAXED_TOOLTIP = Component.translatable("message.supplementaries.blackboard").withStyle(ChatFormatting.GRAY);
     private static final Component GLOW_TOOLTIP = Component.translatable("message.supplementaries.glowing").withStyle(ChatFormatting.GRAY);
     private static final int SIZE = 16;
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlackboardData> STREAM_CODEC = StreamCodec.composite(
+            byteMatrixStream(SIZE), data -> data.pixels,
+            ByteBufCodecs.BOOL, data -> data.glow,
+            ByteBufCodecs.BOOL, data -> data.waxed,
+            BlackboardData::new
+    );
+    public static final BlackboardData EMPTY = new BlackboardData(new byte[SIZE][SIZE], false, false);
+    private static final Codec<byte[][]> MATRIX_CODEC_OR_LEGACY = Codec.withAlternative(
+            byteMatrix(SIZE),
+            Codec.LONG_STREAM.xmap(LongStream::toArray, Arrays::stream)
+                    .xmap(BlackboardData::unpackPixels, BlackboardData::packPixels)
+    );
+    public static final Codec<BlackboardData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            MATRIX_CODEC_OR_LEGACY.fieldOf("values").forGetter(v -> v.pixels),
+            Codec.BOOL.fieldOf("glow").forGetter(v -> v.glow),
+            Codec.BOOL.fieldOf("waxed").forGetter(v -> v.waxed)
+    ).apply(instance, BlackboardData::new));
+    private final byte[][] pixels;
+    private final boolean glow;
+    private final boolean waxed;
+    private final int cachedHashCode;
 
+    public BlackboardData(byte[][] pixels, boolean glowing, boolean waxed) {
+        this.pixels = pixels;
+        this.glow = glowing;
+        this.waxed = waxed;
+        this.cachedHashCode = Objects.hash(Arrays.deepHashCode(pixels), glow, waxed);
+    }
 
     private static Codec<byte[][]> byteMatrix(int size) {
         return Codec.BYTE_BUFFER.xmap(buffer -> {
@@ -44,19 +71,6 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
         });
     }
 
-    private static final Codec<byte[][]> MATRIX_CODEC_OR_LEGACY = Codec.withAlternative(
-            byteMatrix(SIZE),
-            Codec.LONG_STREAM.xmap(LongStream::toArray, Arrays::stream)
-                    .xmap(BlackboardData::unpackPixels, BlackboardData::packPixels)
-    );
-
-    public static final Codec<BlackboardData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            MATRIX_CODEC_OR_LEGACY.fieldOf("values").forGetter(v -> v.pixels),
-            Codec.BOOL.fieldOf("glow").forGetter(v -> v.glow),
-            Codec.BOOL.fieldOf("waxed").forGetter(v -> v.waxed)
-    ).apply(instance, BlackboardData::new));
-
-
     private static StreamCodec<ByteBuf, byte[][]> byteMatrixStream(int size) {
         return ByteBufCodecs.BYTE_ARRAY.map(buffer -> {
             byte[][] matrix = new byte[size][size];
@@ -72,107 +86,6 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
             return flattened;
         });
     }
-
-    public static final StreamCodec<RegistryFriendlyByteBuf, BlackboardData> STREAM_CODEC = StreamCodec.composite(
-            byteMatrixStream(SIZE), data -> data.pixels,
-            ByteBufCodecs.BOOL, data -> data.glow,
-            ByteBufCodecs.BOOL, data -> data.waxed,
-            BlackboardData::new
-    );
-
-    public static final BlackboardData EMPTY = new BlackboardData(new byte[SIZE][SIZE], false, false);
-
-    private final byte[][] pixels;
-    private final boolean glow;
-    private final boolean waxed;
-
-    private final int cachedHashCode;
-
-    public BlackboardData(byte[][] pixels, boolean glowing, boolean waxed) {
-        this.pixels = pixels;
-        this.glow = glowing;
-        this.waxed = waxed;
-        this.cachedHashCode = Objects.hash(Arrays.deepHashCode(pixels), glow, waxed);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof BlackboardData that)) return false;
-        return glow == that.glow && waxed == that.waxed && Objects.deepEquals(pixels, that.pixels);
-    }
-
-    @Override
-    public int hashCode() {
-        return cachedHashCode;
-    }
-
-    @Override
-    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
-        if (waxed) {
-            tooltipAdder.accept(WAXED_TOOLTIP);
-        }
-        if (glow) {
-            tooltipAdder.accept(GLOW_TOOLTIP);
-        }
-    }
-
-    public boolean isWaxed() {
-        return waxed;
-    }
-
-    public boolean isGlow() {
-        return glow;
-    }
-
-    public boolean hasSamePixels(byte[][] pixels) {
-        return Arrays.deepEquals(this.pixels, pixels);
-    }
-
-    public boolean isEmpty() {
-        for (byte[] row : pixels) {
-            for (byte value : row) {
-                if (value != 0) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    public byte getPixel(int xx, int yy) {
-        return pixels[xx][yy];
-    }
-
-    public byte[][] getPixelsUnsafe() {
-        return pixels;
-    }
-
-    public BlackboardData makeCleared() {
-        return new BlackboardData(new byte[SIZE][SIZE], this.glow, this.waxed);
-    }
-
-    public BlackboardData withPixel(int x, int y, byte b) {
-        byte[][] newPixels = new byte[SIZE][SIZE];
-        for (int i = 0; i < SIZE; i++) {
-            System.arraycopy(pixels[i], 0, newPixels[i], 0, SIZE);
-        }
-        newPixels[x][y] = b;
-        return new BlackboardData(newPixels, this.glow, this.waxed);
-    }
-
-    public BlackboardData withWaxed(boolean b) {
-        return new BlackboardData(pixels, this.glow, b);
-    }
-
-    public BlackboardData withGlow(boolean b) {
-        return new BlackboardData(pixels, b, this.waxed);
-    }
-
-    public BlackboardData withPixels(byte[][] pixels) {
-        return new BlackboardData(pixels, this.glow, this.waxed);
-    }
-
 
     public static long[] packPixels(byte[][] pixels) {
         long[] packed = new long[pixels.length];
@@ -312,6 +225,84 @@ public class BlackboardData implements TooltipComponent, TooltipProvider {
             j++;
         }
         return unpacked;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BlackboardData that)) return false;
+        return glow == that.glow && waxed == that.waxed && Objects.deepEquals(pixels, that.pixels);
+    }
+
+    @Override
+    public int hashCode() {
+        return cachedHashCode;
+    }
+
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+        if (waxed) {
+            tooltipAdder.accept(WAXED_TOOLTIP);
+        }
+        if (glow) {
+            tooltipAdder.accept(GLOW_TOOLTIP);
+        }
+    }
+
+    public boolean isWaxed() {
+        return waxed;
+    }
+
+    public boolean isGlow() {
+        return glow;
+    }
+
+    public boolean hasSamePixels(byte[][] pixels) {
+        return Arrays.deepEquals(this.pixels, pixels);
+    }
+
+    public boolean isEmpty() {
+        for (byte[] row : pixels) {
+            for (byte value : row) {
+                if (value != 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public byte getPixel(int xx, int yy) {
+        return pixels[xx][yy];
+    }
+
+    public byte[][] getPixelsUnsafe() {
+        return pixels;
+    }
+
+    public BlackboardData makeCleared() {
+        return new BlackboardData(new byte[SIZE][SIZE], this.glow, this.waxed);
+    }
+
+    public BlackboardData withPixel(int x, int y, byte b) {
+        byte[][] newPixels = new byte[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            System.arraycopy(pixels[i], 0, newPixels[i], 0, SIZE);
+        }
+        newPixels[x][y] = b;
+        return new BlackboardData(newPixels, this.glow, this.waxed);
+    }
+
+    public BlackboardData withWaxed(boolean b) {
+        return new BlackboardData(pixels, this.glow, b);
+    }
+
+    public BlackboardData withGlow(boolean b) {
+        return new BlackboardData(pixels, b, this.waxed);
+    }
+
+    public BlackboardData withPixels(byte[][] pixels) {
+        return new BlackboardData(pixels, this.glow, this.waxed);
     }
 
 }

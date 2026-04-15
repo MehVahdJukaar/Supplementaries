@@ -49,14 +49,32 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     public static final ModelDataKey<ResourceKey<SoftFluid>> FLUID = ModBlockProperties.FLUID;
     public static final ModelDataKey<Integer> FLUID_COLOR = ModBlockProperties.FLUID_COLOR;
     public static final int COOLDOWN_PER_BOTTLE = 20;
-
-    private int transferCooldown = 0;
+    public static final Predicate<Entity> NON_PLAYER = e -> e.isAlive() && !(e instanceof Player);
     public final SoftFluidTank tempFluidHolder;
+    private int transferCooldown = 0;
 
     public FaucetBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.FAUCET_TILE.get(), pos, state);
         this.tempFluidHolder = SoftFluidTank.create(5, Utils.hackyGetRegistryAccess());
     }
+
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FaucetBlockTile tile) {
+        if (tile.transferCooldown > 0) {
+            tile.transferCooldown--;
+        } else if (tile.isOpen()) {
+            int cooldown = tile.tryExtract((ServerLevel) pLevel, false);
+            tile.transferCooldown += cooldown;
+        }
+    }
+
+    @Deprecated(forRemoval = true)
+    public static void registerInteraction(Object interaction) {
+        FaucetBehaviorsManager.addRegisterFaucetInteractions(iFaucetEvent -> {
+            iFaucetEvent.registerInteraction(interaction);
+        });
+    }
+
+//------fluids------
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
@@ -75,18 +93,6 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
             this.level.setBlock(this.worldPosition, this.getBlockState().setValue(FaucetBlock.LIGHT_LEVEL, light), 2);
         }
     }
-
-
-    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FaucetBlockTile tile) {
-        if (tile.transferCooldown > 0) {
-            tile.transferCooldown--;
-        } else if (tile.isOpen()) {
-            int cooldown = tile.tryExtract((ServerLevel) pLevel, false);
-            tile.transferCooldown += cooldown;
-        }
-    }
-
-//------fluids------
 
     //returns true if it has water animation
     public boolean updateContainedFluidVisuals(ServerLevel serverLevel) {
@@ -145,6 +151,8 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         return 0;
     }
 
+//------end-fluids------
+
     // returns cooldown
     @Nullable
     private <T, S extends FaucetSource<T>> Integer runInteractions(Iterable<S> interactions, Level level, Direction dir,
@@ -192,11 +200,11 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         return null;
     }
 
-//------end-fluids------
-
     public boolean isOpen() {
         return (this.getBlockState().getValue(BlockStateProperties.POWERED) ^ this.getBlockState().getValue(BlockStateProperties.ENABLED));
     }
+
+//------items------
 
     public boolean hasWater() {
         return this.getBlockState().getValue(FaucetBlock.HAS_WATER);
@@ -206,8 +214,6 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         return this.getBlockState().getValue(FaucetBlock.CONNECTED);
     }
 
-//------items------
-
     private void drop(ItemStack extracted) {
         BlockPos pos = worldPosition;
         ItemEntity drop = new ItemEntity(level, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, extracted);
@@ -216,8 +222,6 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         float f = (level.random.nextFloat() - 0.5f) / 4f;
         level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
     }
-
-    public static final Predicate<Entity> NON_PLAYER = e -> e.isAlive() && !(e instanceof Player);
 
     private boolean fillEntityBelow(ItemStack stack) {
         List<Entity> list = level.getEntities((Entity) null,
@@ -254,13 +258,6 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return this.saveWithoutMetadata(registries);
-    }
-
-    @Deprecated(forRemoval = true)
-    public static void registerInteraction(Object interaction) {
-        FaucetBehaviorsManager.addRegisterFaucetInteractions(iFaucetEvent -> {
-            iFaucetEvent.registerInteraction(interaction);
-        });
     }
 
 }

@@ -37,16 +37,17 @@ import java.util.function.Supplier;
 
 public class CommonConfigs {
 
-    private static final Map<String, Supplier<Boolean>> FEATURE_TOGGLES = new HashMap<>();
-
     public static final ModConfigHolder CONFIG_HOLDER;
-
+    private static final Map<String, Supplier<Boolean>> FEATURE_TOGGLES = new HashMap<>();
     private static final WeakReference<ConfigBuilder> builderReference;
 
 
     private static final Supplier<Boolean> TRUE = () -> true;
     private static final Supplier<Boolean> FALSE = () -> false;
     private static final Supplier<Double> ZERO = () -> 0d;
+    public static Predicate<Block> xpBottlingOverride = EnchantingTableBlock.class::isInstance;
+    private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
+    private static boolean stasisEnabled = true;
 
     static {
         ConfigBuilder builder = ConfigBuilder.create(Supplementaries.MOD_ID, ConfigType.COMMON_SYNCED);
@@ -65,11 +66,6 @@ public class CommonConfigs {
         CONFIG_HOLDER = builder.build();
         CONFIG_HOLDER.forceLoad();
     }
-
-
-    private static Supplier<Holder.Reference<Block>> ropeOverride = () -> null;
-    public static Predicate<Block> xpBottlingOverride = EnchantingTableBlock.class::isInstance;
-    private static boolean stasisEnabled = true;
 
     private static void onRefresh() {
         //this isn't safe. refresh could happen sooner than item registration for fabric
@@ -111,6 +107,51 @@ public class CommonConfigs {
         return Tools.BOMB_ENABLED.get() ? General.RED_MERCHANT_SPAWN_MULTIPLIER.get() : 0;
     }
 
+    private static Supplier<Boolean> feature(ConfigBuilder builder) {
+        return feature(builder, "enabled", builder.currentCategory(), true);
+    }
+
+    private static Supplier<Boolean> feature(ConfigBuilder builder, String name) {
+        return feature(builder, name, name, true);
+    }
+
+    private static Supplier<Boolean> feature(ConfigBuilder builder, String name, String key, boolean value) {
+        var config = builder.define(name, value);
+        String parentCat = builder.currentCategory();
+        var parentConf = FEATURE_TOGGLES.get(parentCat);
+        if (parentConf != null) {
+            Supplier<Boolean> finalChildConf = config;
+            config = () -> parentConf.get() && finalChildConf.get();
+        }
+        FEATURE_TOGGLES.put(key, config);
+        return config;
+    }
+
+    public static boolean isEnabled(String key) {
+        if (!CONFIG_HOLDER.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
+        return switch (key) {
+            case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
+            case ModConstants.PULLEY_BLOCK_NAME -> Redstone.PULLEY_ENABLED.get() && Functional.ROPE_ENABLED.get();
+            case ModConstants.BUNTING_NAME -> Building.BUNTINGS_ENABLED.get() && Functional.ROPE_ENABLED.get();
+            case ModConstants.ROPE_ARROW_NAME -> Tools.ROPE_ARROW_ENABLED.get() && Functional.ROPE_ENABLED.get();
+            case ModConstants.KEY_NAME ->
+                    Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
+            default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();
+        };
+    }
+
+    public static void init() {
+        int disabled = 0;
+        for (var c : FEATURE_TOGGLES.values()) {
+            if (!c.get()) disabled++;
+        }
+        float percentage = disabled / (float) FEATURE_TOGGLES.size();
+        if (percentage > 0.66f) {
+            Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage * 100));
+        }
+    }
+
+
     public enum SlimedJumpMode {
         NEVER, ALWAYS, NORMAL_DIFFICULTY, HARD_DIFFICULTY;
 
@@ -125,9 +166,11 @@ public class CommonConfigs {
         }
     }
 
+
     public enum Hands {
         MAIN_HAND, OFF_HAND, BOTH, NONE
     }
+
 
     public enum DeathMarkerMode {
         OFF, WITH_COMPASS, ALWAYS;
@@ -147,10 +190,58 @@ public class CommonConfigs {
     }
 
 
+    public enum ReplaceTableMode {
+        REPLACE,
+        NONE,
+        REMOVE
+    }
+
+    public enum TNTMode {
+        IGNITE,
+        IGNITE_ON_IMPACT,
+        NONE
+    }
+
     public static class Redstone {
 
-        public static void init() {
-        }
+        public static final Supplier<Boolean> SPEAKER_BLOCK_ENABLED;
+        public static final Supplier<Integer> SPEAKER_RANGE;
+        public static final Supplier<Integer> SPEAKER_BLOCK_MAX_TEXT;
+        public static final Supplier<Boolean> SPEAKER_NARRATOR;
+        public static final Supplier<Boolean> BELLOWS_ENABLED;
+        public static final Supplier<Integer> BELLOWS_PERIOD;
+        public static final Supplier<Integer> BELLOWS_POWER_SCALING;
+        public static final Supplier<Double> BELLOWS_MAX_VEL;
+        public static final Supplier<Double> BELLOWS_BASE_VEL_SCALING;
+        public static final Supplier<Integer> BELLOWS_RANGE;
+        public static final Supplier<Boolean> PISTON_LAUNCHER_ENABLED;
+        public static final Supplier<Double> LAUNCHER_VEL;
+        public static final Supplier<Integer> LAUNCHER_HEIGHT;
+        public static final Supplier<Boolean> ENDERMAN_HEAD_ENABLED;
+        public static final Supplier<Boolean> ENDERMAN_HEAD_DROP;
+        public static final Supplier<Integer> ENDERMAN_HEAD_INCREMENT;
+        public static final Supplier<Boolean> ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE;
+        public static final Supplier<Boolean> TURN_TABLE_ENABLED;
+        public static final Supplier<Boolean> TURN_TABLE_SHUFFLE;
+        public static final Supplier<Boolean> TURN_TABLE_ROTATE_ENTITIES;
+        public static final Supplier<Boolean> WIND_VANE_ENABLED;
+        public static final Supplier<Boolean> CLOCK_ENABLED;
+        public static final Supplier<Boolean> ILLUMINATOR_ENABLED;
+        public static final Supplier<Boolean> CRANK_ENABLED;
+        public static final Supplier<Boolean> FAUCET_ENABLED;
+        public static final Supplier<Boolean> FAUCET_FILL_ENTITIES;
+        public static final Supplier<Boolean> FAUCET_DROP_ITEMS;
+        public static final Supplier<Boolean> COG_BLOCK_ENABLED;
+        public static final Supplier<Boolean> GOLD_TRAPDOOR_ENABLED;
+        public static final Supplier<Boolean> GOLD_DOOR_ENABLED;
+        public static final Supplier<Boolean> LOCK_BLOCK_ENABLED;
+        public static final Supplier<Boolean> DISPENSER_MINECART_ENABLED;
+        public static final Supplier<Boolean> DISPENSER_MINECART_ANGLE;
+        public static final Supplier<Boolean> RELAYER_ENABLED;
+        public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
+        public static final Supplier<Boolean> CRYSTAL_DISPLAY_CHAINED;
+        public static final Supplier<Boolean> PULLEY_ENABLED;
+        public static final Supplier<Double> MINESHAFT_ELEVATOR;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -254,68 +345,95 @@ public class CommonConfigs {
             builder.pop();
         }
 
-        public static final Supplier<Boolean> SPEAKER_BLOCK_ENABLED;
-        public static final Supplier<Integer> SPEAKER_RANGE;
-        public static final Supplier<Integer> SPEAKER_BLOCK_MAX_TEXT;
-        public static final Supplier<Boolean> SPEAKER_NARRATOR;
-
-        public static final Supplier<Boolean> BELLOWS_ENABLED;
-        public static final Supplier<Integer> BELLOWS_PERIOD;
-        public static final Supplier<Integer> BELLOWS_POWER_SCALING;
-        public static final Supplier<Double> BELLOWS_MAX_VEL;
-        public static final Supplier<Double> BELLOWS_BASE_VEL_SCALING;
-        public static final Supplier<Integer> BELLOWS_RANGE;
-
-        public static final Supplier<Boolean> PISTON_LAUNCHER_ENABLED;
-        public static final Supplier<Double> LAUNCHER_VEL;
-        public static final Supplier<Integer> LAUNCHER_HEIGHT;
-
-        public static final Supplier<Boolean> ENDERMAN_HEAD_ENABLED;
-        public static final Supplier<Boolean> ENDERMAN_HEAD_DROP;
-        public static final Supplier<Integer> ENDERMAN_HEAD_INCREMENT;
-        public static final Supplier<Boolean> ENDERMAN_HEAD_WORKS_FROM_ANY_SIDE;
-
-        public static final Supplier<Boolean> TURN_TABLE_ENABLED;
-        public static final Supplier<Boolean> TURN_TABLE_SHUFFLE;
-        public static final Supplier<Boolean> TURN_TABLE_ROTATE_ENTITIES;
-
-        public static final Supplier<Boolean> WIND_VANE_ENABLED;
-
-        public static final Supplier<Boolean> CLOCK_ENABLED;
-
-        public static final Supplier<Boolean> ILLUMINATOR_ENABLED;
-
-        public static final Supplier<Boolean> CRANK_ENABLED;
-
-        public static final Supplier<Boolean> FAUCET_ENABLED;
-        public static final Supplier<Boolean> FAUCET_FILL_ENTITIES;
-        public static final Supplier<Boolean> FAUCET_DROP_ITEMS;
-
-        public static final Supplier<Boolean> COG_BLOCK_ENABLED;
-
-        public static final Supplier<Boolean> GOLD_TRAPDOOR_ENABLED;
-
-        public static final Supplier<Boolean> GOLD_DOOR_ENABLED;
-
-        public static final Supplier<Boolean> LOCK_BLOCK_ENABLED;
-
-        public static final Supplier<Boolean> DISPENSER_MINECART_ENABLED;
-        public static final Supplier<Boolean> DISPENSER_MINECART_ANGLE;
-
-        public static final Supplier<Boolean> RELAYER_ENABLED;
-
-        public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
-        public static final Supplier<Boolean> CRYSTAL_DISPLAY_CHAINED;
-
-        public static final Supplier<Boolean> PULLEY_ENABLED;
-        public static final Supplier<Double> MINESHAFT_ELEVATOR;
+        public static void init() {
+        }
 
     }
 
-
     public static class Building {
-        public static void init() {
-        }
+        public static final Supplier<Boolean> SPIDER_HEAD_ENABLED;
+        public static final Supplier<Boolean> BARNACLES_ENABLED;
+        public static final Supplier<Boolean> BLACKBOARD_ENABLED;
+        public static final Supplier<Boolean> BLACKBOARD_COLOR;
+        public static final Supplier<BlackboardBlock.UseMode> BLACKBOARD_MODE;
+        public static final Supplier<Boolean> GOLD_BARS_ENABLED;
+        public static final Supplier<Boolean> IRON_GATE_ENABLED;
+        public static final Supplier<Boolean> DOUBLE_IRON_GATE;
+        public static final Supplier<Boolean> CONSISTENT_GATE;
+        public static final Supplier<Boolean> ASH_ENABLED;
+        public static final Supplier<Boolean> ASH_FROM_MOBS;
+        public static final Supplier<Double> ASH_BURN_CHANCE;
+        public static final Supplier<Boolean> ASH_RAIN;
+        public static final Supplier<Boolean> BASALT_ASH_ENABLED;
+        public static final Supplier<Boolean> SUGAR_CUBE_ENABLED;
+        public static final Supplier<Integer> SUGAR_BLOCK_HORSE_SPEED_DURATION;
+        public static final Supplier<Boolean> ITEM_SHELF_ENABLED;
+        public static final Supplier<Boolean> ITEM_SHELF_LADDER;
+        public static final Supplier<Boolean> NOTICE_BOARD_ENABLED;
+        public static final Supplier<Boolean> NOTICE_BOARDS_UNRESTRICTED;
+        public static final Supplier<Boolean> NOTICE_BOARD_GUI;
+        public static final Supplier<Boolean> FLAG_ENABLED;
+        public static final Supplier<Boolean> FLAG_POLE;
+        public static final Supplier<Integer> FLAG_POLE_LENGTH;
+        public static final Supplier<Boolean> GOBLET_ENABLED;
+        public static final Supplier<Boolean> GOBLET_DRINK;
+        public static final Supplier<Boolean> PLANTER_ENABLED;
+        public static final Supplier<Boolean> PLANTER_BREAKS;
+        public static final Supplier<Boolean> FD_PLANTER;
+        public static final Supplier<Boolean> WAY_SIGN_ENABLED;
+        public static final Supplier<Boolean> ROAD_SIGN_DISTANCE_TEXT;
+        public static final Supplier<Boolean> ROAD_SIGN_ENABLED;
+        public static final Supplier<Integer> ROAD_SIGN_MAX_SEARCH_RADIUS;
+        public static final Supplier<Integer> ROAD_SIGN_MAX_SEARCHES;
+        public static final Supplier<Boolean> ROAD_SIGN_EXIT_EARLY;
+        public static final Supplier<Boolean> GLOBE_ENABLED;
+        public static final Supplier<Boolean> GLOBE_COORDINATES;
+        public static final Supplier<Boolean> GLOBE_SEPIA;
+        public static final Supplier<Boolean> PEDESTAL_ENABLED;
+        public static final Supplier<Double> CRYSTAL_ENCHANTING;
+        public static final Supplier<Boolean> TIMBER_FRAME_ENABLED;
+        public static final Supplier<Boolean> REPLACE_DAUB;
+        public static final Supplier<Boolean> SWAP_TIMBER_FRAME;
+        public static final Supplier<Boolean> AXE_TIMBER_FRAME_STRIP;
+        public static final Supplier<Boolean> DAUB_ENABLED;
+        public static final Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
+        public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
+        public static final Supplier<Boolean> GRAVEL_BRICKS_ENABLED;
+        public static final Supplier<Boolean> GRAVEL_BRICKS_BREAKING;
+        public static final Supplier<Boolean> SLIDY_BLOCK_ENABLED;
+        public static final Supplier<Double> SLIDY_BLOCK_SPEED;
+        public static final Supplier<Boolean> BUNTINGS_ENABLED;
+        public static final Supplier<Boolean> SCONCE_ENABLED;
+        public static final Supplier<Boolean> SCONCE_LEVER_ENABLED;
+        public static final Supplier<Boolean> STONE_LAMP_ENABLED;
+        public static final Supplier<Boolean> END_STONE_LAMP_ENABLED;
+        public static final Supplier<Boolean> BLACKSTONE_LAMP_ENABLED;
+        public static final Supplier<Boolean> DEEPSLATE_LAMP_ENABLED;
+        public static final Supplier<Boolean> CHECKERBOARD_ENABLED;
+        public static final Supplier<Boolean> NETHERITE_TRAPDOOR_ENABLED;
+        public static final Supplier<Boolean> NETHERITE_DOOR_ENABLED;
+        public static final Supplier<Boolean> NETHERITE_DOOR_UNBREAKABLE;
+        public static final Supplier<Boolean> PANCAKES_ENABLED;
+        public static final Supplier<Boolean> TILE_ENABLED;
+        public static final Supplier<Boolean> RAKED_GRAVEL_ENABLED;
+        public static final Supplier<Boolean> STATUE_ENABLED;
+        public static final Supplier<Boolean> FEATHER_BLOCK_ENABLED;
+        public static final Supplier<Boolean> FLINT_BLOCK_ENABLED;
+        public static final Supplier<Boolean> FINE_WOOD_ENABLED;
+        public static final Supplier<Boolean> DOORMAT_ENABLED;
+        public static final Supplier<Boolean> FLOWER_BOX_ENABLED;
+        public static final Supplier<Boolean> FLOWER_BOX_SIMPLE_MODE;
+        public static final Supplier<Boolean> BLACKSTONE_TILE_ENABLED;
+        public static final Supplier<Boolean> LAPIS_BRICKS_ENABLED;
+        public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
+        public static final Supplier<Boolean> FIRE_PIT_ENABLED;
+        public static final Supplier<Boolean> WICKER_FENCE_ENABLED;
+        public static final Supplier<Boolean> AWNING_ENABLED;
+        public static final Supplier<Boolean> AWNING_SLANT;
+        public static final Supplier<Boolean> AWNING_FALL_THROUGH;
+        public static final Supplier<Double> AWNINGS_BOUNCE_ANGLE;
+        public static final Supplier<Boolean> HAT_STAND_ENABLED;
+        public static final Supplier<Boolean> HAT_STAND_UNRESTRICTED;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -525,135 +643,77 @@ public class CommonConfigs {
             builder.pop();
         }
 
-        public static final Supplier<Boolean> SPIDER_HEAD_ENABLED;
-        public static final Supplier<Boolean> BARNACLES_ENABLED;
-        public static final Supplier<Boolean> BLACKBOARD_ENABLED;
-        public static final Supplier<Boolean> BLACKBOARD_COLOR;
-        public static final Supplier<BlackboardBlock.UseMode> BLACKBOARD_MODE;
-
-        public static final Supplier<Boolean> GOLD_BARS_ENABLED;
-
-        public static final Supplier<Boolean> IRON_GATE_ENABLED;
-        public static final Supplier<Boolean> DOUBLE_IRON_GATE;
-        public static final Supplier<Boolean> CONSISTENT_GATE;
-
-        public static final Supplier<Boolean> ASH_ENABLED;
-        public static final Supplier<Boolean> ASH_FROM_MOBS;
-        public static final Supplier<Double> ASH_BURN_CHANCE;
-        public static final Supplier<Boolean> ASH_RAIN;
-        public static final Supplier<Boolean> BASALT_ASH_ENABLED;
-
-        public static final Supplier<Boolean> SUGAR_CUBE_ENABLED;
-        public static final Supplier<Integer> SUGAR_BLOCK_HORSE_SPEED_DURATION;
-
-        public static final Supplier<Boolean> ITEM_SHELF_ENABLED;
-        public static final Supplier<Boolean> ITEM_SHELF_LADDER;
-
-        public static final Supplier<Boolean> NOTICE_BOARD_ENABLED;
-        public static final Supplier<Boolean> NOTICE_BOARDS_UNRESTRICTED;
-        public static final Supplier<Boolean> NOTICE_BOARD_GUI;
-
-        public static final Supplier<Boolean> FLAG_ENABLED;
-        public static final Supplier<Boolean> FLAG_POLE;
-        public static final Supplier<Integer> FLAG_POLE_LENGTH;
-
-        public static final Supplier<Boolean> GOBLET_ENABLED;
-        public static final Supplier<Boolean> GOBLET_DRINK;
-
-        public static final Supplier<Boolean> PLANTER_ENABLED;
-        public static final Supplier<Boolean> PLANTER_BREAKS;
-        public static final Supplier<Boolean> FD_PLANTER;
-
-        public static final Supplier<Boolean> WAY_SIGN_ENABLED;
-
-        public static final Supplier<Boolean> ROAD_SIGN_DISTANCE_TEXT;
-        public static final Supplier<Boolean> ROAD_SIGN_ENABLED;
-        public static final Supplier<Integer> ROAD_SIGN_MAX_SEARCH_RADIUS;
-        public static final Supplier<Integer> ROAD_SIGN_MAX_SEARCHES;
-        public static final Supplier<Boolean> ROAD_SIGN_EXIT_EARLY;
-
-        public static final Supplier<Boolean> GLOBE_ENABLED;
-        public static final Supplier<Boolean> GLOBE_COORDINATES;
-        public static final Supplier<Boolean> GLOBE_SEPIA;
-
-        public static final Supplier<Boolean> PEDESTAL_ENABLED;
-        public static final Supplier<Double> CRYSTAL_ENCHANTING;
-
-        public static final Supplier<Boolean> TIMBER_FRAME_ENABLED;
-        public static final Supplier<Boolean> REPLACE_DAUB;
-        public static final Supplier<Boolean> SWAP_TIMBER_FRAME;
-        public static final Supplier<Boolean> AXE_TIMBER_FRAME_STRIP;
-
-        public static final Supplier<Boolean> DAUB_ENABLED;
-        public static final Supplier<Boolean> WATTLE_AND_DAUB_ENABLED;
-
-        public static final Supplier<Boolean> ASH_BRICKS_ENABLED;
-
-        public static final Supplier<Boolean> GRAVEL_BRICKS_ENABLED;
-        public static final Supplier<Boolean> GRAVEL_BRICKS_BREAKING;
-        public static final Supplier<Boolean> SLIDY_BLOCK_ENABLED;
-        public static final Supplier<Double> SLIDY_BLOCK_SPEED;
-
-        public static final Supplier<Boolean> BUNTINGS_ENABLED;
-
-        public static final Supplier<Boolean> SCONCE_ENABLED;
-
-        public static final Supplier<Boolean> SCONCE_LEVER_ENABLED;
-
-        public static final Supplier<Boolean> STONE_LAMP_ENABLED;
-
-        public static final Supplier<Boolean> END_STONE_LAMP_ENABLED;
-
-        public static final Supplier<Boolean> BLACKSTONE_LAMP_ENABLED;
-
-        public static final Supplier<Boolean> DEEPSLATE_LAMP_ENABLED;
-
-        public static final Supplier<Boolean> CHECKERBOARD_ENABLED;
-
-        public static final Supplier<Boolean> NETHERITE_TRAPDOOR_ENABLED;
-        public static final Supplier<Boolean> NETHERITE_DOOR_ENABLED;
-        public static final Supplier<Boolean> NETHERITE_DOOR_UNBREAKABLE;
-
-        public static final Supplier<Boolean> PANCAKES_ENABLED;
-
-        public static final Supplier<Boolean> TILE_ENABLED;
-
-        public static final Supplier<Boolean> RAKED_GRAVEL_ENABLED;
-
-        public static final Supplier<Boolean> STATUE_ENABLED;
-
-        public static final Supplier<Boolean> FEATHER_BLOCK_ENABLED;
-
-        public static final Supplier<Boolean> FLINT_BLOCK_ENABLED;
-        public static final Supplier<Boolean> FINE_WOOD_ENABLED;
-
-        public static final Supplier<Boolean> DOORMAT_ENABLED;
-
-        public static final Supplier<Boolean> FLOWER_BOX_ENABLED;
-        public static final Supplier<Boolean> FLOWER_BOX_SIMPLE_MODE;
-
-        public static final Supplier<Boolean> BLACKSTONE_TILE_ENABLED;
-
-        public static final Supplier<Boolean> LAPIS_BRICKS_ENABLED;
-
-        public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
-        public static final Supplier<Boolean> FIRE_PIT_ENABLED;
-        public static final Supplier<Boolean> WICKER_FENCE_ENABLED;
-        public static final Supplier<Boolean> AWNING_ENABLED;
-        public static final Supplier<Boolean> AWNING_SLANT;
-        public static final Supplier<Boolean> AWNING_FALL_THROUGH;
-        public static final Supplier<Double> AWNINGS_BOUNCE_ANGLE;
-
-        public static final Supplier<Boolean> HAT_STAND_ENABLED;
-        public static final Supplier<Boolean> HAT_STAND_UNRESTRICTED;
+        public static void init() {
+        }
 
     }
 
-
     public static class Functional {
 
-        public static void init() {
-        }
+        public static final Supplier<Boolean> SAFE_ENABLED;
+        public static final Supplier<Boolean> SAFE_UNBREAKABLE;
+        public static final Supplier<Boolean> SAFE_SIMPLE;
+        public static final Supplier<Boolean> BAMBOO_SPIKES_ENABLED;
+        public static final Supplier<Boolean> TIPPED_SPIKES_ENABLED;
+        public static final Supplier<Boolean> TIPPED_SPIKES_TAB;
+        public static final Supplier<Boolean> ONLY_ALLOW_HARMFUL_INFINITE;
+        public static final Supplier<Boolean> BAMBOO_SPIKES_DROP_LOOT;
+        public static final Supplier<Boolean> SACK_ENABLED;
+        public static final Supplier<Boolean> SACK_PENALTY;
+        public static final Supplier<Integer> SACK_INCREMENT;
+        public static final Supplier<Integer> SACK_SLOTS;
+        public static final Supplier<Boolean> JAR_ENABLED;
+        public static final Supplier<Integer> JAR_CAPACITY;
+        public static final Supplier<Boolean> JAR_EAT;
+        public static final Supplier<Boolean> JAR_CAPTURE;
+        public static final Supplier<Boolean> JAR_COOKIES;
+        public static final Supplier<Boolean> JAR_LIQUIDS;
+        public static final Supplier<Boolean> JAR_ITEM_DRINK;
+        public static final Supplier<Boolean> JAR_AUTO_DETECT;
+        public static final Supplier<Boolean> CAGE_ENABLED;
+        public static final Supplier<Boolean> CAGE_ALL_MOBS;
+        public static final Supplier<Boolean> CAGE_ALL_BABIES;
+        public static final Supplier<Boolean> CAGE_AUTO_DETECT;
+        public static final Supplier<Boolean> CAGE_PERSISTENT_MOBS;
+        public static final Supplier<Integer> CAGE_HEALTH_THRESHOLD;
+        public static final Supplier<Boolean> CAGE_TAMED;
+        public static final Supplier<Boolean> SOAP_ENABLED;
+        public static final Supplier<Boolean> SOAP_BLOCK_CLEANING_ENABLED;
+        public static final Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
+        public static final Supplier<Map<BlockPredicate, ResourceLocation>> SOAP_SPECIAL;
+        public static final Supplier<Boolean> ROPE_ENABLED;
+        public static final Supplier<ResourceLocation> ROPE_OVERRIDE;
+        public static final Supplier<Boolean> ROPE_UNRESTRICTED;
+        public static final Supplier<Boolean> ROPE_HORIZONTAL;
+        public static final Supplier<ReplaceTableMode> ROPE_REPLACE_LOOT_TABLES;
+        public static final Supplier<Boolean> ROPE_SLIDE;
+        public static final Supplier<Boolean> URN_ENABLED;
+        public static final Supplier<Double> URN_ENTITY_SPAWN_CHANCE;
+        public static final Supplier<Boolean> URN_PILE_ENABLED;
+        public static final Supplier<Boolean> FLAX_ENABLED;
+        public static final Supplier<Boolean> WILD_FLAX_ENABLED;
+        public static final Supplier<Boolean> FODDER_ENABLED;
+        public static final Supplier<Boolean> LUMISENE_ENABLED;
+        public static final Supplier<Boolean> LUMISENE_BOTTLE;
+        public static final Supplier<Integer> FLAMMABLE_DURATION;
+        public static final Supplier<Integer> GLOWING_DURATION;
+        public static final Supplier<Integer> FLAMMABLE_FROM_LUMISENE;
+        public static final Supplier<Boolean> PRESENT_ENABLED;
+        public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;
+        public static final Supplier<Boolean> HOURGLASS_ENABLED;
+        public static final Supplier<Boolean> CANNON_ENABLED;
+        public static final Supplier<Boolean> CANNON_BOAT_ENABLED;
+        public static final Supplier<Double> CANNON_BOAT_RECOIL;
+        public static final Supplier<TNTMode> CANNON_EXPLODE_TNT;
+        public static final Supplier<Double> CANNON_FIRE_POWER;
+        public static final Supplier<Integer> CANNON_FUSE_TIME;
+        public static final Supplier<Integer> CANNON_COOLDOWN;
+        public static final Supplier<Boolean> CANNONBALL_ENABLED;
+        public static final Supplier<Double> CANNONBALL_RADIUS;
+        public static final Supplier<Boolean> PLUNDERER_ENABLED;
+        public static final Supplier<Boolean> GALLEONS_ENABLED;
+        public static final Supplier<Double> CANNONBALL_POWER_SCALING;
+        public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -838,91 +898,61 @@ public class CommonConfigs {
             builder.pop();
         }
 
-
-        public static final Supplier<Boolean> SAFE_ENABLED;
-        public static final Supplier<Boolean> SAFE_UNBREAKABLE;
-        public static final Supplier<Boolean> SAFE_SIMPLE;
-
-        public static final Supplier<Boolean> BAMBOO_SPIKES_ENABLED;
-        public static final Supplier<Boolean> TIPPED_SPIKES_ENABLED;
-        public static final Supplier<Boolean> TIPPED_SPIKES_TAB;
-
-        public static final Supplier<Boolean> ONLY_ALLOW_HARMFUL_INFINITE;
-        public static final Supplier<Boolean> BAMBOO_SPIKES_DROP_LOOT;
-
-        public static final Supplier<Boolean> SACK_ENABLED;
-        public static final Supplier<Boolean> SACK_PENALTY;
-        public static final Supplier<Integer> SACK_INCREMENT;
-        public static final Supplier<Integer> SACK_SLOTS;
-
-        public static final Supplier<Boolean> JAR_ENABLED;
-        public static final Supplier<Integer> JAR_CAPACITY;
-        public static final Supplier<Boolean> JAR_EAT;
-        public static final Supplier<Boolean> JAR_CAPTURE;
-        public static final Supplier<Boolean> JAR_COOKIES;
-        public static final Supplier<Boolean> JAR_LIQUIDS;
-        public static final Supplier<Boolean> JAR_ITEM_DRINK;
-        public static final Supplier<Boolean> JAR_AUTO_DETECT;
-
-        public static final Supplier<Boolean> CAGE_ENABLED;
-        public static final Supplier<Boolean> CAGE_ALL_MOBS;
-        public static final Supplier<Boolean> CAGE_ALL_BABIES;
-        public static final Supplier<Boolean> CAGE_AUTO_DETECT;
-        public static final Supplier<Boolean> CAGE_PERSISTENT_MOBS;
-        public static final Supplier<Integer> CAGE_HEALTH_THRESHOLD;
-        public static final Supplier<Boolean> CAGE_TAMED;
-
-        public static final Supplier<Boolean> SOAP_ENABLED;
-        public static final Supplier<Boolean> SOAP_BLOCK_CLEANING_ENABLED;
-        public static final Supplier<List<String>> SOAP_DYE_CLEAN_BLACKLIST;
-        public static final Supplier<Map<BlockPredicate, ResourceLocation>> SOAP_SPECIAL;
-
-        public static final Supplier<Boolean> ROPE_ENABLED;
-        public static final Supplier<ResourceLocation> ROPE_OVERRIDE;
-        public static final Supplier<Boolean> ROPE_UNRESTRICTED;
-        public static final Supplier<Boolean> ROPE_HORIZONTAL;
-        public static final Supplier<ReplaceTableMode> ROPE_REPLACE_LOOT_TABLES;
-        public static final Supplier<Boolean> ROPE_SLIDE;
-
-        public static final Supplier<Boolean> URN_ENABLED;
-        public static final Supplier<Double> URN_ENTITY_SPAWN_CHANCE;
-        public static final Supplier<Boolean> URN_PILE_ENABLED;
-
-        public static final Supplier<Boolean> FLAX_ENABLED;
-        public static final Supplier<Boolean> WILD_FLAX_ENABLED;
-
-        public static final Supplier<Boolean> FODDER_ENABLED;
-
-        public static final Supplier<Boolean> LUMISENE_ENABLED;
-        public static final Supplier<Boolean> LUMISENE_BOTTLE;
-        public static final Supplier<Integer> FLAMMABLE_DURATION;
-        public static final Supplier<Integer> GLOWING_DURATION;
-        public static final Supplier<Integer> FLAMMABLE_FROM_LUMISENE;
-
-        public static final Supplier<Boolean> PRESENT_ENABLED;
-        public static final Supplier<Boolean> TRAPPED_PRESENT_ENABLED;
-
-        public static final Supplier<Boolean> HOURGLASS_ENABLED;
-        public static final Supplier<Boolean> CANNON_ENABLED;
-        public static final Supplier<Boolean> CANNON_BOAT_ENABLED;
-        public static final Supplier<Double> CANNON_BOAT_RECOIL;
-        public static final Supplier<TNTMode> CANNON_EXPLODE_TNT;
-        public static final Supplier<Double> CANNON_FIRE_POWER;
-        public static final Supplier<Integer> CANNON_FUSE_TIME;
-        public static final Supplier<Integer> CANNON_COOLDOWN;
-        public static final Supplier<Boolean> CANNONBALL_ENABLED;
-        public static final Supplier<Double> CANNONBALL_RADIUS;
-        public static final Supplier<Boolean> PLUNDERER_ENABLED;
-        public static final Supplier<Boolean> GALLEONS_ENABLED;
-        public static final Supplier<Double> CANNONBALL_POWER_SCALING;
-        public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
-    }
-
-
-    public static class Tools {
         public static void init() {
         }
+    }
 
+    public static class Tools {
+        public static final Supplier<Boolean> BUBBLE_BLOWER_ENABLED;
+        public static final Supplier<Integer> BUBBLE_BLOWER_COST;
+        public static final Supplier<Integer> BUBBLE_LIFETIME;
+        public static final Supplier<Integer> BUBBLE_BLOWER_MAX_CHARGES;
+        public static final Supplier<Boolean> BUBBLE_BREAK;
+        public static final Supplier<Boolean> QUIVER_ENABLED;
+        public static final Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
+        public static final Supplier<Integer> QUIVER_SLOTS;
+        public static final Supplier<Double> QUIVER_SKELETON_SPAWN;
+        public static final Supplier<Boolean> QUIVER_DEPEND_ON_GLOBAL_DIFFICULTY;
+        public static final Supplier<Boolean> QUIVER_CURIO_ONLY;
+        public static final Supplier<Boolean> QUIVER_PICKUP;
+        public static final Supplier<Boolean> LUNCH_BOX_ENABLED;
+        public static final Supplier<Boolean> LUNCH_BOX_PLACEABLE;
+        public static final Supplier<Integer> LUNCH_BOX_SLOTS;
+        public static final Supplier<Boolean> WRENCH_ENABLED;
+        public static final Supplier<CommonConfigs.Hands> WRENCH_BYPASS;
+        public static final Supplier<Boolean> SLINGSHOT_ENABLED;
+        public static final Supplier<Double> SLINGSHOT_RANGE;
+        public static final Supplier<Integer> SLINGSHOT_CHARGE;
+        public static final Supplier<Double> SLINGSHOT_DECELERATION;
+        public static final Supplier<Boolean> UNRESTRICTED_SLINGSHOT;
+        public static final Supplier<Boolean> SLINGSHOT_POTIONS;
+        public static final Supplier<Boolean> SLINGSHOT_BUCKETS;
+        public static final Supplier<Double> SLINGSHOT_DAMAGEABLE_DAMAGE;
+        public static final Supplier<Boolean> SLINGSHOT_BOMBS;
+        public static final Supplier<Boolean> SLINGSHOT_FIRECHARGE;
+        public static final Supplier<Boolean> SLINGSHOT_SNOWBALL;
+        public static final Supplier<Boolean> SLINGSHOT_ENDERPEARLS;
+        public static final Supplier<Boolean> BOMB_ENABLED;
+        public static final Supplier<Double> BOMB_RADIUS;
+        public static final Supplier<Integer> BOMB_FUSE;
+        public static final Supplier<Boolean> BOMB_COOLDOWN;
+        public static final Supplier<BombEntity.BreakingMode> BOMB_BREAKS;
+        public static final Supplier<Double> BOMB_BLUE_RADIUS;
+        public static final Supplier<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
+        public static final Supplier<Boolean> FLUTE_ENABLED;
+        public static final Supplier<Boolean> FLUTE_UNBOUND;
+        public static final Supplier<Integer> FLUTE_RADIUS;
+        public static final Supplier<Integer> FLUTE_DISTANCE;
+        public static final Supplier<Boolean> ROPE_ARROW_ENABLED;
+        public static final Supplier<Integer> ROPE_ARROW_CAPACITY;
+        public static final Supplier<Boolean> ROPE_ARROW_CROSSBOW;
+        public static final Supplier<Boolean> ANTIQUE_INK_ENABLED;
+        public static final Supplier<Boolean> CANDY_ENABLED;
+        public static final Supplier<Boolean> STASIS_ENABLED;
+        public static final Supplier<Boolean> DEPTH_METER_ENABLED;
+        public static final Supplier<Boolean> POPPER_ENABLED;
+        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
+        public static final Supplier<Double> SLICE_MAP_RANGE;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -1063,75 +1093,57 @@ public class CommonConfigs {
             builder.pop();
         }
 
-
-        public static final Supplier<Boolean> BUBBLE_BLOWER_ENABLED;
-        public static final Supplier<Integer> BUBBLE_BLOWER_COST;
-        public static final Supplier<Integer> BUBBLE_LIFETIME;
-        public static final Supplier<Integer> BUBBLE_BLOWER_MAX_CHARGES;
-        public static final Supplier<Boolean> BUBBLE_BREAK;
-
-        public static final Supplier<Boolean> QUIVER_ENABLED;
-        public static final Supplier<Boolean> QUIVER_PREVENTS_SLOWS;
-        public static final Supplier<Integer> QUIVER_SLOTS;
-        public static final Supplier<Double> QUIVER_SKELETON_SPAWN;
-        public static final Supplier<Boolean> QUIVER_DEPEND_ON_GLOBAL_DIFFICULTY;
-        public static final Supplier<Boolean> QUIVER_CURIO_ONLY;
-        public static final Supplier<Boolean> QUIVER_PICKUP;
-
-        public static final Supplier<Boolean> LUNCH_BOX_ENABLED;
-        public static final Supplier<Boolean> LUNCH_BOX_PLACEABLE;
-        public static final Supplier<Integer> LUNCH_BOX_SLOTS;
-
-        public static final Supplier<Boolean> WRENCH_ENABLED;
-        public static final Supplier<CommonConfigs.Hands> WRENCH_BYPASS;
-
-        public static final Supplier<Boolean> SLINGSHOT_ENABLED;
-        public static final Supplier<Double> SLINGSHOT_RANGE;
-        public static final Supplier<Integer> SLINGSHOT_CHARGE;
-        public static final Supplier<Double> SLINGSHOT_DECELERATION;
-        public static final Supplier<Boolean> UNRESTRICTED_SLINGSHOT;
-        public static final Supplier<Boolean> SLINGSHOT_POTIONS;
-        public static final Supplier<Boolean> SLINGSHOT_BUCKETS;
-        public static final Supplier<Double> SLINGSHOT_DAMAGEABLE_DAMAGE;
-        public static final Supplier<Boolean> SLINGSHOT_BOMBS;
-        public static final Supplier<Boolean> SLINGSHOT_FIRECHARGE;
-        public static final Supplier<Boolean> SLINGSHOT_SNOWBALL;
-        public static final Supplier<Boolean> SLINGSHOT_ENDERPEARLS;
-
-        public static final Supplier<Boolean> BOMB_ENABLED;
-        public static final Supplier<Double> BOMB_RADIUS;
-        public static final Supplier<Integer> BOMB_FUSE;
-        public static final Supplier<Boolean> BOMB_COOLDOWN;
-        public static final Supplier<BombEntity.BreakingMode> BOMB_BREAKS;
-        public static final Supplier<Double> BOMB_BLUE_RADIUS;
-        public static final Supplier<BombEntity.BreakingMode> BOMB_BLUE_BREAKS;
-
-        public static final Supplier<Boolean> FLUTE_ENABLED;
-        public static final Supplier<Boolean> FLUTE_UNBOUND;
-        public static final Supplier<Integer> FLUTE_RADIUS;
-        public static final Supplier<Integer> FLUTE_DISTANCE;
-
-        public static final Supplier<Boolean> ROPE_ARROW_ENABLED;
-        public static final Supplier<Integer> ROPE_ARROW_CAPACITY;
-        public static final Supplier<Boolean> ROPE_ARROW_CROSSBOW;
-
-        public static final Supplier<Boolean> ANTIQUE_INK_ENABLED;
-
-        public static final Supplier<Boolean> CANDY_ENABLED;
-
-        public static final Supplier<Boolean> STASIS_ENABLED;
-
-        public static final Supplier<Boolean> DEPTH_METER_ENABLED;
-        public static final Supplier<Boolean> POPPER_ENABLED;
-
-        public static final Supplier<Boolean> SLICE_MAP_ENABLED;
-        public static final Supplier<Double> SLICE_MAP_RANGE;
-    }
-
-
-    public static class Tweaks {
         public static void init() {
         }
+    }
+
+    public static class Tweaks {
+        public static final Supplier<Boolean> USE_CANNON_BOAT;
+        public static final Supplier<Boolean> DISMOUNT_BOAT;
+        public static final Supplier<Boolean> DRAGON_PATTERN;
+        public static final Supplier<Boolean> APPLE_DISENCHANT;
+        public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
+        public static final Supplier<Boolean> BUNDLE_DISPENSER;
+        public static final Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;
+        public static final Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
+        public static final Supplier<Boolean> PLACEABLE_STICKS;
+        public static final Supplier<Boolean> PLACEABLE_RODS;
+        public static final Supplier<Boolean> RAKED_GRAVEL;
+        public static final Supplier<Boolean> BOTTLE_XP;
+        public static final Supplier<Integer> BOTTLING_COST;
+        public static final Supplier<String> BOTTLING_TARGET;
+        public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
+        public static final Supplier<Integer> RANDOM_ADVENTURER_MAPS_MAX_SEARCHES;
+        public static final Supplier<Integer> RANDOM_ADVENTURER_MAX_SEARCH_RADIUS;
+        public static final Supplier<Boolean> MAP_MARKERS;
+        public static final Supplier<DeathMarkerMode> DEATH_MARKER;
+        public static final Supplier<Boolean> QUARK_QUILL;
+        public static final Supplier<Integer> QUILL_MIN_SEARCH_RADIUS;
+        public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
+        public static final Supplier<Boolean> TINTED_MAP;
+        public static final Supplier<Boolean> PLACEABLE_BOOKS;
+        public static final Supplier<Boolean> ZOMBIE_HORSE_CONVERSION;
+        public static final Supplier<Boolean> ZOMBIE_HORSE;
+        public static final Supplier<Integer> ZOMBIE_HORSE_COST;
+        public static final Supplier<Boolean> ZOMBIE_HORSE_UNDERWATER;
+        public static final Supplier<Boolean> PLACEABLE_GUNPOWDER;
+        public static final Supplier<Integer> GUNPOWDER_BURN_SPEED;
+        public static final Supplier<Integer> GUNPOWDER_SPREAD_AGE;
+        public static final Supplier<Boolean> MIXED_BOOKS;
+        public static final Supplier<Boolean> WANDERING_TRADER_DOORS;
+        public static final Supplier<Boolean> SCARE_VILLAGERS;
+        public static final Supplier<Boolean> BAD_LUCK_CAT;
+        public static final Supplier<Boolean> BAD_LUCK_LIGHTNING;
+        public static final Supplier<Boolean> ITEM_LORE;
+        public static final Supplier<Boolean> SUS_RECIPES;
+        public static final Supplier<Boolean> SLIMED_EFFECT;
+        public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
+        public static final Supplier<Boolean> CLOCK_CLICK;
+        public static final Supplier<Boolean> COMPASS_CLICK;
+        public static final Supplier<Boolean> COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS;
+        public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
+        public static final Supplier<Double> SLIMED_PER_SIZE;
+        public static final Supplier<Integer> SLIME_DURATION;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -1299,61 +1311,17 @@ public class CommonConfigs {
             builder.pop();
         }
 
-
-        public static final Supplier<Boolean> USE_CANNON_BOAT;
-        public static final Supplier<Boolean> DISMOUNT_BOAT;
-        public static final Supplier<Boolean> DRAGON_PATTERN;
-        public static final Supplier<Boolean> APPLE_DISENCHANT;
-
-        public static final Supplier<Boolean> ENDER_PEAR_DISPENSERS;
-        public static final Supplier<Boolean> BUNDLE_DISPENSER;
-        public static final Supplier<Boolean> AXE_DISPENSER_BEHAVIORS;
-        public static final Supplier<Boolean> THROWABLE_BRICKS_ENABLED;
-        public static final Supplier<Boolean> PLACEABLE_STICKS;
-        public static final Supplier<Boolean> PLACEABLE_RODS;
-        public static final Supplier<Boolean> RAKED_GRAVEL;
-        public static final Supplier<Boolean> BOTTLE_XP;
-        public static final Supplier<Integer> BOTTLING_COST;
-        public static final Supplier<String> BOTTLING_TARGET;
-        public static final Supplier<Boolean> RANDOM_ADVENTURER_MAPS;
-        public static final Supplier<Integer> RANDOM_ADVENTURER_MAPS_MAX_SEARCHES;
-        public static final Supplier<Integer> RANDOM_ADVENTURER_MAX_SEARCH_RADIUS;
-        public static final Supplier<Boolean> MAP_MARKERS;
-        public static final Supplier<DeathMarkerMode> DEATH_MARKER;
-        public static final Supplier<Boolean> QUARK_QUILL;
-        public static final Supplier<Integer> QUILL_MIN_SEARCH_RADIUS;
-        public static final Supplier<Boolean> REPLACE_VANILLA_MAPS;
-        public static final Supplier<Boolean> TINTED_MAP;
-        public static final Supplier<Boolean> PLACEABLE_BOOKS;
-        public static final Supplier<Boolean> ZOMBIE_HORSE_CONVERSION;
-        public static final Supplier<Boolean> ZOMBIE_HORSE;
-        public static final Supplier<Integer> ZOMBIE_HORSE_COST;
-        public static final Supplier<Boolean> ZOMBIE_HORSE_UNDERWATER;
-        public static final Supplier<Boolean> PLACEABLE_GUNPOWDER;
-        public static final Supplier<Integer> GUNPOWDER_BURN_SPEED;
-        public static final Supplier<Integer> GUNPOWDER_SPREAD_AGE;
-        public static final Supplier<Boolean> MIXED_BOOKS;
-        public static final Supplier<Boolean> WANDERING_TRADER_DOORS;
-        public static final Supplier<Boolean> SCARE_VILLAGERS;
-        public static final Supplier<Boolean> BAD_LUCK_CAT;
-        public static final Supplier<Boolean> BAD_LUCK_LIGHTNING;
-        public static final Supplier<Boolean> ITEM_LORE;
-        public static final Supplier<Boolean> SUS_RECIPES;
-        public static final Supplier<Boolean> SLIMED_EFFECT;
-        public static final Supplier<Boolean> THROWABLE_SLIMEBALLS;
-        public static final Supplier<Boolean> CLOCK_CLICK;
-        public static final Supplier<Boolean> COMPASS_CLICK;
-        public static final Supplier<Boolean> COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS;
-        public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
-        public static final Supplier<Double> SLIMED_PER_SIZE;
-        public static final Supplier<Integer> SLIME_DURATION;
+        public static void init() {
+        }
 
     }
 
-
     public static class General {
-        public static void init() {
-        }
+        public static final Supplier<Double> RED_MERCHANT_SPAWN_MULTIPLIER;
+        public static final Supplier<Boolean> CREATIVE_TAB;
+        public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
+        public static final Supplier<Boolean> DISPENSERS;
+        public static final Supplier<Boolean> SANITY_CHECKS_MESSAGES;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -1376,70 +1344,7 @@ public class CommonConfigs {
             builder.pop();
         }
 
-        public static final Supplier<Double> RED_MERCHANT_SPAWN_MULTIPLIER;
-
-        public static final Supplier<Boolean> CREATIVE_TAB;
-        public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
-        public static final Supplier<Boolean> DISPENSERS;
-        public static final Supplier<Boolean> SANITY_CHECKS_MESSAGES;
-    }
-
-    private static Supplier<Boolean> feature(ConfigBuilder builder) {
-        return feature(builder, "enabled", builder.currentCategory(), true);
-    }
-
-    private static Supplier<Boolean> feature(ConfigBuilder builder, String name) {
-        return feature(builder, name, name, true);
-    }
-
-    private static Supplier<Boolean> feature(ConfigBuilder builder, String name, String key, boolean value) {
-        var config = builder.define(name, value);
-        String parentCat = builder.currentCategory();
-        var parentConf = FEATURE_TOGGLES.get(parentCat);
-        if (parentConf != null) {
-            Supplier<Boolean> finalChildConf = config;
-            config = () -> parentConf.get() && finalChildConf.get();
+        public static void init() {
         }
-        FEATURE_TOGGLES.put(key, config);
-        return config;
-    }
-
-
-    public static boolean isEnabled(String key) {
-        if (!CONFIG_HOLDER.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
-        return switch (key) {
-            case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
-            case ModConstants.PULLEY_BLOCK_NAME -> Redstone.PULLEY_ENABLED.get() && Functional.ROPE_ENABLED.get();
-            case ModConstants.BUNTING_NAME -> Building.BUNTINGS_ENABLED.get() && Functional.ROPE_ENABLED.get();
-            case ModConstants.ROPE_ARROW_NAME -> Tools.ROPE_ARROW_ENABLED.get() && Functional.ROPE_ENABLED.get();
-            case ModConstants.KEY_NAME ->
-                    Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
-            default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();
-        };
-    }
-
-
-    public static void init() {
-        int disabled = 0;
-        for (var c : FEATURE_TOGGLES.values()) {
-            if (!c.get()) disabled++;
-        }
-        float percentage = disabled / (float) FEATURE_TOGGLES.size();
-        if (percentage > 0.66f) {
-            Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage * 100));
-        }
-    }
-
-
-    public enum ReplaceTableMode {
-        REPLACE,
-        NONE,
-        REMOVE
-    }
-
-    public enum TNTMode {
-        IGNITE,
-        IGNITE_ON_IMPACT,
-        NONE
     }
 }

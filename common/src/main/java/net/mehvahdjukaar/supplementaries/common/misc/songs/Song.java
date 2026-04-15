@@ -36,10 +36,9 @@ public class Song {
 
     private final String name;
     private final int tempo;
-    private int[] notes;
     private final String credits;
     private final int weight;
-
+    private int[] notes;
     private boolean processed = false;
 
     public Song(String name, int tempo, List<Integer> notes, String credits, int weight) {

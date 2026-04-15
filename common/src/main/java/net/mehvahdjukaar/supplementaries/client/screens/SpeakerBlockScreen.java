@@ -23,9 +23,8 @@ public class SpeakerBlockScreen extends Screen {
     private static final Component DISTANCE_BLOCKS = Component.translatable("gui.supplementaries.speaker_block.blocks");
     private static final Component VOLUME_TEXT = Component.translatable("gui.supplementaries.speaker_block.volume");
     private static final Component EDIT = Component.translatable("gui.supplementaries.speaker_block.edit");
-
-    private EditBox editBox;
     private final SpeakerBlockTile tileSpeaker;
+    private EditBox editBox;
     private SpeakerBlockTile.Mode mode;
     private Button modeBtn;
     private ISlider volumeSlider;

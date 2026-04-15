@@ -15,6 +15,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractArrow.class)
 public abstract class AbstractArrowMixin extends Entity {
+    @Shadow
+    public int shakeTime;
+    @Shadow
+    public AbstractArrow.Pickup pickup;
+    @Shadow
+    protected boolean inGround;
+
     protected AbstractArrowMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -23,16 +30,7 @@ public abstract class AbstractArrowMixin extends Entity {
     protected abstract ItemStack getPickupItem();
 
     @Shadow
-    protected boolean inGround;
-
-    @Shadow
     public abstract boolean isNoPhysics();
-
-    @Shadow
-    public int shakeTime;
-
-    @Shadow
-    public AbstractArrow.Pickup pickup;
 
     @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
     public void onPlayerTouch(Player player, CallbackInfo ci) {

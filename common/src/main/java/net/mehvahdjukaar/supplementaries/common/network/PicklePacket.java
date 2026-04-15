@@ -17,10 +17,9 @@ public class PicklePacket implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, PicklePacket> CODEC = Message.makeType(
             Supplementaries.res("pickle"), PicklePacket::new);
-
-    protected UUID playerID;
     protected final boolean on;
     private final boolean isJar;
+    protected UUID playerID;
 
     public PicklePacket(UUID appliesTo, boolean on, boolean isJar) {
         this.playerID = appliesTo;

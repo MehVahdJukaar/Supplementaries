@@ -53,24 +53,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class SackBlock extends ColoredFallingBlock implements EntityBlock, SimpleWaterloggedBlock {
+    public static final VoxelShape SHAPE_CLOSED = Shapes.or(Block.box(2, 0, 2, 14, 12, 14),
+            Block.box(6, 12, 6, 10, 13, 10), Block.box(5, 13, 5, 11, 16, 11));
+    public static final VoxelShape SHAPE_OPEN = Shapes.or(Block.box(2, 0, 2, 14, 12, 14),
+            Block.box(6, 12, 6, 10, 13, 10), Block.box(3, 13, 3, 13, 14, 13));
+    public static final ResourceLocation CONTENTS = ResourceLocation.withDefaultNamespace("contents");
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final MapCodec<SackBlock> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter(coloredFallingBlock -> coloredFallingBlock.dustColor), propertiesCodec())
                     .apply(instance, SackBlock::new)
     );
 
-    public static final VoxelShape SHAPE_CLOSED = Shapes.or(Block.box(2, 0, 2, 14, 12, 14),
-            Block.box(6, 12, 6, 10, 13, 10), Block.box(5, 13, 5, 11, 16, 11));
-    public static final VoxelShape SHAPE_OPEN = Shapes.or(Block.box(2, 0, 2, 14, 12, 14),
-            Block.box(6, 12, 6, 10, 13, 10), Block.box(3, 13, 3, 13, 14, 13));
-
-
-    public static final ResourceLocation CONTENTS = ResourceLocation.withDefaultNamespace("contents");
-    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-
     public SackBlock(ColorRGBA color, Properties properties) {
         super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(OPEN, false).setValue(WATERLOGGED, false));
+    }
+
+    public static boolean canFall(BlockPos pos, LevelAccessor world) {
+        return (world.isEmptyBlock(pos.below()) || isFree(world.getBlockState(pos.below()))) &&
+                pos.getY() >= world.getMinBuildHeight() && !IRopeConnection.isSupportingCeiling(pos.above(), world);
     }
 
     @SuppressWarnings("all")
@@ -110,11 +112,6 @@ public class SackBlock extends ColoredFallingBlock implements EntityBlock, Simpl
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         boolean flag = context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER;
         return this.defaultBlockState().setValue(WATERLOGGED, flag);
-    }
-
-    public static boolean canFall(BlockPos pos, LevelAccessor world) {
-        return (world.isEmptyBlock(pos.below()) || isFree(world.getBlockState(pos.below()))) &&
-                pos.getY() >= world.getMinBuildHeight() && !IRopeConnection.isSupportingCeiling(pos.above(), world);
     }
 
     //schedule block tick

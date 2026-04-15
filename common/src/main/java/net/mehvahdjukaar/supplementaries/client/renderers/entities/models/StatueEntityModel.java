@@ -27,14 +27,13 @@ public class StatueEntityModel extends Model {
     public final ModelPart leftPants;
     public final ModelPart rightPants;
     public final ModelPart jacket;
-    private final ModelPart cloak;
-    private final ModelPart ear;
-
     //slim
     public final ModelPart rightArmS;
     public final ModelPart leftArmS;
     public final ModelPart leftSleeveS;
     public final ModelPart rightSleeveS;
+    private final ModelPart cloak;
+    private final ModelPart ear;
 
     public StatueEntityModel(BlockEntityRendererProvider.Context context) {
         super(RenderType::entityTranslucentCull);

@@ -42,6 +42,11 @@ public abstract class RedMerchantSpawnerMixin {
     @Unique
     private int supplementaries$redSpawnDelay = 0;
 
+    @Unique
+    private static double supplementaries$getRedMerchantSpawnMultiplier() {
+        return CommonConfigs.getRedMerchantSpawnMultiplier();
+    }
+
     //remove
     @Inject(method = "tick", at = @At("HEAD"))
     public void supp$tickRedMerchant(ServerLevel serverLevel, boolean b, boolean b1, CallbackInfoReturnable<Integer> cir) {
@@ -49,7 +54,6 @@ public abstract class RedMerchantSpawnerMixin {
             this.supplementaries$redSpawnDelay--;
         }
     }
-
 
     @Inject(method = "spawn", at = @At("RETURN"))
     public void supp$spawnRedMerchant(ServerLevel world, CallbackInfoReturnable<Boolean> cir) {
@@ -88,11 +92,6 @@ public abstract class RedMerchantSpawnerMixin {
             }
         }
 
-    }
-
-    @Unique
-    private static double supplementaries$getRedMerchantSpawnMultiplier() {
-        return CommonConfigs.getRedMerchantSpawnMultiplier();
     }
 
     @Unique

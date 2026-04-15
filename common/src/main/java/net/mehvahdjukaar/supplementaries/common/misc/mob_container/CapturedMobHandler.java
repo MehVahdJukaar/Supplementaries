@@ -29,8 +29,18 @@ import java.util.*;
 
 public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
 
-    // one per level. We must do this to keep the datapack stuff separated per logical side
+    private final Set<String> commandMobs = new HashSet<>();    // one per level. We must do this to keep the datapack stuff separated per logical side
     private static final SidedInstance<CapturedMobHandler> INSTANCES = SidedInstance.of(CapturedMobHandler::new);
+    private final Map<EntityType<?>, DataDefinedCatchableMob> customMobProperties = new IdentityHashMap<>();
+    private final HolderLookup.Provider registryAccess;
+    private DataDefinedCatchableMob moddedFishProperty;
+    public CapturedMobHandler(HolderLookup.Provider ra) {
+        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
+                "catchable_mobs_properties");
+        this.registryAccess = ra;
+
+        INSTANCES.set(ra, this);
+    }
 
     public static CapturedMobHandler getInstance(HolderLookup.Provider ra) {
         return INSTANCES.get(ra);
@@ -41,17 +51,11 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         return getInstance(level.registryAccess());
     }
 
-    private final Set<String> commandMobs = new HashSet<>();
-    private final Map<EntityType<?>, DataDefinedCatchableMob> customMobProperties = new IdentityHashMap<>();
-    private final HolderLookup.Provider registryAccess;
-    private DataDefinedCatchableMob moddedFishProperty;
-
-    public CapturedMobHandler(HolderLookup.Provider ra) {
-        super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
-                "catchable_mobs_properties");
-        this.registryAccess = ra;
-
-        INSTANCES.set(ra, this);
+    public static void sendDataToClient(ServerPlayer player) {
+        var serverInstance = getInstance(player.level());
+        Set<DataDefinedCatchableMob> set = new HashSet<>(serverInstance.customMobProperties.values());
+        NetworkHelper.sendToClientPlayer(player,
+                new ClientBoundSendCapturedMobsPacket(set, serverInstance.moddedFishProperty));
     }
 
     @Override
@@ -80,13 +84,6 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
         if (moddedFishProperty == null) {
             Supplementaries.LOGGER.error("Failed to find json for 'generic_fish'. How? Found jsons were : {}", jsons.keySet());
         }
-    }
-
-    public static void sendDataToClient(ServerPlayer player) {
-        var serverInstance = getInstance(player.level());
-        Set<DataDefinedCatchableMob> set = new HashSet<>(serverInstance.customMobProperties.values());
-        NetworkHelper.sendToClientPlayer(player,
-                new ClientBoundSendCapturedMobsPacket(set, serverInstance.moddedFishProperty));
     }
 
     public void acceptData(Set<DataDefinedCatchableMob> list, @Nullable DataDefinedCatchableMob defaultFish) {
@@ -123,4 +120,6 @@ public class CapturedMobHandler extends SimpleJsonResourceReloadListener {
     public void addCommandMob(String name) {
         commandMobs.add(name);
     }
+
+
 }

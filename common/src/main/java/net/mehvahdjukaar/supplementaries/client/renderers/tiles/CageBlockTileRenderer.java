@@ -24,24 +24,6 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
         entityRenderer = Minecraft.getInstance().getEntityRenderDispatcher();
     }
 
-    @Override
-    public int getViewDistance() {
-        return 80;
-    }
-
-    public void renderMob(Level level, BlockPos pos, MobContainer mobHolder, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, Direction dir) {
-        Entity mob = mobHolder.getDisplayedMob(level, pos);
-        if (mob != null && mobHolder.getData() instanceof MobContainer.MobData.Entity entityData) {
-            matrixStack.pushPose();
-
-            float s = entityData.getScale();
-
-            renderMobStatic(mob, s, entityRenderer, matrixStack, partialTicks, bufferIn, combinedLightIn, dir.toYRot());
-
-            matrixStack.popPose();
-        }
-    }
-
     public static void renderMobStatic(Entity mob, float scale, EntityRenderDispatcher renderer, PoseStack matrixStack, float partialTicks, MultiBufferSource bufferIn, int combinedLightIn, float rot) {
 
         double y = Mth.lerp(partialTicks, mob.yOld, mob.getY());
@@ -63,10 +45,27 @@ public class CageBlockTileRenderer<T extends BlockEntity & IMobContainerProvider
         renderer.setRenderShadow(true);
     }
 
-
     public static double relativeOffset(double pos) {
         if (pos < 0) return 1 + pos % 1;
         return pos % 1;
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 80;
+    }
+
+    public void renderMob(Level level, BlockPos pos, MobContainer mobHolder, float partialTicks, PoseStack matrixStack, MultiBufferSource bufferIn, int combinedLightIn, Direction dir) {
+        Entity mob = mobHolder.getDisplayedMob(level, pos);
+        if (mob != null && mobHolder.getData() instanceof MobContainer.MobData.Entity entityData) {
+            matrixStack.pushPose();
+
+            float s = entityData.getScale();
+
+            renderMobStatic(mob, s, entityRenderer, matrixStack, partialTicks, bufferIn, combinedLightIn, dir.toYRot());
+
+            matrixStack.popPose();
+        }
     }
 
     @Override

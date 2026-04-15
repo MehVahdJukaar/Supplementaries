@@ -21,6 +21,9 @@ public class JarItemRenderer extends CageItemRenderer {
 
     private static final RandomSource RAND = RandomSource.createNewThreadLocalInstance();
 
+    private static float getVisualHeight(float count, float maxHeight) {
+        return maxHeight * count / (float) CommonConfigs.Functional.JAR_CAPACITY.get();
+    }
 
     @Override
     public void renderContent(ItemStack stack, ItemDisplayContext transformType, PoseStack poseStack, MultiBufferSource buffer, int light, int overlay) {
@@ -44,10 +47,6 @@ public class JarItemRenderer extends CageItemRenderer {
                     Minecraft.getInstance().getItemRenderer(),
                     poseStack, buffer, RAND, light, overlay, () -> items.hasNext() ? items.next() : ItemStack.EMPTY);
         }
-    }
-
-    private static float getVisualHeight(float count, float maxHeight) {
-        return maxHeight * count / (float) CommonConfigs.Functional.JAR_CAPACITY.get();
     }
 }
 

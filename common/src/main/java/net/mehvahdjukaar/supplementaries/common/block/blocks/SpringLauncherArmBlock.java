@@ -27,10 +27,9 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class SpringLauncherArmBlock extends Block implements EntityBlock {
-    protected static final VoxelShape SHAPE = Shapes.empty();
-
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty EXTENDING = ModBlockProperties.EXTENDING;// is it extending?
+    protected static final VoxelShape SHAPE = Shapes.empty();
 
     public SpringLauncherArmBlock(Properties properties) {
         super(properties);

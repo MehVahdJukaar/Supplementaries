@@ -16,48 +16,36 @@ import java.util.function.Supplier;
 
 public class ModComponents {
 
-    public static void init() {
-
-    }
-
     public static final Supplier<DataComponentType<Unit>> ANTIQUE_INK = register("antique_ink",
             Unit.CODEC, StreamCodec.unit(Unit.INSTANCE));
-
     public static final Supplier<DataComponentType<SoftFluidTankView>> SOFT_FLUID_CONTENT = register("soft_fluid_content",
             SoftFluidTankView.CODEC, SoftFluidTankView.STREAM_CODEC, true);
-
     public static final Supplier<DataComponentType<MobContainerView>> MOB_HOLDER_CONTENT = register("mob_holder_content",
             MobContainerView.CODEC, MobContainerView.STREAM_CODEC, true);
-
     public static final Supplier<DataComponentType<PresentAddress>> ADDRESS = register("address",
             PresentAddress.CODEC, PresentAddress.STREAM_CODEC);
-
     public static final Supplier<DataComponentType<SafeOwner>> SAFE_OWNER = register("safe_owner",
             SafeOwner.CODEC, SafeOwner.STREAM_CODEC);
-
     public static final Supplier<DataComponentType<FluteTargets>> FLUTE_PETS = register("flute_pets",
             FluteTargets.CODEC, FluteTargets.STREAM_CODEC);
-
     public static final Supplier<DataComponentType<BlackboardData>> BLACKBOARD = register("blackboard",
             BlackboardData.CODEC, BlackboardData.STREAM_CODEC, true);
-
     public static final Supplier<DataComponentType<ConfettiColors>> CONFETTI_COLORS = register("confetti_colors",
             ConfettiColors.CODEC, ConfettiColors.STREAM_CODEC, true);
-
     public static final Supplier<DataComponentType<LunchBaskedContent>> LUNCH_BASKET_CONTENT = register("lunch_basket_content",
             LunchBaskedContent.CODEC, LunchBaskedContent.STREAM_CODEC, true);
-
     public static final Supplier<DataComponentType<QuiverContent>> QUIVER_CONTENT = register("quiver_content",
             QuiverContent.CODEC, QuiverContent.STREAM_CODEC, true);
-
     public static final Supplier<DataComponentType<Integer>> CHARGES = register("charges",
             ExtraCodecs.NON_NEGATIVE_INT, ByteBufCodecs.VAR_INT);
     public static final Supplier<DataComponentType<Integer>> MAX_CHARGES = register("max_charges",
             ExtraCodecs.NON_NEGATIVE_INT, ByteBufCodecs.VAR_INT);
-
     public static final Supplier<DataComponentType<CannonballWhitelist>> CANNONBALL_WHITELIST = register("cannonball_whitelist",
             CannonballWhitelist.CODEC, CannonballWhitelist.STREAM_CODEC);
 
+    public static void init() {
+
+    }
 
     public static <T> Supplier<DataComponentType<T>> register(String name, Supplier<DataComponentType<T>> factory) {
         return RegHelper.registerDataComponent(Supplementaries.res(name), factory);

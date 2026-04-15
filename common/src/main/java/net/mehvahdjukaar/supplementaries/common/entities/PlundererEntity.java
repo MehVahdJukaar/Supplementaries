@@ -52,22 +52,18 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 public class PlundererEntity extends AbstractIllager implements InventoryCarrier, ISpyglassMob {
-    private static final float PARROT_CHANE = 0.2f;
-
-    private static final int INVENTORY_SIZE = 5;
-    private static final int SLOT_OFFSET = 300;
     protected static final EntityDataAccessor<Boolean> USING_SPYGLASS =
             SynchedEntityData.defineId(PlundererEntity.class, EntityDataSerializers.BOOLEAN);
     protected static final EntityDataAccessor<CompoundTag> DATA_SHOULDER_LEFT = SynchedEntityData.defineId(PlundererEntity.class, EntityDataSerializers.COMPOUND_TAG);
     protected static final EntityDataAccessor<CompoundTag> DATA_SHOULDER_RIGHT = SynchedEntityData.defineId(PlundererEntity.class, EntityDataSerializers.COMPOUND_TAG);
-
+    private static final float PARROT_CHANE = 0.2f;
+    private static final int INVENTORY_SIZE = 5;
+    private static final int SLOT_OFFSET = 300;
     private final SimpleContainer inventory = new SimpleContainer(INVENTORY_SIZE);
-
-    private BoatPathNavigation boatNavigation;
-    private PathNavigation defaultNavigation;
     private final BoatMoveController boatController;
     private final MoveControl defaultController;
-
+    private BoatPathNavigation boatNavigation;
+    private PathNavigation defaultNavigation;
     private float timeEntitySatOnShoulder = 0;
     private BlockPos lastKnownCannonPos = null;
 
@@ -76,6 +72,15 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         this.boatController = new BoatMoveController(this);
         this.defaultController = moveControl;
         this.lookControl = new LookControlWithSpyglass<>(this);
+    }
+
+    public static AttributeSupplier.Builder createAttributes() {
+
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.35F)
+                .add(Attributes.MAX_HEALTH, 24.0)
+                .add(Attributes.ATTACK_DAMAGE, 6.0) //more since they have golden sword
+                .add(Attributes.FOLLOW_RANGE, 12.0);
     }
 
     @Override
@@ -91,6 +96,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     public void setLastKnownCannonPos(BlockPos lastKnownCannonPos) {
         this.lastKnownCannonPos = lastKnownCannonPos;
     }
+    //got to do this since the accessors aren't used consistently...
 
     @Override
     protected void registerGoals() {
@@ -133,7 +139,6 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         this.goalSelector.addGoal(9, new PlundererLookAtPlayerGoal(this, Player.class, 1.0F));
         this.goalSelector.addGoal(10, new PlundererLookAtPlayerGoal(this, Mob.class));
     }
-    //got to do this since the accessors aren't used consistently...
 
     @Override
     public void setNoActionTime(int idleTime) {
@@ -152,7 +157,6 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         super.customServerAiStep();
     }
 
-
     @Override
     protected PathNavigation createNavigation(Level level) {
         this.boatNavigation = new BoatPathNavigation(this, level);
@@ -166,15 +170,6 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         builder.define(USING_SPYGLASS, false);
         builder.define(DATA_SHOULDER_LEFT, new CompoundTag());
         builder.define(DATA_SHOULDER_RIGHT, new CompoundTag());
-    }
-
-    public static AttributeSupplier.Builder createAttributes() {
-
-        return Monster.createMonsterAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.35F)
-                .add(Attributes.MAX_HEALTH, 24.0)
-                .add(Attributes.ATTACK_DAMAGE, 6.0) //more since they have golden sword
-                .add(Attributes.FOLLOW_RANGE, 12.0);
     }
 
     public boolean isUsingSpyglass() {

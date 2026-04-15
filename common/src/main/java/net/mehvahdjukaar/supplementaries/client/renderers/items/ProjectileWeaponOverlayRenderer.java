@@ -17,6 +17,27 @@ public class ProjectileWeaponOverlayRenderer implements IItemDecoratorRenderer {
 
     private ItemStack clientCurrentAmmo = ItemStack.EMPTY;
 
+    public static void renderAmmo(GuiGraphics graphics, int x, int y, ItemStack ammo) {
+        if (!ammo.isEmpty()) {
+            PoseStack poseStack = graphics.pose();
+            poseStack.pushPose();
+            float xOff = 22;
+            float yOff = 8;
+            poseStack.translate(16.0F * (-0.25D) + (xOff + x) * (1 - 0.4f),
+                    16.0F * (0.25D + 0.025) + (yOff + y) * (1 - 0.4f),
+                    16.0F + (200.0F) * (1 - 0.4f));
+            poseStack.scale(0.4f, 0.4f, 0.4f);
+
+            //0.4 scale
+            RenderSystem.applyModelViewMatrix();
+
+            graphics.renderFakeItem(ammo, x, y);
+
+            poseStack.popPose();
+            RenderSystem.applyModelViewMatrix();
+        }
+    }
+
     //unneded optimization
     public ItemStack getAmmoForPreview(ItemStack cannon, @Nullable Level world, Player player) {
         if (world != null) {
@@ -44,27 +65,6 @@ public class ProjectileWeaponOverlayRenderer implements IItemDecoratorRenderer {
             renderAmmo(graphics, x, y, ammo);
         }
         return true;
-    }
-
-    public static void renderAmmo(GuiGraphics graphics, int x, int y, ItemStack ammo) {
-        if (!ammo.isEmpty()) {
-            PoseStack poseStack = graphics.pose();
-            poseStack.pushPose();
-            float xOff = 22;
-            float yOff = 8;
-            poseStack.translate(16.0F * (-0.25D) + (xOff + x) * (1 - 0.4f),
-                    16.0F * (0.25D + 0.025) + (yOff + y) * (1 - 0.4f),
-                    16.0F + (200.0F) * (1 - 0.4f));
-            poseStack.scale(0.4f, 0.4f, 0.4f);
-
-            //0.4 scale
-            RenderSystem.applyModelViewMatrix();
-
-            graphics.renderFakeItem(ammo, x, y);
-
-            poseStack.popPose();
-            RenderSystem.applyModelViewMatrix();
-        }
     }
 
 }

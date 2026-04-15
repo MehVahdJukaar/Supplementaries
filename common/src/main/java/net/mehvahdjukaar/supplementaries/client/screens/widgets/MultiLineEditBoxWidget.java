@@ -60,6 +60,11 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
         this.clearDisplayCache();
     }
 
+    static int findLineFromPos(int[] lineStarts, int find) {
+        int i = Arrays.binarySearch(lineStarts, find);
+        return i < 0 ? -(i + 2) : i;
+    }
+
     public void setOutOfBoundResponder(Consumer<Boolean> onOutOfBounds) {
         this.onOutOfBounds = onOutOfBounds;
     }
@@ -84,14 +89,14 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
         return false;
     }
 
+    private String getClipboard() {
+        return this.minecraft != null ? TextFieldHelper.getClipboardContents(this.minecraft) : "";
+    }
+
     private void setClipboard(String s) {
         if (this.minecraft != null) {
             TextFieldHelper.setClipboardContents(this.minecraft, s);
         }
-    }
-
-    private String getClipboard() {
-        return this.minecraft != null ? TextFieldHelper.getClipboardContents(this.minecraft) : "";
     }
 
     //call
@@ -187,7 +192,6 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
             }
         }
     }
-
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
@@ -425,11 +429,6 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
         }
     }
 
-    static int findLineFromPos(int[] lineStarts, int find) {
-        int i = Arrays.binarySearch(lineStarts, find);
-        return i < 0 ? -(i + 2) : i;
-    }
-
     private Rect2i createPartialLineSelection(String input, StringSplitter splitter, int i, int j, int k, int l) {
         String string = input.substring(l, i);
         String string2 = input.substring(l, j);
@@ -456,12 +455,12 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
 
     protected static class DisplayCache {
         static final DisplayCache EMPTY = new DisplayCache("", new Pos2i(0, 0), true, new int[]{0}, new LineInfo[]{new LineInfo(Style.EMPTY, "", 0, 0)}, new Rect2i[0]);
-        private final String fullText;
         final Pos2i cursor;
         final boolean cursorAtEnd;
-        private final int[] lineStarts;
         final LineInfo[] lines;
         final Rect2i[] selection;
+        private final String fullText;
+        private final int[] lineStarts;
 
         public DisplayCache(String text, Pos2i cursorPos, boolean cursorAtEnd, int[] lineStart, LineInfo[] lines, Rect2i[] selection) {
             this.fullText = text;

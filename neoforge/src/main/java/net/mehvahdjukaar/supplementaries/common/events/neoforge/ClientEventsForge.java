@@ -37,11 +37,12 @@ import org.lwjgl.glfw.GLFW;
 
 public class ClientEventsForge {
 
+    static boolean mutex = false;
+    private static boolean firstScreenShown;
+
     public static void init() {
         NeoForge.EVENT_BUS.register(ClientEventsForge.class);
     }
-
-    private static boolean firstScreenShown;
 
     @SubscribeEvent
     public static void onScreenDrawPost(ScreenEvent.Init.Post event) {
@@ -57,7 +58,6 @@ public class ClientEventsForge {
             ClientEvents.onItemTooltip(event.getItemStack(), event.getContext(), event.getFlags(), event.getToolTip());
         }
     }
-
 
     @SubscribeEvent
     public static void onScreenInit(ScreenEvent.Init.Post event) {
@@ -109,6 +109,10 @@ public class ClientEventsForge {
         if (CannonController.isActive()) event.setCanceled(true);
     }
 
+    //forge only below
+
+    //TODO: add to fabric
+
     @SubscribeEvent
     public static void onRenderGuiOverlayPre(RenderGuiLayerEvent.Pre event) {
         if (CannonController.cancelsXPBar()) {
@@ -125,11 +129,6 @@ public class ClientEventsForge {
         }
     }
 
-    //forge only below
-
-    //TODO: add to fabric
-
-
     @SubscribeEvent
     public static void onCameraSetup(ViewportEvent.ComputeCameraAngles event) {
         double wobble = ClientEvents.getRopeWobble(event.getPartialTick());
@@ -137,8 +136,6 @@ public class ClientEventsForge {
             event.setRoll((float) (event.getRoll() + wobble));
         }
     }
-
-    static boolean mutex = false;
 
     @SubscribeEvent
     public static void onPlayerDeath(ScreenEvent.Opening event) {

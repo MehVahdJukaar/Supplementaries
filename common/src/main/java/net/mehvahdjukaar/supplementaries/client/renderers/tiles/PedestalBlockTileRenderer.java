@@ -40,19 +40,6 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         this.entityRenderer = minecraft.getEntityRenderDispatcher();
     }
 
-    @ForgeOverride
-    public AABB getRenderBoundingBox(BlockEntity tile) {
-        return new AABB(tile.getBlockPos()).expandTowards(0, 1, 0);
-    }
-
-    protected boolean canRenderName(ItemStack item, PedestalBlockTile tile, PedestalBlockTile.DisplayType type) {
-        if (Minecraft.renderNames() && item.has(DataComponents.CUSTOM_NAME) && !type.isGlobe()) {
-            double d0 = entityRenderer.distanceToSqr(tile.getBlockPos().getX() + 0.5, tile.getBlockPos().getY() + 0.5, tile.getBlockPos().getZ() + 0.5);
-            return d0 < 16 * 16;
-        }
-        return false;
-    }
-
     public static void renderName(Component name, float h, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn) {
         Minecraft mc = Minecraft.getInstance();
 
@@ -73,6 +60,19 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
 
         mc.font.drawInBatch(name, f2, i, -1, false, matrix4f, bufferIn, Font.DisplayMode.NORMAL, j, combinedLightIn);
         poseStack.popPose();
+    }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox(BlockEntity tile) {
+        return new AABB(tile.getBlockPos()).expandTowards(0, 1, 0);
+    }
+
+    protected boolean canRenderName(ItemStack item, PedestalBlockTile tile, PedestalBlockTile.DisplayType type) {
+        if (Minecraft.renderNames() && item.has(DataComponents.CUSTOM_NAME) && !type.isGlobe()) {
+            double d0 = entityRenderer.distanceToSqr(tile.getBlockPos().getX() + 0.5, tile.getBlockPos().getY() + 0.5, tile.getBlockPos().getZ() + 0.5);
+            return d0 < 16 * 16;
+        }
+        return false;
     }
 
     @Override

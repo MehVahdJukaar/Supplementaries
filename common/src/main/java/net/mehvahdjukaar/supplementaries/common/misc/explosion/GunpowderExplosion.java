@@ -43,6 +43,12 @@ public class GunpowderExplosion extends Explosion {
 
     private static final Holder<SoundEvent> EMPTY_SOUND = BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.EMPTY);
 
+    public GunpowderExplosion(Level world, double x, double y, double z) {
+        super(world, null, null, null,
+                x, y, z, 0.5f, false,
+                BlockInteraction.DESTROY, ParticleTypes.ASH, ParticleTypes.ASH, EMPTY_SOUND);
+    }
+
     //same as Level.explode but with custom subclass. client one just gets the normal one
     public static void explode(ServerLevel world, BlockPos pos) {
         //TODO: maybe this could be done just with a custom block interaction
@@ -76,10 +82,16 @@ public class GunpowderExplosion extends Explosion {
         }
     }
 
-    public GunpowderExplosion(Level world, double x, double y, double z) {
-        super(world, null, null, null,
-                x, y, z, 0.5f, false,
-                BlockInteraction.DESTROY, ParticleTypes.ASH, ParticleTypes.ASH, EMPTY_SOUND);
+    private static boolean canLight(BlockState state) {
+        Block b = state.getBlock();
+        if (b instanceof AbstractCandleBlock) {
+            return !AbstractCandleBlock.isLit(state);
+        }
+        if (state.hasProperty(BlockStateProperties.LIT) && state.is(ModTags.LIGHTABLE_BY_GUNPOWDER)) {
+            return !state.getValue(BlockStateProperties.LIT) &&
+                    (!state.hasProperty(BlockStateProperties.WATERLOGGED) || !state.getValue(BlockStateProperties.WATERLOGGED));
+        }
+        return false;
     }
 
     /**
@@ -131,7 +143,6 @@ public class GunpowderExplosion extends Explosion {
         return false;
     }
 
-
     private void explodeSingleBlock(int i, int j, int k) {
         BlockPos pos = new BlockPos(i, j, k);
         FluidState fluidstate = this.level.getFluidState(pos);
@@ -155,17 +166,5 @@ public class GunpowderExplosion extends Explosion {
                 ILightable.FireSoundType.FLAMING_ARROW.play(level, pos);
             }
         }
-    }
-
-    private static boolean canLight(BlockState state) {
-        Block b = state.getBlock();
-        if (b instanceof AbstractCandleBlock) {
-            return !AbstractCandleBlock.isLit(state);
-        }
-        if (state.hasProperty(BlockStateProperties.LIT) && state.is(ModTags.LIGHTABLE_BY_GUNPOWDER)) {
-            return !state.getValue(BlockStateProperties.LIT) &&
-                    (!state.hasProperty(BlockStateProperties.WATERLOGGED) || !state.getValue(BlockStateProperties.WATERLOGGED));
-        }
-        return false;
     }
 }

@@ -130,23 +130,6 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         this.menu.removeSlotListener(this);
     }
 
-
-    private final class ManeuverButton extends Button {
-
-        public ManeuverButton(int x, int y, boolean active) {
-            super(x, y, 10, 10, Component.empty(), CannonScreen.this::onManeuverPressed, Button.DEFAULT_NARRATION);
-            if (active) this.setTooltip(Tooltip.create(Component.translatable("gui.supplementaries.cannon.maneuver")));
-            this.active = active;
-        }
-
-        @Override
-        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float f) {
-            var texture = this.isHovered() ? ModTextures.CANNON_MANEUVER_HOVERED_SPRITE : ModTextures.CANNON_MANEUVER_SPRITE;
-            texture = active ? texture : ModTextures.CANNON_MANEUVER_DISABLED_SPRITE;
-            guiGraphics.blitSprite(texture, this.getX(), this.getY(), this.width, this.height);
-        }
-    }
-
     private static class NumberEditBox extends EditBox {
         public NumberEditBox(Font font, int x, int y, int width, int height) {
             super(font, x, y, width, height, Component.empty());
@@ -167,16 +150,32 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
             }
         }
 
-        public void setNumber(float value) {
-            this.setValue(String.valueOf((int) value));
-        }
-
         public float getNumber() {
             try {
                 return Float.parseFloat(this.getValue());
             } catch (NumberFormatException e) {
                 return 0;
             }
+        }
+
+        public void setNumber(float value) {
+            this.setValue(String.valueOf((int) value));
+        }
+    }
+
+    private final class ManeuverButton extends Button {
+
+        public ManeuverButton(int x, int y, boolean active) {
+            super(x, y, 10, 10, Component.empty(), CannonScreen.this::onManeuverPressed, Button.DEFAULT_NARRATION);
+            if (active) this.setTooltip(Tooltip.create(Component.translatable("gui.supplementaries.cannon.maneuver")));
+            this.active = active;
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float f) {
+            var texture = this.isHovered() ? ModTextures.CANNON_MANEUVER_HOVERED_SPRITE : ModTextures.CANNON_MANEUVER_SPRITE;
+            texture = active ? texture : ModTextures.CANNON_MANEUVER_DISABLED_SPRITE;
+            guiGraphics.blitSprite(texture, this.getX(), this.getY(), this.width, this.height);
         }
     }
 

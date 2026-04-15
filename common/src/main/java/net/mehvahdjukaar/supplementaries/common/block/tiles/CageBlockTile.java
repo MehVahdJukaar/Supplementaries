@@ -29,6 +29,10 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), false);
     }
 
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, CageBlockTile tile) {
+        tile.mobContainer.tick(pLevel, pPos);
+    }
+
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
@@ -83,10 +87,6 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
     @Override
     public Direction getDirection() {
         return this.getBlockState().getValue(ClockBlock.FACING);
-    }
-
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, CageBlockTile tile) {
-        tile.mobContainer.tick(pLevel, pPos);
     }
 
 }

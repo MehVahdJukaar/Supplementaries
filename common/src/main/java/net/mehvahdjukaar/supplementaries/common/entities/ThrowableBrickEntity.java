@@ -37,6 +37,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.UUID;
 
 public class ThrowableBrickEntity extends ImprovedProjectileEntity {
+    private static final GameProfile BRICK_PLAYER = new GameProfile(UUID.randomUUID(), "Throwable Brick Fake Player");
+
     public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, Level world) {
         super(type, world);
     }
@@ -58,7 +60,6 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     protected Item getDefaultItem() {
         return Items.BRICK;
     }
-
 
     private ParticleOptions makeParticle() {
         ItemStack itemstack = this.getItem();
@@ -103,8 +104,6 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
             }
         }
     }
-
-    private static final GameProfile BRICK_PLAYER = new GameProfile(UUID.randomUUID(), "Throwable Brick Fake Player");
 
     private void breakGlass(BlockPos pos, int chance, Player p) {
         int c = chance - 1 - this.random.nextInt(4);

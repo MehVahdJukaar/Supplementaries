@@ -13,27 +13,24 @@ import static net.mehvahdjukaar.supplementaries.Supplementaries.res;
 
 public class ModEnchantments {
 
-    public static void init() {
-    }
-
     //enchantment
     public static final HolderRef<Enchantment> STASIS_ENCHANTMENT = HolderRef.of(
             res("stasis"), Registries.ENCHANTMENT);
-
-
     public static final Supplier<DataComponentType<Unit>> PROJECTILE_NO_GRAVITY = RegHelper.register(
             res("projectile_no_gravity"),
             () -> DataComponentType.<Unit>builder()
                     .persistent(Unit.CODEC).build(),
             Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE
     );
-
     public static final Supplier<DataComponentType<Unit>> SPAWN_BUBBLE_BLOCK = RegHelper.register(
             res("spawn_bubble_block"),
             () -> DataComponentType.<Unit>builder()
                     .persistent(Unit.CODEC).build(),
             Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE
     );
+
+    public static void init() {
+    }
 
     //TBH we could have just use tags here instead with an empty stasis ench definition
 }

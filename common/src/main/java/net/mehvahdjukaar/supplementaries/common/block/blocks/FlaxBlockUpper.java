@@ -17,13 +17,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class FlaxBlockUpper extends Block {
+    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
     private static final VoxelShape[] SHAPES_TOP = new VoxelShape[]{
             Block.box(2, 0, 2, 14, 3, 14),
             Block.box(1, 0, 1, 15, 7, 15),
             Block.box(1, 0, 1, 15, 11, 15),
             Block.box(1, 0, 1, 15, 16, 15),};
-    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
-    public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
 
     public FlaxBlockUpper(Properties properties) {
         super(properties);

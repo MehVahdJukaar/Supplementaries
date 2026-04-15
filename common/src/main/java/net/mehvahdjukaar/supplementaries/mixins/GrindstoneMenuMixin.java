@@ -21,11 +21,10 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu {
 
     @Final
     @Shadow
-    private Container resultSlots;
-
+    Container repairSlots;
     @Final
     @Shadow
-    Container repairSlots;
+    private Container resultSlots;
 
     protected GrindstoneMenuMixin(@Nullable MenuType<?> menuType, int i) {
         super(menuType, i);

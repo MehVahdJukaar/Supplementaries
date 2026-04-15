@@ -26,6 +26,10 @@ public abstract class CompatCreeperArclightMixin extends Monster implements IPar
     @Unique
     private boolean supplementaries$festive = false;
 
+    protected CompatCreeperArclightMixin(EntityType<? extends Monster> entityType, Level level) {
+        super(entityType, level);
+    }
+
     @Override
     public boolean supplementaries$isFestive() {
         return this.supplementaries$festive;
@@ -39,10 +43,6 @@ public abstract class CompatCreeperArclightMixin extends Monster implements IPar
             NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
                     new SyncPartyCreeperPacket(this));
         }
-    }
-
-    protected CompatCreeperArclightMixin(EntityType<? extends Monster> entityType, Level level) {
-        super(entityType, level);
     }
 
     @WrapWithCondition(method = "explodeCreeper",

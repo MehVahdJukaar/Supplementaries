@@ -54,33 +54,16 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
     private static final Map<UUID, Song> CURRENTLY_PAYING = new HashMap<>();
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    //util to make songs from a map
+    private static final Map<Long, List<Integer>> RECORDING = new HashMap<>();
+    private static final List<NoteBlockInstrument> WHITELIST = new ArrayList<>();
+    private static boolean isRecording = false;
+    private static Source soundSource = Source.NOTE_BLOCKS;
     private final HolderLookup.Provider registryAccess;
 
     public SongsManager(HolderLookup.Provider registryAccess) {
         super(GSON, "flute_songs");
         this.registryAccess = registryAccess;
-    }
-
-    @Override
-    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
-        SONGS.clear();
-        SONG_WEIGHTED_LIST.clear();
-        List<Song> temp = new ArrayList<>();
-        var ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
-        var codec = ForgeHelper.conditionalCodec(Song.CODEC);
-        jsons.forEach((key, json) -> {
-            try {
-                var result = codec.parse(ops, json);
-                var song = result.getOrThrow();
-                if (song.isPresent()) {
-                    temp.add(song.get());
-                    SongsManager.addSong(song.get());
-                }
-            } catch (Exception e) {
-                Supplementaries.LOGGER.error("Failed to parse JSON object for song {}", key, e);
-            }
-        });
-        if (!temp.isEmpty()) Supplementaries.LOGGER.info("Loaded {} flute songs", temp.size());
     }
 
     private static void addSong(Song song) {
@@ -167,13 +150,6 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         }
         return played;
     }
-
-    //util to make songs from a map
-    private static final Map<Long, List<Integer>> RECORDING = new HashMap<>();
-    private static final List<NoteBlockInstrument> WHITELIST = new ArrayList<>();
-
-    private static boolean isRecording = false;
-    private static Source soundSource = Source.NOTE_BLOCKS;
 
     public static void startRecording(Source source, NoteBlockInstrument[] whitelist) {
         RECORDING.clear();
@@ -266,7 +242,6 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         }
     }
 
-
     public static void recordNoteFromSound(SoundInstance sound, String name) {
         if (isRecording && name.startsWith("block.note_block") && soundSource == Source.SOUND_EVENTS) {
             try {
@@ -284,7 +259,6 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
             }
         }
     }
-
 
     private static void recordNote(Level level, int note, NoteBlockInstrument instrument) {
         if (WHITELIST.isEmpty() || WHITELIST.contains(instrument)) {
@@ -310,6 +284,28 @@ public class SongsManager extends SimpleJsonResourceReloadListener {
         } catch (IOException e) {
             Supplementaries.error("Failed to save recorded song: ", e);
         }
+    }
+
+    @Override
+    protected void apply(Map<ResourceLocation, JsonElement> jsons, ResourceManager manager, ProfilerFiller profile) {
+        SONGS.clear();
+        SONG_WEIGHTED_LIST.clear();
+        List<Song> temp = new ArrayList<>();
+        var ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, registryAccess, this);
+        var codec = ForgeHelper.conditionalCodec(Song.CODEC);
+        jsons.forEach((key, json) -> {
+            try {
+                var result = codec.parse(ops, json);
+                var song = result.getOrThrow();
+                if (song.isPresent()) {
+                    temp.add(song.get());
+                    SongsManager.addSong(song.get());
+                }
+            } catch (Exception e) {
+                Supplementaries.LOGGER.error("Failed to parse JSON object for song {}", key, e);
+            }
+        });
+        if (!temp.isEmpty()) Supplementaries.LOGGER.info("Loaded {} flute songs", temp.size());
     }
 
     public enum Source {

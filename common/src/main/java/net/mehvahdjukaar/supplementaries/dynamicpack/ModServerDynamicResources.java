@@ -27,6 +27,8 @@ import java.util.function.Consumer;
 
 public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
+    public static final Map<ResourceLocation, Resource> TAG_TRANSLATION_HACK = new HashMap<>();
+
     public ModServerDynamicResources() {
         super(Supplementaries.res("generated_pack"),
                 PlatHelper.isDev() ? PackGenerationStrategy.CACHED : CommonConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
@@ -41,8 +43,6 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
     protected Collection<String> gatherSupportedNamespaces() {
         return List.of("minecraft");
     }
-
-    public static final Map<ResourceLocation, Resource> TAG_TRANSLATION_HACK = new HashMap<>();
 
     @Override
     public void regenerateDynamicAssets(Consumer<ResourceGenTask> executor) {

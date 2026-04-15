@@ -53,6 +53,9 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
         this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), true);
     }
 
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, JarBlockTile tile) {
+        tile.mobContainer.tick(pLevel, pPos);
+    }
 
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
@@ -286,11 +289,6 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     public Direction getDirection() {
         return this.getBlockState().getValue(ClockBlock.FACING);
     }
-
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, JarBlockTile tile) {
-        tile.mobContainer.tick(pLevel, pPos);
-    }
-
 
     @Override
     public boolean canInteractWithSoftFluidTank() {

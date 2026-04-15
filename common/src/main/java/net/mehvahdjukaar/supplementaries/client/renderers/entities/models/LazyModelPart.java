@@ -17,15 +17,15 @@ public class LazyModelPart implements Supplier<ModelPart> {
         this.partName = partName;
     }
 
+    public static LazyModelPart of(ModelLayerLocation location, String partName) {
+        return new LazyModelPart(location, partName);
+    }
+
     @Override
     public ModelPart get() {
         if (instance == null) {
             instance = Minecraft.getInstance().getEntityModels().bakeLayer(location).getChild(partName);
         }
         return instance;
-    }
-
-    public static LazyModelPart of(ModelLayerLocation location, String partName) {
-        return new LazyModelPart(location, partName);
     }
 }

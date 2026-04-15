@@ -26,12 +26,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(StrongholdPieces.RoomCrossing.class)
 public abstract class StrongholdRoomSconceMixin extends StructurePiece {
 
+    @Unique
+    private final BlockState supplementaries$sconce = ModRegistry.SCONCE_WALL.get().defaultBlockState();
     @Final
     @Shadow
     protected int type;
-
-    @Unique
-    private final BlockState supplementaries$sconce = ModRegistry.SCONCE_WALL.get().defaultBlockState();
 
     protected StrongholdRoomSconceMixin(StructurePieceType pType, int pGenDepth, BoundingBox pBoundingBox) {
         super(pType, pGenDepth, pBoundingBox);

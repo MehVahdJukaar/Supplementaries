@@ -24,6 +24,44 @@ public class CannonChargeHud implements LayeredDraw.Layer {
         this.mc = Minecraft.getInstance();
     }
 
+    private static void renderTrajectoryIcons(GuiGraphics graphics, int screenWidth, int screenHeight) {
+        // trajectory icons
+
+        int iconLeft = screenWidth / 2 + 96;
+        int iconTop = screenHeight - 22;
+        int iconW = 14;
+        ResourceLocation tr = switch (CannonController.shootingMode.ordinal()) {
+            case 0 -> ModTextures.CANNON_TRAJECTORY_0_SPRITE;
+            case 1 -> ModTextures.CANNON_TRAJECTORY_1_SPRITE;
+            default -> ModTextures.CANNON_TRAJECTORY_2_SPRITE;
+        };
+        graphics.blitSprite(tr, iconLeft, iconTop, iconW, iconW);
+
+        iconLeft = screenWidth / 2 - (96 + 14);
+        ResourceLocation tr2 = CannonController.showsTrajectory ? ModTextures.CANNON_TRAJECTORY_SHOWN_SPRITE : ModTextures.CANNON_TRAJECTORY_HIDDEN_SPRITE;
+        graphics.blitSprite(tr2, iconLeft, iconTop, iconW, iconW);
+    }
+
+    private static void renderCrossHair(GuiGraphics graphics, int screenWidth, int screenHeight) {
+        graphics.pose().pushPose();
+        graphics.pose().translate(0, 0, -90);
+
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        int w = 9;
+        ResourceLocation hitType;
+        if (CannonController.shootingMode == ShootingMode.STRAIGHT) {
+            hitType = ModTextures.CANNON_CROSSHAIR_AIM_SPRITE;
+        } else if (CannonController.trajectory == null || CannonController.trajectory.miss()) {
+            hitType = ModTextures.CANNON_CROSSHAIR_MISS_SPRITE;
+        } else hitType = ModTextures.CANNON_CROSSHAIR_HIT_SPRITE;
+
+        graphics.blitSprite(hitType, (screenWidth - w) / 2, (screenHeight - w) / 2, w, w);
+
+        RenderSystem.defaultBlendFunc();
+
+        graphics.pose().popPose();
+    }
+
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
         if (mc.options.hideGui) return;
@@ -49,24 +87,6 @@ public class CannonChargeHud implements LayeredDraw.Layer {
             int screenHeight = graphics.guiHeight();
             renderBar(graphics, screenWidth, screenHeight, cbt, deltaTracker.getGameTimeDeltaPartialTick(false));
         }
-    }
-
-    private static void renderTrajectoryIcons(GuiGraphics graphics, int screenWidth, int screenHeight) {
-        // trajectory icons
-
-        int iconLeft = screenWidth / 2 + 96;
-        int iconTop = screenHeight - 22;
-        int iconW = 14;
-        ResourceLocation tr = switch (CannonController.shootingMode.ordinal()) {
-            case 0 -> ModTextures.CANNON_TRAJECTORY_0_SPRITE;
-            case 1 -> ModTextures.CANNON_TRAJECTORY_1_SPRITE;
-            default -> ModTextures.CANNON_TRAJECTORY_2_SPRITE;
-        };
-        graphics.blitSprite(tr, iconLeft, iconTop, iconW, iconW);
-
-        iconLeft = screenWidth / 2 - (96 + 14);
-        ResourceLocation tr2 = CannonController.showsTrajectory ? ModTextures.CANNON_TRAJECTORY_SHOWN_SPRITE : ModTextures.CANNON_TRAJECTORY_HIDDEN_SPRITE;
-        graphics.blitSprite(tr2, iconLeft, iconTop, iconW, iconW);
     }
 
     private void renderHotBar(GuiGraphics graphics, int screenWidth, int screenHeight, CannonBlockTile cannon) {
@@ -129,26 +149,6 @@ public class CannonChargeHud implements LayeredDraw.Layer {
         graphics.drawString(mc.font, s, i1, j1 + 1, 0, false);
         graphics.drawString(mc.font, s, i1, j1 - 1, 0, false);
         graphics.drawString(mc.font, s, i1, j1, color, false);
-    }
-
-    private static void renderCrossHair(GuiGraphics graphics, int screenWidth, int screenHeight) {
-        graphics.pose().pushPose();
-        graphics.pose().translate(0, 0, -90);
-
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        int w = 9;
-        ResourceLocation hitType;
-        if (CannonController.shootingMode == ShootingMode.STRAIGHT) {
-            hitType = ModTextures.CANNON_CROSSHAIR_AIM_SPRITE;
-        } else if (CannonController.trajectory == null || CannonController.trajectory.miss()) {
-            hitType = ModTextures.CANNON_CROSSHAIR_MISS_SPRITE;
-        } else hitType = ModTextures.CANNON_CROSSHAIR_HIT_SPRITE;
-
-        graphics.blitSprite(hitType, (screenWidth - w) / 2, (screenHeight - w) / 2, w, w);
-
-        RenderSystem.defaultBlendFunc();
-
-        graphics.pose().popPose();
     }
 
     public void setupOverlayRenderState() {

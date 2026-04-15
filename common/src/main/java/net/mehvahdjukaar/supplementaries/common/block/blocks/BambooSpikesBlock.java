@@ -70,19 +70,18 @@ import java.util.function.Supplier;
 import static net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem.getPotion;
 
 public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer, EntityBlock, IWashable, IPistonMotionReact {
-    protected static final EnumMap<Direction, VoxelShape> SHAPES = MthUtils.getAllRotatedVoxelShapes(
-            Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D));
-
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty TIPPED = ModBlockProperties.TIPPED;
+    protected static final EnumMap<Direction, VoxelShape> SHAPES = MthUtils.getAllRotatedVoxelShapes(
+            Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D));
+    private static final GameProfile SPIKE_PLAYER = new GameProfile(UUID.randomUUID(), "Spike Fake Player");
+    private static final Supplier<Boolean> TIPPED_ENABLED = Suppliers.memoize(CommonConfigs.Functional.TIPPED_SPIKES_ENABLED::get);
 
     public BambooSpikesBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(TIPPED, false));
     }
-
-    private static final GameProfile SPIKE_PLAYER = new GameProfile(UUID.randomUUID(), "Spike Fake Player");
 
     public static DamageSource getDamageSource(Level level) {
         if (CommonConfigs.Functional.BAMBOO_SPIKES_DROP_LOOT.get()) {
@@ -94,6 +93,20 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
             return ModDamageSources.spikePlayer(fakePlayer);
         }
         return ModDamageSources.spike(level);
+    }
+
+    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, PotionContents potion, @Nullable Entity adder) {
+        world.setBlock(pos, state.setValue(TIPPED, true), 0);
+        BlockEntity te = world.getBlockEntity(pos);
+        if (te instanceof BambooSpikesBlockTile tile && tile.tryApplyPotion(potion)) {
+            world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
+            world.setBlock(pos, state.setValue(TIPPED, true), 3);
+            world.gameEvent(adder, GameEvent.BLOCK_CHANGE, pos);
+            return true;
+        }
+        if (te != null) te.setRemoved();
+        world.setBlock(pos, state.setValue(TIPPED, false), 0);
+        return false;
     }
 
     @Override
@@ -122,6 +135,8 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         return list;
     }
 
+    //TODO: fix pathfinding
+
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return SHAPES.get(state.getValue(FACING));
@@ -131,8 +146,6 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
     public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
         return Shapes.block();
     }
-
-    //TODO: fix pathfinding
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entityIn) {
@@ -212,8 +225,6 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         }
     }
 
-    private static final Supplier<Boolean> TIPPED_ENABLED = Suppliers.memoize(CommonConfigs.Functional.TIPPED_SPIKES_ENABLED::get);
-
     @Override
     public boolean tryAcceptingFluid(Level world, BlockState state, BlockPos pos, SoftFluidStack fluid) {
         if (!TIPPED_ENABLED.get() || state.getValue(TIPPED)) return false;
@@ -221,20 +232,6 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
             var content = getPotion(fluid);
             return tryAddingPotion(state, world, pos, content, null);
         }
-        return false;
-    }
-
-    public static boolean tryAddingPotion(BlockState state, LevelAccessor world, BlockPos pos, PotionContents potion, @Nullable Entity adder) {
-        world.setBlock(pos, state.setValue(TIPPED, true), 0);
-        BlockEntity te = world.getBlockEntity(pos);
-        if (te instanceof BambooSpikesBlockTile tile && tile.tryApplyPotion(potion)) {
-            world.playSound(null, pos, SoundEvents.HONEY_BLOCK_FALL, SoundSource.BLOCKS, 0.5F, 1.5F);
-            world.setBlock(pos, state.setValue(TIPPED, true), 3);
-            world.gameEvent(adder, GameEvent.BLOCK_CHANGE, pos);
-            return true;
-        }
-        if (te != null) te.setRemoved();
-        world.setBlock(pos, state.setValue(TIPPED, false), 0);
         return false;
     }
 

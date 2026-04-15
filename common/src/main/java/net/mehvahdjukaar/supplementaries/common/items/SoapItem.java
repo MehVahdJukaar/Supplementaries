@@ -48,40 +48,6 @@ public class SoapItem extends Item {
         super(pProperties.food(SOAP_FOOD));
     }
 
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        VibeChecker.assertSameLevel(level, player);
-        ItemStack stack = player.getItemInHand(hand);
-        // clean self
-        SlimedData slimedData = ModEntities.SLIMED_DATA.getOrCreate(player);
-        if (slimedData.isSlimed()) {
-            slimedData.clear(player);
-            playEffectsAndConsume(stack, player, player);
-            return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
-        }
-        if (!hasBeenEatenBefore(player, level)) {
-            if (player.canEat(true)) {
-                player.startUsingItem(hand);
-                return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
-            } else {
-                return InteractionResultHolder.fail(stack);
-            }
-        } else {
-            return InteractionResultHolder.pass(stack);
-        }
-    }
-
-    @Override
-    public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity entity) {
-
-        if (!pLevel.isClientSide) {
-            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(entity,
-                    new ClientBoundParticlePacket(entity,
-                            ClientBoundParticlePacket.Kind.BUBBLE_EAT, entity.getViewVector(1)));
-        }
-        return super.finishUsingItem(pStack, pLevel, entity);
-    }
-
     public static boolean hasBeenEatenBefore(Player player, Level level) {
         ResourceLocation res = Supplementaries.res("husbandry/soap");
         if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
@@ -159,6 +125,40 @@ public class SoapItem extends Item {
                             ClientBoundParticlePacket.Kind.BUBBLE_CLEAN_ENTITY));
         }
         if (!player.getAbilities().instabuild) stack.shrink(1);
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        VibeChecker.assertSameLevel(level, player);
+        ItemStack stack = player.getItemInHand(hand);
+        // clean self
+        SlimedData slimedData = ModEntities.SLIMED_DATA.getOrCreate(player);
+        if (slimedData.isSlimed()) {
+            slimedData.clear(player);
+            playEffectsAndConsume(stack, player, player);
+            return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+        }
+        if (!hasBeenEatenBefore(player, level)) {
+            if (player.canEat(true)) {
+                player.startUsingItem(hand);
+                return InteractionResultHolder.sidedSuccess(stack, level.isClientSide);
+            } else {
+                return InteractionResultHolder.fail(stack);
+            }
+        } else {
+            return InteractionResultHolder.pass(stack);
+        }
+    }
+
+    @Override
+    public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity entity) {
+
+        if (!pLevel.isClientSide) {
+            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(entity,
+                    new ClientBoundParticlePacket(entity,
+                            ClientBoundParticlePacket.Kind.BUBBLE_EAT, entity.getViewVector(1)));
+        }
+        return super.finishUsingItem(pStack, pLevel, entity);
     }
 
 }

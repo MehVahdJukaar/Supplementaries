@@ -45,42 +45,16 @@ import org.joml.Vector2i;
 
 public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashable, ISimpleBrushable {
 
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 11.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
     protected static final VoxelShape SHAPE_EAST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
     protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
 
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-
     public BlackboardBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
                 .setValue(WATERLOGGED, false));
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
-    }
-
-    @Override
-    public BlockState rotate(BlockState state, Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
-    }
-
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            case SOUTH -> SHAPE_SOUTH;
-            case EAST -> SHAPE_EAST;
-            case WEST -> SHAPE_WEST;
-            default -> SHAPE_NORTH;
-        };
     }
 
     //I started using this convention, so I have to keep it for backwards compat
@@ -124,6 +98,31 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             }
         }
         return null;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(FACING, WATERLOGGED);
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, Rotation rot) {
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirrorIn) {
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(FACING)) {
+            case SOUTH -> SHAPE_SOUTH;
+            case EAST -> SHAPE_EAST;
+            case WEST -> SHAPE_WEST;
+            default -> SHAPE_NORTH;
+        };
     }
 
     @Override
@@ -175,18 +174,6 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         return ItemInteractionResult.SUCCESS;
-    }
-
-    public enum UseMode {
-        BOTH, GUI, MANUAL;
-
-        public boolean canOpenGui() {
-            return this != MANUAL;
-        }
-
-        public boolean canManualDraw() {
-            return this != GUI;
-        }
     }
 
     @Override
@@ -241,5 +228,17 @@ public class BlackboardBlock extends WaterBlock implements EntityBlock, IWashabl
             return true;
         }
         return false;
+    }
+
+    public enum UseMode {
+        BOTH, GUI, MANUAL;
+
+        public boolean canOpenGui() {
+            return this != MANUAL;
+        }
+
+        public boolean canManualDraw() {
+            return this != GUI;
+        }
     }
 }

@@ -60,6 +60,17 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
         shapes = this.makeShapes();
     }
 
+    private static boolean findConnectedPulley(Level world, BlockPos pos, Player player, int it, Rotation rot) {
+        BlockState state = world.getBlockState(pos);
+        Block b = state.getBlock();
+        if (b instanceof AbstractRopeBlock) {
+            return findConnectedPulley(world, pos.above(), player, it + 1, rot);
+        } else if (b instanceof PulleyBlock pulley && it != 0) {
+            return pulley.windPulley(state, pos, world, rot, null);
+        }
+        return false;
+    }
+
     @Override
     public boolean canBeReplaced(BlockState state, Fluid fluid) {
         return false;
@@ -213,17 +224,6 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
                 return;
             }
         }
-    }
-
-    private static boolean findConnectedPulley(Level world, BlockPos pos, Player player, int it, Rotation rot) {
-        BlockState state = world.getBlockState(pos);
-        Block b = state.getBlock();
-        if (b instanceof AbstractRopeBlock) {
-            return findConnectedPulley(world, pos.above(), player, it + 1, rot);
-        } else if (b instanceof PulleyBlock pulley && it != 0) {
-            return pulley.windPulley(state, pos, world, rot, null);
-        }
-        return false;
     }
 
     @Override

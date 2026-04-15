@@ -26,10 +26,11 @@ import java.util.EnumSet;
 
 public class EatFodderGoal extends MoveToBlockGoal {
 
+    private static final BlockState FODDER_STATE = ModRegistry.FODDER.get().defaultBlockState();
     private final Animal animal;
     private final int blockBreakingTime;
-    private int ticksSinceReachedGoal;
     protected int lastBreakProgress = -1;
+    private int ticksSinceReachedGoal;
 
     public EatFodderGoal(Animal entity, double speedModifier, int searchRange, int verticalSearchRange, int breakTime) {
         super(entity, speedModifier, searchRange, verticalSearchRange);
@@ -90,8 +91,6 @@ public class EatFodderGoal extends MoveToBlockGoal {
     public double acceptedDistance() {
         return 1.5;
     }
-
-    private static final BlockState FODDER_STATE = ModRegistry.FODDER.get().defaultBlockState();
 
     @Override
     public void tick() {

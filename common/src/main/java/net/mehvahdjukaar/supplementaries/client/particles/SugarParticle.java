@@ -18,6 +18,21 @@ public class SugarParticle extends TerrainParticle {
 
     //TODO:this is crap, make it snap to water surface
 
+    public static final ParticleRenderType TERRAIN_SHEET_OPAQUE = new ParticleRenderType() {
+        @Override
+        public BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
+            RenderSystem.disableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.depthMask(true);
+            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
+            return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+        }
+
+        public String toString() {
+            return "TERRAIN_SHEET_OPAQUE";
+        }
+    };
+
     public SugarParticle(ClientLevel clientLevel, double x, double y, double z, double speedX, double speedY, double speedZ) {
         super(clientLevel, x, y, z, speedX, speedY, speedZ, ModRegistry.SUGAR_CUBE.get().defaultBlockState());
         this.lifetime = (int) (40.0f / (this.random.nextFloat() * 0.7f + 0.3f));
@@ -62,6 +77,11 @@ public class SugarParticle extends TerrainParticle {
 
     }
 
+    @Override
+    public ParticleRenderType getRenderType() {
+        return TERRAIN_SHEET_OPAQUE;
+    }
+
     public static class Factory implements ParticleProvider<SimpleParticleType> {
 
         public Factory(SpriteSet set) {
@@ -71,24 +91,4 @@ public class SugarParticle extends TerrainParticle {
             return new SugarParticle(level, x, y, z, xSpeed, ySpeed, zSpeed);
         }
     }
-
-    @Override
-    public ParticleRenderType getRenderType() {
-        return TERRAIN_SHEET_OPAQUE;
-    }
-
-    public static final ParticleRenderType TERRAIN_SHEET_OPAQUE = new ParticleRenderType() {
-        @Override
-        public BufferBuilder begin(Tesselator tesselator, TextureManager textureManager) {
-            RenderSystem.disableBlend();
-            RenderSystem.defaultBlendFunc();
-            RenderSystem.depthMask(true);
-            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
-            return tesselator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
-        }
-
-        public String toString() {
-            return "TERRAIN_SHEET_OPAQUE";
-        }
-    };
 }

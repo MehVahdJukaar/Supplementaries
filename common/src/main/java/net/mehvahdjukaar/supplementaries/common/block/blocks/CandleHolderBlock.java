@@ -48,17 +48,15 @@ import java.util.function.Supplier;
 
 //TODO: extinguish sound. same for candle skull & interaction
 public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<AttachFace> FACE = BlockStateProperties.ATTACH_FACE;
+    public static final IntegerProperty CANDLES = BlockStateProperties.CANDLES;
     protected static final VoxelShape SHAPE_FLOOR = Block.box(5D, 0D, 5D, 11D, 14D, 11D);
     protected static final VoxelShape SHAPE_WALL_NORTH = Block.box(5D, 0D, 11D, 11D, 14D, 16D);
     protected static final VoxelShape SHAPE_WALL_SOUTH = Block.box(5D, 0D, 0D, 11D, 14D, 5D);
     protected static final VoxelShape SHAPE_WALL_WEST = Block.box(11D, 0D, 5D, 16D, 14D, 11D);
     protected static final VoxelShape SHAPE_WALL_EAST = Block.box(0D, 0D, 5D, 5D, 14D, 11D);
     protected static final VoxelShape SHAPE_CEILING = Block.box(5D, 3D, 5D, 11D, 16D, 11D);
-
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public static final EnumProperty<AttachFace> FACE = BlockStateProperties.ATTACH_FACE;
-    public static final IntegerProperty CANDLES = BlockStateProperties.CANDLES;
-
     private static final EnumMap<Direction, EnumMap<AttachFace, Int2ObjectMap<List<Vec3>>>> PARTICLE_OFFSETS;
 
     static {
@@ -109,29 +107,14 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         }
     }
 
-    //default offsets
-    public static List<Vec3> getDefaultParticleOffsets(BlockState state) {
-        Direction direction = state.getValue(FACING);
-        AttachFace face = state.getValue(FACE);
-        int candles = state.getValue(CANDLES);
-        return PARTICLE_OFFSETS.get(direction).get(face).get(candles);
-    }
-
-    @Deprecated(forRemoval = true)
-    public static List<Vec3> getParticleOffsets(BlockState state) {
-        return getDefaultParticleOffsets(state);
-    }
-
     @Nullable
     public final DyeColor color;
     public final Supplier<ParticleType<? extends ParticleOptions>> particle;
     public final Function<BlockState, List<Vec3>> particleOffsets;
-
     @Deprecated(forRemoval = true)
     public CandleHolderBlock(DyeColor color, Properties properties) {
         this(color, properties, () -> ParticleTypes.SMALL_FLAME, CandleHolderBlock::getDefaultParticleOffsets);
     }
-
     @Deprecated(forRemoval = true)
     public CandleHolderBlock(@Nullable DyeColor color, Properties properties,
                              Supplier<ParticleType<? extends ParticleOptions>> particle) {
@@ -153,12 +136,38 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
                 .setValue(FACE, AttachFace.FLOOR).setValue(FACING, Direction.NORTH).setValue(CANDLES, 1));
     }
 
+    //default offsets
+    public static List<Vec3> getDefaultParticleOffsets(BlockState state) {
+        Direction direction = state.getValue(FACING);
+        AttachFace face = state.getValue(FACE);
+        int candles = state.getValue(CANDLES);
+        return PARTICLE_OFFSETS.get(direction).get(face).get(candles);
+    }
+
+    @Deprecated(forRemoval = true)
+    public static List<Vec3> getParticleOffsets(BlockState state) {
+        return getDefaultParticleOffsets(state);
+    }
+
     private static int lightLevel(BlockState state) {
         if (state.getValue(LIT)) {
             int candles = state.getValue(CANDLES);
             return 7 + candles * 2;
         }
         return 0;
+    }
+
+    protected static Direction getFacing(BlockState state) {
+        return switch (state.getValue(FACE)) {
+            case CEILING -> Direction.DOWN;
+            case FLOOR -> Direction.UP;
+            default -> state.getValue(FACING);
+        };
+    }
+
+    public static boolean isSideSolidForDirection(LevelReader reader, BlockPos pos, Direction direction) {
+        BlockPos blockpos = pos.relative(direction);
+        return reader.getBlockState(blockpos).isFaceSturdy(reader, blockpos, direction.getOpposite());
     }
 
     @Override
@@ -223,7 +232,6 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         return isSideSolidForDirection(worldIn, pos, state.getValue(FACING).getOpposite());
     }
 
-
     private void addParticlesAndSound(Level level, Vec3 offset, RandomSource random) {
         float f = random.nextFloat();
         if (f < 0.3F) {
@@ -235,14 +243,12 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
         level.addParticle((ParticleOptions) this.particle.get(), offset.x, offset.y, offset.z, 0.0, 0.0, 0.0);
     }
 
-
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource rand) {
         if (state.getValue(LIT)) {
             particleOffsets.apply(state).forEach(v -> addParticlesAndSound(level, v.add(pos.getX(), pos.getY(), pos.getZ()), rand));
         }
     }
-
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
@@ -257,20 +263,6 @@ public class CandleHolderBlock extends LightUpWaterBlock implements IColored {
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         return getFacing(stateIn).getOpposite() == facing && !stateIn.canSurvive(worldIn, currentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-    }
-
-
-    protected static Direction getFacing(BlockState state) {
-        return switch (state.getValue(FACE)) {
-            case CEILING -> Direction.DOWN;
-            case FLOOR -> Direction.UP;
-            default -> state.getValue(FACING);
-        };
-    }
-
-    public static boolean isSideSolidForDirection(LevelReader reader, BlockPos pos, Direction direction) {
-        BlockPos blockpos = pos.relative(direction);
-        return reader.getBlockState(blockpos).isFaceSturdy(reader, blockpos, direction.getOpposite());
     }
 
     @Override

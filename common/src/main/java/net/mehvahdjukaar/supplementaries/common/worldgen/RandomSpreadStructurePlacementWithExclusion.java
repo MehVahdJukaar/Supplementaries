@@ -17,8 +17,6 @@ import java.util.Optional;
 //same as random spread but has more exclusion zones
 public class RandomSpreadStructurePlacementWithExclusion extends RandomSpreadStructurePlacement {
 
-    private final List<ExclusionZone> exclusionZones;
-
     public static final MapCodec<RandomSpreadStructurePlacementWithExclusion> CODEC = RecordCodecBuilder.<RandomSpreadStructurePlacementWithExclusion>mapCodec((i) -> i.group(
                     Vec3i.offsetCodec(16).optionalFieldOf("locate_offset", Vec3i.ZERO).forGetter(RandomSpreadStructurePlacementWithExclusion::locateOffset),
                     StructurePlacement.FrequencyReductionMethod.CODEC.optionalFieldOf("frequency_reduction_method", RandomSpreadStructurePlacementWithExclusion.FrequencyReductionMethod.DEFAULT).forGetter(RandomSpreadStructurePlacementWithExclusion::frequencyReductionMethod),
@@ -30,6 +28,7 @@ public class RandomSpreadStructurePlacementWithExclusion extends RandomSpreadStr
                     RandomSpreadType.CODEC.optionalFieldOf("spread_type", RandomSpreadType.LINEAR).forGetter(RandomSpreadStructurePlacement::spreadType))
             .apply(i, RandomSpreadStructurePlacementWithExclusion::new)
     ).validate(RandomSpreadStructurePlacementWithExclusion::validate);
+    private final List<ExclusionZone> exclusionZones;
 
     public RandomSpreadStructurePlacementWithExclusion(Vec3i locateOffset, FrequencyReductionMethod frequencyReductionMethod, float frequency, int salt, List<ExclusionZone> exclusionZones, int spacing, int separation, RandomSpreadType spreadType) {
         super(locateOffset, frequencyReductionMethod, frequency, salt, Optional.empty(), spacing, separation, spreadType);
@@ -38,6 +37,10 @@ public class RandomSpreadStructurePlacementWithExclusion extends RandomSpreadStr
 
     static boolean isPlacementForbidden(ExclusionZone zone, ChunkGeneratorStructureState structureState, int x, int z) {
         return structureState.hasStructureChunkInRange(zone.otherSet(), x, z, zone.chunkCount());
+    }
+
+    private static DataResult<RandomSpreadStructurePlacementWithExclusion> validate(RandomSpreadStructurePlacementWithExclusion placement) {
+        return placement.spacing() <= placement.separation() ? DataResult.error(() -> "Spacing has to be larger than separation") : DataResult.success(placement);
     }
 
     @Override
@@ -52,9 +55,5 @@ public class RandomSpreadStructurePlacementWithExclusion extends RandomSpreadStr
 
     public List<ExclusionZone> exclusionZones() {
         return exclusionZones;
-    }
-
-    private static DataResult<RandomSpreadStructurePlacementWithExclusion> validate(RandomSpreadStructurePlacementWithExclusion placement) {
-        return placement.spacing() <= placement.separation() ? DataResult.error(() -> "Spacing has to be larger than separation") : DataResult.success(placement);
     }
 }

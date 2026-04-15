@@ -72,18 +72,13 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
     }
 
     @Override
-    public void setWaxed(boolean waxed) {
-        isWaxed = waxed;
-    }
-
-    @Override
     public boolean isWaxed() {
         return isWaxed;
     }
 
     @Override
-    public void setCurrentUser(@Nullable UUID playerWhoMayEdit) {
-        this.playerWhoMayEdit = playerWhoMayEdit;
+    public void setWaxed(boolean waxed) {
+        isWaxed = waxed;
     }
 
     @Override
@@ -91,6 +86,10 @@ public class DoormatBlockTile extends ItemDisplayTile implements ITextHolderProv
         return playerWhoMayEdit;
     }
 
+    @Override
+    public void setCurrentUser(@Nullable UUID playerWhoMayEdit) {
+        this.playerWhoMayEdit = playerWhoMayEdit;
+    }
 
     @Override
     public boolean canTakeItem(Container container, int i, ItemStack itemStack) {

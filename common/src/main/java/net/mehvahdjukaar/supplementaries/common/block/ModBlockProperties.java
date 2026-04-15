@@ -120,28 +120,6 @@ public class ModBlockProperties {
             this.offset = (8 - width / 2f) / 16f;
         }
 
-        public int getWidth() {
-            return width;
-        }
-
-        public float getOffset() {
-            return offset;
-        }
-
-        @Override
-        public String toString() {
-            return this.name;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name;
-        }
-
-        public String getName() {
-            return this.name;
-        }
-
         @Nullable
         public static PostType get(BlockState state) {
             return get(state, false);
@@ -179,6 +157,28 @@ public class ModBlockProperties {
             return type;
         }
 
+        public int getWidth() {
+            return width;
+        }
+
+        public float getOffset() {
+            return offset;
+        }
+
+        @Override
+        public String toString() {
+            return this.name;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
     }
 
     public enum Topping implements StringRepresentable {
@@ -192,11 +192,6 @@ public class ModBlockProperties {
 
         Topping(String name) {
             this.name = name;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name;
         }
 
         @NotNull
@@ -248,6 +243,11 @@ public class ModBlockProperties {
             return Pair.of(t, ForgeHelper.getCraftingRemainingItem(item).map(ItemStack::getItem)
                     .orElse(Items.AIR));
         }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
     }
 
     public enum Winding implements StringRepresentable {
@@ -283,6 +283,13 @@ public class ModBlockProperties {
             this.directions = Arrays.asList(dir1, dir2);
         }
 
+        public static RakeDirection fromDirections(List<Direction> directions) {
+            for (RakeDirection shape : values()) {
+                if (new HashSet<>(shape.getDirections()).containsAll(directions)) return shape;
+            }
+            return directions.get(0).getAxis() == Direction.Axis.Z ? NORTH_SOUTH : EAST_WEST;
+        }
+
         @Override
         public String toString() {
             return this.name;
@@ -295,13 +302,6 @@ public class ModBlockProperties {
 
         public List<Direction> getDirections() {
             return directions;
-        }
-
-        public static RakeDirection fromDirections(List<Direction> directions) {
-            for (RakeDirection shape : values()) {
-                if (new HashSet<>(shape.getDirections()).containsAll(directions)) return shape;
-            }
-            return directions.get(0).getAxis() == Direction.Axis.Z ? NORTH_SOUTH : EAST_WEST;
         }
     }
 

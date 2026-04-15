@@ -39,14 +39,13 @@ public class FlowerBoxBakedModel implements CustomBakedModel {
     private final BakedModel box;
     private final BlockModelShaper blockModelShaper;
     private final ModelState rotation;
+    private final ThreadLocal<BlockPos> posHack = ThreadLocal.withInitial(() -> BlockPos.ZERO);
 
     public FlowerBoxBakedModel(BakedModel box, ModelState rotation) {
         this.box = box;
         this.blockModelShaper = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper();
         this.rotation = rotation;
     }
-
-    private final ThreadLocal<BlockPos> posHack = ThreadLocal.withInitial(() -> BlockPos.ZERO);
 
     @Override
     public ExtraModelData getModelData(@NotNull ExtraModelData tileData, BlockPos pos, BlockState state, BlockAndTintGetter level) {

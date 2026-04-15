@@ -227,6 +227,28 @@ public class SuppPlatformStuffImpl {
                 item.finishUsingItem(level, entity));
     }
 
+    public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
+        return CropAccessor.callGetGrowthSpeed(state, level, pos);
+    }
+
+    public static InteractionResult placeBlockItem(BlockItem bi, BlockPlaceContext context) {
+        //mimics what useOn does on a block item without calling use on events
+        ItemStack stack = context.getItemInHand();
+        return !context.getLevel().isClientSide ? CommonHooks.onPlaceItemIntoWorld(context) :
+                ((ItemStackAccessor) (Object) stack).invokeOnItemUse(context,
+                        //instead of useOn we call place directly
+                        c -> bi.place(context));
+    }
+
+    @SuppressWarnings("all")
+    public static void init() {
+        RegHelper.register(Supplementaries.res("mod_cap"), () -> (StreamCodec) CapSlotReference.CODEC, SlotReference.TYPE_REGISTRY_KEY);
+    }
+
+    public static void registerFireBehaviors(RegistryAccess registry, IFireItemBehaviorRegistry event) {
+        NeoForge.EVENT_BUS.post(new RegisterFireBehaviorsEvent(registry, event));
+    }
+
     public record CapSlotReference(int slot) implements SlotReference {
 
         public static final StreamCodec<ByteBuf, CapSlotReference> CODEC = ByteBufCodecs.VAR_INT
@@ -248,21 +270,6 @@ public class SuppPlatformStuffImpl {
         }
     }
 
-
-    public static float getGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
-        return CropAccessor.callGetGrowthSpeed(state, level, pos);
-    }
-
-    public static InteractionResult placeBlockItem(BlockItem bi, BlockPlaceContext context) {
-        //mimics what useOn does on a block item without calling use on events
-        ItemStack stack = context.getItemInHand();
-        return !context.getLevel().isClientSide ? CommonHooks.onPlaceItemIntoWorld(context) :
-                ((ItemStackAccessor) (Object) stack).invokeOnItemUse(context,
-                        //instead of useOn we call place directly
-                        c -> bi.place(context));
-    }
-
-
     private static abstract class CropAccessor extends CropBlock {
         public CropAccessor(Properties properties) {
             super(properties);
@@ -271,14 +278,5 @@ public class SuppPlatformStuffImpl {
         public static float callGetGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
             return CropBlock.getGrowthSpeed(state, level, pos);
         }
-    }
-
-    @SuppressWarnings("all")
-    public static void init() {
-        RegHelper.register(Supplementaries.res("mod_cap"), () -> (StreamCodec) CapSlotReference.CODEC, SlotReference.TYPE_REGISTRY_KEY);
-    }
-
-    public static void registerFireBehaviors(RegistryAccess registry, IFireItemBehaviorRegistry event) {
-        NeoForge.EVENT_BUS.post(new RegisterFireBehaviorsEvent(registry, event));
     }
 }

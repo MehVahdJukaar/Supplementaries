@@ -51,17 +51,17 @@ public class MobContainerView implements TooltipProvider {
         this.inner = container.makeCopy();
     }
 
+    public static MobContainerView of(MobContainer container) {
+        Preconditions.checkNotNull(container.getData(), "cannot create mob container view with null container");
+        return new MobContainerView(container.makeCopy());
+    }
+
     @Nullable
     public MobContainerView copyWithNewUUID(UUID newUUID) {
         if (inner.getData() instanceof MobContainer.MobData.Entity e) {
             return new MobContainerView(e.copyWithNewUUID(newUUID),
                     this.inner.getWidth(), this.inner.getHeight(), this.inner.isAquarium());
         } else return null;
-    }
-
-    public static MobContainerView of(MobContainer container) {
-        Preconditions.checkNotNull(container.getData(), "cannot create mob container view with null container");
-        return new MobContainerView(container.makeCopy());
     }
 
     public int getFishTexture() {

@@ -30,9 +30,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class DoormatBlock extends WaterBlock implements EntityBlock {
 
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 2.0D, 16.0D, 1.0D, 14.0D);
     protected static final VoxelShape SHAPE_WEST = Block.box(2.0D, 0.0D, 0.0D, 14.0D, 1.0D, 16.0D);
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     public DoormatBlock(Properties properties) {
         super(properties);

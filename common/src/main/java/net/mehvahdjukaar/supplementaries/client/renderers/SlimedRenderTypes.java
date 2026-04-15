@@ -11,27 +11,12 @@ import org.joml.Matrix4f;
 
 public class SlimedRenderTypes extends RenderType {
 
+    //will have few entries
+    private static final Int2ObjectArrayMap<RenderType> TYPES = new Int2ObjectArrayMap<>();
+
     public SlimedRenderTypes(String s, VertexFormat vertexFormat, VertexFormat.Mode mode, int i, boolean b, boolean b1, Runnable runnable, Runnable aSuper) {
         super(s, vertexFormat, mode, i, b, b1, runnable, aSuper);
     }
-
-    private static class OffsetTexturing extends TexturingStateShard {
-        public OffsetTexturing(int width, int height) {
-            super("slime_offset_texturing",
-                    () -> {
-                        float u = (float) (System.currentTimeMillis() % 400000L) / 400000.0F;
-                        Matrix4f translation = new Matrix4f().translation(0, -u, 0.0F);
-                        float x = (float) width / 64;
-                        float y = (float) height / 64;
-                        translation.scale(x, y, 1);
-                        RenderSystem.setTextureMatrix(translation);
-                    },
-                    RenderSystem::resetTextureMatrix);
-        }
-    }
-
-    //will have few entries
-    private static final Int2ObjectArrayMap<RenderType> TYPES = new Int2ObjectArrayMap<>();
 
     public static void clear() {
         TYPES.clear();
@@ -54,6 +39,21 @@ public class SlimedRenderTypes extends RenderType {
                         .setTexturingState(new OffsetTexturing(width, height))
                         .createCompositeState(false)
         ));
+    }
+
+    private static class OffsetTexturing extends TexturingStateShard {
+        public OffsetTexturing(int width, int height) {
+            super("slime_offset_texturing",
+                    () -> {
+                        float u = (float) (System.currentTimeMillis() % 400000L) / 400000.0F;
+                        Matrix4f translation = new Matrix4f().translation(0, -u, 0.0F);
+                        float x = (float) width / 64;
+                        float y = (float) height / 64;
+                        translation.scale(x, y, 1);
+                        RenderSystem.setTextureMatrix(translation);
+                    },
+                    RenderSystem::resetTextureMatrix);
+        }
     }
 
 }

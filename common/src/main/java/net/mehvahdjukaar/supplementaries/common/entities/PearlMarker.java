@@ -47,10 +47,9 @@ import java.util.List;
 
 public class PearlMarker extends Entity {
 
-    private Pair<ThrownEnderpearl, HitResult> event = null;
-    private final List<ThrownEnderpearl> pearls = new ArrayList<>();
-
     private static final EntityDataAccessor<BlockPos> TELEPORT_POS = SynchedEntityData.defineId(PearlMarker.class, EntityDataSerializers.BLOCK_POS);
+    private final List<ThrownEnderpearl> pearls = new ArrayList<>();
+    private Pair<ThrownEnderpearl, HitResult> event = null;
 
 
     public PearlMarker(Level worldIn) {
@@ -64,6 +63,63 @@ public class PearlMarker extends Entity {
         this.setInvisible(true);
         this.setNoGravity(true);
         this.setInvulnerable(true);
+    }
+
+    private static boolean isValidBlock(BlockState p) {
+        Block b = p.getBlock();
+        return b instanceof DispenserBlock || b instanceof CannonBlock || b instanceof TrappedPresentBlock;
+    }
+
+    @NotNull
+    private static BlockState getLandingState(BlockState state, BlockPos pos, Direction direction, Level level) {
+        if (state.hasProperty(DispenserBlock.FACING)) {
+            state = state.setValue(DispenserBlock.FACING, direction);
+        }
+        return Block.updateFromNeighbourShapes(state, level, pos);
+    }
+
+    private static boolean isValidBlockEntity(BlockEntity blockEntity) {
+        return blockEntity instanceof CannonBlockTile || blockEntity instanceof DispenserBlockEntity || blockEntity instanceof TrappedPresentBlockTile;
+    }
+
+    public static void onProjectileImpact(Projectile projectile, HitResult hitResult) {
+        Level level = projectile.level();
+        if (!level.isClientSide && projectile instanceof ThrownEnderpearl pearl &&
+                projectile.getOwner() instanceof PearlMarker markerEntity && projectile.removeTag("dispensed")) {
+
+            markerEntity.event = Pair.of(pearl, hitResult);
+        }
+    }
+
+    public static ThrownEnderpearl createPearlToDispenseAndPlaceMarker(BlockSource source, Position pearlPos) {
+        ServerLevel level = source.level();
+        BlockPos pos = source.pos();
+        Entity dispCart = ((IMovingBlockSource) (Object) source).supp$getEntity();
+        return createPearlToDispenseAndPlaceMarker(level, pos, dispCart, pearlPos);
+    }
+
+    public static ThrownEnderpearl createPearlToDispenseAndPlaceMarker(ServerLevel level, BlockPos pos, @Nullable Entity owner, Position pearlPos) {
+        ThrownEnderpearl pearl = new ThrownEnderpearl(EntityType.ENDER_PEARL, level);
+        pearl.setPos(pearlPos.x(), pearlPos.y(), pearlPos.z());
+
+        if (owner != null) {
+            pearl.setOwner(owner);
+        } else {
+            var entity = level.getEntitiesOfClass(PearlMarker.class, new AABB(pos), (e) -> e.blockPosition().equals(pos)).stream().findAny();
+            PearlMarker marker;
+            if (entity.isEmpty()) {
+                marker = new PearlMarker(level);
+                marker.setPos(pos.getX() + 0.5D,
+                        pos.getY() + 0.5 - marker.getBbHeight() / 2f,
+                        pos.getZ() + 0.5D);
+                level.addFreshEntity(marker);
+            } else marker = entity.get();
+
+            marker.addPearl(pearl);
+            pearl.setOwner(marker);
+        }
+        pearl.addTag("dispensed");
+        return pearl;
     }
 
     @Override
@@ -134,11 +190,6 @@ public class PearlMarker extends Entity {
         }
     }
 
-    private static boolean isValidBlock(BlockState p) {
-        Block b = p.getBlock();
-        return b instanceof DispenserBlock || b instanceof CannonBlock || b instanceof TrappedPresentBlock;
-    }
-
     private void removePearl(ThrownEnderpearl pearl) {
         this.pearls.remove(pearl);
     }
@@ -201,62 +252,10 @@ public class PearlMarker extends Entity {
         event = null;
     }
 
-    @NotNull
-    private static BlockState getLandingState(BlockState state, BlockPos pos, Direction direction, Level level) {
-        if (state.hasProperty(DispenserBlock.FACING)) {
-            state = state.setValue(DispenserBlock.FACING, direction);
-        }
-        return Block.updateFromNeighbourShapes(state, level, pos);
-    }
-
-    private static boolean isValidBlockEntity(BlockEntity blockEntity) {
-        return blockEntity instanceof CannonBlockTile || blockEntity instanceof DispenserBlockEntity || blockEntity instanceof TrappedPresentBlockTile;
-    }
-
     @Override
     public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
         super.lerpTo(x, y, z, yRot, xRot, steps);
         this.setPos(x, y, z);
-    }
-
-    public static void onProjectileImpact(Projectile projectile, HitResult hitResult) {
-        Level level = projectile.level();
-        if (!level.isClientSide && projectile instanceof ThrownEnderpearl pearl &&
-                projectile.getOwner() instanceof PearlMarker markerEntity && projectile.removeTag("dispensed")) {
-
-            markerEntity.event = Pair.of(pearl, hitResult);
-        }
-    }
-
-    public static ThrownEnderpearl createPearlToDispenseAndPlaceMarker(BlockSource source, Position pearlPos) {
-        ServerLevel level = source.level();
-        BlockPos pos = source.pos();
-        Entity dispCart = ((IMovingBlockSource) (Object) source).supp$getEntity();
-        return createPearlToDispenseAndPlaceMarker(level, pos, dispCart, pearlPos);
-    }
-
-    public static ThrownEnderpearl createPearlToDispenseAndPlaceMarker(ServerLevel level, BlockPos pos, @Nullable Entity owner, Position pearlPos) {
-        ThrownEnderpearl pearl = new ThrownEnderpearl(EntityType.ENDER_PEARL, level);
-        pearl.setPos(pearlPos.x(), pearlPos.y(), pearlPos.z());
-
-        if (owner != null) {
-            pearl.setOwner(owner);
-        } else {
-            var entity = level.getEntitiesOfClass(PearlMarker.class, new AABB(pos), (e) -> e.blockPosition().equals(pos)).stream().findAny();
-            PearlMarker marker;
-            if (entity.isEmpty()) {
-                marker = new PearlMarker(level);
-                marker.setPos(pos.getX() + 0.5D,
-                        pos.getY() + 0.5 - marker.getBbHeight() / 2f,
-                        pos.getZ() + 0.5D);
-                level.addFreshEntity(marker);
-            } else marker = entity.get();
-
-            marker.addPearl(pearl);
-            pearl.setOwner(marker);
-        }
-        pearl.addTag("dispensed");
-        return pearl;
     }
 
 }

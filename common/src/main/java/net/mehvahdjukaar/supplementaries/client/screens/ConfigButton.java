@@ -25,11 +25,6 @@ public class ConfigButton extends Button {
         super(x, y, 20, 20, Component.literal("s"), ConfigButton::click, Button.DEFAULT_NARRATION);
     }
 
-    @ForgeOverride
-    public int getFGColor() {
-        return this.isHovered ? ColorHelper.getRainbowColorPost(3) : 0xFFAA00;
-    }
-
     public static void click(Button button) {
         ConfigUtils.openModConfigs();
     }
@@ -58,6 +53,11 @@ public class ConfigButton extends Button {
                 }
             }
         }
+    }
+
+    @ForgeOverride
+    public int getFGColor() {
+        return this.isHovered ? ColorHelper.getRainbowColorPost(3) : 0xFFAA00;
     }
 
 }

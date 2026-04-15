@@ -23,16 +23,6 @@ public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverCon
         super(properties);
     }
 
-    @Override
-    public DataComponentType<QuiverContent> getComponentType() {
-        return ModComponents.QUIVER_CONTENT.get();
-    }
-
-    @Override
-    public int getMaxSlots() {
-        return CommonConfigs.Tools.QUIVER_SLOTS.get();
-    }
-
     @NotNull
     public static SlotReference findActiveQuiverSlot(LivingEntity entity) {
         if (entity instanceof Player player) {
@@ -60,6 +50,16 @@ public class QuiverItem extends SelectableContainerItem<QuiverContent, QuiverCon
     public static boolean canAcceptItem(ItemStack toInsert) {
         return (toInsert.getItem() instanceof ArrowItem || toInsert.is(ModTags.QUIVER_WHITELIST)) &&
                 !toInsert.is(ModTags.QUIVER_BLACKLIST);
+    }
+
+    @Override
+    public DataComponentType<QuiverContent> getComponentType() {
+        return ModComponents.QUIVER_CONTENT.get();
+    }
+
+    @Override
+    public int getMaxSlots() {
+        return CommonConfigs.Tools.QUIVER_SLOTS.get();
     }
 }
 

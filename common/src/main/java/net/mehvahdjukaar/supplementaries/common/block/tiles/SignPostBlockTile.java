@@ -69,6 +69,17 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         super(ModRegistry.WAY_SIGN_TILE.get(), pos, state);
     }
 
+    private static BlockPos getCompassTrackedPos(ServerLevel level, ItemStack itemstack) {
+        LodestoneTracker tracker = itemstack.get(DataComponents.LODESTONE_TRACKER);
+        if (tracker != null && tracker.target().isPresent()) {
+            GlobalPos gp = tracker.target().get();
+            if (level.dimension() == gp.dimension()) {
+                return tracker.target().get().pos();
+            }
+        }
+        return level.dimensionType().natural() ? level.getLevelData().getSpawnPos() : null;
+    }
+
     @Override
     public void addExtraModelData(ExtraModelData.Builder builder) {
         super.addExtraModelData(builder);
@@ -92,7 +103,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
     public int textHoldersCount() {
         return 2;
     }
-
 
     public float getPointingYaw(boolean up) {
         if (up) {
@@ -181,6 +191,101 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
 
     public boolean isFramed() {
         return framed;
+    }
+
+    public boolean trySetSign(WoodType woodType, int r, boolean up, boolean framed) {
+        var sign = getSign(up);
+        if (!sign.active) {
+            sign.active = true;
+            sign.woodType = woodType;
+            if (this.getBlockState().hasProperty(HorizontalDirectionalBlock.FACING)) {
+                sign.setYaw(90 - this.getBlockState().getValue(HorizontalDirectionalBlock.FACING).toYRot());
+            } else {
+                sign.setYaw(90 + r * -22.5f);
+            }
+            this.framed = framed;
+            return true;
+        }
+        return false;
+    }
+
+    public ItemInteractionResult handleInteraction(BlockState state, ServerLevel level, BlockPos pos, Player player,
+                                                   InteractionHand handIn, BlockHitResult hit, ItemStack itemstack) {
+        Item item = itemstack.getItem();
+
+        boolean emptyHand = itemstack.isEmpty();
+        boolean isSneaking = player.isShiftKeyDown() && emptyHand;
+
+        boolean ind = getClickedSignIndex(hit.getLocation());
+
+        if (hit.getDirection().getAxis() != Direction.Axis.Y) {
+
+            Sign sign = getSign(ind);
+
+            if (!sign.active && item instanceof SignPostItem)
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
+            if (isSneaking) {
+                sign.toggleDirection();
+
+                this.setChanged();
+                level.sendBlockUpdated(pos, state, state, 3);
+                level.playSound(null, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
+                return ItemInteractionResult.CONSUME;
+            }
+            //change direction with compass
+            else if (item instanceof CompassItem && !state.hasProperty(HorizontalDirectionalBlock.FACING)) {
+
+                BlockPos pointingPos = getCompassTrackedPos(level, itemstack);
+
+                if (pointingPos != null) {
+                    if (sign.active) {
+                        sign.pointToward(pos, pointingPos);
+                        level.playSound(null, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
+                    }
+                    this.setChanged();
+                    level.sendBlockUpdated(pos, state, state, 3);
+                    return ItemInteractionResult.CONSUME;
+                }
+                return ItemInteractionResult.FAIL;
+            } else if (CompatHandler.FRAMEDBLOCKS && this.framed) {
+                boolean success = FramedBlocksCompat.interactWithFramedSignPost(this, player, handIn, itemstack, level, pos);
+                if (success) return ItemInteractionResult.CONSUME;
+            }
+        }
+        return this.textHolderInteract(this, ind ? 0 : 1, player, handIn, itemstack, hit.getDirection(), hit.getLocation());
+    }
+
+    public boolean getClickedSignIndex(Vec3 hit) {
+        double y = hit.y;
+        //negative y yay!
+        if (y < 0) y = y + (1 - (int) y);
+        else y = y - (int) y;
+        return (y > 0.5d);
+    }
+
+    public Sign getClickedSign(Vec3 hit) {
+        return getSign(getClickedSignIndex(hit));
+    }
+
+    @Override
+    public boolean isWaxed() {
+        return isWaxed;
+    }
+
+    @Override
+    public void setWaxed(boolean waxed) {
+        isWaxed = waxed;
+    }
+
+    @Override
+    public UUID getCurrentUser() {
+        return playerWhoMayEdit;
+    }
+
+    @Override
+    public void setCurrentUser(UUID playerWhoMayEdit) {
+        this.playerWhoMayEdit = playerWhoMayEdit;
     }
 
     public static final class Sign {
@@ -279,113 +384,6 @@ public class SignPostBlockTile extends MimicBlockTile implements ITextHolderProv
         public ItemStack getItem() {
             return new ItemStack(ModRegistry.WAY_SIGN_ITEMS.get(woodType));
         }
-    }
-
-    public boolean trySetSign(WoodType woodType, int r, boolean up, boolean framed) {
-        var sign = getSign(up);
-        if (!sign.active) {
-            sign.active = true;
-            sign.woodType = woodType;
-            if (this.getBlockState().hasProperty(HorizontalDirectionalBlock.FACING)) {
-                sign.setYaw(90 - this.getBlockState().getValue(HorizontalDirectionalBlock.FACING).toYRot());
-            } else {
-                sign.setYaw(90 + r * -22.5f);
-            }
-            this.framed = framed;
-            return true;
-        }
-        return false;
-    }
-
-    public ItemInteractionResult handleInteraction(BlockState state, ServerLevel level, BlockPos pos, Player player,
-                                                   InteractionHand handIn, BlockHitResult hit, ItemStack itemstack) {
-        Item item = itemstack.getItem();
-
-        boolean emptyHand = itemstack.isEmpty();
-        boolean isSneaking = player.isShiftKeyDown() && emptyHand;
-
-        boolean ind = getClickedSignIndex(hit.getLocation());
-
-        if (hit.getDirection().getAxis() != Direction.Axis.Y) {
-
-            Sign sign = getSign(ind);
-
-            if (!sign.active && item instanceof SignPostItem)
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-
-            if (isSneaking) {
-                sign.toggleDirection();
-
-                this.setChanged();
-                level.sendBlockUpdated(pos, state, state, 3);
-                level.playSound(null, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
-                return ItemInteractionResult.CONSUME;
-            }
-            //change direction with compass
-            else if (item instanceof CompassItem && !state.hasProperty(HorizontalDirectionalBlock.FACING)) {
-
-                BlockPos pointingPos = getCompassTrackedPos(level, itemstack);
-
-                if (pointingPos != null) {
-                    if (sign.active) {
-                        sign.pointToward(pos, pointingPos);
-                        level.playSound(null, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
-                    }
-                    this.setChanged();
-                    level.sendBlockUpdated(pos, state, state, 3);
-                    return ItemInteractionResult.CONSUME;
-                }
-                return ItemInteractionResult.FAIL;
-            } else if (CompatHandler.FRAMEDBLOCKS && this.framed) {
-                boolean success = FramedBlocksCompat.interactWithFramedSignPost(this, player, handIn, itemstack, level, pos);
-                if (success) return ItemInteractionResult.CONSUME;
-            }
-        }
-        return this.textHolderInteract(this, ind ? 0 : 1, player, handIn, itemstack, hit.getDirection(), hit.getLocation());
-    }
-
-    private static BlockPos getCompassTrackedPos(ServerLevel level, ItemStack itemstack) {
-        LodestoneTracker tracker = itemstack.get(DataComponents.LODESTONE_TRACKER);
-        if (tracker != null && tracker.target().isPresent()) {
-            GlobalPos gp = tracker.target().get();
-            if (level.dimension() == gp.dimension()) {
-                return tracker.target().get().pos();
-            }
-        }
-        return level.dimensionType().natural() ? level.getLevelData().getSpawnPos() : null;
-    }
-
-    public boolean getClickedSignIndex(Vec3 hit) {
-        double y = hit.y;
-        //negative y yay!
-        if (y < 0) y = y + (1 - (int) y);
-        else y = y - (int) y;
-        return (y > 0.5d);
-    }
-
-    public Sign getClickedSign(Vec3 hit) {
-        return getSign(getClickedSignIndex(hit));
-    }
-
-
-    @Override
-    public void setWaxed(boolean waxed) {
-        isWaxed = waxed;
-    }
-
-    @Override
-    public boolean isWaxed() {
-        return isWaxed;
-    }
-
-    @Override
-    public void setCurrentUser(UUID playerWhoMayEdit) {
-        this.playerWhoMayEdit = playerWhoMayEdit;
-    }
-
-    @Override
-    public UUID getCurrentUser() {
-        return playerWhoMayEdit;
     }
 
 }

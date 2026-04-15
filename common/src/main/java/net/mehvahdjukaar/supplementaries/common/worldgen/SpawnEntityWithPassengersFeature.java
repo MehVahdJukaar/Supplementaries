@@ -35,37 +35,6 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
         super(SpawnEntityWithPassengersFeature.Config.CODEC);
     }
 
-    @Override
-    public boolean place(FeaturePlaceContext<Config> context) {
-
-        Config config = context.config();
-        BlockPos blockPos = context.origin();
-        WorldGenLevel level = context.level();
-        ServerLevel serverLevel = level.getLevel();
-
-        for (int i = 0; i < config.attempts + 5; i++) {
-            int dx = context.random().nextIntBetweenInclusive(-config.spread, config.spread);
-            int dz = context.random().nextIntBetweenInclusive(-config.spread, config.spread);
-            BlockPos spawnPos = blockPos.offset(dx, 0, dz);
-            if (config.projection == StructureTemplatePool.Projection.TERRAIN_MATCHING) {
-                //same that projection processor does
-                int y = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, blockPos.getX(), blockPos.getZ());
-                spawnPos = spawnPos.atY(y);
-                //  level.setBlock(spawnPos, Blocks.GLOWSTONE.defaultBlockState(), 2);
-            }
-            if (level.isEmptyBlock(spawnPos)) {
-
-                BlockPos groundPos = spawnPos.below();
-                if (config.groundRule.test(level.getBlockState(groundPos), context.random())) {
-                    if (trySpawningAt(context, config, serverLevel, spawnPos, level)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     private static boolean trySpawningAt(FeaturePlaceContext<Config> context, Config config,
                                          ServerLevel serverLevel, BlockPos blockPos,
                                          WorldGenLevel worldgenLevel) {
@@ -108,6 +77,37 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
         return true;
     }
 
+    @Override
+    public boolean place(FeaturePlaceContext<Config> context) {
+
+        Config config = context.config();
+        BlockPos blockPos = context.origin();
+        WorldGenLevel level = context.level();
+        ServerLevel serverLevel = level.getLevel();
+
+        for (int i = 0; i < config.attempts + 5; i++) {
+            int dx = context.random().nextIntBetweenInclusive(-config.spread, config.spread);
+            int dz = context.random().nextIntBetweenInclusive(-config.spread, config.spread);
+            BlockPos spawnPos = blockPos.offset(dx, 0, dz);
+            if (config.projection == StructureTemplatePool.Projection.TERRAIN_MATCHING) {
+                //same that projection processor does
+                int y = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, blockPos.getX(), blockPos.getZ());
+                spawnPos = spawnPos.atY(y);
+                //  level.setBlock(spawnPos, Blocks.GLOWSTONE.defaultBlockState(), 2);
+            }
+            if (level.isEmptyBlock(spawnPos)) {
+
+                BlockPos groundPos = spawnPos.below();
+                if (config.groundRule.test(level.getBlockState(groundPos), context.random())) {
+                    if (trySpawningAt(context, config, serverLevel, spawnPos, level)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public record Config(EntityType<?> entity, List<EntityType<?>> passengers,
                          int spread, StructureTemplatePool.Projection projection, int attempts, RuleTest groundRule,
                          boolean persistent, ExtraData data) implements FeatureConfiguration {
@@ -126,12 +126,11 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
 
 
     record ExtraData(Optional<WoodType> boatType, Optional<ResourceLocation> lootTable) {
+        public static final ExtraData EMPTY = new ExtraData(Optional.empty(), Optional.empty());
         private static final Codec<ExtraData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 WoodType.CODEC.optionalFieldOf("boat_type").forGetter(ExtraData::boatType),
                 ResourceLocation.CODEC.optionalFieldOf("loot_table").forGetter(ExtraData::lootTable)
         ).apply(instance, ExtraData::new));
-
-        public static final ExtraData EMPTY = new ExtraData(Optional.empty(), Optional.empty());
     }
 
 }

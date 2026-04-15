@@ -53,6 +53,12 @@ public class GlobeData extends WorldSavedData {
         return new GlobeData(flattened, seed);
     }
 
+    public static void recreateAndAssignFromSeed(ServerLevel level, long seed) {
+        GlobeData generate = GlobeData.createFromSeed(seed);
+        ModRegistry.GLOBE_DATA.setData(level, generate);
+        generate.sync();
+    }
+
     public byte getPixel(int x, int y) {
         if (x < 0 || x >= TEXTURE_W || y < 0 || y >= TEXTURE_H) return 0;
         //get pixels into flattened array
@@ -74,13 +80,6 @@ public class GlobeData extends WorldSavedData {
 
     public void onReassigned(Level level) {
         if (level.isClientSide) GlobeManager.refreshTextures();
-    }
-
-
-    public static void recreateAndAssignFromSeed(ServerLevel level, long seed) {
-        GlobeData generate = GlobeData.createFromSeed(seed);
-        ModRegistry.GLOBE_DATA.setData(level, generate);
-        generate.sync();
     }
 }
 

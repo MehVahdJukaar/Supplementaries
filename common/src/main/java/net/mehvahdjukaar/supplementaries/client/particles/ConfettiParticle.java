@@ -25,22 +25,14 @@ public class ConfettiParticle extends TextureSheetParticle {
     protected static final PerlinSimplexNoise YAW_NOISE = noise(28943157);
     protected static final PerlinSimplexNoise ROLL_NOISE = noise(80085);
     protected static final PerlinSimplexNoise PITCH_NOISE = noise(49715286);
-
-    private static PerlinSimplexNoise noise(int seed) {
-        return new PerlinSimplexNoise(new LegacyRandomSource(seed),
-                List.of(-4 - 3, -2, -1, 0, 1, 2));
-    }
-
     private final int particleRandom;
     private float pitch = 0;
     private float oPitch = 0;
     private float yaw = 0;
     private float oYaw = 0;
-
     private float dPitch = 0;
     private float dYaw = 0;
     private float dRoll = 0;
-
     private ConfettiParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ, SpriteSet sprites) {
         super(world, x, y, z);
 
@@ -66,6 +58,11 @@ public class ConfettiParticle extends TextureSheetParticle {
         this.bCol = FastColor.ARGB32.blue(col) / 255f;
 
          */
+    }
+
+    private static PerlinSimplexNoise noise(int seed) {
+        return new PerlinSimplexNoise(new LegacyRandomSource(seed),
+                List.of(-4 - 3, -2, -1, 0, 1, 2));
     }
 
     @Override

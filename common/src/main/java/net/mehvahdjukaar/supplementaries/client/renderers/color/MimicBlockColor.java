@@ -10,11 +10,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class MimicBlockColor implements BlockColor {
 
-    @Override
-    public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tint) {
-        return col(state, world, pos, tint);
-    }
-
     public static int col(BlockState state, @Nullable BlockAndTintGetter level, @Nullable BlockPos pos, int tint) {
         if (level != null && pos != null) {
             if (level.getBlockEntity(pos) instanceof IBlockHolder tile) {
@@ -25,6 +20,11 @@ public class MimicBlockColor implements BlockColor {
             }
         }
         return -1;
+    }
+
+    @Override
+    public int getColor(BlockState state, @Nullable BlockAndTintGetter world, @Nullable BlockPos pos, int tint) {
+        return col(state, world, pos, tint);
     }
 
     public static class NoParticle implements BlockColor {

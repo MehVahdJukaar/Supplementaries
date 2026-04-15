@@ -26,6 +26,10 @@ public class FlagFromBannerRecipe extends CustomRecipe {
         super(category);
     }
 
+    private static int getMaxBannerPatterns() {
+        return CompatHandler.QUARK ? QuarkCompat.getBannerPatternLimit(6) : 6;
+    }
+
     @Override
     public boolean matches(CraftingInput inv, Level world) {
         DyeColor dyecolor = null;
@@ -92,10 +96,6 @@ public class FlagFromBannerRecipe extends CustomRecipe {
         }
 
         return withPatterns != null && empty != null;
-    }
-
-    private static int getMaxBannerPatterns() {
-        return CompatHandler.QUARK ? QuarkCompat.getBannerPatternLimit(6) : 6;
     }
 
     @Override

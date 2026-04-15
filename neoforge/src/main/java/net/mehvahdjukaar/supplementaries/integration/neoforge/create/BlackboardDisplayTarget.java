@@ -20,6 +20,19 @@ import java.util.regex.Pattern;
 
 public class BlackboardDisplayTarget extends DisplayTarget {
 
+    private static final Pattern PATTERN = Pattern.compile("\\((\\d\\d?),(\\d\\d?)\\)->(\\S+)");
+
+    private static boolean copyBlackboard(int line, DisplayLinkContext context, BlockEntity te, BlackboardBlockTile tile, ItemStack stack) {
+        var beData = stack.get(ModComponents.BLACKBOARD.get());
+        if (beData != null) {
+            tile.setPixels(beData.getPixelsUnsafe());
+            context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
+            reserve(line, te, context);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void acceptText(int line, List<MutableComponent> text, DisplayLinkContext context) {
         BlockEntity te = context.getTargetBlockEntity();
@@ -36,9 +49,6 @@ public class BlackboardDisplayTarget extends DisplayTarget {
         }
     }
 
-
-    private static final Pattern PATTERN = Pattern.compile("\\((\\d\\d?),(\\d\\d?)\\)->(\\S+)");
-
     private boolean parseText(String string, BlackboardBlockTile tile) {
         var m = PATTERN.matcher(string);
         if (m.matches()) {
@@ -51,17 +61,6 @@ public class BlackboardDisplayTarget extends DisplayTarget {
                 tile.setPixel(x, y, BlackboardBlock.colorToByte(dye));
                 return true;
             }
-        }
-        return false;
-    }
-
-    private static boolean copyBlackboard(int line, DisplayLinkContext context, BlockEntity te, BlackboardBlockTile tile, ItemStack stack) {
-        var beData = stack.get(ModComponents.BLACKBOARD.get());
-        if (beData != null) {
-            tile.setPixels(beData.getPixelsUnsafe());
-            context.level().sendBlockUpdated(context.getTargetPos(), te.getBlockState(), te.getBlockState(), 2);
-            reserve(line, te, context);
-            return true;
         }
         return false;
     }

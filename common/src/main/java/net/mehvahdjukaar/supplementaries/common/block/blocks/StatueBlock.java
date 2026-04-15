@@ -38,16 +38,27 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class StatueBlock extends WaterBlock implements EntityBlock {
-    protected static final VoxelShape SHAPE = Block.box(4, 0, 4, 12, 16, 12);
-
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
+    protected static final VoxelShape SHAPE = Block.box(4, 0, 4, 12, 16, 12);
 
     public StatueBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LIT) ? 7 : 0));
         this.registerDefaultState(this.stateDefinition.any().setValue(POWERED, false)
                 .setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH).setValue(LIT, false));
+    }
+
+    //candle code
+    public static void addCandleParticleAndSound(Level level, Vec3 vec3, RandomSource random) {
+        float f = random.nextFloat();
+        if (f < 0.3F) {
+            level.addParticle(ParticleTypes.SMOKE, vec3.x, vec3.y, vec3.z, 0.0D, 0.0D, 0.0D);
+            if (f < 0.17F) {
+                level.playLocalSound(vec3.x + 0.5D, vec3.y + 0.5D, vec3.z + 0.5D, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
+            }
+        }
+        level.addParticle(ParticleTypes.SMALL_FLAME, vec3.x, vec3.y, vec3.z, 0.0D, 0.0D, 0.0D);
     }
 
     @Override
@@ -137,17 +148,5 @@ public class StatueBlock extends WaterBlock implements EntityBlock {
             double z = pos.getZ() + 0.5D - 0.1875 * direction.getStepZ();
             addCandleParticleAndSound(level, new Vec3(x, y, z), rand);
         }
-    }
-
-    //candle code
-    public static void addCandleParticleAndSound(Level level, Vec3 vec3, RandomSource random) {
-        float f = random.nextFloat();
-        if (f < 0.3F) {
-            level.addParticle(ParticleTypes.SMOKE, vec3.x, vec3.y, vec3.z, 0.0D, 0.0D, 0.0D);
-            if (f < 0.17F) {
-                level.playLocalSound(vec3.x + 0.5D, vec3.y + 0.5D, vec3.z + 0.5D, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
-            }
-        }
-        level.addParticle(ParticleTypes.SMALL_FLAME, vec3.x, vec3.y, vec3.z, 0.0D, 0.0D, 0.0D);
     }
 }

@@ -40,6 +40,35 @@ public class SackItem extends BlockItem {
         super(blockIn, builder);
     }
 
+    //0 nothing, 1 non empty sack. In between for custom non full stacks
+    public static float getEncumber(ItemStack slotItem) {
+        if (slotItem.is(ModTags.OVERENCUMBERING)) {
+            ItemContainerContents contents = slotItem.get(DataComponents.CONTAINER);
+            if (contents != null) {
+                return contents != ItemContainerContents.EMPTY ? 1 : 0;
+            } else {
+                return slotItem.getCount() / (float) slotItem.getMaxStackSize();
+            }
+        }
+        return 0;
+    }
+
+    public static void applyOverencumbered(ServerPlayer player) {
+        Level level = player.level();
+        if (!CommonConfigs.Functional.SACK_PENALTY.get()) return;
+        if ((level.getGameTime() + player.tickCount) % 27L == 0L &&
+                !player.isCreative() && !player.isSpectator()) {
+            //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
+            //keep refreshing for better accuracy
+            float amount = ItemsUtil.getEncumbermentFromInventory(player);
+            int inc = CommonConfigs.Functional.SACK_INCREMENT.get();
+            if (amount > inc) {
+                player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED,
+                        20 * 10, (((((int) amount) - 1) / inc) - 1), false, false, true));
+            }
+        }
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
@@ -102,35 +131,6 @@ public class SackItem extends BlockItem {
 
     private void playInsertSound(Entity entity) {
         entity.playSound(SoundEvents.BUNDLE_INSERT, 0.8F, 0.8F + entity.level().getRandom().nextFloat() * 0.4F);
-    }
-
-    //0 nothing, 1 non empty sack. In between for custom non full stacks
-    public static float getEncumber(ItemStack slotItem) {
-        if (slotItem.is(ModTags.OVERENCUMBERING)) {
-            ItemContainerContents contents = slotItem.get(DataComponents.CONTAINER);
-            if (contents != null) {
-                return contents != ItemContainerContents.EMPTY ? 1 : 0;
-            } else {
-                return slotItem.getCount() / (float) slotItem.getMaxStackSize();
-            }
-        }
-        return 0;
-    }
-
-    public static void applyOverencumbered(ServerPlayer player) {
-        Level level = player.level();
-        if (!CommonConfigs.Functional.SACK_PENALTY.get()) return;
-        if ((level.getGameTime() + player.tickCount) % 27L == 0L &&
-                !player.isCreative() && !player.isSpectator()) {
-            //var currentEffect = player.getEffect(ModRegistry.OVERENCUMBERED.get());
-            //keep refreshing for better accuracy
-            float amount = ItemsUtil.getEncumbermentFromInventory(player);
-            int inc = CommonConfigs.Functional.SACK_INCREMENT.get();
-            if (amount > inc) {
-                player.addEffect(new MobEffectInstance(ModRegistry.OVERENCUMBERED,
-                        20 * 10, (((((int) amount) - 1) / inc) - 1), false, false, true));
-            }
-        }
     }
 
 }

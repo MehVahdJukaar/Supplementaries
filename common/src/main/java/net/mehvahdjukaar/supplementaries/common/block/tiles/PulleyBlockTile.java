@@ -35,6 +35,13 @@ public class PulleyBlockTile extends ItemDisplayTile {
         super(ModRegistry.PULLEY_BLOCK_TILE.get(), pos, state);
     }
 
+    public static Winding getContentType(Item item) {
+        Winding type = Winding.NONE;
+        if (item instanceof BlockItem bi && bi.getBlock() instanceof ChainBlock || item.builtInRegistryHolder().is(ModTags.CHAINS))
+            type = Winding.CHAIN;
+        else if (item.builtInRegistryHolder().is(ModTags.ROPES)) type = Winding.ROPE;
+        return type;
+    }
 
     @Override
     public void updateTileOnInventoryChanged() {
@@ -43,14 +50,6 @@ public class PulleyBlockTile extends ItemDisplayTile {
         if (state.getValue(PulleyBlock.TYPE) != type) {
             level.setBlockAndUpdate(this.worldPosition, state.setValue(PulleyBlock.TYPE, type));
         }
-    }
-
-    public static Winding getContentType(Item item) {
-        Winding type = Winding.NONE;
-        if (item instanceof BlockItem bi && bi.getBlock() instanceof ChainBlock || item.builtInRegistryHolder().is(ModTags.CHAINS))
-            type = Winding.CHAIN;
-        else if (item.builtInRegistryHolder().is(ModTags.ROPES)) type = Winding.ROPE;
-        return type;
     }
 
     @Override

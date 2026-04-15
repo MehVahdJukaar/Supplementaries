@@ -15,15 +15,13 @@ public abstract class BookViewScreenMixin {
 
     @Shadow
     private BookViewScreen.BookAccess bookAccess;
+    @Shadow
+    private PageButton forwardButton;
+    @Shadow
+    private PageButton backButton;
 
     @Shadow
     protected abstract void init();
-
-    @Shadow
-    private PageButton forwardButton;
-
-    @Shadow
-    private PageButton backButton;
 
     @ModifyArg(method = "renderBackground", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"))

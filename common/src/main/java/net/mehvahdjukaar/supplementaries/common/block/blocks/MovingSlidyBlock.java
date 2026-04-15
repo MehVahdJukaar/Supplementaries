@@ -29,11 +29,6 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         return new MovingSlidyBlockEntity(pos, blockState, movedState, direction, true, false);
     }
 
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), MovingSlidyBlockEntity::tick);
-    }
-
     public static boolean maybeMove(BlockState state, Level level, BlockPos pos, Direction direction) {
         // can run on both sides so it updates faster but really we could make this server only
         BlockPos neighborPos = pos.relative(direction);
@@ -73,6 +68,11 @@ public class MovingSlidyBlock extends MovingPistonBlock {
         level.setBlock(pos, ModRegistry.MOVING_SLIDY_BLOCK_SOURCE.get()
                 .defaultBlockState().setValue(BlockStateProperties.FACING, direction), 3);
 
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), MovingSlidyBlockEntity::tick);
     }
 
     @Override

@@ -34,6 +34,22 @@ public class WrenchItem extends Item {
         super(pProperties);
     }
 
+    //TODO: fix server side
+    public static void playTurningEffects(BlockPos pos, boolean shiftDown, Direction dir, Level level, Player player) {
+        if (!level.isClientSide) {
+            if (dir == Direction.DOWN) {
+                dir = dir.getOpposite();
+            }
+            if (shiftDown) dir = dir.getOpposite();
+            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(player,
+                    new ClientBoundParticlePacket(pos.getCenter(), ClientBoundParticlePacket.Kind.WRENCH_ROTATION,
+                            dir.get3DDataValue()));
+        }
+        //called for both so we play sound immediately here
+        level.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
+        level.playSound(player, player, ModSounds.WRENCH_ROTATE.get(), SoundSource.PLAYERS, 1.0F, 1.4F);
+    }
+
     @Override
     public boolean isValidRepairItem(ItemStack pStack, ItemStack pRepairCandidate) {
         return pRepairCandidate.is(Items.COPPER_INGOT);
@@ -89,23 +105,6 @@ public class WrenchItem extends Item {
         }
         return InteractionResult.FAIL;
     }
-
-    //TODO: fix server side
-    public static void playTurningEffects(BlockPos pos, boolean shiftDown, Direction dir, Level level, Player player) {
-        if (!level.isClientSide) {
-            if (dir == Direction.DOWN) {
-                dir = dir.getOpposite();
-            }
-            if (shiftDown) dir = dir.getOpposite();
-            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(player,
-                    new ClientBoundParticlePacket(pos.getCenter(), ClientBoundParticlePacket.Kind.WRENCH_ROTATION,
-                            dir.get3DDataValue()));
-        }
-        //called for both so we play sound immediately here
-        level.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
-        level.playSound(player, player, ModSounds.WRENCH_ROTATE.get(), SoundSource.PLAYERS, 1.0F, 1.4F);
-    }
-
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity entity, InteractionHand pUsedHand) {

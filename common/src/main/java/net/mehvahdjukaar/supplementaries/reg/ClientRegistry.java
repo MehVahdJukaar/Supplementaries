@@ -317,40 +317,6 @@ public class ClientRegistry {
         //       new SpeedometerItem.SpeedometerItemProperty());
     }
 
-
-    private static class GlobeProperty implements ClampedItemPropertyFunction {
-
-        @Override
-        public float call(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int i) {
-            var customName = itemStack.get(DataComponents.CUSTOM_NAME);
-            if (customName != null) {
-                return GlobeManager.getNamedGlobeTextureID(customName.getString());
-            }
-            return Float.NEGATIVE_INFINITY;
-        }
-
-        @Override
-        public float unclampedCall(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity
-                livingEntity, int i) {
-            return call(itemStack, clientLevel, livingEntity, i);
-        }
-
-    }
-
-    private record CrossbowProperty(Item projectile) implements ClampedItemPropertyFunction {
-
-        @Override
-        public float call(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
-            ChargedProjectiles chargedProjectiles = stack.get(DataComponents.CHARGED_PROJECTILES);
-            return chargedProjectiles != null && chargedProjectiles.contains(projectile) ? 1.0F : 0.0F;
-        }
-
-        @Override
-        public float unclampedCall(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int i) {
-            return 0;
-        }
-    }
-
     @EventCalled
     private static void registerKeyBinds(ClientHelper.KeyBindEvent event) {
         event.register(QUIVER_KEYBIND);
@@ -384,37 +350,6 @@ public class ClientRegistry {
         event.register(ModParticles.SUGAR_PARTICLE.get(), SugarParticle.Factory::new);
         event.register(ModParticles.CANNON_FIRE_PARTICLE.get(), CannonFireParticle.Factory::new);
         event.register(ModParticles.BOMB_CHARGE.get(), BombChargeParticle.Factory::new);
-    }
-
-    public static class ColoredSplashingParticle extends SplashParticle.Provider {
-        public ColoredSplashingParticle(SpriteSet sprites) {
-            super(sprites);
-        }
-
-        @Override
-        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z,
-                                       double r, double g, double b) {
-            var p = super.createParticle(type, level, x, y, z, 0, 0, 0);
-            p.setColor((float) r, (float) g, (float) b);
-            return p;
-        }
-    }
-
-    private static class AshParticleFactory extends SnowflakeParticle.Provider {
-        public AshParticleFactory(SpriteSet pSprites) {
-            super(pSprites);
-        }
-
-        @Override
-        public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-            Particle p = super.createParticle(pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
-            if (p != null) {
-                float yellow = pLevel.random.nextFloat() * 0.05f;
-                p.setColor(108 / 255f
-                        + yellow, 103 / 255f + yellow, 103 / 255f);
-            }
-            return p;
-        }
     }
 
     @EventCalled
@@ -478,7 +413,6 @@ public class ClientRegistry {
         event.register(Supplementaries.res("entity_cutout_texture_offset"), DefaultVertexFormat.NEW_ENTITY, ENTITY_OFFSET_SHADER::assign);
     }
 
-
     @EventCalled
     private static void registerItemRenderers(ClientHelper.ItemRendererEvent event) {
         event.register(ModRegistry.ALTIMETER_ITEM.get(), new AltimeterItemRenderer());
@@ -492,7 +426,6 @@ public class ClientRegistry {
             event.register(f.get(), renderer);
         }
     }
-
 
     @EventCalled
     private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
@@ -625,5 +558,69 @@ public class ClientRegistry {
 
     public static LevelLightEngine getLightEngine() {
         return Minecraft.getInstance().level.getLightEngine();
+    }
+
+    private static class GlobeProperty implements ClampedItemPropertyFunction {
+
+        @Override
+        public float call(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int i) {
+            var customName = itemStack.get(DataComponents.CUSTOM_NAME);
+            if (customName != null) {
+                return GlobeManager.getNamedGlobeTextureID(customName.getString());
+            }
+            return Float.NEGATIVE_INFINITY;
+        }
+
+        @Override
+        public float unclampedCall(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity
+                livingEntity, int i) {
+            return call(itemStack, clientLevel, livingEntity, i);
+        }
+
+    }
+
+    private record CrossbowProperty(Item projectile) implements ClampedItemPropertyFunction {
+
+        @Override
+        public float call(ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity entity, int seed) {
+            ChargedProjectiles chargedProjectiles = stack.get(DataComponents.CHARGED_PROJECTILES);
+            return chargedProjectiles != null && chargedProjectiles.contains(projectile) ? 1.0F : 0.0F;
+        }
+
+        @Override
+        public float unclampedCall(ItemStack itemStack, @Nullable ClientLevel clientLevel, @Nullable LivingEntity livingEntity, int i) {
+            return 0;
+        }
+    }
+
+    public static class ColoredSplashingParticle extends SplashParticle.Provider {
+        public ColoredSplashingParticle(SpriteSet sprites) {
+            super(sprites);
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double x, double y, double z,
+                                       double r, double g, double b) {
+            var p = super.createParticle(type, level, x, y, z, 0, 0, 0);
+            p.setColor((float) r, (float) g, (float) b);
+            return p;
+        }
+    }
+
+    private static class AshParticleFactory extends SnowflakeParticle.Provider {
+        public AshParticleFactory(SpriteSet pSprites) {
+            super(pSprites);
+        }
+
+        @Override
+        public Particle createParticle(SimpleParticleType pType, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+            Particle p = super.createParticle(pType, pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
+            if (p != null) {
+                float yellow = pLevel.random.nextFloat() * 0.05f;
+                p.setColor(108 / 255f
+                        + yellow, 103 / 255f + yellow, 103 / 255f);
+            }
+            return p;
+        }
     }
 }

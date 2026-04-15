@@ -60,19 +60,6 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
         this.dz = v.getZ();
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public double getRenderOffset(float partialTicks) {
-        return Mth.lerp(partialTicks, this.prevOffset, this.offset);
-    }
-
-    //TODO: rewrite some of this old code
-    public AABB getAdjustedBoundingBox() {
-        return new AABB(worldPosition).move(this.dx * this.offset, this.dy * this.offset, this.dz * this.offset);
-    }
-
     public static void tick(Level level, BlockPos pos, BlockState state, SpringLauncherArmBlockTile tile) {
         boolean extending = state.getValue(SpringLauncherArmBlock.EXTENDING);
         if (level.isClientSide && extending) {
@@ -142,6 +129,19 @@ public class SpringLauncherArmBlockTile extends BlockEntity {
                 }
             }
         }
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public double getRenderOffset(float partialTicks) {
+        return Mth.lerp(partialTicks, this.prevOffset, this.offset);
+    }
+
+    //TODO: rewrite some of this old code
+    public AABB getAdjustedBoundingBox() {
+        return new AABB(worldPosition).move(this.dx * this.offset, this.dy * this.offset, this.dz * this.offset);
     }
 
     private void moveCollidedEntity(Entity entity, AABB aabb) {

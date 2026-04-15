@@ -44,6 +44,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class FaucetBlock extends WaterBlock implements EntityBlock {
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty HAS_WATER = ModBlockProperties.HAS_WATER;
+    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_7;
+    public static final BooleanProperty CONNECTED = ModBlockProperties.CONNECTED;
     protected static final VoxelShape SHAPE_NORTH = Block.box(5, 5, 5, 11, 15, 16);
     protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
     protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
@@ -52,13 +58,6 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
     protected static final VoxelShape SHAPE_SOUTH_JAR = MthUtils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.SOUTH);
     protected static final VoxelShape SHAPE_WEST_JAR = MthUtils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.WEST);
     protected static final VoxelShape SHAPE_EAST_JAR = MthUtils.rotateVoxelShape(SHAPE_NORTH_JAR, Direction.EAST);
-
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty ENABLED = BlockStateProperties.ENABLED;
-    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final BooleanProperty HAS_WATER = ModBlockProperties.HAS_WATER;
-    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_7;
-    public static final BooleanProperty CONNECTED = ModBlockProperties.CONNECTED;
 
     public FaucetBlock(Properties properties) {
         super(properties.lightLevel(s -> s.getValue(LIGHT_LEVEL)));

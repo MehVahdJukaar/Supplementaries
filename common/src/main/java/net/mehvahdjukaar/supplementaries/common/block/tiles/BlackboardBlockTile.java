@@ -166,23 +166,23 @@ public class BlackboardBlockTile extends BlockEntity implements
     }
 
     @Override
-    public void setWaxed(boolean b) {
-        this.data = this.data.withWaxed(b);
-    }
-
-    @Override
     public boolean isWaxed() {
         return this.data.isWaxed();
     }
 
     @Override
-    public void setGlowing(boolean b) {
-        this.data = this.data.withGlow(b);
+    public void setWaxed(boolean b) {
+        this.data = this.data.withWaxed(b);
     }
 
     @Override
     public boolean isGlowing() {
         return this.data.isGlow();
+    }
+
+    @Override
+    public void setGlowing(boolean b) {
+        this.data = this.data.withGlow(b);
     }
 
     @Override

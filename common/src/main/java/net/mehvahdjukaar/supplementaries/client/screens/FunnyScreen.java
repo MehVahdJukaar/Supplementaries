@@ -16,8 +16,8 @@ import java.util.Objects;
 
 public class FunnyScreen extends Screen {
     private final Screen parent;
-    private Component errorHeader;
     private final boolean isEvenFunnier;
+    private Component errorHeader;
 
     public FunnyScreen(Screen parent, boolean isEvenFunnier) {
         super(Component.literal("Loading Error"));
@@ -74,15 +74,6 @@ public class FunnyScreen extends Screen {
         this.setFocused(entryList);
     }
 
-    private class FakeButton extends Button {
-
-        public FakeButton(int i, int i1, int i2, int i3, MutableComponent translatable) {
-            super(i, i1, i2, i3, translatable, b -> {
-                Minecraft.getInstance().setScreen(parent);
-            }, DEFAULT_NARRATION);
-        }
-    }
-
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -93,6 +84,15 @@ public class FunnyScreen extends Screen {
         for (FormattedCharSequence s : fr.split(str, this.width)) {
             guiGraphics.drawString(fr, s, (int) (x - fr.width(s) / 2.0), y, 0xFFFFFF, true);
             y += fr.lineHeight;
+        }
+    }
+
+    private class FakeButton extends Button {
+
+        public FakeButton(int i, int i1, int i2, int i3, MutableComponent translatable) {
+            super(i, i1, i2, i3, translatable, b -> {
+                Minecraft.getInstance().setScreen(parent);
+            }, DEFAULT_NARRATION);
         }
     }
 

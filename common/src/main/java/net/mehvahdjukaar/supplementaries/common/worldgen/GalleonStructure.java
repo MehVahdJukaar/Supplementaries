@@ -53,15 +53,7 @@ public class GalleonStructure extends Structure implements ISpawnBoxStructure {
                     LiquidSettings.CODEC.optionalFieldOf("liquid_settings", JigsawStructure.DEFAULT_LIQUID_SETTINGS).forGetter(structure -> structure.liquidSettings),
                     SpawnBoxSettings.CODEC.optionalFieldOf("spawn_boxes", SpawnBoxSettings.EMPTY).forGetter(structure -> structure.spawnBoxSettings)
             ).apply(instance, GalleonStructure::new));
-
-
-    public static class Type implements StructureType<GalleonStructure> {
-        @Override
-        public MapCodec<GalleonStructure> codec() {
-            return CODEC;
-        }
-    }
-
+    private static final Component OMINOUS_FLAG_PATTERN_NAME = Component.translatable("block.supplementaries.ominous_flag").withStyle(ChatFormatting.GOLD);
     private final Holder<StructureTemplatePool> startPool;
     private final Optional<ResourceLocation> startJigsawName;
     private final int yOffset;
@@ -92,11 +84,48 @@ public class GalleonStructure extends Structure implements ISpawnBoxStructure {
         this.spawnBoxSettings = spawnBoxSettings;
     }
 
+    private static boolean containsPoint(Climate.ParameterPoint cube, Climate.TargetPoint point) {
+        return cube.continentalness().min() <= point.continentalness() &&
+                cube.continentalness().max() >= point.continentalness() &&
+
+                cube.erosion().min() <= point.erosion() &&
+                cube.erosion().max() >= point.erosion() &&
+
+                cube.temperature().min() <= point.temperature() &&
+                cube.temperature().max() >= point.temperature() &&
+
+                cube.humidity().min() <= point.humidity() &&
+                cube.humidity().max() >= point.humidity() &&
+
+                cube.weirdness().min() <= point.weirdness() &&
+                cube.weirdness().max() >= point.weirdness() &&
+
+                cube.depth().min() <= point.depth() &&
+                cube.depth().max() >= point.depth();
+    }
+
+    public static ItemStack getGalleonFlag(HolderGetter<BannerPattern> patternRegistry) {
+        ItemStack itemStack = new ItemStack(ModRegistry.FLAGS.get(DyeColor.WHITE).get());
+        BannerPatternLayers bannerPatternLayers = new BannerPatternLayers.Builder()
+                .addIfRegistered(patternRegistry, BannerPatterns.RHOMBUS_MIDDLE, DyeColor.GREEN)
+                .addIfRegistered(patternRegistry, BannerPatterns.STRIPE_LEFT, DyeColor.GRAY)
+                .addIfRegistered(patternRegistry, BannerPatterns.TRIANGLES_TOP, DyeColor.GRAY)
+                .addIfRegistered(patternRegistry, BannerPatterns.TRIANGLES_BOTTOM, DyeColor.GRAY)
+                .addIfRegistered(patternRegistry, BannerPatterns.STRAIGHT_CROSS, DyeColor.BLACK)
+                .addIfRegistered(patternRegistry, BannerPatterns.HALF_VERTICAL_MIRROR, DyeColor.GRAY)
+                .addIfRegistered(patternRegistry, BannerPatterns.BORDER, DyeColor.BLACK)
+                .build();
+
+        itemStack.set(DataComponents.BANNER_PATTERNS, bannerPatternLayers);
+        itemStack.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
+        itemStack.set(DataComponents.ITEM_NAME, OMINOUS_FLAG_PATTERN_NAME);
+        return itemStack;
+    }
+
     @Override
     public StructureType<?> type() {
         return ModWorldgen.GALLEON_STRUCTURE.get();
     }
-
 
     @Override
     public @NotNull SpawnBoxSettings ml$getSpawnBoxSettings() {
@@ -132,7 +161,6 @@ public class GalleonStructure extends Structure implements ISpawnBoxStructure {
 
     }
 
-
     /**
      * gets spawning position or empty if not suitable
      */
@@ -161,45 +189,11 @@ public class GalleonStructure extends Structure implements ISpawnBoxStructure {
         return Optional.of(new BlockPos(x, y + yOffset, z));
     }
 
-    private static boolean containsPoint(Climate.ParameterPoint cube, Climate.TargetPoint point) {
-        return cube.continentalness().min() <= point.continentalness() &&
-                cube.continentalness().max() >= point.continentalness() &&
-
-                cube.erosion().min() <= point.erosion() &&
-                cube.erosion().max() >= point.erosion() &&
-
-                cube.temperature().min() <= point.temperature() &&
-                cube.temperature().max() >= point.temperature() &&
-
-                cube.humidity().min() <= point.humidity() &&
-                cube.humidity().max() >= point.humidity() &&
-
-                cube.weirdness().min() <= point.weirdness() &&
-                cube.weirdness().max() >= point.weirdness() &&
-
-                cube.depth().min() <= point.depth() &&
-                cube.depth().max() >= point.depth();
-    }
-
-
-    private static final Component OMINOUS_FLAG_PATTERN_NAME = Component.translatable("block.supplementaries.ominous_flag").withStyle(ChatFormatting.GOLD);
-
-    public static ItemStack getGalleonFlag(HolderGetter<BannerPattern> patternRegistry) {
-        ItemStack itemStack = new ItemStack(ModRegistry.FLAGS.get(DyeColor.WHITE).get());
-        BannerPatternLayers bannerPatternLayers = new BannerPatternLayers.Builder()
-                .addIfRegistered(patternRegistry, BannerPatterns.RHOMBUS_MIDDLE, DyeColor.GREEN)
-                .addIfRegistered(patternRegistry, BannerPatterns.STRIPE_LEFT, DyeColor.GRAY)
-                .addIfRegistered(patternRegistry, BannerPatterns.TRIANGLES_TOP, DyeColor.GRAY)
-                .addIfRegistered(patternRegistry, BannerPatterns.TRIANGLES_BOTTOM, DyeColor.GRAY)
-                .addIfRegistered(patternRegistry, BannerPatterns.STRAIGHT_CROSS, DyeColor.BLACK)
-                .addIfRegistered(patternRegistry, BannerPatterns.HALF_VERTICAL_MIRROR, DyeColor.GRAY)
-                .addIfRegistered(patternRegistry, BannerPatterns.BORDER, DyeColor.BLACK)
-                .build();
-
-        itemStack.set(DataComponents.BANNER_PATTERNS, bannerPatternLayers);
-        itemStack.set(DataComponents.HIDE_ADDITIONAL_TOOLTIP, Unit.INSTANCE);
-        itemStack.set(DataComponents.ITEM_NAME, OMINOUS_FLAG_PATTERN_NAME);
-        return itemStack;
+    public static class Type implements StructureType<GalleonStructure> {
+        @Override
+        public MapCodec<GalleonStructure> codec() {
+            return CODEC;
+        }
     }
 
 

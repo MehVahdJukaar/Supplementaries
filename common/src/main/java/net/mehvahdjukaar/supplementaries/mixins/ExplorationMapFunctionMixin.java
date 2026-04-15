@@ -36,45 +36,67 @@ import java.util.Optional;
 
 @Mixin(ExplorationMapFunction.class)
 public abstract class ExplorationMapFunctionMixin extends LootItemConditionalFunction implements IExplorationFunctionExtension {
-    @Unique
-    @Nullable
-    Holder<MLMapDecorationType<?, ?>> supplementaries$customDecoration = null;
-
     @Mutable
     @Shadow
     @Final
     public static MapCodec<ExplorationMapFunction> CODEC;
-
     @Shadow
     @Final
     public static TagKey<Structure> DEFAULT_DESTINATION;
-
     @Shadow
     @Final
     public static Holder<MapDecorationType> DEFAULT_DECORATION;
-
     @Shadow
     @Final
     public TagKey<Structure> destination;
-
     @Shadow
     @Final
     public Holder<MapDecorationType> mapDecoration;
-
     @Shadow
     @Final
     public int searchRadius;
-
     @Shadow
     @Final
     public boolean skipKnownStructures;
-
     @Shadow
     @Final
     public byte zoom;
+    @Unique
+    @Nullable
+    Holder<MLMapDecorationType<?, ?>> supplementaries$customDecoration = null;
 
     protected ExplorationMapFunctionMixin(List<LootItemCondition> predicates) {
         super(predicates);
+    }
+
+    @Inject(method = "<clinit>", at = @At("RETURN"))
+    private static void supp$modifyCodec(CallbackInfo ci) {
+        CODEC = RecordCodecBuilder.mapCodec(
+                instance -> commonFields(instance)
+                        .and(
+                                instance.group(
+                                        TagKey.codec(Registries.STRUCTURE)
+                                                .optionalFieldOf("destination", DEFAULT_DESTINATION)
+                                                .forGetter(explorationMapFunction -> explorationMapFunction.destination),
+                                        MapDecorationType.CODEC.optionalFieldOf("decoration", DEFAULT_DECORATION).forGetter(explorationMapFunction -> explorationMapFunction.mapDecoration),
+                                        Codec.BYTE.optionalFieldOf("zoom", Byte.valueOf((byte) 2)).forGetter(explorationMapFunction -> explorationMapFunction.zoom),
+                                        Codec.INT.optionalFieldOf("search_radius", Integer.valueOf(50)).forGetter(explorationMapFunction -> explorationMapFunction.searchRadius),
+                                        Codec.BOOL
+                                                .optionalFieldOf("skip_existing_chunks", Boolean.valueOf(true))
+                                                .forGetter(explorationMapFunction -> explorationMapFunction.skipKnownStructures),
+                                        MLMapDecorationType.CODEC.optionalFieldOf("custom_decoration")
+                                                .forGetter(explorationMapFunction ->
+                                                        Optional.ofNullable(((IExplorationFunctionExtension) explorationMapFunction).supplementaries$getCustomDecoration()))
+                                )
+                        )
+                        .apply(instance, (lootItemConditions, structureTagKey, mapDecorationTypeHolder, aByte, integer, aBoolean, customDeco) -> {
+                            var value = new ExplorationMapFunction(lootItemConditions, structureTagKey, mapDecorationTypeHolder, aByte, integer, aBoolean);
+                            if (value instanceof IExplorationFunctionExtension e) {
+                                customDeco.ifPresent(e::supplementaries$setCustomDecoration);
+                            }
+                            return value;
+                        })
+        );
     }
 
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;findNearestMapStructure(Lnet/minecraft/tags/TagKey;Lnet/minecraft/core/BlockPos;IZ)Lnet/minecraft/core/BlockPos;"), cancellable = true)
@@ -108,35 +130,5 @@ public abstract class ExplorationMapFunctionMixin extends LootItemConditionalFun
     @Override
     public void supplementaries$setCustomDecoration(Holder<MLMapDecorationType<?, ?>> resourceLocation) {
         supplementaries$customDecoration = resourceLocation;
-    }
-
-    @Inject(method = "<clinit>", at = @At("RETURN"))
-    private static void supp$modifyCodec(CallbackInfo ci) {
-        CODEC = RecordCodecBuilder.mapCodec(
-                instance -> commonFields(instance)
-                        .and(
-                                instance.group(
-                                        TagKey.codec(Registries.STRUCTURE)
-                                                .optionalFieldOf("destination", DEFAULT_DESTINATION)
-                                                .forGetter(explorationMapFunction -> explorationMapFunction.destination),
-                                        MapDecorationType.CODEC.optionalFieldOf("decoration", DEFAULT_DECORATION).forGetter(explorationMapFunction -> explorationMapFunction.mapDecoration),
-                                        Codec.BYTE.optionalFieldOf("zoom", Byte.valueOf((byte) 2)).forGetter(explorationMapFunction -> explorationMapFunction.zoom),
-                                        Codec.INT.optionalFieldOf("search_radius", Integer.valueOf(50)).forGetter(explorationMapFunction -> explorationMapFunction.searchRadius),
-                                        Codec.BOOL
-                                                .optionalFieldOf("skip_existing_chunks", Boolean.valueOf(true))
-                                                .forGetter(explorationMapFunction -> explorationMapFunction.skipKnownStructures),
-                                        MLMapDecorationType.CODEC.optionalFieldOf("custom_decoration")
-                                                .forGetter(explorationMapFunction ->
-                                                        Optional.ofNullable(((IExplorationFunctionExtension) explorationMapFunction).supplementaries$getCustomDecoration()))
-                                )
-                        )
-                        .apply(instance, (lootItemConditions, structureTagKey, mapDecorationTypeHolder, aByte, integer, aBoolean, customDeco) -> {
-                            var value = new ExplorationMapFunction(lootItemConditions, structureTagKey, mapDecorationTypeHolder, aByte, integer, aBoolean);
-                            if (value instanceof IExplorationFunctionExtension e) {
-                                customDeco.ifPresent(e::supplementaries$setCustomDecoration);
-                            }
-                            return value;
-                        })
-        );
     }
 }

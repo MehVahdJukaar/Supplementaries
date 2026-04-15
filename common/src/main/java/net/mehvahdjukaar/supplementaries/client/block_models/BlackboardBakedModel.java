@@ -37,6 +37,40 @@ public class BlackboardBakedModel implements CustomBakedModel {
         this.modelTransform = modelTransform;
     }
 
+    public static BakedQuad createPixelQuad(float x, float y, float width, float height,
+                                            TextureAtlasSprite sprite, int color, Transformation transform, boolean emissive) {
+        float u0 = 1 - x;
+        float v0 = 1 - y;
+        float u1 = 1 - (x + width);
+        float v1 = 1 - (y + height);
+
+        AtomicReference<BakedQuad> quad = new AtomicReference<>();
+        try (BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, transform, quad::set)) {
+            builder.setAutoDirection();
+
+            putVertex(builder, x + width, y + height, u1, v1, color);
+            putVertex(builder, x + width, y, u1, v0, color);
+            putVertex(builder, x, y, u0, v0, color);
+            putVertex(builder, x, y + height, u0, v1, color);
+
+            if (emissive) builder.lightEmission(15);
+        } catch (Exception e) {
+            Supplementaries.error();
+        }
+        return quad.get();
+    }
+
+    private static void putVertex(BakedQuadBuilder builder, float x, float y, float u, float v, int color) {
+
+        Vector3f posV = new Vector3f(x, y, 1 - 5 / 16f);
+        //I hate this. Forge seems to have some rounding errors with numbers close to 0 that aren't 0 resulting in incorrect shading
+        posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
+        builder.addVertex(posV.x, posV.y, posV.z);
+        builder.setColor(color);
+        builder.setUv(u / 16, v / 16);
+        builder.setNormal(0, 0, -1);
+    }
+
     @Override
     public boolean useAmbientOcclusion() {
         return true;
@@ -127,41 +161,6 @@ public class BlackboardBakedModel implements CustomBakedModel {
 
         }
         return quads;
-    }
-
-    public static BakedQuad createPixelQuad(float x, float y, float width, float height,
-                                            TextureAtlasSprite sprite, int color, Transformation transform, boolean emissive) {
-        float u0 = 1 - x;
-        float v0 = 1 - y;
-        float u1 = 1 - (x + width);
-        float v1 = 1 - (y + height);
-
-        AtomicReference<BakedQuad> quad = new AtomicReference<>();
-        try (BakedQuadBuilder builder = BakedQuadBuilder.create(sprite, transform, quad::set)) {
-            builder.setAutoDirection();
-
-            putVertex(builder, x + width, y + height, u1, v1, color);
-            putVertex(builder, x + width, y, u1, v0, color);
-            putVertex(builder, x, y, u0, v0, color);
-            putVertex(builder, x, y + height, u0, v1, color);
-
-            if (emissive) builder.lightEmission(15);
-        } catch (Exception e) {
-            Supplementaries.error();
-        }
-        return quad.get();
-    }
-
-
-    private static void putVertex(BakedQuadBuilder builder, float x, float y, float u, float v, int color) {
-
-        Vector3f posV = new Vector3f(x, y, 1 - 5 / 16f);
-        //I hate this. Forge seems to have some rounding errors with numbers close to 0 that aren't 0 resulting in incorrect shading
-        posV.set(Math.round(posV.x() * 16) / 16f, Math.round(posV.y() * 16) / 16f, Math.round(posV.z() * 16) / 16f);
-        builder.addVertex(posV.x, posV.y, posV.z);
-        builder.setColor(color);
-        builder.setUv(u / 16, v / 16);
-        builder.setNormal(0, 0, -1);
     }
 
 

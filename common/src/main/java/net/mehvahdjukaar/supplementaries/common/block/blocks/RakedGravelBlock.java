@@ -27,42 +27,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RakedGravelBlock extends ColoredFallingBlock {
+    public static final EnumProperty<RakeDirection> RAKE_DIRECTION = ModBlockProperties.RAKE_DIRECTION;
     public static final MapCodec<RakedGravelBlock> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(ColorRGBA.CODEC.fieldOf("falling_dust_color").forGetter(coloredFallingBlock -> coloredFallingBlock.dustColor), propertiesCodec())
                     .apply(instance, RakedGravelBlock::new)
     );
-
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
-
-    public static final EnumProperty<RakeDirection> RAKE_DIRECTION = ModBlockProperties.RAKE_DIRECTION;
 
     public RakedGravelBlock(ColorRGBA color, Properties properties) {
         super(color, properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(RAKE_DIRECTION, RakeDirection.NORTH_SOUTH));
-    }
-
-    @SuppressWarnings("all")
-    @Override
-    public MapCodec<ColoredFallingBlock> codec() {
-        return (MapCodec) CODEC;
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(RAKE_DIRECTION);
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState blockstate = super.defaultBlockState();
-        BlockPos pos = context.getClickedPos();
-        Level world = context.getLevel();
-        if (!blockstate.canSurvive(world, pos)) {
-            return Block.pushEntitiesUp(blockstate, Blocks.GRAVEL.defaultBlockState(), world, pos);
-        }
-        Direction front = context.getHorizontalDirection();
-        return getConnectedState(blockstate, world, pos, front);
-
     }
 
     private static boolean canConnect(BlockState state, Direction dir) {
@@ -94,6 +68,34 @@ public class RakedGravelBlock extends ColoredFallingBlock {
         }
 
         return blockstate.setValue(RAKE_DIRECTION, RakeDirection.fromDirections(directionList));
+    }
+
+    public static void turnToGravel(BlockState state, Level world, BlockPos pos) {
+        world.setBlockAndUpdate(pos, pushEntitiesUp(state, Blocks.GRAVEL.defaultBlockState(), world, pos));
+    }
+
+    @SuppressWarnings("all")
+    @Override
+    public MapCodec<ColoredFallingBlock> codec() {
+        return (MapCodec) CODEC;
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(RAKE_DIRECTION);
+    }
+
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockState blockstate = super.defaultBlockState();
+        BlockPos pos = context.getClickedPos();
+        Level world = context.getLevel();
+        if (!blockstate.canSurvive(world, pos)) {
+            return Block.pushEntitiesUp(blockstate, Blocks.GRAVEL.defaultBlockState(), world, pos);
+        }
+        Direction front = context.getHorizontalDirection();
+        return getConnectedState(blockstate, world, pos, front);
+
     }
 
     @Override
@@ -171,10 +173,6 @@ public class RakedGravelBlock extends ColoredFallingBlock {
     public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         if (!state.canSurvive(world, pos)) turnToGravel(state, world, pos);
         super.tick(state, world, pos, random);
-    }
-
-    public static void turnToGravel(BlockState state, Level world, BlockPos pos) {
-        world.setBlockAndUpdate(pos, pushEntitiesUp(state, Blocks.GRAVEL.defaultBlockState(), world, pos));
     }
 
     @Override

@@ -39,6 +39,24 @@ public class BubbleBlock extends Block implements EntityBlock {
         super(properties);
     }
 
+    private static void playBreakSound(BlockState state, Level level, BlockPos pos, Player player) {
+        SoundType soundtype = state.getSoundType();
+        level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+    }
+
+    public static void sendParticles(BlockPos pos, ServerLevel level) {
+        level.sendParticles(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                1, 0, 0, 0, 0);
+    }
+
+    public static void breakBubble(Level level, BlockPos pos, BlockState state) {
+        if (level instanceof ServerLevel sl) {
+            level.removeBlock(pos, false);
+            sendParticles(pos, sl);
+            playBreakSound(state, level, pos, null);
+        }
+    }
+
     @Override
     public boolean canBeReplaced(BlockState state, BlockPlaceContext placeContext) {
         return !placeContext.isSecondaryUseActive();
@@ -80,11 +98,6 @@ public class BubbleBlock extends Block implements EntityBlock {
         playBreakSound(state, level, pos, player);
     }
 
-    private static void playBreakSound(BlockState state, Level level, BlockPos pos, Player player) {
-        SoundType soundtype = state.getSoundType();
-        level.playSound(player, pos, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-    }
-
     @ForgeOverride
     public boolean addLandingEffects(BlockState state1, ServerLevel worldserver, BlockPos pos, BlockState state2, LivingEntity entity, int numberOfParticles) {
         return true;
@@ -92,19 +105,6 @@ public class BubbleBlock extends Block implements EntityBlock {
 
     public void makeParticle(BlockPos pos, Level level) {
         level.addParticle(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
-    }
-
-    public static void sendParticles(BlockPos pos, ServerLevel level) {
-        level.sendParticles(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                1, 0, 0, 0, 0);
-    }
-
-    public static void breakBubble(Level level, BlockPos pos, BlockState state) {
-        if (level instanceof ServerLevel sl) {
-            level.removeBlock(pos, false);
-            sendParticles(pos, sl);
-            playBreakSound(state, level, pos, null);
-        }
     }
 
     @Override

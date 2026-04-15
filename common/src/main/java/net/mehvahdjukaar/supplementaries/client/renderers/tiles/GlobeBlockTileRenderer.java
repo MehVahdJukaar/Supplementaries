@@ -37,8 +37,21 @@ import java.util.Map;
 
 public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTile> {
 
+    public static GlobeBlockTileRenderer INSTANCE = null;
     private final Map<GlobeManager.Model, ModelPart> models = new EnumMap<>(GlobeManager.Model.class);
     private final boolean noise;
+
+    public GlobeBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+        ModelPart model = context.bakeLayer(ClientRegistry.GLOBE_BASE_MODEL);
+        models.put(GlobeManager.Model.GLOBE, model.getChild("globe"));
+        ModelPart special = context.bakeLayer(ClientRegistry.GLOBE_SPECIAL_MODEL);
+        models.put(GlobeManager.Model.FLAT, special.getChild("flat"));
+        models.put(GlobeManager.Model.SNOW, special.getChild("snow"));
+        models.put(GlobeManager.Model.SHEARED, special.getChild("sheared"));
+        INSTANCE = this;
+        this.noise = MiscUtils.getFestivity().isAprilsFool();
+
+    }
 
     public static LayerDefinition createBaseMesh() {
         MeshDefinition mesh = new MeshDefinition();
@@ -97,78 +110,6 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
 
 
         return LayerDefinition.create(mesh, 32, 32);
-    }
-
-    public static GlobeBlockTileRenderer INSTANCE = null;
-
-    public GlobeBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        ModelPart model = context.bakeLayer(ClientRegistry.GLOBE_BASE_MODEL);
-        models.put(GlobeManager.Model.GLOBE, model.getChild("globe"));
-        ModelPart special = context.bakeLayer(ClientRegistry.GLOBE_SPECIAL_MODEL);
-        models.put(GlobeManager.Model.FLAT, special.getChild("flat"));
-        models.put(GlobeManager.Model.SNOW, special.getChild("snow"));
-        models.put(GlobeManager.Model.SHEARED, special.getChild("sheared"));
-        INSTANCE = this;
-        this.noise = MiscUtils.getFestivity().isAprilsFool();
-
-    }
-
-    @Override
-    public void render(GlobeBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
-                       int combinedOverlayIn) {
-
-        poseStack.pushPose();
-        poseStack.translate(0.5, 0.5, 0.5);
-        poseStack.mulPose(RotHlpr.rot(tile.getDirection()));
-        poseStack.translate(0, 0.0625, 0);
-        poseStack.mulPose(RotHlpr.X22);
-        poseStack.mulPose(Axis.YP.rotationDegrees(90 - tile.getRotation(partialTicks)));
-
-        this.renderGlobe(tile.getRenderData(), poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
-                tile.isSepia(), tile.getLevel());
-
-        poseStack.popPose();
-    }
-
-    public void renderGlobe(GlobeRenderData data, PoseStack poseStack, MultiBufferSource buffer,
-                            int light, int overlay, boolean isSepia, Level level) {
-        poseStack.pushPose();
-        poseStack.mulPose(RotHlpr.X180);
-
-        GlobeManager.Model globeModel = data.getModel(isSepia);
-
-        VertexConsumer builder;
-
-        if (globeModel == GlobeManager.Model.ROUND || (noise && isSepia)) {
-            poseStack.mulPose(RotHlpr.Z180);
-            builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
-
-            addSphereQuad(poseStack, builder, 0.65f, light);
-            poseStack.popPose();
-            return;
-        }
-
-        if (noise) {
-            double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
-            float v = (float) Mth.clamp(si, -0.5, 0.5);
-            float c = (float) Mth.clamp(si, -2, 2);
-            Uniform intensity = ClientRegistry.NOISE_SHADER.get().getUniform("Intensity");
-            if (intensity != null) intensity.set(Mth.cos(Mth.PI * c / 4f));
-            poseStack.scale(v + 0.5f + 0.01f, 1, 1);
-            builder = buffer.getBuffer(NoiseRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
-        } else if (globeModel == GlobeManager.Model.FLAT) {
-            poseStack.scale(0.01f, 1, 1);
-            globeModel = GlobeManager.DEFAULT_DATA.getModel(isSepia);
-            RenderType renderType = RenderUtil.getEntityCutoutMipmapRenderType(GlobeManager.DEFAULT_DATA.getTexture(isSepia));
-            builder = buffer.getBuffer(renderType);
-        } else {
-            RenderType renderType = RenderUtil.getEntityCutoutMipmapRenderType(data.getTexture(isSepia));
-            builder = buffer.getBuffer(renderType);
-        }
-        ModelPart model = this.models.get(globeModel);
-
-        model.render(poseStack, builder, light, overlay, -1);
-        poseStack.popPose();
     }
 
     public static Vector3f getPitchAndYaw(Matrix4f m) {
@@ -263,6 +204,64 @@ public class GlobeBlockTileRenderer implements BlockEntityRenderer<GlobeBlockTil
         short high = (short) ((bits >>> 16) & 0xFFFF); // Step 2: high 16 bits
         short low = (short) (bits & 0xFFFF);          // Step 3: low 16 bits
         return new short[]{high, low};
+    }
+
+    @Override
+    public void render(GlobeBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
+                       int combinedOverlayIn) {
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0.5, 0.5);
+        poseStack.mulPose(RotHlpr.rot(tile.getDirection()));
+        poseStack.translate(0, 0.0625, 0);
+        poseStack.mulPose(RotHlpr.X22);
+        poseStack.mulPose(Axis.YP.rotationDegrees(90 - tile.getRotation(partialTicks)));
+
+        this.renderGlobe(tile.getRenderData(), poseStack, bufferIn, combinedLightIn, combinedOverlayIn,
+                tile.isSepia(), tile.getLevel());
+
+        poseStack.popPose();
+    }
+
+    public void renderGlobe(GlobeRenderData data, PoseStack poseStack, MultiBufferSource buffer,
+                            int light, int overlay, boolean isSepia, Level level) {
+        poseStack.pushPose();
+        poseStack.mulPose(RotHlpr.X180);
+
+        GlobeManager.Model globeModel = data.getModel(isSepia);
+
+        VertexConsumer builder;
+
+        if (globeModel == GlobeManager.Model.ROUND || (noise && isSepia)) {
+            poseStack.mulPose(RotHlpr.Z180);
+            builder = buffer.getBuffer(SphereRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
+
+            addSphereQuad(poseStack, builder, 0.65f, light);
+            poseStack.popPose();
+            return;
+        }
+
+        if (noise) {
+            double si = Math.sin(System.currentTimeMillis() / 8000.0) * 30;
+            float v = (float) Mth.clamp(si, -0.5, 0.5);
+            float c = (float) Mth.clamp(si, -2, 2);
+            Uniform intensity = ClientRegistry.NOISE_SHADER.get().getUniform("Intensity");
+            if (intensity != null) intensity.set(Mth.cos(Mth.PI * c / 4f));
+            poseStack.scale(v + 0.5f + 0.01f, 1, 1);
+            builder = buffer.getBuffer(NoiseRenderType.RENDER_TYPE.apply(data.getTexture(isSepia)));
+        } else if (globeModel == GlobeManager.Model.FLAT) {
+            poseStack.scale(0.01f, 1, 1);
+            globeModel = GlobeManager.DEFAULT_DATA.getModel(isSepia);
+            RenderType renderType = RenderUtil.getEntityCutoutMipmapRenderType(GlobeManager.DEFAULT_DATA.getTexture(isSepia));
+            builder = buffer.getBuffer(renderType);
+        } else {
+            RenderType renderType = RenderUtil.getEntityCutoutMipmapRenderType(data.getTexture(isSepia));
+            builder = buffer.getBuffer(renderType);
+        }
+        ModelPart model = this.models.get(globeModel);
+
+        model.render(poseStack, builder, light, overlay, -1);
+        poseStack.popPose();
     }
 
 }

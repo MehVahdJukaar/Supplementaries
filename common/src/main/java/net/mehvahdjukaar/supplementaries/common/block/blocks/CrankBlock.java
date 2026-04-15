@@ -38,15 +38,23 @@ import java.util.function.BiConsumer;
 
 public class CrankBlock extends WaterBlock {
 
-    protected static final EnumMap<Direction, VoxelShape> SHAPES =
-            MthUtils.getAllRotatedVoxelShapes(Block.box(2, 2, 11, 14, 14, 16));
-
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
+    protected static final EnumMap<Direction, VoxelShape> SHAPES =
+            MthUtils.getAllRotatedVoxelShapes(Block.box(2, 2, 11, 14, 14, 16));
 
     public CrankBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(POWER, 0).setValue(FACING, Direction.NORTH));
+    }
+
+    private static void addParticle(BlockState stateIn, Level worldIn, BlockPos pos,
+                                    ParticleOptions particle) {
+        Direction direction = stateIn.getValue(FACING).getOpposite();
+        double x = pos.getX() + 0.5D + 0.1D * direction.getStepX() + 0.2D * direction.getStepX();
+        double y = pos.getY() + 0.5D + 0.1D * direction.getStepY() + 0.2D * direction.getStepY();
+        double z = pos.getZ() + 0.5D + 0.1D * direction.getStepZ() + 0.2D * direction.getStepZ();
+        worldIn.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D);
     }
 
     @Override
@@ -140,7 +148,6 @@ public class CrankBlock extends WaterBlock {
         return true;
     }
 
-
     @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!isMoving && !state.is(newState.getBlock())) {
@@ -161,15 +168,6 @@ public class CrankBlock extends WaterBlock {
         if (stateIn.getValue(POWER) > 0 && rand.nextFloat() < 0.25F) {
             addParticle(stateIn, worldIn, pos, new DustParticleOptions(DustParticleOptions.REDSTONE_PARTICLE_COLOR, 0.5f));
         }
-    }
-
-    private static void addParticle(BlockState stateIn, Level worldIn, BlockPos pos,
-                                    ParticleOptions particle) {
-        Direction direction = stateIn.getValue(FACING).getOpposite();
-        double x = pos.getX() + 0.5D + 0.1D * direction.getStepX() + 0.2D * direction.getStepX();
-        double y = pos.getY() + 0.5D + 0.1D * direction.getStepY() + 0.2D * direction.getStepY();
-        double z = pos.getZ() + 0.5D + 0.1D * direction.getStepZ() + 0.2D * direction.getStepZ();
-        worldIn.addParticle(particle, x, y, z, 0.0D, 0.0D, 0.0D);
     }
 
     @Override

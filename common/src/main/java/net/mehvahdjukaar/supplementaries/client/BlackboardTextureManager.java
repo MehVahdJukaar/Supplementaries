@@ -77,32 +77,6 @@ public class BlackboardTextureManager {
             this.glow = glow;
         }
 
-        public byte[][] getPixels() {
-            return pixels;
-        }
-
-        public boolean isGlow() {
-            return glow;
-        }
-
-        //cant initialize right away since this texture can be created from worked main tread during model bake since it needs getQuads
-
-        private void initializeTexture() {
-            //no need for mipmap, we use block sheet
-            this.texture = new DynamicTexture(WIDTH, WIDTH, false);
-            for (int y = 0; y < pixels.length && y < WIDTH; y++) {
-                for (int x = 0; x < pixels[y].length && x < WIDTH; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
-                    this.texture.getPixels().setPixelRGBA(x, y, getColoredPixel(pixels[x][y], x, y));
-                }
-            }
-            this.texture.upload();
-
-            //texture manager has its own internal id
-            this.textureLocation = Minecraft.getInstance().getTextureManager()
-                    .register("blackboard/", this.texture);
-            this.renderType = RenderType.entitySolid(textureLocation);
-        }
-
         //helper methods
         private static int getColoredPixel(byte i, int x, int y) {
             int offset = i > 0 ? 16 : 0;
@@ -125,6 +99,32 @@ public class BlackboardTextureManager {
             int totalR = FastColor.ARGB32.red(pixel);
             //image has them inverted
             return FastColor.ARGB32.color(255, totalR * tintR / 255, totalG * tintG / 255, totalB * tintB / 255);
+        }
+
+        //cant initialize right away since this texture can be created from worked main tread during model bake since it needs getQuads
+
+        public byte[][] getPixels() {
+            return pixels;
+        }
+
+        public boolean isGlow() {
+            return glow;
+        }
+
+        private void initializeTexture() {
+            //no need for mipmap, we use block sheet
+            this.texture = new DynamicTexture(WIDTH, WIDTH, false);
+            for (int y = 0; y < pixels.length && y < WIDTH; y++) {
+                for (int x = 0; x < pixels[y].length && x < WIDTH; x++) { //getColoredPixel(BlackboardBlock.colorFromByte(pixels[x][y]),x,y)
+                    this.texture.getPixels().setPixelRGBA(x, y, getColoredPixel(pixels[x][y], x, y));
+                }
+            }
+            this.texture.upload();
+
+            //texture manager has its own internal id
+            this.textureLocation = Minecraft.getInstance().getTextureManager()
+                    .register("blackboard/", this.texture);
+            this.renderType = RenderType.entitySolid(textureLocation);
         }
 
         @NotNull

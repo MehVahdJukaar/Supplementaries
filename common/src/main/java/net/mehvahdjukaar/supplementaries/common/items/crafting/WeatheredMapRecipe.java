@@ -21,6 +21,7 @@ import java.lang.ref.WeakReference;
 
 public class WeatheredMapRecipe extends CustomRecipe {
 
+    private static WeakReference<ServerLevel> lastLevelHack = null;
     private final Ingredient ink;
     private final boolean setAntique;
 
@@ -30,10 +31,12 @@ public class WeatheredMapRecipe extends CustomRecipe {
         this.setAntique = setAntique;
     }
 
-    private static WeakReference<ServerLevel> lastLevelHack = null;
-
     public static void onWorldUnload() {
         lastLevelHack = null;
+    }
+
+    private static boolean isMap(ItemStack stack) {
+        return stack.getItem() == Items.FILLED_MAP;
     }
 
     @Override
@@ -63,10 +66,6 @@ public class WeatheredMapRecipe extends CustomRecipe {
             lastLevelHack = new WeakReference<>(serverLevel);
         }
         return match;
-    }
-
-    private static boolean isMap(ItemStack stack) {
-        return stack.getItem() == Items.FILLED_MAP;
     }
 
     @Override

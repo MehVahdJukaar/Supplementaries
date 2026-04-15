@@ -44,6 +44,18 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         }
     }
 
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, GlobeBlockTile tile) {
+        tile.prevYaw = tile.yaw;
+        if (tile.yaw != 0) {
+            if (tile.yaw < 0) {
+                tile.yaw = 0;
+                pLevel.updateNeighbourForOutputSignal(pPos, pState.getBlock());
+            } else {
+                tile.yaw = (tile.yaw * 0.94f) - 0.7f;
+            }
+        }
+    }
+
     public int getFaceRot() {
         return (3 - getBlockState().getValue(GlobeBlock.ROTATION)) * 90;
     }
@@ -60,11 +72,6 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     public boolean isSepia() {
         return sepia;
-    }
-
-    public void setCustomName(Component name) {
-        this.customName = name;
-        this.updateRenderData();
     }
 
     public void toggleShearing() {
@@ -85,6 +92,11 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     @Override
     public Component getCustomName() {
         return this.customName;
+    }
+
+    public void setCustomName(Component name) {
+        this.customName = name;
+        this.updateRenderData();
     }
 
     public Component getDefaultName() {
@@ -147,18 +159,6 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         return this.saveWithoutMetadata(registries);
-    }
-
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, GlobeBlockTile tile) {
-        tile.prevYaw = tile.yaw;
-        if (tile.yaw != 0) {
-            if (tile.yaw < 0) {
-                tile.yaw = 0;
-                pLevel.updateNeighbourForOutputSignal(pPos, pState.getBlock());
-            } else {
-                tile.yaw = (tile.yaw * 0.94f) - 0.7f;
-            }
-        }
     }
 
     public Direction getDirection() {

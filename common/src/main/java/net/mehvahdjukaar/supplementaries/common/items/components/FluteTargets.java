@@ -61,21 +61,19 @@ public record FluteTargets(Set<Pet> pets) implements TooltipProvider {
     }
 
     public record Pet(Component name, UUID uuid) implements TooltipProvider {
-        public static Pet of(Entity entity) {
-            return new Pet(entity.getName(), entity.getUUID());
-        }
-
         public static final Codec<Pet> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ComponentSerialization.CODEC.fieldOf("name").forGetter(Pet::name),
                 Codec.STRING.xmap(UUID::fromString, UUID::toString).fieldOf("uuid").forGetter(Pet::uuid)
         ).apply(instance, Pet::new));
-
-
         public static final StreamCodec<RegistryFriendlyByteBuf, Pet> STREAM_CODEC = StreamCodec.composite(
                 ComponentSerialization.TRUSTED_STREAM_CODEC, Pet::name,
                 UUIDUtil.STREAM_CODEC, Pet::uuid,
                 Pet::new
         );
+
+        public static Pet of(Entity entity) {
+            return new Pet(entity.getName(), entity.getUUID());
+        }
 
         @Override
         public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {

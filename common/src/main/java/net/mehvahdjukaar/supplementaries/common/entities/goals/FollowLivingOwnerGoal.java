@@ -16,13 +16,13 @@ import java.util.EnumSet;
 //Like FollowOwnerGoal but only follows living owner owners and has teleporting tweaks
 public class FollowLivingOwnerGoal extends Goal {
     private final Mob mob;
-    @Nullable
-    public LivingEntity owner;
     private final double speedModifier;
     private final PathNavigation navigation;
-    private int timeToRecalcPath;
     private final float stopDistance;
     private final float startDistance;
+    @Nullable
+    public LivingEntity owner;
+    private int timeToRecalcPath;
     private float oldWaterCost;
 
     public FollowLivingOwnerGoal(Mob mob, double speedModifier, float startDistance, float stopDistance) {

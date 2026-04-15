@@ -41,18 +41,6 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         bannerModel = modelpart.getChild("flag");
     }
 
-    @ForgeOverride
-    public AABB getRenderBoundingBox(BlockEntity tile) {
-        Direction dir = ((FlagBlockTile) tile).getDirection();
-        return new AABB(0.25, 0, 0.25, 0.75, 1, 0.75).expandTowards(
-                dir.getStepX() * 1.35f, 0, dir.getStepZ() * 1.35f).move(tile.getBlockPos());
-    }
-
-    @Override
-    public int getViewDistance() {
-        return 128;
-    }
-
     public static void renderBanner(ModelPart bannerModel, float ang, PoseStack matrixStack, MultiBufferSource bufferSource, int light, int pPackedOverlay,
                                     BannerPatternLayers patterns, DyeColor baseColor) {
         matrixStack.pushPose();
@@ -68,60 +56,6 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         matrixStack.popPose();
     }
 
-    @Override
-    public void render(FlagBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
-                       int combinedOverlayIn) {
-
-        BannerPatternLayers patterns = tile.getPatterns();
-
-
-        int lu = VertexUtil.lightU(combinedLightIn);
-        int lv = VertexUtil.lightV(combinedLightIn);
-
-        int w = 24;
-        int h = 16;
-
-        poseStack.pushPose();
-        poseStack.translate(0.5, 0, 0.5);
-        poseStack.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
-        poseStack.translate(0, 0, (1 / 16f));
-
-        long time = tile.getLevel().getGameTime();
-
-        double l = ClientConfigs.Blocks.FLAG_WAVELENGTH.get();
-        long period = (ClientConfigs.Blocks.FLAG_PERIOD.get());
-        double wavyness = ClientConfigs.Blocks.FLAG_AMPLITUDE.get();
-        double invdamping = ClientConfigs.Blocks.FLAG_AMPLITUDE_INCREMENT.get();
-
-        BlockPos bp = tile.getBlockPos();
-        //always from 0 to 1
-
-        float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
-
-        DyeColor color = tile.getColor();
-        if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
-            float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
-            renderBanner(bannerModel, ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
-        } else {
-
-            int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
-            float oldAng = 0;
-            for (int dX = 0; dX < w; dX += segmentLen) {
-
-                float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
-
-                renderPatterns(bufferIn, poseStack, patterns, lu, lv, dX, w, h, segmentLen,
-                        ang, oldAng, color);
-                poseStack.mulPose(Axis.YP.rotationDegrees(ang));
-                poseStack.translate(0, 0, segmentLen / 16f);
-                poseStack.mulPose(Axis.YP.rotationDegrees(-ang));
-                oldAng = ang;
-            }
-        }
-
-        poseStack.popPose();
-    }
-
     public static void renderPatterns(PoseStack matrixStackIn, MultiBufferSource bufferIn, BannerPatternLayers patterns,
                                       int combinedLightIn, DyeColor baseColor) {
         int lu = VertexUtil.lightU(combinedLightIn);
@@ -130,7 +64,6 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         renderPatterns(bufferIn, matrixStackIn, patterns, lu, lv, 0, 24, 16, 24,
                 0, 0, baseColor);
     }
-
 
     private static void renderPatterns(MultiBufferSource bufferIn, PoseStack poseStack, BannerPatternLayers list,
                                        int lu, int lv, int dX, int w, int h, int segmentLen,
@@ -164,7 +97,6 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         matrixStackIn.popPose();
     }
-
 
     private static void renderCurvedSegment(VertexConsumer builder, PoseStack matrixStack, float angle, float oldAng, int dX,
                                             int length, int height, int lu, int lv, boolean end,
@@ -293,6 +225,72 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
             matrixStack.popPose();
         }
+    }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox(BlockEntity tile) {
+        Direction dir = ((FlagBlockTile) tile).getDirection();
+        return new AABB(0.25, 0, 0.25, 0.75, 1, 0.75).expandTowards(
+                dir.getStepX() * 1.35f, 0, dir.getStepZ() * 1.35f).move(tile.getBlockPos());
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 128;
+    }
+
+    @Override
+    public void render(FlagBlockTile tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferIn, int combinedLightIn,
+                       int combinedOverlayIn) {
+
+        BannerPatternLayers patterns = tile.getPatterns();
+
+
+        int lu = VertexUtil.lightU(combinedLightIn);
+        int lv = VertexUtil.lightV(combinedLightIn);
+
+        int w = 24;
+        int h = 16;
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0, 0.5);
+        poseStack.mulPose(RotHlpr.rot(tile.getDirection().getOpposite()));
+        poseStack.translate(0, 0, (1 / 16f));
+
+        long time = tile.getLevel().getGameTime();
+
+        double l = ClientConfigs.Blocks.FLAG_WAVELENGTH.get();
+        long period = (ClientConfigs.Blocks.FLAG_PERIOD.get());
+        double wavyness = ClientConfigs.Blocks.FLAG_AMPLITUDE.get();
+        double invdamping = ClientConfigs.Blocks.FLAG_AMPLITUDE_INCREMENT.get();
+
+        BlockPos bp = tile.getBlockPos();
+        //always from 0 to 1
+
+        float t = ((float) Math.floorMod(bp.getX() * 7L + bp.getZ() * 13L + time, period) + partialTicks) / ((float) period);
+
+        DyeColor color = tile.getColor();
+        if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
+            float ang = (float) ((wavyness + invdamping * w) * Mth.sin((float) (((w / l) - t * 2 * (float) Math.PI))));
+            renderBanner(bannerModel, ang, poseStack, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
+        } else {
+
+            int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
+            float oldAng = 0;
+            for (int dX = 0; dX < w; dX += segmentLen) {
+
+                float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
+
+                renderPatterns(bufferIn, poseStack, patterns, lu, lv, dX, w, h, segmentLen,
+                        ang, oldAng, color);
+                poseStack.mulPose(Axis.YP.rotationDegrees(ang));
+                poseStack.translate(0, 0, segmentLen / 16f);
+                poseStack.mulPose(Axis.YP.rotationDegrees(-ang));
+                oldAng = ang;
+            }
+        }
+
+        poseStack.popPose();
     }
 
 }

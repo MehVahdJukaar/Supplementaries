@@ -61,6 +61,25 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         this.dispenser = new MovingDispenserBlockEntity(BlockEntityType.DISPENSER, BlockPos.ZERO, BLOCK_STATE, this);
     }
 
+    private static void adjustMovementRelativeToRail(Projectile projectile, RailShape railShape) {
+        var movement = projectile.getDeltaMovement();
+        switch (railShape) {
+            case ASCENDING_EAST -> {
+                movement = movement.zRot(-Mth.HALF_PI / 2);
+            }
+            case ASCENDING_WEST -> {
+                movement = movement.zRot(Mth.HALF_PI / 2);
+            }
+            case ASCENDING_SOUTH -> {
+                movement = movement.xRot(Mth.HALF_PI / 2);
+            }
+            case ASCENDING_NORTH -> {
+                movement = movement.xRot(-Mth.HALF_PI / 2);
+            }
+        }
+        projectile.setDeltaMovement(movement);
+    }
+
     @Override
     protected void addAdditionalSaveData(CompoundTag pCompound) {
         super.addAdditionalSaveData(pCompound);
@@ -97,6 +116,8 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         return BLOCK_STATE;
     }
 
+    //-------container stuff-------
+
     @Override
     public InteractionResult interact(Player pPlayer, InteractionHand pHand) {
         InteractionResult ret = InteractionResult.PASS;
@@ -110,8 +131,6 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
             return InteractionResult.SUCCESS;
         }
     }
-
-    //-------container stuff-------
 
     /**
      * Returns the number of slots in the inventory.
@@ -164,14 +183,14 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         this.dispenser.clearContent();
     }
 
+
+    //------end-container-stuff------
+
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory, Player pPlayer) {
         return this.dispenser.createMenu(pContainerId, pInventory, pPlayer);
     }
-
-
-    //------end-container-stuff------
 
     //------abstract-container-minecart-stuff-----
     @Override
@@ -182,6 +201,9 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
 
         super.remove(reason);
     }
+
+
+    //-------end------
 
     @Override
     protected void applyNaturalSlowdown() {
@@ -194,9 +216,6 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         }
         this.setDeltaMovement(this.getDeltaMovement().multiply(f, 0.0, f));
     }
-
-
-    //-------end------
 
     @Override
     public SlotAccess getSlot(final int pSlot) {
@@ -312,25 +331,6 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         //animation
         source.level().levelEvent(2000, source.pos(), direction.get3DDataValue());
         return stack;
-    }
-
-    private static void adjustMovementRelativeToRail(Projectile projectile, RailShape railShape) {
-        var movement = projectile.getDeltaMovement();
-        switch (railShape) {
-            case ASCENDING_EAST -> {
-                movement = movement.zRot(-Mth.HALF_PI / 2);
-            }
-            case ASCENDING_WEST -> {
-                movement = movement.zRot(Mth.HALF_PI / 2);
-            }
-            case ASCENDING_SOUTH -> {
-                movement = movement.xRot(Mth.HALF_PI / 2);
-            }
-            case ASCENDING_NORTH -> {
-                movement = movement.xRot(-Mth.HALF_PI / 2);
-            }
-        }
-        projectile.setDeltaMovement(movement);
     }
 
 }

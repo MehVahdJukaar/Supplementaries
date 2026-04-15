@@ -64,13 +64,11 @@ import java.util.Optional;
 public class CannonBlock extends DirectionalBlock implements EntityBlock, ILightable, IRotatable, IAnalogRotatable {
 
     public static final int MAX_POWER_LEVELS = 4;
-    public static final MapCodec<CannonBlock> CODEC = simpleCodec(CannonBlock::new);
-
-    protected static final EnumMap<Direction, VoxelShape> SHAPES = MthUtils.getAllRotatedVoxelShapes(
-            Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 2.0));
-
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final EnumProperty<Rotation> ROTATE_TILE = ModBlockProperties.ROTATE_TILE;
+    public static final MapCodec<CannonBlock> CODEC = simpleCodec(CannonBlock::new);
+    protected static final EnumMap<Direction, VoxelShape> SHAPES = MthUtils.getAllRotatedVoxelShapes(
+            Block.box(0.0, 0.0, 0.0, 16.0, 16.0, 2.0));
 
     public CannonBlock(Properties properties) {
         super(properties);

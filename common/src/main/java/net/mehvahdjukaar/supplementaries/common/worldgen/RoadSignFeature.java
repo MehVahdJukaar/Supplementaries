@@ -53,201 +53,17 @@ import java.util.function.Function;
 
 public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
 
-    public RoadSignFeature() {
-        super(RoadSignFeature.Config.CODEC);
-    }
-
-    public record Config(RandomState randomState, WoodType postWood, WoodType signWood,
-                         BlockState fence, BlockState trapdoor, BlockState slab, BlockState log,
-                         BlockState cobble, BlockState mossyCobble,
-                         BlockState wall, BlockState mossyWall,
-                         BlockState lanternUp, BlockState lanternDown,
-                         BlockState candleHolder,
-                         BlockState stone, BlockState stoneSlab,
-                         BlockState stoneStairs, String invalidMessage) implements FeatureConfiguration {
-        public static final Codec<Config> CODEC = RecordCodecBuilder.<Config>create((instance) -> instance.group(
-                RandomState.CODEC.fieldOf("random_state").forGetter(Config::randomState),
-                WoodType.CODEC.fieldOf("post_wood").forGetter(Config::postWood),
-                WoodType.CODEC.fieldOf("sign_wood").forGetter(Config::signWood),
-                BlockState.CODEC.fieldOf("cobble").forGetter(Config::cobble),
-                BlockState.CODEC.fieldOf("mossy_cobble").forGetter(Config::mossyCobble),
-                BlockState.CODEC.fieldOf("wall").forGetter(Config::wall),
-                BlockState.CODEC.fieldOf("mossy_wall").forGetter(Config::mossyWall),
-                BlockState.CODEC.fieldOf("lantern_up").forGetter(Config::lanternUp),
-                BlockState.CODEC.fieldOf("lantern_down").forGetter(Config::lanternDown),
-                BlockState.CODEC.fieldOf("candle_holder").forGetter(Config::candleHolder),
-                BlockState.CODEC.fieldOf("stone").forGetter(Config::stone),
-                BlockState.CODEC.fieldOf("stone_slab").forGetter(Config::stoneSlab),
-                BlockState.CODEC.fieldOf("stone_stairs").forGetter(Config::stoneStairs)
-        ).apply(instance, Config::of)).comapFlatMap((s) -> {
-            if (s.invalidMessage != null)
-                return DataResult.error(() -> s.invalidMessage);
-            return DataResult.success(s);
-        }, Function.identity());
-
-        private static Config of(RandomState randomState, WoodType postWood, WoodType signWood,
-                                 BlockState cobble, BlockState mossyCobble,
-                                 BlockState wall, BlockState mossyWall,
-                                 BlockState lanternUp, BlockState lanternDown,
-                                 BlockState candleHolder,
-                                 BlockState stone, BlockState stoneSlab,
-                                 BlockState stoneStairs) {
-            String message = null;
-            Block fence = postWood.getBlockOfThis("fence");
-            if (fence == null) {
-                message = "Post wood explosionType does not have a fence";
-                fence = Blocks.AIR;
-            }
-            Block trapdoor = postWood.getBlockOfThis("trapdoor");
-            if (trapdoor == null) {
-                message = "Post wood explosionType does not have a trapdoor";
-                trapdoor = Blocks.AIR;
-            }
-            Block slab = postWood.getBlockOfThis("slab");
-            if (slab == null) {
-                message = "Post wood explosionType does not have a slab";
-                slab = Blocks.AIR;
-            }
-            Block log = postWood.getBlockOfThis("stripped_log");
-            if (log == null) {
-                message = "Post wood explosionType does not have a valid stripped log";
-                log = Blocks.AIR;
-            }
-            if (!(stoneSlab.getBlock() instanceof SlabBlock)) {
-                message = "Stone slab must be a SlabBlock, was " + stoneSlab;
-            }
-            if (!(stoneStairs.getBlock() instanceof StairBlock)) {
-                message = "Stone slab must be a StairBlock, was " + stoneStairs;
-            }
-            if (!candleHolder.hasProperty(CandleHolderBlock.FACE) || !candleHolder.hasProperty(CandleHolderBlock.LIT)) {
-                message = "Candle holder block has to have a face and lit property";
-            }
-            return new Config(randomState, postWood, signWood, fence.defaultBlockState(), trapdoor.defaultBlockState(),
-                    slab.defaultBlockState(), log.defaultBlockState(), cobble, mossyCobble, wall, mossyWall,
-                    lanternUp, lanternDown, candleHolder, stone, stoneSlab, stoneStairs, message);
-        }
-    }
-
-    private record RandomState(float doubleSignChance, float stoneChance, float stoneLanternChance,
-                               float candleHolderChance,
-                               float wallLanternChance, float doubleLanternChance, float trapdoorChance,
-                               float logChance) {
-        public static final Codec<RandomState> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-                Codec.floatRange(0, 1).fieldOf("double_sign_chance").forGetter(RandomState::doubleSignChance),
-                Codec.floatRange(0, 1).fieldOf("stone_chance").forGetter(RandomState::stoneChance),
-                Codec.floatRange(0, 1).fieldOf("stone_lantern_chance").forGetter(RandomState::stoneLanternChance),
-                Codec.floatRange(0, 1).fieldOf("candle_holder_chance").forGetter(RandomState::candleHolderChance),
-                Codec.floatRange(0, 1).fieldOf("wall_lantern_chance").forGetter(RandomState::wallLanternChance),
-                Codec.floatRange(0, 1).fieldOf("double_lantern_chance").forGetter(RandomState::doubleLanternChance),
-                Codec.floatRange(0, 1).fieldOf("trapdoor_chance").forGetter(RandomState::trapdoorChance),
-                Codec.floatRange(0, 1).fieldOf("log_chance").forGetter(RandomState::logChance)
-        ).apply(instance, RandomState::new));
-    }
-
     private static final BlockState AIR = Blocks.AIR.defaultBlockState();
     private static final BlockState PATH = Blocks.DIRT_PATH.defaultBlockState();
     private static final BlockState SANDSTONE_PATH = Blocks.SMOOTH_SANDSTONE.defaultBlockState();
 
+    public RoadSignFeature() {
+        super(RoadSignFeature.Config.CODEC);
+    }
+
     public static boolean isNotSolid(LevelAccessor world, BlockPos pos) {
         return !world.isStateAtPosition(pos, (state) -> state.isRedstoneConductor(world, pos));
     }
-
-    @Override
-    public boolean place(FeaturePlaceContext<Config> context) {
-
-
-        WorldGenLevel reader = context.level();
-        RandomSource rand = context.random();
-        BlockPos pos = context.origin();
-        Config c = context.config();
-
-        /*
-        if(!reader.getLevel().dimension().equals(World.OVERWORLD))return false;
-        if(pos.getY()>90 || pos.getY()<50)return false;
-        if(!reader.getLevel().getChunkSource().generator.getBiomeSource().canGenerateStructure(Structure.VILLAGE))return false;
-
-
-        //find nearest solid block
-        for(pos = pos.above(); canGoThrough(reader,pos) && pos.getY() > 2; pos = pos.below()) {}
-
-        if(isNotSolid(reader, pos))return false;
-
-
-        for(int i = -2; i <= 2; ++i) {
-            for (int j = -2; j <= 2; ++j) {
-
-                //checks for empty blocks around wall
-                for(int h = 2; h<=5; h++) {
-                    //skip angles
-                    //if(Math.abs(i)==2&&Math.abs(j)==2)continue;
-                    if (!isReplaceable(reader,pos.offset(i,h,j))) {
-                        return false;
-                    }
-                }
-                //allows 1 block of leaves at the base
-                if (!canGoThrough(reader,pos.offset(i,1,j)))return false;
-                //thick solid base. no floaty sings here
-                if(isNotSolid(reader, pos.offset(i, 0, j)))return false;
-                if(isNotSolid(reader, pos.offset(i, -1, j)))return false;
-                //if(isNotSolid(reader, pos.offset(i, -2, j)))return false;
-            }
-        }*/
-
-        //for jigsaw
-        pos = pos.below();
-
-        //add air blocks around
-        for (int i = -2; i <= 2; ++i) {
-            for (int j = -2; j <= 2; ++j) {
-
-                if (Math.abs(i) == 2 && Math.abs(j) == 2) continue;
-                for (int k = 1; k <= 4; ++k) {
-                    if ((Math.abs(i) == 2 || Math.abs(j) == 2) && k == 1) continue;
-                    reader.setBlock(pos.offset(i, k, j), ModRegistry.STRUCTURE_TEMP.get().defaultBlockState(), 2);
-                }
-            }
-        }
-
-        //TODO: fix mossy
-        float humidity = SuppPlatformStuff.getDownfall(reader.getBiome(pos).value());
-
-
-        //generate cobble path
-        for (int i = -2; i <= 2; ++i) {
-            for (int j = -2; j <= 2; ++j) {
-                if (Math.abs(i) == 2 && Math.abs(j) == 2) continue;
-                reader.setBlock(pos.offset(i, -1, j), c.cobble, 2);
-
-                BlockPos pathPos = pos.offset(i, 0, j);
-                double dist = pos.distToCenterSqr(pathPos.getX(), pathPos.getY(), pathPos.getZ()) / 5.2f;
-
-                if (rand.nextFloat() < dist - 0.15) continue;
-                boolean m = (humidity * 0.75) > rand.nextFloat();
-                reader.setBlock(pathPos, m ? c.mossyCobble : c.cobble, 2);
-            }
-        }
-
-        //post
-
-        boolean m = (humidity * 0.75) > rand.nextFloat();
-
-        pos = pos.above();
-        reader.setBlock(pos, m ? c.mossyWall : c.wall, 2);
-        pos = pos.above();
-        reader.setBlock(pos, c.fence, 2);
-        pos = pos.above();
-        reader.setBlock(pos, c.fence, 2);
-        reader.setBlock(pos.above(), ModRegistry.BLOCK_GENERATOR.get().defaultBlockState(), 2);
-        if (reader.getBlockEntity(pos.above()) instanceof BlockGeneratorBlockTile t) {
-            t.setConfig(c);
-        } else {
-            Supplementaries.LOGGER.error("Failed to get Road Sign Block Entity during generation. How did this happen?");
-        }
-        return true;
-    }
-
-
-    //post process
 
     public static void applyPostProcess(Config c, ServerLevel level, BlockPos generatorPos, List<LocatedStructure> foundVillages) {
 
@@ -482,6 +298,9 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
         }
     }
 
+
+    //post process
+
     private static void placeWallLantern(BlockState lanternState, ServerLevel level, Direction dir, Block wallLantern, BlockPos pos) {
         pos = pos.relative(dir);
         BlockState state = wallLantern.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND,
@@ -490,5 +309,186 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
         if (level.getBlockEntity(pos) instanceof IBlockHolder tt) {
             tt.setHeldBlock(lanternState);
         }
+    }
+
+    @Override
+    public boolean place(FeaturePlaceContext<Config> context) {
+
+
+        WorldGenLevel reader = context.level();
+        RandomSource rand = context.random();
+        BlockPos pos = context.origin();
+        Config c = context.config();
+
+        /*
+        if(!reader.getLevel().dimension().equals(World.OVERWORLD))return false;
+        if(pos.getY()>90 || pos.getY()<50)return false;
+        if(!reader.getLevel().getChunkSource().generator.getBiomeSource().canGenerateStructure(Structure.VILLAGE))return false;
+
+
+        //find nearest solid block
+        for(pos = pos.above(); canGoThrough(reader,pos) && pos.getY() > 2; pos = pos.below()) {}
+
+        if(isNotSolid(reader, pos))return false;
+
+
+        for(int i = -2; i <= 2; ++i) {
+            for (int j = -2; j <= 2; ++j) {
+
+                //checks for empty blocks around wall
+                for(int h = 2; h<=5; h++) {
+                    //skip angles
+                    //if(Math.abs(i)==2&&Math.abs(j)==2)continue;
+                    if (!isReplaceable(reader,pos.offset(i,h,j))) {
+                        return false;
+                    }
+                }
+                //allows 1 block of leaves at the base
+                if (!canGoThrough(reader,pos.offset(i,1,j)))return false;
+                //thick solid base. no floaty sings here
+                if(isNotSolid(reader, pos.offset(i, 0, j)))return false;
+                if(isNotSolid(reader, pos.offset(i, -1, j)))return false;
+                //if(isNotSolid(reader, pos.offset(i, -2, j)))return false;
+            }
+        }*/
+
+        //for jigsaw
+        pos = pos.below();
+
+        //add air blocks around
+        for (int i = -2; i <= 2; ++i) {
+            for (int j = -2; j <= 2; ++j) {
+
+                if (Math.abs(i) == 2 && Math.abs(j) == 2) continue;
+                for (int k = 1; k <= 4; ++k) {
+                    if ((Math.abs(i) == 2 || Math.abs(j) == 2) && k == 1) continue;
+                    reader.setBlock(pos.offset(i, k, j), ModRegistry.STRUCTURE_TEMP.get().defaultBlockState(), 2);
+                }
+            }
+        }
+
+        //TODO: fix mossy
+        float humidity = SuppPlatformStuff.getDownfall(reader.getBiome(pos).value());
+
+
+        //generate cobble path
+        for (int i = -2; i <= 2; ++i) {
+            for (int j = -2; j <= 2; ++j) {
+                if (Math.abs(i) == 2 && Math.abs(j) == 2) continue;
+                reader.setBlock(pos.offset(i, -1, j), c.cobble, 2);
+
+                BlockPos pathPos = pos.offset(i, 0, j);
+                double dist = pos.distToCenterSqr(pathPos.getX(), pathPos.getY(), pathPos.getZ()) / 5.2f;
+
+                if (rand.nextFloat() < dist - 0.15) continue;
+                boolean m = (humidity * 0.75) > rand.nextFloat();
+                reader.setBlock(pathPos, m ? c.mossyCobble : c.cobble, 2);
+            }
+        }
+
+        //post
+
+        boolean m = (humidity * 0.75) > rand.nextFloat();
+
+        pos = pos.above();
+        reader.setBlock(pos, m ? c.mossyWall : c.wall, 2);
+        pos = pos.above();
+        reader.setBlock(pos, c.fence, 2);
+        pos = pos.above();
+        reader.setBlock(pos, c.fence, 2);
+        reader.setBlock(pos.above(), ModRegistry.BLOCK_GENERATOR.get().defaultBlockState(), 2);
+        if (reader.getBlockEntity(pos.above()) instanceof BlockGeneratorBlockTile t) {
+            t.setConfig(c);
+        } else {
+            Supplementaries.LOGGER.error("Failed to get Road Sign Block Entity during generation. How did this happen?");
+        }
+        return true;
+    }
+
+    public record Config(RandomState randomState, WoodType postWood, WoodType signWood,
+                         BlockState fence, BlockState trapdoor, BlockState slab, BlockState log,
+                         BlockState cobble, BlockState mossyCobble,
+                         BlockState wall, BlockState mossyWall,
+                         BlockState lanternUp, BlockState lanternDown,
+                         BlockState candleHolder,
+                         BlockState stone, BlockState stoneSlab,
+                         BlockState stoneStairs, String invalidMessage) implements FeatureConfiguration {
+        public static final Codec<Config> CODEC = RecordCodecBuilder.<Config>create((instance) -> instance.group(
+                RandomState.CODEC.fieldOf("random_state").forGetter(Config::randomState),
+                WoodType.CODEC.fieldOf("post_wood").forGetter(Config::postWood),
+                WoodType.CODEC.fieldOf("sign_wood").forGetter(Config::signWood),
+                BlockState.CODEC.fieldOf("cobble").forGetter(Config::cobble),
+                BlockState.CODEC.fieldOf("mossy_cobble").forGetter(Config::mossyCobble),
+                BlockState.CODEC.fieldOf("wall").forGetter(Config::wall),
+                BlockState.CODEC.fieldOf("mossy_wall").forGetter(Config::mossyWall),
+                BlockState.CODEC.fieldOf("lantern_up").forGetter(Config::lanternUp),
+                BlockState.CODEC.fieldOf("lantern_down").forGetter(Config::lanternDown),
+                BlockState.CODEC.fieldOf("candle_holder").forGetter(Config::candleHolder),
+                BlockState.CODEC.fieldOf("stone").forGetter(Config::stone),
+                BlockState.CODEC.fieldOf("stone_slab").forGetter(Config::stoneSlab),
+                BlockState.CODEC.fieldOf("stone_stairs").forGetter(Config::stoneStairs)
+        ).apply(instance, Config::of)).comapFlatMap((s) -> {
+            if (s.invalidMessage != null)
+                return DataResult.error(() -> s.invalidMessage);
+            return DataResult.success(s);
+        }, Function.identity());
+
+        private static Config of(RandomState randomState, WoodType postWood, WoodType signWood,
+                                 BlockState cobble, BlockState mossyCobble,
+                                 BlockState wall, BlockState mossyWall,
+                                 BlockState lanternUp, BlockState lanternDown,
+                                 BlockState candleHolder,
+                                 BlockState stone, BlockState stoneSlab,
+                                 BlockState stoneStairs) {
+            String message = null;
+            Block fence = postWood.getBlockOfThis("fence");
+            if (fence == null) {
+                message = "Post wood explosionType does not have a fence";
+                fence = Blocks.AIR;
+            }
+            Block trapdoor = postWood.getBlockOfThis("trapdoor");
+            if (trapdoor == null) {
+                message = "Post wood explosionType does not have a trapdoor";
+                trapdoor = Blocks.AIR;
+            }
+            Block slab = postWood.getBlockOfThis("slab");
+            if (slab == null) {
+                message = "Post wood explosionType does not have a slab";
+                slab = Blocks.AIR;
+            }
+            Block log = postWood.getBlockOfThis("stripped_log");
+            if (log == null) {
+                message = "Post wood explosionType does not have a valid stripped log";
+                log = Blocks.AIR;
+            }
+            if (!(stoneSlab.getBlock() instanceof SlabBlock)) {
+                message = "Stone slab must be a SlabBlock, was " + stoneSlab;
+            }
+            if (!(stoneStairs.getBlock() instanceof StairBlock)) {
+                message = "Stone slab must be a StairBlock, was " + stoneStairs;
+            }
+            if (!candleHolder.hasProperty(CandleHolderBlock.FACE) || !candleHolder.hasProperty(CandleHolderBlock.LIT)) {
+                message = "Candle holder block has to have a face and lit property";
+            }
+            return new Config(randomState, postWood, signWood, fence.defaultBlockState(), trapdoor.defaultBlockState(),
+                    slab.defaultBlockState(), log.defaultBlockState(), cobble, mossyCobble, wall, mossyWall,
+                    lanternUp, lanternDown, candleHolder, stone, stoneSlab, stoneStairs, message);
+        }
+    }
+
+    private record RandomState(float doubleSignChance, float stoneChance, float stoneLanternChance,
+                               float candleHolderChance,
+                               float wallLanternChance, float doubleLanternChance, float trapdoorChance,
+                               float logChance) {
+        public static final Codec<RandomState> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                Codec.floatRange(0, 1).fieldOf("double_sign_chance").forGetter(RandomState::doubleSignChance),
+                Codec.floatRange(0, 1).fieldOf("stone_chance").forGetter(RandomState::stoneChance),
+                Codec.floatRange(0, 1).fieldOf("stone_lantern_chance").forGetter(RandomState::stoneLanternChance),
+                Codec.floatRange(0, 1).fieldOf("candle_holder_chance").forGetter(RandomState::candleHolderChance),
+                Codec.floatRange(0, 1).fieldOf("wall_lantern_chance").forGetter(RandomState::wallLanternChance),
+                Codec.floatRange(0, 1).fieldOf("double_lantern_chance").forGetter(RandomState::doubleLanternChance),
+                Codec.floatRange(0, 1).fieldOf("trapdoor_chance").forGetter(RandomState::trapdoorChance),
+                Codec.floatRange(0, 1).fieldOf("log_chance").forGetter(RandomState::logChance)
+        ).apply(instance, RandomState::new));
     }
 }

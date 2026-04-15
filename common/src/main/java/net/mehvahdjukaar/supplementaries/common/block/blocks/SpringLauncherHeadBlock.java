@@ -31,8 +31,9 @@ import java.util.Arrays;
 
 public class SpringLauncherHeadBlock extends DirectionalBlock {
 
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final BooleanProperty SHORT = BlockStateProperties.SHORT; // is not small? (only used for
     public static final MapCodec<SpringLauncherHeadBlock> CODEC = simpleCodec(SpringLauncherHeadBlock::new);
-
     protected static final VoxelShape PISTON_EXTENSION_EAST_AABB = Block.box(12.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_EXTENSION_WEST_AABB = Block.box(0.0D, 0.0D, 0.0D, 4.0D, 16.0D, 16.0D);
     protected static final VoxelShape PISTON_EXTENSION_SOUTH_AABB = Block.box(0.0D, 0.0D, 12.0D, 16.0D, 16.0D, 16.0D);
@@ -54,18 +55,10 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
     private static final VoxelShape[] EXTENDED_SHAPES = getShapesForExtension(true);
     private static final VoxelShape[] UNEXTENDED_SHAPES = getShapesForExtension(false);
 
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final BooleanProperty SHORT = BlockStateProperties.SHORT; // is not small? (only used for
-
     // tile entity, leave true
     public SpringLauncherHeadBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(SHORT, false).setValue(FACING, Direction.NORTH));
-    }
-
-    @Override
-    protected MapCodec<? extends SpringLauncherHeadBlock> codec() {
-        return CODEC;
     }
 
     private static VoxelShape[] getShapesForExtension(boolean extended) {
@@ -81,6 +74,11 @@ public class SpringLauncherHeadBlock extends DirectionalBlock {
             case EAST -> Shapes.or(PISTON_EXTENSION_EAST_AABB, shortArm ? SHORT_EAST_ARM_AABB : EAST_ARM_AABB);
             default -> Shapes.or(PISTON_EXTENSION_DOWN_AABB, shortArm ? SHORT_DOWN_ARM_AABB : DOWN_ARM_AABB);
         };
+    }
+
+    @Override
+    protected MapCodec<? extends SpringLauncherHeadBlock> codec() {
+        return CODEC;
     }
 
     @Override

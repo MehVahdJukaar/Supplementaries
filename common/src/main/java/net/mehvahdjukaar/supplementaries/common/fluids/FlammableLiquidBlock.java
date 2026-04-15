@@ -70,6 +70,72 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
                 .toArray(VoxelShape[]::new);
     }
 
+    //TODO: in fire check
+    public static boolean shouldNotHaveFire(BlockState state, BlockPos pos, LevelAccessor levelAccessor) {
+        return
+                //state.getValue(MISSING_LEVELS) < 5 || //its inverted
+                levelAccessor.getFluidState(pos.above()).is(state.getFluidState().getType());
+    }
+
+    // Mimics what FireBlock .tick does
+    private static void burnStuffAroundLikeFire(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, int age) {
+        boolean increaseFireBurnout = level.getBiome(pos).is(BiomeTags.INCREASED_FIRE_BURNOUT);
+        int extraChance = increaseFireBurnout ? -50 : 0;
+        SuppPlatformStuff.tryBurningByFire(level, pos.east(), 300 + extraChance, random, age, Direction.WEST);
+        SuppPlatformStuff.tryBurningByFire(level, pos.west(), 300 + extraChance, random, age, Direction.EAST);
+        SuppPlatformStuff.tryBurningByFire(level, pos.above(), 250 + extraChance, random, age, Direction.DOWN);
+        SuppPlatformStuff.tryBurningByFire(level, pos.north(), 300 + extraChance, random, age, Direction.SOUTH);
+        SuppPlatformStuff.tryBurningByFire(level, pos.south(), 300 + extraChance, random, age, Direction.NORTH);
+        BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+
+        for (int dx = -1; dx <= 1; ++dx) {
+            for (int dz = -1; dz <= 1; ++dz) {
+                for (int dy = -1; dy <= 4; ++dy) {
+                    if (dx == 0 && dy == 0 && dz == 0) continue;
+                    int chance = 100;
+                    if (dy > 1) {
+                        chance += (dy - 1) * 100;
+                    }
+
+                    mutableBlockPos.setWithOffset(pos, dx, dy, dz);
+                    FireBlock fireBlock = getFireDelegate();
+                    int igniteOdds = fireBlock.getIgniteOdds(level, mutableBlockPos);
+                    // purposefully cant ignite other lumisene next to it. would look bad
+                    boolean isLumisene = false;
+                    if (igniteOdds == 0 && (dy != 0 || (dx != 0 && dz != 0))) {
+                        // same as mixin
+                        BlockState nextState = level.getBlockState(pos);
+                        if (state.getBlock() instanceof FlammableLiquidBlock) {
+                            igniteOdds = PlatHelper.getFireSpreadSpeed(nextState, level, pos, Direction.UP);
+                            isLumisene = true;
+                        }
+                    }
+                    if (igniteOdds > 0) {
+                        int i2 = (igniteOdds + 40 + level.getDifficulty().getId() * 7) / (age + 30);
+                        if (increaseFireBurnout) {
+                            i2 /= 2;
+                        }
+
+                        if (i2 > 0 && random.nextInt(chance) <= i2 && (!level.isRaining() || !fireBlock.isNearRain(level, mutableBlockPos))) {
+                            int newAge = Math.min(15, age + random.nextInt(5) / 4);
+
+                            if (isLumisene && level.getBlockState(pos).getBlock() instanceof FlammableLiquidBlock fl) {
+                                fl.tryLightUp(null, state, pos, level, FireSoundType.FLAMING_ARROW);
+                            } else {
+                                // sets fire block
+                                level.setBlock(mutableBlockPos, fireBlock.getStateWithAge(level, mutableBlockPos, newAge), 3);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static @NotNull FireBlock getFireDelegate() {
+        return (FireBlock) Blocks.FIRE;
+    }
+
     @Override
     public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
         return 0;
@@ -139,13 +205,6 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
             MiscUtils.scheduleTickOverridingExisting(sl, pos, this, getReactToFireDelay());
         }
         return success;
-    }
-
-    //TODO: in fire check
-    public static boolean shouldNotHaveFire(BlockState state, BlockPos pos, LevelAccessor levelAccessor) {
-        return
-                //state.getValue(MISSING_LEVELS) < 5 || //its inverted
-                levelAccessor.getFluidState(pos.above()).is(state.getFluidState().getType());
     }
 
     @Override
@@ -236,6 +295,9 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         super.entityInside(state, level, pos, entity);
     }
 
+
+    // fire block stuff
+
     @Override
     protected void spawnDestroyParticles(Level level, Player player, BlockPos pos, BlockState state) {
     }
@@ -248,9 +310,6 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         }
         return super.playerWillDestroy(level, pos, state, player);
     }
-
-
-    // fire block stuff
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
@@ -357,61 +416,6 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         //high chance to have fire. Cant burn however
     }
 
-    // Mimics what FireBlock .tick does
-    private static void burnStuffAroundLikeFire(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, int age) {
-        boolean increaseFireBurnout = level.getBiome(pos).is(BiomeTags.INCREASED_FIRE_BURNOUT);
-        int extraChance = increaseFireBurnout ? -50 : 0;
-        SuppPlatformStuff.tryBurningByFire(level, pos.east(), 300 + extraChance, random, age, Direction.WEST);
-        SuppPlatformStuff.tryBurningByFire(level, pos.west(), 300 + extraChance, random, age, Direction.EAST);
-        SuppPlatformStuff.tryBurningByFire(level, pos.above(), 250 + extraChance, random, age, Direction.DOWN);
-        SuppPlatformStuff.tryBurningByFire(level, pos.north(), 300 + extraChance, random, age, Direction.SOUTH);
-        SuppPlatformStuff.tryBurningByFire(level, pos.south(), 300 + extraChance, random, age, Direction.NORTH);
-        BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-
-        for (int dx = -1; dx <= 1; ++dx) {
-            for (int dz = -1; dz <= 1; ++dz) {
-                for (int dy = -1; dy <= 4; ++dy) {
-                    if (dx == 0 && dy == 0 && dz == 0) continue;
-                    int chance = 100;
-                    if (dy > 1) {
-                        chance += (dy - 1) * 100;
-                    }
-
-                    mutableBlockPos.setWithOffset(pos, dx, dy, dz);
-                    FireBlock fireBlock = getFireDelegate();
-                    int igniteOdds = fireBlock.getIgniteOdds(level, mutableBlockPos);
-                    // purposefully cant ignite other lumisene next to it. would look bad
-                    boolean isLumisene = false;
-                    if (igniteOdds == 0 && (dy != 0 || (dx != 0 && dz != 0))) {
-                        // same as mixin
-                        BlockState nextState = level.getBlockState(pos);
-                        if (state.getBlock() instanceof FlammableLiquidBlock) {
-                            igniteOdds = PlatHelper.getFireSpreadSpeed(nextState, level, pos, Direction.UP);
-                            isLumisene = true;
-                        }
-                    }
-                    if (igniteOdds > 0) {
-                        int i2 = (igniteOdds + 40 + level.getDifficulty().getId() * 7) / (age + 30);
-                        if (increaseFireBurnout) {
-                            i2 /= 2;
-                        }
-
-                        if (i2 > 0 && random.nextInt(chance) <= i2 && (!level.isRaining() || !fireBlock.isNearRain(level, mutableBlockPos))) {
-                            int newAge = Math.min(15, age + random.nextInt(5) / 4);
-
-                            if (isLumisene && level.getBlockState(pos).getBlock() instanceof FlammableLiquidBlock fl) {
-                                fl.tryLightUp(null, state, pos, level, FireSoundType.FLAMING_ARROW);
-                            } else {
-                                // sets fire block
-                                level.setBlock(mutableBlockPos, fireBlock.getStateWithAge(level, mutableBlockPos, newAge), 3);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     @ForgeOverride
     public PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
         if (isLitUp(state, level, pos)) return PathType.DAMAGE_FIRE;
@@ -424,23 +428,19 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         else return null;
     }
 
-    private static @NotNull FireBlock getFireDelegate() {
-        return (FireBlock) Blocks.FIRE;
-    }
-
 
     public enum FireStage {
         OFF, RISING, RAGING, DYING;
-
-        public boolean isBurning() {
-            return this != OFF;
-        }
 
         public static FireStage fromAge(int age) {
             if (age == 0) return OFF;
             if (age == 15) return DYING;
             else if (age < 4) return RISING;
             else return RAGING;
+        }
+
+        public boolean isBurning() {
+            return this != OFF;
         }
     }
 

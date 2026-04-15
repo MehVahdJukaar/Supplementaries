@@ -23,16 +23,7 @@ import java.util.Objects;
 //client
 public record BookModelVisuals(ModelResourceLocation model, HSVColor color, float hueShift, boolean hasGlint) {
 
-    public BookModelVisuals(ModelResourceLocation res, int color, float hueShift, boolean hasGlint) {
-        this(res, new RGBColor(color).asHSV(), hueShift, hasGlint);
-    }
-
-    public BookModelVisuals(ModelResourceLocation res, DyeColor color, float hueShift, boolean hasGlint) {
-        this(res, color.getTextureDiffuseColor(), hueShift, hasGlint);
-    }
-
     public static final Codec<Either<Integer, DyeColor>> COLOR_CODEC = Codec.either(ColorUtils.CODEC, DyeColor.CODEC);
-
     public static final Codec<BookModelVisuals> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ResourceLocation.CODEC.xmap(RenderUtil::getStandaloneModelLocation, ModelResourceLocation::id)
                     .fieldOf("model").forGetter(BookModelVisuals::model),
@@ -44,6 +35,14 @@ public record BookModelVisuals(ModelResourceLocation model, HSVColor color, floa
                     integer -> new BookModelVisuals(modelResourceLocation, integer, aFloat, aBoolean),
                     dyeColor -> new BookModelVisuals(modelResourceLocation, dyeColor, aFloat, aBoolean)
             )));
+
+    public BookModelVisuals(ModelResourceLocation res, int color, float hueShift, boolean hasGlint) {
+        this(res, new RGBColor(color).asHSV(), hueShift, hasGlint);
+    }
+
+    public BookModelVisuals(ModelResourceLocation res, DyeColor color, float hueShift, boolean hasGlint) {
+        this(res, color.getTextureDiffuseColor(), hueShift, hasGlint);
+    }
 
     //this could be redone
 //I think it allows darker non-saturated colors to have higher color shift

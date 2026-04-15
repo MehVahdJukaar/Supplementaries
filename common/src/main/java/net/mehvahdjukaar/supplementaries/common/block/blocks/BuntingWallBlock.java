@@ -20,16 +20,14 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class BuntingWallBlock extends HorizontalDirectionalBlock implements IColored {
-    private static final MapCodec<BuntingWallBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            DyeColor.CODEC.fieldOf("color").forGetter(BuntingWallBlock::getColor),
-            BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BuntingWallBlock::properties)
-    ).apply(i, BuntingWallBlock::new));
-
     protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 15.0D, 16.0D, 16.0D, 16.0D);
     protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
     protected static final VoxelShape SHAPE_EAST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
     protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
-
+    private static final MapCodec<BuntingWallBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
+            DyeColor.CODEC.fieldOf("color").forGetter(BuntingWallBlock::getColor),
+            BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BuntingWallBlock::properties)
+    ).apply(i, BuntingWallBlock::new));
     private final DyeColor color;
 
     public BuntingWallBlock(DyeColor color, Properties properties) {

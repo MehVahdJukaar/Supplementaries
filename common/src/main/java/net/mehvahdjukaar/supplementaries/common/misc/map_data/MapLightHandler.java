@@ -31,19 +31,16 @@ import java.util.Objects;
 
 public class MapLightHandler {
 
-    private static boolean enabled = false;
-
-    public static void init() {
-    }
-
-    // call to activate light on maps
-    public static void setActive(boolean on) {
-        enabled = on;
-    }
-
     public static final CustomMapData.Type<Patch, LightData> LIGHT_DATA =
             MapDataRegistry.registerCustomMapSavedData(Supplementaries.res("light_data"), LightData::new,
                     Patch.STREAM_CODEC);
+    private static final Object2IntMap<ResourceKey<Level>> LIGHT_PER_WORLD = new Object2IntArrayMap<>();
+    private static boolean enabled = false;
+    @Nullable
+    private static Object lightMap = null;
+
+    public static void init() {
+    }
 
     public static LightData getLightData(MapItemSavedData data) {
         return LIGHT_DATA.get(data);
@@ -53,6 +50,32 @@ public class MapLightHandler {
         return enabled;
     }
 
+    // call to activate light on maps
+    public static void setActive(boolean on) {
+        enabled = on;
+    }
+
+    // Call to set lightmap. Has to be 16x16
+    @Environment(EnvType.CLIENT)
+    public static void setLightMap(@Nullable NativeImage map) {
+        if (map != null) {
+            Preconditions.checkArgument(map.getWidth() != 16 || map.getHeight() != 6, "Lightmap must be 16x16");
+        }
+        lightMap = map;
+    }
+
+    @ApiStatus.Internal
+    public static void setAmbientLight(Object2IntMap<ResourceKey<Level>> ambientLight) {
+        LIGHT_PER_WORLD.clear();
+        LIGHT_PER_WORLD.putAll(ambientLight);
+    }
+
+    @ApiStatus.Internal
+    public static void sendDataToClient(ServerPlayer player) {
+        if (enabled) {
+            NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncAmbientLightPacket(player.level().registryAccess()));
+        }
+    }
 
     public static class Counter implements CustomMapData.DirtyCounter {
         private int minDirtyX = 0;
@@ -95,10 +118,10 @@ public class MapLightHandler {
 
     public static class LightData implements CustomMapData<Counter, Patch> {
 
-        private static final String LIGHTMAP_TAG = "lightmap";
         public static final String MIN_X = "min_x";
         public static final String MAX_X = "max_x";
         public static final String MIN_Z = "min_z";
+        private static final String LIGHTMAP_TAG = "lightmap";
         private byte[][] data = null;
 
         private int getEntry(int x, int z) {
@@ -306,34 +329,6 @@ public class MapLightHandler {
                 }
             }
         };
-    }
-
-    private static final Object2IntMap<ResourceKey<Level>> LIGHT_PER_WORLD = new Object2IntArrayMap<>();
-
-
-    @Nullable
-    private static Object lightMap = null;
-
-    // Call to set lightmap. Has to be 16x16
-    @Environment(EnvType.CLIENT)
-    public static void setLightMap(@Nullable NativeImage map) {
-        if (map != null) {
-            Preconditions.checkArgument(map.getWidth() != 16 || map.getHeight() != 6, "Lightmap must be 16x16");
-        }
-        lightMap = map;
-    }
-
-    @ApiStatus.Internal
-    public static void setAmbientLight(Object2IntMap<ResourceKey<Level>> ambientLight) {
-        LIGHT_PER_WORLD.clear();
-        LIGHT_PER_WORLD.putAll(ambientLight);
-    }
-
-    @ApiStatus.Internal
-    public static void sendDataToClient(ServerPlayer player) {
-        if (enabled) {
-            NetworkHelper.sendToClientPlayer(player, new ClientBoundSyncAmbientLightPacket(player.level().registryAccess()));
-        }
     }
 
 }

@@ -40,6 +40,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyContainerHolder, IOptionalEntityBlock {
+    public static final BooleanProperty UP = BlockStateProperties.UP;
+    public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
+    public static final EnumProperty<DisplayStatus> ITEM_STATUS = ModBlockProperties.ITEM_STATUS;
+    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     protected static final VoxelShape SHAPE = Shapes.or(Shapes.box(0.1875D, 0.125D, 0.1875D, 0.815D, 0.885D, 0.815D),
             Shapes.box(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D),
             Shapes.box(0.0625D, 0D, 0.0625D, 0.9375D, 0.1875D, 0.9375D));
@@ -49,15 +53,31 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
             Shapes.box(0.0625D, 0.8125D, 0.0625D, 0.9375D, 1D, 0.9375D));
     protected static final VoxelShape SHAPE_UP_DOWN = Shapes.box(0.1875D, 0, 0.1875D, 0.815D, 1, 0.815D);
 
-    public static final BooleanProperty UP = BlockStateProperties.UP;
-    public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
-    public static final EnumProperty<DisplayStatus> ITEM_STATUS = ModBlockProperties.ITEM_STATUS;
-    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
-
     public PedestalBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(UP, false).setValue(AXIS, Direction.Axis.X)
                 .setValue(DOWN, false).setValue(WATERLOGGED, false).setValue(ITEM_STATUS, DisplayStatus.EMPTY));
+    }
+
+    public static boolean canConnectTo(BlockState state, BlockPos pos, LevelAccessor world, Direction dir, boolean hasItem) {
+        if (state.getBlock() instanceof PedestalBlock) {
+            if (dir == Direction.DOWN) {
+                return !state.getValue(ITEM_STATUS).hasTile();
+            } else if (dir == Direction.UP) {
+                return !hasItem;
+            }
+        }
+        return false;
+    }
+
+    public static boolean canHaveItemAbove(LevelAccessor level, BlockPos pos) {
+        BlockState above = level.getBlockState(pos.above());
+        return !above.is(ModRegistry.PEDESTAL.get()) && !above.isRedstoneConductor(level, pos.above());
+    }
+
+    public static DisplayStatus getStatus(LevelAccessor level, BlockPos pos, boolean hasItem) {
+        if (hasItem) return DisplayStatus.FULL;
+        return canHaveItemAbove(level, pos) ? DisplayStatus.EMPTY : DisplayStatus.NONE;
     }
 
     @ForgeOverride
@@ -83,17 +103,6 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
                 .setValue(ITEM_STATUS, getStatus(level, pos, false))
                 .setValue(UP, canConnectTo(level.getBlockState(pos.above()), pos, level, Direction.UP, false))
                 .setValue(DOWN, canConnectTo(level.getBlockState(pos.below()), pos, level, Direction.DOWN, false));
-    }
-
-    public static boolean canConnectTo(BlockState state, BlockPos pos, LevelAccessor world, Direction dir, boolean hasItem) {
-        if (state.getBlock() instanceof PedestalBlock) {
-            if (dir == Direction.DOWN) {
-                return !state.getValue(ITEM_STATUS).hasTile();
-            } else if (dir == Direction.UP) {
-                return !hasItem;
-            }
-        }
-        return false;
     }
 
     //called when a neighbor is placed
@@ -152,16 +161,6 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
             }
         }
         return resultType;
-    }
-
-    public static boolean canHaveItemAbove(LevelAccessor level, BlockPos pos) {
-        BlockState above = level.getBlockState(pos.above());
-        return !above.is(ModRegistry.PEDESTAL.get()) && !above.isRedstoneConductor(level, pos.above());
-    }
-
-    public static DisplayStatus getStatus(LevelAccessor level, BlockPos pos, boolean hasItem) {
-        if (hasItem) return DisplayStatus.FULL;
-        return canHaveItemAbove(level, pos) ? DisplayStatus.EMPTY : DisplayStatus.NONE;
     }
 
     @Override

@@ -35,19 +35,6 @@ public class RopeArrowItem extends ArrowItem {
         this.maxCharges = maxCharges;
     }
 
-    @Override
-    public AbstractArrow createArrow(Level level, ItemStack itemStack, LivingEntity shooter, @Nullable ItemStack itemStack2) {
-        return new RopeArrowEntity(shooter, level, itemStack.copyWithCount(1), itemStack2);
-    }
-
-    @Override
-    public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
-        RopeArrowEntity arrow = new RopeArrowEntity(pos.x(), pos.y(), pos.z(),
-                level, stack.copyWithCount(1), null);
-        arrow.pickup = AbstractArrow.Pickup.ALLOWED;
-        return arrow;
-    }
-
     public static int getRopes(ItemStack stack) {
         return stack.getOrDefault(ModComponents.CHARGES.get(), 0);
     }
@@ -67,6 +54,19 @@ public class RopeArrowItem extends ArrowItem {
 
     public static boolean isValidRope(ItemStack stack) {
         return stack.is(ModTags.ROPES);
+    }
+
+    @Override
+    public AbstractArrow createArrow(Level level, ItemStack itemStack, LivingEntity shooter, @Nullable ItemStack itemStack2) {
+        return new RopeArrowEntity(shooter, level, itemStack.copyWithCount(1), itemStack2);
+    }
+
+    @Override
+    public Projectile asProjectile(Level level, Position pos, ItemStack stack, Direction direction) {
+        RopeArrowEntity arrow = new RopeArrowEntity(pos.x(), pos.y(), pos.z(),
+                level, stack.copyWithCount(1), null);
+        arrow.pickup = AbstractArrow.Pickup.ALLOWED;
+        return arrow;
     }
 
     @Override

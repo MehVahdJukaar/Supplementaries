@@ -32,6 +32,31 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         super(ModRegistry.HOURGLASS_TILE.get(), pos, state);
     }
 
+    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, HourGlassBlockTile tile) {
+        Direction dir = pState.getValue(HourGlassBlock.FACING);
+        if (!tile.sandData.isEmpty()) {
+            tile.prevProgress = tile.progress;
+            if (dir == Direction.UP && tile.progress != 1) {
+                tile.progress = Math.min(tile.progress + tile.sandData.getIncrement(), 1f);
+            } else if (dir == Direction.DOWN && tile.progress != 0) {
+                tile.progress = Math.max(tile.progress - tile.sandData.getIncrement(), 0f);
+            }
+        }
+
+        if (!pLevel.isClientSide) {
+            int p;
+            if (dir == Direction.DOWN) {
+                p = 1 + (int) ((1 - tile.progress) * 14f);
+            } else {
+                p = 1 + (int) ((tile.progress) * 14f);
+            }
+            if (p != tile.power) {
+                tile.power = p;
+                pLevel.updateNeighbourForOutputSignal(pPos, pState.getBlock());
+            }
+        }
+    }
+
     @Override
     public void updateTileOnInventoryChanged() {
         this.sandData = HourglassTimesManager.getInstance(level.registryAccess())
@@ -68,31 +93,6 @@ public class HourGlassBlockTile extends ItemDisplayTile {
             this.cachedTexture = this.sandData.computeTexture(this.getDisplayedItem(), this.level);
         }
         return this.cachedTexture;
-    }
-
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, HourGlassBlockTile tile) {
-        Direction dir = pState.getValue(HourGlassBlock.FACING);
-        if (!tile.sandData.isEmpty()) {
-            tile.prevProgress = tile.progress;
-            if (dir == Direction.UP && tile.progress != 1) {
-                tile.progress = Math.min(tile.progress + tile.sandData.getIncrement(), 1f);
-            } else if (dir == Direction.DOWN && tile.progress != 0) {
-                tile.progress = Math.max(tile.progress - tile.sandData.getIncrement(), 0f);
-            }
-        }
-
-        if (!pLevel.isClientSide) {
-            int p;
-            if (dir == Direction.DOWN) {
-                p = 1 + (int) ((1 - tile.progress) * 14f);
-            } else {
-                p = 1 + (int) ((tile.progress) * 14f);
-            }
-            if (p != tile.power) {
-                tile.power = p;
-                pLevel.updateNeighbourForOutputSignal(pPos, pState.getBlock());
-            }
-        }
     }
 
     @Override

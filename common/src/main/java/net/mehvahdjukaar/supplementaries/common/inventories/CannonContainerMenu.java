@@ -20,22 +20,6 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
 
     public final CannonBlockTile cannon;
 
-    @Override
-    public CannonBlockTile getContainer() {
-        return cannon;
-    }
-
-    //client container factory
-    public static CannonContainerMenu create(Integer id, Inventory playerInventory, FriendlyByteBuf friendlyByteBuf) {
-        TileOrEntityTarget target = TileOrEntityTarget.read(friendlyByteBuf);
-        Level level = playerInventory.player.level();
-        var tile = target.findTileOrContainedTile(level);
-        if (tile instanceof CannonBlockTile ct) {
-            return new CannonContainerMenu(ModMenuTypes.CANNON.get(), id, playerInventory, ct);
-        }
-        throw new IllegalStateException("Could not find tile or contained tile for tile " + target);
-    }
-
     public <T extends CannonContainerMenu> CannonContainerMenu(int id, Inventory playerInventory, CannonBlockTile cannon) {
         this(ModMenuTypes.CANNON.get(), id, playerInventory, cannon);
     }
@@ -61,6 +45,21 @@ public class CannonContainerMenu extends AbstractContainerMenu implements IConta
             this.addSlot(new Slot(playerInventory, si, 8 + si * 18, 142));
     }
 
+    //client container factory
+    public static CannonContainerMenu create(Integer id, Inventory playerInventory, FriendlyByteBuf friendlyByteBuf) {
+        TileOrEntityTarget target = TileOrEntityTarget.read(friendlyByteBuf);
+        Level level = playerInventory.player.level();
+        var tile = target.findTileOrContainedTile(level);
+        if (tile instanceof CannonBlockTile ct) {
+            return new CannonContainerMenu(ModMenuTypes.CANNON.get(), id, playerInventory, ct);
+        }
+        throw new IllegalStateException("Could not find tile or contained tile for tile " + target);
+    }
+
+    @Override
+    public CannonBlockTile getContainer() {
+        return cannon;
+    }
 
     @Override
     public boolean stillValid(Player playerIn) {

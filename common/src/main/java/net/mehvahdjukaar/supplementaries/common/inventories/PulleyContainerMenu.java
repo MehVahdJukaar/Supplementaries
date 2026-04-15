@@ -17,11 +17,6 @@ import net.minecraft.world.item.ItemStack;
 public class PulleyContainerMenu extends AbstractContainerMenu implements IContainerProvider {
     public final Container inventory;
 
-    @Override
-    public Container getContainer() {
-        return inventory;
-    }
-
     public PulleyContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(id, playerInventory);
     }
@@ -52,6 +47,10 @@ public class PulleyContainerMenu extends AbstractContainerMenu implements IConta
             this.addSlot(new Slot(playerInventory, si, 8 + si * 18, 142));
     }
 
+    @Override
+    public Container getContainer() {
+        return inventory;
+    }
 
     @Override
     public boolean stillValid(Player playerIn) {

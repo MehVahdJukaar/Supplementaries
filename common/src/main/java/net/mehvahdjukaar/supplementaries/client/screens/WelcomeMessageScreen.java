@@ -19,6 +19,22 @@ import java.util.stream.Collectors;
 
 // Credits to Twilight Forest, used as inspirtaion for this class
 public class WelcomeMessageScreen extends Screen {
+    private static final Component OF_TEXT = Component.translatable("gui.supplementaries.optifine.message");
+    private static final Component OF_URL = Component.translatable("gui.supplementaries.optifine.suggestions")
+            .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).applyFormat(ChatFormatting.UNDERLINE)
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://optifine.alternatives.lambdaurora.dev/")));
+    private static final Component OF_TITLE = Component.translatable("gui.supplementaries.optifine.title")
+            .withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD);
+    private static final Component AM_TEXT = Component.translatable("gui.supplementaries.amendments.message");
+    private static final Component AM_URL = Component.translatable("gui.supplementaries.amendments.suggestions")
+            .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).applyFormat(ChatFormatting.UNDERLINE)
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://legacy.curseforge.com/minecraft/mc-mods/amendments")));
+    private static final Component IM_TITLE = Component.translatable("gui.supplementaries.incompatible_mods.title")
+            .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
+    private static final List<String> MODS_WITH_KNOWN_ISSUES = List.of();
+    private static final String IM_LIST = MODS_WITH_KNOWN_ISSUES.stream()
+            .filter(PlatHelper::isModLoaded) // Change this condition as needed
+            .collect(Collectors.joining(", "));
     private final Screen lastScreen;
     private final Component text;
     @Nullable
@@ -27,7 +43,6 @@ public class WelcomeMessageScreen extends Screen {
     private int ticksUntilEnable;
     private MultiLineLabel message;
     private MultiLineLabel suggestions;
-
     private Button exitButton;
     private Button disaleButton;
 
@@ -42,6 +57,28 @@ public class WelcomeMessageScreen extends Screen {
         this.text = text;
         this.url = url;
         this.onTurnOff = onTurnOff;
+    }
+
+
+    // static stuff
+
+    public static WelcomeMessageScreen createOptifine(Screen screen) {
+        return new WelcomeMessageScreen(screen, 200, OF_TITLE, OF_TEXT,
+                OF_URL, () -> SuppPlatformStuff.disableOFWarn(true));
+    }
+
+    public static WelcomeMessageScreen createIncompatibleMods(Screen screen) {
+        return new WelcomeMessageScreen(screen, 60, IM_TITLE,
+                Component.translatable("gui.supplementaries.incompatible_mods.message",
+                        Component.literal(IM_LIST).withStyle(ChatFormatting.RED)),
+                null, SuppPlatformStuff::disableIMWarn);
+    }
+
+    public static boolean hasIncompat() {
+        for (String s : MODS_WITH_KNOWN_ISSUES) {
+            if (PlatHelper.isModLoaded(s)) return true;
+        }
+        return false;
     }
 
     @Override
@@ -113,52 +150,6 @@ public class WelcomeMessageScreen extends Screen {
         int left = this.width / 2 - wid / 2;
         int right = this.width / 2 + wid / 2;
         return xPos >= left && xPos <= right ? Minecraft.getInstance().font.getSplitter().componentStyleAtWidth(url, xPos - left) : null;
-    }
-
-
-    // static stuff
-
-    private static final Component OF_TEXT = Component.translatable("gui.supplementaries.optifine.message");
-
-    private static final Component OF_URL = Component.translatable("gui.supplementaries.optifine.suggestions")
-            .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).applyFormat(ChatFormatting.UNDERLINE)
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://optifine.alternatives.lambdaurora.dev/")));
-
-    private static final Component OF_TITLE = Component.translatable("gui.supplementaries.optifine.title")
-            .withStyle(ChatFormatting.RED).withStyle(ChatFormatting.BOLD);
-
-    public static WelcomeMessageScreen createOptifine(Screen screen) {
-        return new WelcomeMessageScreen(screen, 200, OF_TITLE, OF_TEXT,
-                OF_URL, () -> SuppPlatformStuff.disableOFWarn(true));
-    }
-
-    private static final Component AM_TEXT = Component.translatable("gui.supplementaries.amendments.message");
-
-    private static final Component AM_URL = Component.translatable("gui.supplementaries.amendments.suggestions")
-            .withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN).applyFormat(ChatFormatting.UNDERLINE)
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://legacy.curseforge.com/minecraft/mc-mods/amendments")));
-
-    private static final Component IM_TITLE = Component.translatable("gui.supplementaries.incompatible_mods.title")
-            .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
-
-    public static WelcomeMessageScreen createIncompatibleMods(Screen screen) {
-        return new WelcomeMessageScreen(screen, 60, IM_TITLE,
-                Component.translatable("gui.supplementaries.incompatible_mods.message",
-                        Component.literal(IM_LIST).withStyle(ChatFormatting.RED)),
-                null, SuppPlatformStuff::disableIMWarn);
-    }
-
-    private static final List<String> MODS_WITH_KNOWN_ISSUES = List.of();
-
-    private static final String IM_LIST = MODS_WITH_KNOWN_ISSUES.stream()
-            .filter(PlatHelper::isModLoaded) // Change this condition as needed
-            .collect(Collectors.joining(", "));
-
-    public static boolean hasIncompat() {
-        for (String s : MODS_WITH_KNOWN_ISSUES) {
-            if (PlatHelper.isModLoaded(s)) return true;
-        }
-        return false;
     }
 
 }

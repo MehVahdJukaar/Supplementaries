@@ -38,6 +38,8 @@ public class ModCreativeTabs {
             RegHelper.registerCreativeModeTab(Supplementaries.res("supplementaries"),
                     (c) -> c.title(Component.translatable("tab.supplementaries.supplementaries"))
                             .icon(() -> ModRegistry.GLOBE_ITEM.get().getDefaultInstance()));
+    //for supp2. ugly i know but fabric has no load order
+    public static final List<Consumer<RegHelper.ItemToTabEvent>> SYNCED_ADD_TO_TABS = new ArrayList<>();
 
     public static void init() {
         RegHelper.addItemsToTabsRegistration(ModCreativeTabs::registerItemsToTabs);
@@ -627,6 +629,25 @@ public class ModCreativeTabs {
         SYNCED_ADD_TO_TABS.forEach(o -> o.accept(event));
     }
 
+    private static ItemStack[] makeSpikeItems() {
+        var items = new ArrayList<ItemStack>();
+        if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get()) {
+            items.add(ModRegistry.BAMBOO_SPIKES_ITEM.get().getDefaultInstance());
+            if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get() && CommonConfigs.Functional.TIPPED_SPIKES_TAB.get()) {
+                items.add(BambooSpikesTippedItem.createItemStack(Potions.POISON));
+                items.add(BambooSpikesTippedItem.createItemStack(Potions.LONG_POISON));
+                items.add(BambooSpikesTippedItem.createItemStack(Potions.STRONG_POISON));
+                for (var potion : BuiltInRegistries.POTION.holders().toList()) {
+                    if (potion == Potions.POISON || potion == Potions.LONG_POISON || potion == Potions.STRONG_POISON)
+                        continue;
+                    if (BambooSpikesTippedItem.isPotionValid(new PotionContents(potion))) {
+                        items.add(BambooSpikesTippedItem.createItemStack(potion));
+                    }
+                }
+            }
+        }
+        return items.toArray(ItemStack[]::new);
+    }
 
     public static final class TabAdder {
         private final RegHelper.ItemToTabEvent event;
@@ -635,6 +656,14 @@ public class ModCreativeTabs {
 
         public TabAdder(RegHelper.ItemToTabEvent event) {
             this.event = event;
+        }
+
+        private static boolean isTagOn(String... tags) {
+            for (var t : tags)
+                if (BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, ResourceLocation.parse(t))).isPresent()) {
+                    return true;
+                }
+            return false;
         }
 
         private void before(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemStack... items) {
@@ -789,39 +818,6 @@ public class ModCreativeTabs {
                 after(target, tab, key, items);
             }
         }
-
-        private static boolean isTagOn(String... tags) {
-            for (var t : tags)
-                if (BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, ResourceLocation.parse(t))).isPresent()) {
-                    return true;
-                }
-            return false;
-        }
-    }
-
-
-    //for supp2. ugly i know but fabric has no load order
-    public static final List<Consumer<RegHelper.ItemToTabEvent>> SYNCED_ADD_TO_TABS = new ArrayList<>();
-
-
-    private static ItemStack[] makeSpikeItems() {
-        var items = new ArrayList<ItemStack>();
-        if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get()) {
-            items.add(ModRegistry.BAMBOO_SPIKES_ITEM.get().getDefaultInstance());
-            if (CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get() && CommonConfigs.Functional.TIPPED_SPIKES_TAB.get()) {
-                items.add(BambooSpikesTippedItem.createItemStack(Potions.POISON));
-                items.add(BambooSpikesTippedItem.createItemStack(Potions.LONG_POISON));
-                items.add(BambooSpikesTippedItem.createItemStack(Potions.STRONG_POISON));
-                for (var potion : BuiltInRegistries.POTION.holders().toList()) {
-                    if (potion == Potions.POISON || potion == Potions.LONG_POISON || potion == Potions.STRONG_POISON)
-                        continue;
-                    if (BambooSpikesTippedItem.isPotionValid(new PotionContents(potion))) {
-                        items.add(BambooSpikesTippedItem.createItemStack(potion));
-                    }
-                }
-            }
-        }
-        return items.toArray(ItemStack[]::new);
     }
 
 

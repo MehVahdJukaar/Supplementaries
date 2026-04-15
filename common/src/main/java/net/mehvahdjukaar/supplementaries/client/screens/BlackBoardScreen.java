@@ -37,9 +37,6 @@ public class BlackBoardScreen extends Screen {
     private byte selectedColor = 1;
 
 
-    private record Entry(int x, int y, byte color) {
-    }
-
     private BlackBoardScreen(BlackboardBlockTile teBoard) {
         super(EDIT);
         this.tile = teBoard;
@@ -72,7 +69,6 @@ public class BlackBoardScreen extends Screen {
     public void setSelectedColor(byte color) {
         this.selectedColor = color;
     }
-
 
     @Override
     public void onClose() {
@@ -129,7 +125,6 @@ public class BlackBoardScreen extends Screen {
         this.saveHistoryStep();
     }
 
-
     private void undoPressed(Button button) {
         if (!this.history.isEmpty()) {
             for (var v : this.history.pollLast()) {
@@ -142,7 +137,6 @@ public class BlackBoardScreen extends Screen {
             this.historyButton.active = false;
         }
     }
-
 
     @Override
     protected void init() {
@@ -195,6 +189,9 @@ public class BlackBoardScreen extends Screen {
             }
         }
         graphics.pose().popPose();
+    }
+
+    private record Entry(int x, int y, byte color) {
     }
 }
 

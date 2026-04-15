@@ -23,10 +23,9 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class FenceMimicBlock extends MimicBlock implements SimpleWaterloggedBlock, EntityBlock {
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     protected static final VoxelShape SHAPE = Block.box(5D, 0.0D, 5D, 11D, 16.0D, 11D);
     protected static final VoxelShape COLLISION_SHAPE = Block.box(5D, 0.0D, 5D, 11D, 24.0D, 11D);
-
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     protected FenceMimicBlock(Properties properties) {
         super(properties);

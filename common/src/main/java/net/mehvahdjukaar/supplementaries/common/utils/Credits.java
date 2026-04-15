@@ -71,6 +71,31 @@ public class Credits implements Serializable {
                 s.alias));
     }
 
+    private static <T> T readFromURL(String link, Function<Reader, T> readerConsumer) throws IOException {
+        URL url = new URL(link);
+
+        URLConnection connection = url.openConnection();
+
+        String encoding = connection.getContentEncoding();
+        Charset charset = (encoding == null) ? StandardCharsets.UTF_8 : Charset.forName(encoding);
+        try (Reader reader = new BufferedReader(new InputStreamReader(url.openStream(), charset))) {
+            return readerConsumer.apply(reader);
+        }
+    }
+
+    public static void fetchFromServer() {
+        Thread creditsFetcher = new Thread(() -> {
+
+            String link = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/master/credits.json";
+            try {
+                INSTANCE = readFromURL(link, r -> GSON.fromJson(r, Credits.class));
+            } catch (Exception e) {
+                Supplementaries.LOGGER.warn("Failed to fetch contributors data from url {}, {}", link, e);
+            }
+        });
+        creditsFetcher.start();
+    }
+
     private void addSpecialPlayer(String name, boolean isDev, boolean hasGlobe, boolean hasStatue, String id, String... alias) {
         UUID onlineId = id == null ? null : UUID.fromString(id);
         addSpecialPlayer(name, isDev, hasGlobe, hasStatue, onlineId);
@@ -175,32 +200,6 @@ public class Credits implements Serializable {
         builder.append("\n\n\n\n\n");
 
         return builder.toString();
-    }
-
-
-    private static <T> T readFromURL(String link, Function<Reader, T> readerConsumer) throws IOException {
-        URL url = new URL(link);
-
-        URLConnection connection = url.openConnection();
-
-        String encoding = connection.getContentEncoding();
-        Charset charset = (encoding == null) ? StandardCharsets.UTF_8 : Charset.forName(encoding);
-        try (Reader reader = new BufferedReader(new InputStreamReader(url.openStream(), charset))) {
-            return readerConsumer.apply(reader);
-        }
-    }
-
-    public static void fetchFromServer() {
-        Thread creditsFetcher = new Thread(() -> {
-
-            String link = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/master/credits.json";
-            try {
-                INSTANCE = readFromURL(link, r -> GSON.fromJson(r, Credits.class));
-            } catch (Exception e) {
-                Supplementaries.LOGGER.warn("Failed to fetch contributors data from url {}, {}", link, e);
-            }
-        });
-        creditsFetcher.start();
     }
 
     //don't convert to record, gson doesn't like them

@@ -42,11 +42,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class HourGlassBlock extends WaterBlock implements EntityBlock {
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
     protected static final VoxelShape SHAPE_Y = Block.box(4D, 0D, 4.0D, 12.0D, 16D, 12.0D);
     protected static final VoxelShape SHAPE_Z = Block.box(4D, 4D, 0.0D, 12.0D, 12D, 16.0D);
     protected static final VoxelShape SHAPE_X = Block.box(0D, 4D, 4D, 16D, 12D, 12.0D);
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
-    public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
 
     public HourGlassBlock(Properties properties) {
         super(properties.lightLevel(state -> state.getValue(LIGHT_LEVEL)));

@@ -79,89 +79,6 @@ public class MobContainer {
         this.isAquarium = isAquarium;
     }
 
-    public MobContainer makeCopy() {
-        MobContainer container = new MobContainer(this.width, this.height, this.isAquarium);
-        container.setData(this.data);
-        return container;
-    }
-
-    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
-        if (this.data != null) {
-            RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
-            RecordBuilder<Tag> mapBuilder = ops.mapBuilder();
-            MobData.CODEC.encode(this.data, ops, mapBuilder);
-            var newTag = mapBuilder.build(tag);
-            if (newTag.isSuccess() && newTag.getOrThrow() instanceof CompoundTag ct) {
-                tag.merge(ct);
-            }
-        }
-        return tag;
-    }
-
-    public void load(CompoundTag tag, HolderLookup.Provider registries) {
-        RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
-
-        ops.getMap(tag).ifSuccess(map ->
-                MobData.CODEC.decode(ops, map)
-                        .ifSuccess(this::setData));
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public boolean isAquarium() {
-        return isAquarium;
-    }
-
-    public void setData(@Nullable MobContainer.MobData data) {
-        this.data = data;
-        this.needsInitialization = true;
-    }
-
-    //----init----
-
-    private void initializeEntity(Level level, @Nullable BlockPos pos) {
-        this.needsInitialization = false;
-        if (data != null) {
-            if (data instanceof MobData.Bucket bucketData) {
-                var type = BucketHelper.getEntityTypeFromBucket(bucketData.filledBucket.getItem());
-                this.mobProperties = CapturedMobHandler.getInstance(level.registryAccess())
-                        .getDataCap(type, true);
-            } else if (data instanceof MobData.Entity entityData) {
-                Entity entity = createStaticMob(entityData, level, pos == null ? BlockPos.ZERO : pos);
-                if (entity != null) {
-                    //visual entity stored in this instance
-                    this.mobProperties = CapturedMobHandler.getInstance(level).getCatchableMobCapOrDefault(entity);
-                    this.mobInstance = mobProperties.createCapturedMobInstance(entity, this.width, this.height);
-                    if (pos != null) {
-                        this.mobInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY,
-                                this.width, this.height);
-                        if (!level.isClientSide) this.updateLightLevel(level, pos);
-                    }
-                }
-            }
-        }
-    }
-
-    public void updateLightLevel(Level level, BlockPos pos) {
-        int light = 0;
-        if (level != null && !level.isClientSide && data != null) {
-            if (mobProperties != null) {
-                light = mobProperties.getLightLevel(level, pos);
-            }
-            BlockState state = level.getBlockState(pos);
-            if (state.getValue(ModBlockProperties.LIGHT_LEVEL_0_15) != light) {
-                level.setBlock(pos, state.setValue(ModBlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
-            }
-        }
-    }
-
-
     /**
      * initialize mob holder when loaded. creates a static entity for rendering. serverside too since we need it for mobs like chicken which need to lay eggs
      */
@@ -191,130 +108,6 @@ public class MobContainer {
             //entity.tickCount += this.rand.nextInt(40);
         }
         return entity;
-    }
-
-    //-----end-init-----
-
-
-    public boolean interactWithBucket(ItemStack stack, Level world, BlockPos pos, @Nullable Player
-            player, InteractionHand hand) {
-        Item item = stack.getItem();
-
-        ItemStack returnStack = ItemStack.EMPTY;
-        //fill
-        if (this.isEmpty()) {
-            if (BucketHelper.isFishBucket(item)) {
-                world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-                returnStack = new ItemStack(Items.BUCKET);
-                var type = BucketHelper.getEntityTypeFromBucket(stack.getItem());
-                var cap = CapturedMobHandler.getInstance(world).getDataCap(type, true);
-                var f = cap.getForceFluid();
-                if (stack.isEmpty()) {
-                    Supplementaries.LOGGER.error("Bucket error 3: name none, bucket {}", stack);
-                }
-                MobData data = new MobData.Bucket(Optional.empty(), stack.copy(), cap.getFishTextureIndex(), f);
-                this.setData(data);
-            }
-        } else if (item == Items.BUCKET) {
-            //empty
-            if (this.data instanceof MobData.Bucket bucketData) {
-                world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-                returnStack = bucketData.filledBucket.copy();
-                this.setData(null);
-            } else if (this.data instanceof MobData.Entity && mobInstance != null) {
-                Entity temp = mobInstance.getEntityForRenderer();
-                if (temp != null) {
-                    ItemStack bucket = BucketHelper.getBucketFromEntity(temp);
-                    if (!bucket.isEmpty()) {
-                        world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        returnStack = bucket.copy();
-                        this.setData(null);
-                    }
-                }
-            }
-        }
-        if (!returnStack.isEmpty()) {
-            if (player != null) {
-                player.awardStat(Stats.ITEM_USED.get(item));
-                if (!player.isCreative()) { //TODO: creative check in spawp item
-                    Utils.swapItem(player, hand, returnStack);
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isEmpty() {
-        return this.data == null;
-    }
-
-
-    public void tick(Level pLevel, BlockPos pPos) {
-        if (this.needsInitialization) this.initializeEntity(pLevel, pPos);
-        if (this.mobInstance != null && this.data instanceof MobData.Entity entityData) {
-            this.mobInstance.containerTick(pLevel, pPos, entityData.scale, entityData.mobTag);
-        }
-    }
-
-    public ItemInteractionResult onInteract(Level world, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
-        if (this.mobInstance != null && this.data instanceof MobData.Entity entityData) {
-            return mobInstance.onPlayerInteract(world, pos, player, hand, stack, entityData.mobTag);
-        }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-    }
-
-    @Nullable
-    public MobContainer.MobData getData() {
-        return data;
-    }
-
-    @Nullable
-    public Entity getDisplayedMob(Level level, @Nullable BlockPos pos) {
-        if (this.needsInitialization) this.initializeEntity(level, pos);
-        if (this.mobInstance != null) {
-            return this.mobInstance.getEntityForRenderer();
-        }
-        return null;
-    }
-
-    public Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
-        if (data == null || !this.isAquarium || this.mobProperties == null) return Optional.empty();
-        return this.mobProperties.getForceFluid();
-    }
-
-    //item stuff
-
-    /**
-     * captures an entity in this container
-     *
-     * @param mob         entity to be captured
-     * @param bucketStack optional filled bucket item
-     * @return true if success
-     */
-    public boolean captureEntity(Entity mob, ItemStack bucketStack) {
-        MobData newData;
-        String name = mob.getName().getString();
-        var cap = CapturedMobHandler.getInstance(mob.level()).getCatchableMobCapOrDefault(mob);
-        if (isAquarium && !bucketStack.isEmpty() && cap.renderAs2DFish()) {
-            var f = cap.getForceFluid();
-            if (bucketStack.isEmpty()) {
-                Supplementaries.LOGGER.error("Bucket error 2: name {}, bucket {}", name, bucketStack);
-            }
-            newData = new MobData.Bucket(Optional.of(name), bucketStack, cap.getFishTextureIndex(), f);
-        } else {
-            Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(mob, width, height, isAquarium);
-            float scale = dimensions.getLeft();
-            float yOffset = dimensions.getRight();
-
-            CompoundTag mobTag = prepareMobTagForContainer(mob, yOffset);
-            if (mobTag == null) return false;
-            UUID id = mob.getUUID();
-            newData = new MobData.Entity(name, mobTag, scale, id);
-        }
-
-        this.setData(newData);
-        return true;
     }
 
     /**
@@ -450,6 +243,210 @@ public class MobContainer {
         }
 
         return new ImmutablePair<>(scale, yOffset);
+    }
+
+    public MobContainer makeCopy() {
+        MobContainer container = new MobContainer(this.width, this.height, this.isAquarium);
+        container.setData(this.data);
+        return container;
+    }
+
+    public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+        if (this.data != null) {
+            RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
+            RecordBuilder<Tag> mapBuilder = ops.mapBuilder();
+            MobData.CODEC.encode(this.data, ops, mapBuilder);
+            var newTag = mapBuilder.build(tag);
+            if (newTag.isSuccess() && newTag.getOrThrow() instanceof CompoundTag ct) {
+                tag.merge(ct);
+            }
+        }
+        return tag;
+    }
+
+    public void load(CompoundTag tag, HolderLookup.Provider registries) {
+        RegistryOps<Tag> ops = registries.createSerializationContext(NbtOps.INSTANCE);
+
+        ops.getMap(tag).ifSuccess(map ->
+                MobData.CODEC.decode(ops, map)
+                        .ifSuccess(this::setData));
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    //----init----
+
+    public float getHeight() {
+        return height;
+    }
+
+    public boolean isAquarium() {
+        return isAquarium;
+    }
+
+    private void initializeEntity(Level level, @Nullable BlockPos pos) {
+        this.needsInitialization = false;
+        if (data != null) {
+            if (data instanceof MobData.Bucket bucketData) {
+                var type = BucketHelper.getEntityTypeFromBucket(bucketData.filledBucket.getItem());
+                this.mobProperties = CapturedMobHandler.getInstance(level.registryAccess())
+                        .getDataCap(type, true);
+            } else if (data instanceof MobData.Entity entityData) {
+                Entity entity = createStaticMob(entityData, level, pos == null ? BlockPos.ZERO : pos);
+                if (entity != null) {
+                    //visual entity stored in this instance
+                    this.mobProperties = CapturedMobHandler.getInstance(level).getCatchableMobCapOrDefault(entity);
+                    this.mobInstance = mobProperties.createCapturedMobInstance(entity, this.width, this.height);
+                    if (pos != null) {
+                        this.mobInstance.onContainerWaterlogged(level.getFluidState(pos).getType() != Fluids.EMPTY,
+                                this.width, this.height);
+                        if (!level.isClientSide) this.updateLightLevel(level, pos);
+                    }
+                }
+            }
+        }
+    }
+
+    //-----end-init-----
+
+    public void updateLightLevel(Level level, BlockPos pos) {
+        int light = 0;
+        if (level != null && !level.isClientSide && data != null) {
+            if (mobProperties != null) {
+                light = mobProperties.getLightLevel(level, pos);
+            }
+            BlockState state = level.getBlockState(pos);
+            if (state.getValue(ModBlockProperties.LIGHT_LEVEL_0_15) != light) {
+                level.setBlock(pos, state.setValue(ModBlockProperties.LIGHT_LEVEL_0_15, light), 2 | 4 | 16);
+            }
+        }
+    }
+
+    public boolean interactWithBucket(ItemStack stack, Level world, BlockPos pos, @Nullable Player
+            player, InteractionHand hand) {
+        Item item = stack.getItem();
+
+        ItemStack returnStack = ItemStack.EMPTY;
+        //fill
+        if (this.isEmpty()) {
+            if (BucketHelper.isFishBucket(item)) {
+                world.playSound(null, pos, SoundEvents.BUCKET_EMPTY_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+                returnStack = new ItemStack(Items.BUCKET);
+                var type = BucketHelper.getEntityTypeFromBucket(stack.getItem());
+                var cap = CapturedMobHandler.getInstance(world).getDataCap(type, true);
+                var f = cap.getForceFluid();
+                if (stack.isEmpty()) {
+                    Supplementaries.LOGGER.error("Bucket error 3: name none, bucket {}", stack);
+                }
+                MobData data = new MobData.Bucket(Optional.empty(), stack.copy(), cap.getFishTextureIndex(), f);
+                this.setData(data);
+            }
+        } else if (item == Items.BUCKET) {
+            //empty
+            if (this.data instanceof MobData.Bucket bucketData) {
+                world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+                returnStack = bucketData.filledBucket.copy();
+                this.setData(null);
+            } else if (this.data instanceof MobData.Entity && mobInstance != null) {
+                Entity temp = mobInstance.getEntityForRenderer();
+                if (temp != null) {
+                    ItemStack bucket = BucketHelper.getBucketFromEntity(temp);
+                    if (!bucket.isEmpty()) {
+                        world.playSound(null, pos, SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        returnStack = bucket.copy();
+                        this.setData(null);
+                    }
+                }
+            }
+        }
+        if (!returnStack.isEmpty()) {
+            if (player != null) {
+                player.awardStat(Stats.ITEM_USED.get(item));
+                if (!player.isCreative()) { //TODO: creative check in spawp item
+                    Utils.swapItem(player, hand, returnStack);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isEmpty() {
+        return this.data == null;
+    }
+
+    public void tick(Level pLevel, BlockPos pPos) {
+        if (this.needsInitialization) this.initializeEntity(pLevel, pPos);
+        if (this.mobInstance != null && this.data instanceof MobData.Entity entityData) {
+            this.mobInstance.containerTick(pLevel, pPos, entityData.scale, entityData.mobTag);
+        }
+    }
+
+    public ItemInteractionResult onInteract(Level world, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
+        if (this.mobInstance != null && this.data instanceof MobData.Entity entityData) {
+            return mobInstance.onPlayerInteract(world, pos, player, hand, stack, entityData.mobTag);
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Nullable
+    public MobContainer.MobData getData() {
+        return data;
+    }
+
+    public void setData(@Nullable MobContainer.MobData data) {
+        this.data = data;
+        this.needsInitialization = true;
+    }
+
+    //item stuff
+
+    @Nullable
+    public Entity getDisplayedMob(Level level, @Nullable BlockPos pos) {
+        if (this.needsInitialization) this.initializeEntity(level, pos);
+        if (this.mobInstance != null) {
+            return this.mobInstance.getEntityForRenderer();
+        }
+        return null;
+    }
+
+    public Optional<Holder<SoftFluid>> shouldRenderWithFluid() {
+        if (data == null || !this.isAquarium || this.mobProperties == null) return Optional.empty();
+        return this.mobProperties.getForceFluid();
+    }
+
+    /**
+     * captures an entity in this container
+     *
+     * @param mob         entity to be captured
+     * @param bucketStack optional filled bucket item
+     * @return true if success
+     */
+    public boolean captureEntity(Entity mob, ItemStack bucketStack) {
+        MobData newData;
+        String name = mob.getName().getString();
+        var cap = CapturedMobHandler.getInstance(mob.level()).getCatchableMobCapOrDefault(mob);
+        if (isAquarium && !bucketStack.isEmpty() && cap.renderAs2DFish()) {
+            var f = cap.getForceFluid();
+            if (bucketStack.isEmpty()) {
+                Supplementaries.LOGGER.error("Bucket error 2: name {}, bucket {}", name, bucketStack);
+            }
+            newData = new MobData.Bucket(Optional.of(name), bucketStack, cap.getFishTextureIndex(), f);
+        } else {
+            Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(mob, width, height, isAquarium);
+            float scale = dimensions.getLeft();
+            float yOffset = dimensions.getRight();
+
+            CompoundTag mobTag = prepareMobTagForContainer(mob, yOffset);
+            if (mobTag == null) return false;
+            UUID id = mob.getUUID();
+            newData = new MobData.Entity(name, mobTag, scale, id);
+        }
+
+        this.setData(newData);
+        return true;
     }
 
     public void clear() {

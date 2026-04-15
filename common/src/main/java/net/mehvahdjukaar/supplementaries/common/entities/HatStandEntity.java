@@ -45,31 +45,27 @@ import java.util.Objects;
 import java.util.OptionalInt;
 
 public class HatStandEntity extends LivingEntity {
-    private static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0F, 0.0F, 0.0F);
     public static final EntityDataAccessor<Byte> DATA_CLIENT_FLAGS = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.BYTE);
     public static final EntityDataAccessor<Rotations> DATA_HEAD_POSE = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.ROTATIONS);
     public static final EntityDataAccessor<OptionalInt> FACING_TARGET = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
-
+    private static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0F, 0.0F, 0.0F);
+    public final SwingAnimation swingAnimation;
+    public final AnimationState skibidiAnimation;
     private final NonNullList<ItemStack> helmet = NonNullList.withSize(1, ItemStack.EMPTY);
-    private boolean invisible;
+    private final int tickOffset;
     /**
      * After punching the stand, the cooldown before you can punch it again without breaking it.
      */
     public long lastHit;
+    public Vec3 jumpScareAngles = Vec3.ZERO;
+    private boolean invisible;
     private boolean slotsDisabled = false;
-
     private Rotations headPose;
-    public final SwingAnimation swingAnimation;
-    public final AnimationState skibidiAnimation;
-    private final int tickOffset;
     private int skibidiAnimDur = 0;
-
     @Nullable
     private Float originalYRot = null;
     @Nullable
     private Entity target = null;
-
-    public Vec3 jumpScareAngles = Vec3.ZERO;
 
     public HatStandEntity(EntityType<? extends HatStandEntity> entityType, Level level) {
         super(entityType, level);
@@ -84,6 +80,12 @@ public class HatStandEntity extends LivingEntity {
         }
         tickOffset = this.random.nextInt(100);
         this.originalYRot = null;
+    }
+
+    public static void makeSkibidiInArea(LivingEntity player) {
+        Level level = player.level();
+        var toilets = level.getEntitiesOfClass(HatStandEntity.class, new AABB(player.getOnPos()).inflate(10));
+        toilets.forEach(h -> h.setSkibidiIfInCauldron(player));
     }
 
     private Vector3f getRotationAxis() {
@@ -396,7 +398,6 @@ public class HatStandEntity extends LivingEntity {
         }
     }
 
-
     @Override
     protected float tickHeadTurn(float yRot, float animStep) {
         this.yBodyRotO = this.yRotO;
@@ -440,12 +441,12 @@ public class HatStandEntity extends LivingEntity {
         super.setInvisible(invisible);
     }
 
-    public void setNoBasePlate(boolean noBasePlate) {
-        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 8, noBasePlate));
-    }
-
     public boolean isNoBasePlate() {
         return (this.entityData.get(DATA_CLIENT_FLAGS) & 8) != 0;
+    }
+
+    public void setNoBasePlate(boolean noBasePlate) {
+        this.entityData.set(DATA_CLIENT_FLAGS, this.setBit(this.entityData.get(DATA_CLIENT_FLAGS), 8, noBasePlate));
     }
 
     private byte setBit(byte oldBit, int offset, boolean value) {
@@ -502,13 +503,13 @@ public class HatStandEntity extends LivingEntity {
         return this.isInvisible();
     }
 
+    public Rotations getHeadPose() {
+        return this.headPose;
+    }
+
     public void setHeadPose(Rotations headPose) {
         this.headPose = headPose;
         this.entityData.set(DATA_HEAD_POSE, headPose);
-    }
-
-    public Rotations getHeadPose() {
-        return this.headPose;
     }
 
     @Override
@@ -612,12 +613,6 @@ public class HatStandEntity extends LivingEntity {
         } else {
             this.setPose(Pose.STANDING);
         }
-    }
-
-    public static void makeSkibidiInArea(LivingEntity player) {
-        Level level = player.level();
-        var toilets = level.getEntitiesOfClass(HatStandEntity.class, new AABB(player.getOnPos()).inflate(10));
-        toilets.forEach(h -> h.setSkibidiIfInCauldron(player));
     }
 
 }

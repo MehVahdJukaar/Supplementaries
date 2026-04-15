@@ -35,15 +35,9 @@ public class AntiqueInkItem extends Item implements SignApplicator {
         super(properties);
     }
 
-    @Override
-    public boolean tryApplyToSign(Level level, SignBlockEntity signBlockEntity, boolean front, Player player) {
-        return toggleAntiqueInkOnSigns(level, player, signBlockEntity.getBlockPos(), signBlockEntity, true);
-    }
-
     public static boolean isEnabled() {
         return PlatHelper.getPlatform().isForge() && CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get();
     }
-
 
     public static boolean toggleAntiqueInkOnSigns(Level world, Player player, BlockPos pos, BlockEntity tile, boolean newState) {
         var cap = SuppPlatformStuff.getForgeCap(tile, IAntiquable.class);
@@ -131,6 +125,11 @@ public class AntiqueInkItem extends Item implements SignApplicator {
 
     public static boolean hasAntiqueInk(ItemStack stack) {
         return stack.get(ModComponents.ANTIQUE_INK.get()) != null;
+    }
+
+    @Override
+    public boolean tryApplyToSign(Level level, SignBlockEntity signBlockEntity, boolean front, Player player) {
+        return toggleAntiqueInkOnSigns(level, player, signBlockEntity.getBlockPos(), signBlockEntity, true);
     }
 }
 

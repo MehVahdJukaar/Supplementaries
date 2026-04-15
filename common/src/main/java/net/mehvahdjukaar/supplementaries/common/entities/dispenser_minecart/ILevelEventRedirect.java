@@ -9,8 +9,6 @@ import net.minecraft.world.phys.Vec3;
 
 public interface ILevelEventRedirect {
 
-    void supp$setRedirected(boolean redirected, Vec3 entityId);
-
     static boolean supp$tryRedirect(ServerLevel serverLevel, Player pPlayer, Vec3 vec3, int pType, BlockPos pPos, int pData) {
         if (pType == 2000) {
             NetworkHelper.sendToAllClientPlayersInRange(serverLevel, pPos, 64,
@@ -19,4 +17,6 @@ public interface ILevelEventRedirect {
         }
         return false;
     }
+
+    void supp$setRedirected(boolean redirected, Vec3 entityId);
 }

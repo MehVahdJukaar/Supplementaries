@@ -28,6 +28,14 @@ public class SlimedData {
         this(0);
     }
 
+    public static float getAlpha(LivingEntity le, float partialTicks) {
+        if (!ClientConfigs.Tweaks.SLIME_OVERLAY.get()) return 0;
+        SlimedData data = ModEntities.SLIMED_DATA.getOrCreate(le);
+        float slimeTicks = data.slimedTicks - partialTicks;
+        float maxFade = 70;
+        return slimeTicks > maxFade ? 1 : Mth.clamp(slimeTicks / maxFade, 0, 1);
+    }
+
     public void tick(LivingEntity entity) {
         if (slimedTicks > 0) {
             if (entity.isUnderWater()) {
@@ -62,14 +70,6 @@ public class SlimedData {
 
     public int getSlimedTicks() {
         return slimedTicks;
-    }
-
-    public static float getAlpha(LivingEntity le, float partialTicks) {
-        if (!ClientConfigs.Tweaks.SLIME_OVERLAY.get()) return 0;
-        SlimedData data = ModEntities.SLIMED_DATA.getOrCreate(le);
-        float slimeTicks = data.slimedTicks - partialTicks;
-        float maxFade = 70;
-        return slimeTicks > maxFade ? 1 : Mth.clamp(slimeTicks / maxFade, 0, 1);
     }
 
 }

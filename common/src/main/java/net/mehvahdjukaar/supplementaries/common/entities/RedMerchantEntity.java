@@ -209,12 +209,12 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         return SoundEvents.WANDERING_TRADER_YES;
     }
 
-    public void setDespawnDelay(int i) {
-        this.despawnDelay = i;
-    }
-
     public int getDespawnDelay() {
         return this.despawnDelay;
+    }
+
+    public void setDespawnDelay(int i) {
+        this.despawnDelay = i;
     }
 
     @Override
@@ -232,13 +232,13 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         }
     }
 
-    public void setWanderTarget(@Nullable BlockPos pos) {
-        this.wanderTarget = pos;
-    }
-
     @Nullable
     private BlockPos getWanderTarget() {
         return this.wanderTarget;
+    }
+
+    public void setWanderTarget(@Nullable BlockPos pos) {
+        this.wanderTarget = pos;
     }
 
     @Override

@@ -45,6 +45,7 @@ public class FeatherBlock extends Block {
         COLLISIONS.put(0f, Shapes.block());
     }
 
+    private final VoxelShape COLLISION_CHECK_SHAPE = Block.box(0, 0, 0, 16, 16.1, 16);
 
     public FeatherBlock(Properties properties) {
         super(properties);
@@ -67,9 +68,6 @@ public class FeatherBlock extends Block {
     public void updateEntityAfterFallOn(BlockGetter reader, Entity entity) {
         entity.setDeltaMovement(entity.getDeltaMovement().multiply(1.0D, 0.4D, 1.0D));
     }
-
-
-    private final VoxelShape COLLISION_CHECK_SHAPE = Block.box(0, 0, 0, 16, 16.1, 16);
 
     private boolean isColliding(Entity e, BlockPos pos) {
         if (e == null) return false;

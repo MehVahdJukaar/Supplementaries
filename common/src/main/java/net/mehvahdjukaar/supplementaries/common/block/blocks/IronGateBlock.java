@@ -39,6 +39,26 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
         this.gold = gold;
     }
 
+    private static void soundAndEvent(BlockState state, Level level, BlockPos pos, @Nullable Player player) {
+        boolean open = state.getValue(OPEN);
+        level.playSound(player, pos, open ? BlockSetType.IRON.trapdoorOpen() : BlockSetType.IRON.trapdoorClose(), SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.1F + 0.9F);
+        level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+    }
+
+    public static BlockState messWithIronBarsState(LevelAccessor level, BlockPos clickedPos, BlockState original) {
+        for (Direction d : Direction.Plane.HORIZONTAL) {
+            BooleanProperty prop = CrossCollisionBlock.PROPERTY_BY_DIRECTION.get(d);
+            if (!original.getValue(prop)) {
+                BlockState blockState = level.getBlockState(clickedPos.relative(d));
+                if (blockState.getBlock() instanceof FenceGateBlock &&
+                        blockState.getValue(FenceGateBlock.FACING).getAxis() != d.getAxis()) {
+                    original = original.setValue(prop, true);
+                }
+            }
+        }
+        return original;
+    }
+
     @Override
     public SoundType getSoundType(BlockState state) {
         return SoundType.METAL;
@@ -106,7 +126,6 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
         }
     }
 
-
     private boolean canConnect(LevelAccessor world, BlockPos pos, Direction dir) {
         return canConnectUp(world.getBlockState(pos.above()), world, pos.above()) ||
                 canConnectSide(world.getBlockState(pos.relative(dir.getClockWise()))) ||
@@ -152,12 +171,6 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
         return InteractionResult.PASS;
     }
 
-    private static void soundAndEvent(BlockState state, Level level, BlockPos pos, @Nullable Player player) {
-        boolean open = state.getValue(OPEN);
-        level.playSound(player, pos, open ? BlockSetType.IRON.trapdoorOpen() : BlockSetType.IRON.trapdoorClose(), SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.1F + 0.9F);
-        level.gameEvent(player, open ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
-    }
-
     private void openGate(BlockState state, Level world, BlockPos pos, float yaw) {
         if (state.getValue(OPEN)) {
             state = state.setValue(OPEN, Boolean.FALSE);
@@ -184,20 +197,5 @@ public class IronGateBlock extends FenceGateBlock implements SimpleWaterloggedBl
             }
         }
         return closest;
-    }
-
-
-    public static BlockState messWithIronBarsState(LevelAccessor level, BlockPos clickedPos, BlockState original) {
-        for (Direction d : Direction.Plane.HORIZONTAL) {
-            BooleanProperty prop = CrossCollisionBlock.PROPERTY_BY_DIRECTION.get(d);
-            if (!original.getValue(prop)) {
-                BlockState blockState = level.getBlockState(clickedPos.relative(d));
-                if (blockState.getBlock() instanceof FenceGateBlock &&
-                        blockState.getValue(FenceGateBlock.FACING).getAxis() != d.getAxis()) {
-                    original = original.setValue(prop, true);
-                }
-            }
-        }
-        return original;
     }
 }

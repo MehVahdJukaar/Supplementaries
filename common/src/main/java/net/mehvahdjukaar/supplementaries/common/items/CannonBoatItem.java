@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class CannonBoatItem extends WoodBasedItem {
+    private static final Predicate<Entity> ENTITY_PREDICATE = EntitySelector.NO_SPECTATORS.and(Entity::isPickable);
+
     public CannonBoatItem(Properties properties, WoodType wood) {
         super(properties, wood);
     }
-
-    private static final Predicate<Entity> ENTITY_PREDICATE = EntitySelector.NO_SPECTATORS.and(Entity::isPickable);
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {

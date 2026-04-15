@@ -37,6 +37,8 @@ public class ItemsUtil {
 
     //placeable item stuff
 
+    private static final Component UNKNOWN_CONTENTS = Component.translatable("container.shulkerBox.unknownContents");
+
     //TODO: move to lib
     @Nullable
     public static BlockState getPlacementState(BlockPlaceContext context, Block block) {
@@ -79,7 +81,6 @@ public class ItemsUtil {
         return InteractionResult.PASS;
     }
 
-
     public static boolean tryInteractingWithContainerItem(ItemStack containerStack, ItemStack incoming, Slot slot, ClickAction action, Player player, boolean inSlot) {
         if (action != ClickAction.PRIMARY) {
             //drop content in empty invSlot
@@ -93,7 +94,6 @@ public class ItemsUtil {
         }
         return false;
     }
-
 
     @ExpectPlatform
     public static boolean addToContainerItem(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate, boolean inSlot) {
@@ -115,7 +115,6 @@ public class ItemsUtil {
         throw new AssertionError();
     }
 
-
     //TODO: move to lib
     @ExpectPlatform
     public static ItemStack tryExtractingItem(Level level, @Nullable Direction dir, BlockPos pos, @Nullable BlockEntity container) {
@@ -132,8 +131,6 @@ public class ItemsUtil {
                                           BlockPos pos, BlockState state, @Nullable BlockEntity tile) {
         throw new AssertionError();
     }
-
-    private static final Component UNKNOWN_CONTENTS = Component.translatable("container.shulkerBox.unknownContents");
 
     public static void addShulkerLikeTooltips(ItemStack stack, List<Component> tooltip) {
         if (stack.has(DataComponents.CONTAINER_LOOT)) {

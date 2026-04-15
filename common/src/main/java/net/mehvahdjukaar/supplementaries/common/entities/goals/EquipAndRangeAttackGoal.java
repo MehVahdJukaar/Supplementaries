@@ -14,15 +14,15 @@ public class EquipAndRangeAttackGoal extends Goal {
     private final ItemStack item;
 
     private final RedMerchantEntity mob;
-    private LivingEntity target;
-    private int attackTime = -1;
     private final double speedModifier;
-    private int seeTime;
     private final int cooldown;
     private final int attackIntervalMin;
     private final int attackIntervalMax;
     private final float attackRadius;
     private final float attackRadiusSqr;
+    private LivingEntity target;
+    private int attackTime = -1;
+    private int seeTime;
 
 
     public EquipAndRangeAttackGoal(RedMerchantEntity mob, double speed, int cooldown, int minInt, int maxInt, float range, ItemStack item) {

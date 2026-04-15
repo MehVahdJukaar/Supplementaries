@@ -40,35 +40,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         this.model = model;
     }
 
-    @ForgeOverride
-    public AABB getRenderBoundingBox(BlockEntity tile) {
-        return new AABB(tile.getBlockPos()).inflate(0.2);
-    }
-
-    @Override
-    public int getViewDistance() {
-        return 96;
-    }
-
-    @Override
-    public boolean shouldRenderOffScreen(CannonBlockTile blockEntity) {
-        return true;
-    }
-
-    @Override
-    public void render(CannonBlockTile tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
-                       int packedLight, int packedOverlay) {
-
-
-        poseStack.pushPose();
-        poseStack.translate(0.5, 0.5, 0.5);
-        CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick);
-
-        renderCannonModel(this, tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
-        poseStack.popPose();
-
-    }
-
     public static void renderCannonModel(CannonBlockTileRenderer renderer,
                                          CannonBlockTile tile, float partialTick, PoseStack poseStack,
                                          MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
@@ -155,7 +126,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         poseStack.popPose();
     }
 
-
     public static LayerDefinition createMesh() {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
@@ -179,5 +149,34 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
                 PartPose.ZERO);
 
         return LayerDefinition.create(meshdefinition, 64, 64);
+    }
+
+    @ForgeOverride
+    public AABB getRenderBoundingBox(BlockEntity tile) {
+        return new AABB(tile.getBlockPos()).inflate(0.2);
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 96;
+    }
+
+    @Override
+    public boolean shouldRenderOffScreen(CannonBlockTile blockEntity) {
+        return true;
+    }
+
+    @Override
+    public void render(CannonBlockTile tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
+                       int packedLight, int packedOverlay) {
+
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, 0.5, 0.5);
+        CannonTrajectoryRenderer.render(tile, poseStack, bufferSource, packedLight, packedOverlay, partialTick);
+
+        renderCannonModel(this, tile, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+        poseStack.popPose();
+
     }
 }

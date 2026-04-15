@@ -39,25 +39,42 @@ import java.util.List;
 
 public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
 
-    protected static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 6.0D);
-    protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 10.0D, 16.0D, 6.0D, 16.0D);
-
-    protected static final VoxelShape SHAPE_EAST = Block.box(0.0D, 0.0D, 0.0D, 6.0D, 6.0D, 16.0D);
-    protected static final VoxelShape SHAPE_WEST = Block.box(10.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D);
-
-
-    protected static final VoxelShape SHAPE_NORTH_FLOOR = Block.box(0.0D, 0.0D, 5.0D, 16.0D, 6.0D, 11.0D);
-
-    protected static final VoxelShape SHAPE_WEST_FLOOR = Block.box(5.0D, 0.0D, 0.0D, 11.0D, 6.0D, 16.0D);
-
     public static final IntegerProperty LIGHT_LEVEL = ModBlockProperties.LIGHT_LEVEL_0_15;
     public static final EnumProperty<AttachFace> ATTACHMENT = BlockStateProperties.ATTACH_FACE;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    protected static final VoxelShape SHAPE_SOUTH = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 6.0D);
+    protected static final VoxelShape SHAPE_NORTH = Block.box(0.0D, 0.0D, 10.0D, 16.0D, 6.0D, 16.0D);
+    protected static final VoxelShape SHAPE_EAST = Block.box(0.0D, 0.0D, 0.0D, 6.0D, 6.0D, 16.0D);
+    protected static final VoxelShape SHAPE_WEST = Block.box(10.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D);
+    protected static final VoxelShape SHAPE_NORTH_FLOOR = Block.box(0.0D, 0.0D, 5.0D, 16.0D, 6.0D, 11.0D);
+    protected static final VoxelShape SHAPE_WEST_FLOOR = Block.box(5.0D, 0.0D, 0.0D, 11.0D, 6.0D, 16.0D);
 
     public FlowerBoxBlock(Properties properties) {
         super(properties.lightLevel((s) -> s.getValue(LIGHT_LEVEL)));
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH)
                 .setValue(WATERLOGGED, false).setValue(ATTACHMENT, AttachFace.WALL).setValue(LIGHT_LEVEL, 0));
+    }
+
+    private static int getIndex(BlockState state, BlockPos pos, BlockHitResult hit) {
+        if (CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) return 1;
+        int ind;
+
+        Direction dir = state.getValue(FACING);
+        Vec3 v = hit.getLocation();
+        v = v.subtract(pos.getX() - 1d, 0, pos.getZ() - 1d);
+
+        if (dir.getAxis() == Direction.Axis.X) {
+            double normalizedZ = Math.abs((v.z) % 1d);
+            if (v.z >= 2) ind = 2;
+            else ind = (int) (normalizedZ / (1 / 3d));
+            if (dir.getStepX() < 0) ind = 2 - ind;
+        } else {
+            double normalizedX = Math.abs((v.x) % 1d);
+            if (v.x >= 2) ind = 2;
+            else ind = (int) (normalizedX / (1 / 3d));
+            if (dir.getStepZ() > 0) ind = 2 - ind;
+        }
+        return ind;
     }
 
     @Override
@@ -115,28 +132,6 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
             return tile.interactWithPlayerItem(player, hand, stack, ind);
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-    }
-
-    private static int getIndex(BlockState state, BlockPos pos, BlockHitResult hit) {
-        if (CommonConfigs.Building.FLOWER_BOX_SIMPLE_MODE.get()) return 1;
-        int ind;
-
-        Direction dir = state.getValue(FACING);
-        Vec3 v = hit.getLocation();
-        v = v.subtract(pos.getX() - 1d, 0, pos.getZ() - 1d);
-
-        if (dir.getAxis() == Direction.Axis.X) {
-            double normalizedZ = Math.abs((v.z) % 1d);
-            if (v.z >= 2) ind = 2;
-            else ind = (int) (normalizedZ / (1 / 3d));
-            if (dir.getStepX() < 0) ind = 2 - ind;
-        } else {
-            double normalizedX = Math.abs((v.x) % 1d);
-            if (v.x >= 2) ind = 2;
-            else ind = (int) (normalizedX / (1 / 3d));
-            if (dir.getStepZ() > 0) ind = 2 - ind;
-        }
-        return ind;
     }
 
     @Nullable

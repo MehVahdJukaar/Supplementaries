@@ -52,20 +52,6 @@ public class FlowerBoxModelsManager extends SimpleJsonResourceReloadListener {
         });
     }
 
-    private record FlowerBoxPlant(List<Item> seedItems, ModelResourceLocation tallModel,
-                                  ModelResourceLocation normalModel) {
-        private FlowerBoxPlant(List<Item> item, Optional<ResourceLocation> tallModel, Optional<ResourceLocation> normalModel) {
-            this(item, tallModel.map(RenderUtil::getStandaloneModelLocation).orElse(null),
-                    normalModel.map(RenderUtil::getStandaloneModelLocation).orElse(null));
-        }
-
-        public static final Codec<FlowerBoxPlant> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                MiscUtils.LENIENT_ITEM_OR_ITEM_LIST.lenientOptionalFieldOf("items", List.of()).forGetter(FlowerBoxPlant::seedItems),
-                ResourceLocation.CODEC.optionalFieldOf("big_model").forGetter(f -> Optional.ofNullable(f.tallModel).map(ModelResourceLocation::id)),
-                ResourceLocation.CODEC.optionalFieldOf("small_model").forGetter(f -> Optional.ofNullable(f.normalModel).map(ModelResourceLocation::id))
-        ).apply(instance, FlowerBoxPlant::new));
-    }
-
     @Nullable
     public ModelResourceLocation getSpecialFlowerModel(Item i) {
         FlowerBoxModelsManager instance = INSTANCE;
@@ -79,6 +65,20 @@ public class FlowerBoxModelsManager extends SimpleJsonResourceReloadListener {
         }
         res = flower.normalModel;
         return res;
+    }
+
+    private record FlowerBoxPlant(List<Item> seedItems, ModelResourceLocation tallModel,
+                                  ModelResourceLocation normalModel) {
+        public static final Codec<FlowerBoxPlant> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                MiscUtils.LENIENT_ITEM_OR_ITEM_LIST.lenientOptionalFieldOf("items", List.of()).forGetter(FlowerBoxPlant::seedItems),
+                ResourceLocation.CODEC.optionalFieldOf("big_model").forGetter(f -> Optional.ofNullable(f.tallModel).map(ModelResourceLocation::id)),
+                ResourceLocation.CODEC.optionalFieldOf("small_model").forGetter(f -> Optional.ofNullable(f.normalModel).map(ModelResourceLocation::id))
+        ).apply(instance, FlowerBoxPlant::new));
+
+        private FlowerBoxPlant(List<Item> item, Optional<ResourceLocation> tallModel, Optional<ResourceLocation> normalModel) {
+            this(item, tallModel.map(RenderUtil::getStandaloneModelLocation).orElse(null),
+                    normalModel.map(RenderUtil::getStandaloneModelLocation).orElse(null));
+        }
     }
 
 }

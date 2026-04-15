@@ -38,6 +38,18 @@ public class ConfettiPopperItem extends BlockItem {
         super(block, properties);
     }
 
+    public static @NotNull ClientBoundParticlePacket getConfettiPacket(ItemStack heldItem, Vec3 pos, Vec3 dir) {
+        ConfettiColors colorsComp = heldItem.get(ModComponents.CONFETTI_COLORS.get());
+        int[] colors;
+        if (colorsComp != null) {
+            colors = colorsComp.getColors().stream().mapToInt(i -> i).toArray();
+        } else {
+            colors = new int[]{};
+        }
+        return new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.CONFETTI,
+                dir, colors);
+    }
+
     @Override
     public String getDescriptionId() {
         return this.getOrCreateDescriptionId();
@@ -75,18 +87,6 @@ public class ConfettiPopperItem extends BlockItem {
 
         heldItem.consume(1, player);
         return InteractionResultHolder.sidedSuccess(heldItem, level.isClientSide);
-    }
-
-    public static @NotNull ClientBoundParticlePacket getConfettiPacket(ItemStack heldItem, Vec3 pos, Vec3 dir) {
-        ConfettiColors colorsComp = heldItem.get(ModComponents.CONFETTI_COLORS.get());
-        int[] colors;
-        if (colorsComp != null) {
-            colors = colorsComp.getColors().stream().mapToInt(i -> i).toArray();
-        } else {
-            colors = new int[]{};
-        }
-        return new ClientBoundParticlePacket(pos, ClientBoundParticlePacket.Kind.CONFETTI,
-                dir, colors);
     }
 
     @Override

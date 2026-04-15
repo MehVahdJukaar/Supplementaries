@@ -13,6 +13,15 @@ public class EndermanSkullModel extends SkullWithEyesModel {
         this.hat = modelPart.getChild("hat");
     }
 
+    //same as enderman. We do this because texture pack like to decapitate the enderman model. Looking at you, Fresh
+    public static LayerDefinition createMesh() {
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
+        partDefinition.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(0, 16).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(-0.5F)), PartPose.ZERO);
+        partDefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
+        return LayerDefinition.create(meshDefinition, 64, 32);
+    }
+
     @Override
     public void setupAnim(float mouthAnim, float g, float h) {
         super.setupAnim(mouthAnim, g, h); //mouth anim is walk anim. we cant use it.
@@ -22,14 +31,5 @@ public class EndermanSkullModel extends SkullWithEyesModel {
     public void setupJawAnimation(float mouthAnim) {
         this.head.y = mouthAnim * -6;
         this.hat.y = 0;
-    }
-
-    //same as enderman. We do this because texture pack like to decapitate the enderman model. Looking at you, Fresh
-    public static LayerDefinition createMesh() {
-        MeshDefinition meshDefinition = new MeshDefinition();
-        PartDefinition partDefinition = meshDefinition.getRoot();
-        partDefinition.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(0, 16).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(-0.5F)), PartPose.ZERO);
-        partDefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F), PartPose.ZERO);
-        return LayerDefinition.create(meshDefinition, 64, 32);
     }
 }

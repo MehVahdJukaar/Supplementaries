@@ -25,6 +25,13 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
     private final ModelPart top;
     private final ModelPart leather;
 
+    public BellowsBlockTileRenderer(BlockEntityRendererProvider.Context context) {
+        ModelPart model = context.bakeLayer(ClientRegistry.BELLOWS_MODEL);
+        this.center = model.getChild("center");
+        this.leather = model.getChild("leather");
+        this.top = model.getChild("top");
+    }
+
     public static LayerDefinition createMesh() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
@@ -48,13 +55,6 @@ public class BellowsBlockTileRenderer implements BlockEntityRenderer<BellowsBloc
                 PartPose.ZERO);
 
         return LayerDefinition.create(mesh, 64, 64);
-    }
-
-    public BellowsBlockTileRenderer(BlockEntityRendererProvider.Context context) {
-        ModelPart model = context.bakeLayer(ClientRegistry.BELLOWS_MODEL);
-        this.center = model.getChild("center");
-        this.leather = model.getChild("leather");
-        this.top = model.getChild("top");
     }
 
     @Override

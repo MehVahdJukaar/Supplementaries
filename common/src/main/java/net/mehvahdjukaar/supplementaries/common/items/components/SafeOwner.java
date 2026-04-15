@@ -25,22 +25,19 @@ import java.util.function.Consumer;
 
 public final class SafeOwner implements TooltipProvider {
 
-    private static final MutableComponent BOUND = Component.translatable("message.supplementaries.safe.bound").withStyle(ChatFormatting.GRAY);
-    private static final MutableComponent UNBOUND = Component.translatable("message.supplementaries.safe.unbound").withStyle(ChatFormatting.GRAY);
-
     public static final Codec<SafeOwner> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             UUIDUtil.CODEC.optionalFieldOf("owner").forGetter(s -> Optional.ofNullable(s.owner)),
             Codec.STRING.optionalFieldOf("password").forGetter(s -> Optional.ofNullable(s.password)),
             Codec.STRING.optionalFieldOf("owner").forGetter(s -> Optional.ofNullable(s.ownerName))
     ).apply(instance, SafeOwner::new));
-
     public static final StreamCodec<RegistryFriendlyByteBuf, SafeOwner> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), s -> Optional.ofNullable(s.owner),
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), s -> Optional.ofNullable(s.ownerName),
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8), s -> Optional.ofNullable(s.password),
             SafeOwner::new
     );
-
+    private static final MutableComponent BOUND = Component.translatable("message.supplementaries.safe.bound").withStyle(ChatFormatting.GRAY);
+    private static final MutableComponent UNBOUND = Component.translatable("message.supplementaries.safe.unbound").withStyle(ChatFormatting.GRAY);
     private final @Nullable UUID owner;
     private final @Nullable String ownerName;
     private final @Nullable String password;

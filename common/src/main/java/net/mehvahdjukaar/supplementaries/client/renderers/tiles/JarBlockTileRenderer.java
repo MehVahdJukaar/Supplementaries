@@ -32,14 +32,15 @@ import java.util.function.Supplier;
 
 
 public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
+    private static final boolean USE_MODEL = false;// PlatHelper.getPlatform().isForge();
     private final ItemRenderer itemRenderer;
+
 
     public JarBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
         Minecraft minecraft = Minecraft.getInstance();
         itemRenderer = minecraft.getItemRenderer();
     }
-
 
     public static void renderFluid(float percentageFill, int color, int luminosity, ResourceLocation texture, PoseStack poseStack,
                                    MultiBufferSource bufferIn, int light, int combinedOverlayIn) {
@@ -53,6 +54,29 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                 percentageFill * dimensions.y(),
                 light, color);
         poseStack.popPose();
+    }
+
+    public static void renderCookies(ItemRenderer itemRenderer, PoseStack poseStack, MultiBufferSource buffer, RandomSource rand,
+                                     int light, int overlay, Supplier<ItemStack> itemIterator) {
+
+        ItemStack cookieStack = itemIterator.get();
+        if (!cookieStack.isEmpty()) {
+            poseStack.pushPose();
+            poseStack.translate(0.5, 0.5, 0.5);
+            poseStack.mulPose(RotHlpr.XN90);
+            poseStack.translate(0, 0, -0.5);
+            float scale = 8f / 14f;
+            poseStack.scale(scale, scale, scale);
+            do {
+                poseStack.mulPose(Axis.ZP.rotationDegrees(rand.nextInt(360)));
+                poseStack.translate(0, 0, 1 / (16f * scale));
+                BakedModel model = itemRenderer.getModel(cookieStack, null, null, 0);
+                itemRenderer.render(cookieStack, ItemDisplayContext.FIXED, true, poseStack, buffer, light,
+                        overlay, model);
+                cookieStack = itemIterator.get();
+            } while (!cookieStack.isEmpty());
+            poseStack.popPose();
+        }
     }
 
     @Override
@@ -124,30 +148,5 @@ public class JarBlockTileRenderer extends CageBlockTileRenderer<JarBlockTile> {
                     poseStack, bufferIn, combinedLightIn, combinedOverlayIn);
         }
     }
-
-    public static void renderCookies(ItemRenderer itemRenderer, PoseStack poseStack, MultiBufferSource buffer, RandomSource rand,
-                                     int light, int overlay, Supplier<ItemStack> itemIterator) {
-
-        ItemStack cookieStack = itemIterator.get();
-        if (!cookieStack.isEmpty()) {
-            poseStack.pushPose();
-            poseStack.translate(0.5, 0.5, 0.5);
-            poseStack.mulPose(RotHlpr.XN90);
-            poseStack.translate(0, 0, -0.5);
-            float scale = 8f / 14f;
-            poseStack.scale(scale, scale, scale);
-            do {
-                poseStack.mulPose(Axis.ZP.rotationDegrees(rand.nextInt(360)));
-                poseStack.translate(0, 0, 1 / (16f * scale));
-                BakedModel model = itemRenderer.getModel(cookieStack, null, null, 0);
-                itemRenderer.render(cookieStack, ItemDisplayContext.FIXED, true, poseStack, buffer, light,
-                        overlay, model);
-                cookieStack = itemIterator.get();
-            } while (!cookieStack.isEmpty());
-            poseStack.popPose();
-        }
-    }
-
-    private static final boolean USE_MODEL = false;// PlatHelper.getPlatform().isForge();
 }
 

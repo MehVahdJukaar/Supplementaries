@@ -40,13 +40,11 @@ import java.util.List;
 
 public abstract class AbstractPresentBlock extends WaterBlock implements EntityBlock, IColored {
 
-    private final DyeColor color;
-
     public static final VoxelShape SHAPE_LID = Block.box(1, 10, 1, 15, 14, 15);
     public static final VoxelShape SHAPE_OPEN = Block.box(2, 0, 2, 14, 10, 14);
     public static final VoxelShape SHAPE_CLOSED = Shapes.or(SHAPE_OPEN, SHAPE_LID);
-
     public static final BooleanProperty PACKED = ModBlockProperties.PACKED;
+    private final DyeColor color;
 
     protected AbstractPresentBlock(DyeColor color, Properties properties) {
         super(properties);

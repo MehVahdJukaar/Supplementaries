@@ -14,8 +14,9 @@ import java.util.UUID;
 //server and client side. might move into data
 public class PickleData {
 
-    private static final UUID ME = UUID.fromString("898b3a39-e486-405c-a873-d6b472dc3ba2");
     protected static final Map<UUID, PickleValues> PICKLE_PLAYERS = new HashMap<>();
+    private static final UUID ME = UUID.fromString("898b3a39-e486-405c-a873-d6b472dc3ba2");
+    private static final PickleValues DEF = new PickleValues();
 
     static {
         for (UUID id : Credits.INSTANCE.getDevs()) {
@@ -60,8 +61,6 @@ public class PickleData {
     public static boolean isActive(UUID id) {
         return PICKLE_PLAYERS.getOrDefault(id, DEF).isOn();
     }
-
-    private static final PickleValues DEF = new PickleValues();
 
     public static class PickleValues {
         private State state = State.OFF;

@@ -66,15 +66,33 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
                 .setValue(EAST, false).setValue(UP, false).setValue(DOWN, false));
     }
 
+    @Nullable
+    public static BlockState convertToRopeKnot(PostType type, BlockState state, Level world, BlockPos pos) {
+        if (state.getBlock() instanceof EntityBlock) return null;
+        Direction.Axis axis = Direction.Axis.Y;
+        if (state.hasProperty(BlockStateProperties.AXIS)) {
+            axis = state.getValue(BlockStateProperties.AXIS);
+        }
+        BlockState newState = ModRegistry.ROPE_KNOT.get().defaultBlockState()
+                .setValue(AXIS, axis).setValue(POST_TYPE, type);
+        newState = Block.updateFromNeighbourShapes(newState, world, pos);
+
+
+        if (!world.setBlock(pos, newState, 0)) {
+            return null;
+        }
+
+        if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
+            tile.setHeldBlock(state);
+            tile.setChanged();
+        }
+        newState.updateNeighbourShapes(world, pos, UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
+        return newState;
+    }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(WATERLOGGED, POST_TYPE, AXIS, NORTH, SOUTH, WEST, EAST, UP, DOWN);
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new RopeKnotBlockTile(pPos, pState);
     }
 
     /*
@@ -97,6 +115,11 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
         return SHAPES_MAP.getOrDefault(state.setValue(WATERLOGGED, false), VoxelShapes.block());
     }*/
 
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return new RopeKnotBlockTile(pPos, pState);
+    }
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -268,30 +291,6 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
         boolean flag = fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8;
         return this.defaultBlockState().setValue(WATERLOGGED, flag);
-    }
-
-    @Nullable
-    public static BlockState convertToRopeKnot(PostType type, BlockState state, Level world, BlockPos pos) {
-        if (state.getBlock() instanceof EntityBlock) return null;
-        Direction.Axis axis = Direction.Axis.Y;
-        if (state.hasProperty(BlockStateProperties.AXIS)) {
-            axis = state.getValue(BlockStateProperties.AXIS);
-        }
-        BlockState newState = ModRegistry.ROPE_KNOT.get().defaultBlockState()
-                .setValue(AXIS, axis).setValue(POST_TYPE, type);
-        newState = Block.updateFromNeighbourShapes(newState, world, pos);
-
-
-        if (!world.setBlock(pos, newState, 0)) {
-            return null;
-        }
-
-        if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
-            tile.setHeldBlock(state);
-            tile.setChanged();
-        }
-        newState.updateNeighbourShapes(world, pos, UPDATE_CLIENTS | Block.UPDATE_INVISIBLE);
-        return newState;
     }
 
 

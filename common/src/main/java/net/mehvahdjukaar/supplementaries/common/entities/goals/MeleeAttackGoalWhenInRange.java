@@ -11,6 +11,13 @@ public class MeleeAttackGoalWhenInRange extends MeleeAttackGoal {
         super(mob, speedModifier, followingTargetEvenIfNotSeen);
     }
 
+    public static boolean isInFollowRange(LivingEntity me, LivingEntity other) {
+        if (other == null) return false;
+        if (!other.isAlive()) return false;
+        double followDistance = me.getAttribute(Attributes.FOLLOW_RANGE).getValue();
+        return me.distanceToSqr(other) <= followDistance * followDistance;
+    }
+
     @Override
     public boolean canUse() {
         return isInFollowRange(this.mob, this.mob.getTarget()) && super.canUse();
@@ -19,12 +26,5 @@ public class MeleeAttackGoalWhenInRange extends MeleeAttackGoal {
     @Override
     public boolean canContinueToUse() {
         return isInFollowRange(this.mob, this.mob.getTarget()) && super.canContinueToUse();
-    }
-
-    public static boolean isInFollowRange(LivingEntity me, LivingEntity other) {
-        if (other == null) return false;
-        if (!other.isAlive()) return false;
-        double followDistance = me.getAttribute(Attributes.FOLLOW_RANGE).getValue();
-        return me.distanceToSqr(other) <= followDistance * followDistance;
     }
 }

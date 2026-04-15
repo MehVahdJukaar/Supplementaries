@@ -97,6 +97,24 @@ public class FarmersDelightCompat {
         return STICK_TOMATOES.get();
     }
 
+    public static void setupClient() {
+        ClientHelper.registerRenderType(ROPE_TOMATO.get(), RenderType.cutout());
+        ClientHelper.registerRenderType(STICK_TOMATOES.get(), RenderType.cutout());
+    }
+
+    public static boolean canAddStickToTomato(BlockState blockstate, BooleanProperty axis) {
+        if (blockstate.getBlock() == getStickTomato()) {
+            return !blockstate.getValue(axis);
+        }
+        return false;
+    }
+
+    public static PlanterBlock makePlanterRich() {
+        return new PlanterRichBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.RED_TERRACOTTA)
+                .strength(2f, 6f)
+                .requiresCorrectToolForDrops()
+                .randomTicks(), CompatObjects.RICH_SOIL);
+    }
 
     private abstract static class TomatoLoggedBlock extends TomatoVineBlock {
 
@@ -238,26 +256,6 @@ public class FarmersDelightCompat {
             }
             return super.canBeReplaced(state, context);
         }
-    }
-
-
-    public static void setupClient() {
-        ClientHelper.registerRenderType(ROPE_TOMATO.get(), RenderType.cutout());
-        ClientHelper.registerRenderType(STICK_TOMATOES.get(), RenderType.cutout());
-    }
-
-    public static boolean canAddStickToTomato(BlockState blockstate, BooleanProperty axis) {
-        if (blockstate.getBlock() == getStickTomato()) {
-            return !blockstate.getValue(axis);
-        }
-        return false;
-    }
-
-    public static PlanterBlock makePlanterRich() {
-        return new PlanterRichBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.RED_TERRACOTTA)
-                .strength(2f, 6f)
-                .requiresCorrectToolForDrops()
-                .randomTicks(), CompatObjects.RICH_SOIL);
     }
 
     public static class PlanterRichBlock extends PlanterBlock {

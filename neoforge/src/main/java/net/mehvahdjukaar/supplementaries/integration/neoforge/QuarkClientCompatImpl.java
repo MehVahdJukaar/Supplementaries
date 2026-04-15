@@ -40,6 +40,8 @@ import java.util.function.Supplier;
 
 public class QuarkClientCompatImpl {
 
+    private static final Supplier<SafeBlockTile> DUMMY_SAFE_TILE = Suppliers.memoize(() -> new SafeBlockTile(BlockPos.ZERO, ModRegistry.SAFE.get().defaultBlockState()));
+
     public static void initClient() {
         ClientHelper.addBlockEntityRenderersRegistration(QuarkClientCompat::registerEntityRenderers);
         NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
@@ -51,9 +53,6 @@ public class QuarkClientCompatImpl {
     public static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
         event.register(InventoryViewTooltip.class, InventoryTooltipComponent::new);
     }
-
-    private static final Supplier<SafeBlockTile> DUMMY_SAFE_TILE = Suppliers.memoize(() -> new SafeBlockTile(BlockPos.ZERO, ModRegistry.SAFE.get().defaultBlockState()));
-
 
     public static void onItemTooltipEvent(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();

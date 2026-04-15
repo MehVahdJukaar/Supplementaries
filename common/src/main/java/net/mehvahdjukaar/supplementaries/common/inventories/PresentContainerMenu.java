@@ -20,21 +20,16 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
     @Nullable
     protected final AbstractPresentBlockTile inventory;
 
-    @Override
-    public AbstractPresentBlockTile getContainer() {
-        return inventory;
-    }
-
     public PresentContainerMenu(int id, Inventory playerInventory, FriendlyByteBuf packetBuffer) {
         this(id, playerInventory, TileOrEntityTarget.read(packetBuffer)
                 .getBlockEntityOrThrow(playerInventory.player.level(), ModRegistry.PRESENT_TILE.get()));
     }
 
-
     public <T extends PresentContainerMenu> PresentContainerMenu(int id, Inventory playerInventory,
                                                                  AbstractPresentBlockTile inventory) {
         this(ModMenuTypes.PRESENT_BLOCK.get(), id, playerInventory, inventory);
     }
+
 
     public <T extends PresentContainerMenu> PresentContainerMenu(MenuType<T> type, int id, Inventory playerInventory,
                                                                  AbstractPresentBlockTile inventory) {
@@ -55,6 +50,11 @@ public class PresentContainerMenu extends AbstractContainerMenu implements ICont
                 this.addSlot(new Slot(playerInventory, sj + (si + 1) * 9, 8 + sj * 18, 84 + si * 18));
         for (int si = 0; si < 9; ++si)
             this.addSlot(new Slot(playerInventory, si, 8 + si * 18, 142));
+    }
+
+    @Override
+    public AbstractPresentBlockTile getContainer() {
+        return inventory;
     }
 
     @Override

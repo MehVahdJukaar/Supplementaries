@@ -4,28 +4,6 @@ import java.util.*;
 
 public class FairRingIterator implements Iterator<FairRingIterator.Ring>, Iterable<FairRingIterator.Ring> {
 
-    public record Ring(int gridSize, int radius, int commonIterationsIndex) {
-    }
-
-    private static class GridRing {
-        final int gridIndex;
-        final int gridSize;
-        final int kMax;
-        int k;
-        int iterations = 0;
-
-        GridRing(int gridIndex, int gridSize, int k, int kMax) {
-            this.gridIndex = gridIndex;
-            this.gridSize = gridSize;
-            this.k = k;
-            this.kMax = kMax;
-        }
-
-        int radius() {
-            return k * gridSize;
-        }
-    }
-
     private final PriorityQueue<GridRing> pq;
 
     /**
@@ -88,5 +66,27 @@ public class FairRingIterator implements Iterator<FairRingIterator.Ring>, Iterab
     @Override
     public Iterator<Ring> iterator() {
         return this;
+    }
+
+    public record Ring(int gridSize, int radius, int commonIterationsIndex) {
+    }
+
+    private static class GridRing {
+        final int gridIndex;
+        final int gridSize;
+        final int kMax;
+        int k;
+        int iterations = 0;
+
+        GridRing(int gridIndex, int gridSize, int k, int kMax) {
+            this.gridIndex = gridIndex;
+            this.gridSize = gridSize;
+            this.k = k;
+            this.kMax = kMax;
+        }
+
+        int radius() {
+            return k * gridSize;
+        }
     }
 }

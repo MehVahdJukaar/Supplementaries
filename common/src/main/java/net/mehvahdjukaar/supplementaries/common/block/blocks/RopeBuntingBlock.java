@@ -77,6 +77,54 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         this.registerDefaultState(this.defaultBlockState().setValue(FLIP_TILE, false));
     }
 
+    private static Optional<Direction> findClosestConnection(BlockState state, BlockPos pos, Vec3 hit) {
+
+        Vector3f hitPos = hit.subtract(pos.getX() + 0.5, 0, pos.getZ() + 0.5).toVector3f();
+
+        List<Direction> availableDir = Direction.Plane.HORIZONTAL.stream()
+                .filter(dir -> ((AbstractRopeBlock) state.getBlock()).hasConnection(dir, state)).toList();
+
+        // find index of closest vector
+        return availableDir.stream().min((a, b) -> {
+            Vector3f v1 = a.step();
+            Vector3f v2 = b.step();
+            float d1 = v1.distanceSquared(hitPos);
+            float d2 = v2.distanceSquared(hitPos);
+            return Float.compare(d1, d2);
+        });
+    }
+
+    public static boolean canSupportBunting(BlockState state, int index) {
+        Direction dir = Direction.from2DDataValue(index);
+        return state.getValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir)).isConnected();
+    }
+
+    @Nullable
+    public static BlockState fromRope(BlockState state, BlockHitResult hit) {
+        var s = fromRope(state);
+        Optional<Direction> closest = findClosestConnection(state, hit.getBlockPos(), hit.getLocation());
+        return closest.map(direction -> s.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(direction),
+                ModBlockProperties.Bunting.BUNTING)).orElse(null);
+    }
+
+    public static BlockState fromRope(BlockState state) {
+        RopeBuntingBlock block = ModRegistry.BUNTING_ROPE_BLOCK.get();
+        BlockState s = block.withPropertiesOf(state);
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            s = block.setConnection(dir, s, ((RopeBlock) state.getBlock()).hasConnection(dir, state));
+        }
+        return s;
+    }
+
+    public static BlockState toRope(BlockState state) {
+        RopeBlock block = ModRegistry.ROPE.get();
+        BlockState s = block.withPropertiesOf(state);
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            s = block.setConnection(dir, s, ((RopeBuntingBlock) state.getBlock()).hasConnection(dir, state));
+        }
+        return s;
+    }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
@@ -230,24 +278,6 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         return ModRegistry.ROPE_ITEM.get().getDefaultInstance();
     }
 
-    private static Optional<Direction> findClosestConnection(BlockState state, BlockPos pos, Vec3 hit) {
-
-        Vector3f hitPos = hit.subtract(pos.getX() + 0.5, 0, pos.getZ() + 0.5).toVector3f();
-
-        List<Direction> availableDir = Direction.Plane.HORIZONTAL.stream()
-                .filter(dir -> ((AbstractRopeBlock) state.getBlock()).hasConnection(dir, state)).toList();
-
-        // find index of closest vector
-        return availableDir.stream().min((a, b) -> {
-            Vector3f v1 = a.step();
-            Vector3f v2 = b.step();
-            float d1 = v1.distanceSquared(hitPos);
-            float d2 = v2.distanceSquared(hitPos);
-            return Float.compare(d1, d2);
-        });
-    }
-
-
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
         var newState = super.updateShape(stateIn, facing, facingState, level, pos, facingPos);
@@ -270,7 +300,6 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         return newState;
     }
 
-
     public void popItem(Level level, BlockPos pos, ItemStack stack, Direction dir) {
         if (!level.isClientSide && !stack.isEmpty() && level.getGameRules().getBoolean(GameRules.RULE_DOBLOCKDROPS)) {
             double h = EntityType.ITEM.getHeight() / 2.0 + 0.25;
@@ -283,38 +312,6 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
             level.addFreshEntity(itemEntity);
         }
     }
-
-    public static boolean canSupportBunting(BlockState state, int index) {
-        Direction dir = Direction.from2DDataValue(index);
-        return state.getValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(dir)).isConnected();
-    }
-
-    @Nullable
-    public static BlockState fromRope(BlockState state, BlockHitResult hit) {
-        var s = fromRope(state);
-        Optional<Direction> closest = findClosestConnection(state, hit.getBlockPos(), hit.getLocation());
-        return closest.map(direction -> s.setValue(HORIZONTAL_FACING_TO_PROPERTY_MAP.get(direction),
-                ModBlockProperties.Bunting.BUNTING)).orElse(null);
-    }
-
-    public static BlockState fromRope(BlockState state) {
-        RopeBuntingBlock block = ModRegistry.BUNTING_ROPE_BLOCK.get();
-        BlockState s = block.withPropertiesOf(state);
-        for (Direction dir : Direction.Plane.HORIZONTAL) {
-            s = block.setConnection(dir, s, ((RopeBlock) state.getBlock()).hasConnection(dir, state));
-        }
-        return s;
-    }
-
-    public static BlockState toRope(BlockState state) {
-        RopeBlock block = ModRegistry.ROPE.get();
-        BlockState s = block.withPropertiesOf(state);
-        for (Direction dir : Direction.Plane.HORIZONTAL) {
-            s = block.setConnection(dir, s, ((RopeBuntingBlock) state.getBlock()).hasConnection(dir, state));
-        }
-        return s;
-    }
-
 
     @Override
     public boolean tryWash(Level level, BlockPos pos, BlockState state, Vec3 hitVec) {

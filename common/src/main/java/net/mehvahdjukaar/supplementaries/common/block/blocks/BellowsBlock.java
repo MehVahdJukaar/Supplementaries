@@ -42,6 +42,14 @@ public class BellowsBlock extends Block implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(POWER, 0));
     }
 
+    public static VoxelShape createVoxelShapeY(float height) {
+        return Shapes.box(0, 0, -height, 1, 1, 1 + height);
+    }
+
+    public static VoxelShape createVoxelShapeXZ(float height) {
+        return Shapes.box(0, -height, 0, 1, 1 + height, 1);
+    }
+
     @ForgeOverride
     public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction direction) {
         return direction == state.getValue(FACING) && state.getValue(POWER) != 0;
@@ -69,14 +77,6 @@ public class BellowsBlock extends Block implements EntityBlock {
             }
         }
         return Shapes.block();
-    }
-
-    public static VoxelShape createVoxelShapeY(float height) {
-        return Shapes.box(0, 0, -height, 1, 1, 1 + height);
-    }
-
-    public static VoxelShape createVoxelShapeXZ(float height) {
-        return Shapes.box(0, -height, 0, 1, 1 + height, 1);
     }
 
     @Override

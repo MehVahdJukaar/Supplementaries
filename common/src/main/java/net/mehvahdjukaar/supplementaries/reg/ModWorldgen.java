@@ -15,45 +15,37 @@ import java.util.function.Supplier;
 
 public class ModWorldgen {
 
-    public static void init() {
-    }
-
-    //structure pieces
-
-    public static final Supplier<StructurePieceType> MINESHAFT_ELEVATOR_PIECE = RegHelper.registerStructurePiece(
-            Supplementaries.res("mineshaft_elevator"), MineshaftElevatorPiece::new);
-
     //structure placement
     public static final Supplier<StructurePlacementType<RandomSpreadStructurePlacementWithExclusion>> RANDOM_SPREAD_WITH_EXCLUSION_PLACEMENT = RegHelper.register(
             Supplementaries.res("random_spread_with_exclusion"), () -> () -> RandomSpreadStructurePlacementWithExclusion.CODEC, net.minecraft.core.registries.Registries.STRUCTURE_PLACEMENT);
 
-    //structure types
-
+    //structure pieces
     public static final Supplier<StructureType<RoadSignStructure>> ROAD_SIGN_STRUCTURE = RegHelper.registerStructure(
             Supplementaries.res("road_sign"), RoadSignStructure.Type::new);
-
-    public static final Supplier<StructureType<GalleonStructure>> GALLEON_STRUCTURE = RegHelper.registerStructure(
-            Supplementaries.res("galleon"), GalleonStructure.Type::new);
-
+    //structure types
     //structure processors
     public static final Supplier<StructureProcessorType<RemoveDisabledBlocksProcessor>> REMOVE_DISABLED_PROCESSOR =
-            RegHelper.register(Supplementaries.res("remove_disabled_blocks"), () -> () -> RemoveDisabledBlocksProcessor.CODEC, Registries.STRUCTURE_PROCESSOR);
-
-
+            RegHelper.register(Supplementaries.res("remove_disabled_blocks"), () -> () -> RemoveDisabledBlocksProcessor.CODEC, Registries.STRUCTURE_PROCESSOR);    public static final Supplier<StructurePieceType> MINESHAFT_ELEVATOR_PIECE = RegHelper.registerStructurePiece(
+            Supplementaries.res("mineshaft_elevator"), MineshaftElevatorPiece::new);
+    public static final Supplier<StructureType<GalleonStructure>> GALLEON_STRUCTURE = RegHelper.registerStructure(
+            Supplementaries.res("galleon"), GalleonStructure.Type::new);
     //feature types
-
+    public static final Supplier<Feature<SpawnEntityWithPassengersFeature.Config>> ENTITY_WITH_PASSENGERS_FEATURE = RegHelper.registerFeature(
+            Supplementaries.res("spawn_entity_with_passengers"), SpawnEntityWithPassengersFeature::new);
     //feature spawned by the structure
     public static final Supplier<Feature<RoadSignFeature.Config>> ROAD_SIGN_FEATURE = RegHelper.registerFeature(
             Supplementaries.res("road_sign"), RoadSignFeature::new);
-
     public static final Supplier<Feature<BasaltAshFeature.Config>> BASALT_ASH_FEATURE = RegHelper.registerFeature(
             Supplementaries.res("surface_scan_random_patch"), BasaltAshFeature::new);
 
-    public static final Supplier<Feature<SpawnEntityWithPassengersFeature.Config>> ENTITY_WITH_PASSENGERS_FEATURE = RegHelper.registerFeature(
-            Supplementaries.res("spawn_entity_with_passengers"), SpawnEntityWithPassengersFeature::new);
-
+    public static void init() {
+    }
     public static final Supplier<Feature<BarnaclesMultifaceGrowthFeature.Config>> BARNACLES_GROWTH = RegHelper.registerFeature(
             Supplementaries.res("barnacles_multiface_growth"), BarnaclesMultifaceGrowthFeature::new);
+
+
+
+
 
 
 }

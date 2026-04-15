@@ -31,6 +31,14 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
             ).apply(instance, RandomArrowFunction::new));
 
     private static final List<ItemStack> RANDOM_ARROWS = new ArrayList<>();
+    private final int min;
+    private final int max;
+
+    public RandomArrowFunction(List<LootItemCondition> pConditions, int min, int max) {
+        super(pConditions);
+        this.min = min;
+        this.max = max;
+    }
 
     //call on mod setup
     public static void setup() {
@@ -48,31 +56,6 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
             }
         }
         RANDOM_ARROWS.add(new ItemStack(Items.SPECTRAL_ARROW));
-    }
-
-    private final int min;
-    private final int max;
-
-    public RandomArrowFunction(List<LootItemCondition> pConditions, int min, int max) {
-        super(pConditions);
-        this.min = min;
-        this.max = max;
-    }
-
-    @Override
-    public LootItemFunctionType<RandomArrowFunction> getType() {
-        return ModRegistry.RANDOM_ARROW_FUNCTION.get();
-    }
-
-    /**
-     * Called to perform the actual action of this function, after conditions have been checked.
-     */
-    @Override
-    public ItemStack run(ItemStack pStack, LootContext pContext) {
-
-        RandomSource random = pContext.getRandom();
-        createRandomQuiver(random, pStack, random.nextInt(min, max + 1));
-        return pStack;
     }
 
     public static ItemStack createRandomQuiver(RandomSource random, float specialMultiplier) {
@@ -99,6 +82,22 @@ public class RandomArrowFunction extends LootItemConditionalFunction {
         mutable.setSelectedSlot(0);
         quiver.set(ModComponents.QUIVER_CONTENT.get(), mutable.toImmutable());
         return quiver;
+    }
+
+    @Override
+    public LootItemFunctionType<RandomArrowFunction> getType() {
+        return ModRegistry.RANDOM_ARROW_FUNCTION.get();
+    }
+
+    /**
+     * Called to perform the actual action of this function, after conditions have been checked.
+     */
+    @Override
+    public ItemStack run(ItemStack pStack, LootContext pContext) {
+
+        RandomSource random = pContext.getRandom();
+        createRandomQuiver(random, pStack, random.nextInt(min, max + 1));
+        return pStack;
     }
 
     public static class Builder extends LootItemConditionalFunction.Builder<Builder> {

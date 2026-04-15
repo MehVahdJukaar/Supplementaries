@@ -26,6 +26,8 @@ import java.util.UUID;
 
 public class GenericProjectileBehavior implements IBallisticBehavior {
 
+    private static final GameProfile FAKE_PLAYER = new GameProfile(UUID.fromString("11242C44-14d5-1f22-3d27-13D2C45CA355"), "[CANNON_TESTER]");
+
     @Override
     public BallisticData calculateData(ItemStack projectile, Level level) {
         if (projectile.isEmpty()) {
@@ -82,8 +84,6 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
         }
         return false;
     }
-
-    private static final GameProfile FAKE_PLAYER = new GameProfile(UUID.fromString("11242C44-14d5-1f22-3d27-13D2C45CA355"), "[CANNON_TESTER]");
 
     // facing is likely not needed
     @Nullable

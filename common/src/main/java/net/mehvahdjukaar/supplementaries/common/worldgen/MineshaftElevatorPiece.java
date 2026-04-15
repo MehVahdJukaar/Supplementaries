@@ -93,6 +93,27 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         return null;
     }
 
+    private static void fillColumnBetween(WorldGenLevel level, BlockState state, BlockPos.MutableBlockPos pos, int minY, int maxY) {
+        for (int i = minY; i < maxY; ++i) {
+            level.setBlock(pos.setY(i), state, 2);
+        }
+    }
+
+    public static int getRopeCutout() {
+        return 22;
+    }
+
+    @Nullable
+    public static BlockState getMineshaftRope() {
+        Block rope = CommonConfigs.getSelectedRope();
+        if (rope == null) return null;
+        BlockState ropeState = rope.defaultBlockState();
+        if (rope instanceof AbstractRopeBlock) {
+            ropeState = ropeState.setValue(RopeBlock.UP, true).setValue(RopeBlock.DOWN, true);
+        }
+        return ropeState;
+    }
+
     @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
         super.addAdditionalSaveData(context, tag);
@@ -281,12 +302,6 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         return Block.canSupportCenter(level, pos, Direction.DOWN) && !(state.getBlock() instanceof FallingBlock);
     }
 
-    private static void fillColumnBetween(WorldGenLevel level, BlockState state, BlockPos.MutableBlockPos pos, int minY, int maxY) {
-        for (int i = minY; i < maxY; ++i) {
-            level.setBlock(pos.setY(i), state, 2);
-        }
-    }
-
     private boolean hasSturdyNeighbours(WorldGenLevel level, BoundingBox box, int x, int y, int z, int required) {
         BlockPos.MutableBlockPos mutableBlockPos = this.getWorldPos(x, y, z);
         int i = 0;
@@ -305,22 +320,6 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
 
         return false;
     }
-
-    public static int getRopeCutout() {
-        return 22;
-    }
-
-    @Nullable
-    public static BlockState getMineshaftRope() {
-        Block rope = CommonConfigs.getSelectedRope();
-        if (rope == null) return null;
-        BlockState ropeState = rope.defaultBlockState();
-        if (rope instanceof AbstractRopeBlock) {
-            ropeState = ropeState.setValue(RopeBlock.UP, true).setValue(RopeBlock.DOWN, true);
-        }
-        return ropeState;
-    }
-
 
     private void addPulley(WorldGenLevel level, RandomSource random, BoundingBox box,
                            int minZ, int minX, int maxY) {

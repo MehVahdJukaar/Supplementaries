@@ -36,28 +36,6 @@ public class TurnTableBlockTile extends BlockEntity {
         super(ModRegistry.TURN_TABLE_TILE.get(), pos, state);
     }
 
-    public void startRotation() {
-        this.timeUntilNextRotation = TurnTableBlock.getPeriod(this.getBlockState());
-        this.level.setBlock(worldPosition, getBlockState().setValue(TurnTableBlock.ROTATING, true), 3);
-
-        this.setChanged();
-    }
-
-    public void stopRotation() {
-        this.timeUntilNextRotation = 0;
-        this.level.setBlock(worldPosition, getBlockState().setValue(TurnTableBlock.ROTATING, false), 3);
-
-        this.setChanged();
-    }
-
-    public int getCatTimer() {
-        return catTimer;
-    }
-
-    public void setCat() {
-        this.catTimer = 20 * 20;
-    }
-
     //server only
     public static void tick(Level level, BlockPos pos, BlockState state, TurnTableBlockTile tile) {
         tile.catTimer = Math.max(tile.catTimer - 1, 0);
@@ -89,6 +67,41 @@ public class TurnTableBlockTile extends BlockEntity {
                 tile.stopRotation();
             }
         }
+    }
+
+    private static Direction.Axis getMinecartMovementAxis(AbstractMinecart m) {
+        Vec3 dir = Vec3.directionFromRotation(0, m.getYRot());
+        return Direction.getNearest(dir.x, dir.y, dir.z).getAxis();
+    }
+
+    private static Direction.Axis getRailAxis(RailShape rail) {
+        return switch (rail) {
+            case EAST_WEST, ASCENDING_WEST, ASCENDING_EAST -> Direction.Axis.X;
+            case NORTH_SOUTH, ASCENDING_SOUTH, ASCENDING_NORTH -> Direction.Axis.Z;
+            default -> Direction.Axis.Y;
+        };
+    }
+
+    public void startRotation() {
+        this.timeUntilNextRotation = TurnTableBlock.getPeriod(this.getBlockState());
+        this.level.setBlock(worldPosition, getBlockState().setValue(TurnTableBlock.ROTATING, true), 3);
+
+        this.setChanged();
+    }
+
+    public void stopRotation() {
+        this.timeUntilNextRotation = 0;
+        this.level.setBlock(worldPosition, getBlockState().setValue(TurnTableBlock.ROTATING, false), 3);
+
+        this.setChanged();
+    }
+
+    public int getCatTimer() {
+        return catTimer;
+    }
+
+    public void setCat() {
+        this.catTimer = 20 * 20;
     }
 
     private boolean performRotation(Level level, BlockPos pos, BlockState state, Direction dir, boolean ccw, BlockPos targetPos) {
@@ -128,19 +141,6 @@ public class TurnTableBlockTile extends BlockEntity {
                 c.setDeltaMovement(movement.yRot(ccw ? Mth.HALF_PI : -Mth.HALF_PI));
             }
         }
-    }
-
-    private static Direction.Axis getMinecartMovementAxis(AbstractMinecart m) {
-        Vec3 dir = Vec3.directionFromRotation(0, m.getYRot());
-        return Direction.getNearest(dir.x, dir.y, dir.z).getAxis();
-    }
-
-    private static Direction.Axis getRailAxis(RailShape rail) {
-        return switch (rail) {
-            case EAST_WEST, ASCENDING_WEST, ASCENDING_EAST -> Direction.Axis.X;
-            case NORTH_SOUTH, ASCENDING_SOUTH, ASCENDING_NORTH -> Direction.Axis.Z;
-            default -> Direction.Axis.Y;
-        };
     }
 
     @Override

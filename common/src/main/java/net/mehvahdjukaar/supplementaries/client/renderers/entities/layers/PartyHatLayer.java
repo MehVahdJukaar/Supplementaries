@@ -38,26 +38,6 @@ public abstract class PartyHatLayer<E extends LivingEntity, M extends EntityMode
         this.parentHead = getParentHead(renderer);
     }
 
-    @Override
-    public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, E entity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
-        if (!entity.isInvisible() && hasHat(entity)) {
-            VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCullZOffset(ModTextures.PARTY_CREEPER));
-            poseStack.pushPose();
-
-            this.string.copyFrom(this.parentHead);
-            this.string.render(poseStack, vertexConsumer, packedLight, LivingEntityRenderer.getOverlayCoords(entity, 0.0F));
-            this.renderExtra(poseStack, buffer, packedLight, entity);
-            poseStack.popPose();
-        }
-    }
-
-    protected void renderExtra(PoseStack poseStack, MultiBufferSource buffer, int packedLight, E entity) {
-    }
-
-    protected abstract ModelPart getParentHead(RenderLayerParent<E, M> renderer);
-
-    protected abstract boolean hasHat(E livingEntity);
-
     public static LayerDefinition createMesh() {
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
@@ -80,6 +60,25 @@ public abstract class PartyHatLayer<E extends LivingEntity, M extends EntityMode
         return LayerDefinition.create(meshDefinition, 32, 32);
     }
 
+    @Override
+    public void render(PoseStack poseStack, MultiBufferSource buffer, int packedLight, E entity, float limbSwing, float limbSwingAmount, float partialTick, float ageInTicks, float netHeadYaw, float headPitch) {
+        if (!entity.isInvisible() && hasHat(entity)) {
+            VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCullZOffset(ModTextures.PARTY_CREEPER));
+            poseStack.pushPose();
+
+            this.string.copyFrom(this.parentHead);
+            this.string.render(poseStack, vertexConsumer, packedLight, LivingEntityRenderer.getOverlayCoords(entity, 0.0F));
+            this.renderExtra(poseStack, buffer, packedLight, entity);
+            poseStack.popPose();
+        }
+    }
+
+    protected void renderExtra(PoseStack poseStack, MultiBufferSource buffer, int packedLight, E entity) {
+    }
+
+    protected abstract ModelPart getParentHead(RenderLayerParent<E, M> renderer);
+
+    protected abstract boolean hasHat(E livingEntity);
 
     public static class Generic<P extends LivingEntity> extends PartyHatLayer<P, HumanoidModel<P>> {
 

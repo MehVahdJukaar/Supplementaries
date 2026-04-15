@@ -27,6 +27,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LocalPlayerMixin extends AbstractClientPlayer implements IQuiverPlayer {
 
 
+    // cached quiver
+    @Unique
+    private ItemStack supplementaries$quiverForRenderer = ItemStack.EMPTY;
+    @Unique
+    private SlotReference supplementaries$quiverSlotForHUD = SlotReference.EMPTY;
+
     protected LocalPlayerMixin(ClientLevel clientLevel, GameProfile gameProfile) {
         super(clientLevel, gameProfile);
     }
@@ -47,12 +53,6 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer implements I
         }
         return original;
     }
-
-    // cached quiver
-    @Unique
-    private ItemStack supplementaries$quiverForRenderer = ItemStack.EMPTY;
-    @Unique
-    private SlotReference supplementaries$quiverSlotForHUD = SlotReference.EMPTY;
 
     // this isn't optimal but still better than checking every render tick the whole inventory
     @Inject(method = "tick",

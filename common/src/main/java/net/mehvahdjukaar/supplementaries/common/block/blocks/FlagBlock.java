@@ -34,14 +34,12 @@ import org.jetbrains.annotations.Nullable;
 
 public class FlagBlock extends WaterBlock implements EntityBlock, IColored {
 
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    protected static final VoxelShape SHAPE = Block.box(4, 0D, 4D, 12.0D, 16.0D, 12.0D);
     private static final MapCodec<FlagBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             DyeColor.CODEC.fieldOf("color").forGetter(FlagBlock::getColor),
             BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(FlagBlock::properties)
     ).apply(i, FlagBlock::new));
-
-    protected static final VoxelShape SHAPE = Block.box(4, 0D, 4D, 12.0D, 16.0D, 12.0D);
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-
     private final DyeColor color;
 
     public FlagBlock(DyeColor color, Properties properties) {

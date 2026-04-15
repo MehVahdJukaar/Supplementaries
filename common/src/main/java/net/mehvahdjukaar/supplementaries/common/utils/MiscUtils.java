@@ -38,6 +38,17 @@ import java.util.function.Supplier;
 public class MiscUtils {
 
 
+    public static final Codec<List<Item>> LENIENT_ITEM_OR_ITEM_LIST = CodecUtils.lenientListOrSingleCodec(
+            BuiltInRegistries.ITEM.byNameCodec());
+    public static final Codec<List<EntityType<?>>> LENIENT_ENTITY_OR_ITEM_LIST = CodecUtils.lenientListOrSingleCodec(
+            BuiltInRegistries.ENTITY_TYPE.byNameCodec());
+    //this is how you do it :D
+    private static final Supplier<ShulkerBoxBlockEntity> SHULKER_TILE =
+            Suppliers.memoize(() -> new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState()));
+    @Deprecated(forRemoval = true)
+    public static Festivity FESTIVITY = Festivity.NONE;
+    private static Festivity festivity = null;
+
     public static boolean showsHints(TooltipFlag flagIn) {
         if (PlatHelper.getPhysicalSide().isServer()) return false;
         return ClientConfigs.General.TOOLTIP_HINTS.get();
@@ -72,6 +83,72 @@ public class MiscUtils {
         return Component.literal(s.substring(0, maxLength)).withStyle(message.getStyle());
     }
 
+    public static Festivity getFestivity() {
+        if (festivity == null) {
+            festivity = Festivity.compute();
+            FESTIVITY = festivity;
+        }
+        return festivity;
+    }
+
+    public static boolean isSword(Item i) {
+        if (i.builtInRegistryHolder().is(ModTags.STATUE_SWORDS)) return true;
+        if (CompatHandler.TETRA && TetraCompat.isTetraSword(i)) return true;
+        return i instanceof SwordItem;
+    }
+
+    public static boolean isTool(Item i) {
+        if (i.builtInRegistryHolder().is(ModTags.STATUE_TOOLS)) return true;
+        if (CompatHandler.TETRA && TetraCompat.isTetraTool(i)) return true;
+        return i instanceof DiggerItem || i instanceof TridentItem;
+    }
+
+    public static boolean isAllowedInShulker(ItemStack stack, Level level) {
+        var te = SHULKER_TILE.get();
+        te.setLevel(level);
+        boolean first = te.canPlaceItemThroughFace(0, stack, null);
+        te.setLevel(null);
+        //also check if its container item. Shulker is super inconsistent here. block checks instanceof, gui checks canfitinsidecontainer
+        return first && stack.getItem().canFitInsideContainerItems();
+    }
+
+    //cylinder distance
+    public static boolean withinDistanceDown(BlockPos pos, Vec3 vector, double distW, double distDown) {
+        double dx = vector.x() - (pos.getX() + 0.5);
+        double dy = vector.y() - (pos.getY() + 0.5);
+        double dz = vector.z() - (pos.getZ() + 0.5);
+        double myDistW = (dx * dx + dz * dz);
+        return (myDistW < (distW * distW) && (dy < distW && dy > -distDown));
+    }
+
+    // vanilla is wont allow to tick a block that already has a scheduled tick, even if at an earlier time
+    public static void scheduleTickOverridingExisting(ServerLevel level, BlockPos pos, Block block, int delay) {
+        var tick = new ScheduledTick<>(block, pos, level.getGameTime() + (long) delay, level.nextSubTickCount());
+
+        long l = ChunkPos.asLong(tick.pos());
+
+        var container = level.getBlockTicks().allContainers.get(l);
+        container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
+        container.schedule(tick);
+    }
+
+    public static <A, B, Buf extends ByteBuf> void writeEither(Buf buf, Either<A, B> either, BiConsumer<Buf, A> encodeA, BiConsumer<Buf, B> encodeB) {
+        buf.writeBoolean(either.left().isPresent());
+        if (either.left().isPresent()) {
+            encodeA.accept(buf, either.left().get());
+        } else {
+            encodeB.accept(buf, either.right().get());
+        }
+    }
+
+    public static <A, B, Buf extends ByteBuf> Either<A, B> readEither(Buf buf, Function<Buf, A> decodeA, Function<Buf, B> decodeB) {
+        if (buf.readBoolean()) {
+            return Either.left(decodeA.apply(buf));
+        } else {
+            return Either.right(decodeB.apply(buf));
+        }
+    }
+
     public enum Festivity {
         NONE,
         HALLOWEEN,
@@ -81,6 +158,30 @@ public class MiscUtils {
         ST_VALENTINE,
         MY_BIRTHDAY,
         MOD_BIRTHDAY;
+
+        public static Festivity compute() {
+            if (PlatHelper.isDev()) {
+                Random rand = new Random();
+                if (rand.nextFloat() < 0.3f) {
+                    return values()[rand.nextInt(values().length - 1) + 1];
+                }
+            }
+            if (PlatHelper.getPhysicalSide().isClient() && ClientConfigs.General.UNFUNNY.get()) {
+                return NONE;
+            }
+            Calendar calendar = Calendar.getInstance();
+            int month = calendar.get(Calendar.MONTH);
+            int date = calendar.get(Calendar.DATE);
+            if ((month == Calendar.OCTOBER && date >= 29) || (month == Calendar.NOVEMBER && date == 1))
+                return HALLOWEEN;
+            if (month == Calendar.APRIL && date == 1) return APRILS_FOOL;
+            if (month == Calendar.FEBRUARY && date == 14) return ST_VALENTINE;
+            if (month == Calendar.APRIL && date == 22) return EARTH_DAY;
+            if (month == Calendar.DECEMBER && date >= 20) return CHRISTMAS;
+            if (month == Calendar.FEBRUARY && date == 7) return MY_BIRTHDAY;
+            if (month == Calendar.OCTOBER && date == 9) return MOD_BIRTHDAY;
+            return NONE;
+        }
 
         public boolean isHalloween() {
             return this == HALLOWEEN;
@@ -113,113 +214,7 @@ public class MiscUtils {
                 default -> 0;
             };
         }
-
-        public static Festivity compute() {
-            if (PlatHelper.isDev()) {
-                Random rand = new Random();
-                if (rand.nextFloat() < 0.3f) {
-                    return values()[rand.nextInt(values().length - 1) + 1];
-                }
-            }
-            if (PlatHelper.getPhysicalSide().isClient() && ClientConfigs.General.UNFUNNY.get()) {
-                return NONE;
-            }
-            Calendar calendar = Calendar.getInstance();
-            int month = calendar.get(Calendar.MONTH);
-            int date = calendar.get(Calendar.DATE);
-            if ((month == Calendar.OCTOBER && date >= 29) || (month == Calendar.NOVEMBER && date == 1))
-                return HALLOWEEN;
-            if (month == Calendar.APRIL && date == 1) return APRILS_FOOL;
-            if (month == Calendar.FEBRUARY && date == 14) return ST_VALENTINE;
-            if (month == Calendar.APRIL && date == 22) return EARTH_DAY;
-            if (month == Calendar.DECEMBER && date >= 20) return CHRISTMAS;
-            if (month == Calendar.FEBRUARY && date == 7) return MY_BIRTHDAY;
-            if (month == Calendar.OCTOBER && date == 9) return MOD_BIRTHDAY;
-            return NONE;
-        }
     }
-
-
-    @Deprecated(forRemoval = true)
-    public static Festivity FESTIVITY = Festivity.NONE;
-    private static Festivity festivity = null;
-
-    public static Festivity getFestivity() {
-        if (festivity == null) {
-            festivity = Festivity.compute();
-            FESTIVITY = festivity;
-        }
-        return festivity;
-    }
-
-    public static boolean isSword(Item i) {
-        if (i.builtInRegistryHolder().is(ModTags.STATUE_SWORDS)) return true;
-        if (CompatHandler.TETRA && TetraCompat.isTetraSword(i)) return true;
-        return i instanceof SwordItem;
-    }
-
-    public static boolean isTool(Item i) {
-        if (i.builtInRegistryHolder().is(ModTags.STATUE_TOOLS)) return true;
-        if (CompatHandler.TETRA && TetraCompat.isTetraTool(i)) return true;
-        return i instanceof DiggerItem || i instanceof TridentItem;
-    }
-
-    //this is how you do it :D
-    private static final Supplier<ShulkerBoxBlockEntity> SHULKER_TILE =
-            Suppliers.memoize(() -> new ShulkerBoxBlockEntity(BlockPos.ZERO, Blocks.SHULKER_BOX.defaultBlockState()));
-
-    public static boolean isAllowedInShulker(ItemStack stack, Level level) {
-        var te = SHULKER_TILE.get();
-        te.setLevel(level);
-        boolean first = te.canPlaceItemThroughFace(0, stack, null);
-        te.setLevel(null);
-        //also check if its container item. Shulker is super inconsistent here. block checks instanceof, gui checks canfitinsidecontainer
-        return first && stack.getItem().canFitInsideContainerItems();
-    }
-
-    //cylinder distance
-    public static boolean withinDistanceDown(BlockPos pos, Vec3 vector, double distW, double distDown) {
-        double dx = vector.x() - (pos.getX() + 0.5);
-        double dy = vector.y() - (pos.getY() + 0.5);
-        double dz = vector.z() - (pos.getZ() + 0.5);
-        double myDistW = (dx * dx + dz * dz);
-        return (myDistW < (distW * distW) && (dy < distW && dy > -distDown));
-    }
-
-    // vanilla is wont allow to tick a block that already has a scheduled tick, even if at an earlier time
-    public static void scheduleTickOverridingExisting(ServerLevel level, BlockPos pos, Block block, int delay) {
-        var tick = new ScheduledTick<>(block, pos, level.getGameTime() + (long) delay, level.nextSubTickCount());
-
-        long l = ChunkPos.asLong(tick.pos());
-
-        var container = level.getBlockTicks().allContainers.get(l);
-        container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
-        container.schedule(tick);
-    }
-
-
-    public static <A, B, Buf extends ByteBuf> void writeEither(Buf buf, Either<A, B> either, BiConsumer<Buf, A> encodeA, BiConsumer<Buf, B> encodeB) {
-        buf.writeBoolean(either.left().isPresent());
-        if (either.left().isPresent()) {
-            encodeA.accept(buf, either.left().get());
-        } else {
-            encodeB.accept(buf, either.right().get());
-        }
-    }
-
-    public static <A, B, Buf extends ByteBuf> Either<A, B> readEither(Buf buf, Function<Buf, A> decodeA, Function<Buf, B> decodeB) {
-        if (buf.readBoolean()) {
-            return Either.left(decodeA.apply(buf));
-        } else {
-            return Either.right(decodeB.apply(buf));
-        }
-    }
-
-    public static final Codec<List<Item>> LENIENT_ITEM_OR_ITEM_LIST = CodecUtils.lenientListOrSingleCodec(
-            BuiltInRegistries.ITEM.byNameCodec());
-
-    public static final Codec<List<EntityType<?>>> LENIENT_ENTITY_OR_ITEM_LIST = CodecUtils.lenientListOrSingleCodec(
-            BuiltInRegistries.ENTITY_TYPE.byNameCodec());
 
 
 }

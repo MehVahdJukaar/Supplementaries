@@ -29,7 +29,8 @@ import net.minecraft.world.scores.Scoreboard;
 public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, PickleModel<AbstractClientPlayer>> {
 
     public static PickleRenderer INSTANCE = null;
-
+    protected float axisFacing = 0;
+    protected boolean wasCrouching = false;
     public PickleRenderer(EntityRendererProvider.Context context) {
         super(context, new PickleModel<>(context.bakeLayer(ClientRegistry.PICKLE_MODEL)), 0.0125F);
 
@@ -48,8 +49,9 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
         this.addLayer(new CustomHeadLayer<>(this, context.getModelSet(), context.getItemInHandRenderer()));
     }
 
-    protected float axisFacing = 0;
-    protected boolean wasCrouching = false;
+    protected static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
+        return JarredRenderer.getArmPose(player, hand);
+    }
 
     @Override
     public ResourceLocation getTextureLocation(AbstractClientPlayer player) {
@@ -76,7 +78,6 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
         }
         super.render(player, entityYaw, partialTicks, matrixStack, buffer, packedLight);
     }
-
 
     @Override
     public Vec3 getRenderOffset(AbstractClientPlayer player, float partialTicks) {
@@ -114,10 +115,6 @@ public class PickleRenderer extends LivingEntityRenderer<AbstractClientPlayer, P
             pickleModel.rightArmPose = poseLeftArm;
             pickleModel.leftArmPose = poseRightArm;
         }
-    }
-
-    protected static HumanoidModel.ArmPose getArmPose(AbstractClientPlayer player, InteractionHand hand) {
-        return JarredRenderer.getArmPose(player, hand);
     }
 
     @Override

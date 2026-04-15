@@ -39,18 +39,29 @@ import java.util.Arrays;
 
 public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
 
+    public static final IntegerProperty PANCAKES = ModBlockProperties.PANCAKES_1_8;
+    public static final EnumProperty<Topping> TOPPING = ModBlockProperties.TOPPING;
     protected static final VoxelShape[] SHAPE_BY_LAYER = new VoxelShape[8];
 
     static {
         Arrays.setAll(SHAPE_BY_LAYER, l -> Block.box(2, 0.0D, 2, 14.0D, 2d + l * 2, 14.0D));
     }
 
-    public static final IntegerProperty PANCAKES = ModBlockProperties.PANCAKES_1_8;
-    public static final EnumProperty<Topping> TOPPING = ModBlockProperties.TOPPING;
-
     public PancakeBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(PANCAKES, 1).setValue(TOPPING, Topping.NONE).setValue(WATERLOGGED, false));
+    }
+
+    public static boolean setTopping(BlockState state, Level worldIn, BlockPos pos, Topping topping) {
+
+        if (state.getValue(TOPPING) == Topping.NONE && topping != Topping.NONE) {
+            if (!worldIn.isClientSide) {
+                worldIn.setBlock(pos, state.setValue(TOPPING, topping), 3);
+                worldIn.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -86,19 +97,6 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
-
-    public static boolean setTopping(BlockState state, Level worldIn, BlockPos pos, Topping topping) {
-
-        if (state.getValue(TOPPING) == Topping.NONE && topping != Topping.NONE) {
-            if (!worldIn.isClientSide) {
-                worldIn.setBlock(pos, state.setValue(TOPPING, topping), 3);
-                worldIn.playSound(null, pos, SoundEvents.HONEY_BLOCK_PLACE, SoundSource.BLOCKS, 1, 1.2f);
-            }
-            return true;
-        }
-        return false;
-    }
-
 
     private void removeLayer(BlockState state, BlockPos pos, Level world, Player player) {
         int i = state.getValue(PANCAKES);

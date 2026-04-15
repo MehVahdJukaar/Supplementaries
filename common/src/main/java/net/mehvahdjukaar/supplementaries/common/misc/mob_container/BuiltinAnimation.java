@@ -27,17 +27,6 @@ public abstract class BuiltinAnimation<T extends Entity> {
     protected float prevJumpY = 0;
     protected float yVel = 0;
 
-    void tick(T mob, Level world, BlockPos pos) {
-        if (world.isClientSide) {
-            mob.yOld = mob.getY();
-            float dy = jumpY - prevJumpY;
-            if (dy != 0) {
-                mob.setPos(mob.getX(), mob.getY() + dy, mob.getZ());
-            }
-            this.prevJumpY = this.jumpY;
-        }
-    }
-
     @Nullable
     public static <E extends Entity> BuiltinAnimation<E> get(E entity, Type type) {
         if (type == Type.BUILTIN) {
@@ -50,6 +39,45 @@ public abstract class BuiltinAnimation<T extends Entity> {
             return new FloatingAnim<>(entity);
         }
         return null;
+    }
+
+    void tick(T mob, Level world, BlockPos pos) {
+        if (world.isClientSide) {
+            mob.yOld = mob.getY();
+            float dy = jumpY - prevJumpY;
+            if (dy != 0) {
+                mob.setPos(mob.getX(), mob.getY() + dy, mob.getZ());
+            }
+            this.prevJumpY = this.jumpY;
+        }
+    }
+
+    public enum Type implements StringRepresentable {
+        NONE,
+        LAND,
+        AIR,
+        FLOATING,
+        BUILTIN; //hardcoded ones
+
+        public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
+        public static final StreamCodec<FriendlyByteBuf, Type> STREAM_CODEC = CodecUtils.enumStreamCodec(Type.class);
+
+        public boolean isFlying() {
+            return this == AIR || this == FLOATING;
+        }
+
+        public boolean isLand() {
+            return this == LAND;
+        }
+
+        public boolean isFloating() {
+            return this == FLOATING;
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name().toLowerCase(Locale.ROOT);
+        }
     }
 
     private static class FloatingAnim<M extends Entity> extends BuiltinAnimation<M> {
@@ -198,34 +226,5 @@ public abstract class BuiltinAnimation<T extends Entity> {
                 }
             }
         }
-    }
-
-    public enum Type implements StringRepresentable {
-        NONE,
-        LAND,
-        AIR,
-        FLOATING,
-        BUILTIN; //hardcoded ones
-
-        public boolean isFlying() {
-            return this == AIR || this == FLOATING;
-        }
-
-        public boolean isLand() {
-            return this == LAND;
-        }
-
-        public boolean isFloating() {
-            return this == FLOATING;
-        }
-
-        @Override
-        public String getSerializedName() {
-            return this.name().toLowerCase(Locale.ROOT);
-        }
-
-        public static final Codec<Type> CODEC = StringRepresentable.fromEnum(Type::values);
-
-        public static final StreamCodec<FriendlyByteBuf, Type> STREAM_CODEC = CodecUtils.enumStreamCodec(Type.class);
     }
 }

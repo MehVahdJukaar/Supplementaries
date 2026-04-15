@@ -43,19 +43,17 @@ import org.jetbrains.annotations.Nullable;
 
 public class ClockBlock extends WaterBlock implements EntityBlock {
 
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final IntegerProperty HOUR = ModBlockProperties.HOUR;
+    public static final BooleanProperty TWO_FACED = ModBlockProperties.TWO_FACED;
     protected static final VoxelShape SHAPE_NORTH = Block.box(0, 0, 1, 16, 16, 16);
     protected static final VoxelShape SHAPE_SOUTH = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.SOUTH);
     protected static final VoxelShape SHAPE_EAST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.EAST);
     protected static final VoxelShape SHAPE_WEST = MthUtils.rotateVoxelShape(SHAPE_NORTH, Direction.WEST);
-
     protected static final VoxelShape SHAPE_NORTH_2 = Block.box(0, 0, 1, 16, 16, 15);
     protected static final VoxelShape SHAPE_SOUTH_2 = MthUtils.rotateVoxelShape(SHAPE_NORTH_2, Direction.SOUTH);
     protected static final VoxelShape SHAPE_EAST_2 = MthUtils.rotateVoxelShape(SHAPE_NORTH_2, Direction.EAST);
     protected static final VoxelShape SHAPE_WEST_2 = MthUtils.rotateVoxelShape(SHAPE_NORTH_2, Direction.WEST);
-
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final IntegerProperty HOUR = ModBlockProperties.HOUR;
-    public static final BooleanProperty TWO_FACED = ModBlockProperties.TWO_FACED;
 
     public ClockBlock(Properties properties) {
         super(properties);

@@ -26,6 +26,10 @@ public abstract class CreeperMixin extends Monster implements IPartyCreeper {
     @Unique
     private boolean supplementaries$festive = false;
 
+    protected CreeperMixin(EntityType<? extends Monster> entityType, Level level) {
+        super(entityType, level);
+    }
+
     @Override
     public boolean supplementaries$isFestive() {
         return this.supplementaries$festive;
@@ -39,10 +43,6 @@ public abstract class CreeperMixin extends Monster implements IPartyCreeper {
             NetworkHelper.sendToAllClientPlayersTrackingEntity(this,
                     new SyncPartyCreeperPacket(this));
         }
-    }
-
-    protected CreeperMixin(EntityType<? extends Monster> entityType, Level level) {
-        super(entityType, level);
     }
 
     @WrapWithCondition(method = "explodeCreeper", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;explode(Lnet/minecraft/world/entity/Entity;DDDFLnet/minecraft/world/level/Level$ExplosionInteraction;)Lnet/minecraft/world/level/Explosion;"))

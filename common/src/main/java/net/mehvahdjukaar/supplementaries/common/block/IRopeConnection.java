@@ -14,6 +14,28 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public interface IRopeConnection {
 
+    static boolean isSupportingCeiling(BlockPos pos, LevelReader world) {
+        return isSupportingCeiling(world.getBlockState(pos), pos, world);
+    }
+
+    static boolean canConnectDown(BlockState downState) {
+        Block b = downState.getBlock();
+        if (b instanceof IRopeConnection ropeConnection) {
+            return ropeConnection.canSideAcceptConnection(downState, Direction.UP);
+        }
+        return (downState.is(ModTags.ROPE_HANG_TAG)
+                || (downState.hasProperty(FaceAttachedHorizontalDirectionalBlock.FACE) && downState.getValue(FaceAttachedHorizontalDirectionalBlock.FACE) == AttachFace.CEILING)
+                || (b instanceof ChainBlock && downState.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y)
+                || (downState.hasProperty(BlockStateProperties.HANGING) && downState.getValue(BlockStateProperties.HANGING)));
+    }
+
+    static boolean isSupportingCeiling(BlockState upState, BlockPos pos, LevelReader world) {
+        if (upState.getBlock() instanceof IRopeConnection ropeConnection) {
+            return ropeConnection.canSideAcceptConnection(upState, Direction.DOWN);
+        }
+        return (Block.canSupportCenter(world, pos, Direction.DOWN) && upState.isSolid()) || upState.is(ModTags.ROPE_SUPPORT_TAG);
+    }
+
     default boolean shouldConnectToFace(BlockState thisState, BlockState facingState, BlockPos facingPos, Direction dir, LevelReader world) {
         if (!this.canSideAcceptConnection(thisState, dir)) return false;
 
@@ -37,27 +59,4 @@ public interface IRopeConnection {
     }
 
     boolean canSideAcceptConnection(BlockState state, Direction direction);
-
-
-    static boolean isSupportingCeiling(BlockPos pos, LevelReader world) {
-        return isSupportingCeiling(world.getBlockState(pos), pos, world);
-    }
-
-    static boolean canConnectDown(BlockState downState) {
-        Block b = downState.getBlock();
-        if (b instanceof IRopeConnection ropeConnection) {
-            return ropeConnection.canSideAcceptConnection(downState, Direction.UP);
-        }
-        return (downState.is(ModTags.ROPE_HANG_TAG)
-                || (downState.hasProperty(FaceAttachedHorizontalDirectionalBlock.FACE) && downState.getValue(FaceAttachedHorizontalDirectionalBlock.FACE) == AttachFace.CEILING)
-                || (b instanceof ChainBlock && downState.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y)
-                || (downState.hasProperty(BlockStateProperties.HANGING) && downState.getValue(BlockStateProperties.HANGING)));
-    }
-
-    static boolean isSupportingCeiling(BlockState upState, BlockPos pos, LevelReader world) {
-        if (upState.getBlock() instanceof IRopeConnection ropeConnection) {
-            return ropeConnection.canSideAcceptConnection(upState, Direction.DOWN);
-        }
-        return (Block.canSupportCenter(world, pos, Direction.DOWN) && upState.isSolid()) || upState.is(ModTags.ROPE_SUPPORT_TAG);
-    }
 }

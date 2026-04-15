@@ -24,14 +24,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class BuntingCeilingBlock extends Block implements IColored {
+    protected static final VoxelShape SHAPE_Z = Block.box(0.0D, 0.0D, 7.0D, 16.0D, 16.0D, 9.0D);
+    protected static final VoxelShape SHAPE_X = MthUtils.rotateVoxelShape(SHAPE_Z, Direction.EAST);
     private static final MapCodec<BuntingWallBlock> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             net.minecraft.world.item.DyeColor.CODEC.fieldOf("color").forGetter(BuntingWallBlock::getColor),
             BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BuntingWallBlock::properties)
     ).apply(i, BuntingWallBlock::new));
-
-    protected static final VoxelShape SHAPE_Z = Block.box(0.0D, 0.0D, 7.0D, 16.0D, 16.0D, 9.0D);
-    protected static final VoxelShape SHAPE_X = MthUtils.rotateVoxelShape(SHAPE_Z, Direction.EAST);
-
     private static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
 
     private final DyeColor color;

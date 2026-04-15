@@ -20,20 +20,18 @@ import static net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockT
 
 public final class PresentAddress implements TooltipProvider {
 
-    private static final Component PUBLIC = Component.translatable("message.supplementaries.present.public").withStyle(ChatFormatting.GRAY);
-
     public static final Codec<PresentAddress> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("recipient").forGetter(PresentAddress::recipient),
             Codec.STRING.fieldOf("sender").forGetter(PresentAddress::sender),
             Codec.STRING.fieldOf("description").forGetter(PresentAddress::description)
     ).apply(instance, PresentAddress::new));
-
     public static final StreamCodec<RegistryFriendlyByteBuf, PresentAddress> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, PresentAddress::recipient,
             ByteBufCodecs.STRING_UTF8, PresentAddress::sender,
             ByteBufCodecs.STRING_UTF8, PresentAddress::description,
             PresentAddress::new
     );
+    private static final Component PUBLIC = Component.translatable("message.supplementaries.present.public").withStyle(ChatFormatting.GRAY);
     private final String recipient;
     private final String sender;
     private final String description;
@@ -57,22 +55,6 @@ public final class PresentAddress implements TooltipProvider {
         return new PresentAddress(recipient, sender, description);
     }
 
-    @Override
-    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
-        boolean isPacked = false;
-        if (senderComp != null) {
-            tooltipAdder.accept(senderComp);
-            isPacked = true;
-        }
-        if (recipientComp != null) {
-            tooltipAdder.accept(recipientComp);
-            isPacked = true;
-        }
-        if (!isPacked) {
-            tooltipAdder.accept(PUBLIC);
-        }
-    }
-
     @Nullable
     private static MutableComponent getSenderMessage(String sender) {
         if (sender.isEmpty()) return null;
@@ -89,6 +71,22 @@ public final class PresentAddress implements TooltipProvider {
         } else {
             return Component.translatable("message.supplementaries.present.to", recipient)
                     .withStyle(ChatFormatting.GRAY);
+        }
+    }
+
+    @Override
+    public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+        boolean isPacked = false;
+        if (senderComp != null) {
+            tooltipAdder.accept(senderComp);
+            isPacked = true;
+        }
+        if (recipientComp != null) {
+            tooltipAdder.accept(recipientComp);
+            isPacked = true;
+        }
+        if (!isPacked) {
+            tooltipAdder.accept(PUBLIC);
         }
     }
 

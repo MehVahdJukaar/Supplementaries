@@ -29,13 +29,28 @@ import net.minecraft.world.phys.BlockHitResult;
 
 public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
 
-    public static final MapCodec<SlidyBlock> CODEC = simpleCodec(SlidyBlock::new);
-
     public static final BooleanProperty ON_PRESSURE_PLATE = ModBlockProperties.ON_PRESSURE_PLATE;
+    public static final MapCodec<SlidyBlock> CODEC = simpleCodec(SlidyBlock::new);
 
     public SlidyBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.defaultBlockState().setValue(ON_PRESSURE_PLATE, false));
+    }
+
+    public static boolean canFall(BlockPos pos, LevelAccessor world) {
+        return (world.isEmptyBlock(pos.below()) || isFree(world.getBlockState(pos.below()))) &&
+                pos.getY() >= world.getMinBuildHeight() &&
+                !IRopeConnection.isSupportingCeiling(pos.above(), world) &&
+                !hasHoneyAround(pos, world);
+    }
+
+    private static boolean hasHoneyAround(BlockPos pos, LevelAccessor world) {
+        for (Direction dir : Direction.Plane.HORIZONTAL) {
+            if (world.getBlockState(pos.relative(dir)).is(Blocks.HONEY_BLOCK)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -74,22 +89,6 @@ public class SlidyBlock extends FallingBlock implements IPistonMotionReact {
     @Override
     protected void falling(FallingBlockEntity entity) {
         entity.setHurtsEntities(1.0F, 10);
-    }
-
-    public static boolean canFall(BlockPos pos, LevelAccessor world) {
-        return (world.isEmptyBlock(pos.below()) || isFree(world.getBlockState(pos.below()))) &&
-                pos.getY() >= world.getMinBuildHeight() &&
-                !IRopeConnection.isSupportingCeiling(pos.above(), world) &&
-                !hasHoneyAround(pos, world);
-    }
-
-    private static boolean hasHoneyAround(BlockPos pos, LevelAccessor world) {
-        for (Direction dir : Direction.Plane.HORIZONTAL) {
-            if (world.getBlockState(pos.relative(dir)).is(Blocks.HONEY_BLOCK)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

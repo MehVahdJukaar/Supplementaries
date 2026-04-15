@@ -26,18 +26,6 @@ public class RedMerchantRenderer extends MobRenderer<RedMerchantEntity, Villager
         this.getModel().getHead().y = this.getModel().getHead().y + 1 - 0.9375F;
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(RedMerchantEntity entity) {
-        return entity.getDisplayName().getString().toLowerCase(Locale.ROOT).equals("morshu") ?
-                ModTextures.ORANGE_MERCHANT :
-                MiscUtils.getFestivity().isChristmas() ? ModTextures.RED_MERCHANT_CHRISTMAS : ModTextures.RED_MERCHANT;
-    }
-
-    @Override
-    protected void scale(RedMerchantEntity entity, PoseStack matrixStack, float ticks) {
-        matrixStack.scale(0.9375F, 0.9375F, 0.9375F);
-    }
-
     public static LayerDefinition createMesh() {
         MeshDefinition meshdefinition = VillagerModel.createBodyModel();
         PartDefinition partdefinition = meshdefinition.getRoot();
@@ -55,5 +43,17 @@ public class RedMerchantRenderer extends MobRenderer<RedMerchantEntity, Villager
                         .addBox(-8.0F, -8.0F, -6.0F, 16.0F, 16.0F, 1.0F),
                 PartPose.rotation((-(float) Math.PI / 2F), 0.0F, 0.0F));
         return LayerDefinition.create(meshdefinition, 64, 64);
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(RedMerchantEntity entity) {
+        return entity.getDisplayName().getString().toLowerCase(Locale.ROOT).equals("morshu") ?
+                ModTextures.ORANGE_MERCHANT :
+                MiscUtils.getFestivity().isChristmas() ? ModTextures.RED_MERCHANT_CHRISTMAS : ModTextures.RED_MERCHANT;
+    }
+
+    @Override
+    protected void scale(RedMerchantEntity entity, PoseStack matrixStack, float ticks) {
+        matrixStack.scale(0.9375F, 0.9375F, 0.9375F);
     }
 }

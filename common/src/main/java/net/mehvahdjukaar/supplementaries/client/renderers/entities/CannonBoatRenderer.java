@@ -21,14 +21,12 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import java.util.IdentityHashMap;
 import java.util.Map;
 
 public class CannonBoatRenderer extends BoatRenderer {
@@ -123,7 +121,5 @@ public class CannonBoatRenderer extends BoatRenderer {
         }
 
     }
-
-    private static final Map<WoodType, EntityType<?>> woodToEntities = new IdentityHashMap<>();
 
 }

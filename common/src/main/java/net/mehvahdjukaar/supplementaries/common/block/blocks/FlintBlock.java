@@ -30,8 +30,19 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class FlintBlock extends Block implements IPistonMotionReact {
+    private static final Long2ObjectMap<Direction> BY_NORMAL = Arrays.stream(Direction.values())
+            .collect(Collectors.toMap((direction) -> new BlockPos(direction.getNormal()).asLong(),
+                    (direction) -> direction, (direction, direction2) -> {
+                        throw new IllegalArgumentException("Duplicate keys");
+                    }, Long2ObjectOpenHashMap::new));
+
     public FlintBlock(Properties properties) {
         super(properties);
+    }
+
+    public static boolean canBlockCreateSpark(BlockState state, Level level, BlockPos pos, Direction face) {
+        return state.is(ModTags.FLINT_METALS) &&
+                state.isFaceSturdy(level, pos, face);
     }
 
     @Override
@@ -84,21 +95,10 @@ public class FlintBlock extends Block implements IPistonMotionReact {
         super.stepOn(level, pos, state, entity);
     }
 
-    public static boolean canBlockCreateSpark(BlockState state, Level level, BlockPos pos, Direction face) {
-        return state.is(ModTags.FLINT_METALS) &&
-                state.isFaceSturdy(level, pos, face);
-    }
-
     private void playSound(Level level, BlockPos pos) {
         RandomSource randomSource = level.getRandom();
         level.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, (randomSource.nextFloat() - randomSource.nextFloat()) * 0.2F + 1.0F);
     }
-
-    private static final Long2ObjectMap<Direction> BY_NORMAL = Arrays.stream(Direction.values())
-            .collect(Collectors.toMap((direction) -> new BlockPos(direction.getNormal()).asLong(),
-                    (direction) -> direction, (direction, direction2) -> {
-                        throw new IllegalArgumentException("Duplicate keys");
-                    }, Long2ObjectOpenHashMap::new));
 
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block oldBlock, BlockPos targetPos, boolean isMoving) {

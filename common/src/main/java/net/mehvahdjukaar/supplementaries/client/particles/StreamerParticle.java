@@ -16,12 +16,6 @@ public class StreamerParticle extends DirectionOrientedBillboardParticle {
 
     // yes we sample 36 perlin noises per tick per particle
     protected static final PerlinSimplexNoise NOISE = noise(404);
-
-    private static PerlinSimplexNoise noise(int seed) {
-        return new PerlinSimplexNoise(new LegacyRandomSource(seed),
-                List.of(-4 - 3, -2, -1, 0, 1, 2));
-    }
-
     private final int particleRandom;
 
     private StreamerParticle(ClientLevel world, double x, double y, double z, double motionX, double motionY, double motionZ) {
@@ -38,6 +32,10 @@ public class StreamerParticle extends DirectionOrientedBillboardParticle {
         this.lifetime = random.nextInt(400, 700);
     }
 
+    private static PerlinSimplexNoise noise(int seed) {
+        return new PerlinSimplexNoise(new LegacyRandomSource(seed),
+                List.of(-4 - 3, -2, -1, 0, 1, 2));
+    }
 
     @Override
     public void tick() {

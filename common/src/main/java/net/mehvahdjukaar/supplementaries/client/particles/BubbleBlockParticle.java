@@ -32,6 +32,10 @@ public class BubbleBlockParticle extends TextureSheetParticle {
         this.setColorForAge();
     }
 
+    protected static double rand(double min, double variation) {
+        return (min / (RANDOM.nextFloat() * variation + (1 - variation)));
+    }
+
     @Override
     public void tick() {
         super.tick();
@@ -41,10 +45,6 @@ public class BubbleBlockParticle extends TextureSheetParticle {
 
     public void updateSprite() {
         this.setSpriteFromAge(this.sprites);
-    }
-
-    protected static double rand(double min, double variation) {
-        return (min / (RANDOM.nextFloat() * variation + (1 - variation)));
     }
 
     public void setColorForAge() {

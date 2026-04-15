@@ -44,6 +44,61 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
 
     }
 
+    public static void renderSigns(PoseStack poseStack, VertexConsumer builder, int combinedLightIn, int combinedOverlayIn,
+                                   SignPostBlockTile.Sign signUp, SignPostBlockTile.Sign signDown, Float zOffset) {
+
+        boolean up = signUp.active();
+        boolean down = signDown.active();
+        //render signs
+        if (up || down) {
+            poseStack.pushPose();
+
+            if (down) {
+                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signDown, zOffset);
+            }
+
+            if (up) {
+                poseStack.translate(0, 0.5, 0);
+                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signUp, zOffset);
+            }
+
+            poseStack.popPose();
+        }
+    }
+
+    public static void renderSign(
+            PoseStack posestack, VertexConsumer builder,
+            int light, int overlay, SignPostBlockTile.Sign sign, Float zOffset) {
+        posestack.pushPose();
+
+        boolean left = sign.left();
+        posestack.translate(0.5, 0.5, 0.5);
+        posestack.mulPose(Axis.YP.rotationDegrees(sign.yaw() - 90));
+
+        //null offset needs to be the same as wall facing one
+        float z = -10 / 16f;
+        if (zOffset != null) {
+            z += zOffset;
+        }
+        posestack.translate(0, 0, z);
+
+
+        //sign block
+        if (!left) {
+            posestack.mulPose(RotHlpr.YN180);
+            posestack.translate(0, 0, -0.3125);
+        }
+        posestack.translate(-0.5, -0.5, -0.25);
+        renderer.renderModel(posestack.last(),
+                builder,
+                null,
+                MODELS.get(sign.woodType()),
+                1.0F, 1.0F, 1.0F,
+                light, overlay);
+
+        posestack.popPose();
+    }
+
     @ForgeOverride
     public AABB getRenderBoundingBox(BlockEntity tile) {
         return new AABB(tile.getBlockPos()).inflate(0.1);
@@ -121,61 +176,5 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
                 -4, matrixStackIn, bufferIn, textProperties);
         matrixStackIn.popPose();
 
-    }
-
-
-    public static void renderSigns(PoseStack poseStack, VertexConsumer builder, int combinedLightIn, int combinedOverlayIn,
-                                   SignPostBlockTile.Sign signUp, SignPostBlockTile.Sign signDown, Float zOffset) {
-
-        boolean up = signUp.active();
-        boolean down = signDown.active();
-        //render signs
-        if (up || down) {
-            poseStack.pushPose();
-
-            if (down) {
-                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signDown, zOffset);
-            }
-
-            if (up) {
-                poseStack.translate(0, 0.5, 0);
-                renderSign(poseStack, builder, combinedLightIn, combinedOverlayIn, signUp, zOffset);
-            }
-
-            poseStack.popPose();
-        }
-    }
-
-    public static void renderSign(
-            PoseStack posestack, VertexConsumer builder,
-            int light, int overlay, SignPostBlockTile.Sign sign, Float zOffset) {
-        posestack.pushPose();
-
-        boolean left = sign.left();
-        posestack.translate(0.5, 0.5, 0.5);
-        posestack.mulPose(Axis.YP.rotationDegrees(sign.yaw() - 90));
-
-        //null offset needs to be the same as wall facing one
-        float z = -10 / 16f;
-        if (zOffset != null) {
-            z += zOffset;
-        }
-        posestack.translate(0, 0, z);
-
-
-        //sign block
-        if (!left) {
-            posestack.mulPose(RotHlpr.YN180);
-            posestack.translate(0, 0, -0.3125);
-        }
-        posestack.translate(-0.5, -0.5, -0.25);
-        renderer.renderModel(posestack.last(),
-                builder,
-                null,
-                MODELS.get(sign.woodType()),
-                1.0F, 1.0F, 1.0F,
-                light, overlay);
-
-        posestack.popPose();
     }
 }

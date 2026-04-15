@@ -18,7 +18,7 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
 
     public static final float SPEED = 11;//0.18f;//0.18/2;
     public static final int LIFE = 8;
-
+    private static final float AL = 0.6f;
     private final Vec3 axis;
     private final Vec3 origin;
     private final double radius;
@@ -49,7 +49,9 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
         this.hasPhysics = false;
     }
 
-    private static final float AL = 0.6f;
+    public static float increment(float age, int step) {
+        return SPEED * step * (1 - (step + 2 * (age - 1)) / (2 * LIFE));
+    }
 
     @Override
     public void tick() {
@@ -87,10 +89,6 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
         this.angularVelocity *= 0.75;
 
         super.move(newPos.x - this.x, newPos.y - this.y, newPos.z - this.z);
-    }
-
-    public static float increment(float age, int step) {
-        return SPEED * step * (1 - (step + 2 * (age - 1)) / (2 * LIFE));
     }
 
     @Override

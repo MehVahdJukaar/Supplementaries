@@ -30,41 +30,14 @@ import java.util.function.Supplier;
 public class CapabilityHandler {
 
 
+    public static final BlockCapability<IAntiquable, Void> ANTIQUE_TEXT_CAP = BlockCapability
+            .createVoid(Supplementaries.res("antique_ink"), IAntiquable.class);
+    public static final BlockCapability<IWashable, @Nullable Direction> WASHABLE_CAP = BlockCapability
+            .create(Supplementaries.res("washable"), IWashable.class, Direction.class);
+    public static final EntityCapability<ICatchableMob, Void> CATCHABLE_MOB = EntityCapability
+            .createVoid(Supplementaries.res("antique_ink"), ICatchableMob.class);
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister
             .create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, Supplementaries.MOD_ID);
-
-    private static final Supplier<AttachmentType<AntiquableAttachment>> ANTIQUABLE_ATTACHMENT = ATTACHMENT_TYPES.register(
-            "antique_ink", () -> AttachmentType.builder(() -> new AntiquableAttachment(false))
-                    .serialize(AntiquableAttachment.CODEC).build());
-
-    public static void init(IEventBus bus) {
-        ATTACHMENT_TYPES.register(bus);
-        bus.addListener(CapabilityHandler::register);
-    }
-
-
-    public static final class AntiquableAttachment implements IAntiquable {
-        public static final Codec<AntiquableAttachment> CODEC = Codec.BOOL.xmap(AntiquableAttachment::new, a -> a.on);
-        private boolean on;
-
-        public AntiquableAttachment(boolean on) {
-            this.on = on;
-        }
-
-        @Override
-        public boolean supplementaries$isAntique() {
-            return on;
-        }
-
-        @Override
-        public void supplementaries$setAntique(boolean hasInk) {
-            this.on = hasInk;
-        }
-
-        private static AntiquableAttachment get(BlockEntity signBlockEntity, Void direction) {
-            return signBlockEntity.getData(ANTIQUABLE_ATTACHMENT);
-        }
-    }
     /*
     public static final Capability<ICatchableMob> CATCHABLE_MOB_CAP = CapabilityManager.get(new CapabilityToken<>() {
     });
@@ -78,21 +51,19 @@ public class CapabilityHandler {
     });
     public static final Capability<IQuiverEntity> QUIVER_PLAYER = CapabilityManager.get(new CapabilityToken<>() {
     });*/
-
-    public static final BlockCapability<IAntiquable, Void> ANTIQUE_TEXT_CAP = BlockCapability
-            .createVoid(Supplementaries.res("antique_ink"), IAntiquable.class);
-
-    public static final BlockCapability<IWashable, @Nullable Direction> WASHABLE_CAP = BlockCapability
-            .create(Supplementaries.res("washable"), IWashable.class, Direction.class);
-
-    public static final EntityCapability<ICatchableMob, Void> CATCHABLE_MOB = EntityCapability
-            .createVoid(Supplementaries.res("antique_ink"), ICatchableMob.class);
-
+    private static final Supplier<AttachmentType<AntiquableAttachment>> ANTIQUABLE_ATTACHMENT = ATTACHMENT_TYPES.register(
+            "antique_ink", () -> AttachmentType.builder(() -> new AntiquableAttachment(false))
+                    .serialize(AntiquableAttachment.CODEC).build());
     private static final Map<Class<?>, BaseCapability<?, ?>> TOKENS = Map.of(
             IAntiquable.class, ANTIQUE_TEXT_CAP,
             ICatchableMob.class, CATCHABLE_MOB,
             IWashable.class, WASHABLE_CAP
     );
+
+    public static void init(IEventBus bus) {
+        ATTACHMENT_TYPES.register(bus);
+        bus.addListener(CapabilityHandler::register);
+    }
 
     public static <T> BaseCapability<?, ?> getToken(Class<T> capClass) {
         return TOKENS.get(capClass);
@@ -153,5 +124,28 @@ public class CapabilityHandler {
         event.register(IAntiquable.class);
         event.register(IWashable.class);
         event.register(IQuiverEntity.class);*/
+    }
+
+    public static final class AntiquableAttachment implements IAntiquable {
+        public static final Codec<AntiquableAttachment> CODEC = Codec.BOOL.xmap(AntiquableAttachment::new, a -> a.on);
+        private boolean on;
+
+        public AntiquableAttachment(boolean on) {
+            this.on = on;
+        }
+
+        private static AntiquableAttachment get(BlockEntity signBlockEntity, Void direction) {
+            return signBlockEntity.getData(ANTIQUABLE_ATTACHMENT);
+        }
+
+        @Override
+        public boolean supplementaries$isAntique() {
+            return on;
+        }
+
+        @Override
+        public void supplementaries$setAntique(boolean hasInk) {
+            this.on = hasInk;
+        }
     }
 }

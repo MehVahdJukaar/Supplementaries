@@ -29,11 +29,6 @@ public class KeyLockableTile extends BlockEntity implements IKeyLockable {
     }
 
     @Override
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    @Override
     public void clearPassword() {
         this.password = null;
     }
@@ -41,6 +36,11 @@ public class KeyLockableTile extends BlockEntity implements IKeyLockable {
     @Override
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     //returns true if door has to open

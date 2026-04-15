@@ -20,10 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class BlockEntityRendererDispatcherMixin {
 
 
-    @Shadow
-    public Level level;
     @Unique
     private static boolean supplementaries$antiqueFontActive;
+    @Shadow
+    public Level level;
 
     @Inject(method = "setupAndRender", at = @At("HEAD"))
     private static <T extends BlockEntity> void setupAndRenderPre(BlockEntityRenderer<T> renderer, T tile, float partialTicks,

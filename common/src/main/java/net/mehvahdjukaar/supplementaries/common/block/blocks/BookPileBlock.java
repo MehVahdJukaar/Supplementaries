@@ -37,13 +37,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class BookPileBlock extends WaterBlock implements EntityBlock {
 
+    public static final IntegerProperty BOOKS = ModBlockProperties.BOOKS;
     private static final VoxelShape SHAPE_1 = Block.box(3D, 0D, 3D, 13D, 4D, 13D);
     private static final VoxelShape SHAPE_2 = Block.box(3D, 0D, 3D, 13D, 8D, 13D);
     private static final VoxelShape SHAPE_3 = Block.box(3D, 0D, 3D, 13D, 12D, 13D);
     private static final VoxelShape SHAPE_4 = Block.box(3D, 0D, 3D, 13D, 16D, 13D);
-
-    public static final IntegerProperty BOOKS = ModBlockProperties.BOOKS;
-
     private final boolean horizontal;
 
     public BookPileBlock(Properties properties) {

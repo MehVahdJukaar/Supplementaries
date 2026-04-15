@@ -36,6 +36,7 @@ import static net.minecraft.world.InteractionHand.MAIN_HAND;
 //btw this should never grow a upper stage with age <4. Such block has a funny model and it you see it its some mod doing some fuckery or unsafe assumptions
 public class FlaxBlock extends CropBlock implements IBeeGrowable {
     public static final int DOUBLE_AGE = 4; //age at which it grows in block above
+    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
     private static final VoxelShape FULL_BOTTOM = Block.box(1, 0, 1, 15, 16, 15);
     private static final VoxelShape[] SHAPES_BOTTOM = new VoxelShape[]{
             Block.box(4, 0, 4, 12, 6, 12),
@@ -56,12 +57,22 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
             Block.box(1, 0, 1, 15, 14, 15),
             Block.box(1, 0, 1, 15, 16, 15),};
 
-    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
-
     public FlaxBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(this.getAgeProperty(), 0)
                 .setValue(HALF, DoubleBlockHalf.LOWER));
+    }
+
+    protected static void removeBottomHalf(Level world, BlockPos pos, BlockState state, Player player) {
+        DoubleBlockHalf doubleblockhalf = state.getValue(HALF);
+        if (doubleblockhalf == DoubleBlockHalf.UPPER) {
+            BlockPos blockpos = pos.below();
+            BlockState blockstate = world.getBlockState(blockpos);
+            if (blockstate.getBlock() == state.getBlock() && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
+                world.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockpos, Block.getId(blockstate));
+            }
+        }
     }
 
     @Override
@@ -123,18 +134,6 @@ public class FlaxBlock extends CropBlock implements IBeeGrowable {
     @Override
     public void playerDestroy(Level worldIn, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
         super.playerDestroy(worldIn, player, pos, Blocks.AIR.defaultBlockState(), te, stack);
-    }
-
-    protected static void removeBottomHalf(Level world, BlockPos pos, BlockState state, Player player) {
-        DoubleBlockHalf doubleblockhalf = state.getValue(HALF);
-        if (doubleblockhalf == DoubleBlockHalf.UPPER) {
-            BlockPos blockpos = pos.below();
-            BlockState blockstate = world.getBlockState(blockpos);
-            if (blockstate.getBlock() == state.getBlock() && blockstate.getValue(HALF) == DoubleBlockHalf.LOWER) {
-                world.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-                world.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockpos, Block.getId(blockstate));
-            }
-        }
     }
 
     @Override

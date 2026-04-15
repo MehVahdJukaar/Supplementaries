@@ -24,30 +24,6 @@ public class PlundererModel extends IllagerModel<PlundererEntity> {
         this.head = root.getChild("head");
     }
 
-    @Override
-    public void prepareMobModel(PlundererEntity entity, float limbSwing, float limbSwingAmount, float partialTick) {
-        super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
-
-        this.skirt.visible = !entity.isPassenger();
-    }
-
-    @Override
-    public void setupAnim(PlundererEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-
-        if (entity.isUsingSpyglass()) {
-            boolean rightHanded = entity.getMainArm() == HumanoidArm.RIGHT;
-            boolean useHand = entity.getUsedItemHand() == InteractionHand.MAIN_HAND;
-            if (useHand == rightHanded) {
-                this.rightArm.xRot = Mth.clamp(this.head.xRot - 1.9198622F - (entity.isCrouching() ? 0.2617994F : 0.0F), -2.4F, 3.3F);
-                this.rightArm.yRot = this.head.yRot - 0.2617994F;
-            } else {
-                this.leftArm.xRot = Mth.clamp(this.head.xRot - 1.9198622F - (entity.isCrouching() ? 0.2617994F : 0.0F), -2.4F, 3.3F);
-                this.leftArm.yRot = this.head.yRot + 0.2617994F;
-            }
-        }
-    }
-
     public static LayerDefinition createMesh() {
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
@@ -103,6 +79,30 @@ public class PlundererModel extends IllagerModel<PlundererEntity> {
                         .addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F),
                 PartPose.offset(5.0F, 2.0F, 0.0F));
         return LayerDefinition.create(meshDefinition, 64, 128);
+    }
+
+    @Override
+    public void prepareMobModel(PlundererEntity entity, float limbSwing, float limbSwingAmount, float partialTick) {
+        super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
+
+        this.skirt.visible = !entity.isPassenger();
+    }
+
+    @Override
+    public void setupAnim(PlundererEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+
+        if (entity.isUsingSpyglass()) {
+            boolean rightHanded = entity.getMainArm() == HumanoidArm.RIGHT;
+            boolean useHand = entity.getUsedItemHand() == InteractionHand.MAIN_HAND;
+            if (useHand == rightHanded) {
+                this.rightArm.xRot = Mth.clamp(this.head.xRot - 1.9198622F - (entity.isCrouching() ? 0.2617994F : 0.0F), -2.4F, 3.3F);
+                this.rightArm.yRot = this.head.yRot - 0.2617994F;
+            } else {
+                this.leftArm.xRot = Mth.clamp(this.head.xRot - 1.9198622F - (entity.isCrouching() ? 0.2617994F : 0.0F), -2.4F, 3.3F);
+                this.leftArm.yRot = this.head.yRot + 0.2617994F;
+            }
+        }
     }
 
 }

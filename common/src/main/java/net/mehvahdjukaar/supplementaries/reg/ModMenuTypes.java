@@ -11,10 +11,11 @@ import static net.mehvahdjukaar.supplementaries.reg.ModConstants.*;
 
 public class ModMenuTypes {
 
-    public static void init() {
-    }
+    public static final Supplier<MenuType<SafeContainerMenu>> SAFE = RegHelper.registerMenuType(
+            Supplementaries.res(SAFE_NAME), SafeContainerMenu::new);
 
-    //menu
+    public static void init() {
+    }    //menu
     public static final Supplier<MenuType<PresentContainerMenu>> PRESENT_BLOCK = RegHelper.registerMenuType(
             Supplementaries.res(PRESENT_NAME), PresentContainerMenu::new);
 
@@ -32,8 +33,6 @@ public class ModMenuTypes {
             Supplementaries.res("sack"), (integer, inventory, buf) ->
                     new VariableSizeContainerMenu(ModMenuTypes.SACK.get(), integer, inventory, buf));
 
-    public static final Supplier<MenuType<SafeContainerMenu>> SAFE = RegHelper.registerMenuType(
-            Supplementaries.res(SAFE_NAME), SafeContainerMenu::new);
 
     public static final Supplier<MenuType<PulleyContainerMenu>> PULLEY_BLOCK = RegHelper.registerMenuType(
             Supplementaries.res(PULLEY_BLOCK_NAME), PulleyContainerMenu::new);

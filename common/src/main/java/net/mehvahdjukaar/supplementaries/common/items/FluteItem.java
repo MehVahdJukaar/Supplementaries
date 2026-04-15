@@ -49,36 +49,6 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
         super(properties);
     }
 
-    @Override
-    public boolean isValidRepairItem(ItemStack pStack, ItemStack pRepairCandidate) {
-        return pRepairCandidate.is(Items.BAMBOO);
-    }
-
-    @Override
-    public boolean isFoil(ItemStack pStack) {
-        FluteTargets flutePet = pStack.get(ModComponents.FLUTE_PETS.get());
-        return flutePet != null || super.isFoil(pStack);
-    }
-
-    /*
-    @Override
-    @PlatformOnly(PlatformOnly.FABRIC)
-    public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
-        if (interactWithPet(stack, playerIn, target, hand)) {
-            return InteractionResult.sidedSuccess(playerIn.level.isClientSide);
-        }
-        return super.interactLivingEntity(stack, playerIn, target, hand);
-    }
-
-
-    @Override
-    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
-        if (entity instanceof LivingEntity livingEntity) {
-            return interactWithPet(stack, player, livingEntity, player.getUsedItemHand());
-        }
-        return false;
-    }*/
-
     //now called from forge event
     @EventCalled
     public static boolean interactWithPet(ItemStack stack, Player player, Entity target, InteractionHand hand) {
@@ -105,6 +75,39 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
         return false;
     }
 
+    public static float getMaxHeadXRot(float xRot) {
+        return Mth.clamp(xRot, (-(float) Math.PI / 2.5F), ((float) Math.PI / 2F));
+    }
+
+    /*
+    @Override
+    @PlatformOnly(PlatformOnly.FABRIC)
+    public InteractionResult interactLivingEntity(ItemStack stack, Player playerIn, LivingEntity target, InteractionHand hand) {
+        if (interactWithPet(stack, playerIn, target, hand)) {
+            return InteractionResult.sidedSuccess(playerIn.level.isClientSide);
+        }
+        return super.interactLivingEntity(stack, playerIn, target, hand);
+    }
+
+
+    @Override
+    public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+        if (entity instanceof LivingEntity livingEntity) {
+            return interactWithPet(stack, player, livingEntity, player.getUsedItemHand());
+        }
+        return false;
+    }*/
+
+    @Override
+    public boolean isValidRepairItem(ItemStack pStack, ItemStack pRepairCandidate) {
+        return pRepairCandidate.is(Items.BAMBOO);
+    }
+
+    @Override
+    public boolean isFoil(ItemStack pStack) {
+        FluteTargets flutePet = pStack.get(ModComponents.FLUTE_PETS.get());
+        return flutePet != null || super.isFoil(pStack);
+    }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand handIn) {
@@ -302,10 +305,6 @@ public class FluteItem extends SongInstrumentItem implements IThirdPersonAnimati
         //hax. unbobs left arm
         AnimationUtils.bobModelPart(model.leftArm, entity.tickCount, 1.0F);
         AnimationUtils.bobModelPart(model.rightArm, entity.tickCount, -1.0F);
-    }
-
-    public static float getMaxHeadXRot(float xRot) {
-        return Mth.clamp(xRot, (-(float) Math.PI / 2.5F), ((float) Math.PI / 2F));
     }
 
     @Override

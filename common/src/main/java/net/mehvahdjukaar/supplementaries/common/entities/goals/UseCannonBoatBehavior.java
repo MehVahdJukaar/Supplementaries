@@ -25,6 +25,10 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
         super(ImmutableMap.of(MemoryModuleType.HOME, MemoryStatus.VALUE_PRESENT, MemoryModuleType.LAST_WOKEN, MemoryStatus.REGISTERED));
     }
 
+    private static LivingEntity getAttackTarget(LivingEntity shooter) {
+        return shooter.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get();
+    }
+
     @Override
     protected boolean checkExtraStartConditions(ServerLevel level, LivingEntity owner) {
         Entity boat = owner.getControlledVehicle();
@@ -34,10 +38,6 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
         LivingEntity livingentity = getAttackTarget(owner);
         return BehaviorUtils.canSee(owner, livingentity);
         //&& BehaviorUtils.isWithinAttackRange(owner, livingentity, 0);
-    }
-
-    private static LivingEntity getAttackTarget(LivingEntity shooter) {
-        return shooter.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get();
     }
 
     @Override
