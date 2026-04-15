@@ -98,11 +98,25 @@ public class DecoBlocksCompatImpl {
     public static void init() {
     }
 
+    public static void setupClient() {
+        if (DecoBlocksCompatImpl.CHANDELIER_ROPE != null)
+            ClientHelper.registerRenderType(DecoBlocksCompatImpl.CHANDELIER_ROPE.get(), RenderType.cutout());
+        if (DecoBlocksCompatImpl.SOUL_CHANDELIER_ROPE != null)
+            ClientHelper.registerRenderType(DecoBlocksCompatImpl.SOUL_CHANDELIER_ROPE.get(), RenderType.cutout());
+        if (CompatHandler.DECO_BLOCKS_ABNORMALS) {
+            if (DecoBlocksCompatImpl.ENDER_CHANDELIER_ROPE != null)
+                ClientHelper.registerRenderType(DecoBlocksCompatImpl.ENDER_CHANDELIER_ROPE.get(), RenderType.cutout());
+        }
+        if (CompatHandler.MUCH_MORE_MOD_COMPAT) {
+            if (DecoBlocksCompatImpl.GLOW_CHANDELIER_ROPE != null)
+                ClientHelper.registerRenderType(DecoBlocksCompatImpl.GLOW_CHANDELIER_ROPE.get(), RenderType.cutout());
+        }
+    }
 
     public static class RopeChandelierBlock extends ChandelierBlock {
+        protected final Supplier<SimpleParticleType> particleData;
         private final Supplier<Block> mimic;
         private final Supplier<BlockState> defMimic;
-        protected final Supplier<SimpleParticleType> particleData;
 
         public <T extends ParticleType<?>> RopeChandelierBlock(Properties properties, Supplier<Block> chandelier, Supplier<T> particleData) {
             super(properties, false);
@@ -160,21 +174,5 @@ public class DecoBlocksCompatImpl {
             worldIn.addParticle(particleData.get(), d0 + off2, d1, d2 - off1, 0.0D, 0.0D, 0.0D);
         }
 
-    }
-
-
-    public static void setupClient() {
-        if (DecoBlocksCompatImpl.CHANDELIER_ROPE != null)
-            ClientHelper.registerRenderType(DecoBlocksCompatImpl.CHANDELIER_ROPE.get(), RenderType.cutout());
-        if (DecoBlocksCompatImpl.SOUL_CHANDELIER_ROPE != null)
-            ClientHelper.registerRenderType(DecoBlocksCompatImpl.SOUL_CHANDELIER_ROPE.get(), RenderType.cutout());
-        if (CompatHandler.DECO_BLOCKS_ABNORMALS) {
-            if (DecoBlocksCompatImpl.ENDER_CHANDELIER_ROPE != null)
-                ClientHelper.registerRenderType(DecoBlocksCompatImpl.ENDER_CHANDELIER_ROPE.get(), RenderType.cutout());
-        }
-        if (CompatHandler.MUCH_MORE_MOD_COMPAT) {
-            if (DecoBlocksCompatImpl.GLOW_CHANDELIER_ROPE != null)
-                ClientHelper.registerRenderType(DecoBlocksCompatImpl.GLOW_CHANDELIER_ROPE.get(), RenderType.cutout());
-        }
     }
 }

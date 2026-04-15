@@ -13,12 +13,12 @@ import net.minecraft.world.item.ItemStack;
 
 public class SelectableContainerItemHudImpl extends SelectableContainerItemHud {
 
-    public static SelectableContainerItemHud makeInstance() {
-        return new SelectableContainerItemHudImpl();
-    }
-
     public SelectableContainerItemHudImpl() {
         super(Minecraft.getInstance());
+    }
+
+    public static SelectableContainerItemHud makeInstance() {
+        return new SelectableContainerItemHudImpl();
     }
 
     @Override

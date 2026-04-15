@@ -163,17 +163,6 @@ public class SuppPlatformStuffImpl {
         return CropAccessor.callGetGrowthSpeed(state, level, pos);
     }
 
-
-    private static abstract class CropAccessor extends CropBlock {
-        public CropAccessor(Properties properties) {
-            super(properties);
-        }
-
-        public static float callGetGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
-            return getGrowthSpeed(state.getBlock(), level, pos);
-        }
-    }
-
     public static void releaseUsingItem(ItemStack stack, LivingEntity entity) {
         stack.releaseUsing(entity.level(), entity, entity.getUseItemRemainingTicks());
         if (stack.useOnRelease()) {
@@ -217,5 +206,15 @@ public class SuppPlatformStuffImpl {
         FabricLoader.getInstance().invokeEntrypoints("supplementaries:register_fire_behaviors", IFireItemBehaviorProvider.class, provider -> {
             provider.register(registry, event);
         });
+    }
+
+    private static abstract class CropAccessor extends CropBlock {
+        public CropAccessor(Properties properties) {
+            super(properties);
+        }
+
+        public static float callGetGrowthSpeed(BlockState state, ServerLevel level, BlockPos pos) {
+            return getGrowthSpeed(state.getBlock(), level, pos);
+        }
     }
 }

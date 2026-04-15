@@ -18,10 +18,6 @@ import java.util.Set;
 
 public class SupplementariesFabricClient implements ClientModInitializer {
 
-    @Override
-    public void onInitializeClient() {
-    }
-
     private static boolean firstScreenShown = false;
 
     public static void init() {
@@ -47,6 +43,10 @@ public class SupplementariesFabricClient implements ClientModInitializer {
                         Set.of(ItemDisplayContext.HEAD)));
 
         FluidRenderHandlerRegistry.INSTANCE.register(ModFluids.LUMISENE_FLUID.get(), new LumiseneFluidRenderPropertiesImpl());
+    }
+
+    @Override
+    public void onInitializeClient() {
     }
 
 
