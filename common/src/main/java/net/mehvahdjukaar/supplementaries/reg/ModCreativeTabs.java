@@ -516,7 +516,7 @@ public class ModCreativeTabs {
 
         before(e, Items.FISHING_ROD, CreativeModeTabs.TOOLS_AND_UTILITIES,
                 ModConstants.LUNCH_BASKET_NAME,
-                ModRegistry.LUNCH_BASKET);
+                ModRegistry.LUNCH_BASKET_ITEM);
 
         after(e, Items.PIGLIN_BANNER_PATTERN, CreativeModeTabs.INGREDIENTS,
                 ModConstants.DRAGON_PATTERN_NAME,
