@@ -198,7 +198,6 @@ public class ModRegistry {
                             .mapColor(MapColor.TERRACOTTA_RED)
                             .strength(2f, 6f)
                     ));
-    // awnings
     public static final Supplier<Block> FINE_WOOD_SLAB = regWithItem(FINE_WOOD_NAME + "_slab", () -> new DirectionalSlabBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_STAIRS)));    public static final Supplier<BlockEntityType<FlagBlockTile>> FLAG_TILE = regTile(
             FLAG_NAME, () -> PlatHelper.newBlockEntityType(

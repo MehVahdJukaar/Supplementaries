@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:cannonball",
+    "supplementaries:netherite_door",
+    "supplementaries:netherite_trapdoor",
+    "supplementaries:slidy_block"
+  ]
+}

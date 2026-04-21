@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:feather_block",
+    "supplementaries:ash",
+    "supplementaries:wicker_fence",
+    "supplementaries:doormat",
+    "#supplementaries:awnings",
+    "supplementaries:stick",
+    "supplementaries:blaze_rod",
+    {
+      "id": "supplementaries:gold_gate",
+      "required": false
+    },
+    {
+      "id": "supplementaries:iron_gate",
+      "required": false
+    },
+    {
+      "id": "supplementaries:rope",
+      "required": false
+    }
+  ]
+}

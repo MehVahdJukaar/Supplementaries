@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:book_pile",
+    "supplementaries:book_pile_horizontal",
+    "supplementaries:flower_box",
+    "supplementaries:crank",
+    "supplementaries:pancake",
+    "supplementaries:clock_block",
+    "supplementaries:bellows",
+    "supplementaries:jar",
+    "supplementaries:lunch_basket",
+    "#supplementaries:fine_wood",
+    "supplementaries:speaker_block",
+    "supplementaries:timber_frame",
+    "supplementaries:timber_brace",
+    "supplementaries:timber_cross_brace"
+  ]
+}
