@@ -1,0 +1,68 @@
+name: Report Bug
+description: Found a bug? Report it.
+title: "[🐞]: "
+labels: [ "bug" ]
+body:
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Mandatory Troubleshooting
+      description: Please complete these steps before submitting.
+      options:
+        - label: "Use the LATEST version of the mod and ALL its dependencies (or ideally all your mods). Pro tip: don't install mods manually, use a launcher."
+          required: true
+        - label: "Don't use Optifine or hybrid servers (Mohist/Velocity/etc) and have tried without big game altering mods (Sodium/Lithium/Connector etc)."
+          required: true
+        - label: "Check that this bug hasn't been reported already."
+          required: true
+        - label: "Try with the mod alone. If issue does not persist then try removing half of your mods at the time to find the conflicting mod."
+          required: false
+
+  - type: dropdown
+    id: mc-version
+    attributes:
+      label: Minecraft Version & Loader
+      description: Select your game version and the loader you are using.
+      options:
+        - 1.21.11-NEOFORGE
+        - 1.21.11-FABRIC
+        - 1.21.5-NEOFORGE
+        - 1.21.5-FABRIC
+        - 1.21.1-NEOFORGE
+        - 1.21.1-FABRIC
+        - 1.20.1-FORGE
+        - 1.20.1-FABRIC
+        - 1.19.2-FORGE
+        - 1.18.2-FORGE
+        - OTHER-SPECIFY
+      default: 4
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue Details
+      description: Provide a clear description of what happened and how to reproduce it.
+      placeholder: |
+        What happened:
+        
+        Steps to reproduce:
+        1. 
+        2. 
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs & Media
+      description: |
+        Drag and drop your **latest.log** or **crash-report** here. 
+        
+        These are found in: `.minecraft/logs/` or `.minecraft/crash-reports/`
+        
+        Include additional screenshot if needed.
+      placeholder: "Drop files or paste logs here..."
+    validations:
+      required: true

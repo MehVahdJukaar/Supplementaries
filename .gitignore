@@ -1,4 +1,4 @@
-build/
+../build/
 *.ipr
 run/
 *.iws
@@ -8,8 +8,6 @@ out/
 output/
 bin/
 libs/
-logs/
-.architectury-transformer/
 
 .classpath
 .project
@@ -19,14 +17,14 @@ classes/
 .vscode
 .settings
 *.launch
-
-# MixinMCP auto-injected rules
-.cursor/rules/minecraft-mod-project.mdc
-.cursor/skills/mixin-writing/SKILL.md
-.cursor/skills/mixin-writing/references/at-reference.md
-.cursor/skills/mixin-writing/references/expressions-language.md
-.cursor/skills/mixinmcp-tools/SKILL.md
-.claude/skills/mixin-writing/SKILL.md
-.claude/skills/mixin-writing/references/at-reference.md
-.claude/skills/mixin-writing/references/expressions-language.md
-.claude/skills/mixinmcp-tools/SKILL.md
+/unique_lines.txt
+/.junie/memory/
+/.codex
+/.aiassistant/
+/.ai/
+/common/build/
+/fabric/build/
+/neoforge/build/
+/forge/build/
+/.junie/AGENTS.md
+/build/reports/problems/problems-report.html
