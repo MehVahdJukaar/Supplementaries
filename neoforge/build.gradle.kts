@@ -102,7 +102,7 @@ dependencies {
     modCompileOnly("curse.maven:emi-580555:5704405")
 
     modCompileOnly("curse.maven:create-328085:6271847")
-    modCompileOnly("curse.maven:forge-config-api-port-fabric-547434:5982385")
+    //modCompileOnly("curse.maven:forge-config-api-port-fabric-547434:5982385")
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
     modCompileOnly ("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")
     modCompileOnly("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")

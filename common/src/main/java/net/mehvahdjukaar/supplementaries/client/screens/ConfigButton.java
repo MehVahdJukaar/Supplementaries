@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
@@ -55,7 +55,7 @@ public class ConfigButton extends Button {
         }
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public int getFGColor() {
         return this.isHovered ? ColorHelper.getRainbowColorPost(3) : 0xFFAA00;
     }

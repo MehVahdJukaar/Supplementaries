@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractPresentBlock;
 import net.mehvahdjukaar.supplementaries.common.items.components.PresentAddress;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -29,12 +29,12 @@ public class PresentItem extends BlockItem implements IColored {
         }
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public int getMaxStackSize(ItemStack stack) {
         return stack.has(ModComponents.ADDRESS.get()) ? 1 : this.getDefaultMaxStackSize();
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean canFitInsideContainerItems(ItemStack stack) {
         return !stack.has(ModComponents.ADDRESS.get());
     }

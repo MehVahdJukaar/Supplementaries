@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.items.components.ConfettiColors;
@@ -101,7 +101,7 @@ public class ConfettiPopperItem extends BlockItem {
         return super.interactLivingEntity(stack, player, entity, usedHand);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public @Nullable EquipmentSlot getEquipmentSlot(ItemStack stack) {
         return EquipmentSlot.HEAD;
     }

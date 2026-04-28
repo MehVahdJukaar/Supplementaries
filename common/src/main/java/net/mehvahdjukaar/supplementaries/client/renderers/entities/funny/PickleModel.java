@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.funny;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
@@ -144,7 +144,7 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
             super.render(matrixStack, buffer, packedLight, entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch);
         }
 
-        @ForgeOverride
+        @VirtualOverride("neoforge")
         public boolean shouldRender(ItemStack stack, T entity) {
             return !entity.isCrouching() && stack.getItem() == Items.ELYTRA;
         }

@@ -3,9 +3,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlock;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -245,7 +245,7 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
         }
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation direction) {
         BlockState s = rotate(state, direction);
         onRotated(s, state, level, pos, direction, Direction.UP, null);

@@ -25,7 +25,6 @@ public class GoldDoorBlock extends DoorBlock {
         super(BlockSetType.GOLD, builder);
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static void tryOpenDoubleDoor(Level world, BlockState state, BlockPos pos) {
         if ((CompatHandler.QUARK && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.DOUBLEDOORS)) {
             Direction direction = state.getValue(DoorBlock.FACING);
@@ -42,7 +41,6 @@ public class GoldDoorBlock extends DoorBlock {
         }
     }
 
-    @SuppressWarnings("ConstantConditions")
     public static void tryOpenDoubleDoorKey(Level world, BlockState state, BlockPos pos, Player player, InteractionHand hand, ItemStack stack) {
         if ((CompatHandler.QUARK && QuarkCompat.isDoubleDoorEnabled() || CompatHandler.DOUBLEDOORS)) {
             Direction direction = state.getValue(DoorBlock.FACING);

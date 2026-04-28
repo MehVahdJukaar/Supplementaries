@@ -1,13 +1,13 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 
 import static net.mehvahdjukaar.supplementaries.integration.CompatHandler.*;
 
 public class CompatHandlerClient {
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void doSetup() {
         throw new AssertionError();
     }
@@ -34,7 +34,7 @@ public class CompatHandlerClient {
         }
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void doInit() {
         throw new AssertionError();
     }

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
@@ -74,7 +74,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
         return super.getCloneItemStack(level, pos, state);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
             var sign = tile.getClickedSign(target.getLocation());
@@ -113,7 +113,7 @@ public class SignPostBlock extends FenceMimicBlock implements EntityBlock, IRota
         return super.mirror(state, mirror);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation rot) {
         return state;
     }

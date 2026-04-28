@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
@@ -62,7 +62,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
         poseStack.popPose();
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public AABB getRenderBoundingBox(BlockEntity tile) {
         return new AABB(tile.getBlockPos()).expandTowards(0, 1, 0);
     }

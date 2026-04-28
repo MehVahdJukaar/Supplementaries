@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.block.IBlockHolder;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BambooSpikesBlock;
@@ -110,7 +110,7 @@ public class QuarkCompat {
         return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static float getEncumbermentFromBackpack(ItemStack stack) {
         throw new AssertionError();
     }

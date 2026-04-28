@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -84,7 +84,7 @@ public class SackItem extends BlockItem {
         return false;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean canFitInsideContainerItems(ItemStack stack) {
         return !stack.has(DataComponents.CONTAINER);
     }

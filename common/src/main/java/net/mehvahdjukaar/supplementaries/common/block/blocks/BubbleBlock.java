@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BubbleBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -98,7 +98,7 @@ public class BubbleBlock extends Block implements EntityBlock {
         playBreakSound(state, level, pos, player);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean addLandingEffects(BlockState state1, ServerLevel worldserver, BlockPos pos, BlockState state2, LivingEntity entity, int numberOfParticles) {
         return true;
     }

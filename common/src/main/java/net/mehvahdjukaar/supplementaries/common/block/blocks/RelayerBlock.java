@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.mojang.serialization.MapCodec;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -137,7 +137,7 @@ public class RelayerBlock extends DirectionalBlock {
         return 0;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
         if (direction == null) return false;
         return direction == state.getValue(ObserverBlock.FACING);

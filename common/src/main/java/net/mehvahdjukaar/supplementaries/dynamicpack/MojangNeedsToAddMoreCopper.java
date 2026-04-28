@@ -62,7 +62,7 @@ public class MojangNeedsToAddMoreCopper {
                     var recolored = resp.recolor(textures.get(random.nextInt(textures.size())));
                     sink.addTexture(relPat, recolored);
                     recolored.close();
-                } catch (Exception e) {
+                } catch (Exception ignored) {
 
                 }
             }
@@ -89,13 +89,12 @@ public class MojangNeedsToAddMoreCopper {
                         toRecolor.setFramePixel(frameIndex, globalX, globalY, -1);
                     });
                     sink.addAndCloseTexture(relPat, toRecolor);
-                } catch (Exception e) {
+                } catch (Exception ignored) {
 
                 }
             }
 
-        } catch (Exception e) {
-            int aa = 1;
+        } catch (Exception ignored) {
         }
 
 

@@ -1,0 +1,63 @@
+package net.mehvahdjukaar.supplementaries.platform;
+
+import com.mojang.serialization.MapCodec;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.events.platform.ClientEventsForge;
+import net.mehvahdjukaar.supplementaries.common.events.platform.ServerEventsForge;
+import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.function.Supplier;
+
+/**
+ * Author: MehVahdJukaar
+ */
+@Mod(Supplementaries.MOD_ID)
+public class SupplementariesForge {
+
+    public static final ItemAbility SOAP_CLEAN = ItemAbility.get("soap_clean");
+    public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(
+            NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Supplementaries.MOD_ID);
+    public static final Supplier<MapCodec<ReplaceRopeByConfigModifier>> REPLACE_ROPE =
+            LOOT_MODIFIERS.register("replace_rope", ReplaceRopeByConfigModifier.CODEC);
+
+    public SupplementariesForge(IEventBus bus) {
+        bus.register(this);
+        Supplementaries.commonInit();
+
+        CapabilityHandler.init(bus);
+
+        ServerEventsForge.init();
+        VillagerScareStuff.init();
+
+        PlatHelper.getPhysicalSide().ifClient(() -> {
+            ClientRegistry.init();
+            ClientEventsForge.init();
+        });
+
+        SuppPlatformStuffImpl.init();
+
+        LOOT_MODIFIERS.register(bus);
+    }
+
+    @SubscribeEvent
+    public void registerCapabilities(RegisterCapabilitiesEvent event) {
+        CapabilityHandler.register(event);
+    }
+
+    @SubscribeEvent
+    public void setup(FMLCommonSetupEvent event) {
+        VillagerScareStuff.setup();
+    }
+
+
+}

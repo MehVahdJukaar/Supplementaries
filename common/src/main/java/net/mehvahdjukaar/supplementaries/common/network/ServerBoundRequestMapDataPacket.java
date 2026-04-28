@@ -27,11 +27,6 @@ public record ServerBoundRequestMapDataPacket(BlockPos pos, UUID id) implements 
         this(buf.readBlockPos(), buf.readUUID());
     }
 
-    public ServerBoundRequestMapDataPacket(BlockPos pos, UUID id) {
-        this.pos = pos;
-        this.id = id;
-    }
-
     @Override
     public void write(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(this.pos);

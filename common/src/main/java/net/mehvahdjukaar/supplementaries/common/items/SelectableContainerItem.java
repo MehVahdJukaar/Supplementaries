@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
@@ -44,7 +44,7 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
         return false;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean canFitInsideContainerItems(ItemStack stack) {
         return !stack.has(this.getComponentType());
     }

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import com.misterpemodder.shulkerboxtooltip.api.ShulkerBoxTooltipApi;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProviderRegistry;
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.integration.shulkerboxtooltip.LunchBasketPreviewProvider;
 import net.mehvahdjukaar.supplementaries.integration.shulkerboxtooltip.SackPreviewProvider;
@@ -17,7 +17,7 @@ public class ShulkerBoxTooltipCompat implements ShulkerBoxTooltipApi {
         return ShulkerBoxTooltipApi.getPreviewProviderForStack(stack) != null;
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void setup() {
         throw new AssertionError();
     }

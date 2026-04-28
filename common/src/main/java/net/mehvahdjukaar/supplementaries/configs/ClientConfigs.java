@@ -232,7 +232,6 @@ public class ClientConfigs {
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
         public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
         public static final Supplier<Boolean> NO_OPTIFINE_WARN;
-        public static final Supplier<Boolean> NO_AMENDMENTS_WARN;
         public static final Supplier<Boolean> NO_INCOMPATIBLE_MODS;
         public static final Supplier<Boolean> UNFUNNY;
         public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
@@ -245,8 +244,6 @@ public class ClientConfigs {
             DYNAMIC_ASSETS_GEN_MODE = builder.define("dynamic_assets_generation_mode", GenMode.CACHED);
             NO_OPTIFINE_WARN = builder.comment("Disables Optifine warn screen")
                     .define("no_optifine_warn_screen", false);
-            NO_AMENDMENTS_WARN = builder.comment("Disables Amendments suggestion screen")
-                    .define("no_amendments_screen", false);
             NO_INCOMPATIBLE_MODS = builder.comment("Disable incompatible mods warning screen")
                     .define("no_incompatible_mods_screen", false);
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")

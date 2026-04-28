@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SignPostItem;
@@ -95,7 +95,7 @@ public class SignPostWallBlock extends WaterBlock implements EntityBlock {
         return super.getCloneItemStack(level, pos, state);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
             var sign = tile.getClickedSign(target.getLocation());

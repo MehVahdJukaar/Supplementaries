@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -114,7 +114,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
     }
 
     //@Override
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
         if (this.isFull(stack)) return false;
         InteractionHand hand = player.getUsedItemHand();

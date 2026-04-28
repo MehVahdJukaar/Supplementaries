@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.KeyLockableTile;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
@@ -26,12 +26,12 @@ public class KeyItem extends Item {
         super(properties);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
         return enchantment.value().effects().has(EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
         return true;
     }

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.ItemShelfBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -43,7 +43,7 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(WATERLOGGED, false).setValue(FACING, Direction.NORTH));
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
         return CommonConfigs.Building.ITEM_SHELF_LADDER.get();
     }
@@ -87,7 +87,7 @@ public class ItemShelfBlock extends WaterBlock implements EntityBlock {
                 : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader world, BlockPos pos, Player player) {
         if (target.getLocation().y() >= pos.getY() + 0.25) {
             if (world.getBlockEntity(pos) instanceof ItemShelfBlockTile tile) {

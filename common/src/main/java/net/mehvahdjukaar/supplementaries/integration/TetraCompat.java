@@ -1,19 +1,19 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.Contract;
 
 public class TetraCompat {
 
     @Contract
-    @ExpectPlatform
+    @PlatformImpl
     public static boolean isTetraSword(Item i) {
         throw new AssertionError();
     }
 
     @Contract
-    @ExpectPlatform
+    @PlatformImpl
     public static boolean isTetraTool(Item i) {
         throw new AssertionError();
     }

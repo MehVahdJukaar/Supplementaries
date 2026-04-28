@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.IOptionalEntityBlock;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.DisplayStatus;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PedestalBlockTile;
@@ -80,7 +80,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
         return canHaveItemAbove(level, pos) ? DisplayStatus.EMPTY : DisplayStatus.NONE;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
         double power = CommonConfigs.Building.CRYSTAL_ENCHANTING.get();
         if (power != 0 && world.getBlockEntity(pos) instanceof PedestalBlockTile te) {
@@ -120,7 +120,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
         return stateIn;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader world, BlockPos pos, Player player) {
         if (target.getLocation().y() > pos.getY() + 1 - 0.1875) {
             if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {

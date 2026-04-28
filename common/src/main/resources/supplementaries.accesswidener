@@ -1,14 +1,11 @@
 accessWidener   v2  named
 
-#set direction for wrench
-accessible method net/minecraft/world/entity/decoration/HangingEntity setDirection (Lnet/minecraft/core/Direction;)V
 
 #structure locator stuff
 accessible method net/minecraft/world/level/chunk/ChunkGenerator getNearestGeneratedStructure (Ljava/util/Set;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/core/BlockPos;ZLnet/minecraft/world/level/levelgen/structure/placement/ConcentricRingsStructurePlacement;)Lcom/mojang/datafixers/util/Pair;
 accessible class net/minecraft/client/gui/screens/MenuScreens$ScreenConstructor
 
 accessible field net/minecraft/client/renderer/GameRenderer effectActive Z
-accessible class net/minecraft/world/item/BrushItem$DustParticlesDelta
 
 #plunderer boat stuff
 accessible field net/minecraft/world/entity/vehicle/Boat deltaRotation F
@@ -21,8 +18,6 @@ accessible class net/minecraft/world/item/ItemCooldowns$CooldownInstance
 
 accessible method net/minecraft/world/item/context/UseOnContext getHitResult ()Lnet/minecraft/world/phys/BlockHitResult;
 
-#dispenser minecart
-accessible method net/minecraft/world/level/block/DispenserBlock getDispenseMethod (Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 
 extendable method net/minecraft/client/resources/sounds/AbstractTickableSoundInstance stop ()V
 
@@ -72,7 +67,6 @@ accessible field net/minecraft/world/inventory/ShulkerBoxMenu container Lnet/min
 
 #sign renderer
 accessible method net/minecraft/client/renderer/blockentity/SignRenderer translateSignText (Lcom/mojang/blaze3d/vertex/PoseStack;ZLnet/minecraft/world/phys/Vec3;)V
-accessible method net/minecraft/client/renderer/blockentity/SignRenderer getTextOffset ()Lnet/minecraft/world/phys/Vec3;
 
 accessible method net/minecraft/server/network/ServerGamePacketListenerImpl filterTextPacket (Ljava/lang/String;)Ljava/util/concurrent/CompletableFuture;
 accessible method net/minecraft/server/network/ServerGamePacketListenerImpl filterTextPacket (Ljava/util/List;)Ljava/util/concurrent/CompletableFuture;
@@ -92,8 +86,6 @@ accessible method net/minecraft/client/model/ParrotModel setupAnim (Lnet/minecra
 
 accessible field net/minecraft/client/GameNarrator narrator Lcom/mojang/text2speech/Narrator;
 
-#relayer diode block reading
-accessible method net/minecraft/world/level/block/DiodeBlock getOutputSignal (Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)I
 
 #explosions
 accessible field net/minecraft/world/level/Explosion source Lnet/minecraft/world/entity/Entity;

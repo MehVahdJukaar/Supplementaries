@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.configs;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestConfigReloadPacket;
 import net.minecraft.client.Minecraft;
@@ -9,8 +9,9 @@ import net.minecraft.server.level.ServerPlayer;
 public class ConfigUtils {
 
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void openModConfigs() {
+        throw new AssertionError();
     }
 
 

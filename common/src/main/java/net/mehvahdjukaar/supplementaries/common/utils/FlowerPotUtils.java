@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import org.jetbrains.annotations.ApiStatus;
@@ -13,25 +13,25 @@ public class FlowerPotUtils {
     }
 
     @Contract
-    @ExpectPlatform
+    @PlatformImpl
     public static Block getEmptyPot(FlowerPotBlock fullPot) {
         throw new AssertionError();
     }
 
     @Contract
-    @ExpectPlatform
+    @PlatformImpl
     public static Block getFullPot(FlowerPotBlock emptyPot, Block flowerBlock) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static boolean isEmptyPot(Block b) {
         throw new AssertionError();
     }
 
     @ApiStatus.Internal
     //move to forge
-    @ExpectPlatform
+    @PlatformImpl
     public static void registerFlowerPots() {
         throw new AssertionError();
     }

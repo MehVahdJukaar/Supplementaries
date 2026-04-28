@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -409,7 +409,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         this.controllingEntity = uuid;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {
         //Unused. PlatHelper.openCUstomMenu writes more data ontop of that. only problem is spectator...
     }

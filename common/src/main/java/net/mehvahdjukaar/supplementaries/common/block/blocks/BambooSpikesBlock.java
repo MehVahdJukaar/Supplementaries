@@ -2,13 +2,13 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.base.Suppliers;
 import com.mojang.authlib.GameProfile;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.IPistonMotionReact;
 import net.mehvahdjukaar.moonlight.api.block.ISoftFluidConsumer;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.fluids.MLBuiltinSoftFluids;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.moonlight.api.util.PotionBottleType;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -174,12 +174,12 @@ public class BambooSpikesBlock extends WaterBlock implements ISoftFluidConsumer,
         }
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public @Nullable PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
         return PathType.DAMAGE_OTHER;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public @Nullable PathType getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, PathType originalType) {
         return PathType.DAMAGE_OTHER;
     }

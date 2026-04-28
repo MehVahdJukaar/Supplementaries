@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -64,14 +64,20 @@ public class WelcomeMessageScreen extends Screen {
 
     public static WelcomeMessageScreen createOptifine(Screen screen) {
         return new WelcomeMessageScreen(screen, 200, OF_TITLE, OF_TEXT,
-                OF_URL, () -> SuppPlatformStuff.disableOFWarn(true));
+                OF_URL, () -> {
+            ClientConfigs.CONFIG_HOLDER.manuallySetValue(
+                    ClientConfigs.General.NO_OPTIFINE_WARN, true);
+        });
     }
 
     public static WelcomeMessageScreen createIncompatibleMods(Screen screen) {
         return new WelcomeMessageScreen(screen, 60, IM_TITLE,
                 Component.translatable("gui.supplementaries.incompatible_mods.message",
                         Component.literal(IM_LIST).withStyle(ChatFormatting.RED)),
-                null, SuppPlatformStuff::disableIMWarn);
+                null, () -> {
+            ClientConfigs.CONFIG_HOLDER.manuallySetValue(
+                    ClientConfigs.General.NO_INCOMPATIBLE_MODS, true);
+        });
     }
 
     public static boolean hasIncompat() {

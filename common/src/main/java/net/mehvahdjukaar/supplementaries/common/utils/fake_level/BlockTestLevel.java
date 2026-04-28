@@ -15,7 +15,7 @@ public class BlockTestLevel extends FakeServerLevel {
     }
 
     public static BlockTestLevel get(ServerLevel level) {
-        // always server sie even on client as projectiles entities wont get fire on client
+        // always server sie even on client as projectiles entities won't get fire on client
         return FakeLevelManager.getServer("faucet_test_level", level, BlockTestLevel::new);
     }
 

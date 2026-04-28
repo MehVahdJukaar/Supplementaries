@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.fluids;
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.GunpowderBlock;
@@ -157,7 +157,7 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
         return FireStage.fromAge(state.getValue(AGE)).isBurning() ? RenderShape.MODEL : RenderShape.INVISIBLE;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
     }
 
@@ -410,19 +410,19 @@ public class FlammableLiquidBlock extends FiniteLiquidBlock implements ILightabl
 
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public int getFireSpreadSpeed(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return isLitUp(state, level, pos) ? 0 : 60;
         //high chance to have fire. Cant burn however
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
         if (isLitUp(state, level, pos)) return PathType.DAMAGE_FIRE;
         else return null;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public @Nullable PathType getAdjacentBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob, PathType originalType) {
         if (isLitUp(state, level, pos)) return PathType.DAMAGE_FIRE;
         else return null;

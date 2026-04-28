@@ -1,10 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.item.IFirstPersonAnimationProvider;
 import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
-import net.mehvahdjukaar.moonlight.api.misc.FabricOverride;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -162,19 +161,19 @@ public class BubbleBlowerItem extends Item implements IThirdPersonAnimationProvi
         return Mth.clamp(Math.round(charges * 13.0F / (float) getMaxCharges(stack)), 0, 13);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return false;
     }
 
-    @FabricOverride
+    @VirtualOverride("fabric")
     public boolean allowComponentsUpdateAnimation(Player player, InteractionHand hand, ItemStack oldStack, ItemStack newStack) {
         int oldCharges = getCharges(oldStack);
         int newCharges = getCharges(newStack);
         return oldCharges == newCharges;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         if (slotChanged) return true;
         int oldCharges = getCharges(oldStack);

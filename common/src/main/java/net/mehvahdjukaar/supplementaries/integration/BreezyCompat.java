@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 public class BreezyCompat {
 
-    @ExpectPlatform
+    @PlatformImpl
     public static float getWindAngle(BlockPos pos, Level level) {
         throw new AssertionError();
     }

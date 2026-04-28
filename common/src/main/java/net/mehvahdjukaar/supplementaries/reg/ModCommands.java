@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.mojang.brigadier.CommandDispatcher;
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.commands.*;
@@ -16,7 +16,7 @@ public class ModCommands {
         registerArguments();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void registerArguments() {
         throw new AssertionError();
     }

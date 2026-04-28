@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.GenericProjectileBehavior;
@@ -18,8 +18,9 @@ public class VibeChecker {
 
     private static boolean checkedOnce = false;
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void checkVibe() {
+        throw new AssertionError();
     }
 
     public static void checkVibe(ServerPlayer player) {

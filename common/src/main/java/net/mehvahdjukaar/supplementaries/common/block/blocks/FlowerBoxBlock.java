@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlowerBoxBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -157,7 +157,7 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
         };
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader world, BlockPos pos, Player player) {
         if (target instanceof BlockHitResult hit && hit.getDirection() == Direction.UP) {
             if (world.getBlockEntity(pos) instanceof ItemDisplayTile tile) {

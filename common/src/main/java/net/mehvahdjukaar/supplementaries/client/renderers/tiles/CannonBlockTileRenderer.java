@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
@@ -151,7 +151,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public AABB getRenderBoundingBox(BlockEntity tile) {
         return new AABB(tile.getBlockPos()).inflate(0.2);
     }

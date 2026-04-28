@@ -2,9 +2,9 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
@@ -233,7 +233,7 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         return s;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation direction) {
         BlockState s = rotate(state, direction);
         s = s.setValue(FLIP_TILE, false);
@@ -263,7 +263,7 @@ public class RopeBuntingBlock extends AbstractRopeBlock implements EntityBlock, 
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader world, BlockPos pos, Player player) {
         Optional<Direction> closest = findClosestConnection(state, pos, target.getLocation());
         if (world.getBlockEntity(pos) instanceof BuntingBlockTile tile && closest.isPresent()) {

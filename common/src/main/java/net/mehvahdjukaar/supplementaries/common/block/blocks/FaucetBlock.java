@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.fluids.FluidsHelper;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -128,7 +128,7 @@ public class FaucetBlock extends WaterBlock implements EntityBlock {
         return false;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
         boolean water = updateTileFluidAndReturnIfHasWater(state, pos, level);
         if (state.getValue(HAS_WATER) != water) {

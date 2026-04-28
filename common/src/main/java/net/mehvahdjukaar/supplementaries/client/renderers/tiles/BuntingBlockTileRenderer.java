@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BuntingBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -91,7 +91,7 @@ public class BuntingBlockTileRenderer implements BlockEntityRenderer<BuntingBloc
         return LayerDefinition.create(meshdefinition, 32, 16);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public AABB getRenderBoundingBox(BlockEntity tile) {
         return new AABB(tile.getBlockPos());
     }

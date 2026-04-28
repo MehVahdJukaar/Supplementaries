@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import com.google.common.base.Suppliers;
-import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -88,7 +88,7 @@ public class FarmersDelightCompat {
     }
 
     @Contract
-    @ExpectPlatform
+    @PlatformImpl
     public static boolean isTomatoVineClimbingConfigOn() {
         throw new AssertionError();
     }
@@ -139,7 +139,7 @@ public class FarmersDelightCompat {
             super.playerDestroy(level, player, pos, state.setValue(TomatoVineBlock.ROPELOGGED, false), blockEntity, stack);
         }
 
-        @ForgeOverride
+        @VirtualOverride("neoforge")
         public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
             this.playerWillDestroy(level, pos, state, player);
             return level.setBlock(pos, getInnerBlock().withPropertiesOf(state), level.isClientSide ? 11 : 3);

@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.minecraft.core.BlockPos;
@@ -15,23 +15,23 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class FramedBlocksCompat {
 
-    @ExpectPlatform
+    @PlatformImpl
     public static BlockState getFramedFence() {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static Block tryGettingFramedBlock(Block targetBlock, Level world, BlockPos blockpos) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static boolean interactWithFramedSignPost(SignPostBlockTile tile, Player player, InteractionHand handIn, ItemStack itemstack, Level level, BlockPos pos) {
         throw new AssertionError();
     }
 
     @Environment(EnvType.CLIENT)
-    @ExpectPlatform
+    @PlatformImpl
     public static ExtraModelData getModelData(BlockState mimic) {
         throw new AssertionError();
     }

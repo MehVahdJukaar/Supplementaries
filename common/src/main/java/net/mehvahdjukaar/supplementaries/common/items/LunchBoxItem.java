@@ -2,9 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
-import net.mehvahdjukaar.moonlight.api.misc.FabricOverride;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
@@ -150,7 +149,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
     }
 
     @Nullable
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public FoodProperties getFoodProperties(ItemStack stack, @Nullable LivingEntity entity) {
         var data = stack.get(getComponentType());
         if (data != null && data.canEatFrom()) {
@@ -159,7 +158,12 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         return null;
     }
 
-    @FabricOverride
+    @VirtualOverride("neoforge")
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
+    }
+
+    @VirtualOverride("fabric")
     public boolean allowComponentsUpdateAnimation(Player player, InteractionHand hand, ItemStack oldStack, ItemStack newStack) {
         return false;
     }
@@ -225,7 +229,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         */
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public void onStopUsing(ItemStack stack, LivingEntity entity, int count) {
         var data = stack.get(getComponentType());
         if (data != null && data.canEatFrom()) {

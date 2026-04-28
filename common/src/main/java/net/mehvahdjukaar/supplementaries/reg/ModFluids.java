@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidRegistry;
 import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
@@ -78,7 +78,7 @@ public class ModFluids {
     public static void init() {
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     private static BucketItem createLumiseneBucket() {
         throw new AssertionError();
     }

@@ -91,7 +91,7 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
      */
     private static BallisticTrajectory findBestTrajectoryBruteForce(float step, Vec2 targetPoint, float gravity,
                                                                     float drag, float initialPow) {
-        boolean exitEarly = true; //whether to grab first or second result. this doesnt work tho
+        boolean exitEarly = true; //whether to grab first or second result. this doesn't work tho
         float stopDistance = 0.01f;
         float targetSlope = targetPoint.y / targetPoint.x;
         float start = (float) (Mth.RAD_TO_DEG * Mth.atan2(targetPoint.y, targetPoint.x)) + 0.01f; //pitch
@@ -141,7 +141,7 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
 
     /**
      * Calculate the best pitch to shoot a projectile at to hit a target, maximizing the distance to the target point.
-     * Uses Secant method. Very fast. can only work when theres a global maxima
+     * Uses Secant method. Very fast. It can only work when there is a global maximum
      *
      * @param targetPoint   Target point
      * @param gravity       Gravity

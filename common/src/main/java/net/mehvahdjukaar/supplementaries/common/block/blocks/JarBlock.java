@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
 import com.google.common.base.Preconditions;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.JarBlockTile;
@@ -63,7 +63,7 @@ public class JarBlock extends WaterBlock implements EntityBlock {
         return 0xffffff;
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public float @Nullable [] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
         int color = getJarLiquidColor(pos, world);
         if (color == -1) return null;

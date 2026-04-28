@@ -1,12 +1,12 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Contract;
 
 public class MapAtlasCompat {
 
-    @ExpectPlatform
+    @PlatformImpl
     @Contract
     public static boolean canPlayerSeeDeathMarker(Player player) {
         throw new AssertionError();

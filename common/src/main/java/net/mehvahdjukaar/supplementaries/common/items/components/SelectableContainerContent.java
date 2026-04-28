@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items.components;
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
@@ -148,13 +148,13 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         public abstract T toImmutable();
 
 
-        @ForgeOverride
+        @VirtualOverride("neoforge")
         public void setStackInSlot(int slot, ItemStack stack) {
             validateSlotIndex(slot, stacks);
             this.stacks.set(slot, stack);
         }
 
-        @ForgeOverride
+        @VirtualOverride("neoforge")
         public ItemStack getStackInSlot(int slot) {
             validateSlotIndex(slot, stacks);
             return this.stacks.get(slot);
@@ -168,7 +168,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return stacks;
         }
 
-        @ForgeOverride
+        @VirtualOverride("neoforge")
         public int getSlots() {
             return this.stacks.size();
         }
@@ -209,7 +209,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return isItemValid(0, stack);
         }
 
-        @ForgeOverride
+        @VirtualOverride("neoforge")
         public abstract boolean isItemValid(int slot, ItemStack stack);
 
         /**
@@ -272,7 +272,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return originalSlot != selectedSlot;
         }
 
-        @ForgeOverride
+        @VirtualOverride("neoforge")
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             if (stack.isEmpty()) {
                 return ItemStack.EMPTY;
@@ -307,7 +307,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             }
         }
 
-        @ForgeOverride
+        @VirtualOverride("neoforge")
         public int getSlotLimit(int slot) {
             return 99;
         }
@@ -316,7 +316,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return Math.min(this.getSlotLimit(slot), stack.getMaxStackSize());
         }
 
-        @ForgeOverride
+        @VirtualOverride("neoforge")
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (amount == 0) {
                 return ItemStack.EMPTY;

@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -19,7 +18,7 @@ public class ReloadConfigsCommand implements Command<CommandSourceStack> {
     }
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) {
         //TODO: figure out server/client side
         CommonConfigs.CONFIG_HOLDER.sendSyncedConfigsToAllPlayers();
         context.getSource().sendSuccess(() -> Component.translatable("commands.supplementaries.configs_reloaded"), false);

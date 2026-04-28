@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
@@ -125,7 +125,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
         return Items.BOOK.getDefaultInstance();
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         if (level.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             return tile.getItem(getBookIndex(state, pos, target.getLocation()));
@@ -148,7 +148,7 @@ public class BookPileBlock extends WaterBlock implements EntityBlock {
         };
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public float getEnchantPowerBonus(BlockState state, LevelReader world, BlockPos pos) {
         if (world.getBlockEntity(pos) instanceof BookPileBlockTile tile) {
             return tile.getEnchantPower();

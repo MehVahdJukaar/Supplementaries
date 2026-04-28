@@ -1,30 +1,30 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class CCCompat {
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void setup() {
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void init() {
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static boolean isPrintedBook(Item item) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static int getPages(ItemStack itemstack) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static String[] getText(ItemStack itemstack) {
         throw new AssertionError();
     }

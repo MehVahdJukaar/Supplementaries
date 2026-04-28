@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.hud;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
@@ -46,7 +46,7 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
         return Holder.INSTANCE;
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static SelectableContainerItemHud makeInstance() {
         throw new AssertionError();
     }

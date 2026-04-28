@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.commands;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -20,7 +19,7 @@ public class ResetGlobeSeedCommand implements Command<CommandSourceStack> {
     }
 
     @Override
-    public int run(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    public int run(CommandContext<CommandSourceStack> context) {
         ServerLevel level = context.getSource().getLevel();
         GlobeData.recreateAndAssignFromSeed(level, level.getSeed());
         context.getSource().sendSuccess(() -> Component.translatable("commands.supplementaries.globe_reset"), false);

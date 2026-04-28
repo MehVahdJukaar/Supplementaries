@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItemPlacementsAPI;
 import net.mehvahdjukaar.moonlight.api.item.additional_placements.BlockPlacerItem;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -95,38 +95,38 @@ public class ItemsUtil {
         return false;
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static boolean addToContainerItem(Player player, ItemStack containerStack, ItemStack stack, Slot slot, boolean simulate, boolean inSlot) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static boolean extractFromContainerItemIntoSlot(Player player, ItemStack containerStack, Slot slot) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static float getEncumbermentFromInventory(ServerPlayer player) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static KeyLockableTile.KeyStatus getPlayerKeyStatus(Player player, String key) {
         throw new AssertionError();
     }
 
     //TODO: move to lib
-    @ExpectPlatform
+    @PlatformImpl
     public static ItemStack tryExtractingItem(Level level, @Nullable Direction dir, BlockPos pos, @Nullable BlockEntity container) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static ItemStack tryAddingItem(ItemStack stack, Level level, Entity entity) {
         throw new AssertionError();
     }
 
-    @ExpectPlatform
+    @PlatformImpl
     public static ItemStack tryAddingItem(ItemStack stack, Level level, Direction direction,
                                           BlockPos pos, BlockState state, @Nullable BlockEntity tile) {
         throw new AssertionError();

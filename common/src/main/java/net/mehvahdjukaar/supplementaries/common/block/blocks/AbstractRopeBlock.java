@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.misc.InvPlacer;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
@@ -88,7 +88,7 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
         builder.add(WATERLOGGED, KNOT);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean isLadder(BlockState state, LevelReader world, BlockPos pos, LivingEntity entity) {
         return hasConnection(Direction.DOWN, state) && (hasConnection(Direction.UP, state) || entity.position().y() - pos.getY() < (13 / 16f));
     }

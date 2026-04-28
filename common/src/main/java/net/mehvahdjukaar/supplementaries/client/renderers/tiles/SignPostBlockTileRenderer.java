@@ -3,10 +3,10 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
@@ -99,7 +99,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
         posestack.popPose();
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public AABB getRenderBoundingBox(BlockEntity tile) {
         return new AABB(tile.getBlockPos()).inflate(0.1);
     }

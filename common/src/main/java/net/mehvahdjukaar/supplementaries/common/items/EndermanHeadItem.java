@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
@@ -13,7 +13,7 @@ public class EndermanHeadItem extends StandingAndWallBlockItem {
         super(block, block2, properties, Direction.DOWN);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean isEnderMask(ItemStack stack, Player player, EnderMan endermanEntity) {
         return true;
     }

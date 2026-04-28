@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.integration.quark.TaterInAJarTileRenderer;
 import net.minecraft.client.gui.screens.Screen;
@@ -11,7 +11,7 @@ import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 
 public class QuarkClientCompat {
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void initClient() {
 
     }

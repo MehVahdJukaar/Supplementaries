@@ -4,9 +4,9 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FlagBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -227,7 +227,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         }
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public AABB getRenderBoundingBox(BlockEntity tile) {
         Direction dir = ((FlagBlockTile) tile).getDirection();
         return new AABB(0.25, 0, 0.25, 0.75, 1, 0.75).expandTowards(

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.neoforge.self;
 
 import net.mehvahdjukaar.supplementaries.common.items.SoapItem;
-import net.mehvahdjukaar.supplementaries.neoforge.SupplementariesForge;
+import net.mehvahdjukaar.supplementaries.platform.SupplementariesForge;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.ItemAbility;

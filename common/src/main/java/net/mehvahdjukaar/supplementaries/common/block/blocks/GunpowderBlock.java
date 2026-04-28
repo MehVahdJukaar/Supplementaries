@@ -2,8 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.TntBehavior;
@@ -510,7 +510,7 @@ public class GunpowderBlock extends LightUpBlock {
     //----- light up block ------
 
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public void onCaughtFire(BlockState state, Level world, BlockPos pos, @Nullable Direction face, @Nullable LivingEntity igniter) {
     }
 

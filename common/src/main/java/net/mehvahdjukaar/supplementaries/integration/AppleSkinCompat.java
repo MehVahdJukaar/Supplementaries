@@ -1,10 +1,11 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 
 public class AppleSkinCompat {
 
-    @ExpectPlatform
+    @PlatformImpl
     public static void addTooltipImage() {
+        throw new AssertionError();
     }
 }

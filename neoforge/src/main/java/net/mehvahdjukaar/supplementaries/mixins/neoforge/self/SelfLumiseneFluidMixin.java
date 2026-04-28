@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.supplementaries.reg.neoforge.ModFluidsImpl.LUMISENE_FLUID_TYPE;
+import static net.mehvahdjukaar.supplementaries.reg.platform.ModFluidsImpl.LUMISENE_FLUID_TYPE;
 
 @Mixin(LumiseneFluid.class)
 public abstract class SelfLumiseneFluidMixin extends FiniteFluid {

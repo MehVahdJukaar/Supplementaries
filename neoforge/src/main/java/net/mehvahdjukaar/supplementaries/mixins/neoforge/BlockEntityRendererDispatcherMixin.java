@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
-import net.mehvahdjukaar.supplementaries.neoforge.CapabilityHandler;
+import net.mehvahdjukaar.supplementaries.platform.CapabilityHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;

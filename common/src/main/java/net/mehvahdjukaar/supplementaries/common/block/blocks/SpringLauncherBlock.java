@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpringLauncherArmBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -42,7 +42,7 @@ public class SpringLauncherBlock extends Block {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(EXTENDED, false));
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public @Nullable PushReaction getPistonPushReaction(BlockState state) {
         return state.getValue(EXTENDED) ? PushReaction.BLOCK : PushReaction.NORMAL;
     }

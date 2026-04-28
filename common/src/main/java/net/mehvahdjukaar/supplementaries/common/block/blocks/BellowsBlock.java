@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.moonlight.api.misc.ForgeOverride;
+import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -50,7 +50,7 @@ public class BellowsBlock extends Block implements EntityBlock {
         return Shapes.box(0, -height, 0, 1, 1 + height, 1);
     }
 
-    @ForgeOverride
+    @VirtualOverride("neoforge")
     public boolean isFireSource(BlockState state, LevelReader level, BlockPos pos, Direction direction) {
         return direction == state.getValue(FACING) && state.getValue(POWER) != 0;
     }
