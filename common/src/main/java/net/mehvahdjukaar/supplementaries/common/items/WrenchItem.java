@@ -45,6 +45,7 @@ public class WrenchItem extends Item {
                     new ClientBoundParticlePacket(pos.getCenter(), ClientBoundParticlePacket.Kind.WRENCH_ROTATION,
                             dir.get3DDataValue()));
         }
+
         //called for both so we play sound immediately here
         level.playSound(player, pos, ModSounds.BLOCK_ROTATE.get(), SoundSource.BLOCKS, 1.0F, 1);
         level.playSound(player, player, ModSounds.WRENCH_ROTATE.get(), SoundSource.PLAYERS, 1.0F, 1.4F);

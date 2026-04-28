@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
-import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -146,7 +146,7 @@ public class BlockUtil {
         }
         // 6 dir blocks blocks
         if (state.hasProperty(BlockStateProperties.FACING)) {
-            return getRotatedDirectionalBlock(state, dir, ccw);
+            return Utils.getRotatedDirectionalBlock(state, dir, ccw);
         }
         // axis blocks
         if (state.hasProperty(BlockStateProperties.AXIS)) {
@@ -313,21 +313,6 @@ public class BlockUtil {
         return Optional.of(state.setValue(StairBlock.HALF, half).setValue(StairBlock.FACING, facing));
     }
 
-    //check if it has facing property
-    public static Optional<BlockState> getRotatedDirectionalBlock(BlockState state, Direction axis, boolean ccw) {
-        Vec3 targetNormal = MthUtils.V3itoV3(state.getValue(BlockStateProperties.FACING).getNormal());
-        Vec3 myNormal = MthUtils.V3itoV3(axis.getNormal());
-        if (!ccw) targetNormal = targetNormal.scale(-1);
-
-        Vec3 rotated = myNormal.cross(targetNormal);
-        // not on same axis, can rotate
-        if (!rotated.equals(Vec3.ZERO)) {
-            Direction newDir = Direction.getNearest(rotated.x(), rotated.y(), rotated.z());
-            return Optional.of(state.setValue(BlockStateProperties.FACING, newDir));
-        }
-        return Optional.empty();
-    }
-
     public static Optional<BlockState> getRotatedHorizontalFaceBlock(BlockState original, Direction axis, boolean ccw) {
 
         Direction facingDir = original.getValue(BlockStateProperties.HORIZONTAL_FACING);
@@ -375,7 +360,7 @@ public class BlockUtil {
 
 
     public static Optional<Direction> rotatePistonHead(BlockState state, BlockPos pos, Level level, Direction face, boolean ccw) {
-        Optional<BlockState> newBase = getRotatedDirectionalBlock(state, face, ccw);
+        Optional<BlockState> newBase = Utils.getRotatedDirectionalBlock(state, face, ccw);
         if (newBase.isEmpty()) return Optional.empty();
         BlockState newBaseState = newBase.get();
         BlockPos oldHeadPos;
@@ -394,7 +379,7 @@ public class BlockUtil {
         } else return Optional.empty();
 
         if (level.getBlockState(newHeadPos).canBeReplaced()) {
-            Optional<BlockState> rotatedHead = getRotatedDirectionalBlock(oldHead, face, ccw);
+            Optional<BlockState> rotatedHead = Utils.getRotatedDirectionalBlock(oldHead, face, ccw);
             if (rotatedHead.isPresent()) {
                 level.setBlock(newHeadPos, rotatedHead.get(), 2);
                 level.setBlock(pos, newBaseState, 2);
