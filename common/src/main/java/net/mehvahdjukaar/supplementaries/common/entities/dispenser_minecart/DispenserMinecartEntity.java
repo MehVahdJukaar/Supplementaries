@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.IMovingBlockSource;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.mixins.IDispenserAccessor;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -277,8 +278,9 @@ public class DispenserMinecartEntity extends Minecart implements Container, Menu
         } else {
             ItemStack itemstack = this.dispenser.getItem(i);
             try {
-                DispenseItemBehavior dispenseitembehavior = ((DispenserBlock) Blocks.DISPENSER)
-                        .getDispenseMethod(level, itemstack);
+                DispenseItemBehavior dispenseitembehavior =
+                        ((IDispenserAccessor) Blocks.DISPENSER)
+                                .invokeGetDispenseMethod(level, itemstack);
                 if (dispenseitembehavior != DispenseItemBehavior.NOOP) {
                     BlockSource blockSource = IMovingBlockSource.create(level, this, dispenser);
                     // sub optimal. Just works for projectiles. we cant use fake level as block source uses ServerLevel...

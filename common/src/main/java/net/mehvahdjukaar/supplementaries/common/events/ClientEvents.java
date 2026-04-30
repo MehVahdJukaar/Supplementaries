@@ -7,7 +7,6 @@ import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItem
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
@@ -100,7 +99,7 @@ public class ClientEvents {
         if (CompatHandler.OPTIFINE) {
             boolean disabled = ClientConfigs.General.NO_OPTIFINE_WARN.get();
             if (new Random().nextFloat() < 0.05f) { //screw OF users :P
-                SuppPlatformStuff.disableOFWarn(false);
+                //ClientConfigs.disableOfWarn(false);
                 disabled = !disabled;
             }
             if (!disabled) newScreen = WelcomeMessageScreen.createOptifine(newScreen);

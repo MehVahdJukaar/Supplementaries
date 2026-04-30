@@ -52,7 +52,7 @@ class XPBottlingBehavior implements ItemUseOnBlockBehavior {
                     returnStack = new ItemStack(Items.EXPERIENCE_BOTTLE);
                 } else if (i instanceof JarItem) {
                     JarBlockTile dummyTile = new JarBlockTile(BlockPos.ZERO, ModRegistry.JAR.get().defaultBlockState());
-                    dummyTile.setLevel(level);
+                    dummyTile.setLevel(world);
                     dummyTile.clearAllContents();
                     Utils.loadTileFromItem(dummyTile, stack);
 

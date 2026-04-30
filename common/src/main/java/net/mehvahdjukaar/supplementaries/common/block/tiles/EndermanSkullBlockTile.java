@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.EndermanSkullBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -119,11 +119,12 @@ public class EndermanSkullBlockTile extends SkullBlockEntity {
     }
 
     //thanks mojank
-    @PlatformOnly(value = PlatformOnly.FABRIC)
     @Override
     public boolean isValidBlockState(BlockState blockState) {
-        return this.getType().isValid(blockState);
+        return PlatHelper.getPlatform().isFabric() ? this.getType().isValid(blockState) :
+                super.isValidBlockState(blockState);
     }
+
 
     public float getMouthAnimation(float partialTicks) {
         return Mth.lerp(partialTicks, prevMouthAnim, mouthAnim);

@@ -21,6 +21,7 @@ dependencies {
 
 
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
+
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
     annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")

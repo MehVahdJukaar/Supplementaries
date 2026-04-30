@@ -23,7 +23,7 @@ public abstract class GameRendererMixin {
 
         ResourceLocation shader = MobHeadShadersManager.INSTANCE.getSpectatorShaders(entity);
         if (shader != null) {
-            PostShadersHelper.toggleEffect(shader, PostShadersHelper.Group.ENTITY_SHADERS);
+            PostShadersHelper.toggleEffect(shader, PostShadersHelper.Group.SPECTATOR_SHADERS);
         }
 
     }

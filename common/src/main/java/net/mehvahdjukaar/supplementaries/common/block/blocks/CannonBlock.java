@@ -12,7 +12,6 @@ import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundControlCannonPacket;
-import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
@@ -309,7 +308,7 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor levelAccessor, BlockPos blockPos,
                                                 Rotation rotation, Direction axis, @Nullable Vec3 hit) {
         boolean ccw = rotation == Rotation.COUNTERCLOCKWISE_90;
-        return BlockUtil.getRotatedDirectionalBlock(state, axis, ccw).or(() -> Optional.of(state));
+        return Utils.getRotatedDirectionalBlock(state, axis, ccw).or(() -> Optional.of(state));
     }
 
     @Override

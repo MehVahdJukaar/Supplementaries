@@ -62,6 +62,16 @@ public class ClientConfigs {
         return signColorMult;
     }
 
+    public static void disableOfWarn() {
+        ClientConfigs.CONFIG_HOLDER.manuallySetValue(
+                ClientConfigs.General.NO_OPTIFINE_WARN, true);
+    }
+
+    public static void disableIncompatWarn() {
+        ClientConfigs.CONFIG_HOLDER.manuallySetValue(
+                ClientConfigs.General.NO_INCOMPATIBLE_MODS, true);
+    }
+
 
     public enum GraphicsFanciness {
         FAST,

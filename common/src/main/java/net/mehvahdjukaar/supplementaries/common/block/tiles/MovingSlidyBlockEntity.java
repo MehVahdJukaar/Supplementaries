@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlockSource;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -128,10 +128,9 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
         return ModRegistry.MOVING_SLIDY_BLOCK_TILE.get();
     }
 
-    @PlatformOnly(value = PlatformOnly.FABRIC)
     @Override
     public boolean isValidBlockState(BlockState blockState) {
-        return this.getType().isValid(blockState);
+        return PlatHelper.getPlatform().isFabric() ? this.getType().isValid(blockState) : super.isValidBlockState(blockState);
     }
 
     private void spawnSlidyParticles(Level level, BlockPos pos) {

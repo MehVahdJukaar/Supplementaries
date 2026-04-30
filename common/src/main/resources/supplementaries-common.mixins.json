@@ -30,6 +30,7 @@
     "GrindstoneInputSlotMixin",
     "GrindstoneMenuMixin",
     "GrindstoneTestSlotMixin",
+    "IDispenserAccessor",
     "InkSackMixin",
     "IronBarsBlockMixin",
     "ItemsMixin",

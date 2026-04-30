@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import dev.architectury.injectables.annotations.PlatformOnly;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -21,10 +21,10 @@ public class SpiderSkullBlockTile extends SkullBlockEntity {
     }
 
     //thanks mojank
-    @PlatformOnly(value = PlatformOnly.FABRIC)
     @Override
     public boolean isValidBlockState(BlockState blockState) {
-        return this.getType().isValid(blockState);
+        return PlatHelper.getPlatform().isFabric() ? this.getType().isValid(blockState) :
+                super.isValidBlockState(blockState);
     }
 
     @Override

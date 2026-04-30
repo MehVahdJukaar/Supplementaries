@@ -264,7 +264,7 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
     @Override
     public Optional<BlockState> getRotatedState(BlockState state, LevelAccessor world, BlockPos pos, Rotation rotation, Direction axis, @Nullable Vec3 hit) {
         if (axis.getAxis() == Direction.Axis.Y) {
-            return Optional.ofNullable(this.rotate(state, rotation));
+            return Optional.of(this.rotate(state, rotation));
         }
         return Optional.empty();
     }
