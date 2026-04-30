@@ -8,10 +8,12 @@ public class CCCompat {
 
     @PlatformImpl
     public static void setup() {
+        throw new AssertionError();
     }
 
     @PlatformImpl
     public static void init() {
+        throw new AssertionError();
     }
 
     @PlatformImpl

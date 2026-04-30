@@ -45,7 +45,7 @@ public class LegacyStructureLocator {
         var found = findNearestMapFeatures(level, targets, pos, maximumChunkDistance,
                 newlyGenerated, 1, maxSearches, exitEarly);
 
-        if (!found.isEmpty()) return found.get(0);
+        if (!found.isEmpty()) return found.getFirst();
         return null;
     }
 

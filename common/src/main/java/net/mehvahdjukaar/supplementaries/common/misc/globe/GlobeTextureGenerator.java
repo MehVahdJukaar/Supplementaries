@@ -524,7 +524,7 @@ public class GlobeTextureGenerator {
         }
     }
 
-    public void setLand(Pos p, int dist) {
+    private void setLand(Pos p, int dist) {
         int x = p.x;
         int y = p.y;
         if (dist < 0 || pixels[x][y].isLand()) return;

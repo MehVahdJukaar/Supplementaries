@@ -42,7 +42,7 @@ public class FlowerBoxModelsManager extends SimpleJsonResourceReloadListener {
         var codec = ForgeHelper.conditionalCodec(FlowerBoxPlant.CODEC);
         jsonMap.forEach((key, json) -> {
             try {
-                FlowerBoxPlant result = codec.parse(JsonOps.INSTANCE, json).getOrThrow().get();
+                FlowerBoxPlant result = codec.parse(JsonOps.INSTANCE, json).getOrThrow().orElseThrow();
                 for (Item item : result.seedItems) {
                     flowers.put(item, result);
                 }

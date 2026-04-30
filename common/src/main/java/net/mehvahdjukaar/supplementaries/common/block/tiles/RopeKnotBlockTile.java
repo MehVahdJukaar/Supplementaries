@@ -70,7 +70,7 @@ public class RopeKnotBlockTile extends MimicBlockTile {
             this.cachedCollisionShape = c.optimize();
             this.cachedShape = s.optimize();
         } catch (Exception e) {
-            Supplementaries.LOGGER.warn("failed to calculate roped fence hitbox: " + e);
+            Supplementaries.LOGGER.warn("Failed to calculate roped fence hitbox: {}", String.valueOf(e));
         }
     }
 

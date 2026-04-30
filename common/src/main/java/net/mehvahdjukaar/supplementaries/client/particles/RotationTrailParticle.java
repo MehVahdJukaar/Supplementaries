@@ -86,7 +86,7 @@ public class RotationTrailParticle extends SimpleAnimatedParticle {
 
         Vec3 newPos = MthUtils.changeBasisN(this.axis, rot).add(this.origin);
 
-        this.angularVelocity *= 0.75;
+        this.angularVelocity *= 0.75F;
 
         super.move(newPos.x - this.x, newPos.y - this.y, newPos.z - this.z);
     }

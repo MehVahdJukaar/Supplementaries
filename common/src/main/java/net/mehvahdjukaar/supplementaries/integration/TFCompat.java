@@ -18,14 +18,14 @@ public class TFCompat {
 
     public static BlockState tryRotateHollowLog(BlockState state, Direction face) {
         if (state.is(VERTICAL) && face.getAxis() != Direction.Axis.Y) {
-            ResourceLocation newId = state.getBlockHolder().unwrapKey().get().location()
+            ResourceLocation newId = state.getBlockHolder().unwrapKey().orElseThrow().location()
                     .withPath(p -> p.replace("vertical", "horizontal"));
             Block newBlock = BuiltInRegistries.BLOCK.get(newId);
             return newBlock.withPropertiesOf(state)
                     .setValue(HorizontalHollowLogBlock.HORIZONTAL_AXIS, face.getClockWise().getAxis());
         }
         if (state.is(HORIZONTAL) && state.getValue(HorizontalHollowLogBlock.HORIZONTAL_AXIS) != face.getAxis()) {
-            ResourceLocation newId = state.getBlockHolder().unwrapKey().get().location()
+            ResourceLocation newId = state.getBlockHolder().unwrapKey().orElseThrow().location()
                     .withPath(p -> p.replace("horizontal", "vertical"));
             Block newBlock = BuiltInRegistries.BLOCK.get(newId);
             return newBlock.withPropertiesOf(state);

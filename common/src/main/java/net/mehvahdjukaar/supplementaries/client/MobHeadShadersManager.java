@@ -131,18 +131,14 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
             return ResourceLocation.tryParse(s);
         }
         //hardcoded ones. Instance check is more compatible
-        if (entity instanceof AbstractSkeleton) {
-            return (ClientRegistry.BLACK_AND_WHITE_SHADER);
-        } else if (entity instanceof Zombie) {
-            return (ClientRegistry.DESATURATE_SHADER);
-        } else if (entity instanceof Rabbit e && e.getVariant() == Rabbit.Variant.EVIL) {
-            return (ClientRegistry.RAGE_SHADER);
-        } else if (entity instanceof Piglin) {
-            return (ClientRegistry.GLITTER_SHADER);
-        } else if (entity instanceof WitherBoss) {
-            return (ClientRegistry.BLACK_AND_WHITE_SHADER);
-        }
-        return null;
+        return switch (entity) {
+            case AbstractSkeleton ignored -> (ClientRegistry.BLACK_AND_WHITE_SHADER);
+            case Zombie ignored -> (ClientRegistry.DESATURATE_SHADER);
+            case Rabbit e when e.getVariant() == Rabbit.Variant.EVIL -> (ClientRegistry.RAGE_SHADER);
+            case Piglin ignored -> (ClientRegistry.GLITTER_SHADER);
+            case WitherBoss ignored -> (ClientRegistry.BLACK_AND_WHITE_SHADER);
+            default -> null;
+        };
     }
 
     //no holders since it loads on boot. lets keep it simple for once

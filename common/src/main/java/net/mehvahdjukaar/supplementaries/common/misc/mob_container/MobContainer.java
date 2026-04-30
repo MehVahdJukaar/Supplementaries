@@ -170,7 +170,7 @@ public class MobContainer {
         entity.save(mobTag);
 
         if (mobTag.isEmpty()) {
-            Supplementaries.LOGGER.error("failed to capture entity " + entity + "Something went wrong :/");
+            Supplementaries.LOGGER.error("Failed to capture entity {}. Something went wrong :/", entity);
             return null;
         }
 

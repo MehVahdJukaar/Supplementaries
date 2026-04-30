@@ -74,7 +74,7 @@ public class AdventurerMapsHandler {
         if (decoration == null) {
             var type =
                     MapDataRegistry.getDecorationFoStructure(level, structure);
-            decoration = type.unwrapKey().get().location();
+            decoration = type.unwrapKey().orElseThrow().location();
             if (color == 0) {
                 color = type.value().getDefaultMapColor();
             }

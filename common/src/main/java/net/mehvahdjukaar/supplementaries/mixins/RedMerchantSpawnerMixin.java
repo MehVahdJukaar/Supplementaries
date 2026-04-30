@@ -112,7 +112,7 @@ public abstract class RedMerchantSpawnerMixin {
         //goes from 1.5 to 4 on normal
         DifficultyInstance instance = new DifficultyInstance(Difficulty.NORMAL, world.getDayTime(), i, f);
         float diff = instance.getEffectiveDifficulty();
-        diff -= 1.5;
+        diff -= 1.5F;
         //from 0 to 10
         diff *= 4;
         float scale = switch (world.getDifficulty()) {

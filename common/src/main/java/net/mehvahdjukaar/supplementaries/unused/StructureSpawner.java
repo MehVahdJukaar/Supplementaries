@@ -23,7 +23,7 @@ public class StructureSpawner {
             for (var t : structureTemplateManager.listTemplates().toList()) {
                 String string = t.toString();
                 if (string.contains("pillager")) {
-                    var template = structureTemplateManager.get(t).get();
+                    var template = structureTemplateManager.get(t).orElseThrow();
                     BlockPos offset = pos.offset(off, 0, zOff);
                     level.setBlock(offset, Blocks.STRUCTURE_BLOCK.defaultBlockState(), 3);
                     var te = BlockEntityType.STRUCTURE_BLOCK.getBlockEntity(level, offset);

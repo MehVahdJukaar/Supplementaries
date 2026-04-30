@@ -13,7 +13,7 @@ public class QuarkClientCompat {
 
     @PlatformImpl
     public static void initClient() {
-
+        throw new AssertionError();
     }
 
     public static void registerEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {

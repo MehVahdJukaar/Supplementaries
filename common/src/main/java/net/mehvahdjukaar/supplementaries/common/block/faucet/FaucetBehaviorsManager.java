@@ -129,7 +129,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
         List<DataFluidInteraction> dataFluidInteractions = new ArrayList<>();
         map.forEach((key, json) -> {
             try {
-                var either = codec.parse(ops, json).getOrThrow().get();
+                var either = codec.parse(ops, json).getOrThrow().orElseThrow();
                 if (either.left().isPresent()) {
                     var interaction = either.left().get();
                     dataInteractions.add(interaction);

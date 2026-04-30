@@ -213,7 +213,7 @@ public class ModBlockProperties {
             if (stack.is(MLBuiltinSoftFluids.HONEY)) {
                 return HONEY;
             }
-            String name = stack.getHolder().unwrapKey().get().location().getPath();
+            String name = stack.getHolder().unwrapKey().orElseThrow().location().getPath();
             if (name.contains("jam")) {
                 return JAM;
             }

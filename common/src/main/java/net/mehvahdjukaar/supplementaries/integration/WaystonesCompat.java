@@ -8,12 +8,12 @@ import org.jetbrains.annotations.Nullable;
 public class WaystonesCompat {
     @PlatformImpl
     public static boolean isWaystone(@Nullable BlockEntity te) {
-        throw new ArrayStoreException();
+        throw new AssertionError();
     }
 
     @Nullable
     @PlatformImpl
     public static Component getName(BlockEntity te) {
-        throw new ArrayStoreException();
+        throw new AssertionError();
     }
 }

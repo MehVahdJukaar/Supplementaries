@@ -71,7 +71,7 @@ public class ModMaterials {
         var p = ITEM_TO_PATTERNS.get(item);
         if (p == null) {
             Registry<BannerPattern> registry = level.registryAccess().registryOrThrow(Registries.BANNER_PATTERN);
-            for (var j : registry.getTag(item.getBannerPattern()).get()) {
+            for (var j : registry.getTag(item.getBannerPattern()).orElseThrow()) {
                 ITEM_TO_PATTERNS.put(item, j.value());
                 return FLAG_MATERIALS.apply(j.value());
             }

@@ -192,23 +192,27 @@ public class SlingshotItem extends ProjectileWeaponItem implements IFirstPersonA
         return s -> {
             Item i = s.getItem();
             //no buckets
-            if (i instanceof ThrowablePotionItem) {
-                return CommonConfigs.Tools.SLINGSHOT_POTIONS.get();
-            }
-            if (i instanceof BombItem) {
-                return CommonConfigs.Tools.SLINGSHOT_BOMBS.get();
-            }
-            if (i instanceof SnowballItem) {
-                return CommonConfigs.Tools.SLINGSHOT_SNOWBALL.get();
-            }
-            if (i instanceof EnderpearlItem) {
-                return CommonConfigs.Tools.SLINGSHOT_ENDERPEARLS.get();
-            }
-            if (i instanceof FireChargeItem) {
-                return CommonConfigs.Tools.SLINGSHOT_FIRECHARGE.get();
-            }
-            if (i instanceof DispensibleContainerItem && i.hasCraftingRemainingItem()) {
-                return CommonConfigs.Tools.SLINGSHOT_BUCKETS.get();
+            switch (i) {
+                case ThrowablePotionItem throwablePotionItem -> {
+                    return CommonConfigs.Tools.SLINGSHOT_POTIONS.get();
+                }
+                case BombItem bombItem -> {
+                    return CommonConfigs.Tools.SLINGSHOT_BOMBS.get();
+                }
+                case SnowballItem snowballItem -> {
+                    return CommonConfigs.Tools.SLINGSHOT_SNOWBALL.get();
+                }
+                case EnderpearlItem enderpearlItem -> {
+                    return CommonConfigs.Tools.SLINGSHOT_ENDERPEARLS.get();
+                }
+                case FireChargeItem fireChargeItem -> {
+                    return CommonConfigs.Tools.SLINGSHOT_FIRECHARGE.get();
+                }
+                case DispensibleContainerItem dispensibleContainerItem when i.hasCraftingRemainingItem() -> {
+                    return CommonConfigs.Tools.SLINGSHOT_BUCKETS.get();
+                }
+                default -> {
+                }
             }
             if (s.is(ModTags.SLINGSHOT_DAMAGEABLE)) {
                 return true;

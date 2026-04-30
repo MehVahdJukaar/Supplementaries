@@ -26,7 +26,7 @@ public class UseCannonBoatBehavior extends Behavior<LivingEntity> {
     }
 
     private static LivingEntity getAttackTarget(LivingEntity shooter) {
-        return shooter.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).get();
+        return shooter.getBrain().getMemory(MemoryModuleType.ATTACK_TARGET).orElseThrow();
     }
 
     @Override

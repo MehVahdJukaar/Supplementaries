@@ -16,10 +16,12 @@ public class DecoBlocksCompat {
 
     @PlatformImpl
     public static void tryConvertingRopeChandelier(BlockState facingState, LevelAccessor worldIn, BlockPos facingPos) {
+        throw new AssertionError();
     }
 
     @PlatformImpl
     public static void init() {
+        throw new AssertionError();
     }
 
     @PlatformImpl

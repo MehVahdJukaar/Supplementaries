@@ -442,11 +442,11 @@ public class ClientReceivers {
     public static void handleParrotPacket(ClientBoundFluteParrotsPacket message) {
         withLevelDo(l -> {
             Entity e = l.getEntity(message.playerId());
-            if (e == null) {
+            if (!(e instanceof Player p)) {
                 Supplementaries.LOGGER.error("Entity not found for parrot packet");
                 return;
             }
-            if (message.playing() && e instanceof Player p) {
+            if (message.playing()) {
                 BlockPos pos = e.blockPosition();
                 List<LivingEntity> list = l.getEntitiesOfClass(LivingEntity.class, (new AABB(pos)).inflate(3.0));
 
@@ -457,7 +457,7 @@ public class ClientReceivers {
                 }
             }
 
-            setDisplayParrotsPartying(l, Either.left((Player) e), message.playing());
+            setDisplayParrotsPartying(l, Either.left(p), message.playing());
         });
     }
 

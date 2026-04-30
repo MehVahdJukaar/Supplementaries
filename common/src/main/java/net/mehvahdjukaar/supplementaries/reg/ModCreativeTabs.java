@@ -299,7 +299,7 @@ public class ModCreativeTabs {
             adder.after(ItemTags.BANNERS, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                     ModConstants.FLAG_NAME,
                     () -> GalleonStructure.getGalleonFlag(event.getParameters().holders()
-                            .lookup(Registries.BANNER_PATTERN).get()));
+                            .lookup(Registries.BANNER_PATTERN).orElseThrow()));
         }
 
 

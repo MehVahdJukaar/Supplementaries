@@ -75,7 +75,7 @@ public class SlingshotItemOverlayRenderer extends ProjectileWeaponOverlayRendere
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
         float xOff = 17;
-        float yOff = +10;
+        float yOff = 10;
         float a = 0f;
         AABB bb = e.getBoundingBox();
         float scale = (float) (0.7f * Math.max(bb.getXsize(), bb.getYsize()));
