@@ -15,10 +15,10 @@ public interface BlockPredicate extends Predicate<BlockState> {
     Codec<BlockPredicate> CODEC = Codec.STRING.xmap(
             BlockPredicate::create,
             blockStatePredicate -> {
-                if (blockStatePredicate instanceof Tag tp) {
-                    return "#" + tp.tag.location();
-                } else if (blockStatePredicate instanceof Block bp) {
-                    return bp.id.toString();
+                if (blockStatePredicate instanceof Tag(TagKey<net.minecraft.world.level.block.Block> tag)) {
+                    return "#" + tag.location();
+                } else if (blockStatePredicate instanceof Block(ResourceLocation id)) {
+                    return id.toString();
                 }
                 throw new IllegalArgumentException("Must either be Tag or Block predicate");
             }

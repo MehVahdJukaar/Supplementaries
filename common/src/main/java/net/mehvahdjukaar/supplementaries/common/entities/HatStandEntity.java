@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -122,7 +123,7 @@ public class HatStandEntity extends LivingEntity {
     @Override
     public ItemStack getItemBySlot(EquipmentSlot slot) {
         if (Objects.requireNonNull(slot) == EquipmentSlot.HEAD) {
-            return this.helmet.get(0);
+            return this.helmet.getFirst();
         }
         return ItemStack.EMPTY;
     }
@@ -144,7 +145,7 @@ public class HatStandEntity extends LivingEntity {
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
-        ItemStack stack = this.helmet.get(0);
+        ItemStack stack = this.helmet.getFirst();
         if (!stack.isEmpty())
             compound.put("Helmet", stack.save(level().registryAccess(), new CompoundTag()));
         compound.putBoolean("Invisible", this.isInvisible());
@@ -480,7 +481,7 @@ public class HatStandEntity extends LivingEntity {
     protected void dropEquipment() {
         super.dropEquipment();
         ItemStack itemStack;
-        itemStack = this.helmet.get(0);
+        itemStack = this.helmet.getFirst();
         if (!itemStack.isEmpty()) {
             this.spawnAtLocation(itemStack, 1);
             this.helmet.set(0, ItemStack.EMPTY);
@@ -575,6 +576,7 @@ public class HatStandEntity extends LivingEntity {
         return false;
     }
 
+    @NotNull
     @Override
     public ItemStack getPickResult() {
         ItemStack itemStack = new ItemStack(ModRegistry.HAT_STAND.get());

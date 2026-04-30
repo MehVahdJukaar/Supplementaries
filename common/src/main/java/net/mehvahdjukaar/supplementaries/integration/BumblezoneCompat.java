@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class BumblezoneCompat {
@@ -17,7 +18,7 @@ public class BumblezoneCompat {
         set.add(pos);
         recursiveGatherPositions(level, pos, 0, 3, set);
 
-        set.forEach(waterPos -> level.setBlock(waterPos, CompatObjects.SUGAR_WATER.get().defaultBlockState(), 3));
+        set.forEach(waterPos -> level.setBlock(waterPos, Objects.requireNonNull(CompatObjects.SUGAR_WATER.get()).defaultBlockState(), 3));
     }
 
     private static void recursiveGatherPositions(Level level, BlockPos position, int depth, int maxDepth, Set<BlockPos> waterPos) {

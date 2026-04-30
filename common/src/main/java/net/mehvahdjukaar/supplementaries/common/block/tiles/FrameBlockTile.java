@@ -22,7 +22,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoulSandBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
@@ -96,9 +99,6 @@ public class FrameBlockTile extends MimicBlockTile {
                     BlockState toPlace = blockItem.getBlock().getStateForPlacement(context);
 
                     if (isValidBlock(toPlace, pos, level)) {
-                        if (((BlockItem) item).getBlock() instanceof SlabBlock) {
-                            int aa = 1;
-                        }
                         BlockState newState = this.acceptBlock(toPlace);
 
                         SoundType s = newState.getSoundType();

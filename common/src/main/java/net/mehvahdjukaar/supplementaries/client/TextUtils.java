@@ -104,7 +104,7 @@ public class TextUtils {
 
         FormattedCharSequence[] formattedCharSequences = signText.getRenderMessages(filtered, (component) -> {
             List<FormattedCharSequence> list = font.split(component, lineWidth);
-            return list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
+            return list.isEmpty() ? FormattedCharSequence.EMPTY : list.getFirst();
         });
         for (int i = 0; i < formattedCharSequences.length; i++) {
             TextUtil.renderLine(formattedCharSequences[i], font, lineHeight * i, poseStack, buffer, properties);

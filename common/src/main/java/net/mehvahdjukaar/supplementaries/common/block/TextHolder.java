@@ -324,7 +324,7 @@ public class TextHolder implements IAntiquable {
         boolean filtered = Minecraft.getInstance().isTextFilteringEnabled();
         if ((this.renderMessages[line] == null) || this.renderMessagedFiltered != filtered) {
             List<FormattedCharSequence> list = font.split(this.getMessage(line, filtered), this.getMaxLineVisualWidth());
-            this.renderMessages[line] = list.isEmpty() ? FormattedCharSequence.EMPTY : list.get(0);
+            this.renderMessages[line] = list.isEmpty() ? FormattedCharSequence.EMPTY : list.getFirst();
         }
         return this.renderMessages[line];
     }

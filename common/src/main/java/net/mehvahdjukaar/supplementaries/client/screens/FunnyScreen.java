@@ -140,7 +140,7 @@ public class FunnyScreen extends Screen {
                 int y = top + 2;
                 for (FormattedCharSequence string : strings) {
                     if (center)
-                        guiGraphics.drawString(font, string, (int) (left + (width - font.width(string)) / 2F), (int) y, 0xFFFFFF, false);
+                        guiGraphics.drawString(font, string, (int) (left + (width - font.width(string)) / 2F), y, 0xFFFFFF, false);
                     else
                         guiGraphics.drawString(font, string, left + 5, y, 0xFFFFFF, false);
                     y += font.lineHeight;

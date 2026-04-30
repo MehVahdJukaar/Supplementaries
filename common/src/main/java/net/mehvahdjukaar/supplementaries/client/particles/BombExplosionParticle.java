@@ -15,7 +15,7 @@ public class BombExplosionParticle extends TextureSheetParticle {
         this.rCol = f;
         this.gCol = f;
         this.bCol = f;
-        this.quadSize = 1F * (1.0F - (float) scale * 0.8F);
+        this.quadSize = (1.0F - (float) scale * 0.8F);
         this.spriteWithAge = spriteWithAge;
         this.setSpriteFromAge(spriteWithAge);
 

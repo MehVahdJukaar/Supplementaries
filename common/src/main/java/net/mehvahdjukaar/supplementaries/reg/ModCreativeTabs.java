@@ -689,7 +689,7 @@ public class ModCreativeTabs {
         }
 
         private void add(ResourceKey<CreativeModeTab> tab, ItemStack... items) {
-            ResourceKey<CreativeModeTab> tabKey = MOD_TAB == null ? tab : (ResourceKey<CreativeModeTab>) MOD_TAB.getKey();
+            ResourceKey<CreativeModeTab> tabKey = MOD_TAB == null ? tab : MOD_TAB.getKey();
             for (ItemStack stack : items) {
                 if (isUnique(stack)) {
                     event.add(tabKey, stack);

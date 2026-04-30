@@ -37,7 +37,7 @@ import java.util.Set;
 
 public class RoadSignStructure extends Structure {
 
-    public static final MapCodec<RoadSignStructure> CODEC = RecordCodecBuilder.<RoadSignStructure>mapCodec(instance ->
+    public static final MapCodec<RoadSignStructure> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(RoadSignStructure.settingsCodec(instance),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(structure -> structure.startPool),
                     ResourceLocation.CODEC.optionalFieldOf("start_jigsaw_name").forGetter(structure -> structure.startJigsawName),

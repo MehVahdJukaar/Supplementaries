@@ -171,7 +171,7 @@ public class MapLightHandler {
                 CompoundTag t = new CompoundTag();
                 for (int x = 0; x <= 127; x++) {
                     if (data[x] != null) {
-                        byte[] rowData = new byte[127 - 0 + 1];
+                        byte[] rowData = new byte[127 + 1];
 
                         System.arraycopy(data[x], 0, rowData, 0, rowData.length);
                         t.putByteArray("pos_" + x, rowData);

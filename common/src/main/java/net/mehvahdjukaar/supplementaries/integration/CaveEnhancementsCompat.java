@@ -67,7 +67,7 @@ public class CaveEnhancementsCompat {
 
     }
 
-    private static class SpectacleCandleHolderTile extends BlockEntity {
+    public static class SpectacleCandleHolderTile extends BlockEntity {
 
         public SpectacleCandleHolderTile(BlockPos blockPos, BlockState blockState) {
             super(tile.get(), blockPos, blockState);

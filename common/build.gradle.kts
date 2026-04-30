@@ -21,9 +21,8 @@ dependencies {
 
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
-    modApi("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    modCompileOnly("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${project.extra["moonlight_version"]}")
-
 
     modCompileOnly("curse.maven:irisshaders-455508:5726473")
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
@@ -57,7 +56,7 @@ dependencies {
 
     modCompileOnly("maven.modrinth:immediatelyfast:1.6.1+1.21.1-neoforge")
 
-//    modCompileOnly("curse.maven:immediatelyfast-686911:5894662")
+    //    modCompileOnly("curse.maven:immediatelyfast-686911:5894662")
     //modCompileOnly("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge")
     modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
     modCompileOnly("curse.maven:buzzier-bees-355458:4776328")
@@ -69,5 +68,4 @@ dependencies {
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-common:${shulker_box_tooltip_version}")
     modCompileOnly("curse.maven:blueprint-382216:5292242")
     modCompileOnly("curse.maven:environmental-388992:6060255")
-
 }

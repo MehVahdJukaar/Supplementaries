@@ -175,7 +175,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
                 float diff = e.getYHeadRot() - increment;
                 e.setYBodyRot(diff);
                 e.setYHeadRot(diff);
-                entity.yHeadRotO = ((LivingEntity) e).yHeadRot;
+                entity.yHeadRotO = entity.yHeadRot;
                 entity.setNoActionTime(20);
                 //e.velocityChanged = true;
 

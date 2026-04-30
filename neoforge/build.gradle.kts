@@ -25,9 +25,10 @@ dependencies {
     apiInclude("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
-    modApi("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
 
+    /*
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 
     modCompileOnly("curse.maven:farmers-delight-398521:5772720")
@@ -130,6 +131,6 @@ dependencies {
     //modCompileOnly("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
-
+*/
 }
 

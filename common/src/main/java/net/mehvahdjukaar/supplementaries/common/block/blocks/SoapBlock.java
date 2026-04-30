@@ -87,7 +87,7 @@ public class SoapBlock extends Block {
         if (!level.isClientSide && entity instanceof LivingEntity le) {
             SlimedData data = ModEntities.SLIMED_DATA.getOrCreate(le);
             if (data != null && rand.nextFloat() < slipChance) {
-                data.clear((LivingEntity) entity);
+                data.clear(le);
                 level.blockEvent(pPos, state.getBlock(), 0, 0);
             }
         }

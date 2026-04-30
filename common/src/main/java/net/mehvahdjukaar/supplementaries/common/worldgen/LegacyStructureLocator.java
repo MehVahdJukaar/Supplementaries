@@ -203,7 +203,7 @@ public class LegacyStructureLocator {
         foundStructures.sort(Comparator.comparingDouble(f -> pos.distSqr(f.pos)));
         //returns only needed elements
         if (foundStructures.size() >= requiredCount) {
-            foundStructures = Lists.partition(foundStructures, requiredCount).get(0);
+            foundStructures = Lists.partition(foundStructures, requiredCount).getFirst();
         }
         //add references to selected ones
         if (newlyGenerated) {

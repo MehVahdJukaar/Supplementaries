@@ -68,7 +68,7 @@ public class PickleModel<T extends LivingEntity> extends PlayerModel<T> {
         matrixStack.translate(0, 0.5, 0);
         ModelPart arm = this.getArm(handSide);
 
-        float f = 1F * (float) (handSide == HumanoidArm.RIGHT ? 1 : -1);
+        float f = (float) (handSide == HumanoidArm.RIGHT ? 1 : -1);
         arm.x += f;
         arm.y -= 1;
         arm.z += 1;

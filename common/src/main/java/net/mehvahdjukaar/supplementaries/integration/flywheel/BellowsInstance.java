@@ -106,10 +106,8 @@ public class BellowsInstance extends AbstractBlockEntityVisual<BellowsBlockTile>
     @Override
     public void updateLight(float v) {
         int packedLight = computePackedLight();
-        instances.traverse(instance -> {
-            instance.light(packedLight)
-                    .setChanged();
-        });
+        instances.traverse(instance -> instance.light(packedLight)
+                .setChanged());
     }
 
     private Direction getDirection() {

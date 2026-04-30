@@ -721,9 +721,10 @@ public class CommonConfigs {
             builder.push("functional");
 
             builder.push("rope");
-            ROPE_ENABLED = feature(builder.comment("Also internally disables Galleons, Pulleys, Buntings, Rope arrows and rope mineshaft.\n" +
-                    "Also disables compat blocks such as supplementaries Farmers Delight rope tomatoes and Decorative blocks rope chandeliers.\n" +
-                    "Also reminder that you can disable any item from any mod with a recipe (datapack) + JEI hide"));
+            ROPE_ENABLED = feature(builder.comment("""
+                    Also internally disables Galleons, Pulleys, Buntings, Rope arrows and rope mineshaft.
+                    Also disables compat blocks such as supplementaries Farmers Delight rope tomatoes and Decorative blocks rope chandeliers.
+                    Also reminder that you can disable any item from any mod with a recipe (datapack) + JEI hide"""));
 
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
                     .define("block_side_attachment", true);

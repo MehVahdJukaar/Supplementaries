@@ -26,8 +26,8 @@ public class SusGravelBricksTile extends RandomizableContainerBlockEntity {
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        if (!this.items.get(0).isEmpty()) {
-            tag.put("item", this.items.get(0).save(registries));
+        if (!this.items.getFirst().isEmpty()) {
+            tag.put("item", this.items.getFirst().save(registries));
         }
     }
 

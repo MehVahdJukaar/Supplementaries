@@ -103,7 +103,7 @@ public class ShowWaresGoal extends LookAtPlayerGoal {
     }
 
     private void displayFirstItem() {
-        this.villager.setItemSlot(EquipmentSlot.MAINHAND, this.displayItems.get(0));
+        this.villager.setItemSlot(EquipmentSlot.MAINHAND, this.displayItems.getFirst());
     }
 
     private void updateDisplayItems() {

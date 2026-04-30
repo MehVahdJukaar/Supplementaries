@@ -57,7 +57,6 @@ public class SelectableContainerTooltip implements ClientTooltipComponent {
         List<ItemStack> items = this.contents.getContentUnsafe();
         if (itemIndex >= items.size()) {
             guiGraphics.blitSprite(ModTextures.QUIVER_TOOLTIP_SLOT_SPRITE, x, y, 0, 18, 20);
-            return;
         } else {
             ItemStack itemStack = items.get(itemIndex);
             guiGraphics.blitSprite(ModTextures.QUIVER_TOOLTIP_SLOT_SPRITE, x, y, 0, 18, 20);

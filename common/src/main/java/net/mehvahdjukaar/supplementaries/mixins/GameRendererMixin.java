@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.moonlight.api.client.PostShadersHelper;
 import net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +23,7 @@ public abstract class GameRendererMixin {
 
         ResourceLocation shader = MobHeadShadersManager.INSTANCE.getSpectatorShaders(entity);
         if (shader != null) {
-            this.loadEffect(shader);
+            PostShadersHelper.toggleEffect(shader, PostShadersHelper.Group.ENTITY_SHADERS);
         }
 
     }

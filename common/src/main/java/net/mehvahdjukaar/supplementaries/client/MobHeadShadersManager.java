@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.moonlight.api.client.PostShadersHelper;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -13,7 +15,6 @@ import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
@@ -32,18 +33,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
 
+    private static final PostShadersHelper.Group MOB_HEAD_SHADER_GROUP = new PostShadersHelper.Group(
+            Supplementaries.res("mob_heads_shaders"), -20);
+
     public static final MobHeadShadersManager INSTANCE = new MobHeadShadersManager();
 
-    private final Map<Item, String> effects = new HashMap<>();
-    private final Map<EntityType<?>, String> entityEffects = new HashMap<>();
-
-    private final Set<String> myShaders = new HashSet<>();
-
-    private String lastAppliedShader = null;
+    private final Map<Item, ResourceLocation> effects = new HashMap<>();
+    private final Map<EntityType<?>, ResourceLocation> entityEffects = new HashMap<>();
 
     public MobHeadShadersManager() {
         super(new Gson(), "mob_head_effects");
@@ -53,13 +55,12 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
     protected void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler) {
         effects.clear();
         entityEffects.clear();
-        myShaders.clear();
         for (var entry : object.entrySet()) {
             //   RegistryOps<JsonElement> ops = ForgeHelper.conditionalOps(JsonOps.INSTANCE, null, this);
 
             var effect = MobHeadEffect.CODEC.parse(JsonOps.INSTANCE, entry.getValue()).getOrThrow();
 
-            String shaderPath = effect.getShaderPath();
+            ResourceLocation shaderPath = effect.getShaderPath();
             for (Item item : effect.items) {
                 if (item == Items.AIR)
                     throw new IllegalArgumentException("Mob head effect cannot have AIR item: " + effect.shader);
@@ -68,67 +69,53 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
             for (EntityType<?> entityType : effect.entityTypes) {
                 entityEffects.put(entityType, shaderPath);
             }
-            myShaders.add(shaderPath);
         }
-        myShaders.add(ClientRegistry.BARBARIC_RAGE_SHADER);
+    }
+
+    @Deprecated(forRemoval = true)
+    @Nullable
+    public String getShaderForItem(Item item) {
+        return getShaderPathForItem(item).getPath();
     }
 
     @Nullable
-    public String getShaderForItem(Item item) {
+    public ResourceLocation getShaderPathForItem(Item item) {
         return effects.get(item);
     }
 
+    @Deprecated(forRemoval = true)
     @Nullable
     public String getShaderForEntity(EntityType<?> entityType) {
+        return getShaderPathForEntity(entityType).getPath();
+    }
+
+    @Nullable
+    public ResourceLocation getShaderPathForEntity(EntityType<?> entityType) {
         return entityEffects.get(entityType);
     }
 
 
-    //todo: USE NEOFOGE REGISTER SPECTATOR SHADERS EVENT
     public void applyMobHeadShaders(Player p, Minecraft mc) {
-        if (ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get()) {
-            GameRenderer renderer = Minecraft.getInstance().gameRenderer;
+        if (!ClientConfigs.Tweaks.MOB_HEAD_EFFECTS.get()) return;
+        ResourceLocation newShader = null;
 
-            String rendererShader = renderer.postEffect == null ? null : renderer.postEffect.getName();
-
-            if (rendererShader != null && !myShaders.contains(rendererShader)) {
-                return;
-            }
-
-            //no shaders in spectator
-            if (p.isSpectator()) {
-                if (rendererShader != null && lastAppliedShader != null) {
-                    renderer.shutdownEffect();
-                    lastAppliedShader = null;
-                }
-                return;
-            }
-
-            if (rendererShader == null && lastAppliedShader != null) {
-                lastAppliedShader = null; //clear when something else unsets it
-            }
+        //no shaders in spectator
+        if (!p.isSpectator()) {
 
             ItemStack stack = p.getItemBySlot(EquipmentSlot.HEAD);
-            if (CompatHandler.QUARK && QuarkCompat.shouldHideOverlay(stack)) return;
+            if (!CompatHandler.QUARK || !QuarkCompat.shouldHideOverlay(stack)) {
 
-            Item item = stack.getItem();
-            String newShader;
-            if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
-                newShader = getShaderForItem(item);
-            } else newShader = null;
+                Item item = stack.getItem();
+                if (mc.options.getCameraType() == CameraType.FIRST_PERSON) {
+                    newShader = getShaderPathForItem(item);
+                }
 
-            if (newShader == null && shouldHaveGoatedEffect(p, item)) {
-                newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
-            }
-            if (newShader != null && (!newShader.equals(rendererShader) || !renderer.effectActive)) {
-                renderer.loadEffect(ResourceLocation.tryParse(newShader));
-                lastAppliedShader = newShader;
-            } else if (rendererShader != null && newShader == null) {
-                //remove my effect
-                renderer.shutdownEffect();
-                lastAppliedShader = null;
+                if (newShader == null && shouldHaveGoatedEffect(p, item)) {
+                    newShader = ClientRegistry.BARBARIC_RAGE_SHADER;
+                }
             }
         }
+        PostShadersHelper.toggleEffect(newShader, MOB_HEAD_SHADER_GROUP);
     }
 
     private boolean shouldHaveGoatedEffect(Player p, Item item) {
@@ -171,8 +158,8 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
                 ).apply(instance, MobHeadEffect::new)
         );
 
-        public String getShaderPath() {
-            return shader.withPath(p -> "shaders/post/" + p + ".json").toString();
+        public ResourceLocation getShaderPath() {
+            return shader.withPath(p -> "shaders/post/" + p + ".json");
         }
 
     }

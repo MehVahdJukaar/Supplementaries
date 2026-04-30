@@ -287,7 +287,7 @@ public class ModBlockProperties {
             for (RakeDirection shape : values()) {
                 if (new HashSet<>(shape.getDirections()).containsAll(directions)) return shape;
             }
-            return directions.get(0).getAxis() == Direction.Axis.Z ? NORTH_SOUTH : EAST_WEST;
+            return directions.getFirst().getAxis() == Direction.Axis.Z ? NORTH_SOUTH : EAST_WEST;
         }
 
         @Override

@@ -39,10 +39,6 @@ subprojects {
     }
 
 
-    tasks.withType<GenerateModuleMetadata>().configureEach {
-        enabled = true
-    }
-
     repositories {
         nexus()
     }

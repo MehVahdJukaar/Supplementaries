@@ -42,11 +42,6 @@ public class Supplementaries {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, n);
     }
 
-    public static ResourceLocation parseRes(String n) {
-        if (n.contains(":")) return ResourceLocation.parse(n);
-        else return res(n);
-    }
-
     public static String str(String n) {
         return MOD_ID + ":" + n;
     }

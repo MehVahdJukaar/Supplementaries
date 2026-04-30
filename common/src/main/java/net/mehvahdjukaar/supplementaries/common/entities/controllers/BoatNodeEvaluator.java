@@ -397,10 +397,10 @@ public class BoatNodeEvaluator extends NodeEvaluator {
             double f = this.mob.getBbWidth() / 2.0;
             AABB aABB = new AABB(
                     d - f,
-                    this.getFloorLevel(pos.set(d, (double) (y + 1), e)) + 0.001,
+                    this.getFloorLevel(pos.set(d, (y + 1), e)) + 0.001,
                     e - f,
                     d + f,
-                    this.mob.getBbHeight() + this.getFloorLevel(pos.set((double) node.x, (double) node.y, (double) node.z)) - 0.002,
+                    this.mob.getBbHeight() + this.getFloorLevel(pos.set(node.x, node.y, (double) node.z)) - 0.002,
                     e + f
             );
             return this.hasCollisions(aABB) ? null : node;

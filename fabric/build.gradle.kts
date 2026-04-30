@@ -2,14 +2,16 @@ plugins {
     id("com.possible-triangle.fabric")
 }
 
+
 fabric {
     dependOn(project(":common"))
     accessWidener(project(":common"))
 }
 
+
+val moonlight_version: String by extra
 val cloth_version: String by extra
 val cca_version: String by extra
-val moonlight_version: String by extra
 val mixin_squared_version: String by extra
 val flywheel_fabric_version: String by extra
 val trinkets_version: String by extra
@@ -17,11 +19,12 @@ val emi_version: String by extra
 val shulker_box_tooltip_version: String by extra
 dependencies {
 
+
+    modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
     annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
 
-    modApi("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
 
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_version}")
     modCompileOnly("curse.maven:yacl-667299:4574163")

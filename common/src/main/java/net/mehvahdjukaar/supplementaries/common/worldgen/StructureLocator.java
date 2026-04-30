@@ -47,7 +47,7 @@ public class StructureLocator {
                 maximumChunkSearchRadius, findNewlyGeneratedOnly, 1, maxStructuresToConsider,
                 stopSearchWhenFound);
 
-        if (!foundStructures.isEmpty()) return foundStructures.get(0);
+        if (!foundStructures.isEmpty()) return foundStructures.getFirst();
         return null;
     }
 

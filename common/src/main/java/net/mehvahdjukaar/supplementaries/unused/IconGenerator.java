@@ -14,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -50,7 +49,7 @@ public class IconGenerator {
     }
 
 
-    private static void makeTexture(String postfix, Item item, @Nullable TextureImage... overlays) {
+    private static void makeTexture(String postfix, Item item, TextureImage... overlays) {
         var model = Minecraft.getInstance().getItemRenderer().getModel(item.getDefaultInstance(), null, null, 0);
         int s = model.isGui3d() ? 16 : 1;
         ResourceLocation id = Utils.getID(item).withSuffix(postfix);
@@ -73,7 +72,7 @@ public class IconGenerator {
                         SpriteUtils.forEachPixel(nativeImage, (x, y) -> {
                             int xx = -1 + x / s;
                             int yy = -1 + y / s;
-                            if (xx >= plus.getImage().getWidth() || yy >= plus.getImage().getHeight() ||
+                            if (xx >= plus.imageWidth() || yy >= plus.imageHeight() ||
                                     xx < 0 || yy < 0) return;
                             int color = plus.getImage().getPixelRGBA(xx, yy);
                             if (color != 0) {

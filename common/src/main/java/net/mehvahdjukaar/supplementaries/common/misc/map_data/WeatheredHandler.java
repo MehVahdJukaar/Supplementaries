@@ -209,7 +209,7 @@ public class WeatheredHandler {
                 range /= 2;
             }
 
-            MapItemSavedData.HoldingPlayer player = data.getHoldingPlayer((Player) entity);
+            MapItemSavedData.HoldingPlayer player = data.getHoldingPlayer(pl);
 
             boolean hasChangedAColorThisZ = false;
 

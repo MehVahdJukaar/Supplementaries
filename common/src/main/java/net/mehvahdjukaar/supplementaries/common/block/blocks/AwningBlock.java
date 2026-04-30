@@ -184,7 +184,7 @@ public class AwningBlock extends WaterBlock implements IColored {
             Direction dir = clickedOn.getValue(FACING).getOpposite();
             if (context.getNearestLookingDirection() == dir) {
                 directions.remove(dir);
-                directions.add(0, dir);
+                directions.addFirst(dir);
                 if (clickedOn.getValue(SLANTED)) {
                     slanted = true;
                 }

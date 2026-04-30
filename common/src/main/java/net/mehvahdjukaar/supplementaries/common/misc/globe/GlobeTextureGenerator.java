@@ -48,11 +48,11 @@ public class GlobeTextureGenerator {
         }
     }
 
-    public Pixel pfp(Pos p) {
+    private Pixel pfp(Pos p) {
         return pixels[p.x][p.y];
     }
 
-    public double dist(double x, double y, double x1, double y1) {
+    private double dist(double x, double y, double x1, double y1) {
         return Mth.sqrt((float) (((x - x1) * (x - x1)) + ((y - y1) * (y - y1))));
     }
 
@@ -256,7 +256,7 @@ public class GlobeTextureGenerator {
         }
     }
 
-    public void setHotBiome(Pos p, int dist) {
+    private void setHotBiome(Pos p, int dist) {
         int x = p.x;
         int y = p.y;
         if (dist < 0 || pixels[x][y].isHot()) return;

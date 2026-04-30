@@ -102,7 +102,7 @@ public class RoadSignFeature extends Feature<RoadSignFeature.Config> {
 
             //only 1 sing found/ 1 tile post. always to closest village. posts that are relatively close to a village will always have two.
             //posts in a village will point away
-            if (villages.size() == 1 || (r.doubleSignChance > rand.nextFloat() && villages.get(0).getFirst() > 192)) {
+            if (villages.size() == 1 || (r.doubleSignChance > rand.nextFloat() && villages.getFirst().getFirst() > 192)) {
                 dist1 = villages.getFirst().getFirst();
                 village1 = villages.getFirst().getSecond();
                 dist2 = dist1;

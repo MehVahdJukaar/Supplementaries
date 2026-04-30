@@ -33,7 +33,6 @@ import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
-import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -75,10 +74,8 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.component.DyedItemColor;
@@ -94,7 +91,7 @@ public class ClientRegistry {
 
     // post shaders
     public static final ResourceLocation RAGE_SHADER = Supplementaries.res("shaders/post/rage.json");
-    public static final String BARBARIC_RAGE_SHADER = Supplementaries.res("shaders/post/barbaric_rage.json").toString();
+    public static final ResourceLocation BARBARIC_RAGE_SHADER = Supplementaries.res("shaders/post/barbaric_rage.json");
     public static final ResourceLocation FLARE_SHADER = Supplementaries.res("shaders/post/flare.json");
     public static final ResourceLocation GLITTER_SHADER = Supplementaries.res("shaders/post/glitter.json");
     public static final ResourceLocation BLACK_AND_WHITE_SHADER = Supplementaries.res("shaders/post/black_and_white.json");
@@ -144,6 +141,7 @@ public class ClientRegistry {
                     w -> modelRes("block/way_signs/" + w.getVariantId("way_sign"))))
     );
 
+    @SuppressWarnings("all")
     public static final KeyMapping QUIVER_KEYBIND = new KeyMapping("supplementaries.keybind.quiver",
             InputConstants.Type.KEYSYM,
             InputConstants.getKey("key.keyboard.v").getValue(),
@@ -188,18 +186,10 @@ public class ClientRegistry {
         ModMapMarkersClient.init();
 
         MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
-        MenuScreens.register(ModMenuTypes.LUNCH_BASKET.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
-            @Override
-            public VariableSizeContainerScreen create(VariableSizeContainerMenu m, Inventory inventory, Component component) {
-                return new VariableSizeContainerScreen(m, inventory, component, ModTextures.LUNCH_BASKET_GUI_TEXTURE);
-            }
-        });
-        MenuScreens.register(ModMenuTypes.SACK.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
-            @Override
-            public VariableSizeContainerScreen create(VariableSizeContainerMenu m, Inventory inventory, Component component) {
-                return new VariableSizeContainerScreen(m, inventory, component, ModTextures.SACK_GUI_TEXTURE);
-            }
-        });
+        MenuScreens.register(ModMenuTypes.LUNCH_BASKET.get(), (m, inventory, component)
+                -> new VariableSizeContainerScreen(m, inventory, component, ModTextures.LUNCH_BASKET_GUI_TEXTURE));
+        MenuScreens.register(ModMenuTypes.SACK.get(), (m, inventory, component) ->
+                new VariableSizeContainerScreen(m, inventory, component, ModTextures.SACK_GUI_TEXTURE));
         MenuScreens.register(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
         MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
         MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);

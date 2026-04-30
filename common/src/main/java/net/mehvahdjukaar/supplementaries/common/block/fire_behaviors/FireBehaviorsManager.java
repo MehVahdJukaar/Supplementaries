@@ -35,7 +35,7 @@ public class FireBehaviorsManager {
     }
 
     public static IFireItemBehavior getCannonBehavior(ItemLike item) {
-        return CANNON_FIRE_BEHAVIORS.getOrDefault(item, CANNON_DEFAULT);
+        return CANNON_FIRE_BEHAVIORS.getOrDefault(item.asItem(), CANNON_DEFAULT);
     }
 
     synchronized public static void registerPresentBehavior(ItemLike pItem, IFireItemBehavior pBehavior) {
@@ -43,7 +43,7 @@ public class FireBehaviorsManager {
     }
 
     public static IFireItemBehavior getPresentBehavior(ItemLike item) {
-        return PRESENT_FIRE_BEHAVIORS.getOrDefault(item, PRESENT_DEFAULT);
+        return PRESENT_FIRE_BEHAVIORS.getOrDefault(item.asItem(), PRESENT_DEFAULT);
     }
 
     @ApiStatus.Internal
