@@ -52,7 +52,7 @@ dependencies {
 
 
     modCompileOnly("curse.maven:irisshaders-455508:5726473")
-    modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
+    //modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
 
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")

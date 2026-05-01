@@ -18,7 +18,6 @@
     "ItemStackAccessor",
     "LivingEntityMixin",
     "TreasureMapForEmeraldsMixin",
-    "compat.CompatFarmersDelightTomatoMixin",
     "self.SelfFlammableFluidBlockMixin",
     "self.SelfFrameMixin",
     "self.SelfGunpowderMixin",

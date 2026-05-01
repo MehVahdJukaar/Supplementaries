@@ -24,7 +24,6 @@
     "RedstoneWireBlockMixin",
     "SugarCaneBlockMixin",
     "ThrowableProjectileMixin",
-    "compat.CompatFarmersDelightTomatoMixin",
     "compat.CompatSodiumFluidRendererMixin"
   ],
   "injectors": {

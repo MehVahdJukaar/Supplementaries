@@ -36,13 +36,17 @@ dependencies {
     modCompileOnly("curse.maven:jade-324717:7545228")
     modCompileOnly("dev.emi:trinkets:${trinkets_version}")
     modCompileOnly("curse.maven:curios-309927:4581099")
+    modImplementation("curse.maven:exposure-871755:7033926")
+    modImplementation("curse.maven:roughly-enough-items-310111:6199139")
+    modImplementation("curse.maven:farmers-delight-refabricated-993166:8008242")
 
 
 
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_version}")
     modCompileOnly("curse.maven:yacl-667299:4574163")
 
-    modCompileOnly("curse.maven:modmenu-308702:3920481")
+    modCompileOnly("curse.maven:modmenu-308702:7808443")
+    modCompileOnly("curse.maven:the-twilight-forest-unofficial-1111023:6010673")
 
 
     modCompileOnly("curse.maven:irisshaders-455508:5726473")
@@ -53,7 +57,6 @@ dependencies {
     //modImplementation("curse.maven:resourceful-lib-570073:5793501") //v2.1.29 | Chipped, Handcrafted, Cozy
     //modImplementation("curse.maven:midnightlib-488090:5687799")
 
-    //modImplementation("curse.maven:roughly-enough-items-310111:4440734")
     //modCompileOnly("curse.maven:architectury-419699:4581904")
     modCompileOnly("curse.maven:flan-404578:3902630")
     //modCompileOnly("curse.maven:farmers-delight-fabric-482834:4640640")
@@ -62,7 +65,6 @@ dependencies {
     //modRuntimeOnly "curse.maven:forge-config-api-port-fabric-547434:6798213"
 
 
-    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5887378")
 
     modCompileOnly("curse.maven:decorative-blocks-reborn-1327768:6897415")
     modCompileOnly("curse.maven:cc-tweaked-282001:5714511")

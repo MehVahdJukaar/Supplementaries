@@ -84,4 +84,5 @@ public class WildFlaxBlock extends BushBlock implements BonemealableBlock {
         }
 
     }
+
 }

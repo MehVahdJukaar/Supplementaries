@@ -49,4 +49,5 @@ public class CogBlock extends Block {
     public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
         return Math.max(0, blockState.getValue(POWER) - 1);
     }
+
 }

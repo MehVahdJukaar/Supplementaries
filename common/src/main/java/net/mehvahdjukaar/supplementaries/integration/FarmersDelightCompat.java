@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import com.google.common.base.Suppliers;
-import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
@@ -41,9 +40,9 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import vectorwing.farmersdelight.common.block.TomatoVineBlock;
+import vectorwing.farmersdelight.common.Configuration;
+import vectorwing.farmersdelight.common.block.HangingTomatoBlock;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -87,10 +86,8 @@ public class FarmersDelightCompat {
         return null;
     }
 
-    @Contract
-    @PlatformImpl
     public static boolean isTomatoVineClimbingConfigOn() {
-        throw new AssertionError();
+        return Configuration.ENABLE_TOMATO_VINE_CLIMBING_TAGGED_ROPES.get();
     }
 
     public static Block getStickTomato() {
@@ -117,27 +114,22 @@ public class FarmersDelightCompat {
     }
 
     //TODO: rethink
-    private abstract static class TomatoLoggedBlock extends TomatoVineBlock {
+    private abstract static class TomatoLoggedBlock extends HangingTomatoBlock {
 
         public TomatoLoggedBlock(BlockBehaviour.Properties properties) {
             super(properties);
         }
 
         @Override
-        public void attemptRopeClimb(ServerLevel level, BlockPos pos, RandomSource random) {
-            super.attemptRopeClimb(level, pos, random);
-        }
-
-        @Override
         public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
             BlockPos belowPos = pos.below();
             BlockState belowState = level.getBlockState(belowPos);
-            return (belowState.getBlock() instanceof TomatoVineBlock || super.canSurvive(state.setValue(TomatoVineBlock.ROPELOGGED, false), level, pos)) && this.hasGoodCropConditions(level, pos);
+            return (belowState.getBlock() instanceof HangingTomatoBlock || super.canSurvive(state.setValue(HangingTomatoBlock.ROPELOGGED, false), level, pos)) && this.hasGoodCropConditions(level, pos);
         }
 
         @Override
         public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
-            super.playerDestroy(level, player, pos, state.setValue(TomatoVineBlock.ROPELOGGED, false), blockEntity, stack);
+            super.playerDestroy(level, player, pos, state.setValue(HangingTomatoBlock.ROPELOGGED, false), blockEntity, stack);
         }
 
         @VirtualOverride("neoforge")
@@ -175,6 +167,46 @@ public class FarmersDelightCompat {
         public abstract Block getInnerBlock();
     }
 
+    private static class TomatoStickBlock extends TomatoLoggedBlock {
+
+        public static final BooleanProperty AXIS_X = ModBlockProperties.AXIS_X;
+        public static final BooleanProperty AXIS_Z = ModBlockProperties.AXIS_Z;
+
+        public TomatoStickBlock(BlockBehaviour.Properties properties) {
+            super(properties);
+            this.registerDefaultState(this.defaultBlockState().setValue(HangingTomatoBlock.ROPELOGGED, true)
+                    .setValue(AXIS_X, false).setValue(AXIS_Z, false));
+        }
+
+        @Override
+        public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+            return StickBlock.getStickShape(state.getValue(AXIS_X), true, state.getValue(AXIS_Z));
+        }
+
+        public Block getInnerBlock() {
+            return ModRegistry.STICK_BLOCK.get();
+        }
+
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+            builder.add(AXIS_X, AXIS_Z);
+            super.createBlockStateDefinition(builder);
+        }
+
+        @Override
+        public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+            if (!context.isSecondaryUseActive() && context.getItemInHand().is(Items.STICK)) {
+                return switch (context.getClickedFace().getAxis()) {
+                    case Z -> !state.getValue(AXIS_Z);
+                    case X -> !state.getValue(AXIS_X);
+                    default -> false;
+                };
+            }
+            return super.canBeReplaced(state, context);
+        }
+    }
+
+
     private static class TomatoRopeBlock extends TomatoLoggedBlock implements IRopeConnection {
 
         public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
@@ -185,7 +217,7 @@ public class FarmersDelightCompat {
 
         public TomatoRopeBlock(BlockBehaviour.Properties properties) {
             super(properties);
-            this.registerDefaultState(this.defaultBlockState().setValue(TomatoVineBlock.ROPELOGGED, true).setValue(KNOT, false)
+            this.registerDefaultState(this.defaultBlockState().setValue(HangingTomatoBlock.ROPELOGGED, true).setValue(KNOT, false)
                     .setValue(EAST, false).setValue(WEST, false).setValue(NORTH, false).setValue(SOUTH, false));
         }
 
@@ -220,44 +252,6 @@ public class FarmersDelightCompat {
         }
     }
 
-    private static class TomatoStickBlock extends TomatoLoggedBlock {
-
-        public static final BooleanProperty AXIS_X = ModBlockProperties.AXIS_X;
-        public static final BooleanProperty AXIS_Z = ModBlockProperties.AXIS_Z;
-
-        public TomatoStickBlock(BlockBehaviour.Properties properties) {
-            super(properties);
-            this.registerDefaultState(this.defaultBlockState().setValue(TomatoVineBlock.ROPELOGGED, true)
-                    .setValue(AXIS_X, false).setValue(AXIS_Z, false));
-        }
-
-        @Override
-        public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-            return StickBlock.getStickShape(state.getValue(AXIS_X), true, state.getValue(AXIS_Z));
-        }
-
-        public Block getInnerBlock() {
-            return ModRegistry.STICK_BLOCK.get();
-        }
-
-        @Override
-        protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-            builder.add(AXIS_X, AXIS_Z);
-            super.createBlockStateDefinition(builder);
-        }
-
-        @Override
-        public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
-            if (!context.isSecondaryUseActive() && context.getItemInHand().is(Items.STICK)) {
-                return switch (context.getClickedFace().getAxis()) {
-                    case Z -> !state.getValue(AXIS_Z);
-                    case X -> !state.getValue(AXIS_X);
-                    default -> false;
-                };
-            }
-            return super.canBeReplaced(state, context);
-        }
-    }
 
     public static class PlanterRichBlock extends PlanterBlock {
 
