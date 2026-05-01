@@ -26,7 +26,7 @@ public class CannonUtils {
         localTarget = localTarget.add(localTarget.normalize().scale(0.05f));
 
         YawPitchRestraint restraints = cannon.getOrientationRestraints();
-        BallisticData ballistic = cannon.getTrajectoryData();
+        BallisticData ballistic = cannon.getBallisticData();
         float minPitch = restraints.minPitchDeg() * Mth.DEG_TO_RAD;
         float maxPitch = restraints.maxPitchDeg() * Mth.DEG_TO_RAD;
 

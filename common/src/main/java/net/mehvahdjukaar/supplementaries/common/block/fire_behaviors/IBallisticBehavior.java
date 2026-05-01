@@ -10,12 +10,12 @@ import org.jetbrains.annotations.Nullable;
 // Provides stats for a ballistic trajectory
 public interface IBallisticBehavior extends IFireItemBehavior {
 
-    BallisticData calculateData(ItemStack stack, Level level);
+    BallisticData calculateBallisticData(ItemStack stack, Level level);
 
     // dont override this
     @Override
     default boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
-        var data = calculateData(stack, level);
+        var data = calculateBallisticData(stack, level);
         return fireInner(stack, level, firePos, direction,
                 power * data.drag() * data.initialSpeed(),
                 inaccuracy, owner);

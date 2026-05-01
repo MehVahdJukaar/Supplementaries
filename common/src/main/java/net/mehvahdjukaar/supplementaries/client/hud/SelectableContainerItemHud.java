@@ -38,6 +38,7 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
     private SlotReference stackSlot;
     private boolean usingKey = false; //false if just using
     private double lastCumulativeMouseDx = 0;
+
     protected SelectableContainerItemHud(Minecraft minecraft) {
         this.mc = minecraft;
     }
@@ -137,6 +138,7 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
 
     @EventCalled
     public boolean onKeyPressed(int key, int action, int modifiers) {
+        if (isActive()) return false;
         if (itemUsed == null) return false;
         if (action != GLFW.GLFW_PRESS) return false;
 

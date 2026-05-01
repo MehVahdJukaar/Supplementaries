@@ -29,7 +29,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
     private static final GameProfile FAKE_PLAYER = new GameProfile(UUID.fromString("11242C44-14d5-1f22-3d27-13D2C45CA355"), "[CANNON_TESTER]");
 
     @Override
-    public BallisticData calculateData(ItemStack projectile, Level level) {
+    public BallisticData calculateBallisticData(ItemStack projectile, Level level) {
         if (projectile.isEmpty()) {
             return BallisticData.LINE;
         }

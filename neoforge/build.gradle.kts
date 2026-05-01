@@ -32,7 +32,7 @@ dependencies {
 
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 
-    modCompileOnly("curse.maven:farmers-delight-398521:8007613")
+    modImplementation("curse.maven:farmers-delight-398521:8007613")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("curse.maven:entity-model-features-844662:7998618")
     modCompileOnly("curse.maven:emi-580555:6420931")
@@ -41,7 +41,9 @@ dependencies {
     modCompileOnly("curse.maven:roughly-enough-items-310111:6199140")
     modCompileOnly("curse.maven:the-twilight-forest-227639:7797302")
     modCompileOnly("curse.maven:environmental-388992:7122147")
-
+    modImplementation("curse.maven:create-328085:7963363")
+    modImplementation("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")
+    modImplementation("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")
     //modRuntimeOnly("curse.maven:modernfix-790626:4599348")
     //modRuntimeOnly("curse.maven:spark-361579:4738952")
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
@@ -106,11 +108,9 @@ dependencies {
     modCompileOnly("curse.maven:jade-324717:4801177")
     modCompileOnly("curse.maven:custom-villager-trades-forge-463402:4906130")
 
-    modCompileOnly("curse.maven:create-328085:6271847")
     //modCompileOnly("curse.maven:forge-config-api-port-fabric-547434:5982385")
     //modCompileOnly("curse.maven:flywheel-forge-1.20.1-0.6.9")
-    modCompileOnly ("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")
-    modCompileOnly("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")
+
     modCompileOnly("com.tterrag.registrate:Registrate:${registrate_version}")
     modCompileOnly("net.createmod.ponder:Ponder-NeoForge-${ponder_version}")
 

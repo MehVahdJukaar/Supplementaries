@@ -301,25 +301,25 @@ public class ClientRegistry {
 
     private static void registerMenuScreens(ClientHelper.MenuScreenEvent event) {
 
-        event.registerMenuScreen(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
-        event.registerMenuScreen(ModMenuTypes.LUNCH_BASKET.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
+        event.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
+        event.register(ModMenuTypes.LUNCH_BASKET.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
             @Override
             public VariableSizeContainerScreen create(VariableSizeContainerMenu menu, Inventory inventory, Component title) {
                 return new VariableSizeContainerScreen(menu, inventory, title, ModTextures.LUNCH_BASKET_GUI_TEXTURE);
             }
         });
-        event.registerMenuScreen(ModMenuTypes.SACK.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
+        event.register(ModMenuTypes.SACK.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
             @Override
             public VariableSizeContainerScreen create(VariableSizeContainerMenu menu, Inventory inventory, Component title) {
                 return new VariableSizeContainerScreen(menu, inventory, title, ModTextures.SACK_GUI_TEXTURE);
             }
         });
-        event.registerMenuScreen(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
-        event.registerMenuScreen(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
-        event.registerMenuScreen(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);
-        event.registerMenuScreen(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
-        event.registerMenuScreen(ModMenuTypes.CANNON.get(), CannonScreen::new);
-        event.registerMenuScreen(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
+        event.register(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
+        event.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
+        event.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);
+        event.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
+        event.register(ModMenuTypes.CANNON.get(), CannonScreen::new);
+        event.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
 
     }
 

@@ -47,6 +47,7 @@ dependencies {
     modCompileOnly("curse.maven:roughly-enough-items-310111:6199140")
     modCompileOnly("curse.maven:the-twilight-forest-227639:7797302")
     modCompileOnly("curse.maven:environmental-388992:7122147")
+    modCompileOnly("curse.maven:create-328085:7963363")
 
 
 

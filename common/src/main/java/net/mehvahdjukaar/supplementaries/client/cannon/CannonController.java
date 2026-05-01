@@ -28,12 +28,13 @@ import org.lwjgl.glfw.GLFW;
 
 public class CannonController {
 
+    @Nullable
+    protected static BallisticTrajectory trajectory;
     protected static CannonBlockTile cannon;
     protected static HitResult hit;
     protected static ShootingMode shootingMode = ShootingMode.DOWN;
-    @Nullable
-    protected static BallisticTrajectory trajectory;
     protected static boolean showsTrajectory = true;
+
     private static CameraType lastCameraType;
     // values controlled by player mouse movement. Not actually what camera uses
     private static float yawIncrease;
@@ -49,9 +50,9 @@ public class CannonController {
         Minecraft mc = Minecraft.getInstance();
         if (CannonController.cannon == null) {
             CannonController.cannon = cannon;
-            shootingMode = cannon.getTrajectoryData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
+            shootingMode = cannon.getBallisticData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
             lastCameraType = mc.options.getCameraType();
-        } //if not it means we entered from manouver mode gui
+        } //if not it means we entered from manoeuvre mode gui
         mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
         MutableComponent message = Component.translatable("message.supplementaries.cannon.maneuver",
                 mc.options.keyShift.getTranslatedKeyMessage(),
@@ -247,8 +248,9 @@ public class CannonController {
     //called by mixin. its cancellable. maybe switch all to this
     public static boolean onEarlyKeyPress(int key, int scanCode, int action, int modifiers) {
         if (!isActive()) return false;
-        if (action != GLFW.GLFW_PRESS) return false;
         var options = Minecraft.getInstance().options;
+
+        if (action != GLFW.GLFW_PRESS) return false;
         if (key == 256) {
             stopControllingAndSync();
             return true;

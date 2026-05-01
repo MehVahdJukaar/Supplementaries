@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;//
 
 
+import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.entity.IControllableVehicle;
 import net.mehvahdjukaar.moonlight.api.entity.ITileEntityCarry;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -10,6 +11,7 @@ import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BoatReferenceFrame;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.YawPitchRestraint;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -51,7 +53,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, IControllableVehicle, ITileEntityCarry {
+import java.util.UUID;
+
+public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, ContainerEntity, IControllableVehicle, ITileEntityCarry, IOneUserInteractable {
 
     private static final EntityDataAccessor<WoodType> DATA_WOOD_TYPE =
             SynchedEntityData.defineId(CannonBoatEntity.class, WoodType.ENTITY_SERIALIZER.get());
@@ -67,7 +71,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.cannon = new CannonBlockTile(BlockPos.ZERO, ModRegistry.CANNON.get()
                 .defaultBlockState().setValue(CannonBlock.FACING, Direction.UP));
         this.cannon.setReferenceFrame(new BoatReferenceFrame(this));
-        //this.cannon.setRestraint(new YawPitchRestraint(50, 360 - 50, 0, 180));
+        this.cannon.setRestraint(new YawPitchRestraint(50, 360 - 50, 0, 180));
         this.cannon.setLevel(level);
         this.setWoodType(VanillaWoodTypes.OAK);
     }
@@ -80,6 +84,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.zo = z;
         this.setWoodType(type);
     }
+
 
     @Override
     public BlockEntity getCarriedTileEntity() {
@@ -364,5 +369,15 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
             float backOff = 7 / 16f;
             return new Vec3(0, 12 / 16f, backOff);
         }
+    }
+
+    @Override
+    public void setCurrentUser(@Nullable UUID uuid) {
+        cannon.setCurrentUser(uuid);
+    }
+
+    @Override
+    public @Nullable UUID getCurrentUser() {
+        return cannon.getCurrentUser();
     }
 }

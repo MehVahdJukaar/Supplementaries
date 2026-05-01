@@ -49,8 +49,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         boolean manActive = cannon.canManeuverFromGUI(Minecraft.getInstance().player);
         ManeuverButton maneuver = new ManeuverButton(i + 154, j + 10 + 6, manActive);
         this.addRenderableWidget(maneuver);
-
-        Quaternionf rot = cannon.getWorldOrientation(1);
+        Quaternionf rot = cannon.getLocalOrientation(1);
         EntityAngles eulerAngles = EntityAngles.fromQuaternion(rot);
         this.yawSelector = this.addRenderableWidget(new NumberEditBox(this.font, i + 144, j + 49 + 6, 18, 10));
         this.yawSelector.setNumber(eulerAngles.yaw());
@@ -85,7 +84,6 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         //update client immediately too
         Quaternionf wantedQuat = EntityAngles.of(pitch, yaw).toQuaternion();
         this.menu.cannon.setTrustedInternalAttributes(wantedQuat, power, false, minecraft.player);
-        this.menu.cannon.snapToWantedRotationInstantly();
         this.menu.cannon.syncToServer(false, !CannonController.isActive());
     }
 
@@ -95,8 +93,6 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
 
     @Override
     public void slotChanged(AbstractContainerMenu container, int slot, ItemStack stack) {
-        if (slot == 0) {
-        }
     }
 
     @Override

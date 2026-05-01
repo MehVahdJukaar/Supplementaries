@@ -9,8 +9,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 
 public record ServerBoundRequestOpenCannonGuiMessage(TileOrEntityTarget target) implements Message {
@@ -30,13 +28,8 @@ public record ServerBoundRequestOpenCannonGuiMessage(TileOrEntityTarget target) 
     @Override
     public void handle(Context context) {
         if (context.getPlayer() instanceof ServerPlayer player) {
-            Level level = player.level();
-
-            BlockEntity be = target.findTileOrContainedTile(level);
-            if (be != null) {
-                ItemStack stack = player.getMainHandItem();
-                Utils.openGuiIfPossible(be, player, stack, Direction.NORTH, Vec3.ZERO);
-            }
+            ItemStack stack = player.getMainHandItem();
+            Utils.openGuiIfPossible(target, player, stack, Direction.NORTH, Vec3.ZERO);
         }
     }
 

@@ -202,6 +202,7 @@ public class ClientEvents {
     }
 
     public static boolean cancelKeyPress(int key, int scancode, int action, int modifiers) {
+        if (Minecraft.getInstance().level == null) return false;
         return SelectableContainerItemHud.getInstance().onKeyPressed(key, action, modifiers) ||
                 CannonController.onEarlyKeyPress(key, scancode, action, modifiers);
     }

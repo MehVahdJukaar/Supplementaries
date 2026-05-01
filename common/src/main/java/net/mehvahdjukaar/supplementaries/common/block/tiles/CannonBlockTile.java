@@ -89,7 +89,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     public void setRestraint(YawPitchRestraint restraint) {
-        this.restraint = restraint;
+        //this.restraint = restraint;
+        //TODO: this is bugged. Restraints dont work properly. Disabled for now.
     }
 
     @VisibleForDebug
@@ -217,14 +218,14 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public void setChanged() {
         super.setChanged();
         //recomputes it
-        recomputeTrajectoryData();
+        maybeRefreshTrajectoryData();
     }
 
     private void computeTrajectoryData() {
         ItemStack proj = this.getProjectile();
         var behavior = FireBehaviorsManager.getCannonBehavior(getProjectile().getItem());
         if (behavior instanceof IBallisticBehavior b) {
-            this.trajectoryData = b.calculateData(proj, level);
+            this.trajectoryData = b.calculateBallisticData(proj, level);
         } else {
             this.trajectoryData = BallisticData.LINE;
         }
@@ -291,11 +292,11 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         this.setItem(0, stack);
     }
 
-    public BallisticData getTrajectoryData() {
+    public BallisticData getBallisticData() {
         return trajectoryData;
     }
 
-    private void recomputeTrajectoryData() {
+    private void maybeRefreshTrajectoryData() {
         if (level == null || level.isClientSide) return;
         if (trajectoryFor != getProjectile().getItem()) {
             computeTrajectoryData();
@@ -455,6 +456,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public void snapToWantedRotationInstantly() {
         this.orientation.tick();
+        this.orientation.tick();
     }
 
     public void setLocalOrientation(Quaternionf localRot) {
@@ -485,7 +487,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     public void setTrustedInternalAttributes(Quaternionf wantedRotation, byte firePower, boolean fire, Player controllingPlayer) {
-        this.orientation.orient(wantedRotation);
+        this.setLocalOrientation(wantedRotation);
         this.setFirePower(firePower);
         if (fire) this.ignite(controllingPlayer);
     }
