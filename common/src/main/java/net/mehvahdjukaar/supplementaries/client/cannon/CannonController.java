@@ -195,7 +195,7 @@ public class CannonController {
 
         if (scrollDelta != 0) {
             byte newPower = (byte) (1 + Math.floorMod((int) (cannon.getPowerLevel() - 1 + scrollDelta), CannonBlockTile.MAX_POWER_LEVEL));
-            cannon.setPowerLevel(newPower);
+            cannon.setFirePower(newPower);
             needsToUpdateServer = true;
         }
         return true;

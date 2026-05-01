@@ -186,7 +186,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         super.loadAdditional(tag, registries);
         this.cooldownTimer = tag.getInt("cooldown");
         this.fuseTimer = Math.max(this.fuseTimer, tag.getInt("fuse_timer")); //don lose client animation
-        this.setPowerLevel(tag.getByte("fire_power"));
+        this.setFirePower(tag.getByte("fire_power"));
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
         if (tag.contains("player_ignited")) {
             this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");
@@ -306,7 +306,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return powerLevel;
     }
 
-    public void setPowerLevel(byte powerLevel) {
+    public void setFirePower(byte powerLevel) {
         this.powerLevel = (byte) Math.clamp(powerLevel, 1, MAX_POWER_LEVEL);
     }
 
@@ -484,12 +484,6 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return localRot.mul(referenceRot);
     }
 
-    public void setAttributes(Quaternionf quaternionf, byte firePower, boolean fire, Player controllingPlayer) {
-        this.setLocalOrientation(quaternionf);
-        this.setPowerLevel(firePower);
-        if (fire) this.ignite(controllingPlayer);
-    }
-
     private Quaternionf getStructureAdditionalRotation() {
         return Axis.YP.rotationDegrees(-this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
     }
@@ -526,7 +520,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     // Network
     public void syncToServer(boolean ignite, boolean removeOwner) {
         NetworkHelper.sendToServer(new SyncCannonPacket(
-                this.orientation.getRotation(1), this.getPowerLevel(),
+                this.orientation.getWantedRotation(), this.getPowerLevel(),
                 ignite, removeOwner, referenceFrame.makeNetworkTarget()));
     }
 
@@ -534,7 +528,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         if (level instanceof ServerLevel sl) {
             NetworkHelper.sendToAllClientPlayersInDefaultRange(sl,
                     BlockPos.containing(referenceFrame.position(1)), new SyncCannonPacket(
-                            this.orientation.getRotation(1), this.getPowerLevel(),
+                            this.orientation.getWantedRotation(), this.getPowerLevel(),
                             ignite, false, referenceFrame.makeNetworkTarget()));
         }
     }

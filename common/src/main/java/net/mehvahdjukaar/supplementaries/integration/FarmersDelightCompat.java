@@ -116,6 +116,7 @@ public class FarmersDelightCompat {
                 .randomTicks(), CompatObjects.RICH_SOIL);
     }
 
+    //TODO: rethink
     private abstract static class TomatoLoggedBlock extends TomatoVineBlock {
 
         public TomatoLoggedBlock(BlockBehaviour.Properties properties) {

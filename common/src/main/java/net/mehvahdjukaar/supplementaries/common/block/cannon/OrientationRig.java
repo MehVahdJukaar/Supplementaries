@@ -24,6 +24,10 @@ public class OrientationRig {
         return new Quaternionf(prevRotation).slerp(rotation, partialTicks);
     }
 
+    public Quaternionf getWantedRotation() {
+        return new Quaternionf(wantedRotation);
+    }
+
     public void pointToward(Vec3 target) {
         Vector3f t = target.toVector3f();
         t.normalize();

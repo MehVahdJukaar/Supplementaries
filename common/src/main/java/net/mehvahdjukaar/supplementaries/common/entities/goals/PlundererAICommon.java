@@ -51,7 +51,7 @@ public final class PlundererAICommon {
                 .add(0, 0.6, 0);
 
         power = (byte) Math.min(power, maxPower);
-        tile.setPowerLevel(power);
+        tile.setFirePower(power);
 
         BallisticTrajectory3D comp = CannonUtils.computeTrajectory(tile, targetLoc, ShootingMode.DOWN);
 

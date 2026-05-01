@@ -85,6 +85,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         //update client immediately too
         Quaternionf wantedQuat = EntityAngles.of(pitch, yaw).toQuaternion();
         this.menu.cannon.setAttributes(wantedQuat, power, false, minecraft.player);
+        this.menu.cannon.snapToWantedRotationInstantly();
         this.menu.cannon.syncToServer(false, !CannonController.isActive());
     }
 
