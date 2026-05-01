@@ -484,6 +484,12 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return localRot.mul(referenceRot);
     }
 
+    public void setTrustedAttributes(Quaternionf wantedRotation, byte firePower, boolean fire, Player controllingPlayer) {
+        this.orientation.orient(wantedRotation);
+        this.setFirePower(firePower);
+        if (fire) this.ignite(controllingPlayer);
+    }
+
     private Quaternionf getStructureAdditionalRotation() {
         return Axis.YP.rotationDegrees(-this.getBlockState().getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
     }
