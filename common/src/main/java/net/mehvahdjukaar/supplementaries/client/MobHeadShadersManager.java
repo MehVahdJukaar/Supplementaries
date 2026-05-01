@@ -75,7 +75,8 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
     @Deprecated(forRemoval = true)
     @Nullable
     public String getShaderForItem(Item item) {
-        return getShaderPathForItem(item).getPath();
+        ResourceLocation shaderPathForItem = getShaderPathForItem(item);
+        return shaderPathForItem == null ? null : shaderPathForItem.getPath();
     }
 
     @Nullable
@@ -86,7 +87,8 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
     @Deprecated(forRemoval = true)
     @Nullable
     public String getShaderForEntity(EntityType<?> entityType) {
-        return getShaderPathForEntity(entityType).getPath();
+        ResourceLocation shaderPathForEntity = getShaderPathForEntity(entityType);
+        return shaderPathForEntity == null ? null : shaderPathForEntity.getPath();
     }
 
     @Nullable
@@ -126,9 +128,9 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
     public ResourceLocation getSpectatorShaders(Entity entity) {
         if (entity == null) return null;
 
-        var s = getShaderForEntity(entity.getType());
-        if (s != null) {
-            return ResourceLocation.tryParse(s);
+        ResourceLocation shader = getShaderPathForEntity(entity.getType());
+        if (shader != null) {
+            return shader;
         }
         //hardcoded ones. Instance check is more compatible
         return switch (entity) {

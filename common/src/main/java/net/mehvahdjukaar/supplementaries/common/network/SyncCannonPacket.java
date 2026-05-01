@@ -44,7 +44,7 @@ public record SyncCannonPacket(
         BlockEntity be = this.target.findTileOrContainedTile(level);
         if (be instanceof CannonBlockTile cannon) {
             if (cannon.canBeUsedBy(BlockPos.containing(cannon.getGlobalPosition(1)), player)) {
-                cannon.setTrustedAttributes(this.rotation, this.firePower, this.ignite, player);
+                cannon.setTrustedInternalAttributes(this.rotation, this.firePower, this.ignite, player);
                 cannon.setChanged();
                 if (stopControlling) {
                     cannon.setCurrentUser(null);
