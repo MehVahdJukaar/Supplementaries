@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.integration.quark;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.JarBlock;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.integration.platform.QuarkCompatImpl;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -112,7 +112,7 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        return Utils.getTicker(pBlockEntityType, QuarkCompat.TATER_IN_A_JAR_TILE.get(), TinyPotatoBlockEntity::commonTick);
+        return Utils.getTicker(pBlockEntityType, QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TinyPotatoBlockEntity::commonTick);
     }
 
 
@@ -125,7 +125,7 @@ public class TaterInAJarBlock extends TinyPotatoBlock {
 
         @Override
         public BlockEntityType<Tile> getType() {
-            return QuarkCompat.TATER_IN_A_JAR_TILE.get();
+            return QuarkCompatImpl.TATER_IN_A_JAR_TILE.get();
         }
     }
 }

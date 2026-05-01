@@ -32,7 +32,7 @@ dependencies {
 
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 
-    modCompileOnly("curse.maven:farmers-delight-398521:5772720")
+    modCompileOnly("curse.maven:farmers-delight-398521:8007613")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("curse.maven:entity-model-features-844662:7998618")
     modCompileOnly("curse.maven:emi-580555:6420931")

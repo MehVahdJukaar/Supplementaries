@@ -33,7 +33,7 @@ public class ConfigButton extends Button {
         if (screen instanceof TitleScreen || screen instanceof PauseScreen) {
             boolean isOnRight;
             if (CompatHandler.QUARK) {
-                isOnRight = QuarkClientCompat.shouldHaveButtonOnRight();
+                isOnRight = QuarkClientCompat.shouldHaveSuppButtonOnRight();
             } else isOnRight = true;
 
             List<String> targets = isOnRight ?

@@ -28,3 +28,8 @@ classes/
 /forge/build/
 /.junie/AGENTS.md
 /build/reports/problems/problems-report.html
+/build/tmp/jar/MANIFEST.MF
+/build/tmp/sourcesJar/MANIFEST.MF
+/loom-deobf/build/loom-cache/remapped_working/remapped.curse.maven-irisshaders-455508-c8fafb98-5726473.jar
+/loom-deobf/build/loom-cache/remapped_working/remapped.maven.modrinth-frozenlib-c8fafb98-1.7.4-mc1.20.1.jar
+/loom-deobf/build/loom-cache/remapped_working/remapped.maven.modrinth-wilder-wild-c8fafb98-2.4.5-mc1.20.1.jar

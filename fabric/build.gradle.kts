@@ -35,6 +35,7 @@ dependencies {
     modCompileOnly("curse.maven:jei-238222:7420583")
     modCompileOnly("curse.maven:jade-324717:7545228")
     modCompileOnly("dev.emi:trinkets:${trinkets_version}")
+    modCompileOnly("curse.maven:curios-309927:4581099")
 
 
 

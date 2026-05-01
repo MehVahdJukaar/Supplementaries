@@ -15,9 +15,11 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.Invento
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
+import net.mehvahdjukaar.supplementaries.integration.quark.TaterInAJarTileRenderer;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -32,6 +34,8 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.quark.api.event.UsageTickerEvent;
+import org.violetmoon.quark.base.Quark;
+import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 
 import java.util.ArrayList;
@@ -49,6 +53,29 @@ public class QuarkClientCompatImpl {
         NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::usageTickerStack);
         ClientHelper.addTooltipComponentRegistration(QuarkClientCompatImpl::registerTooltipComponent);
     }
+
+    public static void registerEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {
+        event.register(QuarkCompatImpl.TATER_IN_A_JAR_TILE.get(), TaterInAJarTileRenderer::new);
+    }
+
+    public static void setupClient() {
+        ClientHelper.registerRenderType(QuarkCompatImpl.TATER_IN_A_JAR.get(), RenderType.cutout());
+    }
+
+    public static boolean shouldHaveSuppButtonOnRight() {
+        return !(QuarkGeneralConfig.qButtonOnRight && QuarkGeneralConfig.enableQButton);
+    }
+
+    public static boolean canRenderBlackboardTooltip() {
+        return canRenderQuarkTooltip();
+    }
+
+    public static boolean canRenderQuarkTooltip() {
+        return Quark.ZETA.modules.isEnabled(ImprovedTooltipsModule.class)
+                && ImprovedTooltipsModule.shulkerTooltips &&
+                (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown());
+    }
+
 
     public static void registerTooltipComponent(ClientHelper.TooltipComponentEvent event) {
         event.register(InventoryViewTooltip.class, InventoryTooltipComponent::new);

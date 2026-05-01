@@ -48,7 +48,7 @@
   "depends": {
     "fabricloader": ">=0.16.7",
     "fabric": ">=0.92.0+1.20.1",
-    "minecraft": ">=${minecraft_min_version} <${minecraft_max_version}",
+    "minecraft": "${minecraft_version}",
     "moonlight": ">=${moonlight_min_version}"
   },
   "breaks": {

@@ -2,12 +2,6 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.supplementaries.integration.quark.TaterInAJarTileRenderer;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderType;
-import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.config.QuarkGeneralConfig;
-import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 
 public class QuarkClientCompat {
 
@@ -16,26 +10,29 @@ public class QuarkClientCompat {
         throw new AssertionError();
     }
 
+    @PlatformImpl
     public static void registerEntityRenderers(ClientHelper.BlockEntityRendererEvent event) {
-        event.register(QuarkCompat.TATER_IN_A_JAR_TILE.get(), TaterInAJarTileRenderer::new);
+        throw new AssertionError();
     }
 
+    @PlatformImpl
     public static void setupClient() {
-        ClientHelper.registerRenderType(QuarkCompat.TATER_IN_A_JAR.get(), RenderType.cutout());
+        throw new AssertionError();
     }
 
-    public static boolean shouldHaveButtonOnRight() {
-        return !(QuarkGeneralConfig.qButtonOnRight && QuarkGeneralConfig.enableQButton);
+    @PlatformImpl
+    public static boolean shouldHaveSuppButtonOnRight() {
+        throw new AssertionError();
     }
 
+    @PlatformImpl
     public static boolean canRenderBlackboardTooltip() {
-        return canRenderQuarkTooltip();
+        throw new AssertionError();
     }
 
+    @PlatformImpl
     public static boolean canRenderQuarkTooltip() {
-        return Quark.ZETA.modules.isEnabled(ImprovedTooltipsModule.class)
-                && ImprovedTooltipsModule.shulkerTooltips &&
-                (!ImprovedTooltipsModule.shulkerBoxRequireShift || Screen.hasShiftDown());
+        throw new AssertionError();
     }
 
 

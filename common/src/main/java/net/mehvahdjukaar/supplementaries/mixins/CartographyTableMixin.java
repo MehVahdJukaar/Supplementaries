@@ -59,7 +59,7 @@ public abstract class CartographyTableMixin extends AbstractContainerMenu {
 
     }
 
-    @Inject(method = "method_17382",
+    @Inject(method = {"lambda$setupResultSlot$0", "method_17382"},
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z",
                     ordinal = 0), cancellable = true)
     public void supp$getItem(ItemStack mapStack, ItemStack firstSlotStack, ItemStack resultSlotStack, Level level,

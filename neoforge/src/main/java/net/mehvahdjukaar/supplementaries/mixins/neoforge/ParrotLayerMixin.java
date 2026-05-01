@@ -24,7 +24,7 @@ public abstract class ParrotLayerMixin<T extends Player> {
     @Final
     private ParrotModel model;
 
-    @WrapOperation(method = "method_17958",
+    @WrapOperation(method = "lambda$render$1",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/ParrotModel;renderOnShoulder(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFFI)V"))
     private void supp$renderParty(ParrotModel instance, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float limbSwing, float limbSwingAmount, float netHeadYaw, float headPitch, int tickCount, Operation<Void> original,
                                   @Local(argsOnly = true) CompoundTag compoundTag) {
