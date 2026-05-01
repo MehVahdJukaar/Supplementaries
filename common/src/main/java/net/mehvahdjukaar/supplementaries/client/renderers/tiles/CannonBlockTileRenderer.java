@@ -20,7 +20,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -151,8 +150,9 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         return LayerDefinition.create(meshdefinition, 64, 64);
     }
 
+
     @VirtualOverride("neoforge")
-    public AABB getRenderBoundingBox(BlockEntity tile) {
+    public AABB getRenderBoundingBox(CannonBlockTile tile) {
         return new AABB(tile.getBlockPos()).inflate(0.2);
     }
 

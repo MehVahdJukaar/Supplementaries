@@ -28,18 +28,20 @@ dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
 
-    /*
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 
     modCompileOnly("curse.maven:farmers-delight-398521:5772720")
-
+    modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
+    modCompileOnly("curse.maven:entity-model-features-844662:7998618")
+    modCompileOnly("curse.maven:emi-580555:6420931")
+    modImplementation("curse.maven:jei-238222:7420587")
+    modCompileOnly("curse.maven:jade-324717:7545219")
 
 
     //modRuntimeOnly("curse.maven:modernfix-790626:4599348")
     //modRuntimeOnly("curse.maven:spark-361579:4738952")
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
 
-    modImplementation("curse.maven:jei-238222:7057366")
     modCompileOnly("curse.maven:configured-457570:5873783")
     modCompileOnly("maven.modrinth:amendments:1.21-2.0.15-neoforge")
     //modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140")
@@ -80,7 +82,6 @@ dependencies {
     modCompileOnly("curse.maven:balm-531761:4757228")
     modCompileOnly("curse.maven:buzzier-bees-355458:5229011")
     modCompileOnly("curse.maven:blueprint-382216:5292242")
-    modCompileOnly("curse.maven:flan-forge-493246:3902633")
     modCompileOnly("curse.maven:additional-banners-230137:3901622")
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
     modCompileOnly("curse.maven:the-bumblezone-forge-362479:5889009")
@@ -126,11 +127,9 @@ dependencies {
 
     modCompileOnly("curse.maven:integrated-stronghold-815548:5178479")
     modCompileOnly("curse.maven:integrated-api-817709:5241489")
-    modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
 
     //modCompileOnly("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
-*/
 }
 

@@ -27,6 +27,15 @@ dependencies {
     annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
 
 
+    modCompileOnly("com.misterpemodder:shulkerboxtooltip-fabric:${shulker_box_tooltip_version}")
+    modCompileOnly("curse.maven:entity-model-features-844662:7998618")
+    modCompileOnly("curse.maven:emi-580555:6420930")
+    modCompileOnly("curse.maven:jei-238222:7420583")
+    modCompileOnly("curse.maven:jade-324717:7545228")
+    modCompileOnly("dev.emi:trinkets:${trinkets_version}")
+
+
+
     modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_version}")
     modCompileOnly("curse.maven:yacl-667299:4574163")
 
@@ -54,7 +63,6 @@ dependencies {
 
     modCompileOnly("curse.maven:decorative-blocks-reborn-1327768:6897415")
     modCompileOnly("curse.maven:cc-tweaked-282001:5714511")
-    modCompileOnly("curse.maven:jei-238222:5846878")
 
     modCompileOnly("net.mehvahdjukaar:amendments-fabric:1.21-2.0.9")
 
@@ -63,7 +71,6 @@ dependencies {
     modCompileOnly("curse.maven:owo-lib-532610:6297839")
     modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
     modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}")
-    modCompileOnly("dev.emi:trinkets:${trinkets_version}")
     //modImplementation("curse.maven:biome-makeover-412182:4572458")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
@@ -79,7 +86,6 @@ dependencies {
     //  modCompileOnly("curse.maven:create-328085:4835191")
 
     modCompileOnly("org.embeddedt:embeddium-fabric-1.20.1:0.3.1-git.b3f920f+mc1.20.1")
-    modCompileOnly("com.misterpemodder:shulkerboxtooltip-fabric:${shulker_box_tooltip_version}")
 
 //    modImplementation("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
