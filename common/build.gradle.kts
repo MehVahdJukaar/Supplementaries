@@ -1,4 +1,5 @@
 plugins {
+    id("com.possible-triangle.core")
     id("com.possible-triangle.common")
 }
 
@@ -15,6 +16,17 @@ val vanillin_version: String by extra
 val shulker_box_tooltip_version: String by extra
 
 dependencies {
+    compileOnly("net.mehvahdjukaar:candlelight:1.1.6")
+
+    compileOnly(project(":loom-deobf"))
+    compileOnly(
+        project(
+            mapOf(
+                "path" to ":loom-deobf",
+                "configuration" to "modRuntimeClasspathMainMapped"
+            )
+        )
+    )
 
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")
     annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")
@@ -31,13 +43,15 @@ dependencies {
     modCompileOnly("curse.maven:emi-580555:6420931")
     modImplementation("curse.maven:jei-238222:7420587")
     modCompileOnly("curse.maven:jade-324717:7545219")
+    modCompileOnly("curse.maven:roughly-enough-items-310111:6199140")
+    modCompileOnly("curse.maven:the-twilight-forest-227639:7797302")
+    modCompileOnly("curse.maven:environmental-388992:7122147")
+
 
 
     modCompileOnly("curse.maven:irisshaders-455508:5726473")
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
     //implementation fileTree(dir: 'mods', include: '*.jar')
-    //modCompileOnly("curse.maven:roughly-enough-items-310111:4357860")
-    modCompileOnly("curse.maven:roughly-enough-items-310111:5731643")
 
     modCompileOnly("curse.maven:farmers-respite-551453:4081312")
     modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
@@ -60,12 +74,10 @@ dependencies {
 
     //    modCompileOnly("curse.maven:immediatelyfast-686911:5894662")
     //modCompileOnly("maven.modrinth:immediatelyfast:1.2.8+1.20.4-forge")
-    modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
+
     modCompileOnly("curse.maven:buzzier-bees-355458:4776328")
-    modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
     modCompileOnly("curse.maven:the-twilight-forest-227639:7398100")
 
 
     modCompileOnly("curse.maven:blueprint-382216:5292242")
-    modCompileOnly("curse.maven:environmental-388992:6060255")
 }

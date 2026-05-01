@@ -33,6 +33,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.*;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
@@ -51,6 +52,7 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -73,8 +75,10 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.component.DyedItemColor;
@@ -298,10 +302,18 @@ public class ClientRegistry {
     private static void registerMenuScreens(ClientHelper.MenuScreenEvent event) {
 
         event.registerMenuScreen(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
-        event.registerMenuScreen(ModMenuTypes.LUNCH_BASKET.get(), (m, inventory, component)
-                -> new VariableSizeContainerScreen(m, inventory, component, ModTextures.LUNCH_BASKET_GUI_TEXTURE));
-        event.registerMenuScreen(ModMenuTypes.SACK.get(), (m, inventory, component) ->
-                new VariableSizeContainerScreen(m, inventory, component, ModTextures.SACK_GUI_TEXTURE));
+        event.registerMenuScreen(ModMenuTypes.LUNCH_BASKET.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
+            @Override
+            public VariableSizeContainerScreen create(VariableSizeContainerMenu menu, Inventory inventory, Component title) {
+                return new VariableSizeContainerScreen(menu, inventory, title, ModTextures.LUNCH_BASKET_GUI_TEXTURE);
+            }
+        });
+        event.registerMenuScreen(ModMenuTypes.SACK.get(), new MenuScreens.ScreenConstructor<VariableSizeContainerMenu, VariableSizeContainerScreen>() {
+            @Override
+            public VariableSizeContainerScreen create(VariableSizeContainerMenu menu, Inventory inventory, Component title) {
+                return new VariableSizeContainerScreen(menu, inventory, title, ModTextures.SACK_GUI_TEXTURE);
+            }
+        });
         event.registerMenuScreen(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
         event.registerMenuScreen(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
         event.registerMenuScreen(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);

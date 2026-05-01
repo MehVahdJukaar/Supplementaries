@@ -24,7 +24,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -63,7 +62,7 @@ public class PedestalBlockTileRenderer implements BlockEntityRenderer<PedestalBl
     }
 
     @VirtualOverride("neoforge")
-    public AABB getRenderBoundingBox(BlockEntity tile) {
+    public AABB getRenderBoundingBox(PedestalBlockTile tile) {
         return new AABB(tile.getBlockPos()).expandTowards(0, 1, 0);
     }
 

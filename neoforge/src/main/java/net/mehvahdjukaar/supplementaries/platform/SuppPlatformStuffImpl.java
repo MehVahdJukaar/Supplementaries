@@ -2,13 +2,11 @@ package net.mehvahdjukaar.supplementaries.platform;
 
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
-import net.mehvahdjukaar.moonlight.api.platform.configs.neoforge.ForgeConfigHolder;
 import net.mehvahdjukaar.moonlight.api.util.FakePlayerManager;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.platform.RegisterFireBehaviorsEvent;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehaviorRegistry;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
-import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatObjects;
 import net.mehvahdjukaar.supplementaries.mixins.neoforge.FireBlockAccessor;
 import net.mehvahdjukaar.supplementaries.mixins.neoforge.ItemStackAccessor;
@@ -44,7 +42,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.ItemAbilities;
-import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
@@ -135,25 +132,6 @@ public class SuppPlatformStuffImpl {
 
     public static float getDownfall(Biome biome) {
         return biome.getModifiedClimateSettings().downfall();
-    }
-
-    public static void disableAMWarn() {
-        ((ModConfigSpec.BooleanValue) ClientConfigs.General.NO_AMENDMENTS_WARN).set(true);
-        ForgeConfigHolder fg = ((ForgeConfigHolder) ClientConfigs.CONFIG_HOLDER);
-        fg.getSpec().save();
-
-    }
-
-    public static void disableIMWarn() {
-        ((ModConfigSpec.BooleanValue) ClientConfigs.General.NO_INCOMPATIBLE_MODS).set(true);
-        ForgeConfigHolder fg = ((ForgeConfigHolder) ClientConfigs.CONFIG_HOLDER);
-        fg.getSpec().save();
-    }
-
-    public static void disableOFWarn(boolean on) {
-        ((ModConfigSpec.BooleanValue) ClientConfigs.General.NO_OPTIFINE_WARN).set(on);
-        ForgeConfigHolder fg = ((ForgeConfigHolder) ClientConfigs.CONFIG_HOLDER);
-        fg.getSpec().save();
     }
 
     public static boolean canStickTo(BlockState movedState, BlockState blockState) {

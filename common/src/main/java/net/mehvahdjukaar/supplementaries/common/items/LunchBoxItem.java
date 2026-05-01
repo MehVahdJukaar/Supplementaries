@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.item.ILeftClickReact;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -42,7 +41,7 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBaskedContent, Lu
         super(properties);
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     private static void addClientTooltip(List<Component> list) {
         list.add(Component.translatable("message.supplementaries.lunch_box.tooltip",
                         Minecraft.getInstance().options.keyAttack.getTranslatedKeyMessage())

@@ -12,9 +12,9 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBo
 import net.mehvahdjukaar.supplementaries.common.entities.trades.ModVillagerTrades;
 import net.mehvahdjukaar.supplementaries.common.events.ServerEvents;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.DepthDataHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.WeatheredHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.ModMapMarkers;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
@@ -48,6 +48,7 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
+
         Credits.fetchFromServer();
         CommonConfigs.init();
 
@@ -77,7 +78,7 @@ public class Supplementaries {
         InteractEventsHandler.init();
         DepthDataHandler.init();
         WeatheredHandler.init();
-        ColoredMapHandler.init();
+        MapTintColorsHandler.init();
         MapLightHandler.init();
         DispenserBehaviorsManager.init();
         PlaceableBookManager.init();

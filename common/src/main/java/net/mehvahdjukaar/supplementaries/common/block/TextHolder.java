@@ -3,8 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
@@ -315,7 +314,7 @@ public class TextHolder implements IAntiquable {
 
     //client stuff
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     @Nullable
     public FormattedCharSequence getRenderMessages(int line, Font font) {
         if (line >= lines) {
@@ -329,7 +328,7 @@ public class TextHolder implements IAntiquable {
         return this.renderMessages[line];
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public TextUtil.RenderProperties computeRenderProperties(int combinedLight, Vector3f normal, BooleanSupplier shouldShowGlow) {
         return TextUtil.renderProperties(this.getColor(), this.hasGlowingText(),
                 ClientConfigs.getSignColorMult(),
@@ -338,7 +337,7 @@ public class TextHolder implements IAntiquable {
                 normal, shouldShowGlow);
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public TextUtil.RenderProperties getGUIRenderTextProperties() {
         return computeRenderProperties(LightTexture.FULL_BRIGHT, Direction.UP.step(), () -> true);
     }

@@ -2,8 +2,10 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightClient;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsClient;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsHandler;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -26,8 +28,10 @@ public abstract class MapTextureMixin {
     @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/texture/DynamicTexture;upload()V",
             shift = At.Shift.BEFORE), method = "updateTexture")
     public DynamicTexture supp$updateColoredTexture(MapRenderer.MapInstance instance, Operation<DynamicTexture> original) {
-        ColoredMapHandler.getColorData(this.data).processTexture(this.texture.getPixels(), 0, 0, this.data.colors);
-        MapLightHandler.getLightData(this.data).processTexture(this.texture.getPixels(), 0, 0, this.data.dimension);
+        MapTintColorsHandler.ColorData colorData = MapTintColorsHandler.getColorData(this.data);
+        MapTintColorsClient.processTexture(colorData, this.texture.getPixels(), 0, 0, this.data.colors);
+        MapLightHandler.LightData lightData = MapLightHandler.getLightData(this.data);
+        MapLightClient.processTexture(lightData, this.texture.getPixels(), 0, 0, this.data.dimension);
         return original.call(instance);
     }
 

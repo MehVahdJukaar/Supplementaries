@@ -1,0 +1,30 @@
+plugins {
+    id("net.fabricmc.fabric-loom-remap")
+}
+
+dependencies {
+    minecraft("com.mojang:minecraft:${minecraft_version}")
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${minecraft_version}:${parchment_mappings_version}")
+    })
+    modCompileOnly("curse.maven:irisshaders-455508:5726473")
+
+    modCompileOnly("maven.modrinth:wilder-wild:2.4.5-mc1.20.1")
+    modCompileOnly("maven.modrinth:frozenlib:1.7.4-mc1.20.1")
+}
+
+
+repositories {
+    flatDir {
+        dirs 'mods'
+    }
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
+    maven { url "https://maven.parchmentmc.org" }
+    maven {
+        url = "https://www.cursemaven.com"
+        allowInsecureProtocol = true
+    }
+}

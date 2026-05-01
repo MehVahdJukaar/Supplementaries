@@ -20,7 +20,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.joml.Vector3f;
 
@@ -100,7 +99,7 @@ public class SignPostBlockTileRenderer implements BlockEntityRenderer<SignPostBl
     }
 
     @VirtualOverride("neoforge")
-    public AABB getRenderBoundingBox(BlockEntity tile) {
+    public AABB getRenderBoundingBox(SignPostBlockTile tile) {
         return new AABB(tile.getBlockPos()).inflate(0.1);
     }
 

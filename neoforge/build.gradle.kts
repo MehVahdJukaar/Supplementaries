@@ -1,4 +1,5 @@
 plugins {
+    id("com.possible-triangle.core")
     id("com.possible-triangle.neoforge")
 }
 
@@ -19,6 +20,7 @@ val vanillin_version: String by extra
 val registrate_version: String by extra
 val shulker_box_tooltip_version: String by extra
 dependencies {
+    compileOnly("net.mehvahdjukaar:candlelight:1.1.6")
 
     annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")
@@ -36,7 +38,9 @@ dependencies {
     modCompileOnly("curse.maven:emi-580555:6420931")
     modImplementation("curse.maven:jei-238222:7420587")
     modCompileOnly("curse.maven:jade-324717:7545219")
-
+    modCompileOnly("curse.maven:roughly-enough-items-310111:6199140")
+    modCompileOnly("curse.maven:the-twilight-forest-227639:7797302")
+    modCompileOnly("curse.maven:environmental-388992:7122147")
 
     //modRuntimeOnly("curse.maven:modernfix-790626:4599348")
     //modRuntimeOnly("curse.maven:spark-361579:4738952")
@@ -101,7 +105,6 @@ dependencies {
     modCompileOnly("curse.maven:farmers-respite-551453:5543547")
     modCompileOnly("curse.maven:jade-324717:4801177")
     modCompileOnly("curse.maven:custom-villager-trades-forge-463402:4906130")
-    modCompileOnly("curse.maven:emi-580555:5704405")
 
     modCompileOnly("curse.maven:create-328085:6271847")
     //modCompileOnly("curse.maven:forge-config-api-port-fabric-547434:5982385")
@@ -123,7 +126,6 @@ dependencies {
     modCompileOnly("maven.modrinth:sodium:mc1.21-0.6.0-beta.2-neoforge")
     modCompileOnly("curse.maven:resourceful-lib-570073:5793500") //v2.1.29 | Chipped, Handcrafted, Cozy
     modCompileOnly("curse.maven:athena-841890:5629395") //v2.1.29 | Chipped, Handcrafted, Cozy
-    modRuntimeOnly("curse.maven:the-twilight-forest-227639:7398100")
 
     modCompileOnly("curse.maven:integrated-stronghold-815548:5178479")
     modCompileOnly("curse.maven:integrated-api-817709:5241489")

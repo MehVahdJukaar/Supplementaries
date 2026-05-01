@@ -20,8 +20,8 @@ import net.mehvahdjukaar.supplementaries.common.entities.goals.*;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.crafting.WeatheredMapRecipe;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
@@ -167,7 +167,7 @@ public class ServerEvents {
         WeatheredMapRecipe.onWorldUnload();
         RoadSignStructure.clearCache();
         EndermanSkullBlockTile.clearCache();
-        ColoredMapHandler.clearIdCache();
+        MapTintColorsHandler.clearIdCache();
     }
 
     @EventCalled

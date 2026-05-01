@@ -18,7 +18,7 @@ public class SlimedRenderTypes extends RenderType {
         super(s, vertexFormat, mode, i, b, b1, runnable, aSuper);
     }
 
-    public static void clear() {
+    public static void clearRenderTypeCache() {
         TYPES.clear();
     }
 

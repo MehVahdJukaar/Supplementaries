@@ -23,7 +23,6 @@ accessible method  net/minecraft/world/item/BrushItem$DustParticlesDelta <init> 
 
 accessible method net/minecraft/world/item/context/UseOnContext getHitResult ()Lnet/minecraft/world/phys/BlockHitResult;
 
-
 extendable method net/minecraft/client/resources/sounds/AbstractTickableSoundInstance stop ()V
 
 # camera

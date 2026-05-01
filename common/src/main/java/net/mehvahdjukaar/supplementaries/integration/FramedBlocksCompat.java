@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.client.model.ExtraModelData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
@@ -30,7 +29,7 @@ public class FramedBlocksCompat {
         throw new AssertionError();
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     @PlatformImpl
     public static ExtraModelData getModelData(BlockState mimic) {
         throw new AssertionError();

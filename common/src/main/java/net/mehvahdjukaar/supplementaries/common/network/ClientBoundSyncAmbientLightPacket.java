@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightClient;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -53,7 +53,7 @@ public class ClientBoundSyncAmbientLightPacket implements Message {
 
     @Override
     public void handle(Context context) {
-        MapLightHandler.setAmbientLight(ambientLight);
+        MapLightClient.setAmbientLight(ambientLight);
     }
 
     @Override

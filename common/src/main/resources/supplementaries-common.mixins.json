@@ -31,6 +31,7 @@
     "GrindstoneMenuMixin",
     "GrindstoneTestSlotMixin",
     "IDispenserAccessor",
+    "IHangingEntityAccessor",
     "InkSackMixin",
     "IronBarsBlockMixin",
     "ItemsMixin",

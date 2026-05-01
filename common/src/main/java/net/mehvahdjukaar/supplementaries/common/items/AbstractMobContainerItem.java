@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -260,7 +259,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         }
     }
 
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public void addPlacementTooltip(List<Component> tooltip) {
         tooltip.add(Component.translatable("message.supplementaries.cage.tooltip",
                         Minecraft.getInstance().options.keyShift.getTranslatedKeyMessage())

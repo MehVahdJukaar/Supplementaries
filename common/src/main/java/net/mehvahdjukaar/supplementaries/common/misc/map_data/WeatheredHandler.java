@@ -106,7 +106,7 @@ public class WeatheredHandler {
 
             MapItemSavedData newData = replaceOld ? mapitemsaveddata : data.ml$copy();
             WeatheredMapData instance = getAntiqueData(newData);
-            var colorData = ColoredMapHandler.getColorData(newData);
+            var colorData = MapTintColorsHandler.getColorData(newData);
             colorData.clear();
             var lightData = MapLightHandler.getLightData(newData);
             lightData.clear();

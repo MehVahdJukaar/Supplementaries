@@ -1,25 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.misc.map_data;
 
-import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.platform.NativeImage;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.moonlight.api.map.CustomMapData;
 import net.mehvahdjukaar.moonlight.api.map.MapDataRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
-import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundSyncAmbientLightPacket;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -34,10 +27,7 @@ public class MapLightHandler {
     public static final CustomMapData.Type<Patch, LightData> LIGHT_DATA =
             MapDataRegistry.registerCustomMapSavedData(Supplementaries.res("light_data"), LightData::new,
                     Patch.STREAM_CODEC);
-    private static final Object2IntMap<ResourceKey<Level>> LIGHT_PER_WORLD = new Object2IntArrayMap<>();
     private static boolean enabled = false;
-    @Nullable
-    private static Object lightMap = null;
 
     public static void init() {
     }
@@ -55,19 +45,11 @@ public class MapLightHandler {
         enabled = on;
     }
 
+    @Deprecated(forRemoval = true)
     // Call to set lightmap. Has to be 16x16
-    @Environment(EnvType.CLIENT)
+    @ClientOnly
     public static void setLightMap(@Nullable NativeImage map) {
-        if (map != null) {
-            Preconditions.checkArgument(map.getWidth() != 16 || map.getHeight() != 6, "Lightmap must be 16x16");
-        }
-        lightMap = map;
-    }
-
-    @ApiStatus.Internal
-    public static void setAmbientLight(Object2IntMap<ResourceKey<Level>> ambientLight) {
-        LIGHT_PER_WORLD.clear();
-        LIGHT_PER_WORLD.putAll(ambientLight);
+        MapLightClient.setLightMap(map);
     }
 
     @ApiStatus.Internal
@@ -124,7 +106,7 @@ public class MapLightHandler {
         private static final String LIGHTMAP_TAG = "lightmap";
         private byte[][] data = null;
 
-        private int getEntry(int x, int z) {
+        protected int getEntry(int x, int z) {
             if (data == null) return 0;
             if (x < 0 || x >= 128 || z < 0 || z >= 128) {
                 return 0; //error
@@ -260,37 +242,6 @@ public class MapLightHandler {
             }
         }
 
-
-        @Environment(EnvType.CLIENT)
-        public void processTexture(NativeImage texture, int startX, int startY, ResourceKey<Level> levelKey) {
-            if (lightMap == null) return;
-            int minL = LIGHT_PER_WORLD.getOrDefault(levelKey, 0);
-            for (int x = 0; x < 128; ++x) {
-                for (int z = 0; z < 128; ++z) {
-                    int light = getEntry(x, z);
-                    //  if (light == 0) continue;
-
-                    int skyDarkness = light & 0b1111; // Extract the lower 4 bits
-                    int blockLight = Math.max(minL, (light >> 4) & 0b1111); // Extract the higher 4 bits
-
-                    int pX = startX + x;
-                    int pY = startY + z;
-                    int originalColor = texture.getPixelRGBA(pX, pY);
-
-                    int skyLight = 15 - skyDarkness;
-
-                    var lightColor = new RGBColor(((NativeImage) lightMap).getPixelRGBA(blockLight, skyLight));
-                    float intensity = 1;
-                    int newColor = new RGBColor(originalColor).multiply(
-                            (lightColor.red() * intensity),
-                            (lightColor.green() * intensity),
-                            (lightColor.green() * intensity),
-                            1).toInt();
-
-                    texture.setPixelRGBA(pX, pY, newColor);
-                }
-            }
-        }
 
         public void clear() {
             data = null;

@@ -6,8 +6,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
 import net.mehvahdjukaar.moonlight.core.MoonlightClient;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightClient;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsClient;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsHandler;
 import net.minecraft.client.gui.MapRenderer;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.lwjgl.opengl.GL11;
@@ -32,8 +34,10 @@ public class CompatIFMapTextureMixin2 {
     public void supplementaries_IFupdateColoredTexture(NativeImage instance,
                                                        int level, int xOffset, int yOffset, int unpackSkipPixels, int unpackSkipRows, int width, int height, boolean mipmap, boolean autoClose,
                                                        Operation<Void> operation) {
-        ColoredMapHandler.getColorData(this.data).processTexture(instance, xOffset, yOffset, this.data.colors);
-        MapLightHandler.getLightData(this.data).processTexture(instance, xOffset, yOffset, this.data.dimension);
+        MapTintColorsHandler.ColorData colorData = MapTintColorsHandler.getColorData(this.data);
+        MapTintColorsClient.processTexture(colorData, instance, xOffset, yOffset, this.data.colors);
+        MapLightHandler.LightData lightData = MapLightHandler.getLightData(this.data);
+        MapLightClient.processTexture(lightData, instance, xOffset, yOffset, this.data.dimension);
 
         MoonlightClient.setMipMap(true);
         mipmap = mipmap || MoonlightClient.isMapMipMap();

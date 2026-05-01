@@ -64,13 +64,11 @@ public class JarBlock extends WaterBlock implements EntityBlock {
     }
 
     @VirtualOverride("neoforge")
-    public float @Nullable [] getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
+    @Nullable
+    public Integer getBeaconColorMultiplier(BlockState state, LevelReader world, BlockPos pos, BlockPos beaconPos) {
         int color = getJarLiquidColor(pos, world);
         if (color == -1) return null;
-        float r = (color >> 16 & 255) / 255.0F;
-        float g = (color >> 8 & 255) / 255.0F;
-        float b = (color & 255) / 255.0F;
-        return new float[]{r, g, b};
+        return color;
     }
 
     @Override

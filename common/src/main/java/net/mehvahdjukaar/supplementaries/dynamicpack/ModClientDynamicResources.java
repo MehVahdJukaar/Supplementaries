@@ -21,7 +21,7 @@ import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsClient;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -133,8 +133,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
     @Override
     public void reload(ResourceManager manager, IProgressTracker reporter) {
         //need this here for reasons I forgot
-        ColoredMapHandler.clearCache();
-        SlimedRenderTypes.clear();
+        MapTintColorsClient.clearColorCache();
+        SlimedRenderTypes.clearRenderTypeCache();
         BlackboardTextureManager.closeAll();
 
         super.reload(manager, reporter);

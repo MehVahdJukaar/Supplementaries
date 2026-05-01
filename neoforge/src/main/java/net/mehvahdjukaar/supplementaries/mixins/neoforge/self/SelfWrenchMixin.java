@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins.neoforge.self;
 
 import net.mehvahdjukaar.supplementaries.common.items.WrenchItem;
+import net.mehvahdjukaar.supplementaries.mixins.IHangingEntityAccessor;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
@@ -35,7 +36,7 @@ public abstract class SelfWrenchMixin extends Item {
             Direction dir = hangingEntity.getDirection();
             dir = shiftDown ? dir.getCounterClockWise() : dir.getClockWise();
 
-            hangingEntity.setDirection(dir);
+            ((IHangingEntityAccessor) hangingEntity).invokeSetDirection(dir);
 
             WrenchItem.playTurningEffects(hangingEntity.getPos(), shiftDown, Direction.UP, player.level(), player);
 

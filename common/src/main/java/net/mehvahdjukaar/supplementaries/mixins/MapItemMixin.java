@@ -12,9 +12,9 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.datafixers.util.Pair;
-import net.mehvahdjukaar.supplementaries.common.misc.map_data.ColoredMapHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.DepthDataHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapLightHandler;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsHandler;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -138,7 +138,7 @@ public abstract class MapItemMixin {
             var l = colorMap.get().get(new Vector2i(x, z));
             if (l != null) {
                 Block block = Iterables.getFirst(Multisets.copyHighestCountFirst(l.getSecond()), Blocks.AIR);
-                ColoredMapHandler.ColorData c = ColoredMapHandler.getColorData(data);
+                MapTintColorsHandler.ColorData c = MapTintColorsHandler.getColorData(data);
                 c.markColored(x, z, block, level, l.getFirst(), data);
             }
         }

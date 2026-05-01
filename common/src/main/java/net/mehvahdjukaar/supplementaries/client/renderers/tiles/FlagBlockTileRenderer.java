@@ -26,7 +26,6 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
 
@@ -228,8 +227,8 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
     }
 
     @VirtualOverride("neoforge")
-    public AABB getRenderBoundingBox(BlockEntity tile) {
-        Direction dir = ((FlagBlockTile) tile).getDirection();
+    public AABB getRenderBoundingBox(FlagBlockTile tile) {
+        Direction dir = tile.getDirection();
         return new AABB(0.25, 0, 0.25, 0.75, 1, 0.75).expandTowards(
                 dir.getStepX() * 1.35f, 0, dir.getStepZ() * 1.35f).move(tile.getBlockPos());
     }

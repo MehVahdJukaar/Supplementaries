@@ -5,8 +5,6 @@ import com.misterpemodder.shulkerboxtooltip.api.PreviewType;
 import com.misterpemodder.shulkerboxtooltip.api.provider.PreviewProvider;
 import com.misterpemodder.shulkerboxtooltip.api.renderer.PreviewRenderer;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.Font;
@@ -22,7 +20,6 @@ import java.util.function.Supplier;
  * A PreviewRenderer that mimics the way slots are placed within a variable-size container.
  * Delegates the rendering to the standard ModPreviewRenderer in COMPACT PreviewMode.
  */
-@Environment(EnvType.CLIENT)
 public class VariableSizePreviewRenderer implements PreviewRenderer {
 
     private static final PreviewRenderer DELEGATE = PreviewRenderer.getModRendererInstance();
