@@ -29,7 +29,6 @@ dependencies {
     modCompileOnly("net.mehvahdjukaar:amendments-neoforge:1.21-2.0.9")
     modCompileOnly("curse.maven:entity-model-features-844662:7998618")
     modCompileOnly("curse.maven:emi-580555:6420931")
-    modCompileOnly("curse.maven:flan-forge-493246:3902633")
     modImplementation("curse.maven:jei-238222:7420587")
     modCompileOnly("curse.maven:jade-324717:7545219")
 

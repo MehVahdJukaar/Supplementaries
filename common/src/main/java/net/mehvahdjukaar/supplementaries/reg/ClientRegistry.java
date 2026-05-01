@@ -51,7 +51,6 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -175,6 +174,7 @@ public class ClientRegistry {
         ClientHelper.addKeyBindRegistration(ClientRegistry::registerKeyBinds);
         ClientHelper.addShaderRegistration(ClientRegistry::registerShaders);
         ClientHelper.addItemRenderersRegistration(ClientRegistry::registerItemRenderers);
+        ClientHelper.addMenuScreensRegistration(ClientRegistry::registerMenuScreens);
     }
 
     public static void setup() {
@@ -184,18 +184,6 @@ public class ClientRegistry {
 
         //map markers
         ModMapMarkersClient.init();
-
-        MenuScreens.register(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
-        MenuScreens.register(ModMenuTypes.LUNCH_BASKET.get(), (m, inventory, component)
-                -> new VariableSizeContainerScreen(m, inventory, component, ModTextures.LUNCH_BASKET_GUI_TEXTURE));
-        MenuScreens.register(ModMenuTypes.SACK.get(), (m, inventory, component) ->
-                new VariableSizeContainerScreen(m, inventory, component, ModTextures.SACK_GUI_TEXTURE));
-        MenuScreens.register(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
-        MenuScreens.register(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
-        MenuScreens.register(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);
-        MenuScreens.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
-        MenuScreens.register(ModMenuTypes.CANNON.get(), CannonScreen::new);
-        MenuScreens.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
 
         RenderType cutoutMipped = RenderType.cutoutMipped();
         ClientHelper.registerRenderType(ModRegistry.COG_BLOCK.get(), cutoutMipped);
@@ -305,6 +293,22 @@ public class ClientRegistry {
 
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
+    }
+
+    private static void registerMenuScreens(ClientHelper.MenuScreenEvent event) {
+
+        event.registerMenuScreen(ModMenuTypes.PULLEY_BLOCK.get(), PulleyScreen::new);
+        event.registerMenuScreen(ModMenuTypes.LUNCH_BASKET.get(), (m, inventory, component)
+                -> new VariableSizeContainerScreen(m, inventory, component, ModTextures.LUNCH_BASKET_GUI_TEXTURE));
+        event.registerMenuScreen(ModMenuTypes.SACK.get(), (m, inventory, component) ->
+                new VariableSizeContainerScreen(m, inventory, component, ModTextures.SACK_GUI_TEXTURE));
+        event.registerMenuScreen(ModMenuTypes.SAFE.get(), ShulkerBoxScreen::new);
+        event.registerMenuScreen(ModMenuTypes.PRESENT_BLOCK.get(), PresentScreen::new);
+        event.registerMenuScreen(ModMenuTypes.TRAPPED_PRESENT_BLOCK.get(), TrappedPresentScreen::new);
+        event.registerMenuScreen(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
+        event.registerMenuScreen(ModMenuTypes.CANNON.get(), CannonScreen::new);
+        event.registerMenuScreen(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
+
     }
 
     @EventCalled
