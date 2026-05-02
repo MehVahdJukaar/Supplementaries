@@ -17,13 +17,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.mehvahdjukaar.supplementaries.fabric.SupplementariesFabric"
+      "net.mehvahdjukaar.supplementaries.platform.SupplementariesFabric"
     ],
     "client": [
-      "net.mehvahdjukaar.supplementaries.fabric.SupplementariesFabricClient"
+      "net.mehvahdjukaar.supplementaries.platform.SupplementariesFabricClient"
     ],
     "modmenu": [
-      "net.mehvahdjukaar.supplementaries.integration.fabric.ModMenuCompat"
+      "net.mehvahdjukaar.supplementaries.integration.platform.ModMenuCompat"
     ],
     "rei_client": [
       "net.mehvahdjukaar.supplementaries.integration.REICompat"

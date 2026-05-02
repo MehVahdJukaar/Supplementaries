@@ -84,7 +84,7 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         //update client immediately too
         Quaternionf wantedQuat = EntityAngles.of(pitch, yaw).toQuaternion();
         this.menu.cannon.setTrustedInternalAttributes(wantedQuat, power, false, minecraft.player);
-        this.menu.cannon.syncToServer(false, !CannonController.isActive());
+        this.menu.cannon.syncToServer(false, !CannonController.isActive(), minecraft.player);
     }
 
     private int getActualPower() {

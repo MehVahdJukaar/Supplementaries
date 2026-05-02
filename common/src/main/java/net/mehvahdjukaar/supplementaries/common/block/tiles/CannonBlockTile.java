@@ -8,10 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.OrientationRig;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.ReferenceFrame;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.WorldReferenceFrame;
-import net.mehvahdjukaar.supplementaries.common.block.cannon.YawPitchRestraint;
+import net.mehvahdjukaar.supplementaries.common.block.cannon.*;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticData;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
@@ -36,6 +33,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.util.Mth;
 import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -73,7 +71,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     private Item trajectoryFor = Items.AIR;
 
     @Nullable
-    private UUID playerWhoIgnitedUUID = null;
+    private UUID entityWhoIgnitedId = null;
 
     //not saved
     @Nullable
@@ -139,11 +137,11 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
         if (this.getLevel() instanceof ServerLevel sl) {
             //level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
-            if (this.shootProjectile(sl)) {
+            Entity entityWhoIgnited = this.getEntityWhoIgnited();
+            if (this.shootProjectile(sl, entityWhoIgnited)) {
                 referenceFrame.applyRecoil(this.getCannonRecoil());
 
-                Player p = this.getPlayerWhoFired();
-                if (p == null || !p.isCreative()) {
+                if (!(entityWhoIgnited instanceof Player pl) || !pl.isCreative()) {
                     ItemStack fuel = this.getFuel();
                     fuel.shrink(this.powerLevel);
                     this.setFuel(fuel);
@@ -153,14 +151,12 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
                     this.setChanged();
                     this.syncToClients(false);
 
-                    level.gameEvent(p, GameEvent.EXPLODE, this.getGlobalPosition(1));
+                    level.gameEvent(entityWhoIgnited, GameEvent.EXPLODE, this.getGlobalPosition(1));
                 }
                 NetworkHelper.sendToAllClientPlayersInRange(sl,
                         BlockPos.containing(this.getGlobalPosition(1)), 128,
                         new ClientBoundCannonAnimationPacket(referenceFrame.makeNetworkTarget(), true));
             }
-        } else {
-            // access.playFiringEffects();
         }
         this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
     }
@@ -172,8 +168,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         tag.putInt("fuse_timer", this.fuseTimer);
         tag.putByte("fire_power", this.powerLevel);
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        if (playerWhoIgnitedUUID != null) {
-            tag.putUUID("player_ignited", playerWhoIgnitedUUID);
+        if (entityWhoIgnitedId != null) {
+            tag.putUUID("ignited_by", entityWhoIgnitedId);
         }
         if (breakWhitelist != null) {
             tag.put("break_whitelist", CannonballWhitelist.CODEC.encodeStart(ops, breakWhitelist).getOrThrow());
@@ -189,8 +185,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         this.fuseTimer = Math.max(this.fuseTimer, tag.getInt("fuse_timer")); //don lose client animation
         this.setFirePower(tag.getByte("fire_power"));
         var ops = registries.createSerializationContext(NbtOps.INSTANCE);
-        if (tag.contains("player_ignited")) {
-            this.playerWhoIgnitedUUID = tag.getUUID("player_ignited");
+        if (tag.contains("ignited_by")) {
+            this.entityWhoIgnitedId = tag.getUUID("ignited_by");
         }
         if (tag.contains("break_whitelist")) {
             this.breakWhitelist = CannonballWhitelist.CODEC.parse(NbtOps.INSTANCE,
@@ -350,6 +346,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     public void ignite(@Nullable Entity entityWhoIgnited) {
+        if (level.isClientSide) return;
         //do nothing if its already ignited
         if (this.fuseTimer > 0) return;
 
@@ -358,21 +355,22 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         // called from server when firing
         this.fuseTimer = CommonConfigs.Functional.CANNON_FUSE_TIME.get();
 
+        this.entityWhoIgnitedId = entityWhoIgnited != null ? entityWhoIgnited.getUUID() : null;
         //particles
         if (this.level instanceof ServerLevel serverLevel) {
             NetworkHelper.sendToAllClientPlayersInDefaultRange(serverLevel,
                     BlockPos.containing(this.getGlobalPosition(1)),
                     new ClientBoundCannonAnimationPacket(referenceFrame.makeNetworkTarget(), false));
-        }
-        this.playerWhoIgnitedUUID = entityWhoIgnited != null ? entityWhoIgnited.getUUID() : null;
 
-        this.setChanged();
-        //update other clients
-        this.syncToClients(true);
+            this.setChanged();
+            //update other clients
+            this.syncToClients(true);
+        }
+
     }
 
 
-    protected boolean shootProjectile(ServerLevel serverLevel) {
+    protected boolean shootProjectile(ServerLevel serverLevel, Entity entityWhoFired) {
         Vec3 facing = new Vec3(this.getGlobalFacing(1));
         ItemStack projectile = this.getProjectile().copy();
 
@@ -386,14 +384,14 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         float firePower = getFirePower();
 
         return behavior.fire(projectile.copy(), serverLevel, this.getGlobalPosition(1), 0.5f,
-                facing, firePower, 0, getPlayerWhoFired());
+                facing, firePower, 0, entityWhoFired);
     }
 
     @Nullable
-    protected Player getPlayerWhoFired() {
+    protected Entity getEntityWhoIgnited() {
         UUID uuid = this.controllingEntity;
-        if (uuid == null && playerWhoIgnitedUUID != null) {
-            uuid = playerWhoIgnitedUUID;
+        if (uuid == null && entityWhoIgnitedId != null) {
+            uuid = entityWhoIgnitedId;
         }
         if (uuid == null) return null;
         return level.getPlayerByUUID(uuid);
@@ -486,10 +484,10 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return localRot.mul(referenceRot);
     }
 
-    public void setTrustedInternalAttributes(Quaternionf wantedRotation, byte firePower, boolean fire, Player controllingPlayer) {
+    public void setTrustedInternalAttributes(Quaternionf wantedRotation, byte firePower, boolean fire, Entity controllingEntity) {
         this.setLocalOrientation(wantedRotation);
         this.setFirePower(firePower);
-        if (fire) this.ignite(controllingPlayer);
+        if (fire) this.ignite(controllingEntity);
     }
 
     private Quaternionf getStructureAdditionalRotation() {
@@ -526,10 +524,11 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
 
     // Network
-    public void syncToServer(boolean ignite, boolean removeOwner) {
+    public void syncToServer(boolean ignite, boolean removeOwner, Player playerWhoChangedIt) {
         NetworkHelper.sendToServer(new SyncCannonPacket(
                 this.orientation.getWantedRotation(), this.getPowerLevel(),
-                ignite, removeOwner, referenceFrame.makeNetworkTarget()));
+                ignite, removeOwner, referenceFrame.makeNetworkTarget(),
+                playerWhoChangedIt.getUUID()));
     }
 
     public void syncToClients(boolean ignite) {
@@ -537,7 +536,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             NetworkHelper.sendToAllClientPlayersInDefaultRange(sl,
                     BlockPos.containing(referenceFrame.position(1)), new SyncCannonPacket(
                             this.orientation.getWantedRotation(), this.getPowerLevel(),
-                            ignite, false, referenceFrame.makeNetworkTarget()));
+                            ignite, false, referenceFrame.makeNetworkTarget(), null));
         }
     }
 
@@ -559,5 +558,20 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public boolean isInWorld() {
         return referenceFrame instanceof WorldReferenceFrame;
+    }
+
+
+    public void setRotationToMatchTrajectory(BallisticTrajectory3D trajectory3D, float partialTick) {
+        BallisticTrajectory trajectory = trajectory3D.trajectory();
+        float followSpeed = 1;
+        Quaternionf rot = this.getWorldOrientation(partialTick);
+        EntityAngles eulerAngles = EntityAngles.fromQuaternion(rot);
+
+        //we used some flipped coordinates in trajectory calculation. we got to adjust them here.
+        float newPitch = Mth.rotLerp(followSpeed, eulerAngles.pitch(),
+                trajectory.pitch() * Mth.RAD_TO_DEG);
+        // targetYawDeg = Mth.rotLerp(followSpeed, this.getYaw(0), targetYawDeg);
+        float newYaw = trajectory3D.yaw() * Mth.RAD_TO_DEG;
+        this.setWorldOrientation(EntityAngles.of(newPitch, newYaw).toQuaternion());
     }
 }

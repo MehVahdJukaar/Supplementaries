@@ -29,7 +29,7 @@ public class SpawnMobBehavior implements IFireItemBehavior {
     }
 
     @Override
-    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
+    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Entity owner) {
         EntityType<?> type = entityTypeSupplier.apply(stack);
         try {
             Entity e = spawnMob(type, level, firePos, direction, power, stack, owner);
@@ -49,7 +49,7 @@ public class SpawnMobBehavior implements IFireItemBehavior {
     @Nullable
     protected <T extends Entity> T spawnMob(EntityType<T> entityType, ServerLevel serverLevel,
                                             Vec3 firePos, Vec3 direction, float power, @Nullable ItemStack stack,
-                                            @Nullable Player player) {
+                                            @Nullable Entity createdBy) {
 
         // we cant call spawn as we want no sound nor any custom equipment due to difficulty
         T entity = entityType.create(serverLevel);
@@ -57,7 +57,8 @@ public class SpawnMobBehavior implements IFireItemBehavior {
 
             if (stack != null) {
                 // adds item stuff to entity
-                EntityType.createDefaultStackConfig(serverLevel, stack, player).accept(entity);
+                Player pl = (createdBy instanceof Player p) ? p : null;
+                EntityType.createDefaultStackConfig(serverLevel, stack, pl).accept(entity);
             }
 
             entity.setPos(firePos.x(), firePos.y(), firePos.z());

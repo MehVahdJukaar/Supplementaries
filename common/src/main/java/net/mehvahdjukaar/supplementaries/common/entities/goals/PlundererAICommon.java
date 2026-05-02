@@ -1,16 +1,17 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
+import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory3D;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.ICannonShooter;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 
 public final class PlundererAICommon {
 
@@ -53,56 +54,48 @@ public final class PlundererAICommon {
         power = (byte) Math.min(power, maxPower);
         tile.setFirePower(power);
 
-        BallisticTrajectory3D comp = CannonUtils.computeTrajectory(tile, targetLoc, ShootingMode.DOWN);
+        BallisticTrajectory3D trajectory3D = CannonUtils.computeTrajectory(tile, targetLoc, ShootingMode.DOWN);
+        if (trajectory3D == null) return false;
 
-        var cannonTrajectory = comp.trajectory();
-        float wantedGlobalYawDeg = comp.yaw() * Mth.RAD_TO_DEG;
-        if (cannonTrajectory != null) {
-            float cannonGlobalYawOffsetDeg = 0;
-            float wantedLocalYawDeg = wantedGlobalYawDeg + cannonGlobalYawOffsetDeg;
-            setCannonAnglesToFollowTrajectory(tile, cannonTrajectory, wantedLocalYawDeg);
+        BallisticTrajectory cannonTrajectory = trajectory3D.trajectory();
+        setCannonAnglesToFollowTrajectory(tile, trajectory3D);
 
-            if (canShoot) {
-                //TODO cannon change
-                float cannonYawTempCHange = 0; //tile.getYaw()
-                float newCannonGlobalYaw = (cannonYawTempCHange - cannonGlobalYawOffsetDeg) * Mth.DEG_TO_RAD;
+        if (canShoot) {
+            Quaternionf newCannonWorldFacing = tile.getWorldOrientation(1);
+            float globalYaw = EntityAngles.fromQuaternion(newCannonWorldFacing).yawRad();
 
-                Vec3 hitLoc = cannonTrajectory.getHitLocation(cannonGlobalPosition, newCannonGlobalYaw);
-                //distance
-                double distance1 = hitLoc.distanceTo(targetLoc);
-                if (distance1 < 0.1 && tile.readyToFire()) {
-                    tile.ignite(shooter);
+            Vec3 hitLoc = cannonTrajectory.getHitLocation(cannonGlobalPosition, globalYaw);
+            //distance
+            double distance1 = hitLoc.distanceTo(targetLoc);
+            if (distance1 < 0.1 && tile.readyToFire()) {
+                tile.ignite(shooter);
 
-                    if (shooter instanceof ICannonShooter cs) {
-                        cs.onShotCannon(tile.getBlockPos());
-                    } else if (shooter instanceof Raider r) {
-                        r.playSound(r.getCelebrateSound(), 2.5F, 1F);
-                    }
-                    return true;
+                if (shooter instanceof ICannonShooter cs) {
+                    cs.onShotCannon(tile.getBlockPos());
+                } else if (shooter instanceof Raider r) {
+                    r.playSound(r.getCelebrateSound(), 2.5F, 1F);
                 }
+                return true;
             }
         }
-
         return false;
 
 
     }
 
-    private static void setCannonAnglesToFollowTrajectory(CannonBlockTile tile, BallisticTrajectory trajectory,
-                                                          float wantedLocalYawDeg) {
-        if (trajectory != null) {
-            float followSpeed = 1;
-            //TODO: improve
-            //TODO: cannon change
-            // tile.setPitch(Mth.rotLerp(followSpeed, tile.getPitch(),
-            //       trajectory.pitch() * Mth.RAD_TO_DEG));
-            // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            //tile.setYaw(wantedLocalYawDeg);
+    private static void setCannonAnglesToFollowTrajectory(CannonBlockTile tile, BallisticTrajectory3D trajectory) {
+        float followSpeed = 1;
+        //TODO: improve
+        //TODO: cannon change
+        // tile.setPitch(Mth.rotLerp(followSpeed, tile.getPitch(),
+        //       trajectory.pitch() * Mth.RAD_TO_DEG));
+        // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
+        //tile.setYaw(wantedLocalYawDeg);
 
-            //sync
-            tile.setChanged();
-            tile.syncToClients(false);
-        }
+        tile.setRotationToMatchTrajectory(trajectory, 1);
+        //sync
+        tile.setChanged();
+        tile.syncToClients(false);
     }
 
     public static boolean hasValidTargetInCannonRange(Mob mob, int minCannonRange) {

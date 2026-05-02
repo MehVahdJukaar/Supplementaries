@@ -16,6 +16,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -345,7 +346,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
             CannonController.startControlling(cannon);
         }
         if (ctrl && cannon.readyToFire()) {
-            cannon.syncToServer(true, false);
+            cannon.syncToServer(true, false, Minecraft.getInstance().player);
         }
     }
 

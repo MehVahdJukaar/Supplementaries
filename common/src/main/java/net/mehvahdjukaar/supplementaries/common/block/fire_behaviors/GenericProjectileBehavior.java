@@ -53,7 +53,7 @@ public class GenericProjectileBehavior implements IBallisticBehavior {
 
     @Override
     public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 firePos,
-                             Vec3 facing, float scalePower, int inaccuracy, @Nullable Player owner) {
+                             Vec3 facing, float scalePower, int inaccuracy, @Nullable Entity owner) {
         Entity entity = createEntity(stack, IEntityInterceptFakeLevel.get(level), facing);
 
         if (entity != null) {

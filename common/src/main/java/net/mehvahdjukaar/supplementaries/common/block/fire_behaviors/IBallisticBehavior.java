@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -14,7 +14,7 @@ public interface IBallisticBehavior extends IFireItemBehavior {
 
     // dont override this
     @Override
-    default boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
+    default boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Entity owner) {
         var data = calculateBallisticData(stack, level);
         return fireInner(stack, level, firePos, direction,
                 power * data.drag() * data.initialSpeed(),
@@ -22,7 +22,7 @@ public interface IBallisticBehavior extends IFireItemBehavior {
     }
 
     boolean fireInner(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float scaledPower,
-                      int inaccuracy, @Nullable Player owner);
+                      int inaccuracy, @Nullable Entity owner);
 
 
 }

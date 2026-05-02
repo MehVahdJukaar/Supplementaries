@@ -36,9 +36,11 @@ dependencies {
     modCompileOnly("curse.maven:jade-324717:7545228")
     modCompileOnly("dev.emi:trinkets:${trinkets_version}")
     modCompileOnly("curse.maven:curios-309927:4581099")
-    modImplementation("curse.maven:exposure-871755:7033926")
-    modImplementation("curse.maven:roughly-enough-items-310111:6199139")
-    modImplementation("curse.maven:farmers-delight-refabricated-993166:8008242")
+    modCompileOnly("curse.maven:exposure-871755:7033926")
+    modCompileOnly("curse.maven:roughly-enough-items-310111:6199139")
+    modCompileOnly("curse.maven:roughly-enough-items-310111:6199140")
+    modCompileOnly("curse.maven:farmers-delight-refabricated-993166:5887378")
+    // modImplementation("curse.maven:farmers-delight-refabricated-993166:8008242")
 
 
 

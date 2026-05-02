@@ -42,7 +42,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.Configuration;
-import vectorwing.farmersdelight.common.block.HangingTomatoBlock;
+import vectorwing.farmersdelight.common.block.TomatoVineBlock;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -114,7 +114,7 @@ public class FarmersDelightCompat {
     }
 
     //TODO: rethink
-    private abstract static class TomatoLoggedBlock extends HangingTomatoBlock {
+    private abstract static class TomatoLoggedBlock extends TomatoVineBlock {
 
         public TomatoLoggedBlock(BlockBehaviour.Properties properties) {
             super(properties);
@@ -124,12 +124,12 @@ public class FarmersDelightCompat {
         public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
             BlockPos belowPos = pos.below();
             BlockState belowState = level.getBlockState(belowPos);
-            return (belowState.getBlock() instanceof HangingTomatoBlock || super.canSurvive(state.setValue(HangingTomatoBlock.ROPELOGGED, false), level, pos)) && this.hasGoodCropConditions(level, pos);
+            return (belowState.getBlock() instanceof TomatoVineBlock || super.canSurvive(state.setValue(TomatoVineBlock.ROPELOGGED, false), level, pos)) && this.hasGoodCropConditions(level, pos);
         }
 
         @Override
         public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
-            super.playerDestroy(level, player, pos, state.setValue(HangingTomatoBlock.ROPELOGGED, false), blockEntity, stack);
+            super.playerDestroy(level, player, pos, state.setValue(TomatoVineBlock.ROPELOGGED, false), blockEntity, stack);
         }
 
         @VirtualOverride("neoforge")
@@ -174,7 +174,7 @@ public class FarmersDelightCompat {
 
         public TomatoStickBlock(BlockBehaviour.Properties properties) {
             super(properties);
-            this.registerDefaultState(this.defaultBlockState().setValue(HangingTomatoBlock.ROPELOGGED, true)
+            this.registerDefaultState(this.defaultBlockState().setValue(TomatoVineBlock.ROPELOGGED, true)
                     .setValue(AXIS_X, false).setValue(AXIS_Z, false));
         }
 
@@ -217,7 +217,7 @@ public class FarmersDelightCompat {
 
         public TomatoRopeBlock(BlockBehaviour.Properties properties) {
             super(properties);
-            this.registerDefaultState(this.defaultBlockState().setValue(HangingTomatoBlock.ROPELOGGED, true).setValue(KNOT, false)
+            this.registerDefaultState(this.defaultBlockState().setValue(TomatoVineBlock.ROPELOGGED, true).setValue(KNOT, false)
                     .setValue(EAST, false).setValue(WEST, false).setValue(NORTH, false).setValue(SOUTH, false));
         }
 

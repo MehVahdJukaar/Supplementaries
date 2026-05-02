@@ -5,7 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.items.ConfettiPopperItem;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class PopperBehavior implements IFireItemBehavior {
 
     @Override
-    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
+    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Entity owner) {
         ClientBoundParticlePacket packet = ConfettiPopperItem.getConfettiPacket(stack, firePos, direction.scale(power));
 
         BlockPos pos = BlockPos.containing(firePos);

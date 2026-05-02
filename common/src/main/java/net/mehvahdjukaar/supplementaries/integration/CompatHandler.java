@@ -107,7 +107,7 @@ public class CompatHandler {
                 Supplementaries.LOGGER.error("Farmers Delight Refabricated is not installed. Disabling Farmers Delight Module");
             }
         }
-        FARMERS_DELIGHT = fd;
+        FARMERS_DELIGHT = fd && false; //TODO: add back
     }
 
     private static boolean isLoaded(String name) {

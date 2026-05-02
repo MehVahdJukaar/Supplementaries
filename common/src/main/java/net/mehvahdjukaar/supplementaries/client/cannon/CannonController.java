@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
-import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory3D;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
@@ -22,7 +21,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 
@@ -65,7 +63,8 @@ public class CannonController {
     // only works if we are already controlling
     private static void stopControllingAndSync() {
         if (cannon == null) return;
-        cannon.syncToServer(false, true);
+        LocalPlayer player = Minecraft.getInstance().player;
+        cannon.syncToServer(false, true, player);
         stopControlling();
     }
 
@@ -130,28 +129,10 @@ public class CannonController {
 
             BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, hit.getLocation(), shootingMode);
 
-            setCannonTrajectory(partialTick, comp);
+            if (comp != null) cannon.setRotationToMatchTrajectory(comp, partialTick);
         }
 
         return true;
-    }
-
-    private static void setCannonTrajectory(float partialTick, @Nullable BallisticTrajectory3D trajectory3D) {
-        trajectory = trajectory3D == null ? null : trajectory3D.trajectory();
-        if (trajectory != null) {
-            float followSpeed = 1;
-            Quaternionf rot = cannon.getWorldOrientation(partialTick);
-            EntityAngles eulerAngles = EntityAngles.fromQuaternion(rot);
-
-            //we used some flipped coordinates in trajectory calculation. we got to adjust them here.
-            float newPitch = Mth.rotLerp(followSpeed, eulerAngles.pitch(),
-                    trajectory.pitch() * Mth.RAD_TO_DEG);
-            // targetYawDeg = Mth.rotLerp(followSpeed, cannon.getYaw(0), targetYawDeg);
-            float newYaw = trajectory3D.yaw() * Mth.RAD_TO_DEG;
-            cannon.setWorldOrientation(EntityAngles.of(newPitch, newYaw)
-                    .toQuaternion());
-            cannon.snapToWantedRotationInstantly();
-        }
     }
 
     // true cancels the thing
@@ -206,7 +187,8 @@ public class CannonController {
     public static boolean onPlayerAttack() {
         if (!isActive()) return false;
         if (cannon != null && cannon.readyToFire()) {
-            cannon.syncToServer(true, false);
+            LocalPlayer player = Minecraft.getInstance().player;
+            cannon.syncToServer(true, false, player);
         }
         return true;
     }
@@ -238,7 +220,7 @@ public class CannonController {
         if (cannon.stillValid(player)) {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;
-                cannon.syncToServer(false, false);
+                cannon.syncToServer(false, false, player);
             }
         } else {
             stopControllingAndSync();

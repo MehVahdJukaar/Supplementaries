@@ -5,8 +5,8 @@ import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public class SkibidiBehavior extends SpawnEggBehavior {
 
     @Override
-    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
+    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Entity owner) {
         EntityType<HatStandEntity> type = ModEntities.HAT_STAND.get();
         try {
             HatStandEntity e = spawnMob(type, level, firePos, firePos, power, stack, owner);

@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.fire_behaviors;
 
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -11,13 +11,13 @@ public record AlternativeBehavior(IFireItemBehavior first,
                                   IFireItemBehavior second) implements IBallisticBehavior {
 
     @Override
-    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Player owner) {
+    public boolean fire(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float power, int inaccuracy, @Nullable Entity owner) {
         return this.first.fire(stack, level, firePos, direction, power, inaccuracy, owner) ||
                 this.second.fire(stack, level, firePos, direction, power, inaccuracy, owner);
     }
 
     @Override
-    public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float scaledPower, int inaccuracy, @Nullable Player owner) {
+    public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 firePos, Vec3 direction, float scaledPower, int inaccuracy, @Nullable Entity owner) {
         return false;
     }
 

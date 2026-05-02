@@ -100,7 +100,7 @@ public class ModMapMarkers {
     private static SimpleMapMarker signPost(Holder<MLMapDecorationType<?, ?>> type,
                                             BlockGetter level, BlockPos pos) {
         if (level.getBlockEntity(pos) instanceof SignPostBlockTile tile) {
-            Component t = null;
+            Component t = Component.literal("");
             if (tile.getSignUp().active()) t = tile.getTextHolder(0).getMessage(0, false);
             if (tile.getSignDown().active() && t.getString().isEmpty())
                 t = tile.getTextHolder(1).getMessage(0, false);
