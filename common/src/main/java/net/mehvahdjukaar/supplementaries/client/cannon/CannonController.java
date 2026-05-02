@@ -43,6 +43,7 @@ public class CannonController {
     private static float lastZoomOut = 0;
     private static float lastCameraYaw = 0;
     private static float lastCameraPitch = 0;
+    private static boolean turnedLastTick = false;
 
     public static void startControlling(CannonBlockTile cannon) {
         Minecraft mc = Minecraft.getInstance();
@@ -129,9 +130,14 @@ public class CannonController {
 
             BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, hit.getLocation(), shootingMode);
 
-            if (comp != null) cannon.setRotationToMatchTrajectory(comp, partialTick);
+            if (comp != null) {
+                cannon.setRotationToMatchTrajectory(comp, partialTick);
+                if (turnedLastTick) cannon.snapToWantedRotationInstantly();
+                turnedLastTick = true;
+                return true;
+            }
         }
-
+        turnedLastTick = false;
         return true;
     }
 

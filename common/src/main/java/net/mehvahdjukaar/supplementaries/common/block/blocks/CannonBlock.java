@@ -4,10 +4,10 @@ import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.moonlight.api.block.IAnalogRotatable;
 import net.mehvahdjukaar.moonlight.api.block.ILightable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
+import net.mehvahdjukaar.moonlight.api.client.util.RotHlpr;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
-import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
@@ -148,20 +148,11 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(level, pos, state, placer, stack);
         if (placer != null && level.getBlockEntity(pos) instanceof CannonBlockTile cannon) {
-            Direction dir = Direction.orderedByNearest(placer)[0];
-            Direction myDir = state.getValue(FACING).getOpposite();
-
-            float wantedPitch = 0;
-            float wantedYaw = 0;
-            if (dir.getAxis() == Direction.Axis.Y) {
-                float pitch = dir == Direction.UP ? -90 : 90;
-                wantedPitch = (myDir.getOpposite() == dir ? pitch + 180 : pitch);
-
-            } else {
-                float yaw = dir.toYRot();
-                wantedYaw = (myDir.getOpposite() == dir ? yaw + 180 : yaw);
-            }
-            cannon.setWorldOrientation(EntityAngles.of(wantedPitch, wantedYaw).toQuaternion());
+            Direction[] nearest = Direction.orderedByNearest(placer);
+            Direction dir = nearest[0].getOpposite();
+            Direction myDir = state.getValue(FACING);
+            if (dir == myDir) dir = nearest[1].getOpposite();
+            cannon.setWorldOrientation(new Quaternionf(RotHlpr.rot(dir)));
             cannon.snapToWantedRotationInstantly();
         }
     }

@@ -346,7 +346,6 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     public void ignite(@Nullable Entity entityWhoIgnited) {
-        if (level.isClientSide) return;
         //do nothing if its already ignited
         if (this.fuseTimer > 0) return;
 
