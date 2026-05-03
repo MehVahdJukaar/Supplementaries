@@ -2,10 +2,11 @@ package net.mehvahdjukaar.supplementaries.common.items.components;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -69,9 +70,10 @@ public final class SafeOwner implements TooltipProvider {
 
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+        if (!PlatHelper.getPhysicalSide().isClient()) return;
         if (CommonConfigs.Functional.SAFE_SIMPLE.get()) {
             if (owner != null) {
-                if (!owner.equals(Minecraft.getInstance().player.getUUID())) {
+                if (!owner.equals(ClientHelper.getLocalPlayer().getUUID())) {
                     if (ownerName != null) {
                         tooltipAdder.accept((Component.translatable("message.supplementaries.safe.owner", ownerName))
                                 .withStyle(ChatFormatting.GRAY));

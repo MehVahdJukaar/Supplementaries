@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;//
 import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.entity.IControllableVehicle;
 import net.mehvahdjukaar.moonlight.api.entity.ITileEntityCarry;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
@@ -16,7 +17,6 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -346,7 +346,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
             CannonController.startControlling(cannon);
         }
         if (ctrl && cannon.readyToFire()) {
-            cannon.syncToServer(true, false, Minecraft.getInstance().player);
+            cannon.syncToServer(true, false, ClientHelper.getLocalPlayer());
         }
     }
 

@@ -1,5 +1,4 @@
 plugins {
-    id("com.possible-triangle.core")
     id("com.possible-triangle.common")
 }
 
@@ -16,17 +15,6 @@ val vanillin_version: String by extra
 val shulker_box_tooltip_version: String by extra
 
 dependencies {
-    compileOnly("net.mehvahdjukaar:candlelight:1.1.6")
-
-    compileOnly(project(":loom-deobf"))
-    compileOnly(
-        project(
-            mapOf(
-                "path" to ":loom-deobf",
-                "configuration" to "modRuntimeClasspathMainMapped"
-            )
-        )
-    )
 
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")
     annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")

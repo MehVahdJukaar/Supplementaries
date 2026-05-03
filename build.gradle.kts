@@ -39,11 +39,13 @@ subprojects {
         nexus()
     }
 
+    dependencies {
+        compileOnly("net.mehvahdjukaar:candlelight:1.1.6")
+    }
+
     tasks.withType<JavaCompile> {
         options.compilerArgs.addAll(listOf("-Xmaxerrs", "4000"))
     }
-
-    /*
 
     upload {
         maven {
@@ -51,11 +53,12 @@ subprojects {
         }
         curseforge {
             dependencies {
+                required("selene")
             }
         }
         modrinth {
             dependencies {
-
+                required("moonlight")
             }
         }
 
@@ -64,8 +67,6 @@ subprojects {
             versionName = "${mod.id.get()}-${mod.version.get()}-${project.name}"
         }
     }
-
-     */
 
     repositories {
         // Standard repositories

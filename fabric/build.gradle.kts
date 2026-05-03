@@ -1,5 +1,4 @@
 plugins {
-    id("com.possible-triangle.core")
     id("com.possible-triangle.fabric")
 }
 
@@ -19,7 +18,6 @@ val trinkets_version: String by extra
 val emi_version: String by extra
 val shulker_box_tooltip_version: String by extra
 dependencies {
-    compileOnly("net.mehvahdjukaar:candlelight:1.1.6")
 
 
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")

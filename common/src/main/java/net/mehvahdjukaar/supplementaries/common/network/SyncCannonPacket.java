@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public record SyncCannonPacket(
-        Quaternionf rotation, byte firePower, boolean ignite, boolean stopControlling,
+        Quaternionf localRot, byte firePower, boolean ignite, boolean stopControlling,
         TileOrEntityTarget target, @Nullable UUID userEntityId) implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, SyncCannonPacket> CODEC = Message.makeType(
@@ -34,7 +34,7 @@ public record SyncCannonPacket(
 
     @Override
     public void write(RegistryFriendlyByteBuf buf) {
-        ByteBufCodecs.QUATERNIONF.encode(buf, rotation);
+        ByteBufCodecs.QUATERNIONF.encode(buf, localRot);
         buf.writeByte(this.firePower);
         buf.writeBoolean(this.ignite);
         buf.writeBoolean(this.stopControlling);
@@ -56,7 +56,7 @@ public record SyncCannonPacket(
         }
         //trusted
         if (level.isClientSide) {
-            cannon.setTrustedInternalAttributes(this.rotation, this.firePower, this.ignite, null);
+            cannon.setTrustedInternalAttributes(this.localRot, this.firePower, this.ignite, null);
             if (stopControlling) {
                 cannon.setCurrentUser(null);
             }
@@ -73,7 +73,7 @@ public record SyncCannonPacket(
             }
 
             if (entity == null || cannon.canBeUsedBy(BlockPos.containing(cannon.getGlobalPosition(1)), entity)) {
-                cannon.setTrustedInternalAttributes(this.rotation, this.firePower, this.ignite, entity);
+                cannon.setTrustedInternalAttributes(this.localRot, this.firePower, this.ignite, entity);
                 cannon.setChanged();
                 if (stopControlling) {
                     cannon.setCurrentUser(null);

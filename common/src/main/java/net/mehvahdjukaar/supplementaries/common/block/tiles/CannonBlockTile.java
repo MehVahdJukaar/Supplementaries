@@ -483,8 +483,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return localRot.mul(referenceRot);
     }
 
-    public void setTrustedInternalAttributes(Quaternionf wantedRotation, byte firePower, boolean fire, Entity controllingEntity) {
-        this.setLocalOrientation(wantedRotation);
+    public void setTrustedInternalAttributes(Quaternionf localRotation, byte firePower, boolean fire, Entity controllingEntity) {
+        this.setLocalOrientation(localRotation);
         this.setFirePower(firePower);
         if (fire) this.ignite(controllingEntity);
     }
@@ -521,11 +521,16 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return restraint.rotated(dir);
     }
 
+    private Quaternionf getWantedLocalRotation() {
+        Quaternionf rot = orientation.getWantedRotation();
+        Quaternionf additionalRot = getStructureAdditionalRotation();
+        return rot.mul(additionalRot);
+    }
 
     // Network
     public void syncToServer(boolean ignite, boolean removeOwner, Player playerWhoChangedIt) {
         NetworkHelper.sendToServer(new SyncCannonPacket(
-                this.orientation.getWantedRotation(), this.getPowerLevel(),
+                this.getWantedLocalRotation(), this.getPowerLevel(),
                 ignite, removeOwner, referenceFrame.makeNetworkTarget(),
                 playerWhoChangedIt.getUUID()));
     }
@@ -534,7 +539,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         if (level instanceof ServerLevel sl) {
             NetworkHelper.sendToAllClientPlayersInDefaultRange(sl,
                     BlockPos.containing(referenceFrame.position(1)), new SyncCannonPacket(
-                            this.orientation.getWantedRotation(), this.getPowerLevel(),
+                            this.getWantedLocalRotation(), this.getPowerLevel(),
                             ignite, false, referenceFrame.makeNetworkTarget(), null));
         }
     }

@@ -1,5 +1,4 @@
 plugins {
-    id("com.possible-triangle.core")
     id("com.possible-triangle.neoforge")
 }
 
@@ -20,7 +19,6 @@ val vanillin_version: String by extra
 val registrate_version: String by extra
 val shulker_box_tooltip_version: String by extra
 dependencies {
-    compileOnly("net.mehvahdjukaar:candlelight:1.1.6")
 
     annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")
@@ -67,9 +65,9 @@ dependencies {
     modCompileOnly("curse.maven:supermartijn642s-config-lib-438332:4715408")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modImplementation("curse.maven:quark-243121:7640331")
-    modImplementation("curse.maven:zeta-968868:7640154")
-    modImplementation("curse.maven:biolith-852512:7074761")
+    modCompileOnly("curse.maven:quark-243121:7640331")
+    modCompileOnly("curse.maven:zeta-968868:7640154")
+    modCompileOnly("curse.maven:biolith-852512:7074761")
 
     //modImplementation("curse.maven:recipe-advancements-nuker-925511:4836115")
 
