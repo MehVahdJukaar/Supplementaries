@@ -9,8 +9,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceMetadata;
 
 public class DummySprite extends TextureAtlasSprite {
-    public static final DummySprite INSTANCE = new DummySprite();
     protected static final ResourceLocation LOCATION = Supplementaries.res("dummy");
+    public static final DummySprite INSTANCE = new DummySprite();
 
     private DummySprite() {
         super(LOCATION, new SpriteContents(LOCATION,
