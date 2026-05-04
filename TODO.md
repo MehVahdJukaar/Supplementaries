@@ -1,5 +1,6 @@
 # 1.21 bugs and stuff
 
+- check plunderers AI taking same cannon
 - fix vanilla bug where entities rotate like shit in boats
 - 2 plunderers using same cannon
 - barnacles spawning inside ship hulls

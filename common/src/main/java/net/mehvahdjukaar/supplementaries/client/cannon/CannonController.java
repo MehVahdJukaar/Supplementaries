@@ -76,6 +76,7 @@ public class CannonController {
         lastCameraPitch = 0;
         lastZoomOut = 0;
         lastCameraPos = null;
+        turnedLastTick = false;
         if (lastCameraType != null) {
             Minecraft.getInstance().options.setCameraType(lastCameraType);
         }

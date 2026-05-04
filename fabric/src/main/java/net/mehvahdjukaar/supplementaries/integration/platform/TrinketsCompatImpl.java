@@ -25,7 +25,7 @@ public class TrinketsCompatImpl {
         RegHelper.register(Supplementaries.res("trinket"), () -> (StreamCodec) Trinket.CODEC, SlotReference.TYPE_REGISTRY_KEY);
     }
 
-    static KeyLockableTile.KeyStatus getKey(Player player, String password) {
+    public static KeyLockableTile.KeyStatus getKey(Player player, String password) {
 
         TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);
         if (trinket != null) {
@@ -43,7 +43,7 @@ public class TrinketsCompatImpl {
         return IKeyLockable.KeyStatus.NO_KEY;
     }
 
-    static SlotReference getQuiver(Player player) {
+    public static SlotReference getQuiver(Player player) {
         TrinketComponent trinket = TrinketsApi.getTrinketComponent(player).orElse(null);
         if (trinket != null) {
             var found = trinket.getEquipped(ModRegistry.QUIVER_ITEM.get());

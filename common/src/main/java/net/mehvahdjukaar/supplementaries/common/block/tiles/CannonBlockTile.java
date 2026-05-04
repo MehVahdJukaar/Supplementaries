@@ -4,6 +4,7 @@ import com.mojang.math.Axis;
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
+import net.mehvahdjukaar.moonlight.api.misc.OrientationRig;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;

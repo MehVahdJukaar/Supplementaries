@@ -1,4 +1,1 @@
-- fixed more things with cannons that were broken last patch
-- improved cannon logic more
-- updated EMF compat to latest version
-- fixed some rare misc crashes
+- more fixes
