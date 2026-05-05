@@ -152,7 +152,7 @@ public class CCCompatImpl {
             if (obj == this) return true;
             if (obj == null || obj.getClass() != this.getClass()) return false;
             var that = (SpeakerPeripheral) obj;
-            return Objects.equals(this.tile, that.tile);
+            return this.tile == that.tile;
         }
 
         @Override
@@ -238,7 +238,7 @@ public class CCCompatImpl {
             if (obj == this) return true;
             if (obj == null || obj.getClass() != this.getClass()) return false;
             var that = (CannonPeripheral) obj;
-            return Objects.equals(this.tile, that.tile);
+            return this.tile == that.tile;
         }
 
         @Override

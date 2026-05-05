@@ -38,7 +38,6 @@ public class FiniteLiquidBlock extends Block implements BucketPickup, LiquidBloc
     private final FiniteFluid fluid;
     private boolean fluidStateCacheInitialized = false;
 
-
     public FiniteLiquidBlock(Supplier<? extends FiniteFluid> supplier, BlockBehaviour.Properties arg) {
         super(arg);
         this.fluid = supplier.get();

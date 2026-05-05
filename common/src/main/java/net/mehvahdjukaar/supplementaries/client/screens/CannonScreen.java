@@ -156,7 +156,11 @@ public class CannonScreen extends AbstractContainerScreen<CannonContainerMenu> i
         }
 
         public void setNumber(float value) {
-            this.setValue(String.valueOf((int) value));
+            if (Math.abs(value - Math.round(value)) < 1e-3) {
+                this.setValue(String.valueOf(Math.round(value)));
+            } else {
+                this.setValue(String.valueOf(value));
+            }
         }
     }
 

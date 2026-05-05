@@ -24,7 +24,7 @@ public record SyncCannonPacket(
         TileOrEntityTarget target, @Nullable UUID userEntityId) implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, SyncCannonPacket> CODEC = Message.makeType(
-            Supplementaries.res("c2s_sync_cannon"), SyncCannonPacket::new);
+            Supplementaries.res("sync_cannon"), SyncCannonPacket::new);
 
     public SyncCannonPacket(FriendlyByteBuf buf) {
         this(ByteBufCodecs.QUATERNIONF.decode(buf), buf.readByte(),

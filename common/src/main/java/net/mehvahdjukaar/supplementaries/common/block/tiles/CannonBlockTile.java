@@ -460,7 +460,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public void setLocalOrientation(Quaternionf localRot) {
         //remove structure rot
         Quaternionf structureRot = getStructureAdditionalRotation();
-        Quaternionf cannonRot = localRot.mul(structureRot.invert(new Quaternionf()));
+        Quaternionf cannonRot = structureRot.invert().mul(localRot);
         //clamp
         this.orientation.orient(this.restraint.clamp(cannonRot));
     }
@@ -475,13 +475,19 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public Quaternionf getLocalOrientation(float partialTicks) {
         Quaternionf rot = orientation.getRotation(partialTicks);
         Quaternionf additionalRot = getStructureAdditionalRotation();
-        return rot.mul(additionalRot);
+        return additionalRot.mul(rot);
     }
 
     public Quaternionf getWorldOrientation(float partialTicks) {
         Quaternionf localRot = getLocalOrientation(partialTicks);
         Quaternionf referenceRot = referenceFrame.getRotation(partialTicks);
         return localRot.mul(referenceRot);
+    }
+
+    private Quaternionf getWantedLocalRotation() {
+        Quaternionf rot = orientation.getWantedRotation();
+        Quaternionf additionalRot = getStructureAdditionalRotation();
+        return additionalRot.mul(rot);
     }
 
     public void setTrustedInternalAttributes(Quaternionf localRotation, byte firePower, boolean fire, Entity controllingEntity) {
@@ -520,12 +526,6 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         BlockState state = this.getBlockState();
         Direction dir = state.getValue(CannonBlock.FACING).getOpposite();
         return restraint.rotated(dir);
-    }
-
-    private Quaternionf getWantedLocalRotation() {
-        Quaternionf rot = orientation.getWantedRotation();
-        Quaternionf additionalRot = getStructureAdditionalRotation();
-        return rot.mul(additionalRot);
     }
 
     // Network

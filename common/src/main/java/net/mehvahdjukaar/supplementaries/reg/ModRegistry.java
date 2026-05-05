@@ -1217,8 +1217,7 @@ public class ModRegistry {
     );
     public static final Supplier<Item> SPIDER_SKULL_ITEM = regItem(SPIDER_HEAD_NAME, () ->
             new StandingAndWallBlockItem(SPIDER_SKULL_BLOCK.get(), SPIDER_SKULL_BLOCK_WALL.get(),
-                    new Item.Properties().rarity(Rarity.UNCOMMON), Direction.UP));
-
+                    new Item.Properties().rarity(Rarity.UNCOMMON), Direction.DOWN));
 
     public static final Supplier<BlockEntityType<SpiderSkullBlockTile>> SPIDER_SKULL_TILE = regTile(
             SPIDER_HEAD_NAME, () -> PlatHelper.newBlockEntityType(
