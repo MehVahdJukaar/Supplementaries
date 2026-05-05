@@ -31,7 +31,8 @@
       "condition": "block_state_property",
       "block": "supplementaries:flax",
       "properties": {
-        "age": "7"
+        "age": "7",
+        "half": "lower"
       }
     }
   ],
