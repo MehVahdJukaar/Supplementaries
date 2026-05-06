@@ -76,12 +76,6 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
             renderDebug(poseStack, bufferSource, localRot, 0xffff00ff);
         }
 
-        // Canonical forward (IMPORTANT: must match your model!)
-        Vector3f forward = new Vector3f(0, 0, -1);
-
-        // Rotate into base-local space
-        localRot.transform(forward);
-
         EntityAngles angles = EntityAngles.fromQuaternion(localRot);
 
         float yaw = angles.yawRad();
