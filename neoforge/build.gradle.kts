@@ -18,6 +18,7 @@ val ponder_version: String by extra
 val vanillin_version: String by extra
 val registrate_version: String by extra
 val shulker_box_tooltip_version: String by extra
+val sable_companion_version: String by extra
 dependencies {
 
     annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")
@@ -131,5 +132,8 @@ dependencies {
     //modCompileOnly("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
 
     // modImplementation ("curse.maven:texture-dump-319039:3573998")
+
+    api("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[${sable_companion_version},)")
+    jarJar("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[${sable_companion_version},)")
 }
 

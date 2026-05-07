@@ -17,6 +17,7 @@ val flywheel_fabric_version: String by extra
 val trinkets_version: String by extra
 val emi_version: String by extra
 val shulker_box_tooltip_version: String by extra
+val sable_companion_version: String by extra
 dependencies {
 
 
@@ -93,5 +94,8 @@ dependencies {
     modCompileOnly("org.embeddedt:embeddium-fabric-1.20.1:0.3.1-git.b3f920f+mc1.20.1")
 
 //    modImplementation("maven.modrinth:immediatelyfast:1.2.0+1.20.1") // Get latest version from releases
+
+    modApi("dev.ryanhcode.sable-companion:sable-companion-fabric-1.21.1:${sable_companion_version}")
+    include("dev.ryanhcode.sable-companion:sable-companion-fabric-1.21.1:${sable_companion_version}")
 
 }

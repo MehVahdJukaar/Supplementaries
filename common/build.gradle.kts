@@ -13,6 +13,7 @@ val cca_version: String by extra
 val flywheel_forge_version: String by extra
 val vanillin_version: String by extra
 val shulker_box_tooltip_version: String by extra
+val sable_companion_version: String by extra
 
 dependencies {
 
@@ -68,4 +69,7 @@ dependencies {
 
 
     modCompileOnly("curse.maven:blueprint-382216:5292242")
+
+    modApi("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[${sable_companion_version},)")
+
 }

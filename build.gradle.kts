@@ -48,9 +48,7 @@ subprojects {
     }
 
     upload {
-        maven {
-            nexus()
-        }
+
         curseforge {
             dependencies {
                 required("selene")
@@ -65,6 +63,10 @@ subprojects {
         forEach {
             changelog = rootProject.file("changelog.md").readText()
             versionName = "${mod.id.get()}-${mod.version.get()}-${project.name}"
+        }
+
+        maven {
+            nexus()
         }
     }
 
