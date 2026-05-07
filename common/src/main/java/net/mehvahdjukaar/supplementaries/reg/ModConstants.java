@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
 public final class ModConstants {
-    public static final String STASIS_NAME = "stasis";
 
     public static final String DISPENSER_MINECART_NAME = "dispenser_minecart";
+    public static final String STASIS_NAME = "stasis";
     public static final String RED_MERCHANT_NAME = "red_merchant";
     public static final String PLUNDERER_NAME = "plunderer";
     public static final String HAT_STAND_NAME = "hat_stand";

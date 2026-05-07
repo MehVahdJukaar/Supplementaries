@@ -1,6 +1,9 @@
 {
   "values": [
     "minecraft:multishot",
-    "supplementaries:stasis"
+    {
+      "id": "supplementaries:stasis",
+      "required": false
+    }
   ]
 }

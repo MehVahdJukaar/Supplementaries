@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class ModServerDynamicResources extends DynamicServerResourceProvider {
@@ -166,6 +167,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
 
     private void addSignPostRecipes(ResourceManager manager, ResourceSink sink) {
+        AtomicInteger am = new AtomicInteger();
         ModRegistry.WAY_SIGN_ITEMS.forEach((w, i) -> {
             if (w == VanillaWoodTypes.OAK) return;
             if (w.getChild("sign") == null) {
@@ -173,12 +175,13 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
                 return;
             }
             try {
+                am.addAndGet(1);
                 sink.addBlockTypeSwapRecipe(manager, Supplementaries.res("way_sign_oak"), VanillaWoodTypes.OAK, w,
                         Supplementaries.res("way_sign" + "_" + w.getTypeName()));
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to generate recipe for sign post {}:", i, e);
             }
-
         });
+        Supplementaries.LOGGER.info("Generated {} sign post recipes", am.get());
     }
 }

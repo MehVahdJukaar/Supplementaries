@@ -35,7 +35,7 @@ public class LumiseneBucketItem extends BucketItem {
         this.capacity = capacity;
     }
 
-    // we override this JUSt so we can place on water
+    // we override this JUST so we can place on water
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {

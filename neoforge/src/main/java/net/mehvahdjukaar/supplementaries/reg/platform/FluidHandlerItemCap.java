@@ -1,26 +1,26 @@
 package net.mehvahdjukaar.supplementaries.reg.platform;
 
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 //same as FluidBucketWrapper but with configurable count
 public class FluidHandlerItemCap implements IFluidHandlerItem {
     protected final int tankVolume;
     protected final Item empty;
-    protected final Fluid validContent;
+    protected final Item full;
+    protected final Fluid fillContent;
 
     protected ItemStack container;
 
-    public FluidHandlerItemCap(ItemStack container, int volume, Item empty, Fluid validContent) {
+    public FluidHandlerItemCap(ItemStack container, int volume, Item empty, Item full, Fluid fillContent) {
         this.container = container;
         this.tankVolume = volume;
         this.empty = empty;
-        this.validContent = validContent;
+        this.full = full;
+        this.fillContent = fillContent;
     }
 
     @Override
@@ -30,23 +30,24 @@ public class FluidHandlerItemCap implements IFluidHandlerItem {
 
 
     public boolean canFillFluidType(FluidStack fluid) {
-        return fluid.is(validContent);
+        return fluid.is(fillContent);
     }
 
-    public FluidStack getFluid() {
+    private FluidStack getFluidInternal() {
         Item item = container.getItem();
-        if (item instanceof BucketItem) {
-            return new FluidStack(((BucketItem) item).content, tankVolume);
+        if (item == full) {
+            return new FluidStack(fillContent, tankVolume);
         } else {
             return FluidStack.EMPTY;
         }
     }
 
-    protected void setFluid(FluidStack fluidStack) {
-        if (fluidStack.isEmpty())
+    private void setFluidInternal(FluidStack fluidStack) {
+        if (fluidStack.isEmpty()) {
             container = new ItemStack(empty);
-        else
-            container = FluidUtil.getFilledBucket(fluidStack);
+        } else {
+            container = new ItemStack(full);
+        }
     }
 
     @Override
@@ -56,7 +57,7 @@ public class FluidHandlerItemCap implements IFluidHandlerItem {
 
     @Override
     public FluidStack getFluidInTank(int tank) {
-        return getFluid();
+        return getFluidInternal();
     }
 
     @Override
@@ -71,12 +72,12 @@ public class FluidHandlerItemCap implements IFluidHandlerItem {
 
     @Override
     public int fill(FluidStack resource, FluidAction action) {
-        if (container.getCount() != 1 || resource.getAmount() < tankVolume || !getFluid().isEmpty() || !canFillFluidType(resource)) {
+        if (container.getCount() != 1 || resource.getAmount() < tankVolume || !getFluidInternal().isEmpty() || !canFillFluidType(resource)) {
             return 0;
         }
 
         if (action.execute()) {
-            setFluid(resource);
+            setFluidInternal(resource);
         }
 
         return tankVolume;
@@ -88,10 +89,10 @@ public class FluidHandlerItemCap implements IFluidHandlerItem {
             return FluidStack.EMPTY;
         }
 
-        FluidStack fluidStack = getFluid();
+        FluidStack fluidStack = getFluidInternal();
         if (!fluidStack.isEmpty() && FluidStack.isSameFluidSameComponents(fluidStack, resource)) {
             if (action.execute()) {
-                setFluid(FluidStack.EMPTY);
+                setFluidInternal(FluidStack.EMPTY);
             }
             return fluidStack;
         }
@@ -105,10 +106,10 @@ public class FluidHandlerItemCap implements IFluidHandlerItem {
             return FluidStack.EMPTY;
         }
 
-        FluidStack fluidStack = getFluid();
+        FluidStack fluidStack = getFluidInternal();
         if (!fluidStack.isEmpty()) {
             if (action.execute()) {
-                setFluid(FluidStack.EMPTY);
+                setFluidInternal(FluidStack.EMPTY);
             }
             return fluidStack;
         }

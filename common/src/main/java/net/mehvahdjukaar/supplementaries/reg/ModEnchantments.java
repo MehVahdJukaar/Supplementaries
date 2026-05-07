@@ -16,6 +16,7 @@ public class ModEnchantments {
     //enchantment
     public static final HolderRef<Enchantment> STASIS_ENCHANTMENT = HolderRef.of(
             res("stasis"), Registries.ENCHANTMENT);
+
     public static final Supplier<DataComponentType<Unit>> PROJECTILE_NO_GRAVITY = RegHelper.register(
             res("projectile_no_gravity"),
             () -> DataComponentType.<Unit>builder()
