@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModLoadingContext;
@@ -187,7 +188,7 @@ public class CCCompatImpl {
         public void setYaw(double value) {
             Quaternionf orientation = tile.getLocalOrientation(1);
             EntityAngles angles = EntityAngles.fromQuaternion(orientation);
-            angles = angles.withYaw((float) value);
+            angles = angles.withYaw((float) (Mth.DEG_TO_RAD * value));
 
             tile.setLocalOrientation(angles.toQuaternion());
             tile.syncToClients(false);
@@ -204,7 +205,7 @@ public class CCCompatImpl {
         public void setPitch(double value) {
             Quaternionf orientation = tile.getLocalOrientation(1);
             EntityAngles angles = EntityAngles.fromQuaternion(orientation);
-            angles = angles.withPitch((float) value);
+            angles = angles.withPitch((float) (Mth.DEG_TO_RAD * value));
 
             tile.setLocalOrientation(angles.toQuaternion());
 
