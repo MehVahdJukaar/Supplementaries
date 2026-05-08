@@ -70,110 +70,9 @@
           ]
         },
         {
-          "weight": 1,
-          "type": "minecraft:alternatives",
-          "children": [
-            {
-              "type": "minecraft:item",
-              "name": "minecraft:iron_helmet",
-              "weight": 1,
-              "functions": [
-                {
-                  "function": "minecraft:enchant_with_levels",
-                  "levels": {
-                    "type": "minecraft:uniform",
-                    "max": 25.0,
-                    "min": 10.0
-                  },
-                  "options": "#minecraft:on_random_loot"
-                },
-                {
-                  "add": false,
-                  "damage": {
-                    "type": "minecraft:uniform",
-                    "max": 0.6,
-                    "min": 0.2
-                  },
-                  "function": "minecraft:set_damage"
-                }
-              ]
-            },
-            {
-              "type": "minecraft:item",
-              "name": "minecraft:iron_chestplate",
-              "weight": 1,
-              "functions": [
-                {
-                  "function": "minecraft:enchant_with_levels",
-                  "levels": {
-                    "type": "minecraft:uniform",
-                    "max": 25.0,
-                    "min": 10.0
-                  },
-                  "options": "#minecraft:on_random_loot"
-                },
-                {
-                  "add": false,
-                  "damage": {
-                    "type": "minecraft:uniform",
-                    "max": 0.6,
-                    "min": 0.2
-                  },
-                  "function": "minecraft:set_damage"
-                }
-              ]
-            },
-            {
-              "type": "minecraft:item",
-              "name": "minecraft:iron_leggings",
-              "weight": 1,
-              "functions": [
-                {
-                  "function": "minecraft:enchant_with_levels",
-                  "levels": {
-                    "type": "minecraft:uniform",
-                    "max": 25.0,
-                    "min": 10.0
-                  },
-                  "options": "#minecraft:on_random_loot"
-                },
-                {
-                  "add": false,
-                  "damage": {
-                    "type": "minecraft:uniform",
-                    "max": 0.6,
-                    "min": 0.2
-                  },
-                  "function": "minecraft:set_damage"
-                }
-              ]
-            },
-            {
-              "type": "minecraft:item",
-              "name": "minecraft:iron_boots",
-              "weight": 1,
-              "functions": [
-                {
-                  "function": "minecraft:enchant_with_levels",
-                  "levels": {
-                    "type": "minecraft:uniform",
-                    "max": 25.0,
-                    "min": 10.0
-                  },
-                  "options": "#minecraft:on_random_loot"
-                },
-                {
-                  "add": false,
-                  "damage": {
-                    "type": "minecraft:uniform",
-                    "max": 0.6,
-                    "min": 0.2
-                  },
-                  "function": "minecraft:set_damage"
-                }
-              ]
-            }
-          ]
+          "type": "minecraft:loot_table",
+          "name": "supplementaries:loot/galleon/safe_armor",
+          "weight": 1
         }
       ]
     },
@@ -355,46 +254,8 @@
           "weight": 1
         },
         {
-          "type": "minecraft:alternatives",
-          "children": [
-            {
-              "type": "minecraft:item",
-              "name": "minecraft:compass",
-              "weight": 1
-            },
-            {
-              "type": "minecraft:item",
-              "name": "supplementaries:hourglass",
-              "weight": 1,
-              "conditions": [
-                {
-                  "condition": "moonlight:load_conditions",
-                  "fabric:load_conditions": [
-                    {
-                      "condition": "supplementaries:flag",
-                      "flag": "hourglass"
-                    }
-                  ],
-                  "neoforge:conditions": [
-                    {
-                      "type": "supplementaries:flag",
-                      "flag": "hourglass"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "minecraft:item",
-              "name": "minecraft:clock",
-              "weight": 1
-            },
-            {
-              "type": "minecraft:item",
-              "name": "minecraft:spyglass",
-              "weight": 1
-            }
-          ],
+          "type": "minecraft:loot_table",
+          "name": "supplementaries:loot/galleon/safe_tools",
           "weight": 4
         }
       ]

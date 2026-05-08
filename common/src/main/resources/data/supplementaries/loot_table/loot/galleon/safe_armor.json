@@ -1,0 +1,109 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_helmet",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "max": 25.0,
+                "min": 10.0
+              },
+              "options": "#minecraft:on_random_loot"
+            },
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.6,
+                "min": 0.2
+              },
+              "function": "minecraft:set_damage"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_chestplate",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "max": 25.0,
+                "min": 10.0
+              },
+              "options": "#minecraft:on_random_loot"
+            },
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.6,
+                "min": 0.2
+              },
+              "function": "minecraft:set_damage"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_leggings",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "max": 25.0,
+                "min": 10.0
+              },
+              "options": "#minecraft:on_random_loot"
+            },
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.6,
+                "min": 0.2
+              },
+              "function": "minecraft:set_damage"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_boots",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": {
+                "type": "minecraft:uniform",
+                "max": 25.0,
+                "min": 10.0
+              },
+              "options": "#minecraft:on_random_loot"
+            },
+            {
+              "add": false,
+              "damage": {
+                "type": "minecraft:uniform",
+                "max": 0.6,
+                "min": 0.2
+              },
+              "function": "minecraft:set_damage"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:compass",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:clock",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:spyglass",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "supplementaries:hourglass",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "moonlight:load_conditions",
+              "fabric:load_conditions": [
+                {
+                  "condition": "supplementaries:flag",
+                  "flag": "hourglass"
+                }
+              ],
+              "neoforge:conditions": [
+                {
+                  "type": "supplementaries:flag",
+                  "flag": "hourglass"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
