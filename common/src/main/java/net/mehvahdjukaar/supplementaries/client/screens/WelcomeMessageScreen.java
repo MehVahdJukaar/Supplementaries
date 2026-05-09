@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,10 +32,16 @@ public class WelcomeMessageScreen extends Screen {
                     .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://legacy.curseforge.com/minecraft/mc-mods/amendments")));
     private static final Component IM_TITLE = Component.translatable("gui.supplementaries.incompatible_mods.title")
             .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
-    private static final List<String> MODS_WITH_KNOWN_ISSUES = List.of();
-    private static final String IM_LIST = MODS_WITH_KNOWN_ISSUES.stream()
+
+    //leave accessible
+    public static final ArrayList<String> MODS_WITH_KNOWN_ISSUES =
+            new ArrayList<>(PlatHelper.getPlatform().isFabric() ?
+                    List.of("particular") : List.of());
+
+    private static final String IM_LIST_TEXT = MODS_WITH_KNOWN_ISSUES.stream()
             .filter(PlatHelper::isModLoaded) // Change this condition as needed
             .collect(Collectors.joining(", "));
+
     private final Screen lastScreen;
     private final Component text;
     @Nullable
@@ -70,7 +77,7 @@ public class WelcomeMessageScreen extends Screen {
     public static WelcomeMessageScreen createIncompatibleMods(Screen screen) {
         return new WelcomeMessageScreen(screen, 60, IM_TITLE,
                 Component.translatable("gui.supplementaries.incompatible_mods.message",
-                        Component.literal(IM_LIST).withStyle(ChatFormatting.RED)),
+                        Component.literal(IM_LIST_TEXT).withStyle(ChatFormatting.RED)),
                 null, ClientConfigs::disableIncompatWarn);
     }
 

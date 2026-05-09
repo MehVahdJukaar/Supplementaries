@@ -29,7 +29,7 @@ dependencies {
     modCompileOnly("curse.maven:farmers-delight-398521:8007613")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("net.mehvahdjukaar:amendments-neoforge:1.21-2.0.9")
-    modCompileOnly("curse.maven:entity-model-features-844662:7998618")
+    modCompileOnly("curse.maven:entity-model-features-844662:8061138")
     modCompileOnly("curse.maven:emi-580555:6420931")
     modImplementation("curse.maven:jei-238222:7420587")
     modCompileOnly("curse.maven:jade-324717:7545219")
