@@ -171,9 +171,15 @@ public class BlockUtil {
         }
         if (CompatHandler.QUARK) {
             WoodType type = WoodTypeRegistry.INSTANCE.getBlockTypeOf(block);
-            if (type != null && type.planks == block) {
+            if (type != null) {
                 var verticalPlanks = type.getBlockOfThis("quark:vertical_planks");
-                if (verticalPlanks != null) return Optional.of(verticalPlanks.defaultBlockState());
+                if (verticalPlanks != null) {
+                    if (block == type.planks) {
+                        return Optional.of(verticalPlanks.defaultBlockState());
+                    } else if (block == verticalPlanks) {
+                        return Optional.of(type.planks.defaultBlockState());
+                    }
+                }
             }
         }
         if (CompatHandler.TWILIGHTFOREST) {
