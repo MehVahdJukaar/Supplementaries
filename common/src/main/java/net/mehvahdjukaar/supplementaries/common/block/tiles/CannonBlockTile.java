@@ -53,6 +53,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class CannonBlockTile extends OpenableContainerBlockTile implements IOneUserInteractable {
@@ -493,7 +494,12 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return additionalRot.mul(rot);
     }
 
-    public void setTrustedInternalAttributes(Quaternionf localRotation, byte firePower, boolean fire, Entity controllingEntity) {
+    public void setTrustedInternalAttributes(Quaternionf localRotation, byte firePower,
+                                             boolean fire, Entity controllingEntity,
+                                             @Nullable BallisticData ballisticData) {
+        if (ballisticData != null) {
+            this.trajectoryData = ballisticData;
+        }
         this.setLocalOrientation(localRotation);
         this.setFirePower(firePower);
         if (fire) this.ignite(controllingEntity);
@@ -535,7 +541,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public void syncToServer(boolean ignite, boolean removeOwner, Player playerWhoChangedIt) {
         NetworkHelper.sendToServer(new SyncCannonPacket(
                 this.getWantedLocalRotation(), this.getPowerLevel(),
-                ignite, removeOwner, referenceFrame.makeNetworkTarget(),
+                ignite, removeOwner, Optional.empty(),
+                referenceFrame.makeNetworkTarget(),
                 playerWhoChangedIt.getUUID()));
     }
 
@@ -544,7 +551,9 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             NetworkHelper.sendToAllClientPlayersInDefaultRange(sl,
                     BlockPos.containing(referenceFrame.position(1)), new SyncCannonPacket(
                             this.getWantedLocalRotation(), this.getPowerLevel(),
-                            ignite, false, referenceFrame.makeNetworkTarget(), null));
+                            ignite, false,
+                            Optional.of(this.trajectoryData),
+                            referenceFrame.makeNetworkTarget(), null));
         }
     }
 
@@ -582,4 +591,5 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         float newYaw = trajectory3D.yaw() * Mth.RAD_TO_DEG;
         this.setWorldOrientation(EntityAngles.of(newPitch, newYaw).toQuaternion());
     }
+
 }

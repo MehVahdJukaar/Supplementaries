@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 public record SyncCannonPacket(
         Quaternionf localRot, byte firePower, boolean ignite, boolean stopControlling,
+        Optional<BallisticData> ballisticData,
         TileOrEntityTarget target, @Nullable UUID userEntityId) implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, SyncCannonPacket> CODEC = Message.makeType(
@@ -28,7 +30,9 @@ public record SyncCannonPacket(
 
     public SyncCannonPacket(FriendlyByteBuf buf) {
         this(ByteBufCodecs.QUATERNIONF.decode(buf), buf.readByte(),
-                buf.readBoolean(), buf.readBoolean(), TileOrEntityTarget.read(buf),
+                buf.readBoolean(), buf.readBoolean(),
+                buf.readOptional(BallisticData.STREAM_CODEC),
+                TileOrEntityTarget.read(buf),
                 buf.readOptional(buffer -> buffer.readUUID()).orElse(null));
     }
 
@@ -38,6 +42,7 @@ public record SyncCannonPacket(
         buf.writeByte(this.firePower);
         buf.writeBoolean(this.ignite);
         buf.writeBoolean(this.stopControlling);
+        buf.writeOptional(this.ballisticData, BallisticData.STREAM_CODEC);
         this.target.write(buf);
         buf.writeOptional(Optional.ofNullable(this.userEntityId), (buffer, value) ->
                 buffer.writeUUID(value));
@@ -56,7 +61,8 @@ public record SyncCannonPacket(
         }
         //trusted
         if (level.isClientSide) {
-            cannon.setTrustedInternalAttributes(this.localRot, this.firePower, this.ignite, null);
+            cannon.setTrustedInternalAttributes(this.localRot, this.firePower, this.ignite, null,
+                    this.ballisticData.orElse(null));
             if (stopControlling) {
                 cannon.setCurrentUser(null);
             }
@@ -73,7 +79,7 @@ public record SyncCannonPacket(
             }
 
             if (entity == null || cannon.canBeUsedBy(BlockPos.containing(cannon.getGlobalPosition(1)), entity)) {
-                cannon.setTrustedInternalAttributes(this.localRot, this.firePower, this.ignite, entity);
+                cannon.setTrustedInternalAttributes(this.localRot, this.firePower, this.ignite, entity, null);
                 cannon.setChanged();
                 if (stopControlling) {
                     cannon.setCurrentUser(null);
