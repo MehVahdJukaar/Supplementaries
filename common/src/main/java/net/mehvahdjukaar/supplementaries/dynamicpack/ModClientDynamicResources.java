@@ -9,7 +9,6 @@ import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.StaticResource;
 import net.mehvahdjukaar.moonlight.api.resources.assets.LangBuilder;
 import net.mehvahdjukaar.moonlight.api.resources.pack.DynamicClientResourceProvider;
-import net.mehvahdjukaar.moonlight.api.resources.pack.PackGenerationStrategy;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceGenTask;
 import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.textures.*;
@@ -49,8 +48,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
     public ModClientDynamicResources() {
         super(Supplementaries.res("generated_pack"),
-                PlatHelper.isDev() ? PackGenerationStrategy.REGEN_ON_EVERY_RELOAD :
-                        ClientConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
+                ClientConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
     }
 
     private static TextureImage createWaySignItemTexture(ResourceManager manager,
