@@ -206,9 +206,11 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         }
         this.orientation.orient(quat);
         this.snapToWantedRotationInstantly();
-        this.trajectoryData = BallisticData.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
-                .resultOrPartial(Supplementaries.LOGGER::error)
-                .orElse(BallisticData.LINE);
+        if (tag.contains("trajectory")) {
+            this.trajectoryData = BallisticData.CODEC.parse(NbtOps.INSTANCE, tag.get("trajectory"))
+                    .resultOrPartial(Supplementaries.LOGGER::error)
+                    .orElse(BallisticData.LINE);
+        }
     }
 
     @Override
@@ -295,6 +297,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     private void maybeRefreshTrajectoryData() {
         if (level == null || level.isClientSide) return;
+        //trajectory is server driven
         if (trajectoryFor != getProjectile().getItem()) {
             computeTrajectoryData();
         }

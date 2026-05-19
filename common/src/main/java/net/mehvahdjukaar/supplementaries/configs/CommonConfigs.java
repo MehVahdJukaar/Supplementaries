@@ -117,7 +117,8 @@ public class CommonConfigs {
 
     private static Supplier<Boolean> feature(ConfigBuilder builder, String name, String key, boolean value) {
         var config = builder.define(name, value);
-        String parentCat = builder.currentCategory();
+        String parentCat =
+                name.equals(key) ? builder.parentCategory() : builder.currentCategory();
         var parentConf = FEATURE_TOGGLES.get(parentCat);
         if (parentConf != null) {
             Supplier<Boolean> finalChildConf = config;

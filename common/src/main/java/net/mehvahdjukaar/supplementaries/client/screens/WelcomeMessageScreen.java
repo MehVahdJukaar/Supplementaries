@@ -39,7 +39,7 @@ public class WelcomeMessageScreen extends Screen {
                     List.of("particular") : List.of());
 
     private static final String IM_LIST_TEXT = MODS_WITH_KNOWN_ISSUES.stream()
-            .filter(PlatHelper::isModLoaded) // Change this condition as needed
+            .filter(PlatHelper::isModLoaded)
             .collect(Collectors.joining(", "));
 
     private final Screen lastScreen;

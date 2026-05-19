@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.compat;
 
+import net.mehvahdjukaar.supplementaries.client.IModelPartExtension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,8 +14,8 @@ import traben.entity_model_features.models.parts.EMFModelPartRoot;
 @Mixin(EMFModelPartCustom.class)
 public class CompatEMFMixin {
 
-    @Inject(method = "<init>*", at = @At("RETURN"))
-    private void supp$canEMFstopChangingTheSignatureOfThisMethodPls(EMFPartData emfPartData, int variant, String part, String id, EMFModelPartRoot root, CallbackInfo ci) {
-        ((IModelPartExnsion) this).supp$setDimensions(emfPartData.textureSize[0], emfPartData.textureSize[1]);
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void supp$setDimensions(EMFPartData emfPartData, int variant, String part, String id, EMFModelPartRoot root, CallbackInfo ci) {
+        ((IModelPartExtension) this).supp$setDimensions(emfPartData.textureSize[0], emfPartData.textureSize[1]);
     }
 }

@@ -245,16 +245,25 @@ public class ClientConfigs {
         public static final Supplier<Boolean> NO_INCOMPATIBLE_MODS;
         public static final Supplier<Boolean> UNFUNNY;
         public static final Supplier<GenMode> DYNAMIC_ASSETS_GEN_MODE;
+        public static final Supplier<Boolean> USE_EXTERNAL_RESOURCE_PACK;
 
         static {
             ConfigBuilder builder = builderReference.get();
 
             builder.comment("General settings")
                     .push("general");
-            DYNAMIC_ASSETS_GEN_MODE = builder.define("dynamic_assets_generation_mode", GenMode.CACHED);
+            USE_EXTERNAL_RESOURCE_PACK = builder.comment("Enable Supplementaries to base textures off external Resource Packs rather than mod's default textures. ")
+                    .gameRestart()
+                    .define("use_external_resource_pack", false);
+
+            DYNAMIC_ASSETS_GEN_MODE = builder
+                    .gameRestart()
+                    .define("dynamic_assets_generation_mode", GenMode.CACHED);
             NO_OPTIFINE_WARN = builder.comment("Disables Optifine warn screen")
+                    .gameRestart()
                     .define("no_optifine_warn_screen", false);
             NO_INCOMPATIBLE_MODS = builder.comment("Disable incompatible mods warning screen")
+                    .gameRestart()
                     .define("no_incompatible_mods_screen", false);
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
                     .define("config_button", CompatHandler.CONFIGURED);
@@ -265,8 +274,11 @@ public class ClientConfigs {
             PLACEABLE_TOOLTIP = builder.comment("Show tooltips items that have been made placeable")
                     .define("placeable_tooltips", true);
             CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
+                    .gameRestart()
                     .define("custom_configured_screen", true);
-            UNFUNNY = builder.comment("unfunny").define("I am very boring and I don't want any Easter Egg", false);
+            UNFUNNY = builder.comment("unfunny")
+                    .gameRestart()
+                    .define("I am very boring and I don't want any Easter Egg", false);
 
 
             builder.pop();

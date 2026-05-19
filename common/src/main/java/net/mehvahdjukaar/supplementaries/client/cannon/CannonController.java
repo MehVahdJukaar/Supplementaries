@@ -132,6 +132,7 @@ public class CannonController {
             BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, hit.getLocation(), shootingMode);
 
             if (comp != null) {
+                trajectory = comp.trajectory();
                 cannon.setRotationToMatchTrajectory(comp, partialTick);
                 if (turnedLastTick) cannon.snapToWantedRotationInstantly();
                 turnedLastTick = true;

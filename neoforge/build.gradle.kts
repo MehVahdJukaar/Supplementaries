@@ -33,7 +33,7 @@ dependencies {
 
     modImplementation("curse.maven:farmers-delight-398521:8007613")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
-    modCompileOnly("curse.maven:entity-model-features-844662:7998618")
+    modCompileOnly("curse.maven:entity-model-features-844662:8063559")
     modCompileOnly("curse.maven:emi-580555:6420931")
     modImplementation("curse.maven:jei-238222:7420587")
     modCompileOnly("curse.maven:jade-324717:7545219")
@@ -47,7 +47,7 @@ dependencies {
     //modRuntimeOnly("curse.maven:spark-361579:4738952")
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
 
-    modCompileOnly("curse.maven:configured-457570:5873783")
+    modImplementation("curse.maven:configured-457570:7276577")
     modCompileOnly("maven.modrinth:amendments:1.21-2.0.15-neoforge")
     //modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140")
     //  modRuntimeOnly("curse.maven:regions-unexplored-659110:7745476")

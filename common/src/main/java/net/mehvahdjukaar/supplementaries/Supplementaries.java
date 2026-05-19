@@ -48,7 +48,7 @@ public class Supplementaries {
 
     //called on mod creation
     public static void commonInit() {
-
+//TODO: custom onfig screen reaets config? how thats impissible how would it even do that wtf
         Credits.fetchFromServer();
         CommonConfigs.init();
 

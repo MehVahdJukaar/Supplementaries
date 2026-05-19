@@ -121,6 +121,11 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
     }
 
     @Override
+    public boolean canUseExternalResourcePacks() {
+        return ClientConfigs.CONFIG_HOLDER != null && ClientConfigs.General.USE_EXTERNAL_RESOURCE_PACK.get();
+    }
+
+    @Override
     protected Collection<String> gatherSupportedNamespaces() {
         return List.of("minecraft");
     }
