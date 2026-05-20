@@ -117,8 +117,7 @@ public class CommonConfigs {
 
     private static Supplier<Boolean> feature(ConfigBuilder builder, String name, String key, boolean value) {
         var config = builder.define(name, value);
-        String parentCat =
-                name.equals(key) ? builder.parentCategory() : builder.currentCategory();
+        String parentCat = name.equals(key) ? builder.parentCategory() : builder.currentCategory();
         var parentConf = FEATURE_TOGGLES.get(parentCat);
         if (parentConf != null) {
             Supplier<Boolean> finalChildConf = config;
@@ -524,7 +523,7 @@ public class CommonConfigs {
             builder.push("pedestal");
             PEDESTAL_ENABLED = feature(builder);
             CRYSTAL_ENCHANTING = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("If enabled end crystals placed on a pedestals will provide an enchantment power bonus equivalent to 3 bookshelves")
-                    .define("crystal_enchanting", 3, 0d, 100);
+                                                                              .define("crystal_enchanting", 3, 0d, 100);
             builder.pop();
 
             builder.push("ash");
@@ -738,7 +737,7 @@ public class CommonConfigs {
                     .define("horizontal_ropes", true);
             ROPE_REPLACE_LOOT_TABLES = PlatHelper.getPlatform().isFabric() ? () -> ReplaceTableMode.NONE :
                     builder.comment("Use this config to turn allow supplementaries to replace all items tagged as #supplementaries:ropes with supplementaries own rope or turn them to air instead. This is applied to all loot tables (chests and drops)")
-                            .define("replace_in_loot_tables", ReplaceTableMode.NONE);
+                    .define("replace_in_loot_tables", ReplaceTableMode.NONE);
             builder.pop();
 
             builder.push("jar");
@@ -1273,7 +1272,7 @@ public class CommonConfigs {
             builder.push("bad_luck_tweaks");
             BAD_LUCK_CAT = PlatHelper.getPlatform().isFabric() ? FALSE :
                     builder.comment("Hit a void cat, get the unluck")
-                            .define("cat_unluck", true);
+                    .define("cat_unluck", true);
             BAD_LUCK_LIGHTNING = builder.comment("If you have unluck you are more likely to get hit by a lighting. Holding a lightning rod also causes this")
                     .define("lightning_unluck", true);
             builder.pop();

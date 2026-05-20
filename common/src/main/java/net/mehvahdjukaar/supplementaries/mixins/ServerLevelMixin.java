@@ -41,7 +41,6 @@ public abstract class ServerLevelMixin extends Level implements ILevelEventRedir
     private boolean supplementaries$redirectLevelEvents = false;
     @Unique
     private Vec3 supplementaries$redirectedEntityPos = Vec3.ZERO;
-
     protected ServerLevelMixin(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder<DimensionType> holder, Supplier<ProfilerFiller> supplier, boolean bl, boolean bl2, long l, int i) {
         super(writableLevelData, resourceKey, registryAccess, holder, supplier, bl, bl2, l, i);
     }
