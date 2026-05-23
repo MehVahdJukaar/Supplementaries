@@ -8,10 +8,17 @@ import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.PistonType;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,19 +27,18 @@ import java.util.Set;
 public class PistonBaseBlockMixin {
 
     /**
-     * Intercepts the feasibility resolve in checkIfExtend to enable cooperative pushing.
+     * Intercepts the extension feasibility resolve in checkIfExtend.
      * <p>
      * Protocol per piston:
-     * 1. Register this piston as attempting to extend this tick.
-     * 2. Try the vanilla single-piston resolve. If it succeeds, mark this piston as
-     * posted and let vanilla post the block event normally.
-     * 3. If vanilla fails, look for adjacent same-direction pistons that registered
-     * earlier this tick. If none exist, return false as usual.
-     * 4. Build a cooperative resolver over all pistons in the group and run it. If it
-     * fails, return false.
-     * 5. Manually post block events for any cooperators whose events weren't posted
-     * yet (i.e. those that ran before us and also failed the vanilla resolve). Mark
-     * all as posted, then return true so vanilla posts this piston's own event.
+     *  1. Register this piston as attempting to extend this tick.
+     *  2. Try the vanilla single-piston resolve. If it succeeds, mark posted and let
+     *     vanilla post the block event normally.
+     *  3. If vanilla fails, look for same-direction pistons that registered earlier this
+     *     tick. If none exist, return false as usual.
+     *  4. Build a cooperative resolver over all pistons in the group and run it. If it
+     *     fails, return false.
+     *  5. Manually post block events for any cooperators whose events weren't posted yet,
+     *     then return true so vanilla posts this piston's event.
      */
     @WrapOperation(method = "checkIfExtend",
             at = @At(value = "INVOKE",
@@ -42,7 +48,7 @@ public class PistonBaseBlockMixin {
                                                   @Local(ordinal = 0) BlockPos pos,
                                                   @Local Direction direction) {
         long tick = level.getGameTime();
-        PistonCooperationTracker.markAttempting(pos, direction, tick);
+        PistonCooperationTracker.markAttempting(pos, direction, true, tick);
 
         boolean vanillaResult = original.call(resolver);
         if (vanillaResult) {
@@ -50,12 +56,11 @@ public class PistonBaseBlockMixin {
             return true;
         }
 
-        Set<BlockPos> cooperators = PistonCooperationTracker.getCooperators(pos, direction, tick);
+        Set<BlockPos> cooperators = PistonCooperationTracker.getCooperators(pos, direction, true);
         if (cooperators.isEmpty()) {
             return false;
         }
 
-        // Build the full cooperative piston group and a fresh resolver for it.
         Set<BlockPos> allPistons = new HashSet<>(cooperators);
         allPistons.add(pos);
         int limit = allPistons.size() * 12;
@@ -67,7 +72,6 @@ public class PistonBaseBlockMixin {
             return false;
         }
 
-        // Post block events for cooperators that failed their own vanilla resolve (not yet posted).
         for (BlockPos cooperatorPos : cooperators) {
             if (!PistonCooperationTracker.hasPosted(cooperatorPos, tick)) {
                 level.blockEvent(cooperatorPos,
@@ -78,15 +82,41 @@ public class PistonBaseBlockMixin {
             }
         }
         PistonCooperationTracker.markPosted(pos, tick);
-        return true; // vanilla will post the block event for this piston
+        return true;
     }
 
     /**
-     * Injects cooperative data into the movement resolver in moveBlocks so that the
-     * actual block movement honours the combined push limit of the piston group.
+     * Register sticky pistons that are about to retract. Retraction's checkIfExtend never
+     * creates a resolver — it just posts a block event with id 1 or 2 — so we hook the
+     * blockEvent call itself to register the piston for cooperative pulling.
      * <p>
-     * Block events fire in the same game tick as checkIfExtend, so the tracker still
-     * holds the cooperation group registered during checkIfExtend.
+     * ordinal = 1 targets the second {@code Level.blockEvent(BlockPos, Block, int, int)}
+     * call in checkIfExtend (the first is the extension event in the !extended branch).
+     */
+    @Inject(method = "checkIfExtend",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;blockEvent(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;II)V",
+                    ordinal = 1))
+    private void supp$registerRetraction(Level level, BlockPos pos, BlockState state, CallbackInfo ci,
+                                         @Local Direction direction) {
+        PistonCooperationTracker.markAttempting(pos, direction, false, level.getGameTime());
+    }
+
+    /**
+     * Injects cooperative data into the movement resolver in moveBlocks. Block events fire
+     * in the tick following checkIfExtend, so the tracker still holds the cooperation group
+     * registered during checkIfExtend (entries are filtered by extending state to prevent
+     * stale extension data from leaking into a later retraction).
+     * <p>
+     * For retraction, we also pre-retract each cooperator: set its body to MOVING_PISTON
+     * (mimicking what its own triggerEvent would do moments later) and then remove its head.
+     * Two reasons for this:
+     *  1. With the head still present, the cooperative sticky-branching forward-scan from
+     *     one column hits the other column's PISTON_HEAD (push reaction BLOCK) and fails.
+     *  2. Setting body → MOVING_PISTON before head → AIR is the ORDER vanilla retraction
+     *     uses. If we removed the head while the body is still STICKY_PISTON,
+     *     PistonHeadBlock.onRemove sees the still-extended body behind it and
+     *     destroyBlock()s it — popping the piston as an item.
      */
     @WrapOperation(method = "moveBlocks",
             at = @At(value = "NEW",
@@ -94,9 +124,16 @@ public class PistonBaseBlockMixin {
     private PistonStructureResolver supp$wrapMoveBlocksResolver(Level level, BlockPos pos, Direction facing,
                                                                 boolean extending,
                                                                 Operation<PistonStructureResolver> original) {
+        Set<BlockPos> cooperators = PistonCooperationTracker.getCooperators(pos, facing, extending);
+
+        if (!extending && !cooperators.isEmpty()) {
+            for (BlockPos cooperatorPos : cooperators) {
+                supp$preRetractCooperator(level, cooperatorPos, facing);
+            }
+        }
+
         PistonStructureResolver resolver = original.call(level, pos, facing, extending);
 
-        Set<BlockPos> cooperators = PistonCooperationTracker.getCooperators(pos, facing, level.getGameTime());
         if (!cooperators.isEmpty()) {
             Set<BlockPos> allPistons = new HashSet<>(cooperators);
             allPistons.add(pos);
@@ -104,5 +141,30 @@ public class PistonBaseBlockMixin {
             ((ICooperativePiston) resolver).supp$setCooperators(allPistons, limit);
         }
         return resolver;
+    }
+
+    @Unique
+    private static void supp$preRetractCooperator(Level level, BlockPos cooperatorPos, Direction facing) {
+        BlockState bodyState = level.getBlockState(cooperatorPos);
+        if (!(bodyState.getBlock() instanceof PistonBaseBlock)) return;
+
+        BlockPos headPos = cooperatorPos.relative(facing);
+        if (!level.getBlockState(headPos).is(Blocks.PISTON_HEAD)) return;
+
+        // 1. Convert the cooperator's body to MOVING_PISTON (matches what its own
+        //    triggerEvent would do moments later — that call will be a no-op since the
+        //    block state matches; only the block entity gets re-created).
+        PistonType type = bodyState.is(Blocks.STICKY_PISTON) ? PistonType.STICKY : PistonType.DEFAULT;
+        BlockState movingPistonState = Blocks.MOVING_PISTON.defaultBlockState()
+                .setValue(MovingPistonBlock.FACING, facing)
+                .setValue(MovingPistonBlock.TYPE, type);
+        BlockState retractedBody = bodyState.setValue(PistonBaseBlock.EXTENDED, false);
+        level.setBlock(cooperatorPos, movingPistonState, 20);
+        level.setBlockEntity(MovingPistonBlock.newMovingBlockEntity(
+                cooperatorPos, movingPistonState, retractedBody, facing, false, true));
+
+        // 2. Now safe to remove the head — PistonHeadBlock.onRemove will see the body
+        //    is MOVING_PISTON (not STICKY_PISTON) and skip the destroy-and-drop logic.
+        level.setBlock(headPos, Blocks.AIR.defaultBlockState(), 20);
     }
 }

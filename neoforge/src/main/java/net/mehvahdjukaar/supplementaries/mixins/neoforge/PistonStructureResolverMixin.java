@@ -31,6 +31,12 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
     private Direction pushDirection;
     @Shadow
     @Final
+    private Direction pistonDirection;
+    @Shadow
+    @Final
+    private boolean extending;
+    @Shadow
+    @Final
     private List<BlockPos> toPush;
 
     @Shadow
@@ -47,8 +53,13 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
     /**
      * After the primary piston's chain is built, extend the resolver to also cover each
      * cooperating piston's chain. Blocks already in toPush (shared structure) are skipped.
-     * Non-pushable cooperating starts (e.g. MOVING_PISTON after the primary already extended)
-     * are skipped with continue so the primary's push still succeeds.
+     * Non-pushable cooperating starts are skipped (return ignored) so the primary's push
+     * still succeeds — e.g. MOVING_PISTON when a cooperative move already happened.
+     * <p>
+     * For extension, a cooperator's startPos is {@code cooperator + pistonDirection*1}
+     * (the first block in front of the piston). For retraction, it's
+     * {@code cooperator + pistonDirection*2} (the block being pulled back, two ahead of
+     * the body).
      */
     @WrapOperation(method = "resolve",
             at = @At(value = "INVOKE",
@@ -56,11 +67,10 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
     private boolean supp$wrapResolveAddBlockLine(PistonStructureResolver self, BlockPos startPos, Direction dir,
                                                  Operation<Boolean> original) {
         if (!original.call(self, startPos, dir)) return false;
+        int cooperatorStartOffset = extending ? 1 : 2;
         for (BlockPos cooperatorPos : supp$cooperatingPistons) {
-            BlockPos cooperatorStart = cooperatorPos.relative(pushDirection);
+            BlockPos cooperatorStart = cooperatorPos.relative(pistonDirection, cooperatorStartOffset);
             if (toPush.contains(cooperatorStart)) continue;
-            // ignore result: non-pushable cooperator start means the cooperator will just
-            // extend its arm into vacated air, which is handled correctly by moveBlocks
             addBlockLine(cooperatorStart, dir);
         }
         return true;

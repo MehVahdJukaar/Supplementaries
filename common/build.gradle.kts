@@ -26,7 +26,7 @@ dependencies {
     accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
 
 
-    modCompileOnly("curse.maven:farmers-delight-398521:8007613")
+    modCompileOnly("curse.maven:farmers-delight-398521:8083481")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("net.mehvahdjukaar:amendments-neoforge:1.21-2.0.9")
     modCompileOnly("curse.maven:entity-model-features-844662:8063559")
