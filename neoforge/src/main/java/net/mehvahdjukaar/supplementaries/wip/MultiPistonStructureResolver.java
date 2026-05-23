@@ -138,8 +138,7 @@ public class MultiPistonStructureResolver {
             }
         }
 
-        for (int i = 0; i < this.toPush.size(); i++) {
-            BlockPos blockPos = this.toPush.get(i);
+        for (BlockPos blockPos : this.toPush) {
             if (this.level.getBlockState(blockPos).isStickyBlock() && !this.addBranchingBlocks(blockPos)) {
                 return false;
             }

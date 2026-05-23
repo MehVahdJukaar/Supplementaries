@@ -119,12 +119,13 @@ tasks.register("buildAndPublishAll") {
 
     finalizedBy("gitTag")
 }
+val mod_version: String by extra
 
 tasks.register("gitTag") {
     group = "build"
     doLast {
         val execOps = serviceOf<ExecOperations>() // Fetches the service
-        val tag = project.version.toString()
+        val tag = mod_version
         val stdout = ByteArrayOutputStream()
 
         execOps.exec {

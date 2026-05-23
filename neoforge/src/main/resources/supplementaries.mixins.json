@@ -17,6 +17,8 @@
     "FireBlockAccessor",
     "ItemStackAccessor",
     "LivingEntityMixin",
+    "PistonBaseBlockMixin",
+    "PistonStructureResolverMixin",
     "TreasureMapForEmeraldsMixin",
     "self.SelfFlammableFluidBlockMixin",
     "self.SelfFrameMixin",
@@ -31,5 +33,8 @@
   ],
   "injectors": {
     "defaultRequire": 1
+  },
+  "mixinextras": {
+    "minVersion": "0.5.3"
   }
 }

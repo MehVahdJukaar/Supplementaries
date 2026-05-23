@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.entities;//
+package net.mehvahdjukaar.supplementaries.common.entities;
 
 
 import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
