@@ -10,7 +10,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.network.chat.Component;
@@ -212,7 +212,7 @@ public class GlobeManager {
         }
 
         private void updateTexture(Level world) {
-            GlobeData data = ModRegistry.GLOBE_DATA.getData(world);
+            GlobeData data = ModData.GLOBE_DATA.getData(world);
             if (data == null) return;
 
             for (int i = 0; i < 16; ++i) {

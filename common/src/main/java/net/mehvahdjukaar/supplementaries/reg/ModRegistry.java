@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.reg;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ModStairBlock;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
-import net.mehvahdjukaar.moonlight.api.misc.WorldSavedDataType;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
@@ -19,7 +18,6 @@ import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction
 import net.mehvahdjukaar.supplementaries.common.items.loot.SetChargesFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.OverencumberedEffect;
-import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
@@ -64,7 +62,6 @@ public class ModRegistry {
         return !CommonConfigs.isEnabled(name);
     }
 
-    //misc entries
 
     //loot
     public static final Supplier<LootItemFunctionType<RandomEnchantFunction>> CURSE_LOOT_FUNCTION = RegHelper.registerLootFunction(
@@ -74,10 +71,6 @@ public class ModRegistry {
     public static final Supplier<LootItemFunctionType<SetChargesFunction>> SET_CHARGES_FUNCTION = RegHelper.registerLootFunction(
             res("set_charges"), SetChargesFunction.CODEC);
 
-    //data
-    public static final WorldSavedDataType<GlobeData> GLOBE_DATA = RegHelper.registerWorldSavedData(
-            res("globe_data"), GlobeData::createFromLevel, () -> GlobeData.CODEC, () -> GlobeData.STREAM_CODEC
-    );
 
     //effects
     public static final RegSupplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(

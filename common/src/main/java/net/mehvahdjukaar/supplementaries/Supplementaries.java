@@ -67,6 +67,7 @@ public class Supplementaries {
         ModRecipes.init();
         ModMenuTypes.init();
         ModEntities.init();
+        ModData.init();
         ModParticles.init();
         ModEnchantments.init();
         ModCommands.init();

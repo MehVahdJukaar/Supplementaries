@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacke
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EnvironmentalCompat;
-import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.client.player.LocalPlayer;
@@ -69,8 +69,8 @@ public class SoapItem extends Item {
         Level level = player.level();
         boolean success = false;
 
-        if (target instanceof LivingEntity le && ModEntities.SLIMED_DATA.getOrCreate(le).isSlimed()) {
-            ModEntities.SLIMED_DATA.getOrCreate(le).clear(le);
+        if (target instanceof LivingEntity le && ModData.SLIMED_DATA.getOrCreate(le).isSlimed()) {
+            ModData.SLIMED_DATA.getOrCreate(le).clear(le);
             success = true;
         } else if (target instanceof Sheep s && s.getColor() != DyeColor.WHITE) {
             s.setColor(DyeColor.WHITE);
@@ -132,7 +132,7 @@ public class SoapItem extends Item {
         VibeChecker.assertSameLevel(level, player);
         ItemStack stack = player.getItemInHand(hand);
         // clean self
-        SlimedData slimedData = ModEntities.SLIMED_DATA.getOrCreate(player);
+        SlimedData slimedData = ModData.SLIMED_DATA.getOrCreate(player);
         if (slimedData.isSlimed()) {
             slimedData.clear(player);
             playEffectsAndConsume(stack, player, player);

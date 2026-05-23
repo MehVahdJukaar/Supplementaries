@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 import com.google.common.base.Suppliers;
-import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.misc.ModSoundType;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
@@ -9,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PlanterBlock;
-import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -19,32 +17,28 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LevelEvent;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 import vectorwing.farmersdelight.common.Configuration;
-import vectorwing.farmersdelight.common.block.TomatoVineBlock;
+import vectorwing.farmersdelight.common.block.TomatoBlock;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class FarmersDelightCompat {
@@ -113,68 +107,14 @@ public class FarmersDelightCompat {
                 .randomTicks(), CompatObjects.RICH_SOIL);
     }
 
-    //TODO: rethink
-    private abstract static class TomatoLoggedBlock extends TomatoVineBlock {
-
-        public TomatoLoggedBlock(BlockBehaviour.Properties properties) {
-            super(properties);
-        }
-
-        @Override
-        public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-            BlockPos belowPos = pos.below();
-            BlockState belowState = level.getBlockState(belowPos);
-            return (belowState.getBlock() instanceof TomatoVineBlock || super.canSurvive(state.setValue(TomatoVineBlock.ROPELOGGED, false), level, pos)) && this.hasGoodCropConditions(level, pos);
-        }
-
-        @Override
-        public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack stack) {
-            super.playerDestroy(level, player, pos, state.setValue(TomatoVineBlock.ROPELOGGED, false), blockEntity, stack);
-        }
-
-        @VirtualOverride("neoforge")
-        public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-            this.playerWillDestroy(level, pos, state, player);
-            return level.setBlock(pos, getInnerBlock().withPropertiesOf(state), level.isClientSide ? 11 : 3);
-        }
-
-        @Override
-        public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-            if (!state.canSurvive(level, pos)) {
-                //we can't just break block or other ropes will react when instead we want to replace with another rope
-                level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, pos, Block.getId(state));
-                Block.dropResources(state, level, pos, null, null, ItemStack.EMPTY);
-
-                level.setBlockAndUpdate(pos, getInnerBlock().withPropertiesOf(state));
-            }
-        }
-
-        @Override
-        public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos,
-                                      BlockPos facingPos) {
-            if (!state.canSurvive(level, currentPos)) {
-                level.scheduleTick(currentPos, this, 1);
-            }
-            return state;
-        }
-
-        @Override
-        public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
-            state = CompatObjects.TOMATO_CROP.get().withPropertiesOf(state);
-            return state.getDrops(builder);
-        }
-
-        public abstract Block getInnerBlock();
-    }
-
-    private static class TomatoStickBlock extends TomatoLoggedBlock {
+    private static class TomatoStickBlock extends TomatoBlock {
 
         public static final BooleanProperty AXIS_X = ModBlockProperties.AXIS_X;
         public static final BooleanProperty AXIS_Z = ModBlockProperties.AXIS_Z;
 
         public TomatoStickBlock(BlockBehaviour.Properties properties) {
             super(properties);
-            this.registerDefaultState(this.defaultBlockState().setValue(TomatoVineBlock.ROPELOGGED, true)
+            this.registerDefaultState(this.defaultBlockState().setValue(TomatoBlock.ROPELOGGED, true)
                     .setValue(AXIS_X, false).setValue(AXIS_Z, false));
         }
 
@@ -207,7 +147,7 @@ public class FarmersDelightCompat {
     }
 
 
-    private static class TomatoRopeBlock extends TomatoLoggedBlock implements IRopeConnection {
+    private static class TomatoRopeBlock extends TomatoBlock implements IRopeConnection {
 
         public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
         public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
@@ -217,38 +157,85 @@ public class FarmersDelightCompat {
 
         public TomatoRopeBlock(BlockBehaviour.Properties properties) {
             super(properties);
-            this.registerDefaultState(this.defaultBlockState().setValue(TomatoVineBlock.ROPELOGGED, true).setValue(KNOT, false)
-                    .setValue(EAST, false).setValue(WEST, false).setValue(NORTH, false).setValue(SOUTH, false));
+            this.registerDefaultState(this.defaultBlockState()
+                    .setValue(VINE_AGE, 0).setValue(ROPELOGGED, false).setValue(KNOT, false)
+                    .setValue(NORTH, false).setValue(SOUTH, false).setValue(EAST, false).setValue(WEST, false));
         }
 
-        public Block getInnerBlock() {
-            return ModRegistry.ROPE.get();
-        }
+        // map horizontal directions to properties
+        private static final Map<Direction, BooleanProperty> HMAP = Map.of(
+                Direction.NORTH, NORTH,
+                Direction.EAST, EAST,
+                Direction.SOUTH, SOUTH,
+                Direction.WEST, WEST
+        );
 
         @Override
         protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-            builder.add(NORTH, SOUTH, EAST, WEST, KNOT);
+            // first add tomato properties
             super.createBlockStateDefinition(builder);
-        }
-
-        @Override
-        public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos,
-                                      BlockPos facingPos) {
-            super.updateShape(state, facing, facingState, level, currentPos, facingPos);
-
-            if (facing.getAxis() == Direction.Axis.Y) {
-                return state;
-            }
-            BlockState newState = state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(facing), this.shouldConnectToFace(state, facingState, facingPos, facing, level));
-            boolean hasKnot = newState.getValue(SOUTH) || newState.getValue(EAST) || newState.getValue(NORTH) || newState.getValue(WEST);
-            newState = newState.setValue(KNOT, hasKnot);
-
-            return newState;
+            // then rope connection properties
+            builder.add(NORTH, SOUTH, EAST, WEST, KNOT);
         }
 
         @Override
         public boolean canSideAcceptConnection(BlockState state, Direction direction) {
+            // allow connections from any side (IRopeConnection helpers will filter)
             return true;
+        }
+
+        public boolean hasConnection(Direction dir, BlockState state) {
+            if (HMAP.containsKey(dir)) return state.getValue(HMAP.get(dir));
+            // no vertical connection properties on this class
+            return false;
+        }
+
+        public BlockState setConnection(Direction dir, BlockState state, boolean value) {
+            if (HMAP.containsKey(dir)) return state.setValue(HMAP.get(dir), value);
+            return state;
+        }
+
+        // determine whether this block should have a middle knot (copied logic adapted to horizontals)
+        private boolean hasMiddleKnot(BlockState state) {
+            boolean north = state.getValue(NORTH);
+            boolean east = state.getValue(EAST);
+            boolean south = state.getValue(SOUTH);
+            boolean west = state.getValue(WEST);
+            return !((north && south && !east && !west) || (!north && !south && east && west));
+        }
+
+        @Override
+        public BlockState updateShape(BlockState state, Direction facing, BlockState facingState,
+                                      LevelAccessor world, BlockPos currentPos, BlockPos facingPos) {
+            // keep tomato behavior
+            super.updateShape(state, facing, facingState, world, currentPos, facingPos);
+
+            // update horizontal connections
+            if (facing.getAxis().isHorizontal()) {
+                boolean conn = this.shouldConnectToFace(state, facingState, facingPos, facing, world);
+                state = setConnection(facing, state, conn);
+            }
+
+            // recompute knot
+            state = state.setValue(KNOT, hasMiddleKnot(state));
+            return state;
+        }
+
+        @Override
+        public BlockState getStateForPlacement(BlockPlaceContext context) {
+            Level world = context.getLevel();
+            BlockPos pos = context.getClickedPos();
+            BlockState state = this.defaultBlockState();
+            // set tomato defaults
+            state = state.setValue(VINE_AGE, 0).setValue(ROPELOGGED, false).setValue(KNOT, false);
+
+            for (Direction dir : Direction.Plane.HORIZONTAL) {
+                BlockPos facingPos = pos.relative(dir);
+                BlockState facingState = world.getBlockState(facingPos);
+                state = setConnection(dir, state, this.shouldConnectToFace(state, facingState, facingPos, dir, world));
+            }
+            state = state.setValue(KNOT, hasMiddleKnot(state));
+            return state;
         }
     }
 

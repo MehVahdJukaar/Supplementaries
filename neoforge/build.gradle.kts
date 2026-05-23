@@ -31,7 +31,7 @@ dependencies {
 
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 
-    modImplementation("curse.maven:farmers-delight-398521:8007613")
+    modImplementation("curse.maven:farmers-delight-398521:8083481")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("curse.maven:entity-model-features-844662:8063559")
     modCompileOnly("curse.maven:emi-580555:6420931")

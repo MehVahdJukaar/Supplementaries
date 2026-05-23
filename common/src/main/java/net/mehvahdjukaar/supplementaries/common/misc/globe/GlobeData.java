@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.misc.WorldSavedData;
 import net.mehvahdjukaar.moonlight.api.misc.WorldSavedDataType;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -55,7 +55,7 @@ public class GlobeData extends WorldSavedData {
 
     public static void recreateAndAssignFromSeed(ServerLevel level, long seed) {
         GlobeData generate = GlobeData.createFromSeed(seed);
-        ModRegistry.GLOBE_DATA.setData(level, generate);
+        ModData.GLOBE_DATA.setData(level, generate);
         generate.sync();
     }
 
@@ -75,7 +75,7 @@ public class GlobeData extends WorldSavedData {
 
     @Override
     public WorldSavedDataType<GlobeData> getType() {
-        return ModRegistry.GLOBE_DATA;
+        return ModData.GLOBE_DATA;
     }
 
     public void onReassigned(Level level) {

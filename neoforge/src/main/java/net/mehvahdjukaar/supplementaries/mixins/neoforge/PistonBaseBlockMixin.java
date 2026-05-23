@@ -3,10 +3,12 @@ package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.mehvahdjukaar.supplementaries.common.misc.PistonCooperationTracker;
+import net.mehvahdjukaar.supplementaries.common.misc.CooperativePistonData;
 import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.piston.MovingPistonBlock;
@@ -44,19 +46,23 @@ public class PistonBaseBlockMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/piston/PistonStructureResolver;resolve()Z"))
     private boolean supp$wrapCheckIfExtendResolve(PistonStructureResolver resolver, Operation<Boolean> original,
-                                                  @Local Level level,
-                                                  @Local(ordinal = 0) BlockPos pos,
+                                                  @Local(argsOnly = true) Level level,
+                                                  @Local(argsOnly = true) BlockPos pos,
                                                   @Local Direction direction) {
+        if (!(level instanceof ServerLevel serverLevel)) return original.call(resolver);
+
         long tick = level.getGameTime();
-        PistonCooperationTracker.markAttempting(pos, direction, true, tick);
+        CooperativePistonData data = ModData.COOPERATIVE_PISTONS.getData(serverLevel);
+        data.markAttempting(pos, direction, true, tick);
+        CooperativePistonData.markAttemptingClient(pos, direction, true, tick);
 
         boolean vanillaResult = original.call(resolver);
         if (vanillaResult) {
-            PistonCooperationTracker.markPosted(pos, tick);
+            data.markPosted(pos, tick);
             return true;
         }
 
-        Set<BlockPos> cooperators = PistonCooperationTracker.getCooperators(pos, direction, true);
+        Set<BlockPos> cooperators = data.getCooperators(pos, direction, true, tick);
         if (cooperators.isEmpty()) {
             return false;
         }
@@ -73,15 +79,15 @@ public class PistonBaseBlockMixin {
         }
 
         for (BlockPos cooperatorPos : cooperators) {
-            if (!PistonCooperationTracker.hasPosted(cooperatorPos, tick)) {
+            if (!data.hasPosted(cooperatorPos, tick)) {
                 level.blockEvent(cooperatorPos,
                         level.getBlockState(cooperatorPos).getBlock(),
                         0,
                         direction.get3DDataValue());
-                PistonCooperationTracker.markPosted(cooperatorPos, tick);
+                data.markPosted(cooperatorPos, tick);
             }
         }
-        PistonCooperationTracker.markPosted(pos, tick);
+        data.markPosted(pos, tick);
         return true;
     }
 
@@ -99,14 +105,16 @@ public class PistonBaseBlockMixin {
                     ordinal = 1))
     private void supp$registerRetraction(Level level, BlockPos pos, BlockState state, CallbackInfo ci,
                                          @Local Direction direction) {
-        PistonCooperationTracker.markAttempting(pos, direction, false, level.getGameTime());
+        if (!(level instanceof ServerLevel serverLevel)) return;
+        long tick = level.getGameTime();
+        ModData.COOPERATIVE_PISTONS.getData(serverLevel).markAttempting(pos, direction, false, tick);
+        CooperativePistonData.markAttemptingClient(pos, direction, false, tick);
     }
 
     /**
      * Injects cooperative data into the movement resolver in moveBlocks. Block events fire
      * in the tick following checkIfExtend, so the tracker still holds the cooperation group
-     * registered during checkIfExtend (entries are filtered by extending state to prevent
-     * stale extension data from leaking into a later retraction).
+     * registered during checkIfExtend (entries are filtered by age and extending state).
      * <p>
      * For retraction, we also pre-retract each cooperator: set its body to MOVING_PISTON
      * (mimicking what its own triggerEvent would do moments later) and then remove its head.
@@ -124,7 +132,13 @@ public class PistonBaseBlockMixin {
     private PistonStructureResolver supp$wrapMoveBlocksResolver(Level level, BlockPos pos, Direction facing,
                                                                 boolean extending,
                                                                 Operation<PistonStructureResolver> original) {
-        Set<BlockPos> cooperators = PistonCooperationTracker.getCooperators(pos, facing, extending);
+        final Set<BlockPos> cooperators;
+        if (level instanceof ServerLevel serverLevel) {
+            cooperators = ModData.COOPERATIVE_PISTONS.getData(serverLevel)
+                    .getCooperators(pos, facing, extending, level.getGameTime());
+        } else {
+            cooperators = CooperativePistonData.getCooperatorsClient(pos, facing, extending);
+        }
 
         if (!extending && !cooperators.isEmpty()) {
             for (BlockPos cooperatorPos : cooperators) {
