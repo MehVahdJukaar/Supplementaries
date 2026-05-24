@@ -7,7 +7,7 @@ pluginManagement {
 }
 
 plugins {
-    id("com.possible-triangle.helper") version ("99.0")
+    id("com.possible-triangle.helper") version ("1.4")
 }
 
 include("common", "fabric", "neoforge")

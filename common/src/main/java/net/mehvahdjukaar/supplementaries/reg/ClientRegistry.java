@@ -320,7 +320,6 @@ public class ClientRegistry {
         event.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
         event.register(ModMenuTypes.CANNON.get(), CannonScreen::new);
         event.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
-
     }
 
     @EventCalled
