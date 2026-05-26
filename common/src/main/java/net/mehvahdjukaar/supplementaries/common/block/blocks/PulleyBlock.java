@@ -5,21 +5,23 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.common.misc.PulleyMover;
+import net.mehvahdjukaar.supplementaries.common.misc.PulleyStructureResolver;
+import net.mehvahdjukaar.supplementaries.common.utils.RopeHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.RotatedPillarBlock;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -34,6 +36,17 @@ import java.util.Optional;
 public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRotatable {
     public static final EnumProperty<Winding> TYPE = ModBlockProperties.WINDING;
     public static final BooleanProperty FLIPPED = ModBlockProperties.FLIPPED;
+
+    /**
+     * Block-event id meaning "do one chain step." Param bits 0-2 encode the push direction
+     * via {@link Direction#get3DDataValue()}: {@link Direction#UP} = retract step (chain moves
+     * toward pulley, top rope consumed), {@link Direction#DOWN} = extend step (anchor moves
+     * away, new rope appears in vacated slot). Fired by
+     * {@link PulleyBlockTile#pullRopeUp} / {@link PulleyBlockTile#releaseRopeDown} under
+     * the continuous config. Handled by {@link #triggerEvent} on BOTH server AND client
+     * (vanilla piston pattern) so the moving-piston block entities exist on the client.
+     */
+    public static final int EVENT_PULL_STEP = 0;
 
     public PulleyBlock(Properties properties) {
         super(properties);
@@ -125,6 +138,100 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         Containers.dropContentsOnDestroy(state, newState, level, pos);
         super.onRemove(state, level, pos, newState, isMoving);
+    }
+
+    /**
+     * Handles {@link #EVENT_PULL_STEP}: runs one resolver+move locally. Called on both
+     * server (via the level's runBlockEvents) and client (after the server's
+     * {@code ClientboundBlockEventPacket} arrives). Each side spawns its own moving-piston
+     * block entities so the client sees the slide animation — vanilla pistons rely on
+     * exactly this dual-side execution because {@code PistonMovingBlockEntity.getUpdatePacket}
+     * is null and {@code MovingPistonBlock.newBlockEntity} also returns null, so the only way
+     * the client gets a moving BE is by running the move logic locally.
+     * <p>
+     * Param bits 0-2 encode the push direction: UP for retract, DOWN for extend. The rope
+     * hangs DOWN from the pulley in either case (vertical-pulley assumption). Server-side
+     * bookkeeping happens here too: +1 item / sound on retract, place new rope + −1 item on
+     * extend.
+     */
+    @Override
+    protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
+        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
+                "[PulleyBlock @ {}] triggerEvent {} id={} param={}",
+                pos, level.isClientSide ? "client" : "server", id, param);
+        if (id != EVENT_PULL_STEP) return super.triggerEvent(state, level, pos, id, param);
+        if (!(level.getBlockEntity(pos) instanceof PulleyBlockTile tile)) return false;
+
+        Direction pushDir = Direction.from3DDataValue(param & 7);
+        Direction ropeHangDir = Direction.DOWN;
+        boolean extending = pushDir == ropeHangDir;
+        Block ropeBlock = tile.resolveRopeBlock(ropeHangDir);
+        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
+                "[PulleyBlock @ {}] triggerEvent {} pushDir={} extending={} ropeBlock={}",
+                pos, level.isClientSide ? "client" : "server", pushDir, extending,
+                ropeBlock == null ? "null" : ropeBlock);
+        if (ropeBlock == null) return false;
+
+        PulleyStructureResolver.PulleyInfo info =
+                new PulleyStructureResolver.PulleyInfo(pos, ropeBlock, ropeHangDir, extending);
+        PulleyStructureResolver resolver = new PulleyStructureResolver(level, info);
+        boolean moved = PulleyMover.moveOneStep(level, resolver);
+        if (!moved) return false;
+
+        if (!level.isClientSide) {
+            boolean contributed = resolver.getContributedPulleys().contains(pos);
+            if (contributed) {
+                if (extending) {
+                    serverFinaliseExtend(level, pos, tile, ropeBlock, ropeHangDir);
+                } else {
+                    serverFinaliseRetract(level, pos, tile, ropeBlock);
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Retract bookkeeping: +1 to displayed item, play break sound.
+     */
+    private static void serverFinaliseRetract(Level level, BlockPos pos, PulleyBlockTile tile, Block ropeBlock) {
+        ItemStack stack = tile.getDisplayedItem();
+        if (stack.isEmpty()) {
+            tile.setDisplayedItem(new ItemStack(ropeBlock));
+        } else if (stack.is(ropeBlock.asItem()) && stack.getCount() < stack.getMaxStackSize()) {
+            stack.grow(1);
+            tile.setChanged();
+        }
+        SoundType st = ropeBlock.defaultBlockState().getSoundType();
+        level.playSound(null, pos, st.getBreakSound(), SoundSource.BLOCKS,
+                (st.getVolume() + 1.0F) / 2.0F, st.getPitch() * 0.8F);
+    }
+
+    /**
+     * Extend bookkeeping: place a new rope in the anchor's vacated slot, −1 displayed item,
+     * play place sound. The new rope position is just past the lowest existing rope (where
+     * the anchor was before moving). Walked here rather than threaded back from the resolver
+     * — small re-walk, no perf concern, keeps the resolver focused on toPush.
+     */
+    private static void serverFinaliseExtend(Level level, BlockPos pos, PulleyBlockTile tile,
+                                             Block ropeBlock, Direction ropeHangDir) {
+        ItemStack stack = tile.getDisplayedItem();
+        if (stack.isEmpty() || !stack.is(ropeBlock.asItem()) || stack.getCount() <= 0) {
+            // Nothing to spend — extend is a no-op on the world (the move animation already
+            // happened but we shouldn't leave an unanchored rope).
+            return;
+        }
+        BlockPos cursor = pos.relative(ropeHangDir);
+        while (RopeHelper.isCorrectRope(ropeBlock, level.getBlockState(cursor), ropeHangDir)) {
+            cursor = cursor.relative(ropeHangDir);
+        }
+        // cursor is the anchor's old position (now AIR after moveOneStep's leftover-clear).
+        level.setBlock(cursor, ropeBlock.defaultBlockState(), 3);
+        stack.shrink(1);
+        tile.setChanged();
+        SoundType st = ropeBlock.defaultBlockState().getSoundType();
+        level.playSound(null, pos, st.getPlaceSound(), SoundSource.BLOCKS,
+                (st.getVolume() + 1.0F) / 2.0F, st.getPitch() * 0.8F);
     }
 
     @Override

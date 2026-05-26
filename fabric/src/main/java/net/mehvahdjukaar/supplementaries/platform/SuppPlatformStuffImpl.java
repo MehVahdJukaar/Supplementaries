@@ -92,6 +92,19 @@ public class SuppPlatformStuffImpl {
         return maybeSticky.getBlock() == Blocks.SLIME_BLOCK || maybeSticky.getBlock() == Blocks.HONEY_BLOCK;
     }
 
+    public static boolean isSticky(BlockState state) {
+        return state.is(Blocks.SLIME_BLOCK) || state.is(Blocks.HONEY_BLOCK);
+    }
+
+    /**
+     * Mirrors vanilla {@code PistonStructureResolver.canStickToEachOther} (private static).
+     */
+    public static boolean canStickToEachOther(BlockState a, BlockState b) {
+        if (a.is(Blocks.HONEY_BLOCK) && b.is(Blocks.SLIME_BLOCK)) return false;
+        if (a.is(Blocks.SLIME_BLOCK) && b.is(Blocks.HONEY_BLOCK)) return false;
+        return isSticky(a) || isSticky(b);
+    }
+
     public static SlotReference getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
         ItemStack mainHand = entity.getMainHandItem();
         if (predicate.test(mainHand)) {
@@ -188,6 +201,11 @@ public class SuppPlatformStuffImpl {
         FabricLoader.getInstance().invokeEntrypoints("supplementaries:register_fire_behaviors", IFireItemBehaviorProvider.class, provider -> {
             provider.register(registry, event);
         });
+    }
+
+    // Fabric has no equivalent of NeoForge's IBlockExtension.onDestroyedByPushReaction —
+    // the hook only exists in NeoForge's BlockState patch, so this is a no-op here.
+    public static void onDestroyedByPushReaction(BlockState state, Level level, BlockPos pos, Direction pushDir) {
     }
 
     private static abstract class CropAccessor extends CropBlock {

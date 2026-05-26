@@ -70,7 +70,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     }
 
     @Override
-    public void updateClientVisualsOnLoad() {
+    public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
         buntings.clear();
         for (Direction d : Direction.Plane.HORIZONTAL) {
             ItemStack stack = this.getItem(d.get2DDataValue());

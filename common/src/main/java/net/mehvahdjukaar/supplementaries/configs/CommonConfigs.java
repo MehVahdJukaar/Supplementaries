@@ -241,6 +241,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_CHAINED;
         public static final Supplier<Boolean> PULLEY_ENABLED;
+        public static final Supplier<Boolean> PULLEY_CONTINUOUS;
+        public static final Supplier<Integer> PULLEY_PULL_INTERVAL;
         public static final Supplier<Double> MINESHAFT_ELEVATOR;
 
         static {
@@ -307,6 +309,15 @@ public class CommonConfigs {
             builder.push("pulley_block");
             builder.comment("Pulleys are automatically disabled if 'rope' feature is disabled");
             PULLEY_ENABLED = feature(builder);
+            PULLEY_CONTINUOUS = builder.comment("""
+                            If true, pulleys retract their rope chain over multiple ticks, animating each block via vanilla moving-piston entities.\s
+                            Connected blocks become moving blocks (so they push entities, drop sand etc) and multiple pulleys can cooperate to pull a single heavy contraption — useful for elevators.\s
+                            If false, the original instant retraction behavior is used.""")
+                    .define("continuous_retraction", false);
+            PULLEY_PULL_INTERVAL = builder.comment("""
+                            Ticks to wait between unit pulls when continuous_retraction is enabled.\s
+                            Lower = faster pulley. Minimum 2 ticks because each animation takes that long to play out — going lower has no effect.""")
+                    .define("pull_interval", 4, 2, 100);
             MINESHAFT_ELEVATOR = builder.comment("Chance for a new mineshaft elevator piece to spawn")
                     .define("mineshaft_elevator", 0.035, 0, 1);
             builder.pop();

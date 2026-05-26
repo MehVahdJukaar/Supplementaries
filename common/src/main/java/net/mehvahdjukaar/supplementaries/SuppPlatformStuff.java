@@ -103,6 +103,27 @@ public class SuppPlatformStuff {
         throw new AssertionError();
     }
 
+    /**
+     * Whether {@code state} is a "sticky" block in the piston sense. NeoForge routes this
+     * through {@code IBlockExtension.isStickyBlock} (so modded sticky variants work);
+     * Fabric falls back to vanilla's private logic of slime-or-honey.
+     */
+    @PlatformImpl
+    public static boolean isSticky(BlockState state) {
+        throw new AssertionError();
+    }
+
+    /**
+     * Whether {@code a} and {@code b} should mutually stick in a piston-style chain.
+     * NeoForge: bidirectional {@code IBlockExtension.canStickTo} check. Fabric: vanilla's
+     * private {@code canStickToEachOther} logic — honey/slime mutual exclusion, otherwise
+     * true if either side is sticky.
+     */
+    @PlatformImpl
+    public static boolean canStickToEachOther(BlockState a, BlockState b) {
+        throw new AssertionError();
+    }
+
     @PlatformImpl
     public static SlotReference getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
         throw new AssertionError();
@@ -160,6 +181,19 @@ public class SuppPlatformStuff {
 
     @PlatformImpl
     public static void registerFireBehaviors(RegistryAccess registry, IFireItemBehaviorRegistry event) {
+        throw new AssertionError();
+    }
+
+    /**
+     * Mirrors the {@code blockstate.onDestroyedByPushReaction(level, pos, direction, fluid)}
+     * call made by the NeoForge-patched {@code PistonBaseBlock.moveBlocks} for each block in
+     * the toDestroy list. No-op on Fabric (the {@code IBlockExtension} hook doesn't exist
+     * there); on NeoForge it dispatches to the standard extension method so mods like
+     * Quark/Create can react to destroy-by-push.
+     */
+    @PlatformImpl
+    public static void onDestroyedByPushReaction(BlockState state, Level level, BlockPos pos,
+                                                 Direction pushDir) {
         throw new AssertionError();
     }
 }

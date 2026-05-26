@@ -138,6 +138,14 @@ public class SuppPlatformStuffImpl {
         return movedState.canStickTo(blockState);
     }
 
+    public static boolean isSticky(BlockState state) {
+        return state.isStickyBlock();
+    }
+
+    public static boolean canStickToEachOther(BlockState a, BlockState b) {
+        return a.canStickTo(b) && b.canStickTo(a);
+    }
+
     public static SlotReference getFirstInInventory(LivingEntity entity, Predicate<ItemStack> predicate) {
         var cap = entity.getCapability(Capabilities.ItemHandler.ENTITY);
         if (cap != null) {
@@ -225,6 +233,10 @@ public class SuppPlatformStuffImpl {
 
     public static void registerFireBehaviors(RegistryAccess registry, IFireItemBehaviorRegistry event) {
         NeoForge.EVENT_BUS.post(new RegisterFireBehaviorsEvent(registry, event));
+    }
+
+    public static void onDestroyedByPushReaction(BlockState state, Level level, BlockPos pos, Direction pushDir) {
+        state.onDestroyedByPushReaction(level, pos, pushDir, level.getFluidState(pos));
     }
 
     public record CapSlotReference(int slot) implements SlotReference {

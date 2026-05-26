@@ -5,11 +5,13 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.PulleyContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.utils.RopeHelper;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
@@ -85,7 +87,55 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     public boolean pullRopeUp() {
+        boolean continuous = CommonConfigs.Redstone.PULLEY_CONTINUOUS.get();
+        boolean isServer = level instanceof ServerLevel;
+        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
+                "[PulleyTile @ {}] pullRopeUp called — continuous_config={} isServerLevel={} levelClass={}",
+                worldPosition, continuous, isServer, level == null ? "null" : level.getClass().getSimpleName());
+        if (continuous) {
+            // Client side is a no-op: server is authoritative for the move, client will receive
+            // the block event and run triggerEvent locally to spawn moving-piston BEs. Falling
+            // through to legacy pullRope here would let the client mutate its world directly
+            // (the bug we saw in the diagnostic logs).
+            if (!isServer) return false;
+            return fireContinuousStep(Direction.UP);
+        }
         return pullRope(Direction.DOWN, Integer.MAX_VALUE, true);
+    }
+
+    /**
+     * Fires a single animated step. The pulley is purely an event initiator — moving-piston
+     * BEs spawned by {@link PulleyBlock#triggerEvent} handle the animation autonomously.
+     * Re-firing while a previous animation is in flight is fine: the next resolver will see
+     * MOVING_PISTON in the chain's adjacent slot and return false (chain busy), so the event
+     * is silently dropped. That's the "automatic" behavior — no busy tracking needed here.
+     *
+     * @param pushDir UP = retract step, DOWN = extend step
+     */
+    private boolean fireContinuousStep(Direction pushDir) {
+        if (!(level instanceof ServerLevel sl)) return false;
+        int param = pushDir.get3DDataValue() & 7;
+        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
+                "[PulleyTile @ {}] fireContinuousStep pushDir={} param={} blockEvent queued",
+                worldPosition, pushDir, param);
+        sl.blockEvent(worldPosition, getBlockState().getBlock(), PulleyBlock.EVENT_PULL_STEP, param);
+        return true;
+    }
+
+    /**
+     * Resolves the rope block this pulley winds: displayed item if present, else the block
+     * directly along the rope-hang direction. Used by {@link PulleyBlock#triggerEvent}.
+     */
+    @Nullable
+    public Block resolveRopeBlock(Direction ropeDir) {
+        ItemStack stack = getDisplayedItem();
+        if (!stack.isEmpty() && stack.getItem() instanceof BlockItem bi) {
+            return bi.getBlock();
+        }
+        if (level == null) return null;
+        Block adjacent = level.getBlockState(worldPosition.relative(ropeDir)).getBlock();
+        if (getContentType(adjacent.asItem()) != Winding.NONE) return adjacent;
+        return null;
     }
 
     public boolean pullRope(Direction moveDir, int maxDist, boolean addItem) {
@@ -111,6 +161,16 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     public boolean releaseRopeDown() {
+        boolean continuous = CommonConfigs.Redstone.PULLEY_CONTINUOUS.get();
+        boolean isServer = level instanceof ServerLevel;
+        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
+                "[PulleyTile @ {}] releaseRopeDown called — continuous_config={} isServerLevel={} levelClass={}",
+                worldPosition, continuous, isServer, level == null ? "null" : level.getClass().getSimpleName());
+        if (continuous) {
+            // See pullRopeUp for the rationale: client side is a no-op in continuous mode.
+            if (!isServer) return false;
+            return fireContinuousStep(Direction.DOWN);
+        }
         return releaseRope(Direction.DOWN, Integer.MAX_VALUE, true);
     }
 
@@ -135,6 +195,10 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     //called when another pulley indirectly rotates this through a rope or chain
     public boolean rotateIndirect(Player player, InteractionHand hand, Block ropeBlock, Direction moveDir, boolean retracting) {
+        // Cross-pulley chaining is disabled in continuous mode (per user spec): in that mode
+        // a pulley is purely a fire-and-forget event initiator and shouldn't recursively
+        // poke other pulleys. The animation system isn't designed to drive multi-pulley chains.
+        if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) return false;
         ItemStack stack = getDisplayedItem();
         if (stack.isEmpty()) {
             if (retracting) {
