@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
+import net.mehvahdjukaar.moonlight.api.block.IAnalogRotatable;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -8,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.PulleyMover;
 import net.mehvahdjukaar.supplementaries.common.misc.PulleyStructureResolver;
 import net.mehvahdjukaar.supplementaries.common.utils.RopeHelper;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -33,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRotatable {
+public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRotatable, IAnalogRotatable {
     public static final EnumProperty<Winding> TYPE = ModBlockProperties.WINDING;
     public static final BooleanProperty FLIPPED = ModBlockProperties.FLIPPED;
 
@@ -162,20 +164,19 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         if (id != EVENT_PULL_STEP) return super.triggerEvent(state, level, pos, id, param);
         if (!(level.getBlockEntity(pos) instanceof PulleyBlockTile tile)) return false;
 
-        Direction pushDir = Direction.from3DDataValue(param & 7);
+        // Param layout matches PulleyBlockTile.fireContinuousStep.
+        int rawParam = param & 0xFF;
+        boolean extending = (rawParam & 1) != 0;
+        int animationTicks = (rawParam >>> 1) & 0x7F;
         Direction ropeHangDir = Direction.DOWN;
-        boolean extending = pushDir == ropeHangDir;
+        Direction pushDir = extending ? ropeHangDir : ropeHangDir.getOpposite();
         Block ropeBlock = tile.resolveRopeBlock(ropeHangDir);
-        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
-                "[PulleyBlock @ {}] triggerEvent {} pushDir={} extending={} ropeBlock={}",
-                pos, level.isClientSide ? "client" : "server", pushDir, extending,
-                ropeBlock == null ? "null" : ropeBlock);
         if (ropeBlock == null) return false;
 
         PulleyStructureResolver.PulleyInfo info =
                 new PulleyStructureResolver.PulleyInfo(pos, ropeBlock, ropeHangDir, extending);
         PulleyStructureResolver resolver = new PulleyStructureResolver(level, info);
-        boolean moved = PulleyMover.moveOneStep(level, resolver);
+        boolean moved = PulleyMover.moveOneStep(level, resolver, animationTicks);
         if (!moved) return false;
 
         if (!level.isClientSide) {
@@ -242,6 +243,21 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
+    }
+
+    @Override
+    public boolean canRotateAnalog(BlockState state, Level level, BlockPos pos, Direction fromDir) {
+        // Analog driving only makes sense for the continuous animated path. In legacy mode the
+        // driver should fall through and call our IRotatable instead.
+        return CommonConfigs.Redstone.PULLEY_CONTINUOUS.get();
+    }
+
+    @Override
+    public void rotateAnalog(BlockState state, Level level, BlockPos pos, Direction fromDir, boolean ccw, float speed) {
+        if (!CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) return;
+        if (level.getBlockEntity(pos) instanceof PulleyBlockTile tile) {
+            tile.driveAnalog(level, ccw, speed);
+        }
     }
 
 }

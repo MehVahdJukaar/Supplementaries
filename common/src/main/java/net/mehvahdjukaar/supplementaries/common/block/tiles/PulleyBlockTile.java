@@ -20,6 +20,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.Rotation;
@@ -32,6 +33,12 @@ import java.util.List;
 
 
 public class PulleyBlockTile extends ItemDisplayTile {
+
+    // Cooldown between analog-driven pulls. 0 = fire on this call. Transient; not persisted.
+    private int analogCooldown = 0;
+    // Game tick of the last driveAnalog call. Used to detect gaps so a restart fires immediately
+    // instead of waiting for whatever residual cooldown was left from a previous drive.
+    private long lastAnalogDriveTick = -1L;
 
     public PulleyBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PULLEY_BLOCK_TILE.get(), pos, state);
@@ -86,19 +93,25 @@ public class PulleyBlockTile extends ItemDisplayTile {
         else return false;
     }
 
+    /**
+     * No-driver path: rotation-source unknown, animation runs at vanilla 2-tick speed.
+     */
     public boolean pullRopeUp() {
-        boolean continuous = CommonConfigs.Redstone.PULLEY_CONTINUOUS.get();
-        boolean isServer = level instanceof ServerLevel;
-        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
-                "[PulleyTile @ {}] pullRopeUp called — continuous_config={} isServerLevel={} levelClass={}",
-                worldPosition, continuous, isServer, level == null ? "null" : level.getClass().getSimpleName());
-        if (continuous) {
-            // Client side is a no-op: server is authoritative for the move, client will receive
-            // the block event and run triggerEvent locally to spawn moving-piston BEs. Falling
-            // through to legacy pullRope here would let the client mutate its world directly
-            // (the bug we saw in the diagnostic logs).
-            if (!isServer) return false;
-            return fireContinuousStep(Direction.UP);
+        return pullRopeUp(0);
+    }
+
+    /**
+     * @param animationTicks ticks the animation should last. 0 = vanilla 2-tick default. A
+     *                       driver (e.g. {@link net.mehvahdjukaar.supplementaries.common.block.tiles.TurnTableBlockTile})
+     *                       that knows its own pulse period passes it directly so the animation
+     *                       lasts the same wall-clock time the legacy instant move would've.
+     */
+    public boolean pullRopeUp(int animationTicks) {
+        if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) {
+            // Client side is a no-op: server is authoritative; the client will receive the block
+            // event and run triggerEvent locally to spawn the moving-piston BEs.
+            if (!(level instanceof ServerLevel)) return false;
+            return fireContinuousStep(Direction.UP, animationTicks);
         }
         return pullRope(Direction.DOWN, Integer.MAX_VALUE, true);
     }
@@ -112,12 +125,18 @@ public class PulleyBlockTile extends ItemDisplayTile {
      *
      * @param pushDir UP = retract step, DOWN = extend step
      */
-    private boolean fireContinuousStep(Direction pushDir) {
+    /**
+     * @param pushDir        UP for retract, DOWN for extend.
+     * @param animationTicks how long the animation should last in ticks. 0 = vanilla 2-tick speed.
+     *                       Encoded in the blockEvent param so triggerEvent on both sides can size
+     *                       the moving-piston BE's progress increment to match.
+     */
+    private boolean fireContinuousStep(Direction pushDir, int animationTicks) {
         if (!(level instanceof ServerLevel sl)) return false;
-        int param = pushDir.get3DDataValue() & 7;
-        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
-                "[PulleyTile @ {}] fireContinuousStep pushDir={} param={} blockEvent queued",
-                worldPosition, pushDir, param);
+        // Param layout (8-bit limit per ClientboundBlockEventPacket): bit 0 = extending flag
+        // (0 = retract, 1 = extend), bits 1-7 = animationTicks clamped to 0..127. 0 = vanilla speed.
+        int extendingBit = pushDir == Direction.DOWN ? 1 : 0;
+        int param = extendingBit | ((Math.min(animationTicks, 127) & 0x7F) << 1);
         sl.blockEvent(worldPosition, getBlockState().getBlock(), PulleyBlock.EVENT_PULL_STEP, param);
         return true;
     }
@@ -161,17 +180,49 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     public boolean releaseRopeDown() {
-        boolean continuous = CommonConfigs.Redstone.PULLEY_CONTINUOUS.get();
-        boolean isServer = level instanceof ServerLevel;
-        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
-                "[PulleyTile @ {}] releaseRopeDown called — continuous_config={} isServerLevel={} levelClass={}",
-                worldPosition, continuous, isServer, level == null ? "null" : level.getClass().getSimpleName());
-        if (continuous) {
-            // See pullRopeUp for the rationale: client side is a no-op in continuous mode.
-            if (!isServer) return false;
-            return fireContinuousStep(Direction.DOWN);
+        return releaseRopeDown(0);
+    }
+
+    /**
+     * @see #pullRopeUp(int)
+     */
+    public boolean releaseRopeDown(int animationTicks) {
+        if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) {
+            if (!(level instanceof ServerLevel)) return false;
+            return fireContinuousStep(Direction.DOWN, animationTicks);
+        } else return releaseRope(Direction.DOWN, Integer.MAX_VALUE, true);
+    }
+
+    /**
+     * Driven by an external analog rotator (e.g. {@link PulleyBlock#rotateAnalog}, called once
+     * per tick by a {@link net.mehvahdjukaar.supplementaries.common.block.tiles.TurnTableBlockTile}).
+     * First call after a gap fires a pull immediately; subsequent calls within the same drive
+     * decrement a cooldown so pulls land at the same wall-clock cadence the old instant-mode
+     * cooldown would have produced.
+     *
+     * @param speed the driver's analog speed value. For a turn table this is its redstone power
+     *              (0-15); the period formula here mirrors {@code TurnTableBlock.getPeriod}.
+     */
+    public void driveAnalog(Level level, boolean ccw, float speed) {
+        long now = level.getGameTime();
+        if (this.lastAnalogDriveTick != now - 1) {
+            // Either a fresh start or the driver paused — reset so we fire on this call.
+            this.analogCooldown = 0;
         }
-        return releaseRope(Direction.DOWN, Integer.MAX_VALUE, true);
+        this.lastAnalogDriveTick = now;
+
+        if (this.analogCooldown > 0) {
+            this.analogCooldown--;
+            return;
+        }
+        // Mirrors TurnTableBlock.getPeriod(power): power 15 → 4 ticks, power 1 → 60 ticks.
+        int period = Math.max(2, (int) ((60 - speed * 4) + 4));
+        if (ccw) {
+            releaseRopeDown(period);
+        } else {
+            pullRopeUp(period);
+        }
+        this.analogCooldown = period;
     }
 
     public boolean releaseRope(Direction dir, int maxDist, boolean removeItem) {

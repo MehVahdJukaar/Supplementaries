@@ -409,6 +409,10 @@ public class ClientRegistry {
         event.register(ModRegistry.CANNON_TILE.get(), CannonBlockTileRenderer::new);
         event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
         event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), SlidyBlockRenderer::new);
+        // Same renderer as vanilla pistons — our BE extends PistonMovingBlockEntity so
+        // PistonRenderer just works for it.
+        event.register(ModRegistry.MOVING_PULLEY_BLOCK_TILE.get(),
+                net.minecraft.client.renderer.blockentity.PistonHeadRenderer::new);
     }
 
     @EventCalled

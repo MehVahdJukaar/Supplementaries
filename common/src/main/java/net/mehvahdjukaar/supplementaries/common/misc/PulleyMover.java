@@ -3,7 +3,10 @@ package net.mehvahdjukaar.supplementaries.common.misc;
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingPulleyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingPulleyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -50,7 +53,12 @@ public final class PulleyMover {
      * {@code PistonMovingBlockEntity.TICKS_TO_EXTEND} ticks). False if the resolve
      * failed or there was nothing to pull — the caller should stop the pull.
      */
-    public static boolean moveOneStep(Level level, PulleyStructureResolver resolver) {
+    /**
+     * @param animationTicks animation duration. 0 = use vanilla {@link Blocks#MOVING_PISTON}
+     *                       (2-tick animation). >0 = use {@code MovingPulleyBlock} (TODO once
+     *                       subclass lands) with progress sized to last that many ticks.
+     */
+    public static boolean moveOneStep(Level level, PulleyStructureResolver resolver, int animationTicks) {
         if (!resolver.resolve()) {
             Supplementaries.LOGGER.info("[PulleyMover {}] resolve() returned false — aborting step",
                     level.isClientSide ? "client" : "server");
@@ -105,20 +113,31 @@ public final class PulleyMover {
             level.gameEvent(GameEvent.BLOCK_DESTROY, pos, Context.of(destroyState));
         }
 
+        // Pick the moving-block variant: our MovingPulleyBlock when a driver passed an animation
+        // duration (we want a non-vanilla speed), else vanilla MOVING_PISTON for the no-driver
+        // path (matches the player-shift-click case where vanilla 2-tick speed is fine).
+        boolean usePulleyBlock = animationTicks > 1;
+        Block movingBlock = usePulleyBlock ? ModRegistry.MOVING_PULLEY_BLOCK.get() : Blocks.MOVING_PISTON;
         for (int j = list.size() - 1; j >= 0; --j) {
             BlockPos srcPos = list.get(j);
             BlockState srcState = originalStates.get(j);
             BlockPos dstPos = srcPos.relative(pushDir);
             map.remove(dstPos);
-            BlockState movingPistonState = Blocks.MOVING_PISTON.defaultBlockState()
+            BlockState movingPistonState = movingBlock.defaultBlockState()
                     .setValue(MovingPistonBlock.FACING, pushDir)
                     .setValue(MovingPistonBlock.TYPE, PistonType.DEFAULT);
             level.setBlock(dstPos, movingPistonState, 68);
-            BlockEntity movingBe = MovingPistonBlock.newMovingBlockEntity(
-                    dstPos, movingPistonState, srcState, pushDir, true, false);
-            CompoundTag srcBeNbt = carriedBeNbt.get(srcPos);
-            if (srcBeNbt != null && movingBe instanceof ICarryingMovingPiston carrier) {
-                carrier.supp$setCarriedBlockEntityNbt(srcBeNbt);
+            BlockEntity movingBe = usePulleyBlock
+                    ? MovingPulleyBlock.newMovingBlockEntity(dstPos, movingPistonState, srcState, pushDir, true, false)
+                    : MovingPistonBlock.newMovingBlockEntity(dstPos, movingPistonState, srcState, pushDir, true, false);
+            if (movingBe instanceof MovingPulleyBlockEntity mpbe) {
+                mpbe.setAnimationDuration(animationTicks);
+            }
+            if (movingBe instanceof ICarryingMovingPiston carrier) {
+                CompoundTag srcBeNbt = carriedBeNbt.get(srcPos);
+                if (srcBeNbt != null) {
+                    carrier.supp$setCarriedBlockEntityNbt(srcBeNbt);
+                }
             }
             level.setBlockEntity(movingBe);
             BlockEntity verifyBe = level.getBlockEntity(dstPos);
