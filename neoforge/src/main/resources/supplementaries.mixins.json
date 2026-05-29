@@ -6,7 +6,6 @@
     "BlockEntityRendererDispatcherMixin",
     "ChatMixin",
     "LevelRendererMixin",
-    "MainTargetMixin",
     "ParrotLayerMixin",
     "compat.CompatEmbFluidRendererMixin",
     "compat.CompatIFMapAtlasTextureMixin",

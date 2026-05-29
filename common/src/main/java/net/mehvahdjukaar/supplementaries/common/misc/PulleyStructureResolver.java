@@ -139,8 +139,9 @@ public class PulleyStructureResolver {
                     pulley.pulleyPos(), pulley.ropeBlock(), ropeDir, firstSlot,
                     firstState.getBlock(), firstState.getValues());
 
-            // Pulley with no rope directly below contributes nothing.
-            if (!RopeHelper.isCorrectRope(pulley.ropeBlock(), firstState, ropeDir)) {
+            // Retracting needs a rope at firstSlot to consume; extending can push an anchor
+            // that sits directly below with no rope yet (phantom places the new rope on finish).
+            if (!extending && !RopeHelper.isCorrectRope(pulley.ropeBlock(), firstState, ropeDir)) {
                 net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
                         "[Resolver {}] firstSlot is NOT a correct rope — skipping this pulley (chain axis mismatch or different block)",
                         level.isClientSide ? "client" : "server");

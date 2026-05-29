@@ -6,9 +6,11 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.common.misc.PulleyCooperation;
 import net.mehvahdjukaar.supplementaries.common.misc.PulleyMover;
 import net.mehvahdjukaar.supplementaries.common.misc.PulleyStructureResolver;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,7 +34,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRotatable, IAnalogRotatable {
     public static final EnumProperty<Winding> TYPE = ModBlockProperties.WINDING;
@@ -172,21 +177,70 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         Block ropeBlock = tile.resolveRopeBlock(ropeHangDir);
         if (ropeBlock == null) return false;
 
-        PulleyStructureResolver.PulleyInfo info =
-                new PulleyStructureResolver.PulleyInfo(pos, ropeBlock, ropeHangDir, extending);
-        PulleyStructureResolver resolver = new PulleyStructureResolver(level, info);
+        // Cooperative pulleys: dispatch to the per-level WorldSavedData on the server, the
+        // client static side-channel otherwise. Same semantics either way — if this pulley was
+        // already absorbed into an earlier triggerEvent's resolver call this tick, swallow our
+        // own event so we don't double-shift the chain.
+        long now = level.getGameTime();
+        PulleyCooperation serverData = level instanceof net.minecraft.server.level.ServerLevel sl
+                ? ModData.COOPERATIVE_PULLEYS.getData(sl) : null;
+        boolean alreadyConsumed = serverData != null
+                ? serverData.wasConsumed(pos, now)
+                : PulleyCooperation.wasConsumedClient(pos, now);
+        if (alreadyConsumed) return true;
+
+        // Gather cooperators (same period, same push dir, registered this tick window, in range)
+        // and resolve all their chains in one structure pass so a shared anchor moves as one unit.
+        Set<BlockPos> cooperatorPositions = serverData != null
+                ? serverData.getCooperators(pos, animationTicks, pushDir, now)
+                : PulleyCooperation.getCooperatorsClient(pos, animationTicks, pushDir, now);
+        List<PulleyStructureResolver.PulleyInfo> infos = new ArrayList<>();
+        infos.add(new PulleyStructureResolver.PulleyInfo(pos, ropeBlock, ropeHangDir, extending));
+        for (BlockPos cp : cooperatorPositions) {
+            if (!(level.getBlockEntity(cp) instanceof PulleyBlockTile ct)) continue;
+            Block cRope = ct.resolveRopeBlock(ropeHangDir);
+            // Only cooperate when the same rope-block type is wound — different blocks (chain vs
+            // rope) would break the resolver's single-ropeBlock assumption per chain walk.
+            if (cRope == null || cRope != ropeBlock) continue;
+            infos.add(new PulleyStructureResolver.PulleyInfo(cp, cRope, ropeHangDir, extending));
+        }
+        // Build rope-block map from infos before any world mutation.
+        java.util.Map<BlockPos, Block> preMovRopeBlocks = new java.util.HashMap<>();
+        for (PulleyStructureResolver.PulleyInfo info : infos) {
+            preMovRopeBlocks.put(info.pulleyPos(), info.ropeBlock());
+        }
+        PulleyStructureResolver resolver = new PulleyStructureResolver(level, infos);
+
+        // Resolve first so we know which pulleys contribute and can update inventories
+        // immediately when the move begins, before the animation plays.
+        if (!resolver.resolve()) return false;
+        if (resolver.getToPush().isEmpty() && resolver.getToDestroy().isEmpty()) return false;
+
+        if (!level.isClientSide) {
+            for (BlockPos contributorPos : resolver.getContributedPulleys()) {
+                if (!(level.getBlockEntity(contributorPos) instanceof PulleyBlockTile ct)) continue;
+                Block cRope = preMovRopeBlocks.get(contributorPos);
+                if (cRope == null) continue;
+                if (extending) {
+                    serverFinaliseExtend(level, contributorPos, ct, cRope, ropeHangDir);
+                } else {
+                    serverFinaliseRetract(level, contributorPos, ct, cRope);
+                }
+            }
+        }
+
+        // moveOneStep re-resolves internally (idempotent — world unchanged since our resolve call).
         boolean moved = PulleyMover.moveOneStep(level, resolver, animationTicks);
         if (!moved) return false;
 
-        if (!level.isClientSide) {
-            boolean contributed = resolver.getContributedPulleys().contains(pos);
-            if (contributed) {
-                if (extending) {
-                    serverFinaliseExtend(level, pos, tile, ropeBlock, ropeHangDir);
-                } else {
-                    serverFinaliseRetract(level, pos, tile, ropeBlock);
-                }
-            }
+        // Mark every cooperator (including self) consumed so their own incoming blockEvents this
+        // tick group are no-ops.
+        if (serverData != null) {
+            serverData.markConsumed(pos, now);
+            for (BlockPos cp : cooperatorPositions) serverData.markConsumed(cp, now);
+        } else {
+            PulleyCooperation.markConsumedClient(pos, now);
+            for (BlockPos cp : cooperatorPositions) PulleyCooperation.markConsumedClient(cp, now);
         }
         return true;
     }

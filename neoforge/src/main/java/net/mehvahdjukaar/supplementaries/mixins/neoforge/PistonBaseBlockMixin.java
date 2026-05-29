@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.CooperativePistonData;
 import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
@@ -55,14 +56,17 @@ public class PistonBaseBlockMixin {
         CooperativePistonData data = ModData.COOPERATIVE_PISTONS.getData(serverLevel);
         data.markAttempting(pos, direction, true, tick);
         CooperativePistonData.markAttemptingClient(pos, direction, true, tick);
+        Supplementaries.LOGGER.info("[COOP] checkIfExtend@{} dir={} tick={} (marked attempting)", pos, direction, tick);
 
         boolean vanillaResult = original.call(resolver);
+        Supplementaries.LOGGER.info("[COOP] checkIfExtend@{} vanilla resolve={}", pos, vanillaResult);
         if (vanillaResult) {
             data.markPosted(pos, tick);
             return true;
         }
 
         Set<BlockPos> cooperators = data.getCooperators(pos, direction, true, tick);
+        Supplementaries.LOGGER.info("[COOP] checkIfExtend@{} candidate cooperators={}", pos, cooperators);
         if (cooperators.isEmpty()) {
             return false;
         }
@@ -74,11 +78,19 @@ public class PistonBaseBlockMixin {
         PistonStructureResolver coopResolver = new PistonStructureResolver(level, pos, direction, true);
         ((ICooperativePiston) coopResolver).supp$setCooperators(allPistons, limit);
 
-        if (!coopResolver.resolve()) {
+        boolean coopResult = coopResolver.resolve();
+        Supplementaries.LOGGER.info("[COOP] checkIfExtend@{} coopResolve={}", pos, coopResult);
+        if (!coopResult) {
             return false;
         }
 
-        for (BlockPos cooperatorPos : cooperators) {
+        // Only post events for cooperators that actually shared the pushed structure.
+        // Free-riders (air above, disjoint columns) are filtered out by the resolver's
+        // contribution check; their vanilla resolve already succeeded independently if
+        // applicable, so no event is owed here.
+        Set<BlockPos> contributing = ((ICooperativePiston) coopResolver).supp$getContributingCooperators();
+        Supplementaries.LOGGER.info("[COOP] checkIfExtend@{} contributing cooperators={}", pos, contributing);
+        for (BlockPos cooperatorPos : contributing) {
             if (!data.hasPosted(cooperatorPos, tick)) {
                 level.blockEvent(cooperatorPos,
                         level.getBlockState(cooperatorPos).getBlock(),
@@ -153,6 +165,8 @@ public class PistonBaseBlockMixin {
             allPistons.add(pos);
             int limit = allPistons.size() * 12;
             ((ICooperativePiston) resolver).supp$setCooperators(allPistons, limit);
+            Supplementaries.LOGGER.info("[COOP] moveBlocks@{} facing={} extending={} cooperators={}",
+                    pos, facing, extending, cooperators);
         }
         return resolver;
     }

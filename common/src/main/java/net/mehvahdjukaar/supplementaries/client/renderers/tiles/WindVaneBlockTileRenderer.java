@@ -3,12 +3,12 @@ package net.mehvahdjukaar.supplementaries.client.renderers.tiles;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.client.renderers.DepthMaskUtils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.ClientConfigs.PulleyMaskMode;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.BoatModel;
-import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -17,25 +17,21 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
 
 
 public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBlockTile> {
 
     private final ModelPart model;
-    private final BoatModel boatModel;
 
     public WindVaneBlockTileRenderer(BlockEntityRendererProvider.Context context) {
         this.model = context.bakeLayer(ClientRegistry.WIND_VANE_MODEL);
-        this.boatModel = new BoatModel(context.bakeLayer(ModelLayers.createBoatModelName(Boat.Type.OAK)));
     }
 
     public static LayerDefinition createMesh() {
@@ -53,71 +49,67 @@ public class WindVaneBlockTileRenderer implements BlockEntityRenderer<WindVaneBl
     @Override
     public void render(WindVaneBlockTile tile, float partialTicks, PoseStack ps, MultiBufferSource buffers,
                        int light, int overlay) {
-        // Flush any pending batch so nothing drawn before us interferes.
-        if (buffers instanceof MultiBufferSource.BufferSource bs) bs.endBatch();
+        PulleyMaskMode mode = ClientConfigs.Blocks.PULLEY_MASK_MODE.get();
+        boolean masking = mode != PulleyMaskMode.OFF;
 
-        // ── Depth-prepass plane at block centre (world Y = 0.5) ─────────────
-        // Computed in the vane's local space (translate + flip) so Y=0 == block centre.
+        if (masking) {
+            // Flush any pending batch so nothing drawn before us is affected by the mask.
+            if (buffers instanceof MultiBufferSource.BufferSource bs) bs.endBatch();
+        }
+
         ps.pushPose();
-        ps.translate(0.5, 0.5, 0.5);
-        ps.scale(1, -1, -1);
-        drawDepthPlane(ps.last().pose());
-        ps.popPose();
+        ps.translate(0.5, 1.0, 0.5);
+        Matrix4f mat = new Matrix4f(ps.last().pose());
 
-        // ── Objects to mask — both queued AFTER the plane is in the depth buffer ─
+        // ── Pass 1: mask CUBE ─────────────────────────────────────────────────
+        DepthMaskUtils.beginMask(mat, mode);
 
-        // Stone block (0→1 in block space): lower half should vanish when viewed from above.
+        // ── Pass 2: raw red quad ──────────────────────────────────────────────
+        drawVisibleQuad(mat);
+
+        // ── Pass 3: vanilla block via the normal pipeline ────────────────────
+        ps.pushPose();
+        ps.translate(-1.5, -0.5, 0.2);
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
-                Blocks.STONE.defaultBlockState(), ps, buffers, light, overlay);
-
-        // Boat model — hollow hull makes the depth-mask cutoff clearly visible.
-        ps.pushPose();
-        ps.translate(0.5, 0.5, 0.5);
-        ps.scale(-1f, -1f, 1f);
-        boatModel.renderToBuffer(ps,
-                buffers.getBuffer(RenderType.entityCutoutNoCull(
-                        ResourceLocation.withDefaultNamespace("textures/entity/boat/oak.png"))),
-                light, OverlayTexture.NO_OVERLAY);
+                Blocks.GLOWSTONE.defaultBlockState(), ps, buffers, light, overlay);
         ps.popPose();
 
-        // Wind vane model.
+        // ── Pass 4: item via the item renderer ───────────────────────────────
         ps.pushPose();
-        ps.translate(0.5, 0.5, 0.5);
-        ps.scale(1, -1, -1);
-        model.yRot = Mth.DEG_TO_RAD * tile.getYaw(partialTicks);
-        model.render(ps, ModMaterials.WIND_VANE_MATERIAL.buffer(buffers, RenderType::entityCutout),
-                light, overlay);
+        ps.translate(0.5, -0.2, 0.2);
+        ps.scale(1.5f, 1.5f, 1.5f);
+        Minecraft.getInstance().getItemRenderer().renderStatic(
+                Items.DIAMOND_SWORD.getDefaultInstance(),
+                ItemDisplayContext.FIXED,
+                light, overlay, ps, buffers, tile.getLevel(), 0);
+        ps.popPose();
+
+        if (masking) {
+            // Flush the buffered block + item so they actually rasterize under the mask.
+            if (buffers instanceof MultiBufferSource.BufferSource bs) bs.endBatch();
+            DepthMaskUtils.endMask(mat, mode);
+        }
+
         ps.popPose();
     }
 
-    /**
-     * Draws a horizontal quad at Y=0 in the supplied matrix space into the depth
-     * buffer only — no colour output.  Depth test is disabled so the write is
-     * unconditional (solid block geometry already in the buffer would otherwise
-     * cause it to fail GL_LEQUAL and write nothing).
-     * <p>
-     * After this call: any geometry drawn to the same pixels whose depth is greater
-     * than the plane's depth (i.e. further from the camera) fails GL_LEQUAL and
-     * is invisible — effectively clipping everything "below" the plane from the
-     * camera's perspective.
-     */
-    private static void drawDepthPlane(Matrix4f mat) {
-        RenderSystem.disableDepthTest();
-        RenderSystem.depthMask(true);
-        RenderSystem.colorMask(false, false, false, false);
-        RenderSystem.disableCull();
-        RenderSystem.setShader(GameRenderer::getPositionShader);
+    /** Horizontal red quad — half of it intersects the mask cube and gets hidden. */
+    private static void drawVisibleQuad(Matrix4f mat) {
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthFunc(GL11.GL_LEQUAL);
+        GL11.glDepthMask(true);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
 
         Tesselator t = Tesselator.getInstance();
-        BufferBuilder bb = t.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        bb.addVertex(mat, -1f, 0f, -1f);
-        bb.addVertex(mat, 1f, 0f, -1f);
-        bb.addVertex(mat, 1f, 0f, 1f);
-        bb.addVertex(mat, -1f, 0f, 1f);
+        BufferBuilder bb = t.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+        bb.addVertex(mat, -1f, 0f, -1f).setColor(255, 32, 32, 255);
+        bb.addVertex(mat,  1f, 0f, -1f).setColor(255, 32, 32, 255);
+        bb.addVertex(mat,  1f, 0f,  1f).setColor(255, 32, 32, 255);
+        bb.addVertex(mat, -1f, 0f,  1f).setColor(255, 32, 32, 255);
         BufferUploader.drawWithShader(bb.buildOrThrow());
 
-        RenderSystem.enableDepthTest();
-        RenderSystem.colorMask(true, true, true, true);
-        RenderSystem.enableCull();
+        GL11.glEnable(GL11.GL_CULL_FACE);
     }
 }

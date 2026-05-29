@@ -217,6 +217,18 @@ public class PulleyBlockTile extends ItemDisplayTile {
         }
         // Mirrors TurnTableBlock.getPeriod(power): power 15 → 4 ticks, power 1 → 60 ticks.
         int period = Math.max(2, (int) ((60 - speed * 4) + 4));
+        // Register intent on BOTH server and client at the same local tick so the matching
+        // triggerEvent (which arrives on the client a few ticks late) can still see all
+        // attempted pulleys and run them through the resolver as one cooperative group.
+        // Server uses the per-level WorldSavedData; client uses a static side-channel.
+        Direction pushDir = ccw ? Direction.DOWN : Direction.UP;
+        if (level instanceof ServerLevel sl) {
+            net.mehvahdjukaar.supplementaries.reg.ModData.COOPERATIVE_PULLEYS.getData(sl)
+                    .markAttempting(this.worldPosition, period, pushDir, now);
+        } else {
+            net.mehvahdjukaar.supplementaries.common.misc.PulleyCooperation
+                    .markAttemptingClient(this.worldPosition, period, pushDir, now);
+        }
         if (ccw) {
             releaseRopeDown(period);
         } else {

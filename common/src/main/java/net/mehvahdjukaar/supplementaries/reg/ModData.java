@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.common.misc.CooperativePistonData;
+import net.mehvahdjukaar.supplementaries.common.misc.PulleyCooperation;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -18,6 +19,11 @@ public class ModData {
     public static final WorldSavedDataType<CooperativePistonData> COOPERATIVE_PISTONS = RegHelper.registerWorldSavedData(
             Supplementaries.res("cooperative_pistons"),
             CooperativePistonData::createFromLevel, () -> CooperativePistonData.CODEC, null,
+            true);
+
+    public static final WorldSavedDataType<PulleyCooperation> COOPERATIVE_PULLEYS = RegHelper.registerWorldSavedData(
+            Supplementaries.res("cooperative_pulleys"),
+            PulleyCooperation::createFromLevel, () -> PulleyCooperation.CODEC, null,
             true);
 
 
