@@ -97,6 +97,17 @@ public final class PulleyMover {
                 }
             }
         }
+        // Snapshot consumed-rope states before the upcoming setBlock loop overwrites them with
+        // MOVING_PULLEY. We need these intact so the topmost piston can render the consumed
+        // rope sliding into the pulley as a "leading phantom" (no actual placement at the end).
+        Map<BlockPos, BlockState> consumedRopeStates = new HashMap<>();
+        for (BlockPos cp : resolver.getConsumedRopes()) {
+            consumedRopeStates.put(cp.immutable(), level.getBlockState(cp));
+        }
+        // For extend: the topmost piston (whose srcPos == firstSlot) carries a "trailing"
+        // phantom rope that animates out of the pulley body and settles into firstSlot when
+        // the animation ends. Empty in retract mode.
+        Map<BlockPos, BlockState> extendingPhantomStates = resolver.getExtendingPhantomSources();
 
         List<BlockPos> destroyList = resolver.getToDestroy();
 
@@ -132,6 +143,18 @@ public final class PulleyMover {
                     : MovingPistonBlock.newMovingBlockEntity(dstPos, movingPistonState, srcState, pushDir, true, false);
             if (movingBe instanceof MovingPulleyBlockEntity mpbe) {
                 mpbe.setAnimationDuration(animationTicks);
+                // Retract: dstPos == consumed firstSlot → phantom slides into the pulley.
+                BlockState consumedHere = consumedRopeStates.get(dstPos);
+                if (consumedHere != null) {
+                    mpbe.setLeadingState(consumedHere);
+                }
+                // Extend: srcPos == firstSlot → phantom emerges from the pulley body and lands
+                // at firstSlot when the animation ends.
+                BlockState extendPhantomHere = extendingPhantomStates.get(srcPos);
+                if (extendPhantomHere != null) {
+                    mpbe.setLeadingState(extendPhantomHere);
+                    mpbe.setExtendPhantom(true);
+                }
             }
             if (movingBe instanceof ICarryingMovingPiston carrier) {
                 CompoundTag srcBeNbt = carriedBeNbt.get(srcPos);

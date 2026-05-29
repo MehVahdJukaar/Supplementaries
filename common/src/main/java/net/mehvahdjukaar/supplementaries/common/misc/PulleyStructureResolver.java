@@ -147,41 +147,30 @@ public class PulleyStructureResolver {
                 continue;
             }
 
-            // RETRACT mode only: the topmost rope (the one adjacent to the pulley) is consumed
-            // into the pulley, not animated as a moving block. The blocks below it shift one
-            // slot toward the pulley to take its place. The forward scan treats this position
-            // as a soft terminator so the chain ends successfully here instead of trying to
-            // push past the consumed rope into the pulley wall.
-            // EXTEND mode: every rope stays put (only the anchor + sticky branches slide away).
-            // We still walk through the ropes to find the anchor, but nothing rope-related goes
-            // into toPush.
+            // Both modes shift the entire rope column by one slot — symmetric move.
+            // RETRACT: chain moves toward the pulley. The topmost rope (firstSlot) is marked
+            // consumed so it doesn't get a MOVING_PISTON entry; the rope below it slides up to
+            // overwrite that slot. The forward scan treats consumed slots as a soft terminator
+            // so the chain ends cleanly at the pulley wall.
+            // EXTEND: chain moves away from the pulley. Every rope animates one slot in the
+            // push direction; the topmost slot (firstSlot) ends up empty and is then filled by
+            // {@code serverFinaliseExtend} with a fresh rope. The bottom rope ends up where the
+            // anchor was, and the anchor slides further down (handled by addBlockLine).
             BlockPos walkPos;
-            if (extending) {
-                // Walk through all ropes from the pulley down to the anchor. Ropes are tagged
-                // in ropePositions so the trailing-scan inside addBlockLine breaks at them —
-                // without that tag, a sticky anchor (e.g. slime) would consider the rope above
-                // it sticky-attached via canStickToEachOther's "either side sticky" rule and
-                // try to drag it along. Ropes are NOT added to toPush — they stay put during
-                // extend; only the anchor and its sticky chain slide.
-                walkPos = firstSlot;
-                while (true) {
-                    BlockState state = level.getBlockState(walkPos);
-                    if (!RopeHelper.isCorrectRope(pulley.ropeBlock(), state, ropeDir)) break;
-                    ropePositions.add(walkPos);
-                    walkPos = walkPos.relative(ropeDir);
-                }
-            } else {
+            if (!extending) {
                 consumedRopes.add(firstSlot);
                 walkPos = firstSlot.relative(ropeDir);
-                while (true) {
-                    BlockState state = level.getBlockState(walkPos);
-                    if (!RopeHelper.isCorrectRope(pulley.ropeBlock(), state, ropeDir)) break;
-                    if (!toPush.contains(walkPos)) {
-                        toPush.add(walkPos);
-                        ropePositions.add(walkPos);
-                    }
-                    walkPos = walkPos.relative(ropeDir);
+            } else {
+                walkPos = firstSlot;
+            }
+            while (true) {
+                BlockState state = level.getBlockState(walkPos);
+                if (!RopeHelper.isCorrectRope(pulley.ropeBlock(), state, ropeDir)) break;
+                if (!toPush.contains(walkPos)) {
+                    toPush.add(walkPos);
+                    ropePositions.add(walkPos);
                 }
+                walkPos = walkPos.relative(ropeDir);
             }
 
             // walkPos is now the anchor position (first non-rope reached). If empty, the
@@ -368,6 +357,28 @@ public class PulleyStructureResolver {
 
     public Set<BlockPos> getRopePositions() {
         return this.ropePositions;
+    }
+
+    public Set<BlockPos> getConsumedRopes() {
+        return this.consumedRopes;
+    }
+
+    /**
+     * For extend mode: returns the firstSlot positions whose rope chain contributed to the
+     * move, mapped to the rope state that should appear there. The mover uses this to flag
+     * the topmost MOVING_PULLEY in each chain as carrying a "trailing" phantom — a new rope
+     * animating from inside the pulley down into firstSlot. Empty in retract mode.
+     */
+    public java.util.Map<BlockPos, BlockState> getExtendingPhantomSources() {
+        java.util.Map<BlockPos, BlockState> result = new java.util.HashMap<>();
+        if (!extending) return result;
+        for (PulleyInfo p : pulleys) {
+            BlockPos firstSlot = p.pulleyPos().relative(p.ropeHangDirection());
+            if (toPush.contains(firstSlot)) {
+                result.put(firstSlot, p.ropeBlock().defaultBlockState());
+            }
+        }
+        return result;
     }
 
     public Set<BlockPos> getContributedPulleys() {

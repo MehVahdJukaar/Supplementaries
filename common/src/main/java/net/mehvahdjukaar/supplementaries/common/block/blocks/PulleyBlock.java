@@ -8,7 +8,6 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.common.misc.PulleyMover;
 import net.mehvahdjukaar.supplementaries.common.misc.PulleyStructureResolver;
-import net.mehvahdjukaar.supplementaries.common.utils.RopeHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -222,12 +221,9 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
             // happened but we shouldn't leave an unanchored rope).
             return;
         }
-        BlockPos cursor = pos.relative(ropeHangDir);
-        while (RopeHelper.isCorrectRope(ropeBlock, level.getBlockState(cursor), ropeHangDir)) {
-            cursor = cursor.relative(ropeHangDir);
-        }
-        // cursor is the anchor's old position (now AIR after moveOneStep's leftover-clear).
-        level.setBlock(cursor, ropeBlock.defaultBlockState(), 3);
+        // The new rope at firstSlot is placed by the topmost MOVING_PULLEY's extend phantom
+        // at the end of its animation — see MovingPulleyBlockEntity.tick. We only decrement
+        // the spool and play the sound here.
         stack.shrink(1);
         tile.setChanged();
         SoundType st = ropeBlock.defaultBlockState().getSoundType();
