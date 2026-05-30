@@ -13,7 +13,7 @@ body:
     attributes:
       label: Your Question
       description: Ask a simple question
-      placeholder: ex. How to build the supplementaries?
+      placeholder: ex. How to build the supplementaries project?
     validations:
       required: true
 
