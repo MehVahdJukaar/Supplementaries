@@ -4,8 +4,8 @@
     "supplementaries:cannon"
   ],
   "remove": [
-    "minecraft:feather_block",
-    "minecraft:safe",
-    "minecraft:gunpowder_block"
+    "supplementaries:feather_block",
+    "supplementaries:safe",
+    "supplementaries:gunpowder_block"
   ]
 }
