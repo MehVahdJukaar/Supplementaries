@@ -4,12 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -57,6 +59,7 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
         for (EntityType<?> passengerType : config.passengers) {
             Entity passenger = passengerType.create(serverLevel);
             if (passenger != null) {
+                passenger.setPos(blockPos.getX(), blockPos.getY(), blockPos.getZ());
                 passenger.startRiding(boat);
             }
         }
@@ -72,12 +75,13 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
         //    return false;
         //}
         //some bullshit bukkit or c2me error hat doesnt like spawning an entity offthread
+        //  worldgenLevel.addFreshEntityWithPassengers(boat);
+
         worldgenLevel.addFreshEntityWithPassengers(boat);
-
         MinecraftServer server = serverLevel.getServer();
-        server.executeIfPossible(() -> {
-
-        });
+        server.tell(new TickTask(server.getTickCount() + 1, () -> {
+        }
+        ));
         return true;
     }
 
@@ -103,6 +107,7 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
 
                 BlockPos groundPos = spawnPos.below();
                 if (config.groundRule.test(level.getBlockState(groundPos), context.random())) {
+                    if (!level.hasChunkAt(groundPos)) continue;
                     if (trySpawningAt(context, config, serverLevel, spawnPos, level)) {
                         return true;
                     }
