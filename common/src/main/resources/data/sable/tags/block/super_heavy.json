@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:cannon"
+  ],
+  "remove": [
+    "supplementaries:feather_block",
+    "supplementaries:safe",
+    "supplementaries:gunpowder_block"
+  ]
+}

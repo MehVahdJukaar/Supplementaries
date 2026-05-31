@@ -28,6 +28,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.ticks.ScheduledTick;
 import org.jetbrains.annotations.Nullable;
 
+import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -159,8 +160,18 @@ public class MiscUtils {
         MY_BIRTHDAY,
         MOD_BIRTHDAY;
 
+        private static boolean isThisModInDev() {
+            Path dir = Path.of("").toAbsolutePath();
+
+                if (dir.resolve("dev.dev").toFile().exists()) return true;
+                Path parent = dir.getParent();
+                if (parent == null) break;
+
+            return false;
+        }
+
         public static Festivity compute() {
-            if (PlatHelper.isDev()) {
+            if (PlatHelper.isDev() && isThisModInDev()) {
                 Random rand = new Random();
                 if (rand.nextFloat() < 0.3f) {
                     return values()[rand.nextInt(values().length - 1) + 1];
