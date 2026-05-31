@@ -103,6 +103,7 @@ accessible field net/minecraft/client/renderer/entity/EntityRenderer shadowRadiu
 accessible field net/minecraft/world/entity/Entity wasTouchingWater Z
 
 accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
+accessible method net/minecraft/world/level/biome/Biome$ClimateSettings <init> (ZFLnet/minecraft/world/level/biome/Biome$TemperatureModifier;F)V
 
 #font stuff
 accessible class net/minecraft/client/gui/Font$StringRenderOutput
