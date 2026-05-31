@@ -159,6 +159,14 @@ public class MiscUtils {
         MY_BIRTHDAY,
         MOD_BIRTHDAY;
 
+        private static boolean isThisModInDev() {
+            Path dir = Path.of("").toAbsolutePath();
+            try {
+                if (dir.resolve("dev.dev").toFile().exists()) return true;
+            }catch (Exception ignored){}
+            return false;
+        }
+
         public static Festivity compute() {
             if (PlatHelper.isDev()) {
                 Random rand = new Random();
