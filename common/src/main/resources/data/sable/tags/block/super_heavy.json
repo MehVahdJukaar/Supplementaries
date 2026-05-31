@@ -5,7 +5,6 @@
   ],
   "remove": [
     "supplementaries:feather_block",
-    "supplementaries:safe",
-    "supplementaries:gunpowder_block"
+    "supplementaries:safe"
   ]
 }
