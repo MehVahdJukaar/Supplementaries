@@ -1,11 +1,10 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:cannon"
+    "supplementaries:cannon",
+    "supplementaries:safe"
   ],
   "remove": [
-    "minecraft:feather_block",
-    "minecraft:safe",
-    "minecraft:gunpowder_block"
+    "supplementaries:feather_block"
   ]
 }
