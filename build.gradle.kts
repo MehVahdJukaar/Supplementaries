@@ -115,7 +115,8 @@ tasks.register("buildAndPublishAll") {
 
     dependsOn(subprojects.map { it.tasks.named("clean") })
     dependsOn(subprojects.map { it.tasks.named("build") })
-    dependsOn("upload")
+    dependsOn(subprojects.map { it.tasks.named("curseforge") })
+    dependsOn(subprojects.map { it.tasks.named("modrinth") })
 
     finalizedBy("gitTag")
 }
