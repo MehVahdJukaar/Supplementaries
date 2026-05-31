@@ -162,11 +162,9 @@ public class MiscUtils {
 
         private static boolean isThisModInDev() {
             Path dir = Path.of("").toAbsolutePath();
-
+            try {
                 if (dir.resolve("dev.dev").toFile().exists()) return true;
-                Path parent = dir.getParent();
-                if (parent == null) break;
-
+            }catch (Exception ignored){}
             return false;
         }
 
