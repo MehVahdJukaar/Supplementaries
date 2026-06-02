@@ -104,8 +104,8 @@ public abstract class ExplorationMapFunctionMixin extends LootItemConditionalFun
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;findNearestMapStructure(Lnet/minecraft/tags/TagKey;Lnet/minecraft/core/BlockPos;IZ)Lnet/minecraft/core/BlockPos;"), cancellable = true)
     public void supp$turnToQuill(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir, @Local Vec3 pos,
                                  @Local ServerLevel level) {
-        if (supplementaries$customDecoration != null ||
-                (CompatHandler.QUARK && CommonConfigs.Tweaks.REPLACE_VANILLA_MAPS.get())) {
+        boolean replaceWithQuill = CompatHandler.QUARK && CommonConfigs.Tweaks.REPLACE_VANILLA_MAPS.get();
+        if (supplementaries$customDecoration != null || replaceWithQuill) {
             var targets = level.registryAccess().registryOrThrow(Registries.STRUCTURE)
                     .getTag(destination).orElse(null);
 
@@ -117,10 +117,16 @@ public abstract class ExplorationMapFunctionMixin extends LootItemConditionalFun
             } else {
                 marker = ResourceLocation.parse(mapDecoration.getRegisteredName());
             }
+            // Async quill search can afford a larger radius without lagging the server,
+            // so widen the vanilla radius (50 for buried treasures, 100 for mansions) when we'll redirect.
+            int radius = this.searchRadius;
+            if (replaceWithQuill) {
+                radius = Math.max(radius, CommonConfigs.Tweaks.QUILL_MIN_SEARCH_RADIUS.get());
+            }
             cir.setReturnValue(AdventurerMapsHandler.createMapOrQuill(context.getLevel(),
                     BlockPos.containing(pos), targets,
-                    this.searchRadius, this.skipKnownStructures, this.zoom, marker,
-                    null, 0));
+                    radius, this.skipKnownStructures, this.zoom, marker,
+                    null, 0, replaceWithQuill));
         }
     }
 

@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BambooSpikesBlockTil
 import net.mehvahdjukaar.supplementaries.common.items.JarItem;
 import net.mehvahdjukaar.supplementaries.common.items.SackItem;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.quark.CartographersQuillItem;
 import net.mehvahdjukaar.supplementaries.integration.quark.TaterInAJarBlock;
 import net.mehvahdjukaar.supplementaries.reg.RegUtils;
 import net.minecraft.core.BlockPos;
@@ -76,7 +77,7 @@ public class QuarkCompatImpl {
         TATER_IN_A_JAR_TILE = RegUtils.regTile(TATER_IN_A_JAR_NAME, () -> BlockEntityType.Builder.of(
                 TaterInAJarBlock.Tile::new, TATER_IN_A_JAR.get()).build(null));
 
-        CARTOGRAPHERS_QUILL = null;// RegUtils.regItem("cartographers_quill", CartographersQuillItem::new);
+        CARTOGRAPHERS_QUILL = RegUtils.regItem("cartographers_quill", CartographersQuillItem::new);
     }
     //Dumb zeta lost features here... commenting out.
     /*
@@ -234,15 +235,9 @@ public class QuarkCompatImpl {
     public static ItemStack makeAdventurerQuill(ServerLevel serverLevel, HolderSet<Structure> targets,
                                                 int radius, boolean skipKnown, int zoom,
                                                 ResourceLocation destinationType, @Nullable String name, int color) {
-        //TODO: add back
-        /*
-        var item = CartographersQuillItem.forStructure(serverLevel, targets, radius, skipKnown, zoom, null, name, color);
-        if (destinationType != null) {
-            item.getOrCreateTag().putString(CartographersQuillItem.TAG_DECORATION, destinationType.toString().toLowerCase(Locale.ROOT));
-        }
-        return item;
-        */
-        return null;
+        if (CARTOGRAPHERS_QUILL == null) return ItemStack.EMPTY;
+        return CartographersQuillItem.forStructure(serverLevel, targets, radius, skipKnown, zoom,
+                destinationType, name, color);
     }
 
     public static void disableFenceGateStuff() {

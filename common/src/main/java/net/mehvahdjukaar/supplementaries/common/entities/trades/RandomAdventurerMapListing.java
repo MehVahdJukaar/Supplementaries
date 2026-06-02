@@ -40,7 +40,8 @@ public record RandomAdventurerMapListing(Item emerald, int priceMin, int priceMa
         if (entity.level() instanceof ServerLevel serverLevel) {
             ItemStack result = AdventurerMapsHandler.createMapOrQuill(serverLevel, entity.blockPosition(), null,
                     CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAX_SEARCH_RADIUS.get(),
-                    true, 2, null, "filled_map.adventure", 0x78151a);
+                    true, 2, null, "filled_map.adventure", 0x78151a,
+                    CommonConfigs.Tweaks.QUARK_QUILL.get());
             if (result.isEmpty()) return null;
             int x = 6;
             int xp = (int) ((x * 12) / (float) maxTrades);

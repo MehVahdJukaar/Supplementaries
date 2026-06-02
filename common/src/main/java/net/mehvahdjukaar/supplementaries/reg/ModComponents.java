@@ -8,6 +8,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Unit;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +43,23 @@ public class ModComponents {
             ExtraCodecs.NON_NEGATIVE_INT, ByteBufCodecs.VAR_INT);
     public static final Supplier<DataComponentType<CannonballWhitelist>> CANNONBALL_WHITELIST = register("cannonball_whitelist",
             CannonballWhitelist.CODEC, CannonballWhitelist.STREAM_CODEC);
+
+    // Cartographers Quill state. Only present when Quark is loaded but the components are registered
+    // unconditionally so existing stacks parse on either platform.
+    public static final Supplier<DataComponentType<ResourceLocation>> QUILL_STRUCTURE = register("quill_structure",
+            ResourceLocation.CODEC, ResourceLocation.STREAM_CODEC);
+    public static final Supplier<DataComponentType<Integer>> QUILL_SEARCH_RADIUS = register("quill_search_radius",
+            ExtraCodecs.POSITIVE_INT, ByteBufCodecs.VAR_INT);
+    public static final Supplier<DataComponentType<Boolean>> QUILL_SKIP_KNOWN = register("quill_skip_known",
+            Codec.BOOL, ByteBufCodecs.BOOL);
+    public static final Supplier<DataComponentType<Integer>> QUILL_ZOOM = register("quill_zoom",
+            ExtraCodecs.NON_NEGATIVE_INT, ByteBufCodecs.VAR_INT);
+    public static final Supplier<DataComponentType<ResourceLocation>> QUILL_DECORATION = register("quill_decoration",
+            ResourceLocation.CODEC, ResourceLocation.STREAM_CODEC);
+    public static final Supplier<DataComponentType<String>> QUILL_MAP_NAME = register("quill_map_name",
+            Codec.STRING, ByteBufCodecs.STRING_UTF8);
+    public static final Supplier<DataComponentType<Integer>> QUILL_COLOR = register("quill_color",
+            Codec.INT, ByteBufCodecs.INT);
 
     public static void init() {
 
