@@ -71,7 +71,7 @@
         },
         {
           "type": "minecraft:loot_table",
-          "name": "supplementaries:loot/galleon/safe_armor",
+          "value": "supplementaries:loot/galleon/safe_armor",
           "weight": 1
         }
       ]
@@ -255,7 +255,7 @@
         },
         {
           "type": "minecraft:loot_table",
-          "name": "supplementaries:loot/galleon/safe_tools",
+          "value": "supplementaries:loot/galleon/safe_tools",
           "weight": 4
         }
       ]
