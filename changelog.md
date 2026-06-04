@@ -1,1 +1,1 @@
-- fixed a recent worldgen issue
+fixed a loot table
