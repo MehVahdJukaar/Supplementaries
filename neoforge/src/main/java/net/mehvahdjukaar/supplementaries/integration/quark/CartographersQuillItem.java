@@ -21,7 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -35,7 +34,6 @@ import org.violetmoon.quark.content.tools.item.PathfindersQuillItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -67,7 +65,9 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         if (Optional.ofNullable(stack.get(QuarkDataComponents.IS_SEARCHING)).orElse(false)) {
             components.add(PathfindersQuillItem.getSearchingComponent().withStyle(ChatFormatting.BLUE));
         }
-        components.add(Component.translatable("structure." + structure.getNamespace() + "." + structure.getPath())
+        components.add(Component.translatableWithFallback(
+                        "structure." + structure.getNamespace() + "." + structure.getPath(),
+                        structure.toString())
                 .withStyle(ChatFormatting.GRAY));
     }
 
@@ -149,13 +149,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
             return InteractionResultHolder.pass(BlockPos.ZERO);
         }
         InteractionResultHolder<BlockPos> cached = RESULTS.remove(key);
-        if (cached != null) {
-            if (cached.getResult() == InteractionResult.PASS) {
-                // shouldn't happen but treat as failure rather than looping forever
-                return InteractionResultHolder.fail(BlockPos.ZERO);
-            }
-            return cached;
-        }
+        if (cached != null) return cached;
 
         COMPUTING.add(key);
         EXECUTORS.submit(() -> {
@@ -236,8 +230,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         stack.set(ModComponents.QUILL_SKIP_KNOWN.get(), skipKnown);
         stack.set(ModComponents.QUILL_ZOOM.get(), zoom);
         if (decoration != null) {
-            stack.set(ModComponents.QUILL_DECORATION.get(),
-                    ResourceLocation.parse(decoration.toString().toLowerCase(Locale.ROOT)));
+            stack.set(ModComponents.QUILL_DECORATION.get(), decoration);
         }
         if (name != null) {
             stack.set(ModComponents.QUILL_MAP_NAME.get(), name);

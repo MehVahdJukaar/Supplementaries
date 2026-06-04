@@ -231,7 +231,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
         player.setItemInHand(InteractionHand.MAIN_HAND, oldItemInHand);
 
         if (success) {
-            this.dropMyItemOnGround();
+            // only drop when the hand stack was swapped (e.g. cage release leaves an empty cage); plain BlockItem.place mutates the same ref and is a no-op in creative, which would otherwise dupe the placed block
+            if (returnedItem != stack) {
+                this.dropMyItemOnGround();
+            }
             this.remove(RemovalReason.DISCARDED);
         }
     }

@@ -35,7 +35,7 @@ public record RandomAdventurerMapListing(Item emerald, int priceMin, int priceMa
 
     @Override
     public MerchantOffer getOffer(@NotNull Entity entity, @NotNull RandomSource random) {
-        int emeraldCost = random.nextInt(priceMax - priceMin + 1) + priceMax;
+        int emeraldCost = random.nextInt(priceMax - priceMin + 1) + priceMin;
 
         if (entity.level() instanceof ServerLevel serverLevel) {
             ItemStack result = AdventurerMapsHandler.createMapOrQuill(serverLevel, entity.blockPosition(), null,
