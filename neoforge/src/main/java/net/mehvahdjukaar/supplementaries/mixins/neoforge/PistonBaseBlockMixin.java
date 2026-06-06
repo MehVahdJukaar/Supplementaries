@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins.neoforge;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
- import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.misc.CooperativePistonData;
 import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
 import net.mehvahdjukaar.supplementaries.reg.ModData;

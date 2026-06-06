@@ -1156,6 +1156,7 @@ public class CommonConfigs {
         public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
         public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;
+        public static final Supplier<Boolean> PUSH_BLOCK_ENTITIES;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -1317,6 +1318,14 @@ public class CommonConfigs {
                     .define("compass_right_click", false);
             COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS = builder.comment("Allow these features to work in dimensions like nether or end where normally clocks don't work")
                     .define("works_in_unnatural_dimensions", false);
+            builder.pop();
+
+            builder.push("piston_tweaks");
+            PUSH_BLOCK_ENTITIES = builder.comment(
+                    "If true, pistons can push blocks that have a block entity (e.g. chests, furnaces). " +
+                    "Their inventory/data is preserved through the animation. " +
+                    "Blocks whose push reaction is BLOCK are still immovable regardless of this setting.")
+                    .define("push_block_entities", true);
             builder.pop();
 
             builder.pop();

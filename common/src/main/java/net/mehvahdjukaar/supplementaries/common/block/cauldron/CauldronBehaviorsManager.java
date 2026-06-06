@@ -23,6 +23,9 @@ public class CauldronBehaviorsManager {
         for (var item : ModRegistry.FLAGS.values()) {
             CauldronInteraction.WATER.map().put(item.get().asItem(), CauldronInteraction.BANNER);
         }
+        for (var item : ModRegistry.BUNTING_ITEMS.values()) {
+            CauldronInteraction.WATER.map().put(item.get(), CauldronInteraction.DYED_ITEM);
+        }
         CauldronInteraction.WATER.map().put(ModRegistry.QUIVER_ITEM.get(), CauldronInteraction.DYED_ITEM);
 
         var a = CompatObjects.ATLAS.get();

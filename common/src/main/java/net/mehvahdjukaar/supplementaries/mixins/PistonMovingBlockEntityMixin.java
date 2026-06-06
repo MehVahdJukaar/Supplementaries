@@ -1,10 +1,11 @@
-package net.mehvahdjukaar.supplementaries.mixins.neoforge;
+package net.mehvahdjukaar.supplementaries.mixins;
 
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.utils.ICarryingMovingPiston;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,23 +19,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * Lets a pulley smuggle a source block's BlockEntity NBT through the moving-piston
- * animation. Set via {@link ICarryingMovingPiston#supp$setCarriedBlockEntityNbt} at the
- * destination immediately after the moving-piston BE is created, applied here in
- * {@code finalTick} once vanilla has placed the final block state.
- * <p>
- * Save/load: the NBT is persisted on the moving-piston BE so a mid-animation chunk
- * unload/save doesn't drop the inventory. The "supp_carried_be" tag is namespaced to
- * avoid collision with future vanilla/NeoForge additions to PistonMovingBlockEntity's
- * own NBT.
- */
 @Mixin(PistonMovingBlockEntity.class)
 public abstract class PistonMovingBlockEntityMixin extends BlockEntity implements ICarryingMovingPiston {
 
     @Unique
     @Nullable
     private CompoundTag supp$carriedBeNbt;
+
+    @Unique
+    @Nullable
+    private BlockEntity supp$cachedCarriedBE;
 
     public PistonMovingBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -43,12 +37,34 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
     @Override
     public void supp$setCarriedBlockEntityNbt(@Nullable CompoundTag nbt) {
         this.supp$carriedBeNbt = nbt;
+        this.supp$cachedCarriedBE = null;
     }
 
     @Override
     @Nullable
     public CompoundTag supp$getCarriedBlockEntityNbt() {
         return this.supp$carriedBeNbt;
+    }
+
+    @Override
+    @Nullable
+    public BlockEntity supp$getOrCreateCachedCarriedBlockEntity() {
+        if (this.supp$cachedCarriedBE != null) return this.supp$cachedCarriedBE;
+        CompoundTag nbt = this.supp$carriedBeNbt;
+        if (nbt == null || this.level == null) return null;
+        PistonMovingBlockEntity self = (PistonMovingBlockEntity) (Object) this;
+        BlockState movedState = self.getMovedState();
+        if (!(movedState.getBlock() instanceof EntityBlock entityBlock)) return null;
+        BlockEntity be = entityBlock.newBlockEntity(this.worldPosition, movedState);
+        if (be == null) return null;
+        if (be.getType() != BuiltInRegistries.BLOCK_ENTITY_TYPE.get(ResourceLocation.parse(nbt.getString("id")))) {
+            return null;
+        }
+        be.loadWithComponents(nbt, this.level.registryAccess());
+        be.setLevel(this.level);
+        be.clearRemoved();
+        this.supp$cachedCarriedBE = be;
+        return be;
     }
 
     @Inject(method = "saveAdditional", at = @At("TAIL"))
@@ -65,18 +81,8 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         }
     }
 
-    /**
-     * After vanilla places the final block, attach the carried BlockEntity (rebuilt from
-     * the saved NBT) at this position. Skip when there's no BE to host (AIR or non-BE
-     * block) — those cases shouldn't happen given our capture conditions, but bail safely.
-     */
     @Inject(method = "finalTick", at = @At("TAIL"))
     private void supp$restoreCarriedBe(CallbackInfo ci) {
-        if (this.level != null) {
-            Supplementaries.LOGGER.info("[PistonMovingBE {} @ {}] finalTick fired (hasCarried={})",
-                    this.level.isClientSide ? "client" : "server",
-                    this.worldPosition, this.supp$carriedBeNbt != null);
-        }
         CompoundTag nbt = this.supp$carriedBeNbt;
         this.supp$carriedBeNbt = null;
         if (nbt == null || this.level == null) return;

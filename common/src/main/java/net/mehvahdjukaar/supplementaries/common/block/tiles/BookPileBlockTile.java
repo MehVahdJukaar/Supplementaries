@@ -119,9 +119,7 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
                 return;
 
             } else {
-                //  shifts books. Assumes at most one has been removed
-                // auto sets my block state when stuff changes
-                //    consolidateBookPile();
+                consolidateBookPile();
                 this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, actualBookCount), 2);
             }
         }

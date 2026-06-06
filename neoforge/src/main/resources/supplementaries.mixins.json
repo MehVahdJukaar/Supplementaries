@@ -18,7 +18,6 @@
     "ItemStackAccessor",
     "LivingEntityMixin",
     "PistonBaseBlockMixin",
-    "PistonMovingBlockEntityMixin",
     "PistonStructureResolverMixin",
     "TreasureMapForEmeraldsMixin",
     "self.SelfFlammableFluidBlockMixin",

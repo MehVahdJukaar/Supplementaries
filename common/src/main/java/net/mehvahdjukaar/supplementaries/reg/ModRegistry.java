@@ -201,7 +201,8 @@ public class ModRegistry {
 
     //sign posts
     public static final Supplier<Block> WAY_SIGN = regBlock(WAY_SIGN_NAME, () -> {
-        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS);
+        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
+                .noOcclusion();
         return new SignPostBlock(p);
     });
 
@@ -460,6 +461,7 @@ public class ModRegistry {
 
     //buntings
     public static final Map<DyeColor, Supplier<Block>> BUNTING_WALL_BLOCKS = new Object2ObjectLinkedOpenHashMap<>();
+    public static final Map<DyeColor, Supplier<Item>> BUNTING_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
     public static final Map<DyeColor, Supplier<Block>> BUNTING_BLOCKS = RegUtils.registerBuntings(BUNTING_NAME);
 
     public static final Supplier<RopeBuntingBlock> BUNTING_ROPE_BLOCK = regBlock("rope_buntings", () -> new RopeBuntingBlock(

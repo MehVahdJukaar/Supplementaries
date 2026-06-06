@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -14,4 +15,12 @@ public interface ICarryingMovingPiston {
 
     @Nullable
     CompoundTag supp$getCarriedBlockEntityNbt();
+
+    /**
+     * Lazily builds and caches a transient BlockEntity from the carried NBT for client-side
+     * rendering. Avoids re-parsing the NBT every frame. Returns null if there's nothing to
+     * carry, the moved state has no BE, or the NBT type doesn't match.
+     */
+    @Nullable
+    BlockEntity supp$getOrCreateCachedCarriedBlockEntity();
 }

@@ -171,9 +171,10 @@ public class RegUtils {
             map.put(color, ceilingBlock);
             ModRegistry.BUNTING_WALL_BLOCKS.put(color, wallBlock);
 
-            regItem(baseName + "_" + color.getName(), () -> new BuntingItem(color, ceilingBlock.get(), wallBlock.get(),
+            Supplier<Item> item = regItem(baseName + "_" + color.getName(), () -> new BuntingItem(color, ceilingBlock.get(), wallBlock.get(),
                     new Item.Properties(),
                     Direction.UP));
+            ModRegistry.BUNTING_ITEMS.put(color, item);
         }
         return map;
     }
