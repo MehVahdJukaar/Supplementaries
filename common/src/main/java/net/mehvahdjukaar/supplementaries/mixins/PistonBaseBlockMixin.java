@@ -72,9 +72,11 @@ public class PistonBaseBlockMixin {
         if (sourceBE != null) {
             level.removeBlockEntity(sourcePos);
         }
-        original.call(level, movingPiston);
+        // Attach the carried NBT to the moving piston BE BEFORE it goes into the chunk,
+        // so any first query (renderer, ticker) immediately sees the carried data.
         if (nbt != null && movingPiston instanceof ICarryingMovingPiston carrying) {
             carrying.supp$setCarriedBlockEntityNbt(nbt);
         }
+        original.call(level, movingPiston);
     }
 }

@@ -50,17 +50,21 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
     @Nullable
     public BlockEntity supp$getOrCreateCachedCarriedBlockEntity() {
         if (this.supp$cachedCarriedBE != null) return this.supp$cachedCarriedBE;
-        CompoundTag nbt = this.supp$carriedBeNbt;
-        if (nbt == null || this.level == null) return null;
+        if (this.level == null) return null;
         PistonMovingBlockEntity self = (PistonMovingBlockEntity) (Object) this;
         BlockState movedState = self.getMovedState();
         if (!(movedState.getBlock() instanceof EntityBlock entityBlock)) return null;
         BlockEntity be = entityBlock.newBlockEntity(this.worldPosition, movedState);
         if (be == null) return null;
-        if (be.getType() != BuiltInRegistries.BLOCK_ENTITY_TYPE.get(ResourceLocation.parse(nbt.getString("id")))) {
-            return null;
+        // Render with default state if NBT hasn't arrived yet — covers the brief gap when
+        // the moving piston BE is constructed locally on the client (block event handler)
+        // before our hook attaches the carried NBT. When NBT arrives, the setter
+        // invalidates the cache and the next call rebuilds with the NBT applied.
+        CompoundTag nbt = this.supp$carriedBeNbt;
+        if (nbt != null
+                && be.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(ResourceLocation.parse(nbt.getString("id")))) {
+            be.loadWithComponents(nbt, this.level.registryAccess());
         }
-        be.loadWithComponents(nbt, this.level.registryAccess());
         be.setLevel(this.level);
         be.clearRemoved();
         this.supp$cachedCarriedBE = be;

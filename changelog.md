@@ -2,4 +2,6 @@
 - fixes #2008 - updated quark non_double_door tag for iron/gold gates (renamed from non_double_doors)
 - fixes #1567 - books in piles now properly consolidate when one is removed, preventing books from disappearing
 - fixes #1856 - restore depth test after cannon HUD renders to prevent breaking Jade/Spyglass integration
+- fixes #1915 - clicking on a rope with rope item now extends the chain downward into the first replaceable position instead of letting vanilla placement wrap a post below
+- fixed rope knot held block not rendering after world reload (moonlight 3.0.17 model data cache regression)
 - fixes #2032 - buntings now properly register for cauldron washing interactions, preserving custom names
