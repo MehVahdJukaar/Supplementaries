@@ -22,8 +22,8 @@ dependencies {
 
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
-    modCompileOnly("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
-    accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    modCompileOnly("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
+    accessTransformers("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
 
 
     modCompileOnly("curse.maven:farmers-delight-398521:8083481")
