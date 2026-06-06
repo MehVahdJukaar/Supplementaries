@@ -20,6 +20,7 @@
     "PistonBaseBlockMixin",
     "PistonStructureResolverMixin",
     "TreasureMapForEmeraldsMixin",
+    "ZetaPistonStructureResolverMixin",
     "self.SelfFlammableFluidBlockMixin",
     "self.SelfFrameMixin",
     "self.SelfGunpowderMixin",

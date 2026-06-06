@@ -1106,6 +1106,7 @@ public class ModRegistry {
                     .forceSolidOn()
                     .isRedstoneConductor(NEVER)
                     .noOcclusion()
+                    .pushReaction(PushReaction.NORMAL)
     ));
 
     public static final Supplier<BlockEntityType<CannonBlockTile>> CANNON_TILE = regTile(

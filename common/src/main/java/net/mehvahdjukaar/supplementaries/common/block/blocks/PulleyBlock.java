@@ -180,20 +180,25 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         // Cooperative pulleys: dispatch to the per-level WorldSavedData on the server, the
         // client static side-channel otherwise. Same semantics either way — if this pulley was
         // already absorbed into an earlier triggerEvent's resolver call this tick, swallow our
-        // own event so we don't double-shift the chain.
+        // own event so we don't double-shift the chain. Gated by config: when off, each pulley
+        // resolves its own chain only.
         long now = level.getGameTime();
-        PulleyCooperation serverData = level instanceof net.minecraft.server.level.ServerLevel sl
+        boolean coopEnabled = net.mehvahdjukaar.supplementaries.configs.CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get();
+        PulleyCooperation serverData = coopEnabled && level instanceof net.minecraft.server.level.ServerLevel sl
                 ? ModData.COOPERATIVE_PULLEYS.getData(sl) : null;
-        boolean alreadyConsumed = serverData != null
-                ? serverData.wasConsumed(pos, now)
-                : PulleyCooperation.wasConsumedClient(pos, now);
-        if (alreadyConsumed) return true;
+        if (coopEnabled) {
+            boolean alreadyConsumed = serverData != null
+                    ? serverData.wasConsumed(pos, now)
+                    : PulleyCooperation.wasConsumedClient(pos, now);
+            if (alreadyConsumed) return true;
+        }
 
         // Gather cooperators (same period, same push dir, registered this tick window, in range)
         // and resolve all their chains in one structure pass so a shared anchor moves as one unit.
-        Set<BlockPos> cooperatorPositions = serverData != null
-                ? serverData.getCooperators(pos, animationTicks, pushDir, now)
-                : PulleyCooperation.getCooperatorsClient(pos, animationTicks, pushDir, now);
+        Set<BlockPos> cooperatorPositions = !coopEnabled ? Set.of()
+                : serverData != null
+                    ? serverData.getCooperators(pos, animationTicks, pushDir, now)
+                    : PulleyCooperation.getCooperatorsClient(pos, animationTicks, pushDir, now);
         List<PulleyStructureResolver.PulleyInfo> infos = new ArrayList<>();
         infos.add(new PulleyStructureResolver.PulleyInfo(pos, ropeBlock, ropeHangDir, extending));
         for (BlockPos cp : cooperatorPositions) {
@@ -235,12 +240,14 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
 
         // Mark every cooperator (including self) consumed so their own incoming blockEvents this
         // tick group are no-ops.
-        if (serverData != null) {
-            serverData.markConsumed(pos, now);
-            for (BlockPos cp : cooperatorPositions) serverData.markConsumed(cp, now);
-        } else {
-            PulleyCooperation.markConsumedClient(pos, now);
-            for (BlockPos cp : cooperatorPositions) PulleyCooperation.markConsumedClient(cp, now);
+        if (coopEnabled) {
+            if (serverData != null) {
+                serverData.markConsumed(pos, now);
+                for (BlockPos cp : cooperatorPositions) serverData.markConsumed(cp, now);
+            } else {
+                PulleyCooperation.markConsumedClient(pos, now);
+                for (BlockPos cp : cooperatorPositions) PulleyCooperation.markConsumedClient(cp, now);
+            }
         }
         return true;
     }

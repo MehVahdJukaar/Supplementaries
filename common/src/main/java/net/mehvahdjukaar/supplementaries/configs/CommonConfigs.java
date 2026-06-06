@@ -242,6 +242,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_CHAINED;
         public static final Supplier<Boolean> PULLEY_ENABLED;
         public static final Supplier<Boolean> PULLEY_CONTINUOUS;
+        public static final Supplier<Boolean> COOPERATIVE_PULLEYS;
         public static final Supplier<Integer> PULLEY_PULL_INTERVAL;
         public static final Supplier<Double> MINESHAFT_ELEVATOR;
 
@@ -314,6 +315,11 @@ public class CommonConfigs {
                             Connected blocks become moving blocks (so they push entities, drop sand etc) and multiple pulleys can cooperate to pull a single heavy contraption — useful for elevators.\s
                             If false, the original instant retraction behavior is used.""")
                     .define("continuous_retraction", false);
+            COOPERATIVE_PULLEYS = builder.comment("""
+                            If true, multiple pulleys firing on the same tick with the same period and push direction \
+                            can pool their pull budget into one structure resolve — letting two ropes share a wide \
+                            elevator platform. Only relevant when 'continuous_retraction' is enabled.""")
+                    .define("cooperative_pulleys", true);
             PULLEY_PULL_INTERVAL = builder.comment("""
                             Ticks to wait between unit pulls when continuous_retraction is enabled.\s
                             Lower = faster pulley. Minimum 2 ticks because each animation takes that long to play out — going lower has no effect.""")
@@ -1157,6 +1163,7 @@ public class CommonConfigs {
         public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;
         public static final Supplier<Boolean> PUSH_BLOCK_ENTITIES;
+        public static final Supplier<Boolean> COOPERATIVE_PISTONS;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -1323,9 +1330,14 @@ public class CommonConfigs {
             builder.push("piston_tweaks");
             PUSH_BLOCK_ENTITIES = builder.comment(
                     "If true, pistons can push blocks that have a block entity (e.g. chests, furnaces). " +
-                    "Their inventory/data is preserved through the animation. " +
                     "Blocks whose push reaction is BLOCK are still immovable regardless of this setting.")
                     .define("push_block_entities", true);
+            COOPERATIVE_PISTONS = builder.comment(
+                    "If true, adjacent pistons facing the same direction can pool their 12-block push budget " +
+                    "to move structures larger than a single piston could handle alone (e.g. two side-by-side " +
+                    "pistons pushing a 24-block slime contraption). Only triggers when a single piston's " +
+                    "vanilla resolve would fail.")
+                    .define("cooperative_pistons", true);
             builder.pop();
 
             builder.pop();
