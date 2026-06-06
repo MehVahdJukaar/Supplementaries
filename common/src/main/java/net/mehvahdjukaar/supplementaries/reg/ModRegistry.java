@@ -459,9 +459,6 @@ public class ModRegistry {
                     RopeKnotBlockTile::new, ROPE_KNOT.get()));
 
     //buntings
-    public static final Supplier<Item> BUNTING_OLD = regItem(BUNTING_NAME, () -> new BuntingItemOld(new Item.Properties()
-            .component(DataComponents.BASE_COLOR, DyeColor.WHITE)));
-
     public static final Map<DyeColor, Supplier<Block>> BUNTING_WALL_BLOCKS = new Object2ObjectLinkedOpenHashMap<>();
     public static final Map<DyeColor, Supplier<Block>> BUNTING_BLOCKS = RegUtils.registerBuntings(BUNTING_NAME);
 

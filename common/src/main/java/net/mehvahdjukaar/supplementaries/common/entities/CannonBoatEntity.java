@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.entity.IControllableVehicle;
 import net.mehvahdjukaar.moonlight.api.entity.ITileEntityCarry;
@@ -340,6 +341,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         super.clampRotation(entityToUpdate);
     }
 
+    @ClientOnly
     @Override
     public void onInputUpdate(boolean b, boolean b1, boolean b2, boolean b3, boolean ctrl, boolean jump) {
         if (jump && level().isClientSide) {
