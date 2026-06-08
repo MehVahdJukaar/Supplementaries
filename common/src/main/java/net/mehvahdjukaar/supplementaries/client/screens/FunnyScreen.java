@@ -42,7 +42,7 @@ public class FunnyScreen extends Screen {
         List<Component> modLoadErrors = List.of(
 
                 Component.literal(
-                        "Supplementaries (suslementaries) has dome messed up :(\n" +
+                        "Supplementaries (suslementaries) has done messed up :(\n" +
                                 ChatFormatting.GRAY +
                                 (isEvenFunnier ?
                                         "net.mehvahdjukaar.supplementaries.code_that_makes_the_game_crash.GameIsKilException" :

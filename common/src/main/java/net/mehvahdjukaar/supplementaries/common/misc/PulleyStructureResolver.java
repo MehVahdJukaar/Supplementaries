@@ -38,8 +38,6 @@ import java.util.Set;
  */
 public class PulleyStructureResolver {
 
-    public static final int MAX_PULL_DEPTH_PER_PULLEY = 12;
-
     /**
      * One pulley in a cooperating set. {@code ropeHangDirection} is the direction ropes hang
      * from the pulley body (typically {@link Direction#DOWN} for a vertical pulley). The
@@ -100,7 +98,8 @@ public class PulleyStructureResolver {
         for (PulleyInfo p : pulleys) this.pulleyPositions.add(p.pulleyPos());
         this.pushDirection = sharedPush;
         this.extending = sharedExtending;
-        this.totalPushLimit = pulleys.size() * MAX_PULL_DEPTH_PER_PULLEY;
+        this.totalPushLimit = pulleys.size()
+                * net.mehvahdjukaar.supplementaries.configs.CommonConfigs.Redstone.PULLEY_PULL_LIMIT.get();
     }
 
     public PulleyStructureResolver(Level level, PulleyInfo pulley) {

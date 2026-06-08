@@ -37,12 +37,13 @@ public class RopeItem extends BlockItem {
             // NOTE: BlockPlaceContext.getClickedPos() returns the placement target,
             // not the actually-clicked block — use the hit result for that.
             BlockPos hitPos = context.getHitResult().getBlockPos();
-            if (world.getBlockState(hitPos).is(ModRegistry.ROPE.get())) {
+            BlockState blockHit = world.getBlockState(hitPos);
+            if (blockHit.is(ModRegistry.ROPE.get())) {
                 BlockPos.MutableBlockPos cursor = hitPos.mutable();
                 while (world.getBlockState(cursor.below()).is(ModRegistry.ROPE.get())) {
                     cursor.move(0, -1, 0);
                 }
-                return super.place(BlockPlaceContext.at(context, cursor.immutable(), Direction.DOWN));
+                return super.place(BlockPlaceContext.at(context, cursor.immutable(), Direction.UP));
             }
 
             BlockPos pos = context.getClickedPos().relative(context.getClickedFace().getOpposite());

@@ -228,7 +228,7 @@ public class ClientConfigs {
                     .define("tooltip_image_size", 80, 1, 255);
             MOB_HEAD_EFFECTS = builder.comment("Wearing mob heads will apply post processing")
                     .define("mob_head_shaders", true);
-            DEATH_CHAT = builder.comment("Sends your current chat when you die while typing")
+            DEATH_CHAT = PlatHelper.getPlatform().isFabric() ? ()->false:  builder.comment("Sends your current chat when you die while typing")
                     .define("send_chat_on_death", true);
             HEAD_VANILLA = builder.comment("Makes enderman and spider heads use vanilla texture. Enable for texture pack support")
                     .define("enderman_and_spider_head_texture_pack_support", true);

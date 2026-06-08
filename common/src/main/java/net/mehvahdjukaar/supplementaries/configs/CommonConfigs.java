@@ -243,6 +243,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> PULLEY_ENABLED;
         public static final Supplier<Boolean> PULLEY_CONTINUOUS;
         public static final Supplier<Boolean> COOPERATIVE_PULLEYS;
+        public static final Supplier<Integer> PULLEY_PULL_LIMIT;
         public static final Supplier<Integer> PULLEY_PULL_INTERVAL;
         public static final Supplier<Double> MINESHAFT_ELEVATOR;
 
@@ -320,6 +321,11 @@ public class CommonConfigs {
                             can pool their pull budget into one structure resolve — letting two ropes share a wide \
                             elevator platform. Only relevant when 'continuous_retraction' is enabled.""")
                     .define("cooperative_pulleys", true);
+            PULLEY_PULL_LIMIT = builder.comment("""
+                            Maximum number of NON-rope blocks a single pulley can drag (the anchor and anything \
+                            sticky-attached to it). Rope segments don't count toward this. Cooperating pulleys \
+                            pool their budgets — two pulleys can pull twice this many blocks together.""")
+                    .define("pull_limit", 8, 1, 128);
             PULLEY_PULL_INTERVAL = builder.comment("""
                             Ticks to wait between unit pulls when continuous_retraction is enabled.\s
                             Lower = faster pulley. Minimum 2 ticks because each animation takes that long to play out — going lower has no effect.""")
