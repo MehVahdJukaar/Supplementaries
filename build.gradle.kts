@@ -37,7 +37,7 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("net.mehvahdjukaar:candlelight:1.1.6")
+        compileOnly("net.mehvahdjukaar:candlelight:1.2.1")
     }
 
     tasks.withType<JavaCompile> {

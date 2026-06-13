@@ -25,6 +25,8 @@ dependencies {
     modCompileOnly("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
 
+    modCompileOnly("maven.modrinth:sodium:mc1.21.1-0.8.12-beta.1-fabric")
+
 
     modCompileOnly("curse.maven:farmers-delight-398521:8083481")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")

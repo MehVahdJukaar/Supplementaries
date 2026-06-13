@@ -9,8 +9,7 @@
     "ParrotLayerMixin",
     "compat.CompatEmbFluidRendererMixin",
     "compat.CompatIFMapAtlasTextureMixin",
-    "compat.CompatIFMapTextureMixin2",
-    "compat.CompatSodiumFluidRendererMixin"
+    "compat.CompatIFMapTextureMixin2"
   ],
   "mixins": [
     "ChunkHolderMixin",
