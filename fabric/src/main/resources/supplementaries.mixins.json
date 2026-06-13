@@ -23,7 +23,8 @@
     "MobMixin",
     "RedstoneWireBlockMixin",
     "SugarCaneBlockMixin",
-    "ThrowableProjectileMixin"
+    "ThrowableProjectileMixin",
+    "compat.CompatSodiumFluidRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.compat;
+package net.mehvahdjukaar.supplementaries.mixins.fabric.compat;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -51,7 +51,6 @@ public abstract class CompatSodiumFluidRendererMixin {
             remap = false)
     public void supplementaries$modifyLumiseneEmissivity(ModelQuadViewMutable quad, LevelSlice level, BlockPos pos, LightPipeline lighter, Direction dir, ModelQuadFacing facing, float brightness,
                                                          ColorProvider<FluidState> colorProvider, FluidState fluidState, CallbackInfo ci) {
-
 
         if (fluidState.is(ModFluids.LUMISENE_FLUID.get())) {
             QuadLightData light = this.quadLightData;
