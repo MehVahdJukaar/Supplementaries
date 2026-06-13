@@ -122,7 +122,9 @@ dependencies {
     modCompileOnly("curse.maven:cyanide-541676:4824162")
     //modImplementation("curse.maven:alltheleaks-1091339:7398946")
     modCompileOnly("curse.maven:embeddium-908741:5681729")
-    modCompileOnly("maven.modrinth:sodium:mc1.21.1-0.8.12-beta.1-neoforge")
+    // NeoForge Sodium is just the Fabric jar shimmed in, so its classes match the Fabric build.
+    // Compile against the real (flat) Fabric jar; the mixin lives in :common.
+    modCompileOnly("maven.modrinth:sodium:mc1.21.1-0.8.12-beta.1-fabric")
     modCompileOnly("curse.maven:resourceful-lib-570073:5793500") //v2.1.29 | Chipped, Handcrafted, Cozy
     modCompileOnly("curse.maven:athena-841890:5629395") //v2.1.29 | Chipped, Handcrafted, Cozy
 

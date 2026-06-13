@@ -93,7 +93,8 @@
     "SkullBlockRendererMixin",
     "UndeadHorseRenderMixin",
     "WrittenBookAccessMixin",
-    "compat.CompatEMFMixin"
+    "compat.CompatEMFMixin",
+    "compat.CompatSodiumFluidRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
