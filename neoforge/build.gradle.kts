@@ -123,9 +123,10 @@ dependencies {
     modCompileOnly("curse.maven:cyanide-541676:4824162")
     //modImplementation("curse.maven:alltheleaks-1091339:7398946")
     modCompileOnly("curse.maven:embeddium-908741:5681729")
-    // NeoForge Sodium is just the Fabric jar shimmed in, so its classes match the Fabric build.
-    // Compile against the real (flat) Fabric jar; the mixin lives in :common.
-    modCompileOnly("maven.modrinth:sodium:mc1.21.1-0.8.12-beta.1-fabric")
+    // Sodium's NeoForge CF/Modrinth download is a bootstrap wrapper that bundles the real mod as a
+    // nested JarJar, so the classes never reach the compile classpath. We extract that inner jar
+    // (already mojmap-mapped) and drop it in neoforge/mods, resolved via the flatDir repo below.
+    compileOnly(":sodium-neoforge:0.8.12-beta.1")
     modCompileOnly("curse.maven:resourceful-lib-570073:5793500") //v2.1.29 | Chipped, Handcrafted, Cozy
     modCompileOnly("curse.maven:athena-841890:5629395") //v2.1.29 | Chipped, Handcrafted, Cozy
 
