@@ -54,7 +54,7 @@ dependencies {
     modCompileOnly("curse.maven:the-bumblezone-fabric-363949:5889007")
     modCompileOnly("curse.maven:goated-805646:5935888")
     //modImplementation("curse.maven:inmis-369254:6952335")
-    modCompileOnly("maven.modrinth:sodium:mc1.21-0.6.0-beta.2-fabric")
+    modCompileOnly("maven.modrinth:sodium:mc1.21.1-0.8.12-beta.1-fabric")
     //modImplementation("curse.maven:resourceful-lib-570073:5793501") //v2.1.29 | Chipped, Handcrafted, Cozy
     //modImplementation("curse.maven:midnightlib-488090:5687799")
 
