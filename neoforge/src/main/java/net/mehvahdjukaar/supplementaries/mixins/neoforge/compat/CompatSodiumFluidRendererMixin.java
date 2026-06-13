@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+
 @Pseudo
 @Mixin(DefaultFluidRenderer.class)
 public abstract class CompatSodiumFluidRendererMixin {
@@ -68,7 +69,7 @@ public abstract class CompatSodiumFluidRendererMixin {
                 light.lm[j] = LightTexture.pack(bl, sl);
 
                 // no shading on emissive stuff!
-                //TODO: this cant be correct! without however stuff is shader when against blocks
+                //TODO: this cant be correct! without however stuff is shaded when against blocks
                 light.br[j] = 1.0F;
             }
         }
