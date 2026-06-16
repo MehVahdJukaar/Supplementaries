@@ -22,6 +22,11 @@ classes/
 /.codex
 /.aiassistant/
 /.ai/
+
+/.claude/
+/.cursor/
+/.junie/
+/CLAUDE.md
 /common/build/
 /fabric/build/
 /neoforge/build/
