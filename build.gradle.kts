@@ -10,18 +10,12 @@ plugins {
 }
 
 mod {
-    val mod_description: String by extra
-    val mod_credits: String by extra
-    val mod_license: String by extra
-    val mod_homepage: String by extra
-    val mod_github: String by extra
-    val moonlight_min_version: String by extra
-    additional.add("mod_description", provider { mod_description })
-    additional.add("mod_credits", provider { mod_credits })
-    additional.add("mod_license", provider { mod_license })
-    additional.add("mod_homepage", provider { mod_homepage })
-    additional.add("mod_github", provider { mod_github })
-    additional.add("moonlight_min_version", provider { moonlight_min_version })
+    additional.add("mod_description")
+    additional.add("mod_credits")
+    additional.add("mod_license")
+    additional.add("mod_homepage")
+    additional.add("mod_github")
+    additional.add("moonlight_min_version")
 }
 
 

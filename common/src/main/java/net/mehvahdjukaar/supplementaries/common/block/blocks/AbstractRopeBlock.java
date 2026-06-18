@@ -106,12 +106,6 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
 
     }
 
-    public boolean shouldConnectToDir(BlockState thisState, BlockPos currentPos, LevelReader world, Direction dir) {
-        if (dir.getAxis().isHorizontal() && !CommonConfigs.Functional.ROPE_HORIZONTAL.get()) return false;
-        BlockPos facingPos = currentPos.relative(dir);
-        return this.shouldConnectToFace(thisState, world.getBlockState(facingPos), facingPos, dir, world);
-    }
-
     @Override
     public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
@@ -119,20 +113,13 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
             worldIn.scheduleTick(currentPos, this, 1);
         }
 
-        if (facing == Direction.UP) {
-            stateIn = setConnection(Direction.DOWN, stateIn, shouldConnectToDir(stateIn, currentPos, worldIn, Direction.DOWN));
-        }
-        stateIn = setConnection(facing, stateIn, shouldConnectToDir(stateIn, currentPos, worldIn, facing));
-
+        stateIn = updateConnection(stateIn, facing, currentPos, worldIn);
 
         if (facing == Direction.DOWN && !worldIn.isClientSide() && CompatHandler.DECO_BLOCKS) {
             DecoBlocksCompat.tryConvertingRopeChandelier(facingState, worldIn, facingPos);
         }
-        //if (facing != Direction.UP && !worldIn.isClientSide() && CompatHandler.FARMERS_DELIGHT) {
-        //FarmersDelightCompat.tryTomatoLogging(facingState, worldIn, facingPos,true);
-        //}
 
-        return stateIn.setValue(KNOT, hasMiddleKnot(stateIn));
+        return stateIn;
     }
 
     @Override
@@ -140,13 +127,8 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
         Level world = context.getLevel();
         BlockPos pos = context.getClickedPos();
         boolean hasWater = context.getLevel().getFluidState(pos).getType() == Fluids.WATER;
-        BlockState state = this.defaultBlockState();
-        for (Direction dir : Direction.values()) {
-            state = setConnection(dir, state, shouldConnectToDir(state, pos, world, dir));
-        }
-
+        BlockState state = withConnections(this.defaultBlockState(), pos, world);
         state = state.setValue(WATERLOGGED, hasWater);
-        state = state.setValue(KNOT, hasMiddleKnot(state));
         return state;
     }
 
@@ -159,19 +141,6 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
                 DecoBlocksCompat.tryConvertingRopeChandelier(worldIn.getBlockState(down), worldIn, down);
             }
         }
-    }
-
-    public boolean hasMiddleKnot(BlockState state) {
-        boolean up = hasConnection(Direction.UP, state);
-        boolean down = hasConnection(Direction.DOWN, state);
-        boolean north = hasConnection(Direction.NORTH, state);
-        boolean east = hasConnection(Direction.EAST, state);
-        boolean south = hasConnection(Direction.SOUTH, state);
-        boolean west = hasConnection(Direction.WEST, state);
-        //not inverse
-        return !((up && down && !north && !south && !east && !west)
-                || (!up && !down && north && south && !east && !west)
-                || (!up && !down && !north && !south && east && west));
     }
 
     @Override

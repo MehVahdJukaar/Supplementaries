@@ -48,8 +48,8 @@ dependencies {
     modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
     modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}")
     modCompileOnly("curse.maven:curios-309927:4581099")
-    modCompileOnly("curse.maven:quark-243121:7640331")
-    modCompileOnly("curse.maven:zeta-968868:7640154")
+    modCompileOnly("curse.maven:quark-243121:8146177")
+    modCompileOnly("curse.maven:zeta-968868:7980010")
 
     modImplementation("curse.maven:exposure-871755:7033927")
 

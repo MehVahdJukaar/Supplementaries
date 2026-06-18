@@ -64,7 +64,8 @@
     "StrongholdRoomSconceMixin",
     "WanderingTraderMixin",
     "ZombieHorseMixin",
-    "compat.CompatCreeperArclightMixin"
+    "compat.CompatCreeperArclightMixin",
+    "compat.CompatFarmersDelightTomatoMixin"
   ],
   "client": [
     "AgeableListAccessor",

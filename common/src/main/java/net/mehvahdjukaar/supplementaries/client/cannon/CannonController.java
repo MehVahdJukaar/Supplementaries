@@ -152,12 +152,21 @@ public class CannonController {
             if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
 
             if (cannon.shouldRotatePlayerFaceWhenManeuvering()) {
-                //make player face camera while maneuvering
+                //make player face camera while maneuvering.
+                //set rotation directly (idempotent) instead of turn()-ing toward yHeadRot:
+                //onPlayerRotated runs once per render frame but yHeadRot only updates once per tick,
+                //so a turn()-based convergence accumulates with framerate (spins at high fps, stalls on vsync)
                 LocalPlayer player = Minecraft.getInstance().player;
-                player.turn(Mth.wrapDegrees((lastCameraYaw + yawAdd) - player.yHeadRot),
-                        Mth.wrapDegrees((lastCameraPitch + pitchAdd) - player.getXRot()));
-                player.yHeadRotO = player.yHeadRot;
-                player.xRotO = player.getXRot();
+                float wantedYaw = (float) Mth.wrapDegrees(lastCameraYaw + yawAdd);
+                float wantedPitch = (float) Mth.clamp(lastCameraPitch + pitchAdd, -90, 90);
+                player.setYRot(wantedYaw);
+                player.yRotO = wantedYaw;
+                player.yBodyRot = wantedYaw;
+                player.yBodyRotO = wantedYaw;
+                player.yHeadRot = wantedYaw;
+                player.yHeadRotO = wantedYaw;
+                player.setXRot(wantedPitch);
+                player.xRotO = wantedPitch;
             }
             return true;
         }
