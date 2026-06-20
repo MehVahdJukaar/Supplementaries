@@ -12,10 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.PushReaction;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Pulley-side equivalent of vanilla {@code PistonStructureResolver}. Single-pulley by default;
@@ -81,6 +78,13 @@ public class PulleyStructureResolver {
      * cooperation group but don't earn a rope this step.
      */
     private final Set<BlockPos> contributedPulleys = new HashSet<>();
+    /**
+     * Extend-into-open-air placements: {@code firstSlot -> rope state}. A pulley lowering into
+     * pure air has no rope column and no anchor to push, so there's no moved block to carry the
+     * usual extend phantom. The mover instead places these rope states directly (instantly, no
+     * animation). Empty in retract mode and whenever a real push/phantom already grows the chain.
+     */
+    private final java.util.Map<BlockPos, BlockState> directRopePlacements = new java.util.HashMap<>();
 
     public PulleyStructureResolver(Level level, List<PulleyInfo> pulleys) {
         if (pulleys.isEmpty()) throw new IllegalArgumentException("need at least one pulley");
@@ -126,24 +130,17 @@ public class PulleyStructureResolver {
         ropePositions.clear();
         consumedRopes.clear();
         contributedPulleys.clear();
+        directRopePlacements.clear();
 
         for (PulleyInfo pulley : pulleys) {
             int contributionMark = toPush.size();
             Direction ropeDir = pulley.ropeHangDirection();
             BlockPos firstSlot = pulley.pulleyPos().relative(ropeDir);
             BlockState firstState = level.getBlockState(firstSlot);
-            net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
-                    "[Resolver {}] pulley={} ropeBlock={} ropeHangDir={} firstSlot={} firstStateBlock={} firstStateProps={}",
-                    level.isClientSide ? "client" : "server",
-                    pulley.pulleyPos(), pulley.ropeBlock(), ropeDir, firstSlot,
-                    firstState.getBlock(), firstState.getValues());
 
             // Retracting needs a rope at firstSlot to consume; extending can push an anchor
             // that sits directly below with no rope yet (phantom places the new rope on finish).
             if (!extending && !RopeHelper.isCorrectRope(pulley.ropeBlock(), firstState, ropeDir)) {
-                net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
-                        "[Resolver {}] firstSlot is NOT a correct rope — skipping this pulley (chain axis mismatch or different block)",
-                        level.isClientSide ? "client" : "server");
                 continue;
             }
 
@@ -181,10 +178,6 @@ public class PulleyStructureResolver {
             boolean anchorPushable = !anchorAir && !anchorIsPulley
                     && isPullable(anchorState, level, walkPos, pushDirection, false, ropeDir);
             boolean anchorPullable = anchorPushable;
-            net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
-                    "[Resolver {}] anchor at {} block={} air={} isPulley={} isPullable={} pushReaction={}",
-                    level.isClientSide ? "client" : "server", walkPos, anchorState.getBlock(),
-                    anchorAir, anchorIsPulley, anchorPushable, anchorState.getPistonPushReaction());
 
             if (!anchorPullable) {
                 if (anchorState.isAir() || pulleyPositions.contains(walkPos)) {
@@ -192,6 +185,14 @@ public class PulleyStructureResolver {
                     // pulley body — the rope chain still shortens by one if we walked any
                     // intermediate rope segments. Mark contribution if so.
                     if (toPush.size() > contributionMark) {
+                        contributedPulleys.add(pulley.pulleyPos());
+                    } else if (extending && anchorState.isAir()) {
+                        // Pure open air below the pulley (firstSlot itself is air): nothing to push
+                        // and no column to grow, but lowering must still drop a fresh rope into
+                        // firstSlot. There's no moved block to carry a phantom rope here, so queue a
+                        // direct placement and count this pulley as contributing so the caller spends
+                        // a rope from its spool. (firstSlot == walkPos in this branch.)
+                        directRopePlacements.put(firstSlot, pulley.ropeBlock().defaultBlockState());
                         contributedPulleys.add(pulley.pulleyPos());
                     }
                     continue;
@@ -383,6 +384,15 @@ public class PulleyStructureResolver {
 
     public Set<BlockPos> getContributedPulleys() {
         return this.contributedPulleys;
+    }
+
+    /**
+     * Extend-only: {@code firstSlot -> rope state} for pulleys lowering into open air, where the
+     * rope must be placed directly (no moved block, no phantom animation). See
+     * {@link #directRopePlacements}. Empty in retract mode.
+     */
+    public Map<BlockPos, BlockState> getDirectRopePlacements() {
+        return this.directRopePlacements;
     }
 
     /**

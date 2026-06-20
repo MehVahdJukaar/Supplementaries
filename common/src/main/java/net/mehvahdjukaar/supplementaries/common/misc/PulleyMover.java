@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.common.misc;
 
 import com.google.common.collect.Maps;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingPulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingPulleyBlockEntity;
 import net.mehvahdjukaar.supplementaries.common.utils.ICarryingMovingPiston;
@@ -60,22 +59,15 @@ public final class PulleyMover {
      */
     public static boolean moveOneStep(Level level, PulleyStructureResolver resolver, int animationTicks) {
         if (!resolver.resolve()) {
-            Supplementaries.LOGGER.info("[PulleyMover {}] resolve() returned false — aborting step",
-                    level.isClientSide ? "client" : "server");
             return false;
         }
 
         List<BlockPos> list = resolver.getToPush();
-        if (list.isEmpty() && resolver.getToDestroy().isEmpty()) {
-            Supplementaries.LOGGER.info("[PulleyMover {}] toPush + toDestroy both empty — aborting step",
-                    level.isClientSide ? "client" : "server");
+        if (list.isEmpty() && resolver.getToDestroy().isEmpty() && resolver.getDirectRopePlacements().isEmpty()) {
             return false;
         }
 
         Direction pushDir = resolver.getPushDirection();
-        Supplementaries.LOGGER.info("[PulleyMover {}] moving {} blocks (pushDir={}, dim={})",
-                level.isClientSide ? "client" : "server",
-                list.size(), pushDir, level.dimension().location());
 
         Map<BlockPos, BlockState> map = Maps.newHashMap();
         List<BlockState> originalStates = new ArrayList<>();
@@ -124,11 +116,13 @@ public final class PulleyMover {
             level.gameEvent(GameEvent.BLOCK_DESTROY, pos, Context.of(destroyState));
         }
 
-        // Pick the moving-block variant: our MovingPulleyBlock when a driver passed an animation
-        // duration (we want a non-vanilla speed), else vanilla MOVING_PISTON for the no-driver
-        // path (matches the player-shift-click case where vanilla 2-tick speed is fine).
-        boolean usePulleyBlock = animationTicks > 1;
-        Block movingBlock = usePulleyBlock ? ModRegistry.MOVING_PULLEY_BLOCK.get() : Blocks.MOVING_PISTON;
+        // Always use our MovingPulleyBlock: only it carries the extend phantom rope and the
+        // retract leading-rope state — vanilla MOVING_PISTON drops both, which made manual /
+        // wrench-driven extends (animationTicks <= 1) shift the column down without ever placing
+        // the new rope. At animationTicks <= 1 setAnimationDuration falls back to the vanilla
+        // 2-tick speed, so timing is unchanged; we just keep the rope placement working.
+        boolean usePulleyBlock = true;
+        Block movingBlock = ModRegistry.MOVING_PULLEY_BLOCK.get();
         for (int j = list.size() - 1; j >= 0; --j) {
             BlockPos srcPos = list.get(j);
             BlockState srcState = originalStates.get(j);
@@ -163,17 +157,21 @@ public final class PulleyMover {
                 }
             }
             level.setBlockEntity(movingBe);
-            BlockEntity verifyBe = level.getBlockEntity(dstPos);
-            Supplementaries.LOGGER.info("[PulleyMover {}]   placed MOVING_PISTON at {} carrying {} -- BE present after setBlockEntity? {} (type {})",
-                    level.isClientSide ? "client" : "server",
-                    dstPos, srcState.getBlock(),
-                    verifyBe != null,
-                    verifyBe == null ? "null" : verifyBe.getClass().getSimpleName());
         }
 
         BlockState air = Blocks.AIR.defaultBlockState();
         for (BlockPos leftover : map.keySet()) {
             level.setBlock(leftover, air, 82);
+        }
+
+        // Extend-into-open-air: pulleys with only air below have no moved block to carry a phantom
+        // rope, so drop the fresh rope straight into firstSlot. Guard on air so we never clobber a
+        // block that arrived meanwhile. The spool decrement + place sound happen in
+        // PulleyBlock.serverFinaliseExtend (these pulleys are marked as contributing).
+        for (Map.Entry<BlockPos, BlockState> entry : resolver.getDirectRopePlacements().entrySet()) {
+            if (level.getBlockState(entry.getKey()).isAir()) {
+                level.setBlock(entry.getKey(), entry.getValue(), 3);
+            }
         }
 
         for (Map.Entry<BlockPos, BlockState> entry : map.entrySet()) {

@@ -162,9 +162,6 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
      */
     @Override
     protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
-        net.mehvahdjukaar.supplementaries.Supplementaries.LOGGER.info(
-                "[PulleyBlock @ {}] triggerEvent {} id={} param={}",
-                pos, level.isClientSide ? "client" : "server", id, param);
         if (id != EVENT_PULL_STEP) return super.triggerEvent(state, level, pos, id, param);
         if (!(level.getBlockEntity(pos) instanceof PulleyBlockTile tile)) return false;
 
@@ -219,7 +216,8 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         // Resolve first so we know which pulleys contribute and can update inventories
         // immediately when the move begins, before the animation plays.
         if (!resolver.resolve()) return false;
-        if (resolver.getToPush().isEmpty() && resolver.getToDestroy().isEmpty()) return false;
+        if (resolver.getToPush().isEmpty() && resolver.getToDestroy().isEmpty()
+                && resolver.getDirectRopePlacements().isEmpty()) return false;
 
         if (!level.isClientSide) {
             for (BlockPos contributorPos : resolver.getContributedPulleys()) {

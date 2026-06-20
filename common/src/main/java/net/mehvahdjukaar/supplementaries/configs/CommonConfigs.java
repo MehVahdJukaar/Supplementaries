@@ -315,7 +315,7 @@ public class CommonConfigs {
                             If true, pulleys retract their rope chain over multiple ticks, animating each block via vanilla moving-piston entities.\s
                             Connected blocks become moving blocks (so they push entities, drop sand etc) and multiple pulleys can cooperate to pull a single heavy contraption — useful for elevators.\s
                             If false, the original instant retraction behavior is used.""")
-                    .define("continuous_retraction", false);
+                    .define("continuous_retraction", true);
             COOPERATIVE_PULLEYS = builder.comment("""
                             If true, multiple pulleys firing on the same tick with the same period and push direction \
                             can pool their pull budget into one structure resolve — letting two ropes share a wide \
