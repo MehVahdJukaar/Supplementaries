@@ -17,8 +17,6 @@
     "FireBlockAccessor",
     "ItemStackAccessor",
     "LivingEntityMixin",
-    "PistonBaseBlockMixin",
-    "PistonStructureResolverMixin",
     "TreasureMapForEmeraldsMixin",
     "ZetaPistonStructureResolverMixin",
     "self.SelfFlammableFluidBlockMixin",

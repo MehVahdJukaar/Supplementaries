@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.mixins.neoforge;
+package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
