@@ -6,6 +6,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -85,10 +86,11 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         }
     }
 
-    @Inject(method = "finalTick", at = @At("TAIL"))
-    private void supp$restoreCarriedBe(CallbackInfo ci) {
+    @Override
+    public void supp$restoreCarriedBe() {
         CompoundTag nbt = this.supp$carriedBeNbt;
         this.supp$carriedBeNbt = null;
+        this.supp$cachedCarriedBE = null;
         if (nbt == null || this.level == null) return;
         BlockState placed = this.level.getBlockState(this.worldPosition);
         if (placed.isAir() || placed.is(Blocks.MOVING_PISTON) || !placed.hasBlockEntity()) return;
@@ -97,5 +99,26 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         if (restored == null) return;
         restored.loadWithComponents(nbt, this.level.registryAccess());
         this.level.setBlockEntity(restored);
+    }
+
+    // Normal completion path: tick() places the moved block itself — it does NOT call
+    // finalTick. Restore right after vanilla sets the block, covering both the air
+    // (updateOrDestroy) and non-air (neighborChanged) branches.
+    @Inject(method = "tick", at = {
+            @At(value = "INVOKE", shift = At.Shift.AFTER,
+                    target = "Lnet/minecraft/world/level/block/Block;updateOrDestroy(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;I)V"),
+            @At(value = "INVOKE", shift = At.Shift.AFTER,
+                    target = "Lnet/minecraft/world/level/Level;neighborChanged(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;Lnet/minecraft/core/BlockPos;)V")
+    })
+    private static void supp$restoreCarriedBeOnTick(Level level, BlockPos pos, BlockState state,
+                                                    PistonMovingBlockEntity blockEntity, CallbackInfo ci) {
+        ((ICarryingMovingPiston) blockEntity).supp$restoreCarriedBe();
+    }
+
+    // Interrupt path: a new piston action force-finishes this move before the animation
+    // completes, calling finalTick() instead of letting tick() finish it.
+    @Inject(method = "finalTick", at = @At("TAIL"))
+    private void supp$restoreCarriedBeOnFinalTick(CallbackInfo ci) {
+        this.supp$restoreCarriedBe();
     }
 }

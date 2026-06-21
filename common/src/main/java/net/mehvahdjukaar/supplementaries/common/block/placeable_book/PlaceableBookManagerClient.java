@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
+import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.misc.MapRegistry;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -27,9 +28,23 @@ public class PlaceableBookManagerClient {
     //client
     //static, just 1 instance exists
     private static final MapRegistry<List<BookModelVisuals.VariantModelList>> bookVisuals = new MapRegistry<>("placeable_books_visuals");
+    // Visuals to fall back to when a book item can't be matched to a known variant (e.g. porting
+    // old worlds whose stored book item data no longer matches any variant). Falling back to the
+    // normal book's color list lets the renderer pick a random color instead of showing vanilla's
+    // purple/black missing-texture cube.
+    private static final ResourceLocation FALLBACK_VISUALS = Supplementaries.res("normal_book");
+    // last resort if even the normal book visuals are missing: a plain brown book (a real, registered model)
     private static final BookModelVisuals missingModel = new BookModelVisuals(
-            new ModelResourceLocation(Supplementaries.res("missing"), "missing"),
+            RenderUtil.getStandaloneModelLocation(Supplementaries.res("block/books/book_brown")),
             -1, 0, false);
+
+    private static List<BookModelVisuals> getFallbackModels() {
+        var list = bookVisuals.getValue(FALLBACK_VISUALS);
+        if (list != null && !list.isEmpty()) {
+            return list.get(0).models();
+        }
+        return List.of(missingModel);
+    }
 
     private static void reload(ResourceManager resourceManager) {
         Map<ResourceLocation, JsonElement> js = new HashMap<>();
@@ -49,12 +64,12 @@ public class PlaceableBookManagerClient {
         BookType type = PlaceableBookManager.get(stack.getItem(), horizontal, level);
         if (type == null) {
             Supplementaries.LOGGER.warn("No book type found for item: {}", stack.getItem());
-            return List.of(missingModel);
+            return getFallbackModels();
         }
         var list = bookVisuals.getValue(type.bookVisuals());
         if (list == null || list.isEmpty()) {
             Supplementaries.LOGGER.warn("No visuals found for book type: {}", type);
-            return List.of(missingModel);
+            return getFallbackModels();
         }
         BookModelVisuals.VariantModelList modelsList = null;
         for (var m : list) {
@@ -65,7 +80,7 @@ public class PlaceableBookManagerClient {
         }
         if (modelsList == null) {
             Supplementaries.LOGGER.warn("No visuals matched for book item: {}", stack);
-            return List.of(missingModel);
+            return getFallbackModels();
         }
         return modelsList.models();
     }

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.compat;
 
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,6 +24,7 @@ public abstract class CompatFarmersDelightTomatoMixin extends Block {
 
     @Inject(method = "getClimbingState", at = @At("HEAD"), cancellable = true, remap = false)
     public void supp$customClimbingState(BlockState stateAbove, CallbackInfoReturnable<BlockState> cir) {
+        if (!CompatHandler.FARMERS_DELIGHT) return;
         BlockState replacement = FarmersDelightCompat.getClimbReplacement(stateAbove);
         if (replacement != null) {
             cir.setReturnValue(replacement);
@@ -31,6 +33,7 @@ public abstract class CompatFarmersDelightTomatoMixin extends Block {
 
     @Inject(method = "canClimbBlock", at = @At("HEAD"), cancellable = true, remap = false)
     public void supp$canClimbOurBlock(BlockState stateAbove, CallbackInfoReturnable<Boolean> cir) {
+        if (!CompatHandler.FARMERS_DELIGHT) return;
         if (FarmersDelightCompat.canClimbOurBlock(stateAbove)) {
             cir.setReturnValue(true);
         }

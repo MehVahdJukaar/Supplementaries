@@ -108,8 +108,8 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
-    public void updateClientVisualsOnLoad() {
-        super.updateClientVisualsOnLoad();
+    public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.clientSideUpdateWhenChanged(registries);
         requestModelReload();
     }
 

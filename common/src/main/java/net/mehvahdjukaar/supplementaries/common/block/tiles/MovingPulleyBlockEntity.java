@@ -87,6 +87,18 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
         return ModRegistry.MOVING_PULLEY_BLOCK_TILE.get();
     }
 
+    /**
+     * {@link PistonMovingBlockEntity}'s constructor hardcodes {@code BlockEntityType.PISTON} into
+     * the {@link BlockEntity#type} field, so the vanilla constructor-time state validation would
+     * check PISTON against our {@code moving_pulley_block} state and throw. Validate against our
+     * real type instead (matches the overridden {@link #getType()}). Safe to call during super
+     * construction — it's a static registry lookup, no instance state.
+     */
+    @Override
+    public boolean isValidBlockState(BlockState state) {
+        return getType().isValid(state);
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);

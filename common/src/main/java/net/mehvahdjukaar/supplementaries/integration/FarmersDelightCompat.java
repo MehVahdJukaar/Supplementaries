@@ -35,16 +35,17 @@ public class FarmersDelightCompat {
             () -> SoundEvents.GRASS_HIT,
             () -> SoundEvents.GRASS_FALL);
 
-    public static final Supplier<Block> ROPE_TOMATO = RegHelper.registerBlock(Supplementaries.res("rope_tomatoes"),
-            () -> new TomatoRopeBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
-                    .forceSolidOff()));
-
-    public static final Supplier<Block> STICK_TOMATOES = RegHelper.registerBlock(Supplementaries.res("stick_tomatoes"),
-            () -> new TomatoStickBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
-                    .forceSolidOff()
-                    .sound(STICK_TOMATO_SOUND)));
+    public static Supplier<Block> ROPE_TOMATO;
+    public static Supplier<Block> STICK_TOMATOES;
 
     public static void init() {
+        ROPE_TOMATO = RegHelper.registerBlock(Supplementaries.res("rope_tomatoes"),
+                () -> new TomatoRopeBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
+                        .forceSolidOff()));
+        STICK_TOMATOES = RegHelper.registerBlock(Supplementaries.res("stick_tomatoes"),
+                () -> new TomatoStickBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHEAT)
+                        .forceSolidOff()
+                        .sound(STICK_TOMATO_SOUND)));
     }
 
 

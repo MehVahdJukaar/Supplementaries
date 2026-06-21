@@ -79,10 +79,10 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
                 (CompatHandler.COMPUTERCRAFT && CCCompat.isPrintedBook(item));
     }
 
-    //refreshTextures blockState and plays sound. server side
     @Override
-    public void updateTileOnInventoryChanged() {
-
+    public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.serverSideUpdateWhenChanged(registries);
+        //refreshTextures blockState and plays sound. server side
         boolean shouldHaveBook = !this.getDisplayedItem().isEmpty();
 
         BlockState state = this.getBlockState();

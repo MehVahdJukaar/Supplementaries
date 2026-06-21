@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookModelVi
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookType;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManager;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
+import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EnchantRedesignCompat;
@@ -27,6 +28,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -166,6 +169,27 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
 
     public float getEnchantPower() {
         return enchantPower;
+    }
+
+    @Override
+    public ItemInteractionResult interactWithPlayerItem(Player player, InteractionHand handIn, ItemStack handItem, int slot) {
+        if (handIn == InteractionHand.MAIN_HAND && handItem.isEmpty()) {
+            ItemStack it = this.removeItemNoUpdate(slot);
+            if (!it.isEmpty()) {
+                this.onItemRemoved(player, it, slot);
+                if (!this.level.isClientSide()) {
+                    ItemStack remaining = ItemsUtil.tryAddingItem(it, this.level, player);
+                    if (!remaining.isEmpty()) {
+                        player.setItemInHand(handIn, remaining);
+                    }
+                    this.setChanged();
+                } else {
+                    this.clientSideUpdateWhenChanged(this.level.registryAccess());
+                }
+                return ItemInteractionResult.sidedSuccess(this.level.isClientSide);
+            }
+        }
+        return super.interactWithPlayerItem(player, handIn, handItem, slot);
     }
 
     @Override
