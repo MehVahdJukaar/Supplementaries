@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.common.misc.PulleyMover;
 import net.mehvahdjukaar.supplementaries.common.misc.PulleyStructureResolver;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -146,6 +147,25 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         super.onRemove(state, level, pos, newState, isMoving);
     }
 
+
+    /**
+     * True while a chain step this pulley spawned is still mid-animation, so further input must
+     * be ignored — one rotation at a time. Each step places a {@code MovingPulleyBlock} in the
+     * slot directly below the pulley (retract: a rope sliding up into firstSlot) or one slot
+     * further down (extend: firstSlot is transiently AIR while the new rope animates into it from
+     * below). Either occupied slot means the chain is busy. This is the gate that makes the
+     * effective pull cooldown equal the animation duration of the block being moved.
+     * <p>
+     * Critically, it removes the reliance on the resolver "naturally" no-opping: an extend
+     * re-fire would otherwise read the transient air at firstSlot as an empty pulley and dump an
+     * un-animated rope (plus an extra spool spend) every animation tick.
+     */
+    public static boolean isChainAnimating(Level level, BlockPos pulleyPos, Direction ropeHangDir) {
+        Block moving = ModRegistry.MOVING_PULLEY_BLOCK.get();
+        BlockPos firstSlot = pulleyPos.relative(ropeHangDir);
+        return level.getBlockState(firstSlot).is(moving)
+                || level.getBlockState(firstSlot.relative(ropeHangDir)).is(moving);
+    }
     /**
      * Handles {@link #EVENT_PULL_STEP}: runs one resolver+move locally. Called on both
      * server (via the level's runBlockEvents) and client (after the server's
@@ -174,6 +194,11 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         Block ropeBlock = tile.resolveRopeBlock(ropeHangDir);
         if (ropeBlock == null) return false;
 
+        // One rotation at a time: if our own chain is still animating a previous step, swallow
+        // this event. Returning true (not false) matches the "already consumed" handling below —
+        // the input is intentionally dropped, not a failure.
+        if (isChainAnimating(level, pos, ropeHangDir)) return true;
+
         // Cooperative pulleys: dispatch to the per-level WorldSavedData on the server, the
         // client static side-channel otherwise. Same semantics either way — if this pulley was
         // already absorbed into an earlier triggerEvent's resolver call this tick, swallow our
@@ -200,6 +225,9 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         infos.add(new PulleyStructureResolver.PulleyInfo(pos, ropeBlock, ropeHangDir, extending));
         for (BlockPos cp : cooperatorPositions) {
             if (!(level.getBlockEntity(cp) instanceof PulleyBlockTile ct)) continue;
+            // Skip a cooperator whose own chain is still animating — pulling it into our resolve
+            // pass would hit the same transient-air extend trap its own gate just dodged.
+            if (isChainAnimating(level, cp, ropeHangDir)) continue;
             Block cRope = ct.resolveRopeBlock(ropeHangDir);
             // Only cooperate when the same rope-block type is wound — different blocks (chain vs
             // rope) would break the resolver's single-ropeBlock assumption per chain walk.

@@ -133,6 +133,10 @@ public class PulleyBlockTile extends ItemDisplayTile {
      */
     private boolean fireContinuousStep(Direction pushDir, int animationTicks) {
         if (!(level instanceof ServerLevel sl)) return false;
+        // Ignore input while a step is still animating below us — one rotation at a time. The
+        // pulley's effective cooldown is thus the animation duration of the block(s) it's moving.
+        // (Rope hangs DOWN for a vertical pulley, matching PulleyBlock.triggerEvent.)
+        if (PulleyBlock.isChainAnimating(sl, worldPosition, Direction.DOWN)) return false;
         // Param layout (8-bit limit per ClientboundBlockEventPacket): bit 0 = extending flag
         // (0 = retract, 1 = extend), bits 1-7 = animationTicks clamped to 0..127. 0 = vanilla speed.
         int extendingBit = pushDir == Direction.DOWN ? 1 : 0;

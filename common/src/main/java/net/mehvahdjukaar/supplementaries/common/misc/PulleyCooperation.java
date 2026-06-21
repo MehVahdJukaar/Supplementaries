@@ -9,12 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Per-level cooperation tracker for pulley pulls — mirrors {@link CooperativePistonData}.
@@ -123,7 +118,11 @@ public class PulleyCooperation extends WorldSavedData {
 
     private boolean isConsumed(BlockPos pos, long currentTick) {
         Long t = consumed.get(pos.asLong());
-        return t != null && currentTick - t <= MAX_AGE_TICKS;
+        // Same-tick only: "consumed" exists solely to dedupe a cooperator's own blockEvent within
+        // the single runBlockEvents pass that already moved its chain. MAX_AGE_TICKS is the purge
+        // horizon, NOT the validity window — using it here swallowed legitimate steps for ~20 ticks
+        // after every move, stalling repeated input (e.g. crank spam).
+        return t != null && t == currentTick;
     }
 
     private static boolean outOfRange(BlockPos a, BlockPos b) {
@@ -174,7 +173,8 @@ public class PulleyCooperation extends WorldSavedData {
 
     public static boolean wasConsumedClient(BlockPos pos, long currentTick) {
         Long t = clientConsumed.get(pos.asLong());
-        return t != null && currentTick - t <= MAX_AGE_TICKS;
+        // Same-tick only — see isConsumed.
+        return t != null && t == currentTick;
     }
 
     public static void markConsumedClient(BlockPos pos, long tick) {
