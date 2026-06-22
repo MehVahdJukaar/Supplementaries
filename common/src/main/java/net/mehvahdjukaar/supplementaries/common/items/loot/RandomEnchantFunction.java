@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
@@ -52,8 +53,13 @@ public class RandomEnchantFunction extends LootItemConditionalFunction {
         ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(pStack));
         RandomSource random = context.getRandom();
         if (random.nextFloat() < chance && curses.stream().noneMatch(h -> enchantments.getLevel(h) != 0)) {
-            var e = curses.getRandomElement(random);
-            e.ifPresent(enchantmentHolder -> enchantments.set(enchantmentHolder, 1));
+            List<Holder<Enchantment>> applicable = curses.stream()
+                    .filter(h -> h.value().canEnchant(pStack))
+                    .filter(h -> EnchantmentHelper.isEnchantmentCompatible(enchantments.keySet(), h))
+                    .toList();
+            if (!applicable.isEmpty()) {
+                enchantments.set(applicable.get(random.nextInt(applicable.size())), 1);
+            }
         }
 
         EnchantmentHelper.setEnchantments(pStack, enchantments.toImmutable());
