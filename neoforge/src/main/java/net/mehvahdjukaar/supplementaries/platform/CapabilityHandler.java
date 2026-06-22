@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.platform.platform.ForgeHelperImpl;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
-import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
@@ -15,16 +14,19 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.platform.FluidHandlerItemCap;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.*;
 import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -78,9 +80,17 @@ public class CapabilityHandler {
 
     public static void register(RegisterCapabilitiesEvent event) {
 
-        //TODO: add more
-        event.registerBlockEntity(ANTIQUE_TEXT_CAP, BlockEntityType.SIGN, AntiquableAttachment::get);
-        event.registerBlockEntity(ANTIQUE_TEXT_CAP, BlockEntityType.HANGING_SIGN, AntiquableAttachment::get);
+        Block[] signBlocks = BuiltInRegistries.BLOCK.stream()
+                .filter(SignBlock.class::isInstance)
+                .toArray(Block[]::new);
+        if (signBlocks.length > 0) {
+            event.registerBlock(ANTIQUE_TEXT_CAP, (level, pos, state, be, ctx) -> {
+                if (be instanceof SignBlockEntity sign) {
+                    return AntiquableAttachment.get(sign, ctx);
+                }
+                return null;
+            }, signBlocks);
+        }
 
         event.registerEntity(Capabilities.ItemHandler.ENTITY, ModEntities.DISPENSER_MINECART.get(),
                 (entity, ctx) -> new InvWrapper(entity));
