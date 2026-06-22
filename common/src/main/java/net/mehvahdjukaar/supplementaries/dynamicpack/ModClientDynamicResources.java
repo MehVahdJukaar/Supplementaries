@@ -31,7 +31,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.alchemy.Potion;
 import org.jetbrains.annotations.Nullable;
@@ -342,7 +341,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                         //Palette targetPalette = SpriteUtils.extrapolateWoodItemPalette(plankTexture);
                         Palette targetPalette = Palette.fromImage(plankTexture);
                         //TextureImage newImage = respriter.recolorWithAnimationOf(plankTexture);
-                        Respriter r = wood.toVanillaBoatOrOak() == Boat.Type.BAMBOO ? respriter2 : respriter;
+                        Respriter r = wood.isBambooLike() ? respriter2 : respriter;
                         return r.recolor(targetPalette);
                     } catch (Exception e) {
                         throw new RuntimeException(e);
