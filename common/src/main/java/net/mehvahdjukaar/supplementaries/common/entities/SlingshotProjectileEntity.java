@@ -204,7 +204,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
                 SuppPlatformStuff.dispenseContent(dc, stack, hit, level, player);
                 dc.checkExtraContent(player, level, stack, hit.getBlockPos());
                 if (craftingRemainingItem != null) {
-                    this.setItem(craftingRemainingItem.getDefaultInstance());
+                    // emptyContents (the dispenser path) leaves the filled bucket in the hand, unlike the
+                    // normal use path. Swap it for the empty remainder so the read-back below carries the
+                    // empty bucket instead of duping the filled one.
+                    player.setItemInHand(InteractionHand.MAIN_HAND, craftingRemainingItem.getDefaultInstance());
                 } else success = true;
             }
         }

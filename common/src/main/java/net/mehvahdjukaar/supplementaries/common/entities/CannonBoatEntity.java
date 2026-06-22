@@ -66,7 +66,6 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @NotNull
     private final CannonBlockTile cannon;
-    private boolean isBamboo;
 
     public CannonBoatEntity(EntityType<CannonBoatEntity> entityType, Level level) {
         super(entityType, level);
@@ -93,10 +92,6 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         return cannon;
     }
 
-    public boolean isBamboo() {
-        return isBamboo;
-    }
-
     @Override
     public Component getDisplayName() {
         return super.getDisplayName();
@@ -117,21 +112,12 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.entityData.set(BANNER_ITEM, stack);
     }
 
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
-        super.onSyncedDataUpdated(dataAccessor);
-        if (dataAccessor == DATA_WOOD_TYPE) {
-            this.isBamboo = this.entityData.get(dataAccessor).isBambooLike();
-        }
-    }
-
     public WoodType getWoodType() {
         return entityData.get(DATA_WOOD_TYPE);
     }
 
     public void setWoodType(WoodType type) {
         this.entityData.set(DATA_WOOD_TYPE, type);
-        this.isBamboo = type.isBambooLike();
         this.setVariant(type.toVanillaBoatOrOak());
     }
 
@@ -364,7 +350,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
 
     public Vec3 getCannonOffset() {
-        if (this.isBamboo()) {
+        if (getWoodType().isBambooLike()) {
             float backOff = 6 / 16f;
             return new Vec3(0, 16 / 16f, backOff);
         } else {
