@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -32,4 +33,18 @@ public interface ICarryingMovingPiston {
      * both paths must invoke this.
      */
     void supp$restoreCarriedBe();
+
+    /**
+     * Smuggle the fluid that occupied the destination so a cauldron (or other
+     * {@link net.mehvahdjukaar.supplementaries.common.block.IFluidFillableOnMove} block) can have
+     * its block-entity filled once it lands. Only set when post-placement is actually needed; not
+     * persisted, so an interrupted move just leaves the block empty (same as before this feature).
+     */
+    void supp$setMovedFluidFill(@Nullable FluidState fluid);
+
+    /**
+     * Applies the carried fluid fill (and clears it) onto the freshly placed block. Called right
+     * after {@link #supp$restoreCarriedBe()} on both move-completion paths.
+     */
+    void supp$applyMovedFluidFill();
 }

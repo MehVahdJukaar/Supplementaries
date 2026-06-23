@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
 import net.mehvahdjukaar.supplementaries.common.utils.ICarryingMovingPiston;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,8 +33,25 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
     @Nullable
     private BlockEntity supp$cachedCarriedBE;
 
+    @Unique
+    @Nullable
+    private FluidState supp$movedFluidFill;
+
     public PistonMovingBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+    }
+
+    @Override
+    public void supp$setMovedFluidFill(@Nullable FluidState fluid) {
+        this.supp$movedFluidFill = fluid;
+    }
+
+    @Override
+    public void supp$applyMovedFluidFill() {
+        FluidState fluid = this.supp$movedFluidFill;
+        this.supp$movedFluidFill = null;
+        if (fluid == null || this.level == null) return;
+        MovedFluidFiller.applyPostPlacement(this.level, this.worldPosition, fluid);
     }
 
     @Override
@@ -112,7 +131,9 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
     })
     private static void supp$restoreCarriedBeOnTick(Level level, BlockPos pos, BlockState state,
                                                     PistonMovingBlockEntity blockEntity, CallbackInfo ci) {
-        ((ICarryingMovingPiston) blockEntity).supp$restoreCarriedBe();
+        ICarryingMovingPiston carrying = (ICarryingMovingPiston) blockEntity;
+        carrying.supp$restoreCarriedBe();
+        carrying.supp$applyMovedFluidFill();
     }
 
     // Interrupt path: a new piston action force-finishes this move before the animation
@@ -120,5 +141,6 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
     @Inject(method = "finalTick", at = @At("TAIL"))
     private void supp$restoreCarriedBeOnFinalTick(CallbackInfo ci) {
         this.supp$restoreCarriedBe();
+        this.supp$applyMovedFluidFill();
     }
 }

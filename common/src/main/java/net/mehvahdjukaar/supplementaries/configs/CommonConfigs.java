@@ -1170,6 +1170,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> SLIME_DURATION;
         public static final Supplier<Boolean> PUSH_BLOCK_ENTITIES;
         public static final Supplier<Boolean> COOPERATIVE_PISTONS;
+        public static final Supplier<Boolean> MOVED_CAULDRON_FILLING;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -1344,6 +1345,10 @@ public class CommonConfigs {
                     "pistons pushing a 24-block slime contraption). Only triggers when a single piston's " +
                     "vanilla resolve would fail.")
                     .define("cooperative_pistons", true);
+            MOVED_CAULDRON_FILLING = builder.comment(
+                            "If true, pushing an empty cauldron into a water or lava source (with a piston or a pulley) " +
+                                    "fills it with that fluid, instead of leaving it empty. Also tops up cauldrons being moved.")
+                    .define("moved_cauldron_filling", true);
             builder.pop();
 
             builder.pop();

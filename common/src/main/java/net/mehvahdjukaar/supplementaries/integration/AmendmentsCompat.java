@@ -41,5 +41,19 @@ public class AmendmentsCompat {
         }
         return state;
     }
+
+    public static boolean isModCauldron(BlockState state) {
+        return state.getBlock() instanceof ModCauldronBlock;
+    }
+
+    /**
+     * Sets up a freshly placed liquid cauldron's fluid tank from the fluid it was moved into. Used
+     * as the post-placement step for moved cauldrons, since Amendments keeps modded fluids in the
+     * block entity rather than the blockstate.
+     */
+    public static void fillMovedCauldronTile(Level level, BlockPos pos, FluidState fluidState) {
+        SoftFluidStack fluidStack = SoftFluidStack.fromFluid(fluidState, level.registryAccess());
+        CauldronConversion.setCorrectCauldronStateAndTile(level.getBlockState(pos), level, pos, fluidStack);
+    }
 }
 
