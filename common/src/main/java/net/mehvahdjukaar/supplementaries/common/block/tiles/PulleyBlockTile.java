@@ -1,11 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
+import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.PulleyContainerMenu;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPulleyAttemptPacket;
 import net.mehvahdjukaar.supplementaries.common.utils.RopeHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -137,6 +140,22 @@ public class PulleyBlockTile extends ItemDisplayTile {
         // pulley's effective cooldown is thus the animation duration of the block(s) it's moving.
         // (Rope hangs DOWN for a vertical pulley, matching PulleyBlock.triggerEvent.)
         if (PulleyBlock.isChainAnimating(sl, worldPosition, Direction.DOWN)) return false;
+
+        // Register this pulley's cooperative-pull attempt BEFORE firing the step. This is the single
+        // chokepoint every driver (crank, manual, analog) passes through, so registration belongs
+        // here. getCooperators keys on period (== animationTicks), pushDir and tick, letting the
+        // matching triggerEvent resolve the whole driven group as one unit — required to pull a
+        // structure bridged across two ropes (a solo resolve can't, and fails on retract).
+        if (CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get()) {
+            long now = sl.getGameTime();
+            ModData.COOPERATIVE_PULLEYS.getData(sl).markAttempting(worldPosition, animationTicks, pushDir, now);
+            // The client re-runs the move locally (MOVING_PULLEY blocks aren't synced), but crank /
+            // manual pulls never execute client-side, so mirror the attempt over the network. It is
+            // queued before the block-event below, so it arrives ahead of the client's triggerEvent.
+            NetworkHelper.sendToAllClientPlayersInDefaultRange(sl, worldPosition,
+                    new ClientBoundPulleyAttemptPacket(worldPosition, animationTicks, pushDir, now));
+        }
+
         // Param layout (8-bit limit per ClientboundBlockEventPacket): bit 0 = extending flag
         // (0 = retract, 1 = extend), bits 1-7 = animationTicks clamped to 0..127. 0 = vanilla speed.
         int extendingBit = pushDir == Direction.DOWN ? 1 : 0;
@@ -221,20 +240,8 @@ public class PulleyBlockTile extends ItemDisplayTile {
         }
         // Mirrors TurnTableBlock.getPeriod(power): power 15 → 4 ticks, power 1 → 60 ticks.
         int period = Math.max(2, (int) ((60 - speed * 4) + 4));
-        // Register intent on BOTH server and client at the same local tick so the matching
-        // triggerEvent (which arrives on the client a few ticks late) can still see all
-        // attempted pulleys and run them through the resolver as one cooperative group.
-        // Server uses the per-level WorldSavedData; client uses a static side-channel.
-        Direction pushDir = ccw ? Direction.DOWN : Direction.UP;
-        if (net.mehvahdjukaar.supplementaries.configs.CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get()) {
-            if (level instanceof ServerLevel sl) {
-                net.mehvahdjukaar.supplementaries.reg.ModData.COOPERATIVE_PULLEYS.getData(sl)
-                        .markAttempting(this.worldPosition, period, pushDir, now);
-            } else {
-                net.mehvahdjukaar.supplementaries.common.misc.PulleyCooperation
-                        .markAttemptingClient(this.worldPosition, period, pushDir, now);
-            }
-        }
+        // Cooperative-pull intent is registered centrally in fireContinuousStep (the path every
+        // driver shares), so no per-driver markAttempting is needed here.
         if (ccw) {
             releaseRopeDown(period);
         } else {
