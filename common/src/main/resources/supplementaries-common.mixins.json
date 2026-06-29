@@ -70,7 +70,6 @@
     "compat.CompatFarmersDelightTomatoMixin"
   ],
   "client": [
-    "AgeableListAccessor",
     "BlockBehaviourPlanterMixin",
     "BoatRendererMixin",
     "BookViewScreenMixin",
@@ -88,11 +87,9 @@
     "LoomScreenFlagMixin",
     "MapTextureMixin",
     "MinecraftMixin",
-    "ModelPartMixin",
     "MouseHandlerMixin",
     "PageButtonMixin",
     "ParrotMixin",
-    "PartDefinitionMixin",
     "PistonHeadRendererMixin",
     "PlayerSocialManagerMixin",
     "RemotePlayerMixin",

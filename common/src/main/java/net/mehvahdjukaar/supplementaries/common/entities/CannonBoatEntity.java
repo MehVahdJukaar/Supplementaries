@@ -350,7 +350,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
 
     public Vec3 getCannonOffset() {
-        if (getWoodType().isBambooLike()) {
+        if (getWpoodType().isBambooLike()) {
             float backOff = 6 / 16f;
             return new Vec3(0, 16 / 16f, backOff);
         } else {

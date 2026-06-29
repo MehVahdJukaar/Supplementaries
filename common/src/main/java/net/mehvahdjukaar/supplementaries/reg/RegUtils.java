@@ -251,7 +251,9 @@ public class RegUtils {
     private static void registerCannonBoatItems(Registrator<Item> event) {
         for (WoodType wood : WoodTypeRegistry.INSTANCE) {
             if (wood.getChild("boat") != null) {
-                String name = wood.getVariantId(ModConstants.CANNON_BOAT_NAME);
+                // bamboo-like woods register as "cannon_raft" instead of "cannon_boat".
+                // the child key stays constant so block type swap recipes still resolve across woods.
+                String name = wood.getVariantId(ModConstants.cannonBoatBaseName(wood));
                 CannonBoatItem item = new CannonBoatItem(new Item.Properties().stacksTo(1), wood);
                 wood.addChild("supplementaries:cannon_boat", item);
                 event.register(Supplementaries.res(name), item);

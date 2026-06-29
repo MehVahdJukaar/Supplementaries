@@ -9,6 +9,7 @@ import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.registries.Registries;
@@ -157,7 +158,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
             }
             try {
                 sink.addBlockTypeSwapRecipe(manager, Supplementaries.res("cannon_boat_oak"),
-                        VanillaWoodTypes.OAK, w, Supplementaries.res("cannon_boat" + "_" + w.getTypeName()));
+                        VanillaWoodTypes.OAK, w, Supplementaries.res(ModConstants.cannonBoatBaseName(w) + "_" + w.getTypeName()));
             } catch (Exception e) {
                 Supplementaries.LOGGER.error("Failed to generate recipe for cannon boat {}:", i, e);
             }

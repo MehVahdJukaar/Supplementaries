@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins.compat;
 
-import net.mehvahdjukaar.supplementaries.client.IModelPartExtension;
+import net.mehvahdjukaar.moonlight.api.client.model.IModelPartExtension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,6 +16,6 @@ public class CompatEMFMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void supp$setDimensions(EMFPartData emfPartData, int variant, String part, String id, EMFModelPartRoot root, CallbackInfo ci) {
-        ((IModelPartExtension) this).supp$setDimensions(emfPartData.textureSize[0], emfPartData.textureSize[1]);
+        ((IModelPartExtension) (Object) this).moonlight$setDimensions(emfPartData.textureSize[0], emfPartData.textureSize[1]);
     }
 }

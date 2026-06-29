@@ -25,6 +25,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
 import net.minecraft.core.Holder;
@@ -317,7 +318,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         ModRegistry.CANNON_BOAT_ITEMS.forEach((wood, sled) -> {
             if (wood == VanillaWoodTypes.OAK) return;
             try {
-                sink.addSimilarJsonResource(manager, itemModel, "cannon_boat_oak", wood.getVariantId("cannon_boat"));
+                sink.addSimilarJsonResource(manager, itemModel, "cannon_boat_oak", wood.getVariantId(ModConstants.cannonBoatBaseName(wood)));
             } catch (Exception ex) {
                 Supplementaries.LOGGER.error("Failed to generate Cannon Boat item model for {} : {}", sled, ex);
             }
@@ -434,7 +435,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
         ModRegistry.WAY_SIGN_ITEMS.forEach((type, item) ->
                 LangBuilder.addDynamicEntry(lang, "item.supplementaries.way_sign", type, item));
         ModRegistry.CANNON_BOAT_ITEMS.forEach((type, item) ->
-                LangBuilder.addDynamicEntry(lang, "item.supplementaries.cannon_boat", type, item));
+                LangBuilder.addDynamicEntry(lang, "item.supplementaries." + ModConstants.cannonBoatBaseName(type), type, item));
 
         String bambooSpikes = lang.getEntry("item.supplementaries.bamboo_spikes_tipped.effect");
         if (bambooSpikes == null) return;
