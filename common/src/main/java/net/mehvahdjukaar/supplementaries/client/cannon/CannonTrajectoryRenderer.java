@@ -3,6 +3,9 @@ package net.mehvahdjukaar.supplementaries.client.cannon;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import dev.ryanhcode.sable.companion.ClientSubLevelAccess;
+import dev.ryanhcode.sable.companion.SableCompanion;
+import dev.ryanhcode.sable.companion.math.Pose3dc;
 import net.mehvahdjukaar.moonlight.api.client.util.VertexUtil;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
@@ -25,6 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.joml.Quaterniondc;
 import org.joml.Quaternionf;
 
 import static net.mehvahdjukaar.supplementaries.client.cannon.CannonController.*;
@@ -46,13 +50,26 @@ public class CannonTrajectoryRenderer {
         boolean debug = PlatHelper.isDev() || !mc.showOnlyReducedInfo() && mc.getEntityRenderDispatcher().shouldRenderHitBoxes();
 
 
+        // When the cannon sits on a sublevel (e.g. a Create Aeronautics ship), the incoming pose
+        // stack carries the sublevel's tilt. Gravity for the trajectory parabola is world-aligned,
+        // so we strip the sublevel transform and render in world space to keep the arrows upright.
+        ClientSubLevelAccess subLevel = SableCompanion.INSTANCE.getContainingClient(tile);
+        Quaternionf cannonOrientation = tile.getLocalOrientation(partialTicks);
+        if (subLevel != null) {
+            Pose3dc subPose = subLevel.renderPose(partialTicks);
+            cannonPos = subPose.transformPosition(cannonPos);
+            Quaterniondc q = subPose.orientation();
+            Quaternionf subOrient = new Quaternionf(
+                    (float) q.x(), (float) q.y(), (float) q.z(), (float) q.w());
+            cannonOrientation = subOrient.mul(cannonOrientation, new Quaternionf());
+        }
+
+        float yaw = EntityAngles.fromQuaternion(cannonOrientation).yawRad();
+
+        Vec3 camPos = mc.gameRenderer.getMainCamera().getPosition();
+
         poseStack.pushPose();
-
-        Quaternionf rot = tile.getLocalOrientation(partialTicks);
-        EntityAngles eulerAngles = EntityAngles.fromQuaternion(rot);
-
-        float yaw = eulerAngles.yawRad();
-
+        if (subLevel != null) resetPoseToWorld(poseStack, cannonPos, camPos);
         //rotate so we can work in 2d. yaw is entity like so its inverted
         poseStack.mulPose(Axis.YP.rotation(-yaw));
 
@@ -66,15 +83,30 @@ public class CannonTrajectoryRenderer {
 
         if (!hitAir && hit instanceof BlockHitResult bh) {
             if (bh.getDirection() == Direction.UP) {
+                poseStack.pushPose();
+                if (subLevel != null) resetPoseToWorld(poseStack, cannonPos, camPos);
                 renderTargetCircle(poseStack, buffer, rendersRed, trajectory.getHitLocation(Vec3.ZERO, yaw), partialTicks);
+                poseStack.popPose();
             }
         }
 
         if (!hitAir && debug && hit instanceof BlockHitResult bh) {
             //TODO: multiply by inverse rot
             //poseStack.mulPose(Axis.YP.rotationDegrees(-cannon.getCannonGlobalYawOffset(partialTicks)));
+            poseStack.pushPose();
+            if (subLevel != null) resetPoseToWorld(poseStack, cannonPos, camPos);
             renderBlockReticule(poseStack, buffer, cannonPos, bh);
+            poseStack.popPose();
         }
+    }
+
+    // Replace the current pose with a world-space, camera-relative transform at the cannon's
+    // world position. The ModelView matrix (in RenderSystem) already carries the camera rotation,
+    // so an identity pose here renders straight in world space.
+    private static void resetPoseToWorld(PoseStack poseStack, Vec3 cannonPos, Vec3 camPos) {
+        poseStack.last().pose().identity();
+        poseStack.last().normal().identity();
+        poseStack.translate(cannonPos.x - camPos.x, cannonPos.y - camPos.y, cannonPos.z - camPos.z);
     }
 
     private static void renderBlockReticule(PoseStack poseStack, MultiBufferSource buffer,

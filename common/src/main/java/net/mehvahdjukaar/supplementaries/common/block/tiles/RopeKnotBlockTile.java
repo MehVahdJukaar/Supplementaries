@@ -91,5 +91,12 @@ public class RopeKnotBlockTile extends MimicBlockTile {
         super.loadAdditional(tag, registries);
         this.cachedCollisionShape = null;
         this.cachedShape = null;
+        // moonlight 3.0.17 regression: the cached model data captured during BE
+        // creation holds the default (air) mimic; without this refresh the held
+        // fence isn't rendered after world reload. matches the pattern other
+        // load-from-NBT tiles use (e.g. SignPostBlockTile).
+        if (this.level != null && this.level.isClientSide) {
+            this.requestModelReload();
+        }
     }
 }

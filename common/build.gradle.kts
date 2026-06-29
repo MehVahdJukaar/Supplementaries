@@ -22,11 +22,11 @@ dependencies {
 
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
-    modCompileOnly("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
-    accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    modCompileOnly("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
+    accessTransformers("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
 
 
-    modCompileOnly("curse.maven:farmers-delight-398521:8007613")
+    modCompileOnly("curse.maven:farmers-delight-398521:8083481")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("net.mehvahdjukaar:amendments-neoforge:1.21-2.0.9")
     modCompileOnly("curse.maven:entity-model-features-844662:8063559")
@@ -48,8 +48,8 @@ dependencies {
     modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
     modCompileOnly("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}")
     modCompileOnly("curse.maven:curios-309927:4581099")
-    modCompileOnly("curse.maven:quark-243121:7640331")
-    modCompileOnly("curse.maven:zeta-968868:7640154")
+    modCompileOnly("curse.maven:quark-243121:8146177")
+    modCompileOnly("curse.maven:zeta-968868:7980010")
 
     modImplementation("curse.maven:exposure-871755:7033927")
 

@@ -58,6 +58,13 @@ versionRange = "${minecraft_version}"
     ordering = "NONE"
     side = "BOTH"
 
+[[dependencies.${ mod_id }]]
+modId = "sodium"
+type = "incompatible"
+versionRange = "[0,0.8.12-beta.1)"
+ordering = "NONE"
+side = "BOTH"
+
 ["lithium:options"]
     block.moving_block_shapes = false
     mixin.block.moving_block_shapes = false

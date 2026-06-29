@@ -1,6 +1,7 @@
-package net.mehvahdjukaar.supplementaries.common.entities;//
+package net.mehvahdjukaar.supplementaries.common.entities;
 
 
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.entity.IControllableVehicle;
 import net.mehvahdjukaar.moonlight.api.entity.ITileEntityCarry;
@@ -65,7 +66,6 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
     @NotNull
     private final CannonBlockTile cannon;
-    private boolean isBamboo;
 
     public CannonBoatEntity(EntityType<CannonBoatEntity> entityType, Level level) {
         super(entityType, level);
@@ -92,10 +92,6 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         return cannon;
     }
 
-    public boolean isBamboo() {
-        return isBamboo;
-    }
-
     @Override
     public Component getDisplayName() {
         return super.getDisplayName();
@@ -116,23 +112,13 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         this.entityData.set(BANNER_ITEM, stack);
     }
 
-    @Override
-    public void onSyncedDataUpdated(EntityDataAccessor<?> dataAccessor) {
-        super.onSyncedDataUpdated(dataAccessor);
-        if (dataAccessor == DATA_WOOD_TYPE) {
-            this.isBamboo = VanillaWoodTypes.BAMBOO == this.entityData.get(dataAccessor);
-        }
-    }
-
     public WoodType getWoodType() {
         return entityData.get(DATA_WOOD_TYPE);
     }
 
     public void setWoodType(WoodType type) {
         this.entityData.set(DATA_WOOD_TYPE, type);
-        Type vanillaBoatOrOak = type.toVanillaBoatOrOak();
-        this.isBamboo = vanillaBoatOrOak == Type.BAMBOO;
-        this.setVariant(vanillaBoatOrOak);
+        this.setVariant(type.toVanillaBoatOrOak());
     }
 
     @Override
@@ -340,6 +326,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
         super.clampRotation(entityToUpdate);
     }
 
+    @ClientOnly
     @Override
     public void onInputUpdate(boolean b, boolean b1, boolean b2, boolean b3, boolean ctrl, boolean jump) {
         if (jump && level().isClientSide) {
@@ -363,7 +350,7 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
 
 
     public Vec3 getCannonOffset() {
-        if (this.isBamboo()) {
+        if (getWpoodType().isBambooLike()) {
             float backOff = 6 / 16f;
             return new Vec3(0, 16 / 16f, backOff);
         } else {

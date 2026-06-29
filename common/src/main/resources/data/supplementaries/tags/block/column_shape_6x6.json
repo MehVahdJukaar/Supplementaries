@@ -1,0 +1,97 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "betternether:stalagnate_stem",
+      "required": false
+    },
+    {
+      "id": "betternether:mushroom_fir_stem",
+      "required": false
+    },
+    {
+      "id": "betternether:mushroom_stem",
+      "required": false
+    },
+    {
+      "id": "#decorative_blocks:palisade",
+      "required": false
+    },
+    {
+      "id": "gardens_of_the_dead:whistlecane_fence",
+      "required": false
+    },
+    {
+      "id": "#druidcraft:beams",
+      "required": false
+    },
+    {
+      "id": "druidcraftrg:beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:oak_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:birch_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:spruce_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:jungle_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:acacia_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:dark_oak_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:darkwood_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:elder_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:oak_small_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:birch_small_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:spruce_small_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:jungle_small_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:acacia_small_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:dark_oak_small_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:darkwood_small_beam",
+      "required": false
+    },
+    {
+      "id": "druidcraft:elder_small_beam",
+      "required": false
+    }
+  ]
+}

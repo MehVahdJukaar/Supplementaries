@@ -2,14 +2,12 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.layers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.mehvahdjukaar.supplementaries.client.IModelPartExtension;
+import net.mehvahdjukaar.moonlight.api.client.model.IModelPartExtension;
 import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EMFCompat;
-import net.mehvahdjukaar.supplementaries.mixins.AgeableListAccessor;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -41,19 +39,14 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
         if (CompatHandler.EMF) {
             modelPart = EMFCompat.getFirstEMFModelPart(model);
         }
-        if (modelPart == null && model instanceof AgeableListAccessor al) {
-            for (ModelPart v : al.invokeBodyParts()) {
-                modelPart = v;
-                break;
-            }
-        } else if (model instanceof HierarchicalModel<?> m) {
-            modelPart = m.root();
+        if (modelPart == null) {
+            modelPart = IModelPartExtension.getRootPart(model);
         }
 
         if (modelPart != null) {
             IModelPartExtension part = (IModelPartExtension) (Object) modelPart;
-            height = part.supp$getTextHeight();
-            width = part.supp$getTextWidth();
+            height = part.moonlight$getTextHeight();
+            width = part.moonlight$getTextWidth();
         }
 
         VertexConsumer consumer = buffer.getBuffer(SlimedRenderTypes.get(width, height));

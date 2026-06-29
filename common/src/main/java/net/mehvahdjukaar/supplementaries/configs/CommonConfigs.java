@@ -241,6 +241,10 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_CHAINED;
         public static final Supplier<Boolean> PULLEY_ENABLED;
+        public static final Supplier<Boolean> PULLEY_CONTINUOUS;
+        public static final Supplier<Boolean> COOPERATIVE_PULLEYS;
+        public static final Supplier<Integer> PULLEY_PULL_LIMIT;
+        public static final Supplier<Integer> PULLEY_PULL_INTERVAL;
         public static final Supplier<Double> MINESHAFT_ELEVATOR;
 
         static {
@@ -307,6 +311,25 @@ public class CommonConfigs {
             builder.push("pulley_block");
             builder.comment("Pulleys are automatically disabled if 'rope' feature is disabled");
             PULLEY_ENABLED = feature(builder);
+            PULLEY_CONTINUOUS = builder.comment("""
+                            If true, pulleys retract their rope chain over multiple ticks, animating each block via vanilla moving-piston entities.\s
+                            Connected blocks become moving blocks (so they push entities, drop sand etc) and multiple pulleys can cooperate to pull a single heavy contraption — useful for elevators.\s
+                            If false, the original instant retraction behavior is used.""")
+                    .define("continuous_retraction", true);
+            COOPERATIVE_PULLEYS = builder.comment("""
+                            If true, multiple pulleys firing on the same tick with the same period and push direction \
+                            can pool their pull budget into one structure resolve — letting two ropes share a wide \
+                            elevator platform. Only relevant when 'continuous_retraction' is enabled.""")
+                    .define("cooperative_pulleys", true);
+            PULLEY_PULL_LIMIT = builder.comment("""
+                            Maximum number of NON-rope blocks a single pulley can drag (the anchor and anything \
+                            sticky-attached to it). Rope segments don't count toward this. Cooperating pulleys \
+                            pool their budgets — two pulleys can pull twice this many blocks together.""")
+                    .define("pull_limit", 8, 1, 128);
+            PULLEY_PULL_INTERVAL = builder.comment("""
+                            Ticks to wait between unit pulls when continuous_retraction is enabled.\s
+                            Lower = faster pulley. Minimum 2 ticks because each animation takes that long to play out — going lower has no effect.""")
+                    .define("pull_interval", 4, 2, 100);
             MINESHAFT_ELEVATOR = builder.comment("Chance for a new mineshaft elevator piece to spawn")
                     .define("mineshaft_elevator", 0.035, 0, 1);
             builder.pop();
@@ -1145,6 +1168,9 @@ public class CommonConfigs {
         public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
         public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;
+        public static final Supplier<Boolean> PUSH_BLOCK_ENTITIES;
+        public static final Supplier<Boolean> COOPERATIVE_PISTONS;
+        public static final Supplier<Boolean> MOVED_CAULDRON_FILLING;
 
         static {
             ConfigBuilder builder = builderReference.get();
@@ -1230,11 +1256,10 @@ public class CommonConfigs {
                     .define("block_map_markers", true);
             DEATH_MARKER = builder.comment("Shows a death marker on your map when you die. Requires a recovery compass in player inventory or similar")
                     .define("death_marker", DeathMarkerMode.WITH_COMPASS);
-            if (PlatHelper.getPlatform().isForge() && false) { //disabled. TODO: add back
+            if (PlatHelper.getPlatform().isForge()) {
                 QUARK_QUILL = builder.comment("If Quark is installed adventurer maps will be replaced by adventurer quills. These will not lag the server when generating")
                         .define("quill_adventurer_maps", true);
-                REPLACE_VANILLA_MAPS = () -> false;
-                builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
+                REPLACE_VANILLA_MAPS = builder.comment("If Quark is installed replaces buried treasure and mansion maps with their equivalent quill form. This removes the lag spike they create when generating")
                         .define("quill_vanilla_maps", true);
                 QUILL_MIN_SEARCH_RADIUS = builder.comment("Miminum search radius for quill. Used to incrase the radius of vanilla searches. For reference buried treasures are at 50 and locate is at 100 chunks")
                         .define("min_search_radius", 75, 10, 600);
@@ -1307,6 +1332,23 @@ public class CommonConfigs {
                     .define("compass_right_click", false);
             COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS = builder.comment("Allow these features to work in dimensions like nether or end where normally clocks don't work")
                     .define("works_in_unnatural_dimensions", false);
+            builder.pop();
+
+            builder.push("piston_tweaks");
+            PUSH_BLOCK_ENTITIES = builder.comment(
+                    "If true, pistons can push blocks that have a block entity (e.g. chests, furnaces). " +
+                    "Blocks whose push reaction is BLOCK are still immovable regardless of this setting.")
+                    .define("push_block_entities", true);
+            COOPERATIVE_PISTONS = builder.comment(
+                    "If true, adjacent pistons facing the same direction can pool their 12-block push budget " +
+                    "to move structures larger than a single piston could handle alone (e.g. two side-by-side " +
+                    "pistons pushing a 24-block slime contraption). Only triggers when a single piston's " +
+                    "vanilla resolve would fail.")
+                    .define("cooperative_pistons", true);
+            MOVED_CAULDRON_FILLING = builder.comment(
+                            "If true, pushing an empty cauldron into a water or lava source (with a piston or a pulley) " +
+                                    "fills it with that fluid, instead of leaving it empty. Also tops up cauldrons being moved.")
+                    .define("moved_cauldron_filling", true);
             builder.pop();
 
             builder.pop();

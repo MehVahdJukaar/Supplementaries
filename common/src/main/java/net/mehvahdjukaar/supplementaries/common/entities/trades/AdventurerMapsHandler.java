@@ -28,7 +28,7 @@ public class AdventurerMapsHandler {
     public static ItemStack createMapOrQuill(ServerLevel serverLevel, BlockPos pos, @Nullable HolderSet<Structure> targets,
                                              int radius, boolean skipKnown,
                                              int zoom, @Nullable ResourceLocation mapMarker,
-                                             @Nullable String name, int color) {
+                                             @Nullable String name, int color, boolean useQuill) {
 
         if (!serverLevel.getServer().getWorldData().worldGenOptions().generateStructures())
             return ItemStack.EMPTY;
@@ -43,13 +43,11 @@ public class AdventurerMapsHandler {
         }
 
 
-        if (CompatHandler.QUARK && CommonConfigs.Tweaks.QUARK_QUILL.get()) {
+        if (useQuill && CompatHandler.QUARK) {
             var item = QuarkCompat.makeAdventurerQuill(serverLevel, targets,
                     radius, skipKnown, zoom, mapMarker, name, color);
-            if (name != null) {
-                item.set(DataComponents.ITEM_NAME, Component.translatable(name));
-            }
-            return item;
+            if (item != null && !item.isEmpty()) return item;
+            // fall through to vanilla map path if the quill could not be produced
         }
 
         int maxSearches = CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAPS_MAX_SEARCHES.get();
@@ -93,7 +91,8 @@ public class AdventurerMapsHandler {
         if (level instanceof ServerLevel serverLevel) {
             return createMapOrQuill(serverLevel, pos, destinations,
                     CommonConfigs.Tweaks.RANDOM_ADVENTURER_MAX_SEARCH_RADIUS.get(),
-                    true, 2, mapMarker, mapName, mapColor);
+                    true, 2, mapMarker, mapName, mapColor,
+                    CommonConfigs.Tweaks.QUARK_QUILL.get());
         }
         return ItemStack.EMPTY;
     }

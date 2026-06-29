@@ -42,6 +42,7 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
                                          WorldGenLevel worldgenLevel) {
         Entity boat = config.entity.create(serverLevel);
         if (boat == null) return false;
+        //hack, hardcoded for boats
         if (boat instanceof Boat b && config.data.boatType.isPresent()) {
             b.setVariant(config.data.boatType.get().toVanillaBoat());
             if (boat instanceof CannonBoatEntity cb) {
@@ -53,6 +54,7 @@ public class SpawnEntityWithPassengersFeature extends Feature<SpawnEntityWithPas
         }
         boat.moveTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5,
                 360 * context.random().nextFloat(), 0);
+
 
         for (EntityType<?> passengerType : config.passengers) {
             Entity passenger = passengerType.create(serverLevel);

@@ -23,10 +23,10 @@ import java.util.stream.Collectors;
 public class ModTags {
 
     //block tags
-    public static final TagKey<Block> POSTS = blockTag("posts");
-    public static final TagKey<Block> PALISADES = blockTag("palisades");
-    public static final TagKey<Block> BEAMS = blockTag("beams");
-    public static final TagKey<Block> WALLS = blockTag("walls");
+    public static final TagKey<Block> COLUMN_SHAPE_4X4 = blockTag("column_shape_4x4");
+    public static final TagKey<Block> COLUMN_SHAPE_6X6 = blockTag("column_shape_6x6");
+    public static final TagKey<Block> COLUMN_SHAPE_8X8 = blockTag("column_shape_8x8");
+    public static final TagKey<Block> COLUMN_SHAPE_10X10 = blockTag("column_shape_10x10");
     public static final TagKey<Block> ROPE_SUPPORT_TAG = blockTag("rope_support");
     public static final TagKey<Block> ROPE_HANG_TAG = blockTag("hang_from_ropes");
     public static final TagKey<Block> BELLOWS_TICKABLE_TAG = blockTag("bellows_tickable");

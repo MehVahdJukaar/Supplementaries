@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.reg;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.mehvahdjukaar.moonlight.api.block.ModStairBlock;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
-import net.mehvahdjukaar.moonlight.api.misc.WorldSavedDataType;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
@@ -19,7 +18,6 @@ import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction
 import net.mehvahdjukaar.supplementaries.common.items.loot.SetChargesFunction;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.FlammableEffect;
 import net.mehvahdjukaar.supplementaries.common.misc.effects.OverencumberedEffect;
-import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FarmersDelightCompat;
@@ -64,7 +62,6 @@ public class ModRegistry {
         return !CommonConfigs.isEnabled(name);
     }
 
-    //misc entries
 
     //loot
     public static final Supplier<LootItemFunctionType<RandomEnchantFunction>> CURSE_LOOT_FUNCTION = RegHelper.registerLootFunction(
@@ -74,10 +71,6 @@ public class ModRegistry {
     public static final Supplier<LootItemFunctionType<SetChargesFunction>> SET_CHARGES_FUNCTION = RegHelper.registerLootFunction(
             res("set_charges"), SetChargesFunction.CODEC);
 
-    //data
-    public static final WorldSavedDataType<GlobeData> GLOBE_DATA = RegHelper.registerWorldSavedData(
-            res("globe_data"), GlobeData::createFromLevel, () -> GlobeData.CODEC, () -> GlobeData.STREAM_CODEC
-    );
 
     //effects
     public static final RegSupplier<MobEffect> OVERENCUMBERED = RegHelper.registerEffect(
@@ -208,7 +201,8 @@ public class ModRegistry {
 
     //sign posts
     public static final Supplier<Block> WAY_SIGN = regBlock(WAY_SIGN_NAME, () -> {
-        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS);
+        var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
+                .noOcclusion();
         return new SignPostBlock(p);
     });
 
@@ -466,10 +460,8 @@ public class ModRegistry {
                     RopeKnotBlockTile::new, ROPE_KNOT.get()));
 
     //buntings
-    public static final Supplier<Item> BUNTING_OLD = regItem(BUNTING_NAME, () -> new BuntingItemOld(new Item.Properties()
-            .component(DataComponents.BASE_COLOR, DyeColor.WHITE)));
-
     public static final Map<DyeColor, Supplier<Block>> BUNTING_WALL_BLOCKS = new Object2ObjectLinkedOpenHashMap<>();
+    public static final Map<DyeColor, Supplier<Item>> BUNTING_ITEMS = new Object2ObjectLinkedOpenHashMap<>();
     public static final Map<DyeColor, Supplier<Block>> BUNTING_BLOCKS = RegUtils.registerBuntings(BUNTING_NAME);
 
     public static final Supplier<RopeBuntingBlock> BUNTING_ROPE_BLOCK = regBlock("rope_buntings", () -> new RopeBuntingBlock(
@@ -988,6 +980,16 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<MovingSlidyBlockEntity>> MOVING_SLIDY_BLOCK_TILE = regTile("moving_slidy_block", () ->
             PlatHelper.newBlockEntityType(MovingSlidyBlockEntity::new, MOVING_SLIDY_BLOCK.get()));
 
+    // Pulley's continuous-mode moving block — subclass of vanilla MOVING_PISTON with
+    // configurable animation duration. Used by PulleyMover when a driver passes an
+    // animation period; falls back to vanilla MOVING_PISTON when period is unspecified.
+    public static final Supplier<Block> MOVING_PULLEY_BLOCK = regBlock("moving_pulley_block", () -> new MovingPulleyBlock(
+            BlockBehaviour.Properties.ofFullCopy(Blocks.MOVING_PISTON)
+    ));
+
+    public static final Supplier<BlockEntityType<MovingPulleyBlockEntity>> MOVING_PULLEY_BLOCK_TILE = regTile("moving_pulley_block", () ->
+            PlatHelper.newBlockEntityType(MovingPulleyBlockEntity::new, MOVING_PULLEY_BLOCK.get()));
+
 
     public static final Supplier<Block> MOVING_SLIDY_BLOCK_SOURCE = regBlock("moving_slidy_block_source", () -> new MovingSlidyBlockSource(
             BlockBehaviour.Properties.of().noCollission()
@@ -1104,6 +1106,7 @@ public class ModRegistry {
                     .forceSolidOn()
                     .isRedstoneConductor(NEVER)
                     .noOcclusion()
+                    .pushReaction(PushReaction.NORMAL)
     ));
 
     public static final Supplier<BlockEntityType<CannonBlockTile>> CANNON_TILE = regTile(

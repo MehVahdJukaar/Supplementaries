@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.AwningBlock;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.Direction;
@@ -144,7 +145,7 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
         }
         if (entity instanceof LivingEntity le && le.attackable()) {
             //sets on both but also sends packet just because lmao
-            SlimedData slimedData = ModEntities.SLIMED_DATA.getOrCreate(le);
+            SlimedData slimedData = ModData.SLIMED_DATA.getOrCreate(le);
             slimedData.setSlimedTicks(le, CommonConfigs.Tweaks.SLIME_DURATION.get());
         } else if (entity instanceof EndCrystal) {
             entity.hurt(this.damageSources().thrown(this, this.getOwner()), 0);

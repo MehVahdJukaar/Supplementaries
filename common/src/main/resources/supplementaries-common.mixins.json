@@ -18,6 +18,7 @@
     "CatSitOnBlockGoalMixin",
     "CelebrateVillagersSurvivedRaidMixin",
     "ComparatorBlockMixin",
+    "CooperativePistonBaseBlockMixin",
     "CreeperMixin",
     "EntityAccessor",
     "EntityMixin",
@@ -44,6 +45,9 @@
     "MineshaftCorridorMixin",
     "MineshaftPiecesMixin",
     "ObserverBlockMixin",
+    "PistonBaseBlockMixin",
+    "PistonMovingBlockEntityMixin",
+    "PistonStructureResolverMixin",
     "PlayerAccessor",
     "PlayerMixin",
     "PlayerProjectileMixin",
@@ -62,10 +66,10 @@
     "StrongholdRoomSconceMixin",
     "WanderingTraderMixin",
     "ZombieHorseMixin",
-    "compat.CompatCreeperArclightMixin"
+    "compat.CompatCreeperArclightMixin",
+    "compat.CompatFarmersDelightTomatoMixin"
   ],
   "client": [
-    "AgeableListAccessor",
     "BlockBehaviourPlanterMixin",
     "BoatRendererMixin",
     "BookViewScreenMixin",
@@ -83,11 +87,10 @@
     "LoomScreenFlagMixin",
     "MapTextureMixin",
     "MinecraftMixin",
-    "ModelPartMixin",
     "MouseHandlerMixin",
     "PageButtonMixin",
     "ParrotMixin",
-    "PartDefinitionMixin",
+    "PistonHeadRendererMixin",
     "PlayerSocialManagerMixin",
     "RemotePlayerMixin",
     "SkullBlockRendererMixin",
@@ -100,5 +103,8 @@
   },
   "overwrites": {
     "conformVisibility": true
+  },
+  "mixinextras": {
+    "minVersion": "0.5.3"
   }
 }

@@ -2,23 +2,32 @@ package net.mehvahdjukaar.supplementaries.platform;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
+import net.mehvahdjukaar.moonlight.api.platform.platform.ForgeHelperImpl;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
+import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.platform.FluidHandlerItemCap;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SignBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.*;
 import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
-import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.jetbrains.annotations.Nullable;
@@ -62,7 +71,7 @@ public class CapabilityHandler {
 
     public static void init(IEventBus bus) {
         ATTACHMENT_TYPES.register(bus);
-        bus.addListener(CapabilityHandler::register);
+            bus.addListener(CapabilityHandler::register);
     }
 
     public static <T> BaseCapability<?, ?> getToken(Class<T> capClass) {
@@ -71,9 +80,17 @@ public class CapabilityHandler {
 
     public static void register(RegisterCapabilitiesEvent event) {
 
-        //TODO: add more
-        event.registerBlockEntity(ANTIQUE_TEXT_CAP, BlockEntityType.SIGN, AntiquableAttachment::get);
-        event.registerBlockEntity(ANTIQUE_TEXT_CAP, BlockEntityType.HANGING_SIGN, AntiquableAttachment::get);
+        Block[] signBlocks = BuiltInRegistries.BLOCK.stream()
+                .filter(SignBlock.class::isInstance)
+                .toArray(Block[]::new);
+        if (signBlocks.length > 0) {
+            event.registerBlock(ANTIQUE_TEXT_CAP, (level, pos, state, be, ctx) -> {
+                if (be instanceof SignBlockEntity sign) {
+                    return AntiquableAttachment.get(sign, ctx);
+                }
+                return null;
+            }, signBlocks);
+        }
 
         event.registerEntity(Capabilities.ItemHandler.ENTITY, ModEntities.DISPENSER_MINECART.get(),
                 (entity, ctx) -> new InvWrapper(entity));
@@ -85,15 +102,15 @@ public class CapabilityHandler {
                 ModRegistry.TRAPPED_PRESENT_TILE.get(),
                 ModRegistry.SAFE_TILE.get(),
                 ModRegistry.SACK_TILE.get(),
+                ModRegistry.CANNON_TILE.get(),
                 ModRegistry.LUNCH_BASKET_TILE.get()
         );
         for (var type : nonSided) {
-            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, type, (container, side) -> new InvWrapper(container));
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, type,
+                    (container, side) ->
+                            ForgeHelperImpl.makeDefaultInvHandler((Container) container, side));
+            //use this its more correct. otherwise can take item through face won't be called
         }
-
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModRegistry.CANNON_TILE.get(),
-                (sidedContainer, side) -> side == null ? new InvWrapper(sidedContainer) :
-                        new SidedInvWrapper(sidedContainer, side));
 
 
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, ctx) ->
@@ -106,25 +123,67 @@ public class CapabilityHandler {
 
         //if compat handler computer craft add cap to speaker block
 
-        //TODO: add back
-        /*
-        event.registerItem(Capabilities.ItemHandler.ITEM, new ICapabilityProvider<>() {
-            @Override
-            public @Nullable IItemHandler getCapability(ItemStack stack, Void object2) {
-                if (stack.getItem() instanceof SelectableContainerItem se) {
-
-                }
-                return null;
+        event.registerItem(Capabilities.ItemHandler.ITEM, (stack, ctx) -> {
+            if (stack.getItem() instanceof SelectableContainerItem<?, ?> se) {
+                return new SelectableContainerItemHandler<>(stack, se);
             }
-        }, ModRegistry.LUNCH_BASKET.get(), ModRegistry.QUIVER_ITEM.get());
-         */
+            return null;
+        }, ModRegistry.LUNCH_BASKET_ITEM.get(), ModRegistry.QUIVER_ITEM.get());
+    }
 
-        //so other mods can find them i guess
-        /*
-        event.register(ICatchableMob.class);
-        event.register(IAntiquable.class);
-        event.register(IWashable.class);
-        event.register(IQuiverEntity.class);*/
+    private static final class SelectableContainerItemHandler<C extends SelectableContainerContent<M>, M extends SelectableContainerContent.Mut<C>>
+            implements IItemHandler {
+        private final ItemStack stack;
+        private final DataComponentType<C> componentType;
+
+        SelectableContainerItemHandler(ItemStack stack, SelectableContainerItem<C, M> item) {
+            this.stack = stack;
+            this.componentType = item.getComponentType();
+        }
+
+        @Override
+        public int getSlots() {
+            C c = stack.get(componentType);
+            return c != null ? c.getSize() : 0;
+        }
+
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            C c = stack.get(componentType);
+            return c != null ? c.getStackInSlot(slot) : ItemStack.EMPTY;
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack item, boolean simulate) {
+            C c = stack.get(componentType);
+            if (c == null) return item;
+            M mutable = c.toMutable();
+            ItemStack result = mutable.insertItem(slot, item, simulate);
+            if (!simulate) stack.set(componentType, mutable.toImmutable());
+            return result;
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            C c = stack.get(componentType);
+            if (c == null) return ItemStack.EMPTY;
+            M mutable = c.toMutable();
+            ItemStack result = mutable.extractItem(slot, amount, simulate);
+            if (!simulate) stack.set(componentType, mutable.toImmutable());
+            return result;
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            C c = stack.get(componentType);
+            return c != null ? c.toMutable().getSlotLimit(slot) : 0;
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack item) {
+            C c = stack.get(componentType);
+            return c != null && c.toMutable().isItemValid(slot, item);
+        }
     }
 
     public static final class AntiquableAttachment implements IAntiquable {

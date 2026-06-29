@@ -81,11 +81,14 @@ public class CannonChargeHud implements LayeredDraw.Layer {
 
             renderTrajectoryIcons(graphics, screenWidth, screenHeight);
 
+            RenderSystem.enableDepthTest();
+
         } else if (mc.player.getVehicle() instanceof ITileEntityCarry tc && tc.getCarriedTileEntity() instanceof CannonBlockTile cbt) {
             setupOverlayRenderState();
             int screenWidth = graphics.guiWidth();
             int screenHeight = graphics.guiHeight();
             renderBar(graphics, screenWidth, screenHeight, cbt, deltaTracker.getGameTimeDeltaPartialTick(false));
+            RenderSystem.enableDepthTest();
         }
     }
 

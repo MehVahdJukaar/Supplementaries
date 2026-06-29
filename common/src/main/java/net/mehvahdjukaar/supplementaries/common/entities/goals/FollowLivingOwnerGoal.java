@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
 import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
-import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -39,7 +39,7 @@ public class FollowLivingOwnerGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        LivingEntityTamable livingTamable = ModEntities.LIVING_TAMABLE.getOrCreate(this.mob);
+        LivingEntityTamable livingTamable = ModData.LIVING_TAMABLE.getOrCreate(this.mob);
         LivingEntity owner = livingTamable.getOwner(this.mob);
         if (owner == null) {
             return false;
@@ -56,7 +56,7 @@ public class FollowLivingOwnerGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        LivingEntityTamable livingTamable = ModEntities.LIVING_TAMABLE.getOrCreate(this.mob);
+        LivingEntityTamable livingTamable = ModData.LIVING_TAMABLE.getOrCreate(this.mob);
         if (this.navigation.isDone()) {
             return false;
         } else if (livingTamable.unableToMoveToOwner(this.mob)) {

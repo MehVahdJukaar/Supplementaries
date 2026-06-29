@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
@@ -16,7 +16,9 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -112,15 +114,8 @@ public class RopeHelper {
         if (originalState.hasProperty(BlockStateProperties.WATERLOGGED)) {
             canHoldWater = originalState.is(ModTags.WATER_HOLDER);
             if (!canHoldWater) originalState = originalState.setValue(BlockStateProperties.WATERLOGGED, waterFluid);
-        } else if (originalState.getBlock() instanceof AbstractCauldronBlock) {
-            if (waterFluid && originalState.is(Blocks.CAULDRON) || originalState.is(Blocks.WATER_CAULDRON)) {
-                originalState = Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, 3);
-            } else if (targetFluid.is(Fluids.LAVA) && originalState.is(Blocks.CAULDRON) || originalState.is(Blocks.LAVA_CAULDRON)) {
-                originalState = Blocks.LAVA_CAULDRON.defaultBlockState();
-            } else if (CompatHandler.AMENDMENTS) {
-                //TODO:this isnt correct actually it needs to set tile after
-                originalState = AmendmentsCompat.fillCauldronWithFluid(level, targetPos, originalState, targetFluid);
-            }
+        } else {
+            originalState = MovedFluidFiller.fillIfMovedIntoFluid(originalState, level, targetPos, targetFluid);
         }
 
         //clear existing block to new position
@@ -132,6 +127,8 @@ public class RopeHelper {
                 te.loadWithComponents(tileTag, level.registryAccess());
             }
         }
+        //populate any block-entity data for cauldron-like blocks moved into a fluid
+        MovedFluidFiller.applyPostPlacement(level, targetPos, targetFluid);
 
         return true;
     }

@@ -57,9 +57,10 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         }
     }
 
+
     @Override
-    public void updateTileOnInventoryChanged() {
-        this.sandData = HourglassTimesManager.getInstance(level.registryAccess())
+    public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        this.sandData = HourglassTimesManager.getInstance(registries)
                 .getData(this.getDisplayedItem().getItem());
         int p = this.getDirection() == Direction.DOWN ? 1 : 0;
         int l = this.sandData.light();
@@ -73,9 +74,8 @@ public class HourGlassBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void updateClientVisualsOnLoad() {
-        super.updateClientVisualsOnLoad();
-        this.sandData = HourglassTimesManager.getInstance(level.registryAccess())
+    public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        this.sandData = HourglassTimesManager.getInstance(registries)
                 .getData(this.getDisplayedItem().getItem());
         this.cachedTexture = null;
     }

@@ -25,7 +25,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -41,7 +40,6 @@ import java.util.Random;
 public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDataProvider {
 
     public static final ModelDataKey<BooksList> BOOKS_KEY = ModBlockProperties.BOOKS_KEY;
-    private static final RandomSource rand = RandomSource.create();
     public final boolean horizontal;
     //client only
     public final BooksList booksVisuals = new BooksList();
@@ -61,16 +59,23 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         builder.with(BOOKS_KEY, booksVisuals);
     }
 
-    private void displayRandomColoredBooks(int i, HolderLookup.Provider provider) {
-        for (int j = 0; j < i; j++) {
-            Item it;
-            int r = rand.nextInt(10);
-            if (r < 2) it = Items.ENCHANTED_BOOK;
-            else if (r < 3) it = Items.WRITABLE_BOOK;
-            else it = Items.BOOK;
-            booksVisuals.add(new BookVisualData(it.getDefaultInstance(), this.worldPosition, j,
-                    this.horizontal, provider, null));
+    private ItemStack getBookOrDefault(int index) {
+        ItemStack stack = this.getItem(index);
+        return stack.isEmpty() ? Items.BOOK.getDefaultInstance() : stack;
+    }
+
+    private void ensureInventoryMatchesBlockState() {
+        int expected = this.getBlockState().getValue(BookPileBlock.BOOKS);
+        int actual = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
+        if (actual >= expected) {
+            return;
         }
+        this.consolidateBookPile();
+        actual = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
+        for (int i = actual; i < expected; i++) {
+            this.setItem(i, Items.BOOK.getDefaultInstance());
+        }
+        this.setChanged();
     }
 
     @Override
@@ -108,22 +113,18 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     }
 
     //called on change... too soon
+
     @Override
-    public void updateTileOnInventoryChanged() {
-        super.updateTileOnInventoryChanged();
-
-        int actualBookCount = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
-        if (actualBookCount != this.getBlockState().getValue(BookPileBlock.BOOKS)) {
-            if (actualBookCount == 0) {
-                //Error?
-                return;
-
-            } else {
-                //  shifts books. Assumes at most one has been removed
-                // auto sets my block state when stuff changes
-                //    consolidateBookPile();
-                this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, actualBookCount), 2);
-            }
+    public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.serverSideUpdateWhenChanged(registries);
+        int expected = this.getBlockState().getValue(BookPileBlock.BOOKS);
+        int actual = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
+        if (actual < expected) {
+            this.ensureInventoryMatchesBlockState();
+        } else if (actual > expected) {
+            this.consolidateBookPile();
+            actual = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
+            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, actual), 2);
         }
         this.enchantPower = 0;
         for (int i = 0; i < 4; i++) {
@@ -153,16 +154,12 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     public void updateClientVisualsOnLoad() {
         this.booksVisuals.clear();
 
-        for (int index = 0; index < 4; index++) {
-            ItemStack stack = this.getItem(index);
-            if (stack.isEmpty()) break;
+        int expected = this.getBlockState().getValue(BookPileBlock.BOOKS);
+        for (int index = 0; index < expected; index++) {
+            ItemStack stack = this.getBookOrDefault(index);
             var last = index == 0 ? null : this.booksVisuals.get(index - 1).type;
             this.booksVisuals.add(index, new BookVisualData(stack, this.worldPosition, index,
                     this.horizontal, level.registryAccess(), last));
-        }
-
-        if (booksVisuals.isEmpty()) {
-            displayRandomColoredBooks(this.getBlockState().getValue(BookPileBlock.BOOKS), this.level.registryAccess());
         }
     }
 

@@ -47,7 +47,7 @@ public class StructureMapCommand {
         var p = source.getPlayer();
         if (p != null) {
             var item = AdventurerMapsHandler.createMapOrQuill(level, p.getOnPos(), holderSet, 150,
-                    true, zoom, null, null, 0);
+                    true, zoom, null, null, 0, false);
             if (!item.isEmpty()) {
                 p.addItem(item);
             }

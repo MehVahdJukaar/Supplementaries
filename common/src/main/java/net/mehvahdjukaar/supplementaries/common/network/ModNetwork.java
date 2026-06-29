@@ -31,6 +31,7 @@ public class ModNetwork {
         event.registerClientBound(ClientBoundControlCannonPacket.CODEC);
         event.registerClientBound(ClientBoundUpdateCannonBoatPacket.CODEC);
         event.registerClientBound(ClientBoundCannonAnimationPacket.CODEC);
+        event.registerClientBound(ClientBoundPulleyAttemptPacket.CODEC);
 
         event.registerServerBound(ServerBoundSetSpeakerBlockPacket.CODEC);
         event.registerServerBound(ServerBoundSetTextHolderPacket.CODEC);

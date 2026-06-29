@@ -35,7 +35,6 @@ import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBo
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
-import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
@@ -292,9 +291,6 @@ public class ClientRegistry {
         ItemProperties.register(ModRegistry.GLOBE_ITEM.get(), Supplementaries.res("type"),
                 new GlobeProperty());
 
-        ItemProperties.register(ModRegistry.BUNTING_OLD.get(), Supplementaries.res("dye"),
-                (stack, world, entity, s) -> BuntingItemOld.getColor(stack).getId() / 100f);
-
         //ItemModelsProperties.register(ModRegistry.SPEEDOMETER_ITEM.get(), new ResourceLocation("speed"),
         //       new SpeedometerItem.SpeedometerItemProperty());
     }
@@ -320,7 +316,6 @@ public class ClientRegistry {
         event.register(ModMenuTypes.NOTICE_BOARD.get(), NoticeBoardScreen::new);
         event.register(ModMenuTypes.CANNON.get(), CannonScreen::new);
         event.register(ModMenuTypes.RED_MERCHANT.get(), RedMerchantScreen::new);
-
     }
 
     @EventCalled
@@ -410,6 +405,9 @@ public class ClientRegistry {
         event.register(ModRegistry.CANNON_TILE.get(), CannonBlockTileRenderer::new);
         event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
         event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), SlidyBlockRenderer::new);
+        // Custom renderer: vanilla piston rendering + a leading phantom block, used to render
+        // the consumed top rope sliding into the pulley alongside the chain shift.
+        event.register(ModRegistry.MOVING_PULLEY_BLOCK_TILE.get(), MovingPulleyRenderer::new);
     }
 
     @EventCalled

@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.entities.data;
 
 import com.mojang.serialization.Codec;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModEntities;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -30,7 +30,7 @@ public class SlimedData {
 
     public static float getAlpha(LivingEntity le, float partialTicks) {
         if (!ClientConfigs.Tweaks.SLIME_OVERLAY.get()) return 0;
-        SlimedData data = ModEntities.SLIMED_DATA.getOrCreate(le);
+        SlimedData data = ModData.SLIMED_DATA.getOrCreate(le);
         float slimeTicks = data.slimedTicks - partialTicks;
         float maxFade = 70;
         return slimeTicks > maxFade ? 1 : Mth.clamp(slimeTicks / maxFade, 0, 1);
@@ -40,7 +40,7 @@ public class SlimedData {
         if (slimedTicks > 0) {
             if (entity.isUnderWater()) {
                 slimedTicks = 0;
-                ModEntities.SLIMED_DATA.sync(entity);
+                ModData.SLIMED_DATA.sync(entity);
             } else {
                 slimedTicks--;
             }
@@ -51,7 +51,7 @@ public class SlimedData {
         int old = this.slimedTicks;
         this.slimedTicks = newSlimedTicks;
         if (!entity.level().isClientSide) {
-            ModEntities.SLIMED_DATA.sync(entity);
+            ModData.SLIMED_DATA.sync(entity);
             if (newSlimedTicks > old) {
                 //send packet
                 entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(),

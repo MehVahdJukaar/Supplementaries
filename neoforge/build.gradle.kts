@@ -31,7 +31,7 @@ dependencies {
 
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 
-    modImplementation("curse.maven:farmers-delight-398521:8007613")
+    modImplementation("curse.maven:farmers-delight-398521:8083481")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("curse.maven:entity-model-features-844662:8063559")
     modCompileOnly("curse.maven:emi-580555:6420931")
@@ -41,6 +41,7 @@ dependencies {
     modCompileOnly("curse.maven:the-twilight-forest-227639:7797302")
     modCompileOnly("curse.maven:environmental-388992:7122147")
     modImplementation("curse.maven:create-328085:7963363")
+    //modCompileOnly("curse.maven:create-aeronautics-676721:8003941")
     modImplementation("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")
     modImplementation("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")
     //modRuntimeOnly("curse.maven:modernfix-790626:4599348")
@@ -66,8 +67,8 @@ dependencies {
     modCompileOnly("curse.maven:supermartijn642s-config-lib-438332:4715408")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modCompileOnly("curse.maven:quark-243121:7640331")
-    modCompileOnly("curse.maven:zeta-968868:7640154")
+    modCompileOnly("curse.maven:quark-243121:8146177")
+    modCompileOnly("curse.maven:zeta-968868:7980010")
     modCompileOnly("curse.maven:biolith-852512:7074761")
 
     //modImplementation("curse.maven:recipe-advancements-nuker-925511:4836115")

@@ -18,6 +18,7 @@
     "ItemStackAccessor",
     "LivingEntityMixin",
     "TreasureMapForEmeraldsMixin",
+    "ZetaPistonStructureResolverMixin",
     "self.SelfFlammableFluidBlockMixin",
     "self.SelfFrameMixin",
     "self.SelfGunpowderMixin",
@@ -31,5 +32,8 @@
   ],
   "injectors": {
     "defaultRequire": 1
+  },
+  "mixinextras": {
+    "minVersion": "0.5.3"
   }
 }

@@ -8,7 +8,6 @@ import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBuntingBlock;
 import net.mehvahdjukaar.supplementaries.common.items.BuntingItem;
-import net.mehvahdjukaar.supplementaries.common.items.BuntingItemOld;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -70,7 +69,7 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     }
 
     @Override
-    public void updateClientVisualsOnLoad() {
+    public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
         buntings.clear();
         for (Direction d : Direction.Plane.HORIZONTAL) {
             ItemStack stack = this.getItem(d.get2DDataValue());
@@ -183,14 +182,6 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
             }
         }
 
-        //backward compat 2
-        for (int i = 0; i < this.getItems().size(); i++) {
-            var item = this.getItem(i);
-            if (item.is(ModRegistry.BUNTING_OLD.get())) {
-                var color = BuntingItemOld.getColor(item);
-                this.setItem(i, ModRegistry.BUNTING_BLOCKS.get(color).get().asItem().getDefaultInstance());
-            }
-        }
     }
 
 }

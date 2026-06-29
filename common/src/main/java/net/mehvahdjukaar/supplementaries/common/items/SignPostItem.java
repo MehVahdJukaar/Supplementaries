@@ -52,7 +52,7 @@ public class SignPostItem extends WoodBasedBlockItem {
         }
         ResourceLocation res = Utils.getID(b);
         //hardcoding this one
-        if (state.is(ModTags.POSTS) && !res.getNamespace().equals("blockcarpentry")) return AttachType.FENCE;
+        if (state.is(ModTags.COLUMN_SHAPE_4X4) && !res.getNamespace().equals("blockcarpentry")) return AttachType.FENCE;
         return AttachType.WALL;
     }
 

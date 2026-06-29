@@ -1,54 +1,29 @@
 package net.mehvahdjukaar.supplementaries.integration.platform;
 
-import com.google.common.base.Suppliers;
-import com.mojang.datafixers.util.Either;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.supplementaries.common.block.tiles.SafeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.LunchBoxItem;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
-import net.mehvahdjukaar.supplementaries.common.items.SackItem;
-import net.mehvahdjukaar.supplementaries.common.items.SafeItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
-import net.mehvahdjukaar.supplementaries.integration.ShulkerBoxTooltipCompat;
 import net.mehvahdjukaar.supplementaries.integration.quark.TaterInAJarTileRenderer;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
-import net.minecraft.world.item.component.ItemContainerContents;
-import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.quark.api.event.UsageTickerEvent;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
 public class QuarkClientCompatImpl {
-
-    private static final Supplier<SafeBlockTile> DUMMY_SAFE_TILE = Suppliers.memoize(() -> new SafeBlockTile(BlockPos.ZERO, ModRegistry.SAFE.get().defaultBlockState()));
 
     public static void initClient() {
         ClientHelper.addBlockEntityRenderersRegistration(QuarkClientCompat::registerEntityRenderers);
-        NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::onItemTooltipEvent);
         NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::usageTickerCount);
         NeoForge.EVENT_BUS.addListener(QuarkClientCompatImpl::usageTickerStack);
         ClientHelper.addTooltipComponentRegistration(QuarkClientCompatImpl::registerTooltipComponent);
@@ -81,6 +56,7 @@ public class QuarkClientCompatImpl {
         event.register(InventoryViewTooltip.class, InventoryTooltipComponent::new);
     }
 
+    /*
     public static void onItemTooltipEvent(RenderTooltipEvent.GatherComponents event) {
         ItemStack stack = event.getItemStack();
         boolean quarkTooltip = QuarkClientCompat.canRenderQuarkTooltip();
@@ -114,7 +90,7 @@ public class QuarkClientCompatImpl {
                     tooltip.add(1, Either.left(Component.translatable("quark.misc.shulker_box_shift")));
             }
         }
-    }
+    }*/
 
 
     public static void usageTickerStack(UsageTickerEvent.GetStack event) {

@@ -2,21 +2,17 @@ package net.mehvahdjukaar.supplementaries.reg;
 
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedFallingBlockEntity;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
-import net.mehvahdjukaar.moonlight.api.misc.IAttachmentType;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.*;
-import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
-import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.common.entities.dispenser_minecart.DispenserMinecartEntity;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 
 import java.util.function.Supplier;
 
-import static net.mehvahdjukaar.supplementaries.Supplementaries.res;
 import static net.mehvahdjukaar.supplementaries.reg.ModConstants.*;
 
 public class ModEntities {
@@ -106,21 +102,6 @@ public class ModEntities {
     //simply used to iterate over nearby poi more quickly. We don't actually occupy these
     public static final RegSupplier<? extends PoiType> USABLE_CANNON = RegHelper.registerPOI(
             Supplementaries.res("cannon"), 1, 1, ModRegistry.CANNON);
-    public static final IAttachmentType<SlimedData, LivingEntity> SLIMED_DATA = RegHelper.registerDataAttachment(
-            res("slimed_data"),
-            () -> RegHelper.AttachmentBuilder.create(SlimedData::new)
-                    .syncWith(SlimedData.STREAM_CODEC)
-                    .persistent(SlimedData.CODEC),
-            LivingEntity.class
-    );
-
-    //poi
-    public static final IAttachmentType<LivingEntityTamable, LivingEntity> LIVING_TAMABLE = RegHelper.registerDataAttachment(
-            res("living_tamable"),
-            () -> RegHelper.AttachmentBuilder.create(LivingEntityTamable::new)
-                    .persistent(LivingEntityTamable.CODEC),
-            LivingEntity.class
-    );
 
     //attachments
 

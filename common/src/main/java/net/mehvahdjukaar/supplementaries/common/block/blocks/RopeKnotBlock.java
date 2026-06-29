@@ -123,6 +123,16 @@ public class RopeKnotBlock extends AbstractRopeKnotBlock implements IRopeConnect
     }
 
     @Override
+    public boolean hasConnection(Direction dir, BlockState state) {
+        return state.getValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(dir));
+    }
+
+    @Override
+    public BlockState setConnection(Direction dir, BlockState state, boolean value) {
+        return state.setValue(RopeBlock.FACING_TO_PROPERTY_MAP.get(dir), value);
+    }
+
+    @Override
     public boolean canSideAcceptConnection(BlockState state, Direction direction) {
         if (state.getValue(AbstractRopeKnotBlock.AXIS) == Direction.Axis.Y) {
             return direction.getAxis() != Direction.Axis.Y;

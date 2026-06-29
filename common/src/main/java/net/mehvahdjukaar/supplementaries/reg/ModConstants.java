@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+
 public final class ModConstants {
 
     public static final String DISPENSER_MINECART_NAME = "dispenser_minecart";
@@ -18,6 +20,7 @@ public final class ModConstants {
     public static final String ROPE_ARROW_NAME = "rope_arrow";
     public static final String SLINGSHOT_PROJECTILE_NAME = "slingshot_projectile";
     public static final String CANNON_BOAT_NAME = "cannon_boat";
+    public static final String CANNON_RAFT_NAME = "cannon_raft";
 
     public static final String BUBBLE_BLOWER_NAME = "bubble_blower";
     public static final String SLINGSHOT_NAME = "slingshot";
@@ -149,4 +152,11 @@ public final class ModConstants {
     public static final String SPIDER_HEAD_NAME = "spider_head";
     public static final String BARNACLES_NAME = "barnacles";
     public static final String PIRATE_DISC_NAME = "music_disc_heave_ho";
+
+    /**
+     * Bamboo-like wood types use "raft" naming instead of "boat", following {@link WoodType#isBambooLike()}.
+     */
+    public static String cannonBoatBaseName(WoodType wood) {
+        return wood.isBambooLike() ? CANNON_RAFT_NAME : CANNON_BOAT_NAME;
+    }
 }
