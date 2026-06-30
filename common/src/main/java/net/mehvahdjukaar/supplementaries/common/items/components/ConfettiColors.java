@@ -1,9 +1,9 @@
 package net.mehvahdjukaar.supplementaries.common.items.components;
 
-import com.google.common.collect.HashBiMap;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
@@ -24,8 +24,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ConfettiColors implements TooltipProvider {
     public static final Codec<ConfettiColors> CODEC = Codec.INT.listOf().xmap(
@@ -39,9 +37,21 @@ public class ConfettiColors implements TooltipProvider {
                     ConfettiColors::new
             );
     public static final ConfettiColors EMPTY = new ConfettiColors();
-    protected static final HashBiMap<DyeColor, Integer> COLOR_TO_DIFFUSE = Arrays.stream(DyeColor.values())
-            .collect(Collectors.toMap(Function.identity(), ConfettiColors::dyeToRGB,
-                    (color, color2) -> color2, HashBiMap::create));
+    protected static final Map<DyeColor, Integer> COLOR_TO_DIFFUSE = new EnumMap<>(DyeColor.class);
+    protected static final Map<Integer, DyeColor> DIFFUSE_TO_COLOR = new HashMap<>();
+
+    static {
+        for (DyeColor dye : DyeColor.values()) {
+            int rgb = dyeToRGB(dye);
+            if (rgb == -1) {
+                Supplementaries.LOGGER.warn("Dye color {} produced diffuse color -1 (white), this should never happen", dye);
+            }
+            COLOR_TO_DIFFUSE.put(dye, rgb);
+            // first dye wins on collision instead of crashing (values are not guaranteed unique)
+            DIFFUSE_TO_COLOR.putIfAbsent(rgb, dye);
+        }
+    }
+
     private final IntList colors;
 
     ConfettiColors(List<Integer> colors) {
@@ -114,7 +124,7 @@ public class ConfettiColors implements TooltipProvider {
     @Override
     public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
         for (int colorInt : colors) {
-            DyeColor dye = COLOR_TO_DIFFUSE.inverse().get(colorInt);
+            DyeColor dye = DIFFUSE_TO_COLOR.get(colorInt);
             if (dye != null) {
                 tooltipAdder.accept(Component.translatable("color.minecraft." + dye.getName()).withStyle(ChatFormatting.GRAY));
             } else {
