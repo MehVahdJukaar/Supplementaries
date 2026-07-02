@@ -14,6 +14,7 @@ val flywheel_forge_version: String by extra
 val vanillin_version: String by extra
 val shulker_box_tooltip_version: String by extra
 val sable_companion_version: String by extra
+val emi_version: String by extra
 
 dependencies {
 
@@ -30,7 +31,7 @@ dependencies {
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("net.mehvahdjukaar:amendments-neoforge:1.21-2.0.9")
     modCompileOnly("curse.maven:entity-model-features-844662:8063559")
-    modCompileOnly("curse.maven:emi-580555:6420931")
+    modCompileOnly("dev.emi:emi-xplat-mojmap:${emi_version}")
     modImplementation("curse.maven:jei-238222:7420587")
     modCompileOnly("curse.maven:jade-324717:7545219")
     modCompileOnly("curse.maven:roughly-enough-items-310111:6199140")

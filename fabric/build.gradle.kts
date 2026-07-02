@@ -30,7 +30,7 @@ dependencies {
 
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-fabric:${shulker_box_tooltip_version}")
     modCompileOnly("curse.maven:entity-model-features-844662:8063557")
-    modCompileOnly("curse.maven:emi-580555:6420930")
+    modCompileOnly("dev.emi:emi-fabric:${emi_version}")
     modCompileOnly("curse.maven:jei-238222:7420583")
     modCompileOnly("curse.maven:roughly-enough-items-310111:6199139")
     modCompileOnly("curse.maven:roughly-enough-items-310111:6199140")
@@ -79,7 +79,6 @@ dependencies {
     //modImplementation("curse.maven:biome-makeover-412182:4572458")
     //modImplementation("curse.maven:twigs-496913:3943447")
     //modImplementation("curse.maven:frame-api-580137:3943404")
-    modCompileOnly("dev.emi:emi:${emi_version}+1.19.4:api")
 
 
     //modImplementation("curse.maven:cyanide-541676:4824161")

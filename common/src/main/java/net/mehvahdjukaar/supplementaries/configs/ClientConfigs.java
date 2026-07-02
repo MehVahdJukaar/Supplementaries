@@ -462,7 +462,7 @@ public class ClientConfigs {
                              - STENCIL: clean clip using stencil buffer (recommended)
                              - DEPTH: simpler depth-buffer clip; can interact poorly with translucent
                                blocks (slime, glass, water) rendered after BE pass""")
-                    .define("mask_mode", PulleyMaskMode.STENCIL);
+                    .define("mask_mode", PulleyMaskMode.OFF);
             builder.pop();
 
 

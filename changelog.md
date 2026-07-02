@@ -1,1 +1,1 @@
-- added piston cooperations on fabric and fixed a bug where logic was misbehaving on retract
+ fixed wind vane renderer

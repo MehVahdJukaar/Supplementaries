@@ -332,12 +332,15 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     public boolean canRotateAnalog(BlockState state, Level level, BlockPos pos, Direction fromDir) {
         // Analog driving only makes sense for the continuous animated path. In legacy mode the
         // driver should fall through and call our IRotatable instead.
-        return CommonConfigs.Redstone.PULLEY_CONTINUOUS.get();
+        return CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()
+                && fromDir.getAxis().isHorizontal()
+                && state.getValue(AXIS) == fromDir.getAxis();
     }
 
     @Override
     public void rotateAnalog(BlockState state, Level level, BlockPos pos, Direction fromDir, boolean ccw, float speed) {
         if (!CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) return;
+        if (!fromDir.getAxis().isHorizontal() || state.getValue(AXIS) != fromDir.getAxis()) return;
         if (level.getBlockEntity(pos) instanceof PulleyBlockTile tile) {
             tile.driveAnalog(level, ccw, speed);
         }

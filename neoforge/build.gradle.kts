@@ -19,6 +19,7 @@ val vanillin_version: String by extra
 val registrate_version: String by extra
 val shulker_box_tooltip_version: String by extra
 val sable_companion_version: String by extra
+val emi_version: String by extra
 dependencies {
 
     annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:${mixin_squared_version}")
@@ -34,7 +35,7 @@ dependencies {
     modImplementation("curse.maven:farmers-delight-398521:8083481")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("curse.maven:entity-model-features-844662:8063559")
-    modCompileOnly("curse.maven:emi-580555:6420931")
+    modCompileOnly("dev.emi:emi-neoforge:${emi_version}")
     modImplementation("curse.maven:jei-238222:7420587")
     modCompileOnly("curse.maven:jade-324717:7545219")
     modCompileOnly("curse.maven:roughly-enough-items-310111:6199140")
