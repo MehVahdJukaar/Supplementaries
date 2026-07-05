@@ -920,7 +920,7 @@ public class ModRegistry {
                 .strength(0.1f, 0f)
                 .noCollission().instabreak()
                 .sound(SoundType.SCAFFOLDING); //.dynamicShape()
-        return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_FRAME) :*/ new FrameBlock(p);
+        return new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_FRAME_ITEM = regItem(TIMBER_FRAME_NAME, () -> new TimberFrameItem(
             TIMBER_FRAME.get(), new Item.Properties()));
@@ -928,7 +928,7 @@ public class ModRegistry {
     //timber brace
     public static final Supplier<FrameBraceBlock> TIMBER_BRACE = regBlock(TIMBER_BRACE_NAME, () -> {
         var p = BlockBehaviour.Properties.ofFullCopy(TIMBER_FRAME.get());
-        return /*CompatHandler.create ? SchematicCannonStuff.makeFrameBraceBlock(p, DAUB_BRACE) :*/ new FrameBraceBlock(p);
+        return new FrameBraceBlock(p);
     });
     public static final Supplier<Item> TIMBER_BRACE_ITEM = regItem(TIMBER_BRACE_NAME, () -> new TimberFrameItem(
             TIMBER_BRACE.get(), new Item.Properties()));
@@ -936,7 +936,7 @@ public class ModRegistry {
     //timber cross brace
     public static final Supplier<FrameBlock> TIMBER_CROSS_BRACE = regBlock(TIMBER_CROSS_BRACE_NAME, () -> {
         var p = BlockBehaviour.Properties.ofFullCopy(TIMBER_FRAME.get());
-        return /*CompatHandler.create ? SchematicCannonStuff.makeFramedBlock(p, DAUB_CROSS_BRACE) :*/ new FrameBlock(p);
+        return new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_CROSS_BRACE_ITEM = regItem(TIMBER_CROSS_BRACE_NAME, () -> new TimberFrameItem(
             TIMBER_CROSS_BRACE.get(), new Item.Properties()));
@@ -1036,7 +1036,7 @@ public class ModRegistry {
     //flower box
     public static final Supplier<Block> FLOWER_BOX = regWithItem(FLOWER_BOX_NAME, () -> {
         var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(0.5F);
-        return /*CompatHandler.create ? SchematicCannonStuff.makeFlowerBox(p) : */new FlowerBoxBlock(p);
+        return new FlowerBoxBlock(p);
     });
 
     public static final Supplier<BlockEntityType<FlowerBoxBlockTile>> FLOWER_BOX_TILE = regTile(FLOWER_BOX_NAME, () ->

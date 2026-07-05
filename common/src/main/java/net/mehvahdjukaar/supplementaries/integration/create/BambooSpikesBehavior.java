@@ -30,15 +30,6 @@ public class BambooSpikesBehavior implements MovementBehaviour {
         return Vec3.atLowerCornerOf(direction.getNormal()).dot(vec.normalize()) > 0.125;
     }
 
-    //@Override
-    //public void visitNewPosition(MovementContext context, BlockPos pos) {
-    //    World world = context.world;
-    //    BlockState stateVisited = world.getBlockState(pos);
-
-    //     if (!stateVisited.isRedstoneConductor(world, pos))
-    //        damageEntities(context, pos, world);
-    //}
-
     @Override
     public boolean isActive(MovementContext context) {
         return MovementBehaviour.super.isActive(context) && !isVecPointingTowards(context.relativeMotion, (context.state.getValue(BambooSpikesBlock.FACING)));

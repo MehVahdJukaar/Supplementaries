@@ -138,6 +138,7 @@ public class CreateCompat {
     public static void setup() {
         registerCannonBehaviours(ModRegistry.CANNON.get());
         registerExtraMovementBehaviours();
+        SchematicRequirements.register();
     }
 
     public static void init() {
@@ -151,6 +152,7 @@ public class CreateCompat {
         try {
             MovementBehaviour.REGISTRY.register(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
             MovementBehaviour.REGISTRY.register(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
+            MovementBehaviour.REGISTRY.register(ModRegistry.FLINT_BLOCK.get(), new FlintBlockBehavior());
         } catch (Exception e) {
             Supplementaries.LOGGER.warn("failed to register supplementaries create behaviors: {}", String.valueOf(e));
         }
