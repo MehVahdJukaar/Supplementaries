@@ -2,8 +2,11 @@ package net.mehvahdjukaar.supplementaries.integration.platform;
 
 import com.simibubi.create.api.behaviour.display.DisplaySource;
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
+import com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour;
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.api.registry.CreateRegistries;
+import com.simibubi.create.content.contraptions.AbstractContraptionEntity;
+import com.simibubi.create.content.contraptions.Contraption;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
 import com.simibubi.create.content.kinetics.belt.behaviour.TransportedItemStackHandlerBehaviour;
 import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttributeType;
@@ -13,17 +16,31 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.mehvahdjukaar.supplementaries.integration.platform.create.*;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
+
+import java.util.UUID;
 import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.List;
@@ -123,14 +140,80 @@ public class CreateCompatImpl {
     }
 
     public static void setup() {
+    }
+
+    public static void registerExtraMovementBehaviours() {
         try {
             MovementBehaviour.REGISTRY.register(ModRegistry.BAMBOO_SPIKES.get(), new BambooSpikesBehavior());
             MovementBehaviour.REGISTRY.register(ModRegistry.HOURGLASS.get(), new HourglassBehavior());
-
-
         } catch (Exception e) {
             Supplementaries.LOGGER.warn("failed to register supplementaries create behaviors: {}", String.valueOf(e));
         }
+    }
+
+    public static void registerCannonBehaviours(Block cannon) {
+        MovingInteractionBehaviour.REGISTRY.register(cannon, new MovingInteractionBehaviour() {
+            @Override
+            public boolean handlePlayerInteraction(Player player, InteractionHand activeHand, BlockPos localPos,
+                                                   AbstractContraptionEntity contraptionEntity) {
+                if (contraptionEntity.level().isClientSide) {
+                    BlockEntity be = contraptionEntity.getContraption().getBlockEntityClientSide(localPos);
+                    return CreateCompat.onContraptionInteractClient(be, contraptionEntity, localPos,
+                            player.isSecondaryUseActive());
+                }
+                return player.isSecondaryUseActive();
+            }
+        });
+    }
+
+    public static Vec3 contraptionPosToGlobalPos(Entity contraption, Vec3 localVec, float partialTicks) {
+        return ((AbstractContraptionEntity) contraption).toGlobalVector(localVec, partialTicks);
+    }
+
+    public static Quaternionf getContraptionRotation(Entity contraption, float partialTicks) {
+        AbstractContraptionEntity c = (AbstractContraptionEntity) contraption;
+        Vec3 x = c.applyRotation(new Vec3(1, 0, 0), partialTicks);
+        Vec3 y = c.applyRotation(new Vec3(0, 1, 0), partialTicks);
+        Vec3 z = c.applyRotation(new Vec3(0, 0, 1), partialTicks);
+        Matrix3f rot = new Matrix3f(
+                new Vector3f((float) x.x, (float) x.y, (float) x.z),
+                new Vector3f((float) y.x, (float) y.y, (float) y.z),
+                new Vector3f((float) z.x, (float) z.y, (float) z.z));
+        return new Quaternionf().setFromNormalized(rot);
+    }
+
+    public static Vec3 getContactPointMotion(Entity contraption, Vec3 worldPoint) {
+        return ((AbstractContraptionEntity) contraption).getContactPointMotion(worldPoint);
+    }
+
+    @Nullable
+    public static BlockEntity getClientBlockEntity(Entity contraption, BlockPos localPos) {
+        return ((AbstractContraptionEntity) contraption).getContraption().getBlockEntityClientSide(localPos);
+    }
+
+    @Nullable
+    public static Entity findContraption(Level level, UUID contraptionId) {
+        if (level instanceof ServerLevel sl) {
+            return sl.getEntity(contraptionId) instanceof AbstractContraptionEntity ce && !ce.isRemoved() ? ce : null;
+        }
+        if (level instanceof ClientLevel cl) {
+            for (Entity e : cl.entitiesForRendering()) {
+                if (e instanceof AbstractContraptionEntity ce && !ce.isRemoved() && ce.getUUID().equals(contraptionId)) {
+                    return e;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void persistCannonAim(Entity contraption, BlockPos localPos, Quaternionf localRot, byte firePower) {
+        Contraption c = ((AbstractContraptionEntity) contraption).getContraption();
+        StructureTemplate.StructureBlockInfo info = c.getBlocks().get(localPos);
+        if (info == null) return;
+        CompoundTag nbt = info.nbt() != null ? info.nbt().copy() : new CompoundTag();
+        net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile.buildAimNbt(
+                nbt, info.state(), localRot, firePower);
+        c.getBlocks().put(localPos, new StructureTemplate.StructureBlockInfo(info.pos(), info.state(), nbt));
     }
 
 

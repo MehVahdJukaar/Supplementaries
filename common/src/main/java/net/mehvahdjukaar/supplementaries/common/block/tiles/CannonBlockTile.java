@@ -19,7 +19,6 @@ import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonAnimationPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
-import net.mehvahdjukaar.supplementaries.common.network.SyncCannonPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -537,24 +536,16 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return restraint.rotated(dir);
     }
 
-    // Network
+    // Network. The reference frame decides how the aim travels: a world cannon locates itself by block pos,
+    // a contraption cannon needs its own packet (no server-side block entity exists inside a contraption).
     public void syncToServer(boolean ignite, boolean removeOwner, Player playerWhoChangedIt) {
-        NetworkHelper.sendToServer(new SyncCannonPacket(
-                this.getWantedLocalRotation(), this.getPowerLevel(),
-                ignite, removeOwner, Optional.empty(),
-                referenceFrame.makeNetworkTarget(),
-                playerWhoChangedIt.getUUID()));
+        referenceFrame.syncToServer(this, this.getWantedLocalRotation(), this.getPowerLevel(),
+                ignite, removeOwner, playerWhoChangedIt);
     }
 
     public void syncToClients(boolean ignite) {
-        if (level instanceof ServerLevel sl) {
-            NetworkHelper.sendToAllClientPlayersInDefaultRange(sl,
-                    BlockPos.containing(referenceFrame.position(1)), new SyncCannonPacket(
-                            this.getWantedLocalRotation(), this.getPowerLevel(),
-                            ignite, false,
-                            Optional.of(this.trajectoryData),
-                            referenceFrame.makeNetworkTarget(), null));
-        }
+        referenceFrame.syncToClients(this, this.getWantedLocalRotation(), this.getPowerLevel(), ignite,
+                Optional.of(this.trajectoryData));
     }
 
     public void sendOpenGuiRequest() {
@@ -575,6 +566,18 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public boolean isInWorld() {
         return referenceFrame instanceof WorldReferenceFrame;
+    }
+
+    /**
+     * Bakes a cannon's aim into save NBT without a live block entity - used to persist aim into a Create
+     * contraption's stored block data.
+     */
+    public static CompoundTag buildAimNbt(CompoundTag base, BlockState state, Quaternionf localRot, byte firePower) {
+        Quaternionf additional = Axis.YP.rotationDegrees(-state.getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
+        Quaternionf rig = localRot.mul(additional.invert(new Quaternionf()), new Quaternionf());
+        base.put("orientation", ExtraCodecs.QUATERNIONF.encodeStart(NbtOps.INSTANCE, rig).getOrThrow());
+        base.putByte("fire_power", firePower);
+        return base;
     }
 
 
