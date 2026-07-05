@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.platform.create;
+package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;

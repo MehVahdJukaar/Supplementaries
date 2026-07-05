@@ -33,7 +33,7 @@ public class CompatHandler {
     public static final boolean CONFIGURED = isLoaded("configured");
     public static final boolean SOUL_FIRED = isLoaded("soul_fire_d") && false;
     public static final boolean OREGANIZED = isLoaded("oreganized");
-    public static final boolean CREATE = isLoaded("create") && PlatHelper.getPlatform().isForge();
+    public static final boolean CREATE = isLoaded("create");
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
     public static final boolean CURIOS = isLoaded("curios") || isClassPresent("top.theillusivec4.curios.api.CuriosApi");
     public static final boolean TRINKETS = isLoaded("trinkets") || isClassPresent("dev.emi.trinkets.api.TrinketsApi");
@@ -107,7 +107,7 @@ public class CompatHandler {
                 Supplementaries.LOGGER.error("Farmers Delight Refabricated is not installed. Disabling Farmers Delight Module");
             }
         }
-        FARMERS_DELIGHT = fd && false; //TODO: add back
+        FARMERS_DELIGHT = fd;
     }
 
     private static boolean isLoaded(String name) {

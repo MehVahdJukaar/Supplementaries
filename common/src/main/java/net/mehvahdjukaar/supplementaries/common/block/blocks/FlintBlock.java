@@ -63,7 +63,7 @@ public class FlintBlock extends Block implements IPistonMotionReact {
         }
     }
 
-    private void ignitePosition(Level level, BlockPos firePos, boolean isIronMoving) {
+    public static void ignitePosition(Level level, BlockPos firePos, boolean isIronMoving) {
         //send particle packet
 
         NetworkHelper.sendToAllClientPlayersInParticleRange((ServerLevel) level, firePos,
@@ -78,7 +78,7 @@ public class FlintBlock extends Block implements IPistonMotionReact {
                 break;
             }
         }
-        this.playSound(level, firePos);
+        playSound(level, firePos);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class FlintBlock extends Block implements IPistonMotionReact {
         super.stepOn(level, pos, state, entity);
     }
 
-    private void playSound(Level level, BlockPos pos) {
+    private static void playSound(Level level, BlockPos pos) {
         RandomSource randomSource = level.getRandom();
         level.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, (randomSource.nextFloat() - randomSource.nextFloat()) * 0.2F + 1.0F);
     }
