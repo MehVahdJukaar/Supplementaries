@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.platform.create;
+package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.api.behaviour.display.DisplayTarget;
 import com.simibubi.create.content.redstone.displayLink.DisplayLinkContext;
@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.BlackboardItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.BlackboardData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.platform.CreateCompatImpl;
+import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.DyeColor;
@@ -39,7 +39,7 @@ public class BlackboardDisplayTarget extends DisplayTarget {
         if (te instanceof BlackboardBlockTile tile && !text.isEmpty() && !tile.isWaxed()) {
             BlockEntity source = context.getSourceBlockEntity();
             if (!parseText(text.get(0).getString(), tile)) {
-                ItemStack copyStack = CreateCompatImpl.getDisplayedItem(context, source, i -> i.getItem() instanceof BlackboardItem);
+                ItemStack copyStack = CreateCompat.getDisplayedItem(context, source, i -> i.getItem() instanceof BlackboardItem);
                 if (!copyStack.isEmpty() && copyBlackboard(line, context, te, tile, copyStack)) return;
                 var pixels = CommonConfigs.Building.BLACKBOARD_COLOR.get() ? BlackboardData.unpackPixelsFromString(text.getFirst().getString()) : BlackboardData.unpackPixelsFromStringWhiteOnly(text.getFirst().getString());
                 tile.setPixels(BlackboardData.unpackPixels(pixels));

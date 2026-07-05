@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.platform.create;
+package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.simibubi.create.api.behaviour.movement.MovementBehaviour;
 import com.simibubi.create.content.contraptions.behaviour.MovementContext;
@@ -8,7 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.HourGlassBlockTi
 import net.mehvahdjukaar.supplementaries.common.block.blocks.HourGlassBlock;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimeData;
 import net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimesManager;
-import net.mehvahdjukaar.supplementaries.integration.platform.CreateCompatImpl;
+import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
@@ -22,8 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.mehvahdjukaar.candlelight.api.ClientOnly;
 
 import java.util.function.UnaryOperator;
 
@@ -40,7 +39,7 @@ public class HourglassBehavior implements MovementBehaviour {
         UnaryOperator<Vec3> rot = context.rotation;
         BlockState state = context.state;
         Direction dir = state.getValue(HourGlassBlock.FACING);
-        Rotation rotation = CreateCompatImpl.isClockWise(rot, dir);
+        Rotation rotation = CreateCompat.isClockWise(rot, dir);
 
         CompoundTag com = context.blockEntityData;
         this.sandData = HourglassTimeData.EMPTY;
@@ -73,7 +72,7 @@ public class HourglassBehavior implements MovementBehaviour {
         com.putFloat("PrevProgress", prevProgress);
     }
 
-    @OnlyIn(Dist.CLIENT)
+    @ClientOnly
     @Override
     public void renderInContraption(MovementContext context, VirtualRenderWorld renderWorld, ContraptionMatrices matrices, MultiBufferSource buffer) {
         float partialTicks = 1;

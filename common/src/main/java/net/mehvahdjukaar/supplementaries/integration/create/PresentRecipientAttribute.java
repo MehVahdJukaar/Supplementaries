@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.integration.platform.create;
+package net.mehvahdjukaar.supplementaries.integration.create;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -7,7 +7,7 @@ import com.simibubi.create.content.logistics.item.filter.attribute.ItemAttribute
 import io.netty.buffer.ByteBuf;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.components.PresentAddress;
-import net.mehvahdjukaar.supplementaries.integration.platform.CreateCompatImpl;
+import net.mehvahdjukaar.supplementaries.integration.CreateCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -48,7 +48,7 @@ public class PresentRecipientAttribute implements ItemAttribute {
 
     @Override
     public ItemAttributeType getType() {
-        return CreateCompatImpl.PRESENT_ATTRIBUTE.get();
+        return CreateCompat.PRESENT_ATTRIBUTE.get();
     }
 
     @Override
