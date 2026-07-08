@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
 
+import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -33,7 +34,9 @@ public class CompatHandler {
     public static final boolean CONFIGURED = isLoaded("configured");
     public static final boolean SOUL_FIRED = isLoaded("soul_fire_d") && false;
     public static final boolean OREGANIZED = isLoaded("oreganized");
-    public static final boolean CREATE = isLoaded("create");
+    // Create has no Fabric build for this Minecraft version (latest Create Fabric release is 1.20.1), so the
+    // integration is disabled there even if a stale Create jar happens to be present.
+    public static final boolean CREATE = isLoaded("create") && !PlatHelper.getPlatform().isFabric();
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
     public static final boolean CURIOS = isLoaded("curios") || isClassPresent("top.theillusivec4.curios.api.CuriosApi");
     public static final boolean TRINKETS = isLoaded("trinkets") || isClassPresent("dev.emi.trinkets.api.TrinketsApi");
@@ -115,7 +118,7 @@ public class CompatHandler {
     }
 
     public static void setup() {
-        if (CREATE) CreateCompat.setup();
+        setupPlat();
         if (COMPUTERCRAFT) CCCompat.setup();
         if (SOUL_FIRED) SoulFiredCompat.setup();
         if (SHULKER_BOX_TOOLTIP) ShulkerBoxTooltipCompat.setup();
@@ -126,7 +129,7 @@ public class CompatHandler {
         if (DECO_BLOCKS) DecoBlocksCompat.init();
         if (QUARK) QuarkCompat.init();
         if (ENDERGETIC) EndergeticCompat.init();
-        if (CREATE) CreateCompat.init();
+        initPlat();
         if (CAVERNS_AND_CHASMS) ModRegistry.SCONCES.add(ModRegistry.SCONCE_ITEM_GREEN);
         if (INFERNALEXP) InfernalExpCompat.init();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.init();
@@ -134,6 +137,18 @@ public class CompatHandler {
         if (CURIOS) CuriosCompat.init();
         if (TRINKETS) TrinketsCompat.init();
         //if (inspirations) CauldronRecipes.registerStuff();
+    }
+
+    // Create only ships on NeoForge for this Minecraft version, so the actual CreateCompat calls live in the
+    // platform CompatHandlerImpl: NeoForge routes to CreateCompat, Fabric is a no-op. Keeps common Create-agnostic.
+    @PlatformImpl
+    public static void setupPlat() {
+        throw new AssertionError();
+    }
+
+    @PlatformImpl
+    public static void initPlat() {
+        throw new AssertionError();
     }
 
     private static boolean isClassPresent(String s) {

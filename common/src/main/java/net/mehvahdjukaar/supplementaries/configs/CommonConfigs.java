@@ -448,6 +448,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FLOWER_BOX_SIMPLE_MODE;
         public static final Supplier<Boolean> BLACKSTONE_TILE_ENABLED;
         public static final Supplier<Boolean> LAPIS_BRICKS_ENABLED;
+        public static final Supplier<Boolean> BRITTLESTONE_ENABLED;
+        public static final Supplier<Boolean> BRITTLESTONE_BRICKS_ENABLED;
         public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
         public static final Supplier<Boolean> FIRE_PIT_ENABLED;
         public static final Supplier<Boolean> WICKER_FENCE_ENABLED;
@@ -636,6 +638,8 @@ public class CommonConfigs {
             builder.pop();
 
             LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
+            BRITTLESTONE_ENABLED = feature(builder, ModConstants.BRITTLESTONE_NAME);
+            BRITTLESTONE_BRICKS_ENABLED = feature(builder, ModConstants.BRITTLESTONE_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
             BLACKSTONE_LAMP_ENABLED = feature(builder, ModConstants.BLACKSTONE_LAMP_NAME);

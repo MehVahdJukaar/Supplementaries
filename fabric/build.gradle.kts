@@ -87,7 +87,10 @@ dependencies {
 
     modCompileOnly("curse.maven:immediatelyfast-686911:6285506")
     //modImplementation("curse.maven:spectrum-556967:5080474")
-    modCompileOnly("curse.maven:create-fabric-624165:7286603")
+    // Create integration disabled on Fabric: Create Fabric has no build for this Minecraft version
+    // (latest release is for 1.20.1). See CompatHandler.CREATE.
+    //modCompileOnly("curse.maven:create-fabric-624165:7286603")
+    //modCompileOnly("io.github.fabricators_of_create.Porting-Lib:entity:2.3.15+1.20.1")
 
     modCompileOnly("org.embeddedt:embeddium-fabric-1.20.1:0.3.1-git.b3f920f+mc1.20.1")
 

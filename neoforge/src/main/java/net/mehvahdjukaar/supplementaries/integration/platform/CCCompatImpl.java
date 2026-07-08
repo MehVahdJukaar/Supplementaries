@@ -188,7 +188,7 @@ public class CCCompatImpl {
         public void setYaw(double value) {
             Quaternionf orientation = tile.getLocalOrientation(1);
             EntityAngles angles = EntityAngles.fromQuaternion(orientation);
-            angles = angles.withYaw((float) (Mth.DEG_TO_RAD * value));
+            angles = EntityAngles.of(angles.pitch(), (float) value); //both deg
 
             tile.setLocalOrientation(angles.toQuaternion());
             tile.syncToClients(false);
@@ -205,7 +205,7 @@ public class CCCompatImpl {
         public void setPitch(double value) {
             Quaternionf orientation = tile.getLocalOrientation(1);
             EntityAngles angles = EntityAngles.fromQuaternion(orientation);
-            angles = angles.withPitch((float) (Mth.DEG_TO_RAD * value));
+            angles = EntityAngles.of((float) value, angles.yaw()); //both deg
 
             tile.setLocalOrientation(angles.toQuaternion());
 
