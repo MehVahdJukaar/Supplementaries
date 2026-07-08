@@ -1,11 +1,12 @@
 {
   "replace": false,
   "values": [
-	"supplementaries:checker_slab",
-	"supplementaries:lapis_bricks_slab",
+    "supplementaries:checker_slab",
+    "supplementaries:lapis_bricks_slab",
     "supplementaries:stone_tile_slab",
     "supplementaries:blackstone_tile_slab",
     "supplementaries:ash_bricks_slab",
-    "supplementaries:fine_wood_slab"
+    "supplementaries:fine_wood_slab",
+    "supplementaries:brittlestone_bricks_slab"
   ]
 }

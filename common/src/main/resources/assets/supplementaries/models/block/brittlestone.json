@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/cube_column",
+	"textures": {
+		"end": "supplementaries:block/brittlestone/brittlestone_top",
+		"side": "supplementaries:block/brittlestone/brittlestone_side"
+	}
+}

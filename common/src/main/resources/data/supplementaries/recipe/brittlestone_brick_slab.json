@@ -1,0 +1,27 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "brittlestone_bricks"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "brittlestone_bricks"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "supplementaries:brittlestone_bricks"
+    }
+  },
+  "result": {
+    "id": "supplementaries:brittlestone_bricks_slab",
+    "count": 6
+  }
+}

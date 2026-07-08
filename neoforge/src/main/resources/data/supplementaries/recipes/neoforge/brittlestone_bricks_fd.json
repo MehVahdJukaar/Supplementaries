@@ -1,0 +1,30 @@
+{
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "supplementaries:brittlestone_bricks"
+    }
+  ],
+  "result": [
+    {
+      "item": {
+        "count": 1,
+        "id": "supplementaries:brittlestone"
+      }
+    }
+  ],
+  "tool": {
+    "type": "farmersdelight:item_ability",
+    "action": "pickaxe_dig"
+  },
+  "fabric:load_conditions": [
+    {
+      "modid": "farmersdelight",
+      "condition": "fabric:mod_loaded"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "brittlestone_bricks"
+    }
+  ]
+}

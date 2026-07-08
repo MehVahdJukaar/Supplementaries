@@ -950,6 +950,21 @@ public class ModRegistry {
             RegHelper.registerFullBlockSet(res(LAPIS_BRICKS_NAME), BlockBehaviour.Properties.ofFullCopy(Blocks.LAPIS_BLOCK)
                     .sound(SoundType.DEEPSLATE_TILES).strength(2.0F, 2.0F));
 
+    //brittlestone
+    public static final Supplier<Block> BRITTLESTONE = regWithItem(BRITTLESTONE_NAME, () -> new Block(
+            BlockBehaviour.Properties.ofFullCopy(Blocks.STONE)
+                    .mapColor(MapColor.RAW_IRON)
+                    .sound(SoundType.DRIPSTONE_BLOCK)
+                    .strength(2.0F, 3.0F)
+    ));
+
+    //brittlestone bricks
+    public static final Map<RegHelper.VariantType, Supplier<Block>> BRITTLESTONE_BRICKS_BLOCKS =
+            RegHelper.registerFullBlockSet(res(BRITTLESTONE_BRICKS_NAME),
+                    BlockBehaviour.Properties.ofFullCopy(Blocks.STONE).mapColor(MapColor.RAW_IRON)
+                            .sound(SoundType.DRIPSTONE_BLOCK)
+                            .strength(1.5F, 6.0F));
+
     //ashen bricks
     public static final Map<RegHelper.VariantType, Supplier<Block>> ASH_BRICKS_BLOCKS =
             RegHelper.registerFullBlockSet(res(ASH_BRICKS_NAME), Blocks.STONE_BRICKS);

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "supplementaries:block/brittlestone/brittlestone_brick"
+  }
+}
