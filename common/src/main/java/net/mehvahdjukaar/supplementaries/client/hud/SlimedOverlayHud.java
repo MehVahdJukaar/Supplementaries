@@ -40,6 +40,7 @@ public class SlimedOverlayHud implements LayeredDraw.Layer {
                     screenWidth, screenHeight + slide, screenWidth, screenHeight + slide);
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();
+            RenderSystem.disableBlend();
             graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
         }
     }

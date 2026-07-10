@@ -919,7 +919,7 @@ public class ModRegistry {
         var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS)
                 .strength(0.1f, 0f)
                 .noCollission().instabreak()
-                .sound(SoundType.SCAFFOLDING); //.dynamicShape()
+                .sound(SoundType.SCAFFOLDING).dynamicShape();
         return new FrameBlock(p);
     });
     public static final Supplier<Item> TIMBER_FRAME_ITEM = regItem(TIMBER_FRAME_NAME, () -> new TimberFrameItem(
