@@ -182,7 +182,7 @@ public class CannonFireParticle extends TextureSheetParticle {
             float size = type.size();
 
             Vec3 offset = Vec3.directionFromRotation(pitch, yaw);
-            offset = offset.scale(-6.501 / 16f);
+            offset = offset.scale(6.501 / 16f);
             offset = offset.add(0, 2 / 16f, 0);
             offset = offset.scale(size);
 

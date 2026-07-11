@@ -346,6 +346,7 @@ public class ClientRegistry {
         event.register(ModParticles.ROTATION_TRAIL.get(), RotationTrailParticle.Factory::new);
         event.register(ModParticles.ROTATION_TRAIL_EMITTER.get(), RotationTrailEmitter.Factory::new);
         event.register(ModParticles.SUDS_PARTICLE.get(), SudsParticle.Factory::new);
+        event.register(ModParticles.SUDS_PARTICLE_EMITTER.get(), SudsEmitterParticle.Factory::new);
         event.register(ModParticles.ASH_PARTICLE.get(), AshParticleFactory::new);
         event.register(ModParticles.BUBBLE_BLOCK_PARTICLE.get(), BubbleBlockParticle.Factory::new);
         event.register(ModParticles.SUGAR_PARTICLE.get(), SugarParticle.Factory::new);

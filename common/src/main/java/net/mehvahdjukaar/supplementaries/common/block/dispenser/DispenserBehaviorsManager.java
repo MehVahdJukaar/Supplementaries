@@ -71,6 +71,9 @@ public class DispenserBehaviorsManager {
         if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
             event.registerPlaceBlock(ModRegistry.BUBBLE_BLOCK.get());
         }
+        if (CommonConfigs.Tools.BUBBLE_BLOWER_ENABLED.get()) {
+            event.register(new BubbleBlowerBehavior(ModRegistry.BUBBLE_BLOWER.get()));
+        }
 
         if (CommonConfigs.Functional.LUMISENE_ENABLED.get()) {
             event.register(new BucketBehavior(ModFluids.LUMISENE_BUCKET.get()));

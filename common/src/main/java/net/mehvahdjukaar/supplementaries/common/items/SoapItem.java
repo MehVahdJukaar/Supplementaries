@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundParticlePacket;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
+import net.mehvahdjukaar.supplementaries.integration.CavernsAndChasmsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EnvironmentalCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
@@ -88,6 +89,9 @@ public class SoapItem extends Item {
             success = true;
         } else if (target instanceof Pig pig && CompatHandler.ENVIRONMENTAL &&
                 EnvironmentalCompat.maybeCleanMuddyPig(pig)) {
+            success = true;
+        } else if (CompatHandler.CAVERNS_AND_CHASMS &&
+                CavernsAndChasmsCompat.maybeCleanDirtyRat(target)) {
             success = true;
         } else if (target instanceof TamableAnimal ta && ta.isOwnedBy(player)) {
             if (target instanceof Wolf wolf) {

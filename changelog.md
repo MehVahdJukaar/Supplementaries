@@ -1,1 +1,2 @@
- fixed wind vane renderer
+- added more mod compat
+- bubble blower can be used by dispenser

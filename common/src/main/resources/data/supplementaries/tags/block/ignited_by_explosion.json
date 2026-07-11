@@ -3,10 +3,6 @@
     {
       "id": "caverns_and_chasms:gunpowder_block",
       "required": false
-    },
-    {
-      "id": "caverns_and_chasms:block_of_gunpowder",
-      "required": false
     }
   ]
 }

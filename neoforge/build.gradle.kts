@@ -91,6 +91,7 @@ dependencies {
     modCompileOnly("curse.maven:blueprint-382216:5292242")
     modCompileOnly("curse.maven:additional-banners-230137:3901622")
     modCompileOnly("curse.maven:cave-enhancements-597562:4388535")
+    modCompileOnly("curse.maven:caverns-and-chasms-438005:8155745")
     modCompileOnly("curse.maven:the-bumblezone-forge-362479:5889009")
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modImplementation("curse.maven:decorative-blocks-reborn-1327768:6897419")
