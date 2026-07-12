@@ -38,7 +38,6 @@ import java.util.function.Supplier;
 public class CommonConfigs {
 
     public static final ModConfigHolder CONFIG_HOLDER;
-    private static final Map<String, Supplier<Boolean>> FEATURE_TOGGLES = new HashMap<>();
     private static final WeakReference<ConfigBuilder> builderReference;
 
 
@@ -107,26 +106,6 @@ public class CommonConfigs {
         return Tools.BOMB_ENABLED.get() ? General.RED_MERCHANT_SPAWN_MULTIPLIER.get() : 0;
     }
 
-    private static Supplier<Boolean> feature(ConfigBuilder builder) {
-        return feature(builder, "enabled", builder.currentCategory(), true);
-    }
-
-    private static Supplier<Boolean> feature(ConfigBuilder builder, String name) {
-        return feature(builder, name, name, true);
-    }
-
-    private static Supplier<Boolean> feature(ConfigBuilder builder, String name, String key, boolean value) {
-        var config = builder.define(name, value);
-        String parentCat = name.equals(key) ? builder.parentCategory() : builder.currentCategory();
-        var parentConf = FEATURE_TOGGLES.get(parentCat);
-        if (parentConf != null) {
-            Supplier<Boolean> finalChildConf = config;
-            config = () -> parentConf.get() && finalChildConf.get();
-        }
-        FEATURE_TOGGLES.put(key, config);
-        return config;
-    }
-
     public static boolean isEnabled(String key) {
         if (!CONFIG_HOLDER.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
@@ -136,16 +115,20 @@ public class CommonConfigs {
             case ModConstants.ROPE_ARROW_NAME -> Tools.ROPE_ARROW_ENABLED.get() && Functional.ROPE_ENABLED.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
-            default -> FEATURE_TOGGLES.getOrDefault(key, () -> true).get();
+            // every feature() gate/leaf is registered in the config holder by name (see Moonlight ConfigBuilder),
+            // so we query it there instead of keeping our own map. Unknown keys read as enabled.
+            default -> CONFIG_HOLDER.isFeatureEnabled(key);
         };
     }
 
     public static void init() {
+        var toggles = CONFIG_HOLDER.getFeatureToggles();
+        if (toggles.isEmpty()) return;
         int disabled = 0;
-        for (var c : FEATURE_TOGGLES.values()) {
+        for (var c : toggles.values()) {
             if (!c.get()) disabled++;
         }
-        float percentage = disabled / (float) FEATURE_TOGGLES.size();
+        float percentage = disabled / (float) toggles.size();
         if (percentage > 0.66f) {
             Supplementaries.LOGGER.error("You have disabled more than {}% of Supplementaries content. Consider uninstalling the mod", String.format("%.0f", percentage * 100));
         }
@@ -250,10 +233,10 @@ public class CommonConfigs {
         static {
             ConfigBuilder builder = builderReference.get();
 
-            builder.push("redstone");
+            builder.icon("minecraft:redstone").push("redstone");
 
             builder.push("speaker_block");
-            SPEAKER_BLOCK_ENABLED = feature(builder);
+            SPEAKER_BLOCK_ENABLED = builder.mainFeature();
             SPEAKER_NARRATOR = builder.comment("Enable/disable speaker block narrator mode")
                     .define("narrator_enabled", true);
             SPEAKER_BLOCK_MAX_TEXT = builder.comment("Max text")
@@ -263,7 +246,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("bellows");
-            BELLOWS_ENABLED = feature(builder);
+            BELLOWS_ENABLED = builder.mainFeature();
             BELLOWS_PERIOD = builder.comment("""
                             bellows pushes air following this equation:\s
                             air=(sin(2PI*ticks/period)<0), with period = base_period-(redstone_power-1)*power_scaling\s
@@ -284,7 +267,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("spring_launcher");
-            PISTON_LAUNCHER_ENABLED = feature(builder);
+            PISTON_LAUNCHER_ENABLED = builder.mainFeature();
             LAUNCHER_VEL = builder.comment("spring launcher launch speed")
                     .define("velocity", 1.5D, 0, 16);
             LAUNCHER_HEIGHT = builder.comment("fall distance needed to trigger the automatic spring launch")
@@ -292,7 +275,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("enderman_head");
-            ENDERMAN_HEAD_ENABLED = feature(builder);
+            ENDERMAN_HEAD_ENABLED = builder.mainFeature();
             ENDERMAN_HEAD_DROP = builder.define("drop_head", true);
             ENDERMAN_HEAD_INCREMENT = builder.comment("Time to increase 1 power level when being looked at")
                     .define("ticks_to_increase_power", 15, 0, 10000);
@@ -301,7 +284,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("turn_table");
-            TURN_TABLE_ENABLED = feature(builder);
+            TURN_TABLE_ENABLED = builder.mainFeature();
             TURN_TABLE_ROTATE_ENTITIES = builder.comment("can rotate entities standing on it?")
                     .define("rotate_entities", true);
             TURN_TABLE_SHUFFLE = builder.comment("Allows turn table to shuffle containers content when rotated over horizontal axis")
@@ -310,7 +293,7 @@ public class CommonConfigs {
 
             builder.push("pulley_block");
             builder.comment("Pulleys are automatically disabled if 'rope' feature is disabled");
-            PULLEY_ENABLED = feature(builder);
+            PULLEY_ENABLED = builder.mainFeature();
             PULLEY_CONTINUOUS = builder.comment("""
                             If true, pulleys retract their rope chain over multiple ticks, animating each block via vanilla moving-piston entities.\s
                             Connected blocks become moving blocks (so they push entities, drop sand etc) and multiple pulleys can cooperate to pull a single heavy contraption — useful for elevators.\s
@@ -335,13 +318,13 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("dispenser_minecart");
-            DISPENSER_MINECART_ENABLED = feature(builder);
+            DISPENSER_MINECART_ENABLED = builder.mainFeature();
             DISPENSER_MINECART_ANGLE = builder.comment("Makes projectiles shot from dispenser minecart retain the minecart velocity and be shot at an angle when the minecart is on a rail slope")
                     .define("adjust_projectile_angle", true);
             builder.pop();
 
             builder.push("faucet");
-            FAUCET_ENABLED = feature(builder);
+            FAUCET_ENABLED = builder.mainFeature();
             FAUCET_DROP_ITEMS = builder.comment("Turn off to prevent faucets from dropping items")
                     .define("spill_items", true);
             FAUCET_FILL_ENTITIES = builder.comment("Allows faucets to fill entities inventories")
@@ -349,21 +332,21 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("crystal_display");
-            CRYSTAL_DISPLAY_ENABLED = feature(builder);
+            CRYSTAL_DISPLAY_ENABLED = builder.mainFeature();
             CRYSTAL_DISPLAY_CHAINED = builder.comment("Allows chaining 2 crystal displays, letting one power the other to its left IF its own power exceeds 10. " +
                             "Given power will be its own divided by 10. Note that to work the decimal display must NOT have power directly behind it. Doing so will override the behavior to non chaining mode")
                     .define("chaining", true);
             builder.pop();
 
-            WIND_VANE_ENABLED = feature(builder, ModConstants.WIND_VANE_NAME);
-            CLOCK_ENABLED = feature(builder, ModConstants.CLOCK_BLOCK_NAME);
-            ILLUMINATOR_ENABLED = feature(builder, ModConstants.REDSTONE_ILLUMINATOR_NAME);
-            CRANK_ENABLED = feature(builder, ModConstants.CRANK_NAME);
-            COG_BLOCK_ENABLED = feature(builder, ModConstants.COG_BLOCK_NAME);
-            GOLD_DOOR_ENABLED = feature(builder, ModConstants.GOLD_DOOR_NAME);
-            GOLD_TRAPDOOR_ENABLED = feature(builder, ModConstants.GOLD_TRAPDOOR_NAME);
-            LOCK_BLOCK_ENABLED = feature(builder, ModConstants.LOCK_BLOCK_NAME);
-            RELAYER_ENABLED = feature(builder, ModConstants.RELAYER_NAME);
+            WIND_VANE_ENABLED = builder.feature(ModConstants.WIND_VANE_NAME);
+            CLOCK_ENABLED = builder.feature(ModConstants.CLOCK_BLOCK_NAME);
+            ILLUMINATOR_ENABLED = builder.feature(ModConstants.REDSTONE_ILLUMINATOR_NAME);
+            CRANK_ENABLED = builder.feature(ModConstants.CRANK_NAME);
+            COG_BLOCK_ENABLED = builder.feature(ModConstants.COG_BLOCK_NAME);
+            GOLD_DOOR_ENABLED = builder.feature(ModConstants.GOLD_DOOR_NAME);
+            GOLD_TRAPDOOR_ENABLED = builder.feature(ModConstants.GOLD_TRAPDOOR_NAME);
+            LOCK_BLOCK_ENABLED = builder.feature(ModConstants.LOCK_BLOCK_NAME);
+            RELAYER_ENABLED = builder.feature(ModConstants.RELAYER_NAME);
 
             builder.pop();
         }
@@ -463,18 +446,18 @@ public class CommonConfigs {
         static {
             ConfigBuilder builder = builderReference.get();
 
-            builder.push("building");
+            builder.icon("minecraft:oxidized_copper").push("building");
 
             builder.push("spider_head");
-            SPIDER_HEAD_ENABLED = feature(builder);
+            SPIDER_HEAD_ENABLED = builder.mainFeature();
             builder.pop();
 
             builder.push(ModConstants.BARNACLES_NAME);
-            BARNACLES_ENABLED = feature(builder);
+            BARNACLES_ENABLED = builder.mainFeature();
             builder.pop();
 
             builder.push("blackboard");
-            BLACKBOARD_ENABLED = feature(builder);
+            BLACKBOARD_ENABLED = builder.mainFeature();
             BLACKBOARD_COLOR = builder.comment("Enable to draw directly on a blackboard using any dye. Gui still only works in black and white")
                     .define("colored_blackboard", PlatHelper.isModLoaded("chalk"));
             BLACKBOARD_MODE = builder.comment("Interaction mode for blackboards")
@@ -483,20 +466,20 @@ public class CommonConfigs {
 
 
             builder.push(ModConstants.GRAVEL_BRICKS_NAME);
-            GRAVEL_BRICKS_ENABLED = feature(builder);
+            GRAVEL_BRICKS_ENABLED = builder.mainFeature();
             GRAVEL_BRICKS_BREAKING = builder.comment("Allows gravel bricks to break when fallen upon or when an entity walks on them with enough falling speed")
                     .define("allow_breaking", true);
             builder.pop();
 
 
             builder.push("slidy_block");
-            SLIDY_BLOCK_ENABLED = feature(builder);
+            SLIDY_BLOCK_ENABLED = builder.mainFeature();
             SLIDY_BLOCK_SPEED = builder.comment("Slidy block speed")
                     .define("speed", 0.125D, 0, 1);
             builder.pop();
 
             builder.push("timber_frame");
-            TIMBER_FRAME_ENABLED = feature(builder);
+            TIMBER_FRAME_ENABLED = builder.mainFeature();
             SWAP_TIMBER_FRAME = builder.comment("Allow placing a timber frame directly on a block by holding shift")
                     .define("swap_on_shift", false);
             AXE_TIMBER_FRAME_STRIP = builder.comment("Allows axes to remove a framed block leaving the contained block intact")
@@ -506,7 +489,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("iron_gate");
-            IRON_GATE_ENABLED = feature(builder);
+            IRON_GATE_ENABLED = builder.mainFeature();
             DOUBLE_IRON_GATE = builder.comment("Allows two iron gates to be opened simultaneously when on top of the other")
                     .define("double_opening", true);
             CONSISTENT_GATE = builder.comment("Makes iron (ang gold) gates behave like their door counterpart so for example iron gates will only be openable by redstone")
@@ -514,23 +497,23 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("gold_bars");
-            GOLD_BARS_ENABLED = feature(builder);
+            GOLD_BARS_ENABLED = builder.mainFeature();
             builder.pop();
 
             builder.push("item_shelf");
-            ITEM_SHELF_ENABLED = feature(builder);
+            ITEM_SHELF_ENABLED = builder.mainFeature();
             ITEM_SHELF_LADDER = builder.comment("Makes item shelves climbable")
                     .define("climbable_shelves", false);
             builder.pop();
 
             builder.push("sugar_cube");
-            SUGAR_CUBE_ENABLED = feature(builder);
+            SUGAR_CUBE_ENABLED = builder.mainFeature();
             SUGAR_BLOCK_HORSE_SPEED_DURATION = builder.comment("Duration in seconts of speed effect garanted to horses that eat a sugar cube")
                     .define("horse_speed_duration", 10, 0, 1000);
             builder.pop();
 
             builder.push("planter");
-            PLANTER_ENABLED = feature(builder);
+            PLANTER_ENABLED = builder.mainFeature();
             PLANTER_BREAKS = builder.comment("Makes so saplings that grow in a planter will break it turning into rooted dirt")
                     .define("broken_by_sapling", false);
             FD_PLANTER = builder.comment("When Farmers Delight is on planter will also act like rich soil and use it in its recipe")
@@ -538,7 +521,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("notice_board");
-            NOTICE_BOARD_ENABLED = feature(builder);
+            NOTICE_BOARD_ENABLED = builder.mainFeature();
             NOTICE_BOARDS_UNRESTRICTED = builder.comment("Allows notice boards to accept and display any item, not just maps and books")
                     .define("allow_any_item", false);
             NOTICE_BOARD_GUI = builder.comment("Enables a GUI for the block. Not needed as the block just holds one item which you can place by clicking on it")
@@ -546,17 +529,17 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("pedestal");
-            PEDESTAL_ENABLED = feature(builder);
+            PEDESTAL_ENABLED = builder.mainFeature();
             CRYSTAL_ENCHANTING = PlatHelper.getPlatform().isFabric() ? ZERO : builder.comment("If enabled end crystals placed on a pedestals will provide an enchantment power bonus equivalent to 3 bookshelves")
                                                                               .define("crystal_enchanting", 3, 0d, 100);
             builder.pop();
 
             builder.push("ash");
-            ASH_ENABLED = feature(builder);
+            ASH_ENABLED = builder.mainFeature();
             ASH_BURN_CHANCE = builder.comment("Burnable blocks will have a chance to create ash layers when burned. Greater this number the greater the chance will be")
                     .define("ash_from_fire_chance", 1d, 0, 1);
             ASH_FROM_MOBS = PlatHelper.getPlatform().isFabric() ? FALSE :
-                    feature(builder.comment("Burning mobs will drop ash when they die"), "ash_from_burning_mobs");
+                    builder.comment("Burning mobs will drop ash when they die").feature("ash_from_burning_mobs");
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
             BASALT_ASH_ENABLED = builder.comment("Use a datapack to tweak rarity")
@@ -564,7 +547,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("flag");
-            FLAG_ENABLED = feature(builder);
+            FLAG_ENABLED = builder.mainFeature();
             FLAG_POLE = builder.comment("Allows right/left clicking on a stick to lower/raise a flag attached to it")
                     .define("stick_pole", true);
             FLAG_POLE_LENGTH = builder.comment("Maximum allowed pole length")
@@ -572,20 +555,20 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("goblet");
-            GOBLET_ENABLED = feature(builder);
+            GOBLET_ENABLED = builder.mainFeature();
             GOBLET_DRINK = builder.comment("Allows drinking from goblets").define("allow_drinking", true);
             builder.pop();
 
             builder.push("globe");
-            GLOBE_ENABLED = feature(builder);
+            GLOBE_ENABLED = builder.mainFeature();
             GLOBE_COORDINATES = builder.comment("Displays current coordinates when using a globe").define("show_coordinates", true);
-            GLOBE_SEPIA = feature(builder, "sepia_globe");
+            GLOBE_SEPIA = builder.feature("sepia_globe");
             builder.pop();
 
             builder.push(ModConstants.WAY_SIGN_NAME);
-            WAY_SIGN_ENABLED = feature(builder);
+            WAY_SIGN_ENABLED = builder.mainFeature();
             builder.push("road_signs");
-            ROAD_SIGN_ENABLED = feature(builder.worldReload().comment("Entirely disables them from spawning"));
+            ROAD_SIGN_ENABLED = builder.worldReload().comment("Entirely disables them from spawning").mainFeature();
             ROAD_SIGN_DISTANCE_TEXT = builder.comment("With this option road signs will display the distance to the structure that they are pointing to")
                     .define("show_distance_text", true);
             ROAD_SIGN_MAX_SEARCH_RADIUS = builder.comment("Maximum distance in chunks that road signs will search for structures")
@@ -599,22 +582,22 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("daub");
-            DAUB_ENABLED = feature(builder);
-            WATTLE_AND_DAUB_ENABLED = feature(builder, ModConstants.WATTLE_AND_DAUB);
+            DAUB_ENABLED = builder.mainFeature();
+            WATTLE_AND_DAUB_ENABLED = builder.feature(ModConstants.WATTLE_AND_DAUB);
             builder.pop();
 
             builder.push("ash_bricks");
-            ASH_BRICKS_ENABLED = feature(builder);
+            ASH_BRICKS_ENABLED = builder.mainFeature();
             builder.pop();
 
             builder.push("hat_stand");
-            HAT_STAND_ENABLED = feature(builder);
+            HAT_STAND_ENABLED = builder.mainFeature();
             HAT_STAND_UNRESTRICTED = builder.comment("Allow all items to go on hat stand")
                     .define("unrestricted", false);
             builder.pop();
 
             builder.push(ModConstants.AWNING_NAME);
-            AWNING_ENABLED = feature(builder);
+            AWNING_ENABLED = builder.mainFeature();
             AWNING_SLANT = builder.comment("Allows having slanted awnings. Disabled if you feel its cursed.")
                     .define("slant", true);
             AWNING_FALL_THROUGH = builder.comment("Allows entities to fall through awnings, when shifting.")
@@ -625,47 +608,47 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push(ModConstants.FLOWER_BOX_NAME);
-            FLOWER_BOX_ENABLED = feature(builder);
+            FLOWER_BOX_ENABLED = builder.mainFeature();
             FLOWER_BOX_SIMPLE_MODE = builder.comment("Makes so flower boxes can only contain one tall flower item per block")
                     .define("simple_mode", true);
             builder.pop();
 
             builder.push("netherite_doors");
-            NETHERITE_DOOR_ENABLED = feature(builder, "door");
-            NETHERITE_TRAPDOOR_ENABLED = feature(builder, "trapdoor");
+            NETHERITE_DOOR_ENABLED = builder.feature("door");
+            NETHERITE_TRAPDOOR_ENABLED = builder.feature("trapdoor");
             NETHERITE_DOOR_UNBREAKABLE = builder.comment("Makes netherite doors and trapdoors unbreakable")
                     .define("unbreakable", false);
             builder.pop();
 
-            LAPIS_BRICKS_ENABLED = feature(builder, ModConstants.LAPIS_BRICKS_NAME);
-            BRITTLESTONE_ENABLED = feature(builder, ModConstants.BRITTLESTONE_NAME);
-            BRITTLESTONE_BRICKS_ENABLED = feature(builder, ModConstants.BRITTLESTONE_BRICKS_NAME);
-            DEEPSLATE_LAMP_ENABLED = feature(builder, ModConstants.DEEPSLATE_LAMP_NAME);
-            END_STONE_LAMP_ENABLED = feature(builder, ModConstants.END_STONE_LAMP_NAME);
-            BLACKSTONE_LAMP_ENABLED = feature(builder, ModConstants.BLACKSTONE_LAMP_NAME);
-            STONE_LAMP_ENABLED = feature(builder, ModConstants.STONE_LAMP_NAME);
-            TILE_ENABLED = feature(builder, ModConstants.STONE_TILE_NAME);
-            BLACKSTONE_TILE_ENABLED = feature(builder, ModConstants.BLACKSTONE_TILE_NAME);
+            LAPIS_BRICKS_ENABLED = builder.feature(ModConstants.LAPIS_BRICKS_NAME);
+            BRITTLESTONE_ENABLED = builder.feature(ModConstants.BRITTLESTONE_NAME);
+            BRITTLESTONE_BRICKS_ENABLED = builder.feature(ModConstants.BRITTLESTONE_BRICKS_NAME);
+            DEEPSLATE_LAMP_ENABLED = builder.feature(ModConstants.DEEPSLATE_LAMP_NAME);
+            END_STONE_LAMP_ENABLED = builder.feature(ModConstants.END_STONE_LAMP_NAME);
+            BLACKSTONE_LAMP_ENABLED = builder.feature(ModConstants.BLACKSTONE_LAMP_NAME);
+            STONE_LAMP_ENABLED = builder.feature(ModConstants.STONE_LAMP_NAME);
+            TILE_ENABLED = builder.feature(ModConstants.STONE_TILE_NAME);
+            BLACKSTONE_TILE_ENABLED = builder.feature(ModConstants.BLACKSTONE_TILE_NAME);
             builder.comment("Buntings are automatically disabled if 'rope' feature is disabled");
-            BUNTINGS_ENABLED = feature(builder, ModConstants.BUNTING_NAME);
+            BUNTINGS_ENABLED = builder.feature(ModConstants.BUNTING_NAME);
             builder.push(ModConstants.SCONCE_NAME);
-            SCONCE_ENABLED = feature(builder);
-            SCONCE_LEVER_ENABLED = feature(builder, ModConstants.SCONCE_LEVER_NAME);
+            SCONCE_ENABLED = builder.mainFeature();
+            SCONCE_LEVER_ENABLED = builder.feature(ModConstants.SCONCE_LEVER_NAME);
             builder.pop();
-            PANCAKES_ENABLED = feature(builder, ModConstants.PANCAKE_NAME);
+            PANCAKES_ENABLED = builder.feature(ModConstants.PANCAKE_NAME);
 
 
-            CHECKERBOARD_ENABLED = feature(builder, ModConstants.CHECKER_BLOCK_NAME);
-            RAKED_GRAVEL_ENABLED = feature(builder, ModConstants.RAKED_GRAVEL_NAME);
-            FEATHER_BLOCK_ENABLED = feature(builder, ModConstants.FEATHER_BLOCK_NAME);
-            STATUE_ENABLED = feature(builder, ModConstants.STATUE_NAME);
-            DOORMAT_ENABLED = feature(builder, ModConstants.DOORMAT_NAME);
-            FLINT_BLOCK_ENABLED = feature(builder, ModConstants.FLINT_BLOCK_NAME);
-            FINE_WOOD_ENABLED = feature(builder, ModConstants.FINE_WOOD_NAME);
-            CANDLE_HOLDER_ENABLED = feature(builder, ModConstants.CANDLE_HOLDER_NAME);
-            FIRE_PIT_ENABLED = feature(builder, ModConstants.FIRE_PIT_NAME);
-            WICKER_FENCE_ENABLED = feature(builder, ModConstants.WICKER_FENCE_NAME);
-            //   SPEEDOMETER_ENABLED = feature(builder, ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
+            CHECKERBOARD_ENABLED = builder.feature(ModConstants.CHECKER_BLOCK_NAME);
+            RAKED_GRAVEL_ENABLED = builder.feature(ModConstants.RAKED_GRAVEL_NAME);
+            FEATHER_BLOCK_ENABLED = builder.feature(ModConstants.FEATHER_BLOCK_NAME);
+            STATUE_ENABLED = builder.feature(ModConstants.STATUE_NAME);
+            DOORMAT_ENABLED = builder.feature(ModConstants.DOORMAT_NAME);
+            FLINT_BLOCK_ENABLED = builder.feature(ModConstants.FLINT_BLOCK_NAME);
+            FINE_WOOD_ENABLED = builder.feature(ModConstants.FINE_WOOD_NAME);
+            CANDLE_HOLDER_ENABLED = builder.feature(ModConstants.CANDLE_HOLDER_NAME);
+            FIRE_PIT_ENABLED = builder.feature(ModConstants.FIRE_PIT_NAME);
+            WICKER_FENCE_ENABLED = builder.feature(ModConstants.WICKER_FENCE_NAME);
+            //   SPEEDOMETER_ENABLED = builder.feature(ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();
         }
@@ -745,13 +728,13 @@ public class CommonConfigs {
         static {
             ConfigBuilder builder = builderReference.get();
 
-            builder.push("functional");
+            builder.icon("minecraft:amethyst_shard").push("functional");
 
             builder.push("rope");
-            ROPE_ENABLED = feature(builder.comment("""
+            ROPE_ENABLED = builder.comment("""
                     Also internally disables Galleons, Pulleys, Buntings, Rope arrows and rope mineshaft.
                     Also disables compat blocks such as supplementaries Farmers Delight rope tomatoes and Decorative blocks rope chandeliers.
-                    Also reminder that you can disable any item from any mod with a recipe (datapack) + JEI hide"""));
+                    Also reminder that you can disable any item from any mod with a recipe (datapack) + JEI hide""").mainFeature();
 
             ROPE_UNRESTRICTED = builder.comment("Allows ropes to be supported & attached to solid block sides")
                     .define("block_side_attachment", true);
@@ -768,7 +751,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("jar");
-            JAR_ENABLED = feature(builder);
+            JAR_ENABLED = builder.mainFeature();
             JAR_CAPACITY = builder.comment("Jar liquid capacity: leave at 12 for pixel accuracy")
                     .define("capacity", 12, 0, 1024);
             JAR_EAT = builder.comment("Allow right click to instantly eat or drink food or potions inside a placed jar.\n" +
@@ -787,7 +770,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("cage");
-            CAGE_ENABLED = feature(builder);
+            CAGE_ENABLED = builder.mainFeature();
             CAGE_ALL_MOBS = builder.comment("Allows all entities to be captured by cages and jars. Not meant for survival")
                     .define("allow_all_mobs", false);
             CAGE_ALL_BABIES = builder.comment("Allows all baby mobs to be captured by cages")
@@ -803,7 +786,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("safe");
-            SAFE_ENABLED = feature(builder);
+            SAFE_ENABLED = builder.mainFeature();
             SAFE_UNBREAKABLE = builder.comment("Makes safes only breakable by their owner or by a player in creative")
                     .define("prevent_breaking", false);
             SAFE_SIMPLE = builder.comment("Make safes simpler so they do not require keys:\n" +
@@ -812,7 +795,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("sack");
-            SACK_ENABLED = feature(builder);
+            SACK_ENABLED = builder.mainFeature();
             SACK_PENALTY = builder.comment("Penalize the player with slowness effect when carrying too many sacks")
                     .define("sack_penalty", true);
             SACK_INCREMENT = builder.comment("Maximum number of sacks after which the overencumbered effect will be applied. Each multiple of this number will increase the effect strength by one")
@@ -823,8 +806,8 @@ public class CommonConfigs {
 
             builder.push("bamboo_spikes");
 
-            BAMBOO_SPIKES_ENABLED = feature(builder);
-            TIPPED_SPIKES_ENABLED = feature(builder, "tipped_spikes");
+            BAMBOO_SPIKES_ENABLED = builder.mainFeature();
+            TIPPED_SPIKES_ENABLED = builder.feature("tipped_spikes");
             BAMBOO_SPIKES_DROP_LOOT = builder.comment("Allows entities killed by spikes to drop loot as if they were killed by a player")
                     .define("player_loot", false);
             ONLY_ALLOW_HARMFUL_INFINITE = builder.comment("Alternative mode for bamboo spikes. Allows only harmful effects to be applied on them and they obtain infinite durability")
@@ -834,14 +817,14 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("urn");
-            URN_ENABLED = feature(builder);
+            URN_ENABLED = builder.mainFeature();
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
                     .define("critter_spawn_chance", 0.01d, 0, 1);
             URN_PILE_ENABLED = builder.worldReload().define("cave_urns", true);
             builder.pop();
 
             builder.push("soap");
-            SOAP_ENABLED = feature(builder);
+            SOAP_ENABLED = builder.mainFeature();
             SOAP_BLOCK_CLEANING_ENABLED = builder.comment("Allows soap to clean blocks in-world. Disable to prevent in-world block cleaning while keeping soap item and recipes functional")
                     .define("block_cleaning_enabled", true);
             SOAP_DYE_CLEAN_BLACKLIST = builder.comment("Dyed Bock/Item types that cannot be cleaned with soap")
@@ -860,7 +843,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("cannon");
-            CANNON_ENABLED = feature(builder);
+            CANNON_ENABLED = builder.mainFeature();
             CANNON_EXPLODE_TNT = builder.comment("Makes TNT-like block shot from a cannon explode on impact")
                     .define("explode_tnt", TNTMode.IGNITE);
             CANNON_FIRE_POWER = builder.comment("Cannon fire power multiplier")
@@ -870,12 +853,12 @@ public class CommonConfigs {
             CANNON_COOLDOWN = builder.comment("Time for a cannon to be able to fire again after it has been fired")
                     .define("cooldown", 60, 0, 500);
             builder.push(ModConstants.CANNON_BOAT_NAME);
-            CANNON_BOAT_ENABLED = feature(builder);
+            CANNON_BOAT_ENABLED = builder.mainFeature();
             CANNON_BOAT_RECOIL = builder.comment("Cannon boat recoil multiplier. Higher values will make the cannon boat recoil more when firing a cannonball")
                     .define("recoil_multiplier", 0.5d, 0, 5);
             builder.pop();
             builder.push("cannonball");
-            CANNONBALL_ENABLED = feature(builder);
+            CANNONBALL_ENABLED = builder.mainFeature();
             CANNONBALL_POWER_SCALING = builder.comment("Cannonball power scaling. Higher values will make cannonballs have more energy. Reminder that the damage and breaking power of a cannonball is proportional to its energy (speed squared) times this constant")
                     .define("power_scaling", 3.5, 0, 100);
             CANNONBALL_RADIUS = builder.comment("Radius of the 'explosion' when a cannonball hits a block. Set to 0 to disable")
@@ -884,31 +867,31 @@ public class CommonConfigs {
 
 
             builder.push("plunderer");
-            PLUNDERER_ENABLED = feature(builder);
-            GALLEONS_ENABLED = feature(builder, ModConstants.GALLEON_NAME);
+            PLUNDERER_ENABLED = builder.mainFeature();
+            GALLEONS_ENABLED = builder.feature(ModConstants.GALLEON_NAME);
             builder.pop();
 
-            PIRATE_DISC_ENABLED = feature(builder, ModConstants.PIRATE_DISC_NAME);
+            PIRATE_DISC_ENABLED = builder.feature(ModConstants.PIRATE_DISC_NAME);
             builder.pop();
 
             builder.push("present");
-            PRESENT_ENABLED = feature(builder);
-            TRAPPED_PRESENT_ENABLED = feature(builder, ModConstants.TRAPPED_PRESENT_NAME);
+            PRESENT_ENABLED = builder.mainFeature();
+            TRAPPED_PRESENT_ENABLED = builder.feature(ModConstants.TRAPPED_PRESENT_NAME);
             builder.pop();
 
 
             builder.push("flax");
-            FLAX_ENABLED = feature(builder);
+            FLAX_ENABLED = builder.mainFeature();
             WILD_FLAX_ENABLED = builder.worldReload().define("wild_flax", true);
             builder.pop();
 
             builder.push(ModConstants.LUMISENE_NAME);
 
-            LUMISENE_ENABLED = feature(builder);
+            LUMISENE_ENABLED = builder.mainFeature();
             builder.push(ModConstants.LUMISENE_BOTTLE_NAME);
-            LUMISENE_BOTTLE = feature(builder
+            LUMISENE_BOTTLE = builder
                     .comment("Enables lumisene bottles and the flammable effect and lumisene bottles. Turn off if you think its over the top and doesnt match with existing effects")
-            );
+                    .mainFeature();
             FLAMMABLE_DURATION = builder.comment("Duration of the flammable effect when you drink a lumisene bottle")
                     .gameRestart()
                     .define("flammable_duration", 300, 0, 10000);
@@ -920,8 +903,8 @@ public class CommonConfigs {
                     .define("flammable_from_lumisene_block_duration", 50, 0, 10000);
             builder.pop();
 
-            FODDER_ENABLED = feature(builder, ModConstants.FODDER_NAME);
-            HOURGLASS_ENABLED = feature(builder, ModConstants.HOURGLASS_NAME);
+            FODDER_ENABLED = builder.feature(ModConstants.FODDER_NAME);
+            HOURGLASS_ENABLED = builder.feature(ModConstants.HOURGLASS_NAME);
 
             builder.pop();
         }
@@ -985,10 +968,10 @@ public class CommonConfigs {
         static {
             ConfigBuilder builder = builderReference.get();
 
-            builder.push("tools");
+            builder.icon("minecraft:golden_pickaxe").push("tools");
 
             builder.push("quiver");
-            QUIVER_ENABLED = feature(builder);
+            QUIVER_ENABLED = builder.mainFeature();
             QUIVER_PREVENTS_SLOWS = builder.comment("Allows using a quiver without being slowed down")
                     .define("use_without_slow", true);
             QUIVER_SLOTS = builder.comment("Arrow stacks that can fit inside a quiver. Requires reboot")
@@ -1005,7 +988,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("lunch_basket");
-            LUNCH_BOX_ENABLED = feature(builder);
+            LUNCH_BOX_ENABLED = builder.mainFeature();
             LUNCH_BOX_PLACEABLE = builder.comment("Allows lunch baskets to be placed on the ground")
                     .define("placeable", true);
             LUNCH_BOX_SLOTS = builder.comment("Arrow stacks that can fit inside a lunch basket. Requires reboot")
@@ -1014,13 +997,13 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("slice_map");
-            SLICE_MAP_ENABLED = feature(builder);
+            SLICE_MAP_ENABLED = builder.mainFeature();
             SLICE_MAP_RANGE = builder.comment("Multiplier that will be applied by slice maps to lower their range compared to normal maps")
                     .define("range_multiplier", 0.25, 0, 1);
             builder.pop();
 
             builder.push("bubble_blower");
-            BUBBLE_BLOWER_ENABLED = feature(builder);
+            BUBBLE_BLOWER_ENABLED = builder.mainFeature();
             BUBBLE_BLOWER_COST = builder.comment("Amount of soap consumed per bubble block placed")
                     .define("stasis_cost", 5, 1, 25);
             builder.push("bubble_block");
@@ -1036,7 +1019,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("wrench");
-            WRENCH_ENABLED = feature(builder);
+            WRENCH_ENABLED = builder.mainFeature();
             WRENCH_BYPASS = builder.comment("Allows wrenches to bypass a block interaction action prioritizing their own when on said hand")
                     .define("bypass_when_on", CommonConfigs.Hands.MAIN_HAND);
             builder.pop();
@@ -1044,7 +1027,7 @@ public class CommonConfigs {
             //rope arrow
             builder.push("rope_arrow");
             builder.comment("Rope arrows are automatically disabled if 'rope' feature is disabled");
-            ROPE_ARROW_ENABLED = feature(builder);
+            ROPE_ARROW_ENABLED = builder.mainFeature();
             ROPE_ARROW_CAPACITY = builder.comment("Max number of rope items allowed to be stored inside a rope arrow")
                     .gameRestart()
                     .define("capacity", 32, 1, 256);
@@ -1053,7 +1036,7 @@ public class CommonConfigs {
             builder.pop();
             //flute
             builder.push("flute");
-            FLUTE_ENABLED = feature(builder);
+            FLUTE_ENABLED = builder.mainFeature();
             FLUTE_UNBOUND = builder.comment("Allows flute to be unbound. Unbound flutes will search for pets in a radius and teleport them to the player")
                     .define("unbound", false);
             FLUTE_RADIUS = builder.comment("Radius in which an unbound flute will search pets")
@@ -1064,7 +1047,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("bomb");
-            BOMB_ENABLED = feature(builder);
+            BOMB_ENABLED = builder.mainFeature();
             BOMB_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
                     .define("explosion_radius", 2, 0.1, 10);
             BOMB_BREAKS = builder.comment("Do bombs break blocks like tnt?")
@@ -1082,7 +1065,7 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("slingshot");
-            SLINGSHOT_ENABLED = feature(builder);
+            SLINGSHOT_ENABLED = builder.mainFeature();
             SLINGSHOT_RANGE = builder.comment("Slingshot range multiplier. Affect the initial projectile speed")
                     .define("range_multiplier", 1d, 0, 5);
             SLINGSHOT_CHARGE = builder.comment("Time in ticks to fully charge a slingshot")
@@ -1111,12 +1094,12 @@ public class CommonConfigs {
             builder.pop();
 
             builder.push("antique_ink");
-            ANTIQUE_INK_ENABLED = feature(builder);
+            ANTIQUE_INK_ENABLED = builder.mainFeature();
             builder.pop();
-            CANDY_ENABLED = feature(builder, ModConstants.CANDY_NAME);
-            STASIS_ENABLED = feature(builder, ModConstants.STASIS_NAME);
-            DEPTH_METER_ENABLED = feature(builder, ModConstants.DEPTH_METER_NAME);
-            POPPER_ENABLED = feature(builder, ModConstants.CONFETTI_POPPER_NAME);
+            CANDY_ENABLED = builder.feature(ModConstants.CANDY_NAME);
+            STASIS_ENABLED = builder.feature(ModConstants.STASIS_NAME);
+            DEPTH_METER_ENABLED = builder.feature(ModConstants.DEPTH_METER_NAME);
+            POPPER_ENABLED = builder.feature(ModConstants.CONFETTI_POPPER_NAME);
 
             builder.pop();
         }
@@ -1179,10 +1162,10 @@ public class CommonConfigs {
         static {
             ConfigBuilder builder = builderReference.get();
 
-            builder.comment("Vanilla tweaks").push("tweaks");
+            builder.comment("Vanilla tweaks").icon("wrench").push("tweaks");
 
             builder.push(ModConstants.DRAGON_PATTERN_NAME);
-            DRAGON_PATTERN = feature(builder.comment("Adds dragon banner pattern made from dragon head"));
+            DRAGON_PATTERN = builder.comment("Adds dragon banner pattern made from dragon head").mainFeature();
             builder.pop();
 
             builder.push("ai_tweaks");
@@ -1192,17 +1175,17 @@ public class CommonConfigs {
                     .define("raiders_dismount_boats", true);
             builder.pop();
 
-            builder.push("golden_apple_disenchant");
-            APPLE_DISENCHANT = feature(builder);
+            builder.icon("minecraft:enchanted_golden_apple").push("golden_apple_disenchant");
+            APPLE_DISENCHANT = builder.mainFeature();
             builder.pop();
 
-            builder.push("traders_open_doors");
+            builder.icon("minecraft:wandering_trader_spawn_egg").push("traders_open_doors");
             WANDERING_TRADER_DOORS = builder.comment("Allows traders to open doors (because they couldn't apparently)")
                     .define("enabled", true);
             builder.pop();
 
 
-            builder.push("dispenser_tweaks");
+            builder.icon("minecraft:dispenser").push("dispenser_tweaks");
             AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation and wax")
                     .define("axe_strip", true);
             ENDER_PEAR_DISPENSERS = builder.comment("Enables shooting ender pearls with dispensers")
@@ -1212,19 +1195,19 @@ public class CommonConfigs {
             builder.pop();
 
             //throwable bricks
-            builder.push("throwable_bricks");
+            builder.icon("minecraft:brick").push("throwable_bricks");
             THROWABLE_BRICKS_ENABLED = builder.comment("Throw bricks at your foes! Might break glass blocks")
                     .define("enabled", true);
             builder.pop();
 
-            builder.push("placeable_sticks");
+            builder.icon("minecraft:stick").push("placeable_sticks");
             PLACEABLE_STICKS = builder.comment("Allow placeable sticks")
                     .define("sticks", true);
             PLACEABLE_RODS = builder.comment("Allow placeable blaze rods")
                     .define("blaze_rods", true);
             builder.pop();
 
-            builder.push("placeable_gunpowder");
+            builder.icon("minecraft:gunpowder").push("placeable_gunpowder");
             PLACEABLE_GUNPOWDER = builder.comment("Allow placeable gunpowder")
                     .define("enabled", true);
             GUNPOWDER_BURN_SPEED = builder.comment("Number of ticks it takes for gunpowder to burn 1 stage (out of 8). Increase to slow it down")
@@ -1233,12 +1216,12 @@ public class CommonConfigs {
                     .define("spread_age", 2, 0, 8);
             builder.pop();
 
-            builder.push("raked_gravel");
+            builder.icon("raked_gravel").push("raked_gravel");
             RAKED_GRAVEL = builder.comment("allow gravel to be raked with a hoe")
                     .define("enabled", true);
             builder.pop();
 
-            builder.push("bottle_xp");
+            builder.icon("minecraft:experience_bottle").push("bottle_xp");
             BOTTLE_XP = builder.comment("Allow bottling up xp by using a bottle on an enchanting table")
                     .define("enabled", false);
             BOTTLING_COST = builder.comment("bottling health cost")
@@ -1247,10 +1230,10 @@ public class CommonConfigs {
                     .define("target_block", "");
             builder.pop();
 
-            builder.push("map_tweaks");
+            builder.icon("minecraft:filled_map").push("map_tweaks");
             builder.push("random_adventurer_maps");
-            RANDOM_ADVENTURER_MAPS = feature(builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
-                    "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)"));
+            RANDOM_ADVENTURER_MAPS = builder.comment("Cartographers will sell 'adventurer maps' that will lead to a random vanilla structure (choosen from a thought out preset list).\n" +
+                    "Best kept disabled if you are adding custom adventurer maps with datapack (check the wiki for more)").mainFeature();
             RANDOM_ADVENTURER_MAX_SEARCH_RADIUS = builder.comment("Maximum number of structure types from the tag that road signs will attempt to look for every time. Decrease to speed up search at the cost of making them not point to the nearest structure out of all. Also if made too low and in cases it were to pick a structure that only spawns very rarely, this would actually slow down the search")
                     .define("max_search_radius", 100, 1, 1000);
             RANDOM_ADVENTURER_MAPS_MAX_SEARCHES = builder.comment("Select a random structure to look for instead of iterating through all of the ones in the tag returning the closest. Turning on will make ones that have diff structures (aka all different ruined portals) show up more. Increasing the number past 1 will allow x random structures to be picked instead. this can possibly speed up search as it decreases chances to find far away ones")
@@ -1276,13 +1259,13 @@ public class CommonConfigs {
                     .define("tinted_blocks_on_maps", true);
             builder.pop();
 
-            builder.push("placeable_books");
-            PLACEABLE_BOOKS = feature(builder.comment("Allow books and enchanted books to be placed on the ground"));
+            builder.icon("minecraft:enchanted_book").push("placeable_books");
+            PLACEABLE_BOOKS = builder.comment("Allow books and enchanted books to be placed on the ground").mainFeature();
             MIXED_BOOKS = builder.comment("Allow all books to be placed both vertically and horizontally")
                     .define("mixed_books", false);
             builder.pop();
 
-            builder.push("zombie_horse");
+            builder.icon("minecraft:zombie_horse_spawn_egg").push("zombie_horse");
             ZOMBIE_HORSE = builder.comment("Feed a stack of rotten flesh to a skeleton horse to buff him up to a zombie horse")
                     .define("zombie_horse_conversion", true);
             ZOMBIE_HORSE_COST = builder.comment("Amount of rotten flesh needed")
@@ -1293,7 +1276,7 @@ public class CommonConfigs {
                     .define("zombie_horse_inverse_conversion", true);
             builder.pop();
 
-            builder.push("noteblocks_scare");
+            builder.icon("minecraft:note_block").push("noteblocks_scare");
             SCARE_VILLAGERS = builder.comment("Noteblocks with a zombie head will scare off villagers")
                     .define("enabled", true);
             builder.pop();
@@ -1306,18 +1289,18 @@ public class CommonConfigs {
                     .define("lightning_unluck", true);
             builder.pop();
 
-            builder.push("item_lore");
-            ITEM_LORE = feature(builder
-                    .comment("Adds a recipe to add 'lore' strings to an item by combining it with a named nametag"));
+            builder.icon("minecraft:name_tag").push("item_lore");
+            ITEM_LORE = builder
+                    .comment("Adds a recipe to add 'lore' strings to an item by combining it with a named nametag").mainFeature();
             builder.pop();
 
-            builder.push("sus_recipes");
-            SUS_RECIPES = feature(builder
-                    .comment("Adds recipes to craft suspicious gravel and suspicious sand"));
+            builder.icon("minecraft:suspicious_sand").push("sus_recipes");
+            SUS_RECIPES = builder
+                    .comment("Adds recipes to craft suspicious gravel and suspicious sand").mainFeature();
             builder.pop();
 
-            builder.push("slimed_effect");
-            SLIMED_EFFECT = feature(builder);
+            builder.icon("minecraft:slime_ball").push("slimed_effect");
+            SLIMED_EFFECT = builder.mainFeature();
             THROWABLE_SLIMEBALLS = builder.comment("Allow slimeballs to be thrown")
                     .define("throwable_slimeballs", true);
             HINDERS_JUMP = builder.comment("Thrown slimeballs will shortly nerf the player jump height. Disable if you don't want this effect as it can be quite powerful")
@@ -1328,7 +1311,7 @@ public class CommonConfigs {
                     .define("chance_per_slime_size", 0.15d, 0, 1);
             builder.pop();
 
-            builder.push("clock_and_compass");
+            builder.icon("minecraft:clock").push("clock_and_compass");
             CLOCK_CLICK = builder.comment("Allow to right click with a clock to display current time in numerical form")
                     .define("clock_right_click", true);
 
@@ -1338,7 +1321,7 @@ public class CommonConfigs {
                     .define("works_in_unnatural_dimensions", false);
             builder.pop();
 
-            builder.push("piston_tweaks");
+            builder.icon("minecraft:piston").push("piston_tweaks");
             PUSH_BLOCK_ENTITIES = builder.comment(
                     "If true, pistons can push blocks that have a block entity (e.g. chests, furnaces). " +
                     "Blocks whose push reaction is BLOCK are still immovable regardless of this setting.")
@@ -1374,6 +1357,7 @@ public class CommonConfigs {
             ConfigBuilder builder = builderReference.get();
 
             builder.comment("General settings")
+                    .icon("minecraft:bookshelf")
                     .push("general");
             DYNAMIC_ASSETS_GEN_MODE = builder.define("dynamic_assets_generation_mode", GenMode.CACHED);
 

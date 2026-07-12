@@ -2,11 +2,14 @@ package net.mehvahdjukaar.supplementaries.integration.platform;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
+import net.mehvahdjukaar.moonlight.core.client.config.MoonlightConfigSelectScreen;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 
 public class ModMenuCompat implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return ModConfigSelectScreen::new;
+        return parent -> MoonlightConfigSelectScreen.create(Supplementaries.MOD_ID, parent, ModTextures.CONFIG_BACKGROUND);
     }
 }

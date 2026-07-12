@@ -22,7 +22,7 @@ public class OpenConfiguredCommand implements Command<CommandSourceStack> {
 
     @Override
     public int run(CommandContext<CommandSourceStack> context) {
-        if (CommonConfigs.CONFIG_HOLDER.hasConfigScreen()) {
+        if (CommonConfigs.CONFIG_HOLDER.getConfigRoot() != null) {
             if (context.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
                 NetworkHelper.sendToClientPlayer(serverPlayer, new ClientBoundOpenConfigsPacket());
             }

@@ -80,7 +80,7 @@ subprojects {
         maven { url = uri("https://maven.createmod.net") } // Create Mod, Ponder, Flywheel
         maven { url = uri("https://maven.blamejared.com") } // JEI, Vazkii's Mods
         maven { url = uri("https://maven.ladysnake.org/releases") } // Ladysnake mods
-        maven { url = uri("https://maven.tterrag.com/") } // Flywheel, EnderIO
+        //maven { url = uri("https://maven.tterrag.com/") } // Flywheel, EnderIO
         maven { url = uri("https://mvn.devos.one/releases/") } // Registrate, Porting Lib (releases)
         maven { url = uri("https://mvn.devos.one/snapshots/") } // Registrate, Porting Lib (snapshots)
         maven { url = uri("https://maven.terraformersmc.com/") } // TerraformersMC mods

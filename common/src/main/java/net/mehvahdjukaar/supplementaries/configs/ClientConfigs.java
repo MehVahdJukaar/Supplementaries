@@ -122,7 +122,7 @@ public class ClientConfigs {
         static {
             ConfigBuilder builder = builderReference.get();
 
-            builder.push("items");
+            builder.icon("minecraft:amethyst_shard").push("items");
 
             builder.push("slingshot");
             SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected ammo")
@@ -132,7 +132,7 @@ public class ClientConfigs {
             SLINGSHOT_OUTLINE_COLOR = builder.comment("An RGBA color for the block outline in hex format, for example 0x00000066 for vanilla outline colors")
                     .defineColor("block_outline_color", -1);
             SLINGSHOT_PROJECTILE_SCALE = builder.comment("How big should a slingshot projectile look")
-                    .define("projectile_scale", 0.5, 0, 1);
+                    .defineSlider("projectile_scale", 0.5, 0, 1);
             builder.pop();
 
             builder.push("lunch_basket");
@@ -211,6 +211,7 @@ public class ClientConfigs {
             ConfigBuilder builder = builderReference.get();
 
             builder.comment("Game tweaks")
+                    .icon("wrench")
                     .push("tweaks");
 
             PROJECTILE_WEAPON_OVERLAY = builder.comment("Adds an overlay to projectile weapons in gui displaying currently selected ammo")
@@ -259,7 +260,6 @@ public class ClientConfigs {
         public static final Supplier<Integer> CONFIG_BUTTON_Y_OFF;
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
-        public static final Supplier<Boolean> CUSTOM_CONFIGURED_SCREEN;
         public static final Supplier<Boolean> NO_OPTIFINE_WARN;
         public static final Supplier<Boolean> NO_INCOMPATIBLE_MODS;
         public static final Supplier<Boolean> UNFUNNY;
@@ -270,6 +270,7 @@ public class ClientConfigs {
             ConfigBuilder builder = builderReference.get();
 
             builder.comment("General settings")
+                    .icon("minecraft:bookshelf")
                     .push("general");
             USE_EXTERNAL_RESOURCE_PACK = builder.comment("Enable Supplementaries to base textures off external Resource Packs rather than mod's default textures. ")
                     .gameRestart()
@@ -284,17 +285,14 @@ public class ClientConfigs {
             NO_INCOMPATIBLE_MODS = builder.comment("Disable incompatible mods warning screen")
                     .gameRestart()
                     .define("no_incompatible_mods_screen", false);
-            CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu. Needs Configured installed to work")
-                    .define("config_button", CompatHandler.CONFIGURED);
+            CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu")
+                    .define("configs_button", true);
             CONFIG_BUTTON_Y_OFF = builder.comment("Config button Y offset")
-                    .define("config_button_y_offset", 0, -10000, 10000);
+                    .define("configs_button_y_offset", 0, -10000, 10000);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")
                     .define("tooltip_hints", true);
             PLACEABLE_TOOLTIP = builder.comment("Show tooltips items that have been made placeable")
                     .define("placeable_tooltips", true);
-            CUSTOM_CONFIGURED_SCREEN = builder.comment("Enables custom Configured config screen")
-                    .gameRestart()
-                    .define("custom_configured_screen", true);
             UNFUNNY = builder.comment("unfunny")
                     .gameRestart()
                     .define("I am very boring and I don't want any Easter Egg", false);
@@ -346,6 +344,7 @@ public class ClientConfigs {
                             Tweak and change the various block animations.
                             Only cosmetic stuff in here so to leave default if not interested.
                             Remember to delete this and server configs and let it refresh every once in a while since I might have tweaked it""")
+                    .icon("minecraft:oxidized_copper")
                     .push("blocks");
 
             builder.push("globe");
@@ -377,9 +376,9 @@ public class ClientConfigs {
 
             builder.push("bubble_block");
             BUBBLE_BLOCK_WOBBLE = builder.comment("Wobbling intensity. set to 0 to disable")
-                    .define("wobble", 0.2, 0, 1);
+                    .defineSlider("wobble", 0.2, 0, 1);
             BUBBLE_BLOCK_GROW_SPEED = builder.comment("How fast it grows when created. 1 to be instant")
-                    .define("grow_speed", 0.4, 0, 1);
+                    .defineSlider("grow_speed", 0.4, 0, 1);
             builder.pop();
 
             builder.push("item_shelf");
@@ -483,6 +482,7 @@ public class ClientConfigs {
 
             ConfigBuilder builder = builderReference.get();
             builder.comment("Particle parameters")
+                    .icon("minecraft:blaze_powder")
                     .push("particles");
 
 

@@ -13,7 +13,6 @@ import net.mehvahdjukaar.supplementaries.common.misc.songs.SongsManager;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -61,9 +60,7 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onScreenInit(ScreenEvent.Init.Post event) {
-        if (CompatHandler.CONFIGURED) {
-            ClientEvents.addConfigButton(event.getScreen(), event.getListenersList(), event::addListener);
-        }
+        ClientEvents.addConfigButton(event.getScreen(), event.getListenersList(), event::addListener);
     }
 
     @SubscribeEvent

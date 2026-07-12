@@ -12,6 +12,7 @@ neoForge {
     }
 }
 val moonlight_version: String by extra
+val codecui_version: String by extra
 val mixin_squared_version: String by extra
 val flywheel_forge_version: String by extra
 val ponder_version: String by extra
@@ -29,6 +30,8 @@ dependencies {
 
     modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
+    // JiJ'd into Moonlight, so not on the dev runtime classpath — add explicitly to avoid missing schema codec class.
+    modRuntimeOnly("net.mehvahdjukaar:codecui-neoforge:${codecui_version}")
 
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 

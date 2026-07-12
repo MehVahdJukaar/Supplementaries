@@ -10,6 +10,7 @@ fabric {
 
 
 val moonlight_version: String by extra
+val codecui_version: String by extra
 val cloth_version: String by extra
 val cca_version: String by extra
 val mixin_squared_version: String by extra
@@ -22,6 +23,8 @@ dependencies {
 
 
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
+    // JiJ'd into Moonlight, so not on the dev runtime classpath — add explicitly to avoid missing schema codec class.
+    modRuntimeOnly("net.mehvahdjukaar:codecui-fabric:${codecui_version}")
 
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")

@@ -16,7 +16,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.Quiver
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -34,13 +33,11 @@ public class ClientEventsFabric {
 
         ItemTooltipCallback.EVENT.register(ClientEvents::onItemTooltip);
         ScreenEvents.AFTER_INIT.register((m, s, x, y) -> {
-            if (CompatHandler.CLOTH_CONFIG || CompatHandler.YACL) {
-                List<? extends GuiEventListener> listeners = s.children();
-                ClientEvents.addConfigButton(s, listeners, e -> {
-                    List<GuiEventListener> c = (List<GuiEventListener>) s.children();
-                    c.add(e);
-                });
-            }
+            List<? extends GuiEventListener> listeners = s.children();
+            ClientEvents.addConfigButton(s, listeners, e -> {
+                List<GuiEventListener> c = (List<GuiEventListener>) s.children();
+                c.add(e);
+            });
         });
 
         ClientPreAttackCallback.EVENT.register((minecraft, localPlayer, i) -> {
