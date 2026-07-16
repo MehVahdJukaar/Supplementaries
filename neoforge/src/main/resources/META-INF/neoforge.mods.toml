@@ -58,6 +58,14 @@ versionRange = "${minecraft_version}"
     ordering = "NONE"
     side = "BOTH"
 
+# Not required, but if Farmer's Delight is present it must be recent enough or the compat breaks.
+[[dependencies.${mod_id}]]
+    modId = "farmersdelight"
+    type = "incompatible"
+    versionRange = "[0,1.21.1-2.2.0)"
+    ordering = "NONE"
+    side = "BOTH"
+
 [[dependencies.${ mod_id }]]
 modId = "sodium"
 type = "incompatible"

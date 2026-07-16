@@ -67,6 +67,13 @@ public class PistonBaseBlockMixin {
                                              Operation<Void> original,
                                              @Local(argsOnly = true) Direction facing,
                                              @Local(argsOnly = true) boolean extending) {
+        if (movingPiston == null) {
+            // Vanilla's newMovingBlockEntity never returns null and Level.setBlockEntity dereferences
+            throw new IllegalStateException("Another mod passed a null moving-piston BlockEntity into " +
+                    "Level.setBlockEntity during PistonBaseBlock.moveBlocks. This is not a Supplementaries bug; " +
+                    "some other mod is overriding MovingPistonBlock.newMovingBlockEntity and returning null. " +
+                    "Carpet is a known mod that does this.");
+        }
         if (!CommonConfigs.Tweaks.PUSH_BLOCK_ENTITIES.get()) {
             original.call(level, movingPiston);
             return;

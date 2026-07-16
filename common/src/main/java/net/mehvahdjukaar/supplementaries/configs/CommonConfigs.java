@@ -622,7 +622,7 @@ public class CommonConfigs {
 
             LAPIS_BRICKS_ENABLED = builder.feature(ModConstants.LAPIS_BRICKS_NAME);
             BRITTLESTONE_ENABLED = builder.feature(ModConstants.BRITTLESTONE_NAME);
-            BRITTLESTONE_BRICKS_ENABLED = builder.feature(ModConstants.BRITTLESTONE_BRICKS_NAME);
+            BRITTLESTONE_BRICKS_ENABLED = ()-> false;// builder.feature(ModConstants.BRITTLESTONE_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = builder.feature(ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = builder.feature(ModConstants.END_STONE_LAMP_NAME);
             BLACKSTONE_LAMP_ENABLED = builder.feature(ModConstants.BLACKSTONE_LAMP_NAME);

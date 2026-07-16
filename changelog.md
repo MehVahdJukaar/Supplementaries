@@ -1,2 +1,3 @@
+- added new mod own config screen
 - added more mod compat
 - bubble blower can be used by dispenser
