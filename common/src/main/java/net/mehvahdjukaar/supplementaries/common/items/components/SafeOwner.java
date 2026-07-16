@@ -29,7 +29,7 @@ public final class SafeOwner implements TooltipProvider {
     public static final Codec<SafeOwner> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             UUIDUtil.CODEC.optionalFieldOf("owner").forGetter(s -> Optional.ofNullable(s.owner)),
             Codec.STRING.optionalFieldOf("password").forGetter(s -> Optional.ofNullable(s.password)),
-            Codec.STRING.optionalFieldOf("owner").forGetter(s -> Optional.ofNullable(s.ownerName))
+            Codec.STRING.optionalFieldOf("ownerName").forGetter(s -> Optional.ofNullable(s.ownerName))
     ).apply(instance, SafeOwner::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, SafeOwner> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), s -> Optional.ofNullable(s.owner),

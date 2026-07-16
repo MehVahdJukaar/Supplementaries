@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import net.mehvahdjukaar.candlelight.api.PlatformImpl;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import org.jetbrains.annotations.Contract;
 
 public class QuarkClientCompat {
 
@@ -30,6 +31,7 @@ public class QuarkClientCompat {
         throw new AssertionError();
     }
 
+    @Contract
     @PlatformImpl
     public static boolean canRenderQuarkTooltip() {
         throw new AssertionError();

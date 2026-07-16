@@ -118,7 +118,9 @@ public class SackItem extends BlockItem {
         if (quarkTooltips && !sbtTooltips) {
             if (!pStack.has(DataComponents.CONTAINER_LOOT)) {
                 var container = pStack.get(DataComponents.CONTAINER);
-                return Optional.of(new InventoryViewTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get()));
+                if (container != null && container.stream().anyMatch(s -> !s.isEmpty())) {
+                    return Optional.of(new InventoryViewTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get()));
+                }
             }
         }
         return Optional.empty();

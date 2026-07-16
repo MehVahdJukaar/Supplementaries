@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
@@ -47,8 +48,8 @@ public class SafeItem extends BlockItem {
         boolean sbtTooltip = CompatHandler.SHULKER_BOX_TOOLTIP && ShulkerBoxTooltipCompat.hasPreviewProvider(pStack);
         if (quarkTooltip && !sbtTooltip) {
             var container = pStack.get(DataComponents.CONTAINER);
-            if (container != null && !pStack.has(DataComponents.CONTAINER_LOOT)) {
-                return Optional.of(new InventoryViewTooltip(container, 27));
+            if (container != null && container.stream().anyMatch(s -> !s.isEmpty())) {
+                return Optional.of(new InventoryViewTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get()));
             }
         }
         return Optional.empty();

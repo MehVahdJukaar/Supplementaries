@@ -71,9 +71,9 @@ dependencies {
     modCompileOnly("curse.maven:supermartijn642s-config-lib-438332:4715408")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modCompileOnly("curse.maven:quark-243121:8146177")
-    modCompileOnly("curse.maven:zeta-968868:7980010")
-    modCompileOnly("curse.maven:biolith-852512:7074761")
+    modImplementation("curse.maven:quark-243121:8146177")
+    modImplementation("curse.maven:zeta-968868:7980010")
+    modImplementation("curse.maven:biolith-852512:7074761")
 
     //modImplementation("curse.maven:recipe-advancements-nuker-925511:4836115")
 

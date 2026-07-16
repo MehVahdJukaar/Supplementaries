@@ -62,7 +62,7 @@ versionRange = "${minecraft_version}"
 [[dependencies.${mod_id}]]
     modId = "farmersdelight"
     type = "incompatible"
-    versionRange = "[0,1.21.1-2.2.0)"
+    versionRange = "[0,1.3.0)"
     ordering = "NONE"
     side = "BOTH"
 

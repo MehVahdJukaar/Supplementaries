@@ -1,3 +1,1 @@
-- added new mod own config screen
-- added more mod compat
-- bubble blower can be used by dispenser
+- fixed a bug with safes not saving their password correctly under some circumstances
