@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.EquipAndRangeAttackGoal;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.ShowWaresGoal;
@@ -40,7 +41,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
-import java.util.OptionalInt;
 
 public class RedMerchantEntity extends AbstractVillager implements RangedAttackMob {
     @Nullable
@@ -132,12 +132,18 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
 
     @Override
     public void openTradingScreen(Player player, Component name, int level) {
-        OptionalInt optionalint = player.openMenu(new SimpleMenuProvider((i, p, m) -> new RedMerchantMenu(i, p, this), name));
-        if (optionalint.isPresent() && player instanceof ServerPlayer serverPlayer) {
+        if (!(player instanceof ServerPlayer serverPlayer)) return;
+        // RED_MERCHANT is registered as a networked (extended) menu type, so it must be opened via
+        // openCustomMenu. Vanilla player.openMenu skips the extended screen handler factory and Fabric
+        // aborts the interaction, leaving the merchant looking like it has no trades.
+        PlatHelper.openCustomMenu(serverPlayer,
+                new SimpleMenuProvider((i, p, m) -> new RedMerchantMenu(i, p, this), name), buf -> {});
+        if (serverPlayer.containerMenu instanceof RedMerchantMenu) {
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {
                 NetworkHelper.sendToClientPlayer(serverPlayer,
-                        new ClientBoundSyncTradesPacket(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock())
+                        new ClientBoundSyncTradesPacket(serverPlayer.containerMenu.containerId, merchantoffers, level,
+                                this.getVillagerXp(), this.showProgressBar(), this.canRestock())
                 );
             }
         }

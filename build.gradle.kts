@@ -61,6 +61,13 @@ subprojects {
         }
     }
 
+    // The upload plugin does not expose CurseForge's mandatory environment group, so add it here.
+    tasks.withType<net.darkhax.curseforgegradle.TaskPublishCurseForge>().configureEach {
+        doFirst {
+            uploadArtifacts.forEach { it.addEnvironment("Client", "Server") }
+        }
+    }
+
     repositories {
         // Standard repositories
         mavenLocal()
