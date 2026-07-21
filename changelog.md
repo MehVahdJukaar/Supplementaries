@@ -1,1 +1,1 @@
-- fixed a bug with safes not saving their password correctly under some circumstances
+- fixed an issue with opening menus
