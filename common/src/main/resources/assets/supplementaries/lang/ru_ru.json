@@ -17,7 +17,6 @@
   "advancements.nether.goblet.title": "Аристократ",
   "advancements.story.unenchanter.description": "Обточите зачарованное золотое яблоко",
   "advancements.story.unenchanter.title": "И для чего это!?",
-
   "block.supplementaries.banner.dragon.black": "Чёрный дракон",
   "block.supplementaries.banner.dragon.blue": "Синий дракон",
   "block.supplementaries.banner.dragon.brown": "Коричневый дракон",
@@ -157,6 +156,11 @@
   "block.supplementaries.jar": "Баночка",
   "block.supplementaries.jar_boat": "Лодка в баночке",
   "block.supplementaries.jar_tinted": "Тонированная баночка",
+  "block.supplementaries.brittlestone": "Хрупокамень",
+  "block.supplementaries.brittlestone_bricks": "Хрупокаменные кирпичи",
+  "block.supplementaries.brittlestone_bricks_slab": "Плита из хрупокаменного кирпича",
+  "block.supplementaries.brittlestone_bricks_stairs": "Ступеньки из хрупокаменного кирпича",
+  "block.supplementaries.brittlestone_bricks_wall": "Ограда из хрупокаменного кирпича",
   "block.supplementaries.lapis_bricks": "Лазуритовые кирпичи",
   "block.supplementaries.lapis_bricks_slab": "Плита из лазуритового кирпича",
   "block.supplementaries.lapis_bricks_stairs": "Ступеньки из лазуритового кирпича",
@@ -257,14 +261,11 @@
   "block.supplementaries.wild_flax": "Дикий лён",
   "block.supplementaries.wind_vane": "Флюгер",
   "block.supplementaries.spider_head": "Голова паука",
-  "block.supplementaries.spider_wall_head": "Настенная голова паука",
 
   "config.jade.plugin_supplementaries.hat_stand": "Подставка для шлема",
   "create.display_source.fill_level.fluid_amount": "Объём жидкости",
-
   "create.item_attributes.present_recipient": "Подарок адресован: '%1$s'",
   "create.item_attributes.present_recipient.inverted": "Подарок не адресован: '%1$s'",
-
   "death.attack.supplementaries.bamboo_spikes": "%1$s был насажен на шип",
   "death.attack.supplementaries.bamboo_spikes.player": "%1$s насажен на шип, пока боролся с %2$s",
   "death.attack.supplementaries.cannonball": "%1$s был разорван на куски",
@@ -273,19 +274,16 @@
   "death.attack.supplementaries.slingshot.item": "%1$s был забит до смерти %2$s с помощью %3$s",
   "death.attack.supplementaries.xp_extracting": "%1$s оказался не таким уж опытным",
   "death.attack.supplementaries.xp_extracting.player": "%1$s извлек слишком много, пока боролся с %2$s",
-
   "effect.supplementaries.flammable": "Легковоспламенение",
   "effect.supplementaries.flammable.description": "Увеличивает продолжительность горения и распространяет огонь при ходьбе.",
   "effect.supplementaries.overencumbered": "Перегрузка",
   "effect.supplementaries.overencumbered.description": "Препятствует бегу. Дальнейшие уровни уменьшают высоту прыжка и препятствуют скорости ходьбы соответственно.",
-
   "enchantment.supplementaries.lumisene_fire_aspect": "Светоновый заговор огня",
   "enchantment.supplementaries.lumisene_fire_aspect.desc": "Наносит дополнительный урон от светонового огня",
   "enchantment.supplementaries.lumisene_flame": "Светоновое воспламенение",
   "enchantment.supplementaries.lumisene_flame.desc": "Стрелы наносят дополнительный урон от светонового огня",
   "enchantment.supplementaries.stasis": "Равновесие",
   "enchantment.supplementaries.stasis.desc": "Позволяет снарядам из рогатки игнорировать гравитацию",
-
   "entity.supplementaries.plunderer": "Грабитель",
   "entity.supplementaries.brick_projectile": "Кирпич",
   "entity.supplementaries.cannon_boat": "Пушечная лодка",
@@ -300,7 +298,6 @@
   "entity.supplementaries.slimeball_projectile": "Сгусток слизи",
   "entity.supplementaries.slingshot_projectile": "Снаряд рогатки",
   "entity.supplementaries.throwable_brick": "Кирпич",
-
   "filled_map.adventure": "Карта путешественника",
   "filled_map.antique": "Потрёпанная карта",
   "filled_map.antique.tooltip": "Потрёпанная",
@@ -320,7 +317,6 @@
   "filled_map.structure": "Карта исследователя %s",
   "filled_map.swamp_hut": "Карта исследователя болота",
   "filled_map.village": "Карта следопыта деревни",
-
   "fluid.supplementaries.experience": "Опыт",
   "fluid.supplementaries.honey": "Мёд",
   "fluid.supplementaries.jar_fluid": "Жидкость в баночке",
@@ -333,7 +329,6 @@
   "globe.supplementaries.moon": "Луна",
   "globe.supplementaries.round": "Круг",
   "globe.supplementaries.sun": "Солнце",
-
   "gui.supplementaries.amendments.message": "С обновления 2.8.0 некоторые функции Supplementaries из раздела Tweaks были перенесены в отдельный мод Amendments.\n\n Моды работают отдельно друг от друга, но если вы хотите сохранить все старые блоки, вам необходимо установить Amendments.\n\n Перемещены следующие элементы: НАСТЕННЫЕ ФОНАРИ, ЧЕРЕПА СО СВЕЧАМИ, ПОДВЕСНЫЕ ГОРШКИ, ПОДВЕСНЫЕ ФЛАГИ и КУЧИ ЧЕРЕПОВ.\n\nОбратите внимание, что если вы продолжите работу без мода, все существующие блоки будут потеряны.",
   "gui.supplementaries.amendments.suggestions": "Вы можете скачать мод ТУТ",
   "gui.supplementaries.amendments.title": "Предупреждение: Amendments не установлен",
@@ -374,7 +369,6 @@
   "gui.supplementaries.speaker_block.volume": "Громкость: ",
   "gui.supplementaries.trapped_present": "Подарок-ловушка",
   "gui.supplementaries.welcome_screen.turn_off": "Больше не показывать",
-
   "item.supplementaries.altimeter": "Высотомер",
   "item.supplementaries.antique_ink": "Старинные чернила",
   "item.supplementaries.ash": "Пепел",
@@ -431,18 +425,15 @@
   "item.supplementaries.speedometer": "Спидометр",
   "item.supplementaries.way_sign": "Указатель %s",
   "item.supplementaries.cannon_boat": "Пушечная лодка из %s",
+  "item.supplementaries.cannon_raft": "%s пушечный плот",
   "item.supplementaries.cannon_raft_bamboo": "Бамбуковый пушечный плот",
   "item.supplementaries.wrench": "Гаечный ключ",
-
   "tab.supplementaries.jars": "Баночки",
   "tab.supplementaries.supplementaries": "Supplementaries",
-
   "jukebox_song.supplementaries.heave_ho": "Hlzfss — Heave Ho!",
   "jukebox_song.supplementaries.pancake": "Hlzfss — Pancake Music",
-
   "leaves_type.twilightforest.dark": "Тёмное дерево",
   "leaves_type.ulterlands.souldrained": "Окаменелые",
-
   "message.supplementaries.altimeter": "Y: %d",
   "message.supplementaries.cannon": "Может стрелять чем угодно",
   "message.supplementaries.flute": "Вы не можете добавить больше питомцев к этой флейте",
@@ -461,7 +452,6 @@
   "message.supplementaries.cannon.maneuver": "Нажмите %2$s, чтобы слезть, %2$s, чтобы выстрелить",
   "message.supplementaries.cannon_boat": "Нажмите %1$s, чтобы слезть, %2$s чтобы выстрелить, %3$s чтобы управлять",
   "message.supplementaries.cartographers_quill": "Неизвестно",
-
   "commands.supplementaries.configs": "Установите Configured для доступа к конфигурациям",
   "commands.supplementaries.cage": "Added %s to temporary Cage and Jars catchable list",
   "commands.supplementaries.configs_reloaded": "Конфигурации Supplementaries перезагружены",
@@ -469,7 +459,6 @@
   "commands.supplementaries.globe_reset": "Ключ генерации глобуса сброшен",
   "commands.supplementaries.record.start": "Запись нотных блоков началась",
   "commands.supplementaries.record.stop": "Запись нотных блоков остановлена: песня сохранена в recorded_songs/%s",
-
   "message.supplementaries.compass": "X: %d, Z: %d",
   "message.supplementaries.death_marker": "Последняя смерть",
   "message.supplementaries.door.locked": "Эта дверь заперта",
@@ -511,12 +500,10 @@
   "message.supplementaries.timber_frame": "Принимает любой полный блок",
   "message.supplementaries.trapdoor.locked": "Этот люк заперт",
   "message.supplementaries.wind_vane": "Реагирует на погоду",
-
   "painting.supplementaries.bombs.author": "Plantkillable",
   "painting.supplementaries.bombs.title": "Бомбы",
   "painting.supplementaries.jar.author": "TestedBubble",
   "painting.supplementaries.jar.title": "Баночка",
-
   "structure.supplementaries.way_sign": "Указатель",
   "subtitles.supplementaries.bellows.blow": "Мехи дуют",
   "subtitles.supplementaries.bellows.retract": "Мехи сжимаются",
@@ -558,7 +545,6 @@
   "subtitles.supplementaries.slingshot.release": "Рогатка стреляет",
   "subtitles.supplementaries.soap.wash": "Мытьё",
   "subtitles.supplementaries.turntable.cat": "Чин чан чон чи чича чочи",
-
   "supplementaries.display_source.fluid_amount": "Объём жидкости",
   "supplementaries.display_source.item_name": "Название предмета",
   "supplementaries.display_source.notice_board": "Копировать информационную доску",
@@ -568,7 +554,6 @@
   "supplementaries.keybind.quiver": "Колчан",
   "supplementaries.virtual_resourcepack.description": "Динамически сгенерированные ресурсы",
   "supplementaries.virtual_resourcepack.title": "Виртуальный набор ресурсов",
-
   "tag.block.supplementaries.awnings": "Маркизы",
   "tag.block.supplementaries.bamboo_spikes": "Бамбуковые шипы",
   "tag.block.supplementaries.column_shape_10x10": "Форма балки",
@@ -611,10 +596,8 @@
   "tag.block.supplementaries.water_holder": "Держатели воды из верёвки",
   "tag.block.supplementaries.wattle_and_daubs": "Плетень и мазня",
   "tag.block.supplementaries.ignores_planter_offset": "Игнорирует смещение кашпо",
-
   "tag.enchantment.supplementaries.slingshot_exclusive_set": "Исключающий набор рогатки",
   "tag.enchantment.supplementaries.prevents_bubble_pop": "Предотвращает лопание колонны пузырей",
-
   "tag.entity_type.supplementaries.ash_blacklist": "Не превращается в пепел",
   "tag.entity_type.supplementaries.cage_baby_catchable": "Ловится в клетку детёнышами",
   "tag.entity_type.supplementaries.cage_catchable": "Ловится в клетку",
@@ -628,7 +611,6 @@
   "tag.entity_type.supplementaries.rotatable": "Вращается ключом",
   "tag.entity_type.supplementaries.tickable_when_captured": "Помечается при ловле",
   "tag.entity_type.supplementaries.urn_spawn": "Появляется из урн",
-
   "tag.item.supplementaries.altimeters": "Высотомеры",
   "tag.item.supplementaries.awnings": "Маркизы",
   "tag.item.supplementaries.bamboo_spikes": "Бамбуковые шипы",
@@ -650,12 +632,10 @@
   "tag.item.supplementaries.blackboard_yellow": "Жёлтые красители для доски",
   "tag.item.supplementaries.buntings": "Флажки",
   "tag.item.supplementaries.candle_holders": "Подсвечники",
-  "tag.item.supplementaries.cannon_blacklist": "Чёрный список пушки",
   "tag.item.supplementaries.cannon_boats": "Пушечные лодки",
   "tag.item.supplementaries.causes_lightning_when_held": "Вызывает молнию в руке",
   "tag.item.supplementaries.chains": "Цепи",
   "tag.item.supplementaries.chocolate_bars": "Плитки шоколада",
-  "tag.item.supplementaries.concrete_powders": "Сухой бетон",
   "tag.item.supplementaries.cookies": "Печенье",
   "tag.item.supplementaries.enchantable.stasis": "Зачаровывается «Равновесием»",
   "tag.item.supplementaries.fire_sources": "Источники огня",
@@ -677,12 +657,11 @@
   "tag.item.supplementaries.placeable_books": "Размещаемые книги",
   "tag.item.supplementaries.presents": "Подарки",
   "tag.item.supplementaries.quiver_blacklist": "Чёрный список колчана",
-  "tag.item.supplementaries.quiver_whitelist": "Белый список колчана",
   "tag.item.supplementaries.ropes": "Верёвки",
-  "tag.item.supplementaries.sacks": "Мешки",
   "tag.item.supplementaries.sconces": "Бра",
   "tag.item.supplementaries.shulker_blacklist": "Чёрный список шалкера",
   "tag.item.supplementaries.slingshot_blacklist": "Чёрный список рогатки",
+  "tag.item.supplementaries.cannon_blacklist": "Чёрный список пушки",
   "tag.item.supplementaries.slingshot_damageable": "Повреждаемое рогаткой",
   "tag.item.supplementaries.statue_swords": "Мечи статуэтки",
   "tag.item.supplementaries.statue_tools": "Инструменты статуэтки",
@@ -693,29 +672,23 @@
   "tag.item.supplementaries.trapped_presents": "Подарки-ловушки",
   "tag.item.supplementaries.wattle_and_daubs": "Плетень и мазня",
   "tag.item.supplementaries.way_signs": "Указатели",
-
   "tag.potion.supplementaries.quiver_blacklist": "Чёрный список колчана",
   "tag.potion.supplementaries.tipped_spikes_blacklist": "Чёрный список шипов",
-
   "tag.worldgen.supplementaries.biome.has_basalt_ash": "Есть базальтовый пепел",
   "tag.worldgen.supplementaries.biome.has_cave_urns": "Есть пещерные урны",
   "tag.worldgen.supplementaries.biome.has_road_signs": "Есть дорожные указатели",
   "tag.worldgen.supplementaries.biome.has_wild_flax": "Есть дикий лён",
-
   "tag.worldgen.supplementaries.structure.adventure_map_destinations": "Цели карт приключений",
   "tag.worldgen.supplementaries.structure.road_sign_destinations": "Цели дорожных указателей",
-
   "trinkets.slot.chest.quiver": "Колчан",
   "trinkets.slot.legs.key": "Ключ",
   "trinkets.slot.legs.quiver": "Колчан",
-
   "wood_type.domum_ornamentum.cactus": "Зелёный кактус",
   "wood_type.domum_ornamentum.cactus_extra": "Кактус",
   "wood_type.twilightforest.dark": "Тёмное дерево",
   "wood_type.twilightforest.sorting": "Сортировочное дерево",
   "wood_type.twilightforest.time": "Дерево времени",
   "wood_type.twilightforest.trans": "Транс-дерево",
-
   "item.supplementaries.cannon_boat_acacia": "Акациевая пушечная лодка",
   "item.supplementaries.cannon_boat_birch": "Берёзовая пушечная лодка",
   "item.supplementaries.cannon_boat_cherry": "Вишнёвая пушечная лодка",
@@ -726,7 +699,6 @@
   "item.supplementaries.cannon_boat_oak": "Дубовая пушечная лодка",
   "item.supplementaries.cannon_boat_spruce": "Еловая пушечная лодка",
   "item.supplementaries.cannon_boat_warped": "Искажённая пушечная лодка",
-
   "item.supplementaries.way_sign_acacia": "Акациевый указатель",
   "item.supplementaries.way_sign_bamboo": "Бамбуковый указатель",
   "item.supplementaries.way_sign_birch": "Берёзовый указатель",
@@ -737,5 +709,27 @@
   "item.supplementaries.way_sign_mangrove": "Мангровый указатель",
   "item.supplementaries.way_sign_oak": "Дубовый указатель",
   "item.supplementaries.way_sign_spruce": "Еловый указатель",
-  "item.supplementaries.way_sign_warped": "Искажённый указатель"
+  "item.supplementaries.way_sign_warped": "Искажённый указатель",
+  "tag.banner_pattern.supplementaries.pattern_item.dragon": "Дракон",
+  "tag.block.supplementaries.barnacles_blacklist": "Чёрный список ракушек",
+  "tag.block.supplementaries.buntings": "Флажки",
+  "tag.block.supplementaries.cannon_tnts": "Пушечный динамит",
+  "tag.block.supplementaries.faucet_cant_interact": "Кран не взаимодействует",
+  "tag.block.supplementaries.fine_wood": "Благородная древесина",
+  "tag.block.supplementaries.globes": "Глобусы",
+  "tag.block.supplementaries.ignited_by_explosion": "Воспламеняется от взрыва",
+  "tag.block.supplementaries.rotateable_in_creative": "Вращается в творческом режиме",
+  "tag.block.supplementaries.sacks": "Мешки",
+  "tag.block.supplementaries.un_moveable_by_ropes": "Не перемещается верёвками",
+  "tag.enchantment.supplementaries.galleon_treasure": "Сокровище галеона",
+  "tag.entity_type.supplementaries.can_dismount_boats": "Может слезать с лодок",
+  "tag.entity_type.supplementaries.can_entity_dismount_from": "Можно слезть с существа",
+  "tag.entity_type.supplementaries.can_slime": "Можно покрыть слизью",
+  "tag.entity_type.supplementaries.can_steer_boats": "Может управлять лодками",
+  "tag.entity_type.supplementaries.can_use_cannon_boats": "Может использовать пушечные лодки",
+  "tag.item.supplementaries.quiver_whitelist": "Белый список колчана",
+  "tag.item.supplementaries.sacks": "Мешки",
+  "tag.item.supplementaries.weapon_projectile_overlay_blacklist": "Чёрный список наложения снарядов оружия",
+  "tag.potion.supplementaries.tipped_spikes_finite_blacklist": "Чёрный список конечных обработанных шипов",
+  "tag.worldgen.supplementaries.biome.has_way_signs": "Есть указатели"
 }
