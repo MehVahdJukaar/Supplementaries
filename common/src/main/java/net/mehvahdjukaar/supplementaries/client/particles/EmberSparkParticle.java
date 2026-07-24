@@ -19,16 +19,13 @@ public class EmberSparkParticle extends TextureSheetParticle {
     };
 
     // bedrock renders the spark at world size 0.14 (full width); Java quadSize is a half-extent
-    private static final float BASE_SIZE = 0.06f;
+    private static final float BASE_SIZE = 0.04f;
     // full size until this many ticks remain, then shrinks to 0 (bedrock: last 0.2s)
     private static final float SHRINK_TICKS = 4f;
-
-    private final SpriteSet sprites;
 
     protected EmberSparkParticle(ClientLevel level, double x, double y, double z, double xd, double yd, double zd,
                                  SpriteSet sprites) {
         super(level, x, y, z);
-        this.sprites = sprites;
         this.xd = xd;
         this.yd = yd;
         this.zd = zd;

@@ -142,13 +142,13 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         double wy = pos.y + 1 / 16f + wick.y;
         double wz = pos.z + wick.z;
         for (int i = 0; i < 2; i++) {
-            // spray down and backwards in cannon-local space, then rotate into the world
+            // scatter mostly down and backwards in cannon-local space, then rotate into the world
             Vector3f dir = new Vector3f(
-                    rand.nextFloat() - 0.5f,
-                    -1.1f - rand.nextFloat() * 0.6f,
-                    -0.4f - rand.nextFloat() * 0.8f).normalize();
+                    (rand.nextFloat() - 0.5f) * 1.6f,
+                    -0.15f - rand.nextFloat() * 0.85f,
+                    -0.15f - rand.nextFloat() * 1.0f).normalize();
             rot.transform(dir);
-            float speed = (1.3f + rand.nextFloat() * 0.9f) / 20f;
+            float speed = (0.7f + rand.nextFloat() * 0.7f) / 20f;
             this.level.addParticle(ModParticles.EMBER_SPARK_PARTICLE.get(),
                     wx, wy, wz, dir.x * speed, dir.y * speed, dir.z * speed);
         }
@@ -214,6 +214,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
+        // baseline for the render-state sync so a disk-loaded, already-loaded cannon syncs correctly on the next change
+        this.lastSyncedLoaded = !this.getFuel().isEmpty();
         this.cooldownTimer = tag.getInt("cooldown");
         this.fuseTimer = Math.max(this.fuseTimer, tag.getInt("fuse_timer")); //don lose client animation
         this.setFirePower(tag.getByte("fire_power"));
@@ -394,7 +396,9 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         //do nothing if its already ignited
         if (this.fuseTimer > 0) return;
 
-        if (this.getProjectile().isEmpty()) return;
+        // the server decides whether the cannon can actually fire (needs a projectile and enough gunpowder);
+        // the client just plays the fuse when the server syncs the ignite, so no gunpowder -> no fire state at all
+        if (this.level != null && !this.level.isClientSide && !this.hasRequiredFuelAndProjectiles()) return;
 
         // called from server when firing
         this.fuseTimer = CommonConfigs.Functional.CANNON_FUSE_TIME.get();

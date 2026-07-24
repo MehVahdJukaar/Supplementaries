@@ -153,7 +153,7 @@ public class PedestalBlock extends WaterBlock implements EntityBlock, WorldlyCon
                     tile.setChanged();
                 } else {
                     //also refreshTextures visuals on client. will get overwritten by packet tho
-                    tile.updateClientVisualsOnLoad();
+                    tile.clientSideUpdateWhenChanged(level.registryAccess());
                 }
                 resultType = ItemInteractionResult.sidedSuccess(level.isClientSide);
             } else {

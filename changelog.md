@@ -1,1 +1,1 @@
-- fixed an issue with opening menus
+- improved cannon visuals. bedrock parity.
