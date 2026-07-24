@@ -41,6 +41,7 @@ public class ModParticles {
     public static final Supplier<SimpleParticleType> ROTATION_TRAIL = reg("rotation_trail");
     public static final Supplier<SimpleParticleType> ROTATION_TRAIL_EMITTER = reg("rotation_trail_emitter");
     public static final Supplier<SimpleParticleType> SPARKLE_PARTICLE = reg("sparkle");
+    public static final Supplier<SimpleParticleType> EMBER_SPARK_PARTICLE = reg("ember_spark");
     public static final Supplier<SimpleParticleType> SUDS_PARTICLE = reg("suds");
     public static final Supplier<SimpleParticleType> SUDS_PARTICLE_EMITTER = reg("suds_emitter");
     public static final Supplier<SimpleParticleType> ASH_PARTICLE = reg("ash");

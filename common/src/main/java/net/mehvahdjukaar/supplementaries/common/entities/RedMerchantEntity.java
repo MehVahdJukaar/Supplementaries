@@ -123,7 +123,6 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
         }
     }
 
-
     @Override
     public void updateTrades() {
         MerchantOffers merchantoffers = this.getOffers();
@@ -133,9 +132,6 @@ public class RedMerchantEntity extends AbstractVillager implements RangedAttackM
     @Override
     public void openTradingScreen(Player player, Component name, int level) {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
-        // RED_MERCHANT is registered as a networked (extended) menu type, so it must be opened via
-        // openCustomMenu. Vanilla player.openMenu skips the extended screen handler factory and Fabric
-        // aborts the interaction, leaving the merchant looking like it has no trades.
         PlatHelper.openCustomMenu(serverPlayer,
                 new SimpleMenuProvider((i, p, m) -> new RedMerchantMenu(i, p, this), name), buf -> {});
         if (serverPlayer.containerMenu instanceof RedMerchantMenu) {

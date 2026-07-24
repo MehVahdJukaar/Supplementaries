@@ -144,7 +144,7 @@ public class MobHeadShadersManager extends SimpleJsonResourceReloadListener {
     }
 
     //no holders since it loads on boot. lets keep it simple for once
-    private record MobHeadEffect(List<Item> items, List<EntityType<?>> entityTypes, ResourceLocation shader) {
+    public record MobHeadEffect(List<Item> items, List<EntityType<?>> entityTypes, ResourceLocation shader) {
 
         public static final Codec<MobHeadEffect> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(

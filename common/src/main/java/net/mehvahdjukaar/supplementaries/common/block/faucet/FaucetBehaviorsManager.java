@@ -46,7 +46,7 @@ import java.util.function.Consumer;
 //really we just use this on the server. its info should not be needed on the client
 public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
-    private static final Codec<Either<DataItemInteraction, DataFluidInteraction>> CODEC =
+    public static final Codec<Either<DataItemInteraction, DataFluidInteraction>> CODEC =
             Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
 
     private static final Set<Consumer<IFaucetEvent>> SERVER_LISTENERS = new HashSet<>();

@@ -67,8 +67,8 @@ public class FlowerBoxModelsManager extends SimpleJsonResourceReloadListener {
         return res;
     }
 
-    private record FlowerBoxPlant(List<Item> seedItems, ModelResourceLocation tallModel,
-                                  ModelResourceLocation normalModel) {
+    public record FlowerBoxPlant(List<Item> seedItems, ModelResourceLocation tallModel,
+                                 ModelResourceLocation normalModel) {
         public static final Codec<FlowerBoxPlant> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 MiscUtils.LENIENT_ITEM_OR_ITEM_LIST.lenientOptionalFieldOf("items", List.of()).forGetter(FlowerBoxPlant::seedItems),
                 ResourceLocation.CODEC.optionalFieldOf("big_model").forGetter(f -> Optional.ofNullable(f.tallModel).map(ModelResourceLocation::id)),

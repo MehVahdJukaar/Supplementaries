@@ -21,6 +21,7 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonAnimati
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
+import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -34,6 +35,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -115,10 +117,38 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             this.cooldownTimer -= 1;
         }
         if (this.fuseTimer > 0) {
+            if (this.level != null && this.level.isClientSide) {
+                this.spawnFuseSparks();
+            }
             this.fuseTimer -= 1;
             if (this.fuseTimer <= 0) {
                 this.fire();
             }
+        }
+    }
+
+    // Tiny ember sparks flying off the wick at the back of the cannon while the fuse burns.
+    // Ported from the bedrock razz_sup:ember_spark wick emitter.
+    private void spawnFuseSparks() {
+        // roughly 2 sparks every 3 ticks, matching the bedrock emitter rate
+        if (this.fuseTimer % 3 != 0) return;
+        RandomSource rand = this.level.random;
+        Quaternionf rot = this.getWorldOrientation(1);
+        Vec3 pos = this.getGlobalPosition(1);
+        Vector3f wick = rot.transform(new Vector3f(0, 0, -0.45f));
+        double wx = pos.x + wick.x;
+        double wy = pos.y + 1 / 16f + wick.y;
+        double wz = pos.z + wick.z;
+        for (int i = 0; i < 2; i++) {
+            // spray down and backwards in cannon-local space, then rotate into the world
+            Vector3f dir = new Vector3f(
+                    rand.nextFloat() - 0.5f,
+                    -1.1f - rand.nextFloat() * 0.6f,
+                    -0.4f - rand.nextFloat() * 0.8f).normalize();
+            rot.transform(dir);
+            float speed = (1.3f + rand.nextFloat() * 0.9f) / 20f;
+            this.level.addParticle(ModParticles.EMBER_SPARK_PARTICLE.get(),
+                    wx, wy, wz, dir.x * speed, dir.y * speed, dir.z * speed);
         }
     }
 

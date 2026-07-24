@@ -57,7 +57,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -537,13 +536,7 @@ public class ClientReceivers {
 
     private static void playIgniteEffects(CannonBlockTile tile) {
         Level level = tile.getLevel();
-        PoseStack poseStack = calculateGlobalCannonNozzleTransform(tile);
-        Vector4f p = poseStack.last().pose().transform(new Vector4f(0, 0, -0.85f, 1));
-
-        Vec3 speed = tile.getGlobalVelocity();
-        level.addParticle(ParticleTypes.CRIT,
-                p.x, p.y, p.z, speed.x, speed.y, speed.z);
-
+        // wick sparks are spawned continuously from CannonBlockTile#tick while the fuse burns
         Vec3 pos = tile.getGlobalPosition(1);
         level.playLocalSound(pos.x, pos.y, pos.z, ModSounds.CANNON_IGNITE.get(), SoundSource.BLOCKS, 0.6f,
                 1.2f + level.getRandom().nextFloat() * 0.2f, false);

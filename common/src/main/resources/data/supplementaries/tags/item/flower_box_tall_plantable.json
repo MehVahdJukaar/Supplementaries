@@ -2,6 +2,16 @@
   "replace": false,
   "values": [
     {"id":"#minecraft:tall_flowers","required":false},
-    {"id":"minecraft:tall_grass","required":false}
+    {"id":"minecraft:tall_grass","required":false},
+    {"id":"minecraft:sweet_berries","required":false},
+    {"id":"berry_good:sweet_berry_pips","required":false},
+    {"id":"minecraft:glow_berries","required":false},
+    {"id":"berry_good:glow_berry_pips","required":false},
+    {"id":"minecraft:large_fern","required":false},
+    {"id":"minecraft:sugar_cane","required":false},
+    {"id":"minecraft:twisting_vines","required":false},
+    {"id":"minecraft:vine","required":false},
+    {"id":"minecraft:weeping_vines","required":false},
+    {"id":"create_bic_bit:sunflower_seeds","required":false}
   ]
 }
