@@ -1,0 +1,8 @@
+{
+  "class": "net.mehvahdjukaar.supplementaries.common.misc.mob_container.DataDefinedCatchableMob",
+  "field": "CODEC",
+  "side": "server",
+  "dir": "catchable_mobs_properties",
+  "label": "supplementaries.nautilus_studio.catchable_mob",
+  "wiki": "https://github.com/MehVahdJukaar/Supplementaries/wiki/Customization"
+}

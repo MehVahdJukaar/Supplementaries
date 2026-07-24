@@ -1,0 +1,8 @@
+{
+  "class": "net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager",
+  "field": "CODEC",
+  "side": "server",
+  "dir": "faucet_interactions",
+  "label": "supplementaries.nautilus_studio.faucet_interaction",
+  "wiki": "https://github.com/MehVahdJukaar/Supplementaries/wiki/Customization"
+}

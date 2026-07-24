@@ -1,0 +1,8 @@
+{
+  "class": "net.mehvahdjukaar.supplementaries.common.block.placeable_book.BookModelVisuals$VariantModelList",
+  "field": "LIST_CODEC",
+  "side": "client",
+  "dir": "placeable_books_visuals",
+  "label": "supplementaries.nautilus_studio.placeable_book_visual",
+  "wiki": "https://github.com/MehVahdJukaar/Supplementaries/wiki/Customization"
+}

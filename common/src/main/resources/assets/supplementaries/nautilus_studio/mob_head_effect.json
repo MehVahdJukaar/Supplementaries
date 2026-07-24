@@ -1,0 +1,15 @@
+{
+  "class": "net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager$MobHeadEffect",
+  "field": "CODEC",
+  "side": "client",
+  "dir": "mob_head_effects",
+  "label": "supplementaries.nautilus_studio.mob_head_effect",
+  "wiki": "https://github.com/MehVahdJukaar/Supplementaries/wiki/Customization",
+  "companion": {
+    "field": "shader",
+    "dir": "shaders/post",
+    "side": "client",
+    "ext": ".json",
+    "label": "post shader"
+  }
+}

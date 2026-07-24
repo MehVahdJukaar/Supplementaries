@@ -1,0 +1,8 @@
+{
+  "class": "net.mehvahdjukaar.supplementaries.common.misc.songs.Song",
+  "field": "CODEC",
+  "side": "server",
+  "dir": "flute_songs",
+  "label": "supplementaries.nautilus_studio.flute_song",
+  "wiki": "https://github.com/MehVahdJukaar/Supplementaries/wiki/Customization"
+}

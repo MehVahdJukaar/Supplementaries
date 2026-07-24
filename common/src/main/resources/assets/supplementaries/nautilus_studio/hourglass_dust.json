@@ -1,0 +1,15 @@
+{
+  "class": "net.mehvahdjukaar.supplementaries.common.block.hourglass.HourglassTimeData",
+  "field": "CODEC",
+  "side": "server",
+  "dir": "hourglass_dusts",
+  "label": "supplementaries.nautilus_studio.hourglass_dust",
+  "wiki": "https://github.com/MehVahdJukaar/Supplementaries/wiki/Customization",
+  "companion": {
+    "field": "texture",
+    "dir": "textures",
+    "side": "client",
+    "ext": ".png",
+    "label": "sand texture"
+  }
+}

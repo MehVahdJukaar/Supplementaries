@@ -1,0 +1,8 @@
+{
+  "class": "net.mehvahdjukaar.supplementaries.client.FlowerBoxModelsManager$FlowerBoxPlant",
+  "field": "CODEC",
+  "side": "client",
+  "dir": "flower_box_plants",
+  "label": "supplementaries.nautilus_studio.flower_box_plant",
+  "wiki": "https://github.com/MehVahdJukaar/Supplementaries/wiki/Customization"
+}
