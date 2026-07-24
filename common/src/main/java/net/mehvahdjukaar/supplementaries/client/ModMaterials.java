@@ -42,6 +42,8 @@ public class ModMaterials {
     public static final Material BLACKBOARD_BLACK = new Material(LOCATION_BLOCKS, ModTextures.BLACKBOARD_BLACK_TEXTURE);
     public static final Material SAND_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.SAND_TEXTURE);
     public static final Material CANNON_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.CANNON_TEXTURE);
+    public static final Material CANNON_LOADED_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.CANNON_LOADED_TEXTURE);
+    public static final Material CANNON_LIT_MATERIAL = new Material(LOCATION_BLOCKS, ModTextures.CANNON_LIT_TEXTURE);
     public static final Material BOOK_GLINT_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res("block/books/book_enchanted"));
     public static final Material CANNON_TARGET_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res("block/cannon_target"));
     public static final Material CANNON_TARGET_RED_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res("block/cannon_target_charging"));

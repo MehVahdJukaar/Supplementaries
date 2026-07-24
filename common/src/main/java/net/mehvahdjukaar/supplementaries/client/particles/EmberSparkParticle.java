@@ -18,7 +18,8 @@ public class EmberSparkParticle extends TextureSheetParticle {
             0xFFFF5E12, 0xFFEA3206, 0x80861C04, 0x00000000
     };
 
-    private static final float BASE_SIZE = 0.1f;
+    // bedrock renders the spark at world size 0.14 (full width); Java quadSize is a half-extent
+    private static final float BASE_SIZE = 0.06f;
     // full size until this many ticks remain, then shrinks to 0 (bedrock: last 0.2s)
     private static final float SHRINK_TICKS = 4f;
 
@@ -31,8 +32,9 @@ public class EmberSparkParticle extends TextureSheetParticle {
         this.xd = xd;
         this.yd = yd;
         this.zd = zd;
+        // bedrock: linear_acceleration -5 b/s^2 -> yd -= 0.04*gravity per tick; drag 0.9/s -> friction^20 ~= e^-0.9
         this.gravity = 0.3125f;
-        this.friction = 0.95f;
+        this.friction = 0.956f;
         this.quadSize = BASE_SIZE;
         this.lifetime = 11 + this.random.nextInt(11);
         this.setSpriteFromAge(sprites);
@@ -62,7 +64,6 @@ public class EmberSparkParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
         if (!this.removed) {
-            this.setSpriteFromAge(sprites);
             this.updateColor(1);
         }
     }

@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.Material;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
@@ -106,7 +107,10 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         renderer.head.zScale = 1 - squish;
         renderer.head.z = 1 - squish * 5.675f;
 
-        VertexConsumer builder = ModMaterials.CANNON_MATERIAL.buffer(bufferSource, RenderType::entityCutout);
+        // texture state, matching bedrock: igniting > loaded (gunpowder) > default
+        Material material = tile.isFiring() ? ModMaterials.CANNON_LIT_MATERIAL
+                : (!tile.getFuel().isEmpty() ? ModMaterials.CANNON_LOADED_MATERIAL : ModMaterials.CANNON_MATERIAL);
+        VertexConsumer builder = material.buffer(bufferSource, RenderType::entityCutout);
         renderer.model.render(poseStack, builder, packedLight, packedOverlay);
         poseStack.popPose();
     }

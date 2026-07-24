@@ -69,6 +69,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     private int cooldownTimer = 0;
     private int fuseTimer = 0;
     private byte powerLevel = 1;
+    // client-render texture sync: tracks whether the gunpowder-loaded state was last broadcast
+    private boolean lastSyncedLoaded = false;
 
     private BallisticData trajectoryData = BallisticData.LINE;
     private Item trajectoryFor = Items.AIR;
@@ -135,7 +137,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         RandomSource rand = this.level.random;
         Quaternionf rot = this.getWorldOrientation(1);
         Vec3 pos = this.getGlobalPosition(1);
-        Vector3f wick = rot.transform(new Vector3f(0, 0, -0.45f));
+        Vector3f wick = rot.transform(new Vector3f(0, 0, -0.4f));
         double wx = pos.x + wick.x;
         double wy = pos.y + 1 / 16f + wick.y;
         double wz = pos.z + wick.z;
@@ -248,6 +250,15 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         super.setChanged();
         //recomputes it
         maybeRefreshTrajectoryData();
+        // push a block update when the gunpowder-loaded state flips so the renderer can swap textures
+        if (this.level instanceof ServerLevel sl) {
+            boolean loaded = !this.getFuel().isEmpty();
+            if (loaded != this.lastSyncedLoaded) {
+                this.lastSyncedLoaded = loaded;
+                BlockState s = this.getBlockState();
+                sl.sendBlockUpdated(this.getBlockPos(), s, s, 3);
+            }
+        }
     }
 
     private void computeTrajectoryData() {

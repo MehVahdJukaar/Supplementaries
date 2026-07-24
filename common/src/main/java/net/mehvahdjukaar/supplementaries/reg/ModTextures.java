@@ -23,6 +23,8 @@ public class ModTextures {
     public static final ResourceLocation CLOCK_HAND_TEXTURE = Supplementaries.res("block/clock_hand");
     public static final ResourceLocation BLACKBOARD_GRID = Supplementaries.res("block/blackboard_grid");
     public static final ResourceLocation CANNON_TEXTURE = Supplementaries.res("block/cannon");
+    public static final ResourceLocation CANNON_LOADED_TEXTURE = Supplementaries.res("block/cannon_gunpowder");
+    public static final ResourceLocation CANNON_LIT_TEXTURE = Supplementaries.res("block/cannon_lit");
 
 
     public static final ResourceLocation TIMBER_CROSS_BRACE_TEXTURE = Supplementaries.res("block/timber_cross_brace");

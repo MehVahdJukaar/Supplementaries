@@ -97,6 +97,9 @@ public class CannonFireParticle extends TextureSheetParticle {
         drawDoubleQuad(buffer, mat, 1, 0, u0, u1, v0, v1, light);
 
         mat.translate(0, 0, 0.25f);
+        // the boom quads below fan around the matrix's X axis, forming a square tube along X.
+        // rotate the whole assembly so that tube runs along Z (the barrel forward) instead of sideways.
+        mat.rotate(RotHlpr.Y90);
 
         float U0 = boomSprite.getU0();
         float U1 = boomSprite.getU1();
