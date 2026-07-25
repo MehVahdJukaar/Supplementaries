@@ -111,12 +111,32 @@ public class RelayerBlock extends DirectionalBlock {
         Direction back = front.getOpposite();
 
         int pow = getSignalInFront(level, pos, front);
+        boolean powerChanged = pow != state.getValue(POWER);
 
         level.setBlock(pos, state.setValue(POWERED, pow != 0).setValue(POWER, Mth.clamp(pow, 0, 15)), 1 | 2 | 4);
 
         BlockPos blockPos = pos.relative(back);
         level.neighborChanged(blockPos, this, pos);
         level.updateNeighborsAtExceptFromFacing(blockPos, this, front);
+        // guarded so two relayers looking at each other dont keep waking each other up forever
+        if (powerChanged) updateRelayersLookingAt(level, pos, this, back);
+    }
+
+    /**
+     * Relayers can read a signal off any face of a block, but diodes (and relayers themselves) only send a block
+     * update to the single block they output into. Call this to poke any relayer that is looking at pos.
+     *
+     * @param outputSide side the caller already updates on its own
+     */
+    public static void updateRelayersLookingAt(Level level, BlockPos pos, Block source, Direction outputSide) {
+        for (Direction dir : Direction.values()) {
+            if (dir == outputSide) continue;
+            BlockPos relayerPos = pos.relative(dir);
+            BlockState relayer = level.getBlockState(relayerPos);
+            if (relayer.getBlock() instanceof RelayerBlock && relayer.getValue(FACING) == dir.getOpposite()) {
+                level.neighborChanged(relayerPos, source, pos);
+            }
+        }
     }
 
     @Override

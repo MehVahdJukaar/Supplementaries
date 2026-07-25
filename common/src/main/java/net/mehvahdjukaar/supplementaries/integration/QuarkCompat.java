@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 public class QuarkCompat {
@@ -83,6 +84,7 @@ public class QuarkCompat {
         throw new AssertionError();
     }
 
+    @Contract
     @PlatformImpl
     public static boolean isShulkerDropInOn() {
         throw new AssertionError();
