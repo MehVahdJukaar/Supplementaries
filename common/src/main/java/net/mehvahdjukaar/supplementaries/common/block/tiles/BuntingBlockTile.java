@@ -86,7 +86,8 @@ public class BuntingBlockTile extends DynamicRenderedItemDisplayTile {
     }
 
     @Override
-    public void updateTileOnInventoryChanged() {
+    public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.serverSideUpdateWhenChanged(registries);
         BlockState state = getBlockState();
         if (this.isEmpty()) {
             level.setBlockAndUpdate(worldPosition, RopeBuntingBlock.toRope(state));

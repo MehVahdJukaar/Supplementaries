@@ -99,7 +99,8 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     }
 
     @Override
-    public void updateTileOnInventoryChanged() {
+    public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.serverSideUpdateWhenChanged(registries);
         this.level.updateNeighborsAt(worldPosition, this.getBlockState().getBlock()); //why is this here?
         int light = this.fluidHolder.getFluidValue().getLuminosity();
         if (light != this.getBlockState().getValue(ModBlockProperties.LIGHT_LEVEL_0_15)) {

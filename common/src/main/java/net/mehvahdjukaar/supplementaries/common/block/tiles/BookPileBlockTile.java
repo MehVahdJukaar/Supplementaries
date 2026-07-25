@@ -151,7 +151,8 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     }
 
     @Override
-    public void updateClientVisualsOnLoad() {
+    public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.clientSideUpdateWhenChanged(registries);
         this.booksVisuals.clear();
 
         int expected = this.getBlockState().getValue(BookPileBlock.BOOKS);

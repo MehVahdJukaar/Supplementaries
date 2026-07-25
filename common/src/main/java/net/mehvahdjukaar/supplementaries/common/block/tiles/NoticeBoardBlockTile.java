@@ -114,7 +114,8 @@ public class NoticeBoardBlockTile extends ItemDisplayTile implements Nameable, I
     }
 
     @Override
-    public void updateClientVisualsOnLoad() {
+    public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.clientSideUpdateWhenChanged(registries);
 
         ItemStack itemstack = getDisplayedItem();
         Item item = itemstack.getItem();

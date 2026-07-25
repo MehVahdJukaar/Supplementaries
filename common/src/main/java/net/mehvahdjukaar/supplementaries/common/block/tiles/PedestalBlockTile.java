@@ -25,7 +25,8 @@ public class PedestalBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void updateTileOnInventoryChanged() {
+    public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.serverSideUpdateWhenChanged(registries);
 
         BlockState state = this.getBlockState();
         boolean hasItem = !this.isEmpty();

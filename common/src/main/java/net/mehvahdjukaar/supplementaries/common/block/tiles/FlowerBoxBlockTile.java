@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -54,8 +55,8 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     }
 
     @Override
-    public void updateTileOnInventoryChanged() {
-        super.updateTileOnInventoryChanged();
+    public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.serverSideUpdateWhenChanged(registries);
         for (int n = 0; n < this.getContainerSize(); n++) {
             this.setBlockFromItem(n, this.getItem(n).getItem());
         }
@@ -82,7 +83,8 @@ public class FlowerBoxBlockTile extends ItemDisplayTile implements IBlockHolder,
     }
 
     @Override
-    public void updateClientVisualsOnLoad() {
+    public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.clientSideUpdateWhenChanged(registries);
         for (int n = 0; n < flowerStates.length; n++) {
             Item item = this.getItem(n).getItem();
             setBlockFromItem(n, item);

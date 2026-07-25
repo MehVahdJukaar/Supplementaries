@@ -13,6 +13,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
@@ -56,7 +57,8 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void updateTileOnInventoryChanged() {
+    public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.serverSideUpdateWhenChanged(registries);
         Winding type = getContentType(this.getDisplayedItem().getItem());
         BlockState state = this.getBlockState();
         if (state.getValue(PulleyBlock.TYPE) != type) {

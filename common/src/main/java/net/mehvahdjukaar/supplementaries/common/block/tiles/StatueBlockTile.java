@@ -10,6 +10,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
@@ -96,7 +97,8 @@ public class StatueBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void updateClientVisualsOnLoad() {
+    public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.clientSideUpdateWhenChanged(registries);
         this.updateSkin();
         ItemStack stack = this.getDisplayedItem();
         this.pose = StatuePose.getPose(stack);
@@ -111,7 +113,8 @@ public class StatueBlockTile extends ItemDisplayTile {
     }
 
     @Override
-    public void updateTileOnInventoryChanged() {
+    public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
+        super.serverSideUpdateWhenChanged(registries);
         boolean flag = (StatuePose.getPose(this.getDisplayedItem()) == StatuePose.CANDLE);
         if (flag != this.getBlockState().getValue(StatueBlock.LIT)) {
             this.level.setBlockAndUpdate(this.getBlockPos(), this.getBlockState().setValue(StatueBlock.LIT, flag));
