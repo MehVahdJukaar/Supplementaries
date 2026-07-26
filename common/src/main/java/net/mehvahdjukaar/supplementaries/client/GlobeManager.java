@@ -28,6 +28,8 @@ public class GlobeManager {
 
     public static final List<ResourceLocation> TEXTURES = new ArrayList<>();
     private static final Map<String, TextureInstance> TEXTURE_CACHE = Maps.newHashMap();
+    private static final Map<String, TextureInstance> SEED_TEXTURE_CACHE = Maps.newHashMap();
+    private static final ResourceLocation OVERWORLD_PALETTE = ResourceLocation.withDefaultNamespace("overworld");
     private static final HashMap<ResourceLocation, IntList> DIMENSION_COLORS = new HashMap<>();
     private static final IntList SEPIA_COLORS = new IntArrayList();
     private static final Map<String, GlobeRenderData> NAME_CACHE = new HashMap<>();
@@ -35,6 +37,14 @@ public class GlobeManager {
 
     public static void refreshTextures() {
         TEXTURE_CACHE.clear();
+        SEED_TEXTURE_CACHE.clear();
+    }
+
+    /**
+     * A globe showing a texture generated from an arbitrary seed, for guis that have no level to take the world's from.
+     */
+    public static GlobeRenderData seededRenderData(long seed) {
+        return new SeededData(seed);
     }
 
     private static TextureInstance getTextureInstance(Level world, boolean sepia) {
@@ -192,14 +202,18 @@ public class GlobeManager {
         private final boolean sepiaColored;
 
         private TextureInstance(Level world, boolean sepia) {
+            this(world.dimension().location(), ModData.GLOBE_DATA.getData(world), sepia,
+                    "globe/" + world.dimension().location().toString().replace(":", "_"));
+        }
+
+        private TextureInstance(ResourceLocation palette, @Nullable GlobeData data, boolean sepia, String name) {
             this.sepiaColored = sepia;
-            this.dimensionId = world.dimension().location();
+            this.dimensionId = palette;
             RenderUtil.setDynamicTexturesToUseMipmap(true);
             this.texture = new DynamicTexture(32, 16, false);
             RenderUtil.setDynamicTexturesToUseMipmap(false);
-            this.updateTexture(world);
-            this.textureLocation = Minecraft.getInstance().getTextureManager()
-                    .register("globe/" + dimensionId.toString().replace(":", "_"), this.texture);
+            this.updateTexture(data);
+            this.textureLocation = Minecraft.getInstance().getTextureManager().register(name, this.texture);
         }
 
         private static int getRGBA(byte b, ResourceLocation dimension, boolean sepia) {
@@ -211,8 +225,7 @@ public class GlobeManager {
             return 1;
         }
 
-        private void updateTexture(Level world) {
-            GlobeData data = ModData.GLOBE_DATA.getData(world);
+        private void updateTexture(@Nullable GlobeData data) {
             if (data == null) return;
 
             for (int i = 0; i < 16; ++i) {
@@ -237,6 +250,21 @@ public class GlobeManager {
         public void close() {
             this.texture.close();
             Minecraft.getInstance().getTextureManager().release(textureLocation);
+        }
+    }
+
+    private record SeededData(long seed) implements GlobeRenderData {
+
+        @Override
+        public Model getModel(boolean sepia) {
+            return Model.GLOBE;
+        }
+
+        @Override
+        public @NotNull ResourceLocation getTexture(boolean sepia) {
+            String id = (sepia ? "sepia_" : "") + Long.toHexString(this.seed);
+            return SEED_TEXTURE_CACHE.computeIfAbsent(id, i -> new TextureInstance(OVERWORLD_PALETTE,
+                    GlobeData.createFromSeed(this.seed), sepia, "globe/seed_" + i)).textureLocation;
         }
     }
 

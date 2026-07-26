@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
+import net.mehvahdjukaar.moonlight.api.client.gui.ConfigScreenExtensions;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
@@ -30,6 +31,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.Plunde
 import net.mehvahdjukaar.supplementaries.client.renderers.items.*;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.*;
 import net.mehvahdjukaar.supplementaries.client.screens.*;
+import net.mehvahdjukaar.supplementaries.client.screens.widgets.GlobeShowcaseWidget;
 import net.mehvahdjukaar.supplementaries.client.tooltip.*;
 import net.mehvahdjukaar.supplementaries.common.block.placeable_book.PlaceableBookManagerClient;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
@@ -160,6 +162,8 @@ public class ClientRegistry {
     public static void init() {
         CompatHandlerClient.init();
         ClientHelper.addClientSetup(ClientRegistry::setup);
+        // a spinnable globe instead of the mod icon on the config screen
+        ConfigScreenExtensions.registerShowcase(Supplementaries.MOD_ID, GlobeShowcaseWidget.SHOWCASE);
         ClientHelper.addClientReloadListener(() -> MobHeadShadersManager.INSTANCE, Supplementaries.res("mob_head_effects"));
         ClientHelper.addClientReloadListener(() -> FlowerBoxModelsManager.INSTANCE, Supplementaries.res("flower_box_plants"));
 

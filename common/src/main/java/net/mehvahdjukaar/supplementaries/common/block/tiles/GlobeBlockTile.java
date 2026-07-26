@@ -45,15 +45,20 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, GlobeBlockTile tile) {
-        tile.prevYaw = tile.yaw;
-        if (tile.yaw != 0) {
-            if (tile.yaw < 0) {
-                tile.yaw = 0;
-                pLevel.updateNeighbourForOutputSignal(pPos, pState.getBlock());
-            } else {
-                tile.yaw = (tile.yaw * 0.94f) - 0.7f;
-            }
+        if (tile.decaySpin()) {
+            pLevel.updateNeighbourForOutputSignal(pPos, pState.getBlock());
         }
+    }
+
+    public boolean decaySpin() {
+        this.prevYaw = this.yaw;
+        if (this.yaw == 0) return false;
+        if (this.yaw < 0) {
+            this.yaw = 0;
+            return true;
+        }
+        this.yaw = (this.yaw * 0.94f) - 0.7f;
+        return false;
     }
 
     public int getFaceRot() {
@@ -68,6 +73,10 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     @NotNull
     public GlobeRenderData getRenderData() {
         return renderData;
+    }
+
+    public void setRenderData(GlobeRenderData data) {
+        this.renderData = data;
     }
 
     public boolean isSepia() {
@@ -130,7 +139,13 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         int face = ((this.getFaceRot() - inc) + 360) % 360;
         this.yaw = (this.yaw + spin + inc);
         this.prevYaw = (this.prevYaw + spin + inc);
-        level.setBlockAndUpdate(worldPosition, getBlockState().setValue(GlobeBlock.ROTATION, 3 - face / 90));
+        BlockState spun = getBlockState().setValue(GlobeBlock.ROTATION, 3 - face / 90);
+        if (this.level == null) {
+            // a gui preview has no level to put the new facing into, so it goes straight on the tile
+            this.setBlockState(spun);
+            return;
+        }
+        level.setBlockAndUpdate(worldPosition, spun);
         this.setChanged();
     }
 

@@ -269,7 +269,6 @@ public class RegUtils {
                         .ignitedByLava()
                         .mapColor(MapColor.SAND)
                         .strength(1.0F)
-                        .forceSolidOff()
                         .noOcclusion()
                         .sound(SoundType.WOOL))
         );
@@ -282,7 +281,6 @@ public class RegUtils {
                             .ignitedByLava()
                             .mapColor(color.getMapColor())
                             .strength(1.0F)
-                            .forceSolidOff()
                             .noOcclusion()
                             .sound(SoundType.WOOL))
             );
