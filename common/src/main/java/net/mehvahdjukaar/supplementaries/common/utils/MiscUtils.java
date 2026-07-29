@@ -38,6 +38,7 @@ import java.util.function.Supplier;
 
 public class MiscUtils {
 
+    public static final Codec<Long> LONG_STRING_CODEC = Codec.STRING.xmap(Long::parseLong, String::valueOf);
 
     public static final Codec<List<Item>> LENIENT_ITEM_OR_ITEM_LIST = CodecUtils.lenientListOrSingleCodec(
             BuiltInRegistries.ITEM.byNameCodec());
@@ -61,20 +62,6 @@ public class MiscUtils {
         entity.save(c);
         var opt = EntityType.create(c, level); // create new to reset level properly
         return opt.orElse(null);
-    }
-
-    public static Direction getMoveDirection(BlockPos fromPos, BlockPos toPos) {
-        return Direction.getNearest(
-                toPos.getX() - fromPos.getX(),
-                toPos.getY() - fromPos.getY(),
-                toPos.getZ() - fromPos.getZ()
-        );
-    }
-
-    public static String truncate(String s, int maxLength) {
-        if (s == null) return null;
-        if (s.length() <= maxLength) return s;
-        return s.substring(0, maxLength);
     }
 
     public static Component truncateComponent(Component message, int maxLength) {
@@ -131,23 +118,6 @@ public class MiscUtils {
         var container = level.getBlockTicks().allContainers.get(l);
         container.removeIf(t -> t.pos().equals(tick.pos()) && t.type() == tick.type());
         container.schedule(tick);
-    }
-
-    public static <A, B, Buf extends ByteBuf> void writeEither(Buf buf, Either<A, B> either, BiConsumer<Buf, A> encodeA, BiConsumer<Buf, B> encodeB) {
-        buf.writeBoolean(either.left().isPresent());
-        if (either.left().isPresent()) {
-            encodeA.accept(buf, either.left().get());
-        } else {
-            encodeB.accept(buf, either.right().get());
-        }
-    }
-
-    public static <A, B, Buf extends ByteBuf> Either<A, B> readEither(Buf buf, Function<Buf, A> decodeA, Function<Buf, B> decodeB) {
-        if (buf.readBoolean()) {
-            return Either.left(decodeA.apply(buf));
-        } else {
-            return Either.right(decodeB.apply(buf));
-        }
     }
 
     public enum Festivity {

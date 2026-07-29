@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
-import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.ICooperativePiston;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;

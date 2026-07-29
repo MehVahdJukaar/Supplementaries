@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PistonCooperationData;
-import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.ICooperativePiston;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.core.BlockPos;
@@ -151,7 +151,8 @@ public class CooperativePistonBaseBlockMixin {
         Set<BlockPos> allPistons = new HashSet<>(cooperators);
         allPistons.add(pos);
         int limit = allPistons.size() * 12;
-        ((ICooperativePiston) resolver).supp$setCooperators(allPistons, limit, facing, extending);
+        ((ICooperativePiston) resolver)
+                .supp$setCooperators(allPistons, limit, facing, extending);
         return original.call(resolver);
     }
 

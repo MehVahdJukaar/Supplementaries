@@ -1,6 +1,5 @@
-package net.mehvahdjukaar.supplementaries.common.utils;
+package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
 
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PistonCoopResolverState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 
@@ -15,8 +14,6 @@ public interface ICooperativePiston {
     void supp$setCooperators(Set<BlockPos> cooperatingPistons, int pushLimit,
                              Direction pistonDirection, boolean extending);
 
-    /**
-     * Direct access to the underlying state, used by mixins on resolver subclasses (Zeta).
-     */
+
     PistonCoopResolverState supp$getCoopState();
 }

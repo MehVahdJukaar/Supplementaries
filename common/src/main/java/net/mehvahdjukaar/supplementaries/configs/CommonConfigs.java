@@ -885,9 +885,10 @@ public class CommonConfigs {
             WILD_FLAX_ENABLED = builder.worldReload().define("wild_flax", true);
             builder.pop();
 
-            builder.push(ModConstants.LUMISENE_NAME);
+            LUMISENE_ENABLED = builder
+                    .icon(ModConstants.LUMISENE_BUCKET_NAME)
+                    .pushFeature(ModConstants.LUMISENE_NAME);
 
-            LUMISENE_ENABLED = builder.mainFeature();
             builder.push(ModConstants.LUMISENE_BOTTLE_NAME);
             LUMISENE_BOTTLE = builder
                     .comment("Enables lumisene bottles and the flammable effect and lumisene bottles. Turn off if you think its over the top and doesnt match with existing effects")
@@ -1164,26 +1165,22 @@ public class CommonConfigs {
 
             builder.comment("Vanilla tweaks").icon("wrench").push("tweaks");
 
-            builder.push(ModConstants.DRAGON_PATTERN_NAME);
-            DRAGON_PATTERN = builder.comment("Adds dragon banner pattern made from dragon head").mainFeature();
-            builder.pop();
+            DRAGON_PATTERN = builder.comment("Adds dragon banner pattern made from dragon head")
+                    .feature(ModConstants.DRAGON_PATTERN_NAME);
 
             builder.push("ai_tweaks");
             USE_CANNON_BOAT = builder.comment("Allows pillagers to use cannon boats. Add more entities to the 'supplementaries:can_use_cannon_boat' tag to allow them to use cannon boats as well")
                     .define("pillagers_use_cannon_boats", true);
-            DISMOUNT_BOAT = builder.comment("Allows mobs to dismount from boats when on land. Add more entities to the 'supplementaries:can_dismount_boats' tag to allow them to dismount as well")
-                    .define("raiders_dismount_boats", true);
-            builder.pop();
-
-            builder.icon("minecraft:enchanted_golden_apple").push("golden_apple_disenchant");
-            APPLE_DISENCHANT = builder.mainFeature();
-            builder.pop();
-
-            builder.icon("minecraft:wandering_trader_spawn_egg").push("traders_open_doors");
+            DISMOUNT_BOAT = builder.comment("Allows mobs (like raiders and endermen) to dismount from boats when on land. Add more entities to the 'supplementaries:can_dismount_boats' tag to allow them to dismount as well")
+                    .define("smart_boat_dismount", true);
             WANDERING_TRADER_DOORS = builder.comment("Allows traders to open doors (because they couldn't apparently)")
-                    .define("enabled", true);
+                    .define("traders_open_doors", true);
+            SCARE_VILLAGERS = builder.comment("Noteblocks with a zombie head will scare off villagers")
+                    .define("noteblock_scare", true);
             builder.pop();
 
+            APPLE_DISENCHANT = builder.icon("minecraft:enchanted_golden_apple")
+                    .feature("golden_apple_disenchant");
 
             builder.icon("minecraft:dispenser").push("dispenser_tweaks");
             AXE_DISPENSER_BEHAVIORS = builder.comment("Allows dispensers to use axes on blocks to strip logs and scrape off copper oxidation and wax")
@@ -1202,24 +1199,24 @@ public class CommonConfigs {
 
             builder.icon("minecraft:stick").push("placeable_sticks");
             PLACEABLE_STICKS = builder.comment("Allow placeable sticks")
-                    .define("sticks", true);
+                    .icon("minecraft:stick")
+                    .feature("sticks");
             PLACEABLE_RODS = builder.comment("Allow placeable blaze rods")
-                    .define("blaze_rods", true);
+                    .icon("minecraft:blaze_rod")
+                    .feature("blaze_rods");
             builder.pop();
 
-            builder.icon("minecraft:gunpowder").push("placeable_gunpowder");
-            PLACEABLE_GUNPOWDER = builder.comment("Allow placeable gunpowder")
-                    .define("enabled", true);
+            PLACEABLE_GUNPOWDER = builder.icon("minecraft:gunpowder")
+                    .comment("Allow placeable gunpowder")
+                    .pushFeature("placeable_gunpowder");
             GUNPOWDER_BURN_SPEED = builder.comment("Number of ticks it takes for gunpowder to burn 1 stage (out of 8). Increase to slow it down")
                     .define("speed", 2, 0, 20);
             GUNPOWDER_SPREAD_AGE = builder.comment("Age at which it spread to the next gunpowder block. Also affects speed")
                     .define("spread_age", 2, 0, 8);
             builder.pop();
 
-            builder.icon("raked_gravel").push("raked_gravel");
             RAKED_GRAVEL = builder.comment("allow gravel to be raked with a hoe")
-                    .define("enabled", true);
-            builder.pop();
+                    .feature("raked_gravel");
 
             builder.icon("minecraft:experience_bottle").push("bottle_xp");
             BOTTLE_XP = builder.comment("Allow bottling up xp by using a bottle on an enchanting table")
@@ -1276,11 +1273,6 @@ public class CommonConfigs {
                     .define("zombie_horse_inverse_conversion", true);
             builder.pop();
 
-            builder.icon("minecraft:note_block").push("noteblocks_scare");
-            SCARE_VILLAGERS = builder.comment("Noteblocks with a zombie head will scare off villagers")
-                    .define("enabled", true);
-            builder.pop();
-
             builder.push("bad_luck_tweaks");
             BAD_LUCK_CAT = PlatHelper.getPlatform().isFabric() ? FALSE :
                     builder.comment("Hit a void cat, get the unluck")
@@ -1289,15 +1281,17 @@ public class CommonConfigs {
                     .define("lightning_unluck", true);
             builder.pop();
 
-            builder.icon("minecraft:name_tag").push("item_lore");
+            builder.icon("minecraft:crafting_table").push("extra_crafting");
             ITEM_LORE = builder
-                    .comment("Adds a recipe to add 'lore' strings to an item by combining it with a named nametag").mainFeature();
+                    .icon("minecraft:name_tag")
+                    .comment("Adds a recipe to add 'lore' strings to an item by combining it with a named nametag")
+                    .feature("item_lore");
+
+            SUS_RECIPES = builder.icon("minecraft:suspicious_sand")
+                    .comment("Adds recipes to craft suspicious gravel and suspicious sand")
+                    .feature("sus_recipes");
             builder.pop();
 
-            builder.icon("minecraft:suspicious_sand").push("sus_recipes");
-            SUS_RECIPES = builder
-                    .comment("Adds recipes to craft suspicious gravel and suspicious sand").mainFeature();
-            builder.pop();
 
             builder.icon("minecraft:slime_ball").push("slimed_effect");
             SLIMED_EFFECT = builder.mainFeature();
@@ -1322,9 +1316,15 @@ public class CommonConfigs {
             builder.pop();
 
             builder.icon("minecraft:piston").push("piston_tweaks");
-            PUSH_BLOCK_ENTITIES = builder.comment(
-                    "If true, pistons can push blocks that have a block entity (e.g. chests, furnaces). " +
-                    "Blocks whose push reaction is BLOCK are still immovable regardless of this setting.")
+            PUSH_BLOCK_ENTITIES = builder.comment("""
+                            If true, pistons can push blocks that have a block entity (e.g. chests, furnaces). \
+                            Blocks whose push reaction is BLOCK are still immovable regardless of this setting.
+                            Quark takes priority here: while its 'pistons move tile entities' module is enabled \
+                            this option does nothing and Quark handles piston moves instead, since the two \
+                            implementations would otherwise both rebuild the moved block entity and wipe its \
+                            contents. Turn that module off to use this one, which supports more cases (pulleys, \
+                            cauldron filling, cooperative pistons).
+                            Pulleys always move block entities and are unaffected by this option.""")
                     .define("push_block_entities", true);
             COOPERATIVE_PISTONS = builder.comment(
                     "If true, adjacent pistons facing the same direction can pool their 12-block push budget " +

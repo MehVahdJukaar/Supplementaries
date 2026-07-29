@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.utils;
+package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;

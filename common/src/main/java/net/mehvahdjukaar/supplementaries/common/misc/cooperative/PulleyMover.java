@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingPulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingPulleyBlockEntity;
-import net.mehvahdjukaar.supplementaries.common.utils.ICarryingMovingPiston;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

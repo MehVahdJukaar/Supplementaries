@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
-import net.mehvahdjukaar.supplementaries.common.utils.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.ICarryingMovingPiston;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -105,6 +105,10 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         }
     }
 
+    // Deliberately not gated on blockEntityMovesHandledByUs: pulley moves reach this through the
+    // inherited finalTick and must keep working even when Quark owns piston moves. For a
+    // Quark-owned piston move our capture never ran, so there is no NBT here and this no-ops
+    // rather than replacing the block entity Quark just populated.
     @Override
     public void supp$restoreCarriedBe() {
         CompoundTag nbt = this.supp$carriedBeNbt;

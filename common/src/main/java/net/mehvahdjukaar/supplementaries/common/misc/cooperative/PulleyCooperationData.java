@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.misc.WorldSavedData;
 import net.mehvahdjukaar.moonlight.api.misc.WorldSavedDataType;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,11 +49,8 @@ public class PulleyCooperationData extends WorldSavedData {
         ).apply(i, AttemptInfo::new));
     }
 
-    // Map keys must round-trip as strings so this works under NbtOps (map keys become StringTag).
-    private static final Codec<Long> POS_KEY_CODEC = Codec.STRING.xmap(Long::parseLong, String::valueOf);
-
     public static final Codec<PulleyCooperationData> CODEC = RecordCodecBuilder.create(i -> i.group(
-            Codec.unboundedMap(POS_KEY_CODEC, AttemptInfo.CODEC).fieldOf("pulleys").forGetter(d -> d.attempting)
+            Codec.unboundedMap(MiscUtils.LONG_STRING_CODEC, AttemptInfo.CODEC).fieldOf("pulleys").forGetter(d -> d.attempting)
     ).apply(i, PulleyCooperationData::new));
 
     private final Map<Long, AttemptInfo> attempting = new HashMap<>();

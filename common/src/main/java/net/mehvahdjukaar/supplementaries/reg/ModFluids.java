@@ -60,10 +60,10 @@ public class ModFluids {
                                 .strength(0, 100.0F),
                         0));
 
-        LUMISENE_BUCKET = RegHelper.registerItem(Supplementaries.res("lumisene_bucket"),
+        LUMISENE_BUCKET = RegHelper.registerItem(Supplementaries.res(ModConstants.LUMISENE_BUCKET_NAME),
                 ModFluids::createLumiseneBucket);
 
-        LUMISENE_BOTTLE = RegHelper.registerItem(Supplementaries.res("lumisene_bottle"),
+        LUMISENE_BOTTLE = RegHelper.registerItem(Supplementaries.res(ModConstants.LUMISENE_BOTTLE_NAME),
                 () -> new LumiseneBottleItem(new Item.Properties()
                         .stacksTo(1)
                         .craftRemainder(Items.GLASS_BOTTLE)

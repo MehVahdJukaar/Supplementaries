@@ -114,6 +114,10 @@ public class QuarkCompatImpl {
         return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
     }
 
+    public static boolean isMovingTileEntitiesEnabled() {
+        return Quark.ZETA.modules.isEnabled(PistonsMoveTileEntitiesModule.class);
+    }
+
     public static boolean shouldHideOverlay(ItemStack stack) {
         return UsesForCursesModule.staticEnabled && EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP);
     }

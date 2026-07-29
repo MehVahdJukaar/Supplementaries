@@ -6,7 +6,8 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
-import net.mehvahdjukaar.supplementaries.common.utils.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PistonCooperationData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,13 +37,16 @@ public class PistonBaseBlockMixin {
      * pass through. Blocks with BLOCK/DESTROY/PUSH_ONLY are already handled earlier
      * in isPushable and never reach this call.
      * <p>
-     * BE data is preserved by {@link #supp$captureBeForPistonMove}.
+     * BE data is preserved by {@link #supp$captureBeForPistonMove}. When Quark owns the move
+     * (see {@link PistonCooperationData#blockEntityMovesHandledByUs()}) we pass the vanilla value
+     * through untouched so its own hook on this same call decides, which also keeps its movement
+     * blacklist authoritative.
      */
     @WrapOperation(method = "isPushable",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/state/BlockState;hasBlockEntity()Z"))
     private static boolean supp$allowBlockEntityPush(BlockState state, Operation<Boolean> original) {
-        if (!CommonConfigs.Tweaks.PUSH_BLOCK_ENTITIES.get()) return original.call(state);
+        if (!PistonCooperationData.blockEntityMovesHandledByUs()) return original.call(state);
         return false;
     }
 
@@ -74,7 +78,7 @@ public class PistonBaseBlockMixin {
                     "some other mod is overriding MovingPistonBlock.newMovingBlockEntity and returning null. " +
                     "Carpet is a known mod that does this.");
         }
-        if (!CommonConfigs.Tweaks.PUSH_BLOCK_ENTITIES.get()) {
+        if (!PistonCooperationData.blockEntityMovesHandledByUs()) {
             original.call(level, movingPiston);
             return;
         }

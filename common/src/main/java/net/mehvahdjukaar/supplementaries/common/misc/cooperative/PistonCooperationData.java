@@ -4,6 +4,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.mehvahdjukaar.moonlight.api.misc.WorldSavedData;
 import net.mehvahdjukaar.moonlight.api.misc.WorldSavedDataType;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,6 +28,31 @@ public class PistonCooperationData extends WorldSavedData {
 
     private static final int MAX_AGE = 20;
 
+    /**
+     * Whether our own capture/restore runs for piston moves.
+     * <p>
+     * Quark's <i>pistons move tile entities</i> module does the same job with its own pipeline, and
+     * the two cannot share a move: both strip the source block entity and both rebuild one at the
+     * destination, so whichever writes last wins and the loser's data is silently gone (only blocks
+     * on Quark's delayed-update list survive, since those are written a tick later). Quark detaches
+     * at the very top of {@code moveBlocks} and so always captures first, leaving ours empty.
+     * Rather than race, we hand pistons over entirely whenever that module is on.
+     * <p>
+     * Pulleys keep our pipeline either way: Quark only hooks {@code PistonBaseBlock.moveBlocks} and
+     * {@code PistonMovingBlockEntity.tick}, neither of which a pulley move goes through, so there
+     * is nothing to defer to there.
+     */
+    public static boolean blockEntityMovesHandledByUs() {
+        return CommonConfigs.Tweaks.PUSH_BLOCK_ENTITIES.get() && !blockEntityMovesHandledByQuark();
+    }
+
+    /**
+     * Whether Quark's module is present and enabled, and therefore owns piston moves.
+     */
+    public static boolean blockEntityMovesHandledByQuark() {
+        return CompatHandler.QUARK && QuarkCompat.isMovingTileEntitiesEnabled();
+    }
+
     private record AttemptInfo(Direction direction, boolean extending, long tick) {
         static final Codec<AttemptInfo> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Direction.CODEC.fieldOf("dir").forGetter(AttemptInfo::direction),
@@ -32,13 +61,8 @@ public class PistonCooperationData extends WorldSavedData {
         ).apply(i, AttemptInfo::new));
     }
 
-    // Map keys must round-trip as strings so this works under NbtOps (map keys become StringTag).
-    private static final Codec<Long> POS_KEY_CODEC = Codec.STRING.xmap(Long::parseLong, String::valueOf);
-
-    // Root codec must produce a compound tag (not a bare list) so Moonlight's WorldSavedData.save()
-    // can merge into an existing CompoundTag without hitting "mergeToList called with not a list".
     public static final Codec<PistonCooperationData> CODEC = RecordCodecBuilder.create(i -> i.group(
-            Codec.unboundedMap(POS_KEY_CODEC, AttemptInfo.CODEC).fieldOf("pistons").forGetter(d -> d.attemptingPistons)
+            Codec.unboundedMap(MiscUtils.LONG_STRING_CODEC, AttemptInfo.CODEC).fieldOf("pistons").forGetter(d -> d.attemptingPistons)
     ).apply(i, PistonCooperationData::new));
 
     private final Map<Long, AttemptInfo> attemptingPistons = new HashMap<>();

@@ -43,6 +43,11 @@ public class QuarkCompat {
     }
 
     @PlatformImpl
+    public static boolean isMovingTileEntitiesEnabled() {
+        throw new AssertionError();
+    }
+
+    @PlatformImpl
     public static float getEncumbermentFromBackpack(ItemStack stack) {
         throw new AssertionError();
     }

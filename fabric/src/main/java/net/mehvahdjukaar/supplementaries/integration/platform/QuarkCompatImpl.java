@@ -88,6 +88,10 @@ public class QuarkCompatImpl {
         return false;
     }
 
+    public static boolean isMovingTileEntitiesEnabled() {
+        return false;
+    }
+
     public static boolean isFastSlideModuleEnabled() {
         return false;
     }

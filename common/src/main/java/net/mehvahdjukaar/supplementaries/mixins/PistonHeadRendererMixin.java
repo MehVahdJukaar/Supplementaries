@@ -1,7 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.utils.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PistonCooperationData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -23,6 +24,11 @@ public class PistonHeadRendererMixin {
                                                int packedLight, int packedOverlay, CallbackInfo ci) {
         if (!(piston instanceof ICarryingMovingPiston carrying)) return;
         if (piston.getProgress(partialTick) > 1.0F) return;
+        // Quark's module owns piston moves, so it holds the data and its own renderer hook draws
+        // the carried block. Bail out instead of drawing an empty default one over it. A pulley
+        // move always carries our own NBT, so it still renders here.
+        if (carrying.supp$getCarriedBlockEntityNbt() == null
+                && PistonCooperationData.blockEntityMovesHandledByQuark()) return;
 
         BlockEntity carriedBE = carrying.supp$getOrCreateCachedCarriedBlockEntity();
         if (carriedBE == null) return;

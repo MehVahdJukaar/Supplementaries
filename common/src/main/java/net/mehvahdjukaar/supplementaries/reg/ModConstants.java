@@ -43,6 +43,7 @@ public final class ModConstants {
     public static final String FLAG_NAME = "flag";
     public static final String LUMISENE_NAME = "lumisene";
     public static final String LUMISENE_BOTTLE_NAME = "lumisene_bottle";
+    public static final String LUMISENE_BUCKET_NAME = "lumisene_bucket";
     public static final String PRESENT_NAME = "present";
     public static final String TRAPPED_PRESENT_NAME = "trapped_present";
     public static final String AWNING_NAME = "awning";
