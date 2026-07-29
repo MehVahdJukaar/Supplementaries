@@ -15,6 +15,8 @@ public interface ICooperativePiston {
     void supp$setCooperators(Set<BlockPos> cooperatingPistons, int pushLimit,
                              Direction pistonDirection, boolean extending);
 
-    /** Direct access to the underlying state — used by mixins on resolver subclasses (Zeta). */
+    /**
+     * Direct access to the underlying state, used by mixins on resolver subclasses (Zeta).
+     */
     CoopResolverState supp$getCoopState();
 }

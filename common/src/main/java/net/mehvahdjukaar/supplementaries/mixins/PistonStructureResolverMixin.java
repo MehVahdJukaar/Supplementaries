@@ -40,21 +40,16 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
         return this.supp$coopState;
     }
 
-    /**
-     * After vanilla {@code resolve()} returns, gate the result on real cooperation:
-     * filter cooperators down to those whose start block landed in {@code toPush}, and
-     * enforce the cooperative budget {@code 12 × (1 + contributing)}.
-     */
+    // Gate the resolve result on real cooperation: keep only cooperators whose start block
+    // landed in toPush, then enforce the cooperative budget of 12 per contributing piston.
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
     private boolean supp$gateOnRealCooperation(boolean original) {
         return CoopResolverHelper.gateResolve(original, pistonPos, toPush, supp$coopState);
     }
 
-    /**
-     * Extend each "is this the piston's own body?" check in {@code addBlockLine} to also
-     * recognise cooperator piston positions as boundaries. Catches all three
-     * {@code BlockPos.equals(pistonPos)} sites (origin, trailing-scan, forward-scan).
-     */
+    // Extend each "is this the piston's own body?" check in addBlockLine to also recognise
+    // cooperator piston positions as boundaries. Catches all three BlockPos.equals(pistonPos)
+    // sites (origin, trailing-scan, forward-scan).
     @WrapOperation(method = "addBlockLine",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/core/BlockPos;equals(Ljava/lang/Object;)Z"))
@@ -64,14 +59,14 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
                 original.call(candidate, pistonPosArg), candidate, supp$coopState);
     }
 
-    /** Replace the two trailing-scan {@code > 12} limits with the cooperative limit. */
+    // Replace the two trailing-scan "> 12" limits with the cooperative limit.
     @Expression("? > @(12)")
     @ModifyExpressionValue(method = "addBlockLine", at = @At("MIXINEXTRAS:EXPRESSION"), require = 2)
     private int supp$modifyTrailingLimit(int original) {
         return supp$coopState.pushLimit;
     }
 
-    /** Replace the forward-scan {@code >= 12} limit with the cooperative limit. */
+    // Replace the forward-scan ">= 12" limit with the cooperative limit.
     @Expression("? >= @(12)")
     @ModifyExpressionValue(method = "addBlockLine", at = @At("MIXINEXTRAS:EXPRESSION"), require = 1)
     private int supp$modifyForwardLimit(int original) {

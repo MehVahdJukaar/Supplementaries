@@ -9,8 +9,8 @@ import java.util.Set;
 
 /**
  * Cooperative-piston state attached to a {@code PistonStructureResolver} (or any subclass
- * like Quark/Zeta's wrapper). Captures the cooperators registered for this resolve and
- * — after the gate check runs — the subset that actually contributed to the pushed structure.
+ * like Quark/Zeta's wrapper). Captures the cooperators registered for this resolve and, once
+ * the gate check has run, the subset that actually contributed to the pushed structure.
  */
 public class CoopResolverState {
     public Set<BlockPos> cooperatingPistons = Collections.emptySet();

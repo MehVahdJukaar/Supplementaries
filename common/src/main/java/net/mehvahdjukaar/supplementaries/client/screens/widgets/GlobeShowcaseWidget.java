@@ -96,9 +96,6 @@ public class GlobeShowcaseWidget extends AbstractWidget {
         pose.popPose();
     }
 
-    /**
-     * Runs the tile's spin decay off real time, since there is no level ticking it. @return the leftover partial tick
-     */
     private float advance() {
         long now = Util.getMillis();
         float dt = this.lastMs < 0 ? 0 : Math.min((now - this.lastMs) / 1000f, 0.1f); // clamp screen-reopen gaps

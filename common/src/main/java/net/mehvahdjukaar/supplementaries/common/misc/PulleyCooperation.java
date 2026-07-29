@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import java.util.*;
 
 /**
- * Per-level cooperation tracker for pulley pulls — mirrors {@link CooperativePistonData}.
+ * Per-level cooperation tracker for pulley pulls, mirroring {@link CooperativePistonData}.
  * When two pulleys fire a continuous step on the same tick with the same period and push
  * direction, this is how they discover each other so the resolver runs once with a combined
  * PulleyInfo set, letting them pull a shared structure together (e.g. an elevator on two
@@ -20,7 +20,7 @@ import java.util.*;
  * <p>
  * Persisted via Moonlight's {@code WorldSavedData} so the per-level instance is naturally
  * isolated and survives chunk lifecycle quirks (unlike a static map). Entries auto-purge
- * after {@link #MAX_AGE_TICKS}; the on-disk persistence is incidental — the cooperation
+ * after {@link #MAX_AGE_TICKS}; the on-disk persistence is incidental, since the cooperation
  * window is single-tick in practice.
  * <p>
  * <b>Server-only instance.</b> Client uses the static {@link #markAttemptingClient} /
@@ -91,24 +91,11 @@ public class PulleyCooperation extends WorldSavedData {
     }
 
     public Set<BlockPos> getCooperators(BlockPos primary, int period, Direction pushDir, long currentTick) {
-        if (attempting.size() <= 1) return Collections.emptySet();
-        Set<BlockPos> result = new HashSet<>();
-        for (Map.Entry<Long, AttemptInfo> entry : attempting.entrySet()) {
-            AttemptInfo info = entry.getValue();
-            if (info.pushDir() != pushDir) continue;
-            if (info.period() != period) continue;
-            if (currentTick - info.tick() > MAX_AGE_TICKS) continue;
-            BlockPos candidate = BlockPos.of(entry.getKey());
-            if (candidate.equals(primary)) continue;
-            if (isConsumed(candidate, currentTick)) continue;
-            if (outOfRange(candidate, primary)) continue;
-            result.add(candidate);
-        }
-        return result;
+        return collectCooperators(attempting, consumed, primary, period, pushDir, currentTick);
     }
 
     public boolean wasConsumed(BlockPos pos, long currentTick) {
-        return isConsumed(pos, currentTick);
+        return wasConsumedIn(consumed, pos, currentTick);
     }
 
     public void markConsumed(BlockPos pos, long tick) {
@@ -116,13 +103,31 @@ public class PulleyCooperation extends WorldSavedData {
         consumed.put(pos.asLong(), tick);
     }
 
-    private boolean isConsumed(BlockPos pos, long currentTick) {
-        Long t = consumed.get(pos.asLong());
-        // Same-tick only: "consumed" exists solely to dedupe a cooperator's own blockEvent within
-        // the single runBlockEvents pass that already moved its chain. MAX_AGE_TICKS is the purge
-        // horizon, NOT the validity window — using it here swallowed legitimate steps for ~20 ticks
-        // after every move, stalling repeated input (e.g. crank spam).
-        return t != null && t == currentTick;
+    private static Set<BlockPos> collectCooperators(Map<Long, AttemptInfo> attempts, Map<Long, Long> consumedTicks,
+                                                    BlockPos primary, int period, Direction pushDir, long currentTick) {
+        if (attempts.size() <= 1) return Collections.emptySet();
+        Set<BlockPos> result = new HashSet<>();
+        for (Map.Entry<Long, AttemptInfo> entry : attempts.entrySet()) {
+            AttemptInfo info = entry.getValue();
+            if (info.pushDir() != pushDir) continue;
+            if (info.period() != period) continue;
+            if (currentTick - info.tick() > MAX_AGE_TICKS) continue;
+            BlockPos candidate = BlockPos.of(entry.getKey());
+            if (candidate.equals(primary)) continue;
+            if (wasConsumedIn(consumedTicks, candidate, currentTick)) continue;
+            if (outOfRange(candidate, primary)) continue;
+            result.add(candidate);
+        }
+        return result;
+    }
+
+    // Same-tick only: "consumed" exists solely to dedupe a cooperator's own blockEvent within the
+    // single runBlockEvents pass that already moved its chain. MAX_AGE_TICKS is the purge horizon,
+    // NOT the validity window; using it here swallowed legitimate steps for ~20 ticks after every
+    // move, stalling repeated input (e.g. crank spam).
+    private static boolean wasConsumedIn(Map<Long, Long> consumedTicks, BlockPos pos, long currentTick) {
+        Long consumedAt = consumedTicks.get(pos.asLong());
+        return consumedAt != null && consumedAt == currentTick;
     }
 
     private static boolean outOfRange(BlockPos a, BlockPos b) {
@@ -155,26 +160,11 @@ public class PulleyCooperation extends WorldSavedData {
     }
 
     public static Set<BlockPos> getCooperatorsClient(BlockPos primary, int period, Direction pushDir, long currentTick) {
-        if (clientAttempts.size() <= 1) return Collections.emptySet();
-        Set<BlockPos> result = new HashSet<>();
-        for (Map.Entry<Long, AttemptInfo> entry : clientAttempts.entrySet()) {
-            AttemptInfo info = entry.getValue();
-            if (info.pushDir() != pushDir) continue;
-            if (info.period() != period) continue;
-            if (currentTick - info.tick() > MAX_AGE_TICKS) continue;
-            BlockPos candidate = BlockPos.of(entry.getKey());
-            if (candidate.equals(primary)) continue;
-            if (wasConsumedClient(candidate, currentTick)) continue;
-            if (outOfRange(candidate, primary)) continue;
-            result.add(candidate);
-        }
-        return result;
+        return collectCooperators(clientAttempts, clientConsumed, primary, period, pushDir, currentTick);
     }
 
     public static boolean wasConsumedClient(BlockPos pos, long currentTick) {
-        Long t = clientConsumed.get(pos.asLong());
-        // Same-tick only — see isConsumed.
-        return t != null && t == currentTick;
+        return wasConsumedIn(clientConsumed, pos, currentTick);
     }
 
     public static void markConsumedClient(BlockPos pos, long tick) {
