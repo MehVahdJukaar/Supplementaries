@@ -5,8 +5,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.mehvahdjukaar.supplementaries.common.misc.CoopResolverHelper;
-import net.mehvahdjukaar.supplementaries.common.misc.CoopResolverState;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PistonCoopResolverState;
 import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +23,7 @@ import java.util.Set;
 public abstract class PistonStructureResolverMixin implements ICooperativePiston {
 
     @Unique
-    private final CoopResolverState supp$coopState = new CoopResolverState();
+    private final PistonCoopResolverState supp$coopState = new PistonCoopResolverState();
 
     @Shadow @Final private List<BlockPos> toPush;
     @Shadow @Final private BlockPos pistonPos;
@@ -36,7 +35,7 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
     }
 
     @Override
-    public CoopResolverState supp$getCoopState() {
+    public PistonCoopResolverState supp$getCoopState() {
         return this.supp$coopState;
     }
 
@@ -44,7 +43,7 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
     // landed in toPush, then enforce the cooperative budget of 12 per contributing piston.
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
     private boolean supp$gateOnRealCooperation(boolean original) {
-        return CoopResolverHelper.gateResolve(original, pistonPos, toPush, supp$coopState);
+        return supp$coopState.gateResolve(original, pistonPos, toPush);
     }
 
     // Extend each "is this the piston's own body?" check in addBlockLine to also recognise
@@ -55,21 +54,21 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
                     target = "Lnet/minecraft/core/BlockPos;equals(Ljava/lang/Object;)Z"))
     private boolean supp$wrapPistonEqualsCheck(BlockPos candidate, Object pistonPosArg,
                                                Operation<Boolean> original) {
-        return CoopResolverHelper.wrapEqualsCheck(
-                original.call(candidate, pistonPosArg), candidate, supp$coopState);
+        return supp$coopState.wrapEqualsCheck(
+                original.call(candidate, pistonPosArg), candidate);
     }
 
     // Replace the two trailing-scan "> 12" limits with the cooperative limit.
     @Expression("? > @(12)")
     @ModifyExpressionValue(method = "addBlockLine", at = @At("MIXINEXTRAS:EXPRESSION"), require = 2)
     private int supp$modifyTrailingLimit(int original) {
-        return supp$coopState.pushLimit;
+        return supp$coopState.getPushLimit();
     }
 
     // Replace the forward-scan ">= 12" limit with the cooperative limit.
     @Expression("? >= @(12)")
     @ModifyExpressionValue(method = "addBlockLine", at = @At("MIXINEXTRAS:EXPRESSION"), require = 1)
     private int supp$modifyForwardLimit(int original) {
-        return supp$coopState.pushLimit;
+        return supp$coopState.getPushLimit();
     }
 }

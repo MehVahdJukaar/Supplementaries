@@ -5,6 +5,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
@@ -38,9 +39,9 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
      * positioned relative to the carried block based on {@link #extendPhantom}.
      * <ul>
      *   <li>Retract ({@code extendPhantom=false}): rendered one slot AHEAD of carried in the
-     *   push direction — the consumed top rope sliding into the pulley body. Never placed.</li>
+     *   push direction, i.e. the consumed top rope sliding into the pulley body. Never placed.</li>
      *   <li>Extend ({@code extendPhantom=true}): rendered one slot BEHIND the carried's source
-     *   in the push direction — a new rope sliding from the pulley body down into the chain.
+     *   in the push direction, i.e. a new rope sliding from the pulley body down into the chain.
      *   Placed at firstSlot when the animation finishes.</li>
      * </ul>
      */
@@ -89,10 +90,10 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
 
     /**
      * {@link PistonMovingBlockEntity}'s constructor hardcodes {@code BlockEntityType.PISTON} into
-     * the {@link BlockEntity#type} field, so the vanilla constructor-time state validation would
+     * the block entity's own {@code type} field, so the vanilla constructor-time validation would
      * check PISTON against our {@code moving_pulley_block} state and throw. Validate against our
      * real type instead (matches the overridden {@link #getType()}). Safe to call during super
-     * construction — it's a static registry lookup, no instance state.
+     * construction, since it's a static registry lookup with no instance state.
      */
     @Override
     public boolean isValidBlockState(BlockState state) {
@@ -117,18 +118,17 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
         }
         if (tag.contains("supp_leading_state", CompoundTag.TAG_COMPOUND)) {
             this.leadingState = NbtUtils.readBlockState(
-                    registries.lookupOrThrow(net.minecraft.core.registries.Registries.BLOCK),
+                    registries.lookupOrThrow(Registries.BLOCK),
                     tag.getCompound("supp_leading_state"));
         }
         this.extendPhantom = tag.getBoolean("supp_extend_phantom");
     }
 
     /**
-     * Mirrors vanilla {@link PistonMovingBlockEntity#tick} byte-for-byte except for the one
-     * line that advances progress — we use {@link #progressStep} instead of the hardcoded
-     * 0.5F. Keeping the rest identical means entity-interactions, finalisation (including
-     * the {@code MovingPulleyBlock} → real-block transition) and chunk lifecycle all match
-     * vanilla expectations exactly.
+     * Mirrors vanilla {@link PistonMovingBlockEntity#tick} byte-for-byte except for the one line
+     * that advances progress, which uses {@link #progressStep} instead of the hardcoded 0.5F.
+     * Keeping the rest identical means entity interactions, finalisation (including the
+     * moving-block to real-block transition) and chunk lifecycle all match vanilla exactly.
      */
     public static void tick(Level level, BlockPos pos, BlockState state, MovingPulleyBlockEntity be) {
         be.lastTicked = level.getGameTime();

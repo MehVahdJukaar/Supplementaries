@@ -24,7 +24,7 @@ import org.joml.Matrix4f;
  * Vanilla piston rendering + a "leading phantom" block one slot ahead in the push direction.
  * The phantom shares the carried block's progress curve, so a rope being consumed by a pulley
  * animates smoothly from its source slot into the pulley body alongside the rest of the chain
- * sliding up. The phantom is purely visual — see {@link MovingPulleyBlockEntity#getLeadingState}.
+ * sliding up. The phantom is purely visual, see {@link MovingPulleyBlockEntity#getLeadingState}.
  * <p>
  * For the topmost moving block (the one carrying the leading phantom) we additionally write a
  * 1-block mask cube at the pulley's world position around the carried block + phantom draws,
@@ -56,8 +56,8 @@ public class MovingPulleyRenderer extends PistonHeadRenderer {
             if (buffer instanceof MultiBufferSource.BufferSource bs) bs.endBatch();
 
             // Pulley world position relative to be.getBlockPos():
-            //   Retract (extendPhantom=false): pulley = entity + 1·pushDir
-            //   Extend  (extendPhantom=true):  pulley = entity − 2·pushDir
+            //   Retract (extendPhantom=false): pulley = entity + 1 * pushDir
+            //   Extend  (extendPhantom=true):  pulley = entity - 2 * pushDir
             Direction dir = be.getDirection();
             int dist = mpbe.isExtendPhantom() ? -2 : 1;
 
@@ -71,7 +71,7 @@ public class MovingPulleyRenderer extends PistonHeadRenderer {
             DepthMaskUtils.beginMask(cubeMat, mode);
         }
 
-        // Carried block (vanilla path) — queued into buffer source.
+        // Carried block (vanilla path), queued into buffer source.
         super.render(be, partialTick, pose, buffer, packedLight, packedOverlay);
 
         // Leading phantom (queued into buffer source).

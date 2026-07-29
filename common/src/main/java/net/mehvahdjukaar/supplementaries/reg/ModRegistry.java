@@ -995,9 +995,9 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<MovingSlidyBlockEntity>> MOVING_SLIDY_BLOCK_TILE = regTile("moving_slidy_block", () ->
             PlatHelper.newBlockEntityType(MovingSlidyBlockEntity::new, MOVING_SLIDY_BLOCK.get()));
 
-    // Pulley's continuous-mode moving block — subclass of vanilla MOVING_PISTON with
-    // configurable animation duration. Used by PulleyMover when a driver passes an
-    // animation period; falls back to vanilla MOVING_PISTON when period is unspecified.
+    // Pulley's continuous-mode moving block: a subclass of vanilla MOVING_PISTON with configurable
+    // animation duration, used by PulleyMover for every chain step. Falls back to the vanilla
+    // 2-tick speed when the driver doesn't specify an animation period.
     public static final Supplier<Block> MOVING_PULLEY_BLOCK = regBlock("moving_pulley_block", () -> new MovingPulleyBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.MOVING_PISTON)
     ));

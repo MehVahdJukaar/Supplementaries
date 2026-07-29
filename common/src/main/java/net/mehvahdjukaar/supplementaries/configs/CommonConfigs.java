@@ -296,22 +296,22 @@ public class CommonConfigs {
             PULLEY_ENABLED = builder.mainFeature();
             PULLEY_CONTINUOUS = builder.comment("""
                             If true, pulleys retract their rope chain over multiple ticks, animating each block via vanilla moving-piston entities.\s
-                            Connected blocks become moving blocks (so they push entities, drop sand etc) and multiple pulleys can cooperate to pull a single heavy contraption — useful for elevators.\s
+                            Connected blocks become moving blocks (so they push entities, drop sand etc) and multiple pulleys can cooperate to pull a single heavy contraption, useful for elevators.\s
                             If false, the original instant retraction behavior is used.""")
                     .define("continuous_retraction", true);
             COOPERATIVE_PULLEYS = builder.comment("""
                             If true, multiple pulleys firing on the same tick with the same period and push direction \
-                            can pool their pull budget into one structure resolve — letting two ropes share a wide \
+                            can pool their pull budget into one structure resolve, letting two ropes share a wide \
                             elevator platform. Only relevant when 'continuous_retraction' is enabled.""")
                     .define("cooperative_pulleys", true);
             PULLEY_PULL_LIMIT = builder.comment("""
                             Maximum number of NON-rope blocks a single pulley can drag (the anchor and anything \
                             sticky-attached to it). Rope segments don't count toward this. Cooperating pulleys \
-                            pool their budgets — two pulleys can pull twice this many blocks together.""")
+                            pool their budgets: two pulleys can pull twice this many blocks together.""")
                     .define("pull_limit", 8, 1, 128);
             PULLEY_PULL_INTERVAL = builder.comment("""
                             Ticks to wait between unit pulls when continuous_retraction is enabled.\s
-                            Lower = faster pulley. Minimum 2 ticks because each animation takes that long to play out — going lower has no effect.""")
+                            Lower = faster pulley. Minimum 2 ticks because each animation takes that long to play out, going lower has no effect.""")
                     .define("pull_interval", 4, 2, 100);
             MINESHAFT_ELEVATOR = builder.comment("Chance for a new mineshaft elevator piece to spawn")
                     .define("mineshaft_elevator", 0.035, 0, 1);

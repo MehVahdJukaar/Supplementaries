@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.utils;
 
-import net.mehvahdjukaar.supplementaries.common.misc.CoopResolverState;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PistonCoopResolverState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 
@@ -18,5 +18,5 @@ public interface ICooperativePiston {
     /**
      * Direct access to the underlying state, used by mixins on resolver subclasses (Zeta).
      */
-    CoopResolverState supp$getCoopState();
+    PistonCoopResolverState supp$getCoopState();
 }

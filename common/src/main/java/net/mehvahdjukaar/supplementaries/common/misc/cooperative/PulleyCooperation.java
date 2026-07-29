@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.misc;
+package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.mehvahdjukaar.supplementaries.common.misc.CooperativePistonData;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.CooperativePistonData;
 import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
@@ -77,7 +77,7 @@ public class CooperativePistonBaseBlockMixin {
         // Only post events for cooperators that actually shared the pushed structure.
         // Free-riders are filtered out by the helper's contribution check; their own
         // vanilla resolve already succeeded independently if applicable.
-        Set<BlockPos> contributing = coop.supp$getCoopState().contributingCooperators;
+        Iterable<BlockPos> contributing = coop.supp$getCoopState().getContributingCooperators();
         for (BlockPos cooperatorPos : contributing) {
             if (!data.hasPosted(cooperatorPos, tick)) {
                 level.blockEvent(cooperatorPos,

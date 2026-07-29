@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.misc.PulleyCooperation;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyCooperation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -15,7 +15,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * The client re-runs the pull move locally in {@code PulleyBlock.triggerEvent} (the
  * {@code MOVING_PULLEY} blocks are placed with a non-syncing flag, vanilla-piston style), so it
  * must resolve the SAME cooperative group the server did. Analog driving (turn tables) already
- * runs on the client, so it populates the client side-channel locally — but crank / manual pulls
+ * runs on the client, so it populates the client side-channel locally, but crank / manual pulls
  * happen server-only, so the client would otherwise see an empty cooperation table and resolve
  * each pulley solo (which fails for structures bridged across two ropes). This packet, sent from
  * {@code PulleyBlockTile.fireContinuousStep} just before the pull block-event, fills that gap for

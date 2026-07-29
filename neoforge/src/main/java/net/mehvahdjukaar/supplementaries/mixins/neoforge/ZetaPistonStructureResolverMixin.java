@@ -5,8 +5,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
-import net.mehvahdjukaar.supplementaries.common.misc.CoopResolverHelper;
-import net.mehvahdjukaar.supplementaries.common.misc.CoopResolverState;
 import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,14 +19,6 @@ import org.violetmoon.zeta.piston.ZetaPistonStructureResolver;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Apply the same cooperative logic to Quark/Zeta's wrapping resolver. Zeta extends vanilla
- * and inherits the {@code ICooperativePiston} interface plus the {@code supp$coopState} field
- * from the vanilla mixin, so we only need to re-target the injections at Zeta's own overridden
- * {@code resolve()} and {@code addBlockLine()} (which use {@code myToPush} and Zeta's
- * configurable push limit) and forward {@code setCooperators} to the parent resolver for
- * the Zeta-disabled delegation path.
- */
 @Pseudo
 @OptionalMixin("org.violetmoon.zeta.piston.ZetaPistonStructureResolver")
 @Mixin(ZetaPistonStructureResolver.class)
@@ -38,11 +28,9 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
     @Shadow @Final private List<BlockPos> myToPush;
     @Shadow @Final private PistonStructureResolver parent;
 
-    /**
-     * Forward cooperator state to the {@code parent} vanilla resolver as well: when Zeta is
-     * globally disabled, {@code resolve()} delegates to {@code parent.resolve()} and vanilla's
-     * mixin needs to see the cooperators on the parent instance.
-     */
+    // Forward cooperator state to the {@code parent} vanilla resolver as well: when Zeta is
+    // globally disabled, {@code resolve()} delegates to {@code parent.resolve()} and vanilla's
+    // mixin needs to see the cooperators on the parent instance.
     @Override
     public void supp$setCooperators(Set<BlockPos> cooperators, int pushLimit,
                                     Direction pistonDirection, boolean extending) {
@@ -58,8 +46,7 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
     private boolean supp$gateOnRealCooperation(boolean original) {
         if (!ZetaPistonStructureResolver.GlobalSettings.isEnabled()) return original;
-        CoopResolverState state = this.supp$getCoopState();
-        return CoopResolverHelper.gateResolve(original, pistonPos, myToPush, state);
+        return this.supp$getCoopState().gateResolve(original, pistonPos, myToPush);
     }
 
     // Same boundary-extension as on vanilla, applied to Zeta's overridden addBlockLine.
@@ -68,8 +55,7 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
                     target = "Lnet/minecraft/core/BlockPos;equals(Ljava/lang/Object;)Z"))
     private boolean supp$wrapPistonEqualsCheck(BlockPos candidate, Object pistonPosArg,
                                                Operation<Boolean> original) {
-        return CoopResolverHelper.wrapEqualsCheck(
-                original.call(candidate, pistonPosArg), candidate, this.supp$getCoopState());
+        return this.supp$getCoopState().wrapEqualsCheck(original.call(candidate, pistonPosArg), candidate);
     }
 
     // Zeta reads its push limit once at the top of addBlockLine via GlobalSettings.getPushLimit().
@@ -79,6 +65,6 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
             at = @At(value = "INVOKE",
                     target = "Lorg/violetmoon/zeta/piston/ZetaPistonStructureResolver$GlobalSettings;getPushLimit()I"))
     private int supp$boostPushLimit(int original) {
-        return Math.max(original, this.supp$getCoopState().pushLimit);
+        return Math.max(original, this.supp$getCoopState().getPushLimit());
     }
 }

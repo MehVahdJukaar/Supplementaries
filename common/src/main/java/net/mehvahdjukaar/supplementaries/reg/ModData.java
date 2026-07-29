@@ -6,8 +6,8 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
-import net.mehvahdjukaar.supplementaries.common.misc.CooperativePistonData;
-import net.mehvahdjukaar.supplementaries.common.misc.PulleyCooperation;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.CooperativePistonData;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyCooperation;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.minecraft.world.entity.LivingEntity;
 

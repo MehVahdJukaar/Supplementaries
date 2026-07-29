@@ -6,14 +6,15 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.common.misc.PulleyCooperation;
-import net.mehvahdjukaar.supplementaries.common.misc.PulleyMover;
-import net.mehvahdjukaar.supplementaries.common.misc.PulleyStructureResolver;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyCooperation;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyMover;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyStructureResolver;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
@@ -36,7 +37,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -45,13 +48,11 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     public static final BooleanProperty FLIPPED = ModBlockProperties.FLIPPED;
 
     /**
-     * Block-event id meaning "do one chain step." Param bits 0-2 encode the push direction
-     * via {@link Direction#get3DDataValue()}: {@link Direction#UP} = retract step (chain moves
-     * toward pulley, top rope consumed), {@link Direction#DOWN} = extend step (anchor moves
-     * away, new rope appears in vacated slot). Fired by
-     * {@link PulleyBlockTile#pullRopeUp} / {@link PulleyBlockTile#releaseRopeDown} under
-     * the continuous config. Handled by {@link #triggerEvent} on BOTH server AND client
-     * (vanilla piston pattern) so the moving-piston block entities exist on the client.
+     * Block-event id meaning "do one chain step". Fired by {@link PulleyBlockTile#pullRopeUp} /
+     * {@link PulleyBlockTile#releaseRopeDown} under the continuous config; the param carries the
+     * direction and animation duration (layout documented at the encoding site). Handled by
+     * {@link #triggerEvent} on BOTH server AND client (vanilla piston pattern) so the moving
+     * block entities exist on the client too.
      */
     public static final int EVENT_PULL_STEP = 0;
 
@@ -150,7 +151,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
 
     /**
      * True while a chain step this pulley spawned is still mid-animation, so further input must
-     * be ignored — one rotation at a time. Each step places a {@code MovingPulleyBlock} in the
+     * be ignored: one rotation at a time. Each step places a {@code MovingPulleyBlock} in the
      * slot directly below the pulley (retract: a rope sliding up into firstSlot) or one slot
      * further down (extend: firstSlot is transiently AIR while the new rope animates into it from
      * below). Either occupied slot means the chain is busy. This is the gate that makes the
@@ -166,18 +167,18 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         return level.getBlockState(firstSlot).is(moving)
                 || level.getBlockState(firstSlot.relative(ropeHangDir)).is(moving);
     }
+
     /**
      * Handles {@link #EVENT_PULL_STEP}: runs one resolver+move locally. Called on both
      * server (via the level's runBlockEvents) and client (after the server's
-     * {@code ClientboundBlockEventPacket} arrives). Each side spawns its own moving-piston
-     * block entities so the client sees the slide animation — vanilla pistons rely on
-     * exactly this dual-side execution because {@code PistonMovingBlockEntity.getUpdatePacket}
-     * is null and {@code MovingPistonBlock.newBlockEntity} also returns null, so the only way
-     * the client gets a moving BE is by running the move logic locally.
+     * {@code ClientboundBlockEventPacket} arrives). Each side spawns its own moving block
+     * entities so the client sees the slide animation; vanilla pistons rely on exactly this
+     * dual-side execution because {@code PistonMovingBlockEntity.getUpdatePacket} is null and
+     * {@code MovingPistonBlock.newBlockEntity} also returns null, so the only way the client
+     * gets a moving BE is by running the move logic locally.
      * <p>
-     * Param bits 0-2 encode the push direction: UP for retract, DOWN for extend. The rope
-     * hangs DOWN from the pulley in either case (vertical-pulley assumption). Server-side
-     * bookkeeping happens here too: +1 item / sound on retract, place new rope + −1 item on
+     * The rope always hangs DOWN from the pulley (vertical-pulley assumption). Server-side
+     * bookkeeping happens here too: +1 item and a sound on retract, new rope and -1 item on
      * extend.
      */
     @Override
@@ -195,19 +196,19 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         if (ropeBlock == null) return false;
 
         // One rotation at a time: if our own chain is still animating a previous step, swallow
-        // this event. Returning true (not false) matches the "already consumed" handling below —
-        // the input is intentionally dropped, not a failure.
+        // this event. Returning true (not false) matches the "already consumed" handling below,
+        // as the input is intentionally dropped, not a failure.
         if (isChainAnimating(level, pos, ropeHangDir)) return true;
 
         // Cooperative pulleys: dispatch to the per-level WorldSavedData on the server, the
-        // client static side-channel otherwise. Same semantics either way — if this pulley was
+        // client static side-channel otherwise. Same semantics either way: if this pulley was
         // already absorbed into an earlier triggerEvent's resolver call this tick, swallow our
         // own event so we don't double-shift the chain. Gated by config: when off, each pulley
         // resolves its own chain only.
         long now = level.getGameTime();
-        boolean coopEnabled = net.mehvahdjukaar.supplementaries.configs.CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get();
-        PulleyCooperation serverData = coopEnabled && level instanceof net.minecraft.server.level.ServerLevel sl
-                ? ModData.COOPERATIVE_PULLEYS.getData(sl) : null;
+        boolean coopEnabled = CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get();
+        PulleyCooperation serverData = coopEnabled && level instanceof ServerLevel serverLevel
+                ? ModData.COOPERATIVE_PULLEYS.getData(serverLevel) : null;
         if (coopEnabled) {
             boolean alreadyConsumed = serverData != null
                     ? serverData.wasConsumed(pos, now)
@@ -223,21 +224,21 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
                     : PulleyCooperation.getCooperatorsClient(pos, animationTicks, pushDir, now);
         List<PulleyStructureResolver.PulleyInfo> infos = new ArrayList<>();
         infos.add(new PulleyStructureResolver.PulleyInfo(pos, ropeBlock, ropeHangDir, extending));
-        for (BlockPos cp : cooperatorPositions) {
-            if (!(level.getBlockEntity(cp) instanceof PulleyBlockTile ct)) continue;
-            // Skip a cooperator whose own chain is still animating — pulling it into our resolve
+        for (BlockPos cooperatorPos : cooperatorPositions) {
+            if (!(level.getBlockEntity(cooperatorPos) instanceof PulleyBlockTile cooperatorTile)) continue;
+            // Skip a cooperator whose own chain is still animating: pulling it into our resolve
             // pass would hit the same transient-air extend trap its own gate just dodged.
-            if (isChainAnimating(level, cp, ropeHangDir)) continue;
-            Block cRope = ct.resolveRopeBlock(ropeHangDir);
-            // Only cooperate when the same rope-block type is wound — different blocks (chain vs
+            if (isChainAnimating(level, cooperatorPos, ropeHangDir)) continue;
+            Block cooperatorRope = cooperatorTile.resolveRopeBlock(ropeHangDir);
+            // Only cooperate when the same rope-block type is wound: different blocks (chain vs
             // rope) would break the resolver's single-ropeBlock assumption per chain walk.
-            if (cRope == null || cRope != ropeBlock) continue;
-            infos.add(new PulleyStructureResolver.PulleyInfo(cp, cRope, ropeHangDir, extending));
+            if (cooperatorRope != ropeBlock) continue;
+            infos.add(new PulleyStructureResolver.PulleyInfo(cooperatorPos, cooperatorRope, ropeHangDir, extending));
         }
-        // Build rope-block map from infos before any world mutation.
-        java.util.Map<BlockPos, Block> preMovRopeBlocks = new java.util.HashMap<>();
+        // Build the rope-block map from infos before any world mutation.
+        Map<BlockPos, Block> ropeBlockByPulley = new HashMap<>();
         for (PulleyStructureResolver.PulleyInfo info : infos) {
-            preMovRopeBlocks.put(info.pulleyPos(), info.ropeBlock());
+            ropeBlockByPulley.put(info.pulleyPos(), info.ropeBlock());
         }
         PulleyStructureResolver resolver = new PulleyStructureResolver(level, infos);
 
@@ -249,18 +250,18 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
 
         if (!level.isClientSide) {
             for (BlockPos contributorPos : resolver.getContributedPulleys()) {
-                if (!(level.getBlockEntity(contributorPos) instanceof PulleyBlockTile ct)) continue;
-                Block cRope = preMovRopeBlocks.get(contributorPos);
-                if (cRope == null) continue;
+                if (!(level.getBlockEntity(contributorPos) instanceof PulleyBlockTile contributorTile)) continue;
+                Block contributorRope = ropeBlockByPulley.get(contributorPos);
+                if (contributorRope == null) continue;
                 if (extending) {
-                    serverFinaliseExtend(level, contributorPos, ct, cRope, ropeHangDir);
+                    serverFinaliseExtend(level, contributorPos, contributorTile, contributorRope);
                 } else {
-                    serverFinaliseRetract(level, contributorPos, ct, cRope);
+                    serverFinaliseRetract(level, contributorPos, contributorTile, contributorRope);
                 }
             }
         }
 
-        // moveOneStep re-resolves internally (idempotent — world unchanged since our resolve call).
+        // moveOneStep re-resolves internally (idempotent: the world is unchanged since our call).
         boolean moved = PulleyMover.moveOneStep(level, resolver, animationTicks);
         if (!moved) return false;
 
@@ -269,18 +270,18 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         if (coopEnabled) {
             if (serverData != null) {
                 serverData.markConsumed(pos, now);
-                for (BlockPos cp : cooperatorPositions) serverData.markConsumed(cp, now);
+                for (BlockPos cooperatorPos : cooperatorPositions) serverData.markConsumed(cooperatorPos, now);
             } else {
                 PulleyCooperation.markConsumedClient(pos, now);
-                for (BlockPos cp : cooperatorPositions) PulleyCooperation.markConsumedClient(cp, now);
+                for (BlockPos cooperatorPos : cooperatorPositions) {
+                    PulleyCooperation.markConsumedClient(cooperatorPos, now);
+                }
             }
         }
         return true;
     }
 
-    /**
-     * Retract bookkeeping: +1 to displayed item, play break sound.
-     */
+    // Retract bookkeeping: +1 to displayed item, play break sound.
     private static void serverFinaliseRetract(Level level, BlockPos pos, PulleyBlockTile tile, Block ropeBlock) {
         ItemStack stack = tile.getDisplayedItem();
         if (stack.isEmpty()) {
@@ -289,33 +290,27 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
             stack.grow(1);
             tile.setChanged();
         }
-        SoundType st = ropeBlock.defaultBlockState().getSoundType();
-        level.playSound(null, pos, st.getBreakSound(), SoundSource.BLOCKS,
-                (st.getVolume() + 1.0F) / 2.0F, st.getPitch() * 0.8F);
+        SoundType soundType = ropeBlock.defaultBlockState().getSoundType();
+        level.playSound(null, pos, soundType.getBreakSound(), SoundSource.BLOCKS,
+                (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
     }
 
-    /**
-     * Extend bookkeeping: place a new rope in the anchor's vacated slot, −1 displayed item,
-     * play place sound. The new rope position is just past the lowest existing rope (where
-     * the anchor was before moving). Walked here rather than threaded back from the resolver
-     * — small re-walk, no perf concern, keeps the resolver focused on toPush.
-     */
+    // Extend bookkeeping: -1 displayed item and a place sound. The new rope itself is placed at
+    // firstSlot by the topmost moving block's extend phantom when its animation ends, see
+    // MovingPulleyBlockEntity.tick.
     private static void serverFinaliseExtend(Level level, BlockPos pos, PulleyBlockTile tile,
-                                             Block ropeBlock, Direction ropeHangDir) {
+                                             Block ropeBlock) {
         ItemStack stack = tile.getDisplayedItem();
-        if (stack.isEmpty() || !stack.is(ropeBlock.asItem()) || stack.getCount() <= 0) {
-            // Nothing to spend — extend is a no-op on the world (the move animation already
-            // happened but we shouldn't leave an unanchored rope).
+        if (stack.isEmpty() || !stack.is(ropeBlock.asItem())) {
+            // Nothing to spend, so extending is a no-op on the world: the move animation already
+            // happened but we shouldn't leave an unanchored rope.
             return;
         }
-        // The new rope at firstSlot is placed by the topmost MOVING_PULLEY's extend phantom
-        // at the end of its animation — see MovingPulleyBlockEntity.tick. We only decrement
-        // the spool and play the sound here.
         stack.shrink(1);
         tile.setChanged();
-        SoundType st = ropeBlock.defaultBlockState().getSoundType();
-        level.playSound(null, pos, st.getPlaceSound(), SoundSource.BLOCKS,
-                (st.getVolume() + 1.0F) / 2.0F, st.getPitch() * 0.8F);
+        SoundType soundType = ropeBlock.defaultBlockState().getSoundType();
+        level.playSound(null, pos, soundType.getPlaceSound(), SoundSource.BLOCKS,
+                (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.misc;
+package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -45,9 +45,6 @@ public class CooperativePistonData extends WorldSavedData {
     private final Map<Long, AttemptInfo> attemptingPistons = new HashMap<>();
     // Transient: only used within a single tick to dedup event posting, not persisted.
     private final Map<Long, Long> postedPistons = new HashMap<>();
-
-    public CooperativePistonData() {
-    }
 
     private static CooperativePistonData fromList(List<StoredEntry> list) {
         CooperativePistonData data = new CooperativePistonData();

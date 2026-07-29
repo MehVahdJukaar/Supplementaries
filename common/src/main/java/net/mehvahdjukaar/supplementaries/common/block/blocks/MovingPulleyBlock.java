@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
  * Pulley-side moving block. Behaves identically to {@link MovingPistonBlock} but routes
  * through {@link MovingPulleyBlockEntity} so the animation duration can be customised
  * per-instance (matched to the driving turn table's pulse period). Same null
- * {@code newBlockEntity} pattern as vanilla — the BE is created manually by
+ * {@code newBlockEntity} pattern as vanilla: the BE is created manually by
  * {@code PulleyMover} via {@link #newMovingBlockEntity}.
  */
 public class MovingPulleyBlock extends MovingPistonBlock {

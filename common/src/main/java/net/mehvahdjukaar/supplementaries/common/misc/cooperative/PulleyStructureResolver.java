@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.misc;
+package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
@@ -36,17 +36,7 @@ import java.util.*;
  */
 public class PulleyStructureResolver {
 
-    /**
-     * One pulley in a cooperating set. {@code ropeHangDirection} is the direction ropes hang
-     * from the pulley body (typically {@link Direction#DOWN} for a vertical pulley). The
-     * {@code extending} flag picks the operation: {@code false} = retract (chain moves toward
-     * the pulley), {@code true} = extend (anchor + sticky branches move away, new rope appears
-     * in the slot the anchor vacated).
-     */
     public record PulleyInfo(BlockPos pulleyPos, Block ropeBlock, Direction ropeHangDirection, boolean extending) {
-        /**
-         * Direction blocks in {@code toPush} actually move.
-         */
         public Direction pushDirection() {
             return extending ? ropeHangDirection : ropeHangDirection.getOpposite();
         }
@@ -81,7 +71,7 @@ public class PulleyStructureResolver {
 
     public PulleyStructureResolver(Level level, List<PulleyInfo> pulleys) {
         if (pulleys.isEmpty()) throw new IllegalArgumentException("need at least one pulley");
-        PulleyInfo first = pulleys.get(0);
+        PulleyInfo first = pulleys.getFirst();
         Direction sharedPush = first.pushDirection();
         boolean sharedExtending = first.extending();
         for (PulleyInfo p : pulleys) {
@@ -155,23 +145,22 @@ public class PulleyStructureResolver {
                 walkPos = walkPos.relative(ropeDir);
             }
 
-            // walkPos is now the anchor position (first non-rope reached). If empty, the
-            // ropes simply shorten by one — no anchor to attach a sticky chain to.
+            // walkPos is now the anchor position (first non-rope reached). If empty, the ropes
+            // simply shorten by one: no anchor to attach a sticky chain to.
             BlockState anchorState = level.getBlockState(walkPos);
-            boolean anchorAir = anchorState.isAir();
+            boolean anchorIsAir = anchorState.isAir();
             boolean anchorIsPulley = pulleyPositions.contains(walkPos);
-            boolean anchorPushable = !anchorAir && !anchorIsPulley
+            boolean anchorPullable = !anchorIsAir && !anchorIsPulley
                     && isPullable(anchorState, level, walkPos, pushDirection, false, ropeDir);
-            boolean anchorPullable = anchorPushable;
 
             if (!anchorPullable) {
-                if (anchorState.isAir() || pulleyPositions.contains(walkPos)) {
+                if (anchorIsAir || anchorIsPulley) {
                     // No anchor at all (just hanging rope), or the chain runs into another
-                    // pulley body — the rope chain still shortens by one if we walked any
+                    // pulley body: the rope chain still shortens by one if we walked any
                     // intermediate rope segments. Mark contribution if so.
                     if (toPush.size() > contributionMark) {
                         contributedPulleys.add(pulley.pulleyPos());
-                    } else if (extending && anchorState.isAir()) {
+                    } else if (extending && anchorIsAir) {
                         // Pure open air below the pulley (firstSlot itself is air): nothing to push
                         // and no column to grow, but lowering must still drop a fresh rope into
                         // firstSlot. There's no moved block to carry a phantom rope here, so queue a
@@ -189,8 +178,8 @@ public class PulleyStructureResolver {
             }
 
             if (toPush.contains(walkPos)) {
-                // Anchor already added by another pulley's sticky chain — we still count
-                // as contributing (our column shifts via the shared structure).
+                // Anchor already added by another pulley's sticky chain. We still count as
+                // contributing, since our column shifts via the shared structure.
                 contributedPulleys.add(pulley.pulleyPos());
                 continue;
             }
@@ -199,14 +188,13 @@ public class PulleyStructureResolver {
                 contributedPulleys.add(pulley.pulleyPos());
             }
         }
-        // Sticky branching pass — skip ropes (no slime-via-rope chains).
-        // MUST be an indexed loop: addBranchingBlocks → addBlockLine mutates toPush, and we
+        // Sticky branching pass, skipping ropes (no slime-via-rope chains).
+        // MUST be an indexed loop: addBranchingBlocks -> addBlockLine mutates toPush, and we
         // want newly-added blocks (e.g. slime laterally stuck to the anchor) to also be
         // visited by this pass. An enhanced-for / iterator throws ConcurrentModificationException
         // the moment branching adds anything. Vanilla's PistonStructureResolver uses the same
         // indexed pattern for the same reason.
-        for (int i = 0; i < toPush.size(); i++) {
-            BlockPos pos = toPush.get(i);
+        for (BlockPos pos : toPush) {
             if (ropePositions.contains(pos)) continue;
             if (SuppPlatformStuff.isSticky(level.getBlockState(pos)) && !addBranchingBlocks(pos)) {
                 return false;
@@ -215,14 +203,9 @@ public class PulleyStructureResolver {
         return true;
     }
 
-    /**
-     * Vanilla addBlockLine, with two modifications:
-     * <ul>
-     *   <li>Piston-position guard uses {@link #pulleyPositions} (any cooperating pulley is a wall).</li>
-     *   <li>Push-limit checks use {@link #budgetUsage()} instead of raw {@code toPush.size()} so
-     *       rope segments don't consume budget.</li>
-     * </ul>
-     */
+    // Vanilla addBlockLine, with two modifications: the piston-position guard uses pulleyPositions
+    // (any cooperating pulley is a wall), and the push-limit checks use budgetUsage() instead of
+    // raw toPush.size() so rope segments don't consume budget.
     private boolean addBlockLine(BlockPos originPos, Direction approachDir) {
         BlockState currentState = this.level.getBlockState(originPos);
 
@@ -266,7 +249,7 @@ public class PulleyStructureResolver {
         while (true) {
             BlockPos forwardPos = originPos.relative(this.pushDirection, forwardScanStep);
 
-            // Chain reached the pulley's mouth — terminate successfully. The consumed rope
+            // Chain reached the pulley's mouth, so terminate successfully. The consumed rope
             // will be overwritten by whichever block in toPush has it as its destination.
             if (this.consumedRopes.contains(forwardPos)) return true;
 
@@ -352,11 +335,11 @@ public class PulleyStructureResolver {
     /**
      * For extend mode: returns the firstSlot positions whose rope chain contributed to the
      * move, mapped to the rope state that should appear there. The mover uses this to flag
-     * the topmost MOVING_PULLEY in each chain as carrying a "trailing" phantom — a new rope
+     * the topmost MOVING_PULLEY in each chain as carrying a "trailing" phantom, a new rope
      * animating from inside the pulley down into firstSlot. Empty in retract mode.
      */
-    public java.util.Map<BlockPos, BlockState> getExtendingPhantomSources() {
-        java.util.Map<BlockPos, BlockState> result = new java.util.HashMap<>();
+    public Map<BlockPos, BlockState> getExtendingPhantomSources() {
+        Map<BlockPos, BlockState> result = new HashMap<>();
         if (!extending) return result;
         for (PulleyInfo p : pulleys) {
             BlockPos firstSlot = p.pulleyPos().relative(p.ropeHangDirection());
@@ -382,8 +365,8 @@ public class PulleyStructureResolver {
 
     /**
      * Pulley-flavoured pushability check. Identical to vanilla {@code PistonBaseBlock.isPushable}
-     * — including all NeoForge {@code IBlockExtension} hooks invoked by the state-level methods
-     * it calls — except for one deliberate divergence: <b>block-entity-bearing blocks are not
+     * (including all NeoForge {@code IBlockExtension} hooks invoked by the state-level methods it
+     * calls) except for one deliberate divergence: <b>block-entity-bearing blocks are not
      * automatically rejected</b>. Vanilla's final {@code return !state.hasBlockEntity()} is
      * dropped so that pulleys can pull blocks like chests or barrels, with NBT preserved
      * separately by the mover.

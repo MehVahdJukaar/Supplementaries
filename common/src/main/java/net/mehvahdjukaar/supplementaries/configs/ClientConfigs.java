@@ -83,11 +83,11 @@ public class ClientConfigs {
      * How the topmost pulley-driven moving block is clipped against the pulley body so it appears
      * to disappear into / emerge from it.
      * <ul>
-     *   <li>{@code OFF}     — no masking; the moving block can poke through the pulley.</li>
-     *   <li>{@code STENCIL} — writes a 1-block stencil volume at the pulley and tests against it
+     *   <li>{@code OFF}: no masking; the moving block can poke through the pulley.</li>
+     *   <li>{@code STENCIL}: writes a 1-block stencil volume at the pulley and tests against it
      *       only when drawing the carried block. Doesn't touch the depth buffer, so translucents
      *       (slime, glass, water) drawn later in the frame are unaffected.</li>
-     *   <li>{@code DEPTH}   — writes a 1-block depth volume at the pulley. Simpler, no stencil
+     *   <li>{@code DEPTH}: writes a 1-block depth volume at the pulley. Simpler, no stencil
      *       requirements, but its depth values persist through the rest of the frame and can
      *       cause translucent layers (slime etc.) drawn after BE rendering to clip incorrectly.</li>
      * </ul>
