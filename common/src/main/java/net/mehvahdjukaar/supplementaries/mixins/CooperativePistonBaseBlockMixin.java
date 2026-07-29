@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.CooperativePistonData;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PistonCooperationData;
 import net.mehvahdjukaar.supplementaries.common.utils.ICooperativePiston;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
@@ -52,9 +52,9 @@ public class CooperativePistonBaseBlockMixin {
         if (!(level instanceof ServerLevel serverLevel)) return original.call(resolver);
 
         long tick = level.getGameTime();
-        CooperativePistonData data = ModData.COOPERATIVE_PISTONS.getData(serverLevel);
+        PistonCooperationData data = ModData.COOPERATIVE_PISTONS.getData(serverLevel);
         data.markAttempting(pos, direction, true, tick);
-        CooperativePistonData.markAttemptingClient(pos, direction, true, tick);
+        PistonCooperationData.markAttemptingClient(pos, direction, true, tick);
 
         boolean vanillaResult = original.call(resolver);
         if (vanillaResult) {
@@ -104,7 +104,7 @@ public class CooperativePistonBaseBlockMixin {
         if (!(level instanceof ServerLevel serverLevel)) return;
         long tick = level.getGameTime();
         ModData.COOPERATIVE_PISTONS.getData(serverLevel).markAttempting(pos, direction, false, tick);
-        CooperativePistonData.markAttemptingClient(pos, direction, false, tick);
+        PistonCooperationData.markAttemptingClient(pos, direction, false, tick);
     }
 
     // Gate cooperation on the actual resolve() outcome instead of forcing it.
@@ -161,7 +161,7 @@ public class CooperativePistonBaseBlockMixin {
             return ModData.COOPERATIVE_PISTONS.getData(serverLevel)
                     .getCooperators(pos, facing, extending, level.getGameTime());
         }
-        return CooperativePistonData.getCooperatorsClient(pos, facing, extending);
+        return PistonCooperationData.getCooperatorsClient(pos, facing, extending);
     }
 
     @Unique

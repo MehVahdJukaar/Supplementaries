@@ -6,8 +6,8 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.CooperativePistonData;
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyCooperation;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PistonCooperationData;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyCooperationData;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -16,14 +16,14 @@ import static net.mehvahdjukaar.supplementaries.Supplementaries.res;
 public class ModData {
 
 
-    public static final WorldSavedDataType<CooperativePistonData> COOPERATIVE_PISTONS = RegHelper.registerWorldSavedData(
+    public static final WorldSavedDataType<PistonCooperationData> COOPERATIVE_PISTONS = RegHelper.registerWorldSavedData(
             Supplementaries.res("cooperative_pistons"),
-            CooperativePistonData::createFromLevel, () -> CooperativePistonData.CODEC, null,
+            PistonCooperationData::new, () -> PistonCooperationData.CODEC, null,
             true);
 
-    public static final WorldSavedDataType<PulleyCooperation> COOPERATIVE_PULLEYS = RegHelper.registerWorldSavedData(
+    public static final WorldSavedDataType<PulleyCooperationData> COOPERATIVE_PULLEYS = RegHelper.registerWorldSavedData(
             Supplementaries.res("cooperative_pulleys"),
-            PulleyCooperation::createFromLevel, () -> PulleyCooperation.CODEC, null,
+            PulleyCooperationData::new, () -> PulleyCooperationData.CODEC, null,
             true);
 
 

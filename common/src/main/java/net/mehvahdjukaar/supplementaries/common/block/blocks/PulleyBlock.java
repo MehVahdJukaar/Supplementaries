@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyCooperation;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyCooperationData;
 import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyMover;
 import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyStructureResolver;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -207,12 +207,12 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         // resolves its own chain only.
         long now = level.getGameTime();
         boolean coopEnabled = CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get();
-        PulleyCooperation serverData = coopEnabled && level instanceof ServerLevel serverLevel
+        PulleyCooperationData serverData = coopEnabled && level instanceof ServerLevel serverLevel
                 ? ModData.COOPERATIVE_PULLEYS.getData(serverLevel) : null;
         if (coopEnabled) {
             boolean alreadyConsumed = serverData != null
                     ? serverData.wasConsumed(pos, now)
-                    : PulleyCooperation.wasConsumedClient(pos, now);
+                    : PulleyCooperationData.wasConsumedClient(pos, now);
             if (alreadyConsumed) return true;
         }
 
@@ -221,7 +221,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         Set<BlockPos> cooperatorPositions = !coopEnabled ? Set.of()
                 : serverData != null
                     ? serverData.getCooperators(pos, animationTicks, pushDir, now)
-                    : PulleyCooperation.getCooperatorsClient(pos, animationTicks, pushDir, now);
+                  : PulleyCooperationData.getCooperatorsClient(pos, animationTicks, pushDir, now);
         List<PulleyStructureResolver.PulleyInfo> infos = new ArrayList<>();
         infos.add(new PulleyStructureResolver.PulleyInfo(pos, ropeBlock, ropeHangDir, extending));
         for (BlockPos cooperatorPos : cooperatorPositions) {
@@ -272,9 +272,9 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
                 serverData.markConsumed(pos, now);
                 for (BlockPos cooperatorPos : cooperatorPositions) serverData.markConsumed(cooperatorPos, now);
             } else {
-                PulleyCooperation.markConsumedClient(pos, now);
+                PulleyCooperationData.markConsumedClient(pos, now);
                 for (BlockPos cooperatorPos : cooperatorPositions) {
-                    PulleyCooperation.markConsumedClient(cooperatorPos, now);
+                    PulleyCooperationData.markConsumedClient(cooperatorPos, now);
                 }
             }
         }

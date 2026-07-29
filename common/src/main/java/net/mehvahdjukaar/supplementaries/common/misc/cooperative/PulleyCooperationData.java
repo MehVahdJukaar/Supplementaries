@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import java.util.*;
 
 /**
- * Per-level cooperation tracker for pulley pulls, mirroring {@link CooperativePistonData}.
+ * Per-level cooperation tracker for pulley pulls, mirroring {@link PistonCooperationData}.
  * When two pulleys fire a continuous step on the same tick with the same period and push
  * direction, this is how they discover each other so the resolver runs once with a combined
  * PulleyInfo set, letting them pull a shared structure together (e.g. an elevator on two
@@ -29,53 +29,44 @@ import java.util.*;
  * tick, so the matching {@code triggerEvent} (arriving on the client a few ticks late) sees
  * the same cooperator set on either side.
  */
-public class PulleyCooperation extends WorldSavedData {
+public class PulleyCooperationData extends WorldSavedData {
 
-    /** Cooperator search radius per axis. Roughly matches the resolver's per-pulley budget. */
+    /**
+     * Cooperator search radius per axis. Roughly matches the resolver's per-pulley budget.
+     */
     private static final int MAX_DISTANCE = 12;
-    /** Attempt/consumed entries older than this many ticks are purged. */
+    /**
+     * Attempt/consumed entries older than this many ticks are purged.
+     */
     private static final int MAX_AGE_TICKS = 20;
 
-    private record AttemptInfo(int period, Direction pushDir, long tick) {}
-
-    private record StoredEntry(long pos, int period, Direction pushDir, long tick) {
-        static final Codec<StoredEntry> CODEC = RecordCodecBuilder.create(i -> i.group(
-                Codec.LONG.fieldOf("pos").forGetter(StoredEntry::pos),
-                Codec.INT.fieldOf("period").forGetter(StoredEntry::period),
-                Direction.CODEC.fieldOf("dir").forGetter(StoredEntry::pushDir),
-                Codec.LONG.fieldOf("tick").forGetter(StoredEntry::tick)
-        ).apply(i, StoredEntry::new));
+    private record AttemptInfo(int period, Direction pushDir, long tick) {
+        static final Codec<AttemptInfo> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Codec.INT.fieldOf("period").forGetter(AttemptInfo::period),
+                Direction.CODEC.fieldOf("dir").forGetter(AttemptInfo::pushDir),
+                Codec.LONG.fieldOf("tick").forGetter(AttemptInfo::tick)
+        ).apply(i, AttemptInfo::new));
     }
 
-    public static final Codec<PulleyCooperation> CODEC = RecordCodecBuilder.create(i -> i.group(
-            StoredEntry.CODEC.listOf().fieldOf("pulleys").forGetter(PulleyCooperation::toList)
-    ).apply(i, PulleyCooperation::fromList));
+    // Map keys must round-trip as strings so this works under NbtOps (map keys become StringTag).
+    private static final Codec<Long> POS_KEY_CODEC = Codec.STRING.xmap(Long::parseLong, String::valueOf);
+
+    public static final Codec<PulleyCooperationData> CODEC = RecordCodecBuilder.create(i -> i.group(
+            Codec.unboundedMap(POS_KEY_CODEC, AttemptInfo.CODEC).fieldOf("pulleys").forGetter(d -> d.attempting)
+    ).apply(i, PulleyCooperationData::new));
 
     private final Map<Long, AttemptInfo> attempting = new HashMap<>();
     private final Map<Long, Long> consumed = new HashMap<>();
 
-    public PulleyCooperation() {}
-
-    private static PulleyCooperation fromList(List<StoredEntry> list) {
-        PulleyCooperation data = new PulleyCooperation();
-        for (StoredEntry e : list) {
-            data.attempting.put(e.pos(), new AttemptInfo(e.period(), e.pushDir(), e.tick()));
-        }
-        return data;
+    public PulleyCooperationData(ServerLevel level) {
     }
 
-    private List<StoredEntry> toList() {
-        return attempting.entrySet().stream()
-                .map(e -> new StoredEntry(e.getKey(), e.getValue().period(), e.getValue().pushDir(), e.getValue().tick()))
-                .toList();
-    }
-
-    public static PulleyCooperation createFromLevel(ServerLevel level) {
-        return new PulleyCooperation();
+    private PulleyCooperationData(Map<Long, AttemptInfo> attempting) {
+        this.attempting.putAll(attempting);
     }
 
     @Override
-    public WorldSavedDataType<PulleyCooperation> getType() {
+    public WorldSavedDataType<PulleyCooperationData> getType() {
         return ModData.COOPERATIVE_PULLEYS;
     }
 

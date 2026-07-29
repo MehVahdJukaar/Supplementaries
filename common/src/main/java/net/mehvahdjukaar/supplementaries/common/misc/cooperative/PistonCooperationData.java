@@ -20,52 +20,40 @@ import java.util.*;
  * Entries carry their registration tick and expire after MAX_AGE ticks, which lets a
  * rescheduled moveBlocks (running a few ticks after checkIfExtend) still find its cooperators.
  */
-public class CooperativePistonData extends WorldSavedData {
+public class PistonCooperationData extends WorldSavedData {
 
     private static final int MAX_AGE = 20;
 
     private record AttemptInfo(Direction direction, boolean extending, long tick) {
+        static final Codec<AttemptInfo> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Direction.CODEC.fieldOf("dir").forGetter(AttemptInfo::direction),
+                Codec.BOOL.fieldOf("ext").forGetter(AttemptInfo::extending),
+                Codec.LONG.fieldOf("tick").forGetter(AttemptInfo::tick)
+        ).apply(i, AttemptInfo::new));
     }
 
-    private record StoredEntry(long pos, Direction direction, boolean extending, long tick) {
-        static final Codec<StoredEntry> CODEC = RecordCodecBuilder.create(i -> i.group(
-                Codec.LONG.fieldOf("pos").forGetter(StoredEntry::pos),
-                Direction.CODEC.fieldOf("dir").forGetter(StoredEntry::direction),
-                Codec.BOOL.fieldOf("ext").forGetter(StoredEntry::extending),
-                Codec.LONG.fieldOf("tick").forGetter(StoredEntry::tick)
-        ).apply(i, StoredEntry::new));
-    }
+    // Map keys must round-trip as strings so this works under NbtOps (map keys become StringTag).
+    private static final Codec<Long> POS_KEY_CODEC = Codec.STRING.xmap(Long::parseLong, String::valueOf);
 
     // Root codec must produce a compound tag (not a bare list) so Moonlight's WorldSavedData.save()
     // can merge into an existing CompoundTag without hitting "mergeToList called with not a list".
-    public static final Codec<CooperativePistonData> CODEC = RecordCodecBuilder.create(i -> i.group(
-            StoredEntry.CODEC.listOf().fieldOf("pistons").forGetter(CooperativePistonData::toList)
-    ).apply(i, CooperativePistonData::fromList));
+    public static final Codec<PistonCooperationData> CODEC = RecordCodecBuilder.create(i -> i.group(
+            Codec.unboundedMap(POS_KEY_CODEC, AttemptInfo.CODEC).fieldOf("pistons").forGetter(d -> d.attemptingPistons)
+    ).apply(i, PistonCooperationData::new));
 
     private final Map<Long, AttemptInfo> attemptingPistons = new HashMap<>();
     // Transient: only used within a single tick to dedup event posting, not persisted.
     private final Map<Long, Long> postedPistons = new HashMap<>();
 
-    private static CooperativePistonData fromList(List<StoredEntry> list) {
-        CooperativePistonData data = new CooperativePistonData();
-        for (StoredEntry e : list) {
-            data.attemptingPistons.put(e.pos(), new AttemptInfo(e.direction(), e.extending(), e.tick()));
-        }
-        return data;
+    private PistonCooperationData(Map<Long, AttemptInfo> attemptingPistons) {
+        this.attemptingPistons.putAll(attemptingPistons);
     }
 
-    private List<StoredEntry> toList() {
-        return attemptingPistons.entrySet().stream()
-                .map(e -> new StoredEntry(e.getKey(), e.getValue().direction(), e.getValue().extending(), e.getValue().tick()))
-                .toList();
-    }
-
-    public static CooperativePistonData createFromLevel(ServerLevel level) {
-        return new CooperativePistonData();
+    public PistonCooperationData(ServerLevel level) {
     }
 
     @Override
-    public WorldSavedDataType<CooperativePistonData> getType() {
+    public WorldSavedDataType<PistonCooperationData> getType() {
         return ModData.COOPERATIVE_PISTONS;
     }
 

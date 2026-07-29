@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyCooperation;
+import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PulleyCooperationData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -10,7 +10,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 /**
  * Mirrors a pulley's "attempting a cooperative pull step" onto the client side-channel
- * ({@link PulleyCooperation#markAttemptingClient}).
+ * ({@link PulleyCooperationData#markAttemptingClient}).
  * <p>
  * The client re-runs the pull move locally in {@code PulleyBlock.triggerEvent} (the
  * {@code MOVING_PULLEY} blocks are placed with a non-syncing flag, vanilla-piston style), so it
@@ -58,7 +58,7 @@ public class ClientBoundPulleyAttemptPacket implements Message {
     public void handle(Context context) {
         // Runs on the client. markAttemptingClient is common static touching the client-only
         // side-channel tables; safe to call directly without a client-only receiver class.
-        PulleyCooperation.markAttemptingClient(this.pos, this.period, this.pushDir, this.tick);
+        PulleyCooperationData.markAttemptingClient(this.pos, this.period, this.pushDir, this.tick);
     }
 
     @Override
