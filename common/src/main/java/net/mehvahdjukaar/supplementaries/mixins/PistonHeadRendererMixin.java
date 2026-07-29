@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.ICarryingMovingPiston;
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.PistonCooperationData;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCooperationData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

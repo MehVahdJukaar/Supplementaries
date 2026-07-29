@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
+package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingPulleyBlock;

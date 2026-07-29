@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.utils;
+package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
@@ -29,7 +29,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class RopeHelper {
+public class RopeMover {
 
     public static boolean addRopeDown(BlockPos pos, Level level, @Nullable Player player, InteractionHand hand, Block ropeBlock) {
         return addRope(pos, level, player, hand, ropeBlock, Direction.DOWN, Integer.MAX_VALUE);

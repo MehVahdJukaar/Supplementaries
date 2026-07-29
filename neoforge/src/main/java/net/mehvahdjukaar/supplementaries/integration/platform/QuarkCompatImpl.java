@@ -118,6 +118,11 @@ public class QuarkCompatImpl {
         return Quark.ZETA.modules.isEnabled(PistonsMoveTileEntitiesModule.class);
     }
 
+    public static int getPistonPushLimit() {
+        if (!ZetaPistonStructureResolver.GlobalSettings.isEnabled()) return PistonStructureResolver.MAX_PUSH_DEPTH;
+        return ZetaPistonStructureResolver.GlobalSettings.getPushLimit();
+    }
+
     public static boolean shouldHideOverlay(ItemStack stack) {
         return UsesForCursesModule.staticEnabled && EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP);
     }

@@ -1,6 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

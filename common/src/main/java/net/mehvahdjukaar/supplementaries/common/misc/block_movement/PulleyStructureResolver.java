@@ -1,8 +1,7 @@
-package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
+package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
-import net.mehvahdjukaar.supplementaries.common.utils.RopeHelper;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -115,7 +114,7 @@ public class PulleyStructureResolver {
 
             // Retracting needs a rope at firstSlot to consume; extending can push an anchor
             // that sits directly below with no rope yet (phantom places the new rope on finish).
-            if (!extending && !RopeHelper.isCorrectRope(pulley.ropeBlock(), firstState, ropeDir)) {
+            if (!extending && !RopeMover.isCorrectRope(pulley.ropeBlock(), firstState, ropeDir)) {
                 continue;
             }
 
@@ -137,7 +136,7 @@ public class PulleyStructureResolver {
             }
             while (true) {
                 BlockState state = level.getBlockState(walkPos);
-                if (!RopeHelper.isCorrectRope(pulley.ropeBlock(), state, ropeDir)) break;
+                if (!RopeMover.isCorrectRope(pulley.ropeBlock(), state, ropeDir)) break;
                 if (!toPush.contains(walkPos)) {
                     toPush.add(walkPos);
                     ropePositions.add(walkPos);

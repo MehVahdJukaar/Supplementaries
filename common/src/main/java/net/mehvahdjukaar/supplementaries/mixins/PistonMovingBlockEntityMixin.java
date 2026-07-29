@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
-import net.mehvahdjukaar.supplementaries.common.misc.cooperative.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;

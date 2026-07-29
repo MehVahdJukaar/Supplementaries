@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
+package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

@@ -92,6 +92,10 @@ public class QuarkCompatImpl {
         return false;
     }
 
+    public static int getPistonPushLimit() {
+        return PistonStructureResolver.MAX_PUSH_DEPTH;
+    }
+
     public static boolean isFastSlideModuleEnabled() {
         return false;
     }

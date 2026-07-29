@@ -6,7 +6,7 @@ import net.mehvahdjukaar.moonlight.api.misc.InvPlacer;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
-import net.mehvahdjukaar.supplementaries.common.utils.RopeHelper;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.RopeMover;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.DecoBlocksCompat;
@@ -207,7 +207,7 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
                     state = setConnection(Direction.DOWN, state, true);
                     level.setBlock(pos, state, 0);
                 }
-                if (RopeHelper.addRopeDown(pos.below(), level, player, hand, this)) {
+                if (RopeMover.addRopeDown(pos.below(), level, player, hand, this)) {
                     SoundType soundtype = state.getSoundType();
                     level.playSound(player, pos, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
                     if (!player.getAbilities().instabuild) {
@@ -226,7 +226,7 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
             if (!player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
                 if (level.getBlockState(pos.below()).is(this)
                         || level.getBlockState(pos.above()).is(this)) {
-                    if (RopeHelper.removeRopeDown(pos.below(), level, this)) {
+                    if (RopeMover.removeRopeDown(pos.below(), level, this)) {
                         level.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (!player.getAbilities().instabuild) {
                             Utils.addItemOrDrop(player, new ItemStack(this), InvPlacer.handOrExistingOrAnyAvoidEmptyHand(hand));

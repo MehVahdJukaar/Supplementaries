@@ -124,7 +124,7 @@ public class ClientConfigs {
 
             builder.icon("minecraft:amethyst_shard").push("items");
 
-            builder.push("slingshot");
+            builder.icon("slingshot").push("slingshot");
             SLINGSHOT_OVERLAY = builder.comment("Adds an overlay to slingshots in gui displaying currently selected ammo")
                     .define("overlay", true);
             SLINGSHOT_OUTLINE = builder.comment("Render the block outline for distant blocks that are reachable with a slingshot enchanted with Stasis")
@@ -135,12 +135,12 @@ public class ClientConfigs {
                     .defineSlider("projectile_scale", 0.5, 0, 1);
             builder.pop();
 
-            builder.push("lunch_basket");
+            builder.icon("lunch_basket").push("lunch_basket");
             LUNCH_BOX_OVERLAY = builder.comment("Adds an overlay to lunch boxes in gui displaying currently selected food")
                     .define("overlay", true);
             builder.pop();
 
-            builder.push("altimeter");
+            builder.icon("altimeter").push("altimeter");
             DEPTH_METER_CLICK = builder.comment("Click action for depth meter which displays current depth")
                     .define("click_action", true);
             DEPTH_METER_DIMENSIONS = builder.comment("Allows depth meter to have unique textures per each dimension. Add more dimensions IDs and a matching texture in the correct path replacing ':' with '_'")
@@ -149,13 +149,13 @@ public class ClientConfigs {
                     .define("texture_precision_multiplier", 1, 1, 10);
             builder.pop();
 
-            builder.push("cannonball");
+            builder.icon("cannonball").push("cannonball");
             CANNONBALL_3D = builder.comment("Render cannonballs as 3D models")
                     .define("3d_model", true);
             builder.pop();
 
 
-            builder.push("quiver");
+            builder.icon("quiver").push("quiver");
             QUIVER_ARMOR_OFFSET = builder.comment("Z offset for quiver render when wearing armor. Useful for when you have custom armor bigger than vanilla to void clipping. Leave at -1 for automatic offset")
                     .define("armor_render_offset", -1d, -1d, 1);
             QUIVER_RENDER_MODE = builder.comment("How quivers should render onto players")
@@ -172,12 +172,12 @@ public class ClientConfigs {
                     .define("gui_y_offset", 0, -1000, 1000);
             builder.pop();
 
-            builder.push("wrench");
+            builder.icon("wrench").push("wrench");
             WRENCH_PARTICLES = builder.comment("Display visual particles when a block is rotated")
                     .define("turn_particles", true);
             builder.pop();
 
-            builder.push("flute");
+            builder.icon("flute").push("flute");
             FLUTE_PARTICLES = builder.comment("Display visual particles when a playing a flute")
                     .define("note_particles", true);
             builder.pop();
@@ -236,7 +236,7 @@ public class ClientConfigs {
             SLIME_OVERLAY = builder.comment("Show a slime overlay when you hit an entity with a slimeball")
                     .define("slime_effect_overlay", true);
 
-            builder.push("colored_maps");
+            builder.icon("minecraft:filled_map").push("colored_maps");
 
             COLORED_MAPS = builder
                     .comment("Needs the server config with same name on. If on here it will ignore the server one and keep vanilla colors")
@@ -347,25 +347,25 @@ public class ClientConfigs {
                     .icon("minecraft:oxidized_copper")
                     .push("blocks");
 
-            builder.push("globe");
+            builder.icon("globe").push("globe");
             GLOBE_RANDOM = builder.comment("Enable a random globe texture for each world").define("random_world", true);
             builder.pop();
 
-            builder.push("notice_board");
+            builder.icon("notice_board").push("notice_board");
             NOTICE_BOARD_CENTERED_TEXT = builder.comment("Allows notice board displayed text to be centered instead of being left aligned")
                     .define("centered_text", true);
             builder.pop();
 
-            builder.push("bunting");
+            builder.icon("bunting_white").push("bunting");
             FAST_BUNTINGS = builder.comment("Makes buntings use normal block models with no animation for faster performance. When off this is only active when viewed from a distance")
                     .define("fast_buntings", false);
             builder.pop();
 
-            builder.push("clock_block");
+            builder.icon("clock_block").push("clock_block");
             CLOCK_24H = builder.comment("Display 24h time format. False for 12h format").define("24h_format", true);
             builder.pop();
 
-            builder.push("pedestal");
+            builder.icon("pedestal").push("pedestal");
             PEDESTAL_SPIN = builder.comment("Enable displayed item spin")
                     .define("spin", true);
             PEDESTAL_SPEED = builder.comment("Spin speed")
@@ -374,20 +374,20 @@ public class ClientConfigs {
                     .define("fancy_renderers", true);
             builder.pop();
 
-            builder.push("bubble_block");
+            builder.icon("bubble_block").push("bubble_block");
             BUBBLE_BLOCK_WOBBLE = builder.comment("Wobbling intensity. set to 0 to disable")
                     .defineSlider("wobble", 0.2, 0, 1);
             BUBBLE_BLOCK_GROW_SPEED = builder.comment("How fast it grows when created. 1 to be instant")
                     .defineSlider("grow_speed", 0.4, 0, 1);
             builder.pop();
 
-            builder.push("item_shelf");
+            builder.icon("item_shelf").push("item_shelf");
             SHELF_TRANSLATE = builder.comment("Translate down displayed 3d blocks so that they are touching the shelf.\n" +
                             "Note that they will not be centered vertically this way")
                     .define("supported_blocks", true);
             builder.pop();
 
-            builder.push("wind_vane");
+            builder.icon("wind_vane").push("wind_vane");
             WIND_VANE_POWER_SCALING = builder.comment("""
                             Wind vane animation swings according to this equation:\s
                             pitch(time) = max_angle_1*sin(2pi*time*pow/period_1) + <max_angle_2>*sin(2pi*time*pow/<period_2>)
@@ -407,7 +407,7 @@ public class ClientConfigs {
                     .define("period_2", 150.0, 0.0, 2000.0);
             builder.pop();
 
-            builder.push("flag");
+            builder.icon("flag_white").push("flag");
             FLAG_PERIOD = builder.comment("How slow a flag will oscillate. (Period of oscillation)\n" +
                             "Lower value = faster oscillation")
                     .define("slowness", 100, 0, 10000);
@@ -423,37 +423,37 @@ public class ClientConfigs {
                     .define("render_as_banner", false);
             builder.pop();
 
-            builder.push("captured_mobs").comment("THIS IS ONLY FOR VISUALS! To allow more entities in cages you need to edit the respective tags!");
+            builder.icon("jar").push("captured_mobs").comment("THIS IS ONLY FOR VISUALS! To allow more entities in cages you need to edit the respective tags!");
 
             TICKABLE_MOBS = builder.comment("A list of mobs that can be ticked on client side when inside jars. Mainly used for stuff that has particles. Can cause issues and side effects so use with care")
                     .define("tickable_inside_jars", Arrays.asList("iceandfire:pixie", "druidcraft:dreadfish", "druidcraft:lunar_moth", "alexsmobs:hummingbird"));
 
             builder.pop();
 
-            builder.push("hat_stand");
+            builder.icon("hat_stand").push("hat_stand");
             HAT_STAND_CONFIG = builder.defineObject("swing_physics",
                     () -> new PendulumAnimation.Config(0, 55, 1.625f, 1.5f, true, 1.5f, 15),
                     PendulumAnimation.Config.CODEC);
             builder.pop();
 
-            builder.push("turn_table");
+            builder.icon("turn_table").push("turn_table");
             TURN_TABLE_PARTICLES = builder.comment("Display visual particles when a block is rotated")
                     .define("turn_particles", true);
             builder.pop();
 
-            builder.push("speaker_block");
+            builder.icon("speaker_block").push("speaker_block");
             SPEAKER_BLOCK_MUTE = builder.comment("Mute speaker block incoming narrator messages and displays them in chat instead")
                     .define("mute_narrator", false);
             builder.pop();
 
-            builder.push("rope");
+            builder.icon("rope").push("rope");
             ROPE_WOBBLE_AMPLITUDE = builder.comment("Amplitude of rope wobbling effect")
                     .define("wobbling_amplitude", 1.2d, 0, 20);
             ROPE_WOBBLE_PERIOD = builder.comment("Period of rope wobbling effect")
                     .define("wobbling_period", 12d, 0.01, 200);
             builder.pop();
 
-            builder.push("pulley");
+            builder.icon("pulley_block").push("pulley");
             PULLEY_MASK_MODE = builder.comment("""
                             How the topmost moving block of a continuous-mode pulley is clipped
                             against the pulley body so it appears to disappear into / emerge from it.
@@ -487,6 +487,7 @@ public class ClientConfigs {
 
 
             builder.comment("Rotation particle")
+                    .icon("turn_table")
                     .push("turn_particle");
 
             TURN_INITIAL_COLOR = builder.comment("An RGBA color")

@@ -1,4 +1,4 @@
-package net.mehvahdjukaar.supplementaries.common.misc.cooperative;
+package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
