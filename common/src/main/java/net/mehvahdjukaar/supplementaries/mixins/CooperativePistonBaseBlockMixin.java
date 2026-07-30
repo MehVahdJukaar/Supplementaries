@@ -159,7 +159,7 @@ public class CooperativePistonBaseBlockMixin {
             return ModData.COOPERATIVE_PISTONS.getData(serverLevel)
                     .getCooperators(pos, facing, extending, level.getGameTime());
         }
-        return PistonCooperationData.getCooperatorsClient(pos, facing, extending);
+        return PistonCooperationData.getCooperatorsClient(pos, facing, extending, level.getGameTime());
     }
 
     @Unique
