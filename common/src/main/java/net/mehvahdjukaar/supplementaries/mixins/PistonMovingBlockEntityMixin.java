@@ -81,9 +81,11 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         // before our hook attaches the carried NBT. When NBT arrives, the setter
         // invalidates the cache and the next call rebuilds with the NBT applied.
         CompoundTag nbt = this.supp$carriedBeNbt;
-        if (nbt != null
-                && be.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(ResourceLocation.parse(nbt.getString("id")))) {
-            be.loadWithComponents(nbt, this.level.registryAccess());
+        if (nbt != null) {
+            ResourceLocation resourceLoc = ResourceLocation.parse(nbt.getString("id"));
+            if (be.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(resourceLoc)) {
+                be.loadWithComponents(nbt, this.level.registryAccess());
+            }
         }
         be.setLevel(this.level);
         be.clearRemoved();
@@ -105,7 +107,7 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         }
     }
 
-    // Deliberately not gated on blockEntityMovesHandledByUs: pulley moves reach this through the
+    // Deliberately not gated on BeMoverHelper: pulley moves reach this through the
     // inherited finalTick and must keep working even when Quark owns piston moves. For a
     // Quark-owned piston move our capture never ran, so there is no NBT here and this no-ops
     // rather than replacing the block entity Quark just populated.

@@ -6,14 +6,9 @@ import net.minecraft.core.Direction;
 import java.util.Set;
 
 public interface ICooperativePiston {
-    /**
-     * Configure cooperators on this resolver. Subsequent {@code resolve()} runs use the
-     * boosted push limit and treat cooperator positions as boundaries inside
-     * {@code addBlockLine}, and the post-resolve gate filters out free-riders.
-     */
-    void supp$setCooperators(Set<BlockPos> cooperatingPistons, int pushLimit,
-                             Direction pistonDirection, boolean extending);
 
+    // only needed for our zeta hacks, just delegates to coopstate.set
+    void supp$setCooperators(Set<BlockPos> cooperatingPistons, Direction pistonDirection, boolean extending);
 
     PistonCoopResolverState supp$getCoopState();
 }

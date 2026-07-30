@@ -2,7 +2,6 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCooperationData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -24,11 +23,9 @@ public class PistonHeadRendererMixin {
                                                int packedLight, int packedOverlay, CallbackInfo ci) {
         if (!(piston instanceof ICarryingMovingPiston carrying)) return;
         if (piston.getProgress(partialTick) > 1.0F) return;
-        // Quark's module owns piston moves, so it holds the data and its own renderer hook draws
-        // the carried block. Bail out instead of drawing an empty default one over it. A pulley
-        // move always carries our own NBT, so it still renders here.
-        if (carrying.supp$getCarriedBlockEntityNbt() == null
-                && PistonCooperationData.blockEntityMovesHandledByQuark()) return;
+        // No carried data means this move isn't ours to draw: something else moved the block entity
+        // and has its own renderer for it. Fabricating an empty one here would draw over theirs.
+        if (carrying.supp$getCarriedBlockEntityNbt() == null) return;
 
         BlockEntity carriedBE = carrying.supp$getOrCreateCachedCarriedBlockEntity();
         if (carriedBE == null) return;
@@ -43,7 +40,7 @@ public class PistonHeadRendererMixin {
         poseStack.popPose();
 
         // For non-MODEL render shapes (e.g. chests = ENTITYBLOCK_ANIMATED), the block
-        // model would draw nothing anyway — skip vanilla rendering.
+        // model would draw nothing anyway, so skip vanilla rendering.
         if (piston.getMovedState().getRenderShape() != RenderShape.MODEL) {
             ci.cancel();
         }

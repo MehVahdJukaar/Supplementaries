@@ -48,6 +48,7 @@ import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
 import org.violetmoon.quark.addons.oddities.item.BackpackItem;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.base.components.QuarkDataComponents;
+import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import org.violetmoon.quark.content.automation.module.PistonsMoveTileEntitiesModule;
 import org.violetmoon.quark.content.building.block.StoolBlock;
 import org.violetmoon.quark.content.building.module.GoldBarsModule;
@@ -57,6 +58,8 @@ import org.violetmoon.quark.content.tools.module.SlimeInABucketModule;
 import org.violetmoon.quark.content.tweaks.module.DoubleDoorOpeningModule;
 import org.violetmoon.quark.content.tweaks.module.EnhancedLaddersModule;
 import org.violetmoon.quark.content.tweaks.module.MoreBannerLayersModule;
+import org.violetmoon.zeta.piston.ZetaPistonStructureResolver;
+import org.violetmoon.zeta.piston.ZetaPistonStructureResolver;
 
 import java.util.List;
 import java.util.function.Supplier;

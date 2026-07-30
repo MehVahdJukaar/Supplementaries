@@ -50,9 +50,6 @@ public final class DepthMaskUtils {
      */
     private static final int STENCIL_REF = 0xFF;
 
-    private DepthMaskUtils() {
-    }
-
     /**
      * Writes the mask cube and configures GL so subsequent draws are clipped against it.
      * No-op when {@code mode == OFF}.

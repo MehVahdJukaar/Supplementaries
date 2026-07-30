@@ -3,8 +3,8 @@ package net.mehvahdjukaar.supplementaries.mixins;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCooperationData;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICooperativePiston;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCooperationData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.core.BlockPos;
@@ -67,10 +67,8 @@ public class CooperativePistonBaseBlockMixin {
 
         Set<BlockPos> allPistons = new HashSet<>(cooperators);
         allPistons.add(pos);
-        int limit = allPistons.size() * 12;
-
         ICooperativePiston coop = (ICooperativePiston) resolver;
-        coop.supp$setCooperators(allPistons, limit, direction, true);
+        coop.supp$setCooperators(allPistons, direction, true);
         boolean coopResult = resolver.resolve();
         if (!coopResult) return false;
 
@@ -150,9 +148,8 @@ public class CooperativePistonBaseBlockMixin {
 
         Set<BlockPos> allPistons = new HashSet<>(cooperators);
         allPistons.add(pos);
-        int limit = allPistons.size() * 12;
         ((ICooperativePiston) resolver)
-                .supp$setCooperators(allPistons, limit, facing, extending);
+                .supp$setCooperators(allPistons, facing, extending);
         return original.call(resolver);
     }
 

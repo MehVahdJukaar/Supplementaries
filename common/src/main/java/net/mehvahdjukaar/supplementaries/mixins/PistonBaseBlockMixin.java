@@ -6,8 +6,8 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonMovementHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCooperationData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +38,7 @@ public class PistonBaseBlockMixin {
      * in isPushable and never reach this call.
      * <p>
      * BE data is preserved by {@link #supp$captureBeForPistonMove}. When Quark owns the move
-     * (see {@link BeMoverHelper#handledByUs()}) we pass the vanilla value
+     * (see {@link PistonMovementHelper#BEMovementHandledByUs()}) we pass the vanilla value
      * through untouched so its own hook on this same call decides, which also keeps its movement
      * blacklist authoritative.
      */
@@ -46,7 +46,7 @@ public class PistonBaseBlockMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/state/BlockState;hasBlockEntity()Z"))
     private static boolean supp$allowBlockEntityPush(BlockState state, Operation<Boolean> original) {
-        if (!PistonCooperationData.blockEntityMovesHandledByUs()) return original.call(state);
+        if (!PistonMovementHelper.BEMovementHandledByUs()) return original.call(state);
         return false;
     }
 
@@ -78,7 +78,7 @@ public class PistonBaseBlockMixin {
                     "some other mod is overriding MovingPistonBlock.newMovingBlockEntity and returning null. " +
                     "Carpet is a known mod that does this.");
         }
-        if (!PistonCooperationData.blockEntityMovesHandledByUs()) {
+        if (!PistonMovementHelper.BEMovementHandledByUs()) {
             original.call(level, movingPiston);
             return;
         }

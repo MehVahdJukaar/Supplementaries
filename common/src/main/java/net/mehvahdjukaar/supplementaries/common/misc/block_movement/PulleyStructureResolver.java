@@ -7,9 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.PushReaction;
 
 import java.util.*;
@@ -363,45 +362,19 @@ public class PulleyStructureResolver {
     }
 
     /**
-     * Pulley-flavoured pushability check. Identical to vanilla {@code PistonBaseBlock.isPushable}
-     * (including all NeoForge {@code IBlockExtension} hooks invoked by the state-level methods it
-     * calls) except for one deliberate divergence: <b>block-entity-bearing blocks are not
-     * automatically rejected</b>. Vanilla's final {@code return !state.hasBlockEntity()} is
-     * dropped so that pulleys can pull blocks like chests or barrels, with NBT preserved
-     * separately by the mover.
+     * Pulleys use the exact piston rule, so this just calls {@link PistonBaseBlock#isPushable}: same
+     * world-border and build-height limits, same hardcoded obsidian family, same push reactions,
+     * same NeoForge {@code IBlockExtension} hooks. Notably vanilla's final
+     * {@code !state.hasBlockEntity()} rejection is neutralised by our own mixin on that call (or by
+     * Quark's, when its module owns block entity moves), which is what lets a pulley pull a chest.
      * <p>
-     * Blocks that genuinely shouldn't be moved (machines with anchored physics, blocks whose
-     * BE references absolute world position, etc.) should override
-     * {@code getPistonPushReaction} to return {@link PushReaction#BLOCK} as usual.
+     * Blocks that genuinely shouldn't be moved (machines with anchored physics, blocks whose block
+     * entity references absolute world position, etc.) override {@code getPistonPushReaction} to
+     * return {@link PushReaction#BLOCK} as usual.
      */
-    public static boolean isPullable(BlockState state, Level level, BlockPos pos,
-                                     Direction movementDirection, boolean allowDestroy,
-                                     Direction pulleyFacing) {
-        if (pos.getY() < level.getMinBuildHeight() || pos.getY() > level.getMaxBuildHeight() - 1
-                || !level.getWorldBorder().isWithinBounds(pos)) {
-            return false;
-        }
-        if (state.isAir()) return true;
-        if (state.is(Blocks.OBSIDIAN) || state.is(Blocks.CRYING_OBSIDIAN)
-                || state.is(Blocks.RESPAWN_ANCHOR) || state.is(Blocks.REINFORCED_DEEPSLATE)) {
-            return false;
-        }
-        if (movementDirection == Direction.DOWN && pos.getY() == level.getMinBuildHeight()) return false;
-        if (movementDirection == Direction.UP && pos.getY() == level.getMaxBuildHeight() - 1) return false;
-        if (!state.is(Blocks.PISTON) && !state.is(Blocks.STICKY_PISTON)) {
-            if (state.getDestroySpeed(level, pos) == -1.0F) return false;
-            switch (state.getPistonPushReaction()) {
-                case BLOCK:
-                    return false;
-                case DESTROY:
-                    return allowDestroy;
-                case PUSH_ONLY:
-                    return movementDirection == pulleyFacing;
-            }
-        } else if (state.getValue(BlockStateProperties.EXTENDED)) {
-            return false;
-        }
-        // NOTE: vanilla returns !state.hasBlockEntity() here; we don't, see method javadoc.
-        return true;
+    private static boolean isPullable(BlockState state, Level level, BlockPos pos,
+                                      Direction movementDirection, boolean allowDestroy,
+                                      Direction pulleyFacing) {
+        return PistonBaseBlock.isPushable(state, level, pos, movementDirection, allowDestroy, pulleyFacing);
     }
 }

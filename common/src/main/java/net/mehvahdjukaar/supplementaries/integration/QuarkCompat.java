@@ -43,16 +43,12 @@ public class QuarkCompat {
         throw new AssertionError();
     }
 
+    @Contract
     @PlatformImpl
     public static boolean isMovingTileEntitiesEnabled() {
         throw new AssertionError();
     }
 
-    /**
-     * Zeta's configured piston push limit when its resolver is in use, else vanilla's
-     * {@code MAX_PUSH_DEPTH}. Zeta replaces vanilla's hardcoded 12 with a config value, so this is
-     * the per-piston budget our cooperative pistons have to pool.
-     */
     @PlatformImpl
     public static int getPistonPushLimit() {
         throw new AssertionError();

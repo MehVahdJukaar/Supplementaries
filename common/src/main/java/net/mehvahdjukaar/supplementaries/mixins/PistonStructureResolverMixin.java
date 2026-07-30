@@ -29,9 +29,8 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
     @Shadow @Final private BlockPos pistonPos;
 
     @Override
-    public void supp$setCooperators(Set<BlockPos> cooperators, int pushLimit,
-                                    Direction pistonDirection, boolean extending) {
-        this.supp$coopState.set(cooperators, pushLimit, pistonDirection, extending);
+    public void supp$setCooperators(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
+        this.supp$coopState.set(cooperators, pistonDirection, extending);
     }
 
     @Override

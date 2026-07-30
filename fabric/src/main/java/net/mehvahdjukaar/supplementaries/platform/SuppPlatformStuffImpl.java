@@ -203,8 +203,6 @@ public class SuppPlatformStuffImpl {
         });
     }
 
-    // Fabric has no equivalent of NeoForge's IBlockExtension.onDestroyedByPushReaction —
-    // the hook only exists in NeoForge's BlockState patch, so this is a no-op here.
     public static void onDestroyedByPushReaction(BlockState state, Level level, BlockPos pos, Direction pushDir) {
     }
 

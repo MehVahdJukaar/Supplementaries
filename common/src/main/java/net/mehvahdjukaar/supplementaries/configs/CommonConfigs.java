@@ -1324,7 +1324,8 @@ public class CommonConfigs {
                             implementations would otherwise both rebuild the moved block entity and wipe its \
                             contents. Turn that module off to use this one, which supports more cases (pulleys, \
                             cauldron filling, cooperative pistons).
-                            Pulleys always move block entities and are unaffected by this option.""")
+                            Pulleys and ropes follow whichever implementation is active, so turning both off stops \
+                            them from moving block entities too.""")
                     .define("push_block_entities", true);
             COOPERATIVE_PISTONS = builder.comment(
                     "If true, adjacent pistons facing the same direction can pool their 12-block push budget " +

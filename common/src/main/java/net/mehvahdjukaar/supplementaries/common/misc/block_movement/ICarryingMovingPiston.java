@@ -5,14 +5,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Mixin marker added to {@link net.minecraft.world.level.block.piston.PistonMovingBlockEntity}.
- * Lets a pulley smuggle the source block's BlockEntity data through the animation so
- * chests/barrels/etc. survive the move. Applied via {@link #supp$restoreCarriedBe()} right
- * after vanilla places the final block state (on both the {@code tick} and {@code finalTick}
- * completion paths).
- */
 public interface ICarryingMovingPiston {
+
     void supp$setCarriedBlockEntityNbt(@Nullable CompoundTag nbt);
 
     @Nullable

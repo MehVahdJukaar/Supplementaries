@@ -32,11 +32,10 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
     // globally disabled, {@code resolve()} delegates to {@code parent.resolve()} and vanilla's
     // mixin needs to see the cooperators on the parent instance.
     @Override
-    public void supp$setCooperators(Set<BlockPos> cooperators, int pushLimit,
-                                    Direction pistonDirection, boolean extending) {
-        this.supp$getCoopState().set(cooperators, pushLimit, pistonDirection, extending);
+    public void supp$setCooperators(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
+        this.supp$getCoopState().set(cooperators, pistonDirection, extending);
         if (this.parent instanceof ICooperativePiston parentCoop) {
-            parentCoop.supp$setCooperators(cooperators, pushLimit, pistonDirection, extending);
+            parentCoop.supp$setCooperators(cooperators, pistonDirection, extending);
         }
     }
 
