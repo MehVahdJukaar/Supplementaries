@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonMovementHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,8 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
+
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -129,6 +129,13 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
      * that advances progress, which uses {@link #progressStep} instead of the hardcoded 0.5F.
      * Keeping the rest identical means entity interactions, finalisation (including the
      * moving-block to real-block transition) and chunk lifecycle all match vanilla exactly.
+     * <p>
+     * <b>Why a copy and not a call.</b> Vanilla's finalisation is guarded by
+     * {@code level.getBlockState(pos).is(Blocks.MOVING_PISTON)}, which our {@code MOVING_PULLEY}
+     * block fails, so delegating would animate and then never place the moved block. Reusing it
+     * would take mixins on both {@code tick} and {@code finalTick} to widen that check plus another
+     * for the progress step, which is more injection surface on a method other mods already crowd
+     * than the copy is worth. Keep this in sync when porting to a new Minecraft version.
      */
     public static void tick(Level level, BlockPos pos, BlockState state, MovingPulleyBlockEntity be) {
         be.lastTicked = level.getGameTime();
@@ -165,13 +172,8 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
                         // The mixin's finalTick TAIL does this for vanilla MOVING_PISTON; since
                         // our subclass inlines its own finalisation, we replay the same logic.
                         CompoundTag carriedNbt = ((ICarryingMovingPiston) be).supp$getCarriedBlockEntityNbt();
-                        if (carriedNbt != null && movedAfter.hasBlockEntity()
-                                && movedAfter.getBlock() instanceof EntityBlock entityBlock) {
-                            BlockEntity restored = entityBlock.newBlockEntity(pos, movedAfter);
-                            if (restored != null) {
-                                restored.loadWithComponents(carriedNbt, level.registryAccess());
-                                level.setBlockEntity(restored);
-                            }
+                        if (carriedNbt != null) {
+                            PistonMovementHelper.restoreBlockEntity(level, pos, movedAfter, carriedNbt);
                         }
                     }
                 }

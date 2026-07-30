@@ -113,8 +113,11 @@ public class QuarkCompatImpl {
         return Quark.ZETA.modules.isEnabled(DoubleDoorOpeningModule.class);
     }
 
-    public static boolean canMoveBlockEntity(BlockState state) {
-        return !PistonsMoveTileEntitiesModule.shouldMoveTE(true, state);
+    public static boolean blacklistsBlockMovement(BlockState state) {
+        // The single-arg overload is the raw blacklist check. The two-arg one passes its first
+        // argument straight through when the module is off, which would report every block entity
+        // as blacklisted.
+        return PistonsMoveTileEntitiesModule.shouldMoveTE(state);
     }
 
     public static boolean isMovingTileEntitiesEnabled() {

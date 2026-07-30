@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -51,6 +52,17 @@ public class PistonBaseBlockMixin {
     }
 
     /**
+     * Single enforcement point for "this block is never relocated". Pulleys and ropes run their
+     * pushability through this same method, so one tag covers every mover we have. See
+     * {@link PistonMovementHelper#isMovementBlacklisted}.
+     */
+    @ModifyReturnValue(method = "isPushable", at = @At("RETURN"))
+    private static boolean supp$respectMovementBlacklist(boolean original,
+                                                         @Local(argsOnly = true) BlockState state) {
+        return original && !PistonMovementHelper.isMovementBlacklisted(state);
+    }
+
+    /**
      * Before vanilla places the {@code MOVING_PISTON} block entity at the target
      * position, snapshot the source block's block entity NBT and attach it to the
      * new moving-piston BE via {@link ICarryingMovingPiston}.
@@ -84,15 +96,9 @@ public class PistonBaseBlockMixin {
         }
         Direction direction = extending ? facing : facing.getOpposite();
         BlockPos sourcePos = movingPiston.getBlockPos().relative(direction.getOpposite());
-        BlockEntity sourceBE = level.getBlockEntity(sourcePos);
-        CompoundTag nbt = sourceBE != null ? sourceBE.saveWithFullMetadata(level.registryAccess()) : null;
-        // Detach the source BE BEFORE vanilla's source-to-AIR loop runs (and before the
-        // next push iteration overwrites this position with MOVING_PISTON). Container
-        // blocks' onRemove fetches the BE to drop contents — a null BE skips the drop.
-        // Lectern's popBook also fetches the BE for the same reason.
-        if (sourceBE != null) {
-            level.removeBlockEntity(sourcePos);
-        }
+        // Capture and detach BEFORE vanilla's source-to-AIR loop runs, and before the next push
+        // iteration overwrites this position with MOVING_PISTON.
+        CompoundTag nbt = PistonMovementHelper.captureAndDetachBlockEntity(level, sourcePos);
         // Attach the carried NBT to the moving piston BE BEFORE it goes into the chunk,
         // so any first query (renderer, ticker) immediately sees the carried data.
         if (nbt != null && movingPiston instanceof ICarryingMovingPiston carrying) {

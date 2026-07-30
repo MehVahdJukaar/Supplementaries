@@ -35,6 +35,11 @@ public class ModTags {
     public static final TagKey<Block> FAUCET_CONNECTION_WHITELIST = blockTag("faucet_connection_whitelist");
     public static final TagKey<Block> ROTATION_BLACKLIST = blockTag("un_rotatable");
     public static final TagKey<Block> ROTATION_CREATIVE_WHITELIST = blockTag("rotatable_in_creative");
+    // Never relocated by anything: pistons, pulleys and ropes alike.
+    public static final TagKey<Block> RELOCATION_NOT_SUPPORTED = cBlockTag("relocation_not_supported");
+    // Additionally un-moveable by rope-driven movement (ropes and pulleys), for blocks whose
+    // partner block wouldn't come along: doors, double blocks and friends. Pistons still push
+    // those, since they resolve the whole structure and vanilla allows it.
     public static final TagKey<Block> ROPE_PUSH_BLACKLIST = blockTag("un_moveable_by_ropes");
     public static final TagKey<Block> BOMB_BREAKABLE = blockTag("bomb_breakable");
     public static final TagKey<Block> BRICK_BREAKABLE_GLASS = blockTag("brick_breakable_recursive");

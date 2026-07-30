@@ -3,46 +3,62 @@ package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class PistonMovementHelper {
 
-    /**
-     * Whether our own capture/restore runs for piston block entity moves.
-     * <p>
-     * Quark's <i>pistons move tile entities</i> module does the same job with its own pipeline, and
-     * the two cannot share a move: both strip the source block entity and both rebuild one at the
-     * destination, so whichever writes last wins and the loser's data is silently gone (only blocks
-     * on Quark's delayed-update list survive, since those are written a tick later). Quark detaches
-     * at the very top of {@code moveBlocks} and so always captures first, leaving ours empty.
-     * Rather than race, we hand pistons over entirely whenever that module is on.
-     * <p>
-     * Pulleys keep our pipeline either way: Quark only hooks {@code PistonBaseBlock.moveBlocks} and
-     * {@code PistonMovingBlockEntity.tick}, neither of which a pulley move goes through, so there
-     * is nothing to defer to there.
-     */
     public static boolean BEMovementHandledByUs() {
         return CommonConfigs.Tweaks.PUSH_BLOCK_ENTITIES.get() && !BEMovementHandledByQuark();
     }
 
-    /**
-     * Whether Quark's module is present and enabled, and therefore owns piston moves.
-     */
     public static boolean BEMovementHandledByQuark() {
         return CompatHandler.QUARK && QuarkCompat.isMovingTileEntitiesEnabled();
     }
 
-
-    /**
-     * How many blocks a single piston may push, which is what each cooperator contributes to the
-     * pooled budget. Vanilla's {@link PistonStructureResolver#MAX_PUSH_DEPTH} unless Zeta's piston
-     * resolver is in use, in which case its configurable limit (Zeta general config,
-     * {@code pistonPushLimit}) is authoritative: cooperation has to scale off the same number the
-     * user configured, or raising it would silently stop cooperation from adding anything and
-     * lowering it would let us push past what they asked for.
-     */
     public static int perPistonPushLimit() {
         if (CompatHandler.QUARK) return QuarkCompat.getPistonPushLimit();
         return PistonStructureResolver.MAX_PUSH_DEPTH;
+    }
+
+    public static boolean isMovementBlacklisted(BlockState state) {
+        if (state.is(ModTags.RELOCATION_NOT_SUPPORTED)) return true;
+        // Quark's list exists to protect block entities it doesn't want moved. Honour it whenever
+        // Quark is loaded, including when its own module is off and we are doing the moving.
+        return state.hasBlockEntity() && CompatHandler.QUARK && QuarkCompat.blacklistsBlockMovement(state);
+    }
+
+    @Nullable
+    public static CompoundTag captureAndDetachBlockEntity(Level level, BlockPos pos) {
+        BlockEntity be = level.getBlockEntity(pos);
+        if (be == null) return null;
+        CompoundTag nbt = be.saveWithFullMetadata(level.registryAccess());
+        level.removeBlockEntity(pos);
+        return nbt;
+    }
+
+    public static void restoreBlockEntity(Level level, BlockPos pos, BlockState placedState, CompoundTag nbt) {
+        if (!placedState.hasBlockEntity() || !(placedState.getBlock() instanceof EntityBlock entityBlock)) return;
+        BlockEntity restored = entityBlock.newBlockEntity(pos, placedState);
+        if (restored == null || !matchesCapturedType(restored, nbt)) return;
+        restored.loadWithComponents(nbt, level.registryAccess());
+        level.setBlockEntity(restored);
+    }
+
+    public static boolean matchesCapturedType(BlockEntity be, CompoundTag nbt) {
+        String id = nbt.getString("id");
+        // Data captured before we started saving full metadata carries no id; nothing to check.
+        if (id.isEmpty()) return true;
+        ResourceLocation type = ResourceLocation.tryParse(id);
+        return type != null && be.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(type);
     }
 }

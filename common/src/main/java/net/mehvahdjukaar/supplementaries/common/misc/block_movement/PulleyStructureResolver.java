@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 import com.google.common.collect.Lists;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -362,11 +363,16 @@ public class PulleyStructureResolver {
     }
 
     /**
-     * Pulleys use the exact piston rule, so this just calls {@link PistonBaseBlock#isPushable}: same
+     * Pulleys use the piston rule, so this defers to {@link PistonBaseBlock#isPushable}: same
      * world-border and build-height limits, same hardcoded obsidian family, same push reactions,
-     * same NeoForge {@code IBlockExtension} hooks. Notably vanilla's final
-     * {@code !state.hasBlockEntity()} rejection is neutralised by our own mixin on that call (or by
-     * Quark's, when its module owns block entity moves), which is what lets a pulley pull a chest.
+     * same NeoForge {@code IBlockExtension} hooks, and the same movement blacklist (our mixin on
+     * that method also applies {@link PistonMovementHelper#isMovementBlacklisted}). Vanilla's final
+     * {@code !state.hasBlockEntity()} rejection is neutralised there too, which is what lets a
+     * pulley pull a chest.
+     * <p>
+     * On top of that, rope-driven movement refuses {@link ModTags#ROPE_PUSH_BLACKLIST}: a pulley
+     * shifts single blocks, so anything whose partner block wouldn't come along (doors, double
+     * blocks) would break. Pistons still push those, since they resolve the whole structure.
      * <p>
      * Blocks that genuinely shouldn't be moved (machines with anchored physics, blocks whose block
      * entity references absolute world position, etc.) override {@code getPistonPushReaction} to
@@ -375,6 +381,7 @@ public class PulleyStructureResolver {
     private static boolean isPullable(BlockState state, Level level, BlockPos pos,
                                       Direction movementDirection, boolean allowDestroy,
                                       Direction pulleyFacing) {
+        if (state.is(ModTags.ROPE_PUSH_BLACKLIST)) return false;
         return PistonBaseBlock.isPushable(state, level, pos, movementDirection, allowDestroy, pulleyFacing);
     }
 }

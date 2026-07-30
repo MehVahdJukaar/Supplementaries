@@ -39,7 +39,7 @@ public class QuarkCompat {
 
     @Contract
     @PlatformImpl
-    public static boolean canMoveBlockEntity(BlockState state) {
+    public static boolean blacklistsBlockMovement(BlockState state) {
         throw new AssertionError();
     }
 

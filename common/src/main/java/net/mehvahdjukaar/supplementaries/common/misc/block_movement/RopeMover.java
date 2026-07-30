@@ -3,8 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,9 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChainBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -71,16 +67,9 @@ public class RopeMover {
         if (needsToPush) {
             if (!targetState.canBeReplaced() && placeWhereItWas != null) return false;
             if (!isPushableByRopes(originalState, level, originPos, moveDir)) return false;
-
-            BlockEntity tile = level.getBlockEntity(originPos);
-            if (tile != null) {
-                if (CompatHandler.QUARK && !QuarkCompat.canMoveBlockEntity(originalState)) {
-                    return false;
-                } else {
-                    tile.setRemoved();
-                }
-                tileTag = tile.saveWithoutMetadata(level.registryAccess());
-            }
+            // Blacklists (ours and Quark's) are enforced by isPushableByRopes, so anything reaching
+            // here may be carried. Detaching also stops containers from spilling on removal.
+            tileTag = PistonMovementHelper.captureAndDetachBlockEntity(level, originPos);
         }
 
         //gets clear state for new position
@@ -105,8 +94,6 @@ public class RopeMover {
             level.setBlockAndUpdate(originPos, originalFluid.createLegacyBlock());
         }
 
-        //remove block below to make space
-        //   level.destroyBlock(targetPos, false);
         FluidState targetFluid = level.getFluidState(targetPos);
 
         boolean waterFluid = targetFluid.is(Fluids.WATER);
@@ -122,10 +109,7 @@ public class RopeMover {
         originalState = Block.updateFromNeighbourShapes(originalState, level, targetPos);
         level.setBlockAndUpdate(targetPos, originalState);
         if (tileTag != null) {
-            BlockEntity te = level.getBlockEntity(targetPos);
-            if (te != null) {
-                te.loadWithComponents(tileTag, level.registryAccess());
-            }
+            PistonMovementHelper.restoreBlockEntity(level, targetPos, originalState, tileTag);
         }
         //populate any block-entity data for cauldron-like blocks moved into a fluid
         MovedFluidFiller.applyPostPlacement(level, targetPos, targetFluid);
@@ -149,7 +133,6 @@ public class RopeMover {
                 && level.getBlockEntity(pos) instanceof PulleyBlockTile te && !te.isEmpty()) {
             return te.rotateIndirect(null, InteractionHand.MAIN_HAND, ropeBlock, moveUpDir, true);
         } else {
-            //if (dist == 0) return false;
             BlockPos up = pos.relative(moveUpDir.getOpposite());
             if ((level.getBlockState(up).getBlock() != ropeBlock)) return false;
             if (!placeAndMove(null, InteractionHand.MAIN_HAND, level, pos, moveUpDir.getOpposite(), null)) {
@@ -160,54 +143,22 @@ public class RopeMover {
     }
 
 
+    /**
+     * Whether a rope may drag this block along. Defers to {@link PistonBaseBlock#isPushable} for the
+     * shared rules (build height, world border, push reactions, the movement blacklist and the
+     * block entity allowance our mixin applies there), and adds the rope-specific ones on top:
+     * pulleys are never dragged, {@link ModTags#ROPE_PUSH_BLACKLIST} blocks whose partner wouldn't
+     * come along are refused, and anything in {@link ModTags#ROPE_HANG_TAG} rides along vertically
+     * regardless of its push reaction.
+     */
     public static boolean isPushableByRopes(BlockState state, Level level, BlockPos pos, Direction moveDir) {
-        //hardcoded stuff from vanilla
         if (state.getBlock() instanceof PulleyBlock) return false; //could be in the tag but easier for addons like this
         if (state.is(ModTags.ROPE_PUSH_BLACKLIST)) return false;
         if (!state.isSolid()) return false;
         if (moveDir.getAxis().isVertical() && state.is(ModTags.ROPE_HANG_TAG)) {
             return true;
         }
-        boolean couldBreak = !state.isSolid();
-        return isPushable(state, level, pos, moveDir, couldBreak, moveDir);
-    }
-
-
-    //same as PistonBaseBlock.isPushable but ignores some stuff like Block Entities
-    private static boolean isPushable(BlockState state, Level level, BlockPos pos, Direction movementDirection, boolean allowDestroy, Direction pistonFacing) {
-        if (pos.getY() >= level.getMinBuildHeight() && pos.getY() <= level.getMaxBuildHeight() - 1 && level.getWorldBorder().isWithinBounds(pos)) {
-            if (state.isAir()) {
-                return true;
-            } else if (!state.is(Blocks.OBSIDIAN) && !state.is(Blocks.CRYING_OBSIDIAN) && !state.is(Blocks.RESPAWN_ANCHOR) && !state.is(Blocks.REINFORCED_DEEPSLATE)) {
-                if (movementDirection == Direction.DOWN && pos.getY() == level.getMinBuildHeight()) {
-                    return false;
-                } else if (movementDirection == Direction.UP && pos.getY() == level.getMaxBuildHeight() - 1) {
-                    return false;
-                } else {
-                    if (!state.is(Blocks.PISTON) && !state.is(Blocks.STICKY_PISTON)) {
-                        if (state.getDestroySpeed(level, pos) == -1.0F) {
-                            return false;
-                        }
-
-                        switch (state.getPistonPushReaction()) {
-                            case BLOCK -> {
-                                return false;
-                            }
-                            case DESTROY -> {
-
-                                return allowDestroy;
-                            }
-                            case PUSH_ONLY -> {
-                                return movementDirection == pistonFacing;
-                            }
-                        }
-                    } else if (state.getValue(PistonBaseBlock.EXTENDED)) {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-        return false;
+        // Never destroys: the solidity check above already rejected everything a rope could break.
+        return PistonBaseBlock.isPushable(state, level, pos, moveDir, false, moveDir);
     }
 }

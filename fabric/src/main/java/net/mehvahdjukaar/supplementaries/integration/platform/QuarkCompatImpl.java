@@ -85,7 +85,7 @@ public class QuarkCompatImpl {
         return false;
     }
 
-    public static boolean canMoveBlockEntity(BlockState state) {
+    public static boolean blacklistsBlockMovement(BlockState state) {
         return false;
     }
 

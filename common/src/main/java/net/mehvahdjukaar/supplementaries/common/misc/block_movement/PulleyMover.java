@@ -73,13 +73,8 @@ public final class PulleyMover {
             originalStates.add(state);
             vacatedSlots.put(pos, state);
             if (state.hasBlockEntity()) {
-                BlockEntity be = level.getBlockEntity(pos);
-                if (be != null) {
-                    carriedBeNbt.put(pos.immutable(), be.saveWithoutMetadata(level.registryAccess()));
-                    // Detach the BE from this position so the upcoming setBlock(AIR / moving block)
-                    // doesn't drop it as items via vanilla onRemove.
-                    level.removeBlockEntity(pos);
-                }
+                CompoundTag nbt = PistonMovementHelper.captureAndDetachBlockEntity(level, pos);
+                if (nbt != null) carriedBeNbt.put(pos.immutable(), nbt);
             }
         }
         // Snapshot consumed-rope states before the upcoming setBlock loop overwrites them with

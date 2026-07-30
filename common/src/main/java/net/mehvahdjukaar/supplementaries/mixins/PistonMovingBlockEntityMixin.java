@@ -2,11 +2,12 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonMovementHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
+
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
@@ -76,16 +77,13 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         if (!(movedState.getBlock() instanceof EntityBlock entityBlock)) return null;
         BlockEntity be = entityBlock.newBlockEntity(this.worldPosition, movedState);
         if (be == null) return null;
-        // Render with default state if NBT hasn't arrived yet — covers the brief gap when
-        // the moving piston BE is constructed locally on the client (block event handler)
-        // before our hook attaches the carried NBT. When NBT arrives, the setter
-        // invalidates the cache and the next call rebuilds with the NBT applied.
+        // Render with default state if NBT hasn't arrived yet: covers the brief gap when the moving
+        // piston BE is constructed locally on the client (block event handler) before our hook
+        // attaches the carried NBT. When NBT arrives, the setter invalidates the cache and the next
+        // call rebuilds with the NBT applied.
         CompoundTag nbt = this.supp$carriedBeNbt;
-        if (nbt != null) {
-            ResourceLocation resourceLoc = ResourceLocation.parse(nbt.getString("id"));
-            if (be.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(resourceLoc)) {
-                be.loadWithComponents(nbt, this.level.registryAccess());
-            }
+        if (nbt != null && PistonMovementHelper.matchesCapturedType(be, nbt)) {
+            be.loadWithComponents(nbt, this.level.registryAccess());
         }
         be.setLevel(this.level);
         be.clearRemoved();
@@ -118,12 +116,9 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         this.supp$cachedCarriedBE = null;
         if (nbt == null || this.level == null) return;
         BlockState placed = this.level.getBlockState(this.worldPosition);
-        if (placed.isAir() || placed.is(Blocks.MOVING_PISTON) || !placed.hasBlockEntity()) return;
-        if (!(placed.getBlock() instanceof EntityBlock entityBlock)) return;
-        BlockEntity restored = entityBlock.newBlockEntity(this.worldPosition, placed);
-        if (restored == null) return;
-        restored.loadWithComponents(nbt, this.level.registryAccess());
-        this.level.setBlockEntity(restored);
+        // Still mid-move or the block never landed: nothing to restore onto.
+        if (placed.isAir() || placed.is(Blocks.MOVING_PISTON)) return;
+        PistonMovementHelper.restoreBlockEntity(this.level, this.worldPosition, placed, nbt);
     }
 
     // Normal completion path: tick() places the moved block itself — it does NOT call
