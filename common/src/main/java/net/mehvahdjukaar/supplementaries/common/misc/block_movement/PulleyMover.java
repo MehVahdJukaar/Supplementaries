@@ -27,6 +27,10 @@ import java.util.Map;
  * {@code PistonBaseBlock.moveBlocks}. Each call shifts every block in the resolver's
  * {@code toPush} list by one slot toward the cooperating pulleys.
  * <p>
+ * This is the continuous-mode pulley path ({@code pulley_block.continuous_retraction = true}): the
+ * whole hanging structure moves, over several ticks, as moving block entities. {@link RopeMover} is
+ * the instant single-block alternative used by rope items, rope arrows and legacy-mode pulleys.
+ * <p>
  * Animation runs through {@link MovingPulleyBlock}, a subclass of vanilla
  * {@link Blocks#MOVING_PISTON}, so every sticky-block-aware mod that plugs into piston pushing
  * automatically extends to pulley pulling as well.

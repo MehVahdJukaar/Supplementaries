@@ -55,6 +55,11 @@ public class PistonBaseBlockMixin {
      * Single enforcement point for "this block is never relocated". Pulleys and ropes run their
      * pushability through this same method, so one tag covers every mover we have. See
      * {@link PistonMovementHelper#isMovementBlacklisted}.
+     * <p>
+     * Note this also applies to plain vanilla piston pushes of blocks with no block entity, which
+     * vanilla itself would allow. That is deliberate: {@code c:relocation_not_supported} is how a
+     * block declares it must not be moved, and the blocks in it are only piston-movable in the
+     * first place because {@link #supp$allowBlockEntityPush} let them be.
      */
     @ModifyReturnValue(method = "isPushable", at = @At("RETURN"))
     private static boolean supp$respectMovementBlacklist(boolean original,

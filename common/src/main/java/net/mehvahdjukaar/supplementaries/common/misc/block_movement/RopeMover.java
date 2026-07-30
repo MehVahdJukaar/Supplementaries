@@ -25,6 +25,28 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Instant, one-block-at-a-time rope movement. Walks down a rope column, then adds or removes a
+ * single rope at the end of it and shifts whatever hangs below by one slot, immediately: a plain
+ * {@code setBlock}, no animation and no structure resolving.
+ * <p>
+ * This is the path for everything driven by hand or by an item:
+ * <ul>
+ *   <li>{@code AbstractRopeBlock} when a player right-clicks a rope with rope, or shift-clicks to
+ *   wind one back up.</li>
+ *   <li>{@code RopeArrowEntity}, which lays a rope column where it lands.</li>
+ *   <li>Pulleys in <b>legacy mode</b> ({@code pulley_block.continuous_retraction = false}), via
+ *   {@code PulleyBlockTile.pullRope} / {@code releaseRope}, including the chaining in
+ *   {@code rotateIndirect} where one pulley pokes another through a shared rope.</li>
+ * </ul>
+ * {@link PulleyMover} is the other half of the story and handles the opposite case: pulleys in
+ * continuous mode. There a {@link PulleyStructureResolver} resolves the whole hanging structure
+ * first (sticky branching, a pooled push budget, cooperating pulleys), and every block becomes a
+ * moving block entity that slides over several ticks. Use that one when the move should animate,
+ * carry more than the single block directly under the rope, or be driven by redstone.
+ * <p>
+ * Only {@link #isCorrectRope} is shared between the two modes.
+ */
 public class RopeMover {
 
     public static boolean addRopeDown(BlockPos pos, Level level, @Nullable Player player, InteractionHand hand, Block ropeBlock) {
