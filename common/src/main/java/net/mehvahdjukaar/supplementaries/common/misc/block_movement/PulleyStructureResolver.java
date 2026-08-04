@@ -15,23 +15,14 @@ import net.minecraft.world.level.material.PushReaction;
 import java.util.*;
 
 /**
- * Pulley-side equivalent of vanilla {@code PistonStructureResolver}. Takes one
- * {@link PulleyInfo} per cooperating pulley and resolves all their chains in a single pass, so
- * a structure bridged across several ropes moves as one unit and the pulleys pool their budget.
+ * Pulley-side equivalent of vanilla {@code PistonStructureResolver}. Takes one {@link PulleyInfo} per
+ * cooperating pulley and resolves all their chains in one pass, so a structure bridged across several
+ * ropes moves as a unit and the pulleys pool their push budget.
  * <p>
- * Two operations, picked by {@link PulleyInfo#extending()}:
- * <ul>
- *   <li><b>Retract</b> ({@code extending=false}): chain moves toward the pulley. The rope
- *   directly adjacent to the pulley is <i>consumed</i> (item +1) and not animated. Ropes
- *   between that consumed top rope and the anchor go into {@code toPush} (they shift one
- *   slot up via moving-block entities) but don't count against the push budget.</li>
- *   <li><b>Extend</b> ({@code extending=true}): existing ropes stay put. Only the anchor,
- *   plus any sticky-branched blocks attached to it, moves one slot away. A new rope is
- *   placed in the anchor's vacated slot (handled by the caller, not here).</li>
- * </ul>
- * In either mode, stickiness does not propagate through ropes: a slime laterally adjacent to
- * a rope segment is never dragged in. Sticky branching only fires from the anchor and
- * anything in its sticky chain.
+ * Retracting, the chain moves toward the pulley and the rope adjacent to it is consumed (item +1)
+ * instead of animated. Extending, the ropes shift one slot away and a fresh rope fills the vacated
+ * top slot. Either way ropes don't count against the budget, and stickiness never propagates through
+ * them: sticky branching only fires from the anchor and its own sticky chain.
  */
 public class PulleyStructureResolver {
 
@@ -52,20 +43,15 @@ public class PulleyStructureResolver {
     private final List<BlockPos> toDestroy = Lists.newArrayList();
     // Subset of toPush that are rope segments: not counted toward budget, never sticky-branched.
     private final Set<BlockPos> ropePositions = new HashSet<>();
-    // Topmost-rope positions, one per pulley: the rope slot directly adjacent to the pulley.
-    // These are consumed into the pulley (overwritten by the next rope shifting up) rather than
-    // being moved themselves. The forward scan treats them as a terminator, so a chain that walks
-    // into one ends successfully instead of trying to push past into the pulley wall behind it.
+    // Topmost rope of each chain: consumed into the pulley (overwritten by the rope shifting up)
+    // rather than moved. The forward scan treats these as a terminator, so a chain walking into one
+    // ends successfully instead of pushing into the pulley wall behind it.
     private final Set<BlockPos> consumedRopes = new HashSet<>();
-    // Pulleys whose chain actually added at least one rope or anchor to toPush. The caller uses
-    // this to decide which pulleys deserve a +1 item this step: a pulley whose chain was already
-    // exhausted (e.g. single rope with no anchor below) sits in the cooperation group but doesn't
-    // earn a rope this step.
+    // Pulleys whose chain added at least one rope or anchor. Only these earn a +1 item this step;
+    // a pulley with an already exhausted chain sits in the group without contributing.
     private final Set<BlockPos> contributedPulleys = new HashSet<>();
-    // Extend-into-open-air placements, firstSlot -> rope state. A pulley lowering into pure air
-    // has no rope column and no anchor to push, so there's no moved block to carry the usual
-    // extend phantom. The mover instead places these rope states directly (instantly, no
-    // animation). Empty in retract mode and whenever a real push/phantom already grows the chain.
+    // Extend-into-open-air placements, firstSlot -> rope state. Lowering into pure air has no moved
+    // block to carry the usual phantom rope, so the mover places these instantly instead.
     private final Map<BlockPos, BlockState> directRopePlacements = new HashMap<>();
 
     public PulleyStructureResolver(Level level, List<PulleyInfo> pulleys) {
@@ -87,9 +73,9 @@ public class PulleyStructureResolver {
         this.totalPushLimit = pulleys.size() * CommonConfigs.Redstone.PULLEY_PULL_LIMIT.get();
     }
 
-    // Non-rope blocks already queued: the figure compared against the budget. Counted iteratively
-    // rather than as toPush.size() - ropePositions.size() because in extend mode ropePositions
-    // holds chain ropes that are NOT in toPush, so the subtraction would underflow.
+    // Non-rope blocks already queued, the figure compared against the budget. Counted iteratively
+    // rather than toPush.size() - ropePositions.size(): in extend mode ropePositions holds chain
+    // ropes that are not in toPush, so the subtraction would underflow.
     private int budgetUsage() {
         int n = 0;
         for (BlockPos p : toPush) {
@@ -118,15 +104,11 @@ public class PulleyStructureResolver {
                 continue;
             }
 
-            // Both modes shift the entire rope column by one slot: a symmetric move.
-            // RETRACT: chain moves toward the pulley. The topmost rope (firstSlot) is marked
-            // consumed so it doesn't get a MOVING_PISTON entry; the rope below it slides up to
-            // overwrite that slot. The forward scan treats consumed slots as a soft terminator
-            // so the chain ends cleanly at the pulley wall.
-            // EXTEND: chain moves away from the pulley. Every rope animates one slot in the
-            // push direction; the topmost slot (firstSlot) ends up empty and is then filled by
-            // {@code serverFinaliseExtend} with a fresh rope. The bottom rope ends up where the
-            // anchor was, and the anchor slides further down (handled by addBlockLine).
+            // Both modes shift the whole rope column by one slot, symmetrically.
+            // Retract: firstSlot is marked consumed so it gets no MOVING_PISTON entry, and the rope
+            // below slides up to overwrite it.
+            // Extend: every rope animates one slot in the push direction, leaving firstSlot empty
+            // for serverFinaliseExtend to fill; the anchor slides further down via addBlockLine.
             BlockPos walkPos;
             if (!extending) {
                 consumedRopes.add(firstSlot);
@@ -154,31 +136,26 @@ public class PulleyStructureResolver {
 
             if (!anchorPullable) {
                 if (anchorIsAir || anchorIsPulley) {
-                    // No anchor at all (just hanging rope), or the chain runs into another
-                    // pulley body: the rope chain still shortens by one if we walked any
-                    // intermediate rope segments. Mark contribution if so.
+                    // No anchor (bare hanging rope) or the chain ran into another pulley body: the
+                    // column still shortens by one if we walked any rope segments.
                     if (toPush.size() > contributionMark) {
                         contributedPulleys.add(pulley.pulleyPos());
                     } else if (extending && anchorIsAir) {
-                        // Pure open air below the pulley (firstSlot itself is air): nothing to push
-                        // and no column to grow, but lowering must still drop a fresh rope into
-                        // firstSlot. There's no moved block to carry a phantom rope here, so queue a
-                        // direct placement and count this pulley as contributing so the caller spends
-                        // a rope from its spool. (firstSlot == walkPos in this branch.)
+                        // Pure open air below the pulley (firstSlot == walkPos): nothing to push and
+                        // no column to grow, but lowering must still drop a rope into firstSlot.
                         directRopePlacements.put(firstSlot, pulley.ropeBlock().defaultBlockState());
                         contributedPulleys.add(pulley.pulleyPos());
                     }
                     continue;
                 }
-                // Anchor exists but is immovable (obsidian, DESTROY-reaction block, etc.).
-                // Fail the whole resolve so the player gets clear "nothing happens" feedback
-                // rather than the pulley silently winding rope and leaving the anchor stuck.
+                // Immovable anchor (obsidian, DESTROY reaction...). Fail the whole resolve so nothing
+                // happens, rather than winding rope while leaving the anchor stuck.
                 return false;
             }
 
             if (toPush.contains(walkPos)) {
-                // Anchor already added by another pulley's sticky chain. We still count as
-                // contributing, since our column shifts via the shared structure.
+                // Anchor already added by another pulley's sticky chain. Still a contribution,
+                // since our column shifts along with the shared structure.
                 contributedPulleys.add(pulley.pulleyPos());
                 continue;
             }
@@ -188,12 +165,10 @@ public class PulleyStructureResolver {
             }
         }
         // Sticky branching pass, skipping ropes (no slime-via-rope chains).
-        // MUST be an indexed loop: addBranchingBlocks -> addBlockLine mutates toPush, and we
-        // want newly-added blocks (e.g. slime laterally stuck to the anchor) to also be
-        // visited by this pass. An enhanced-for / iterator throws ConcurrentModificationException
-        // the moment branching adds anything. Vanilla's PistonStructureResolver uses the same
-        // indexed pattern for the same reason.
-        for (BlockPos pos : toPush) {
+        // Must be an indexed loop, like vanilla: branching mutates toPush while we walk it, and
+        // newly added blocks have to be visited too. An iterator would throw here.
+        for (int i = 0; i < toPush.size(); i++) {
+            BlockPos pos = toPush.get(i);
             if (ropePositions.contains(pos)) continue;
             if (SuppPlatformStuff.isSticky(level.getBlockState(pos)) && !addBranchingBlocks(pos)) {
                 return false;
@@ -227,9 +202,8 @@ public class PulleyStructureResolver {
                     || !SuppPlatformStuff.canStickToEachOther(prevTrailingState, currentState)
                     || !isPullable(currentState, this.level, trailingPos, this.pushDirection, false, this.pushDirection.getOpposite())
                     || this.pulleyPositions.contains(trailingPos)
-                    // Stop at any chain-rope position. Without this, a sticky anchor (e.g. slime
-                    // during extend) would consider the rope above it sticky-attached via the
-                    // "either side sticky" rule in canStickToEachOther and drag it along.
+                    // Stop at chain ropes. Otherwise a sticky anchor would count the rope above it
+                    // as attached via the "either side sticky" rule and drag it along.
                     || this.ropePositions.contains(trailingPos)
                     || this.consumedRopes.contains(trailingPos)) {
                 break;
@@ -248,8 +222,8 @@ public class PulleyStructureResolver {
         while (true) {
             BlockPos forwardPos = originPos.relative(this.pushDirection, forwardScanStep);
 
-            // Chain reached the pulley's mouth, so terminate successfully. The consumed rope
-            // will be overwritten by whichever block in toPush has it as its destination.
+            // Chain reached the pulley's mouth: terminate successfully. The consumed rope gets
+            // overwritten by whichever block in toPush has it as its destination.
             if (this.consumedRopes.contains(forwardPos)) return true;
 
             int collisionIndex = this.toPush.indexOf(forwardPos);
@@ -331,12 +305,9 @@ public class PulleyStructureResolver {
         return this.consumedRopes;
     }
 
-    /**
-     * For extend mode: returns the firstSlot positions whose rope chain contributed to the
-     * move, mapped to the rope state that should appear there. The mover uses this to flag
-     * the topmost MOVING_PULLEY in each chain as carrying a "trailing" phantom, a new rope
-     * animating from inside the pulley down into firstSlot. Empty in retract mode.
-     */
+    // Extend only: firstSlot -> rope state for chains that contributed. The mover flags the topmost
+    // MOVING_PULLEY of each as carrying a trailing phantom, a rope animating out of the pulley into
+    // firstSlot. Empty when retracting.
     public Map<BlockPos, BlockState> getExtendingPhantomSources() {
         Map<BlockPos, BlockState> result = new HashMap<>();
         if (!extending) return result;
@@ -353,31 +324,17 @@ public class PulleyStructureResolver {
         return this.contributedPulleys;
     }
 
-    /**
-     * Extend-only: {@code firstSlot -> rope state} for pulleys lowering into open air, where the
-     * rope must be placed directly (no moved block, no phantom animation). See
-     * {@link #directRopePlacements}. Empty in retract mode.
-     */
+    // Extend only: firstSlot -> rope state for pulleys lowering into open air, where the rope is
+    // placed directly with no animation. Empty when retracting.
     public Map<BlockPos, BlockState> getDirectRopePlacements() {
         return this.directRopePlacements;
     }
 
-    /**
-     * Pulleys use the piston rule, so this defers to {@link PistonBaseBlock#isPushable}: same
-     * world-border and build-height limits, same hardcoded obsidian family, same push reactions,
-     * same NeoForge {@code IBlockExtension} hooks, and the same movement blacklist (our mixin on
-     * that method also applies {@link PistonMovementHelper#isMovementBlacklisted}). Vanilla's final
-     * {@code !state.hasBlockEntity()} rejection is neutralised there too, which is what lets a
-     * pulley pull a chest.
-     * <p>
-     * On top of that, rope-driven movement refuses {@link ModTags#ROPE_PUSH_BLACKLIST}: a pulley
-     * shifts single blocks, so anything whose partner block wouldn't come along (doors, double
-     * blocks) would break. Pistons still push those, since they resolve the whole structure.
-     * <p>
-     * Blocks that genuinely shouldn't be moved (machines with anchored physics, blocks whose block
-     * entity references absolute world position, etc.) override {@code getPistonPushReaction} to
-     * return {@link PushReaction#BLOCK} as usual.
-     */
+    // Pulleys follow the piston rule, so this defers to PistonBaseBlock.isPushable: same limits,
+    // push reactions and platform hooks. Our mixin on that method applies the movement blacklist and
+    // neutralises vanilla's !hasBlockEntity() rejection, which is what lets a pulley pull a chest.
+    // On top of it, rope movement refuses ROPE_PUSH_BLACKLIST: a pulley shifts single blocks, so
+    // anything whose partner wouldn't come along (doors, double blocks) would break.
     private static boolean isPullable(BlockState state, Level level, BlockPos pos,
                                       Direction movementDirection, boolean allowDestroy,
                                       Direction pulleyFacing) {
