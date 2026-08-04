@@ -5,7 +5,6 @@
 
 uniform mat4 ModelViewMat;
 uniform mat4 ProjMat;
-uniform vec2 ScreenSize;
 uniform vec4 ColorModulator;
 uniform vec3 Light0_Direction;
 uniform vec3 Light1_Direction;
@@ -110,26 +109,12 @@ vec2 cubeMapUV(vec3 direction) {
 }
 
 void main() {
-    // Screen -> NDC
-    vec2 ndc = vec2((gl_FragCoord.x / ScreenSize.x) * 2.0 - 1.0,
-    (gl_FragCoord.y / ScreenSize.y) * 2.0 - 1.0);
-
-    // Clip space points at near and far planes
-    vec4 clipNear = vec4(ndc, -1.0, 1.0);
-    vec4 clipFar  = vec4(ndc, 1.0, 1.0);
-
-    // Unproject to view space
-    //problem must be somewhere here
-
-    mat4 invProj = inverse(ProjMat);
-    vec4 viewNear = invProj * clipNear;
-    viewNear /= viewNear.w;
-    vec4 viewFar  = invProj * clipFar;
-    viewFar /= viewFar.w;
-
-    vec3 rayOrigin =  viewNear.xyz;
-
-    vec3 rayDir = normalize(viewFar.xyz - viewNear.xyz);
+    // The quad is a camera-facing billboard, so in view space the camera sits at the
+    // origin and vertexPos (interpolated per-fragment) is already the point on the quad
+    // the ray passes through. This avoids reconstructing the ray from gl_FragCoord/ScreenSize,
+    // which broke under Iris since its internal framebuffers aren't always window-sized.
+    vec3 rayOrigin = vec3(0.0);
+    vec3 rayDir = normalize(vertexPos);
 
     float t = intersectSphere(rayOrigin, rayDir, spherePos, Radius);
     if (t < 0.0){

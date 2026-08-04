@@ -41,9 +41,6 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
     // Transient in both features: only meaningful within the tick it was written, never persisted.
     private final Map<Long, Long> handled = new HashMap<>();
 
-    /**
-     * Live view of the persistable entries, for the owner's codec.
-     */
     public Map<Long, A> attempts() {
         return this.attempts;
     }

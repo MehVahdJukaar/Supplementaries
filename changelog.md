@@ -1,1 +1,2 @@
-- improved cannon visuals. bedrock parity.
+- fixed some missing textures
+- improved cooperative piston code
