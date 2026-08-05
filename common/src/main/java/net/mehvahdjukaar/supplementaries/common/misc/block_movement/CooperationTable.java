@@ -2,10 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
 import net.minecraft.core.BlockPos;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiPredicate;
 
 /**
@@ -37,9 +37,11 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
         long tick();
     }
 
-    private final Map<Long, A> attempts = new HashMap<>();
+    // Concurrent because the client side-channel tables are written by the integrated server
+    // thread and read by the client thread. Plain HashMaps here crashed with a CME.
+    private final Map<Long, A> attempts = new ConcurrentHashMap<>();
     // Transient in both features: only meaningful within the tick it was written, never persisted.
-    private final Map<Long, Long> handled = new HashMap<>();
+    private final Map<Long, Long> handled = new ConcurrentHashMap<>();
 
     public Map<Long, A> attempts() {
         return this.attempts;

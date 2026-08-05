@@ -1,2 +1,1 @@
-- fixed some missing textures
-- improved cooperative piston code
+- fixed an issue with cooperators
