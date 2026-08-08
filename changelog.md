@@ -1,1 +1,2 @@
-- fixed an issue with cooperators
+- fixed an issue with piston cooperators
+- plunderers can rarely drop spyglasses

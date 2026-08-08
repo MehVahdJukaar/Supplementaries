@@ -41,10 +41,16 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
 
     // Gate Zeta's resolve on real cooperation. When Zeta is globally disabled, resolve delegates
     // to parent.resolve(); the parent's vanilla mixin already gated, so skip re-gating here (our
-    // myToPush is empty in that case).
+    // myToPush is empty in that case) and just take over the contributing set it worked out, since
+    // checkIfExtend reads that off this wrapper to decide whose block events to post.
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
     private boolean supp$gateOnRealCooperation(boolean original) {
-        if (!ZetaPistonStructureResolver.GlobalSettings.isEnabled()) return original;
+        if (!ZetaPistonStructureResolver.GlobalSettings.isEnabled()) {
+            if (this.parent instanceof ICooperativePiston parentCoop) {
+                this.supp$getCoopState().adoptContributingFrom(parentCoop.supp$getCoopState());
+            }
+            return original;
+        }
         return this.supp$getCoopState().gateResolve(original, pistonPos, myToPush);
     }
 

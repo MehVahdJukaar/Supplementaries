@@ -44,6 +44,15 @@ public class PistonCoopResolverState {
     }
 
     /**
+     * Take over the contributing set another resolver's state computed. Needed when Zeta wraps the
+     * vanilla resolver but delegates {@code resolve()} to it: the gate then runs on the delegate's
+     * state while callers still read the wrapper's.
+     */
+    public void adoptContributingFrom(PistonCoopResolverState other) {
+        this.contributingCooperators = other.contributingCooperators;
+    }
+
+    /**
      * Runs after the resolver's {@code resolve()} returns. Filters cooperators down to those whose
      * start block actually landed in {@code toPush} (free-riders excluded), remembers them as the
      * contributing set, and gates on the cooperative budget.
