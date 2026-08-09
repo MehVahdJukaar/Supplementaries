@@ -65,8 +65,9 @@ public class DispenserBehaviorsManager {
         if (CommonConfigs.Functional.FODDER_ENABLED.get()) {
             event.registerPlaceBlock(ModRegistry.FODDER.get());
         }
-        if (CommonConfigs.Tools.LUNCH_BOX_ENABLED.get()) {
-            event.registerPlaceBlock(ModRegistry.LUNCH_BASKET.get());
+        //must pass the item: the basket block has no BlockItem, so LUNCH_BASKET.asItem() is air
+        if (CommonConfigs.Tools.LUNCH_BOX_ENABLED.get() && CommonConfigs.Tools.LUNCH_BOX_PLACEABLE.get()) {
+            event.registerPlaceBlock(ModRegistry.LUNCH_BASKET_ITEM.get());
         }
         if (CommonConfigs.Functional.SOAP_ENABLED.get()) {
             event.registerPlaceBlock(ModRegistry.BUBBLE_BLOCK.get());
@@ -135,7 +136,7 @@ public class DispenserBehaviorsManager {
         boolean sack = CommonConfigs.Functional.SACK_ENABLED.get();
 
         HolderLookup.Provider ra = event.getRegistryAccess();
-        if (axe || jar || key) {
+        if (axe || jar || key || pancake || sack) {
             for (Item i : BuiltInRegistries.ITEM) {
                 try {
                     if (jar && BucketHelper.isFishBucket(i)) {
