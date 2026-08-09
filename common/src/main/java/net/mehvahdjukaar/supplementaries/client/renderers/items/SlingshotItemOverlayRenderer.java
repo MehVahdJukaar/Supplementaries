@@ -21,11 +21,8 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.phys.AABB;
 
 import java.util.UUID;
-import java.util.WeakHashMap;
 
 public class SlingshotItemOverlayRenderer extends ProjectileWeaponOverlayRenderer {
-
-    private final WeakHashMap<CompoundTag, Entity> cachedParrots = new WeakHashMap<>();
 
     private UUID lastUUID = null;
 
