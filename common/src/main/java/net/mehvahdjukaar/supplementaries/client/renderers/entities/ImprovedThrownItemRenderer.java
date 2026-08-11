@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 public class ImprovedThrownItemRenderer<T extends Entity & ItemSupplier> extends EntityRenderer<T> {
     public static final float MIN_CAMERA_DISTANCE_SQUARED = 7;
     private final ItemRenderer itemRenderer;
-    private final float scale;
+    protected final float scale;
 
     public ImprovedThrownItemRenderer(EntityRendererProvider.Context context, float scale) {
         super(context);
@@ -36,12 +36,17 @@ public class ImprovedThrownItemRenderer<T extends Entity & ItemSupplier> extends
         }
         poseStack.pushPose();
         poseStack.translate(0, entity.getBbHeight() / 2, 0);
-        poseStack.scale(this.scale * 0.5f, this.scale * 0.5f, this.scale * 0.5f);
+        float s = this.getScale(entity) * 0.5f;
+        poseStack.scale(s, s, s);
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
         this.itemRenderer.renderStatic(entity.getItem(), ItemDisplayContext.NONE, packedLight, OverlayTexture.NO_OVERLAY, poseStack, buffer, entity.level(), entity.getId());
         poseStack.popPose();
         super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
+    }
+
+    protected float getScale(T entity) {
+        return this.scale;
     }
 
     @Override

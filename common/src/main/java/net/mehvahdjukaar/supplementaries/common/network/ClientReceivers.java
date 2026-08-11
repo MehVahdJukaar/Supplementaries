@@ -23,6 +23,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.inventories.RedMerchantMenu;
 import net.mehvahdjukaar.supplementaries.common.items.AntiqueInkItem;
 import net.mehvahdjukaar.supplementaries.common.items.SongInstrumentItem;
+import net.mehvahdjukaar.supplementaries.common.misc.explosion.BombExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.CapturedMobHandler;
 import net.mehvahdjukaar.supplementaries.common.misc.mob_container.IMobContainerProvider;
@@ -105,11 +106,11 @@ public class ClientReceivers {
             final RandomSource ran = l.random;
             switch (message.type) {
                 case BOMB_EXPLOSION -> {
-                    Integer radius = message.getFirstExtraData();
-                    if (radius != null) {
+                    Integer scaledRadius = message.getFirstExtraData();
+                    if (scaledRadius != null) {
                         l.addParticle(ModParticles.BOMB_EXPLOSION_PARTICLE_EMITTER.get(),
                                 message.pos.x, message.pos.y, message.pos.z,
-                                radius, 0.0, 0.0);
+                                scaledRadius / (double) BombExplosion.RADIUS_PACKET_SCALE, 0.0, 0.0);
                     }
                 }
                 case BUBBLE_BLOW -> {

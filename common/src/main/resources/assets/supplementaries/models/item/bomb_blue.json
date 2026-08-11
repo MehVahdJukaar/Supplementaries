@@ -9,6 +9,12 @@
         "custom_model_data": 1
       },
       "model": "supplementaries:item/bomb_blue_projectile"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "supplementaries:item/bomb_blue_baby"
     }
   ]
 }
