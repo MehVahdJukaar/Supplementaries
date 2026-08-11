@@ -153,7 +153,8 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
             if (w == VanillaWoodTypes.OAK) return;
 
             if (w.getChild("boat") == null) {
-                Supplementaries.LOGGER.warn("Could not find Boat for wood {}. Does this item even exist? It should! Skipping cannon boat generation", w);
+                //plenty of modded woods have no boat, so this is expected and not worth a warning
+                Supplementaries.LOGGER.debug("Could not find Boat for wood {}. Skipping cannon boat generation", w);
                 return;
             }
             try {
@@ -172,7 +173,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
         ModRegistry.WAY_SIGN_ITEMS.forEach((w, i) -> {
             if (w == VanillaWoodTypes.OAK) return;
             if (w.getChild("sign") == null) {
-                Supplementaries.LOGGER.warn("Could not find Sign for wood {}. Does this block even exist? It should! Skipping way sign recipe generation", w);
+                Supplementaries.LOGGER.debug("Could not find Sign for wood {}. Skipping way sign recipe generation", w);
                 return;
             }
             try {

@@ -412,11 +412,6 @@ public class ModCreativeTabs {
                 ModConstants.BOMB_NAME,
                 ModRegistry.BOMB_ITEM, ModRegistry.BOMB_BLUE_ITEM);
 
-        adder.afterML(ModRegistry.BOMB_BLUE_ITEM.get(), CreativeModeTabs.COMBAT,
-                "oreganized",
-                ModConstants.BOMB_NAME,
-                ModRegistry.BOMB_SPIKY_ITEM);
-
         adder.before(Items.BOW, CreativeModeTabs.COMBAT,
                 ModConstants.QUIVER_NAME,
                 ModRegistry.QUIVER_ITEM);

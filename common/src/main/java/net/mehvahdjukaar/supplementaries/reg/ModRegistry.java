@@ -99,10 +99,6 @@ public class ModRegistry {
             .rarity(Rarity.RARE),
             BombEntity.BombType.BLUE, true));
 
-    //sharpnel bomb
-    public static final Supplier<Item> BOMB_SPIKY_ITEM = regItem(BOMB_SPIKY_NAME, () -> new BombItem(new Item.Properties(),
-            BombEntity.BombType.SPIKY, false));
-
     //rope arrow
     public static final Supplier<RopeArrowItem> ROPE_ARROW_ITEM = regItem(ROPE_ARROW_NAME, () -> new RopeArrowItem(
             CommonConfigs.Tools.ROPE_ARROW_CAPACITY.get(),

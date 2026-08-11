@@ -161,6 +161,7 @@
   "block.supplementaries.sconce_ender": "Bougeoir de l'End",
   "block.supplementaries.sconce_glow": "Bougeoir brillant",
   "block.supplementaries.sconce_green": "Bougeoir vert",
+  "block.supplementaries.sconce_wall_green": "Bougeoir vert",
   "block.supplementaries.sconce_lever": "Levier de bougeoir",
   "block.supplementaries.sconce_soul": "Bougeoir des damnés",
   "block.supplementaries.sign_post": "Poteau indicateur",
@@ -311,8 +312,6 @@
   "item.supplementaries.bomb_blue": "Bombe bleue",
   "item.supplementaries.bomb_blue_projectile": "Bombe bleue",
   "item.supplementaries.bomb_projectile": "Bombe",
-  "item.supplementaries.bomb_spiky": "Bombe piquante",
-  "item.supplementaries.bomb_spiky_projectile": "Bombe piquante",
   "item.supplementaries.bubble_blower": "Souffleur de bulles",
   "item.supplementaries.bunting": "Petits drapeaux",
   "item.supplementaries.bunting_black": "Petits drapeaux noirs",
@@ -481,6 +480,5 @@
   "wood_type.twilightforest.dark": "Bois sombre",
   "wood_type.twilightforest.sorting": "Sortingwood",
   "wood_type.twilightforest.time": "Bois du temps",
-  "wood_type.twilightforest.trans": "Bois de transformation",
-
+  "wood_type.twilightforest.trans": "Bois de transformation"
 }

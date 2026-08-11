@@ -2,7 +2,7 @@
   "fabric:load_conditions": [
     {
       "condition": "supplementaries:flag",
-      "flag": "quiver"
+      "flag": "lapis_bricks"
     },
     {
       "modid": "farmersdelight",
@@ -12,7 +12,7 @@
   "neoforge:conditions": [
     {
       "type": "supplementaries:flag",
-      "flag": "quiver"
+      "flag": "lapis_bricks"
     },
     {
       "type": "neoforge:mod_loaded",
@@ -22,17 +22,17 @@
   "type": "farmersdelight:cutting",
   "ingredients": [
     {
-      "item": "minecraft:saddle"
+      "item": "supplementaries:lapis_bricks"
     }
   ],
   "tool": {
     "type": "farmersdelight:item_ability",
-    "action": "shears_dig"
+    "action": "pickaxe_dig"
   },
   "result": [
     {
-      "item": "minecraft:leather",
-      "count": 2
+      "item": "minecraft:lapis_lazuli",
+      "count": 4
     }
   ]
 }

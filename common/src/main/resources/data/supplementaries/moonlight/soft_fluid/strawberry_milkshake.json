@@ -3,7 +3,7 @@
   "containers": [
     {
       "filled": [
-        "minecraft:strawberry_milkshake"
+        "neapolitan:strawberry_milkshake"
       ],
       "empty": "minecraft:glass_bottle",
       "capacity": 1

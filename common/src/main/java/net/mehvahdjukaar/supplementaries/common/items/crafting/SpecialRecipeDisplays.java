@@ -328,7 +328,7 @@ public class SpecialRecipeDisplays {
     }
 
     private static RecipeHolder<ShapelessRecipe> makeSpikeRecipe(Holder<Potion> potionType, String group) {
-        ItemStack spikes = new ItemStack(ModRegistry.BAMBOO_SPIKES.get());
+        ItemStack spikes = ModRegistry.BAMBOO_SPIKES_ITEM.get().getDefaultInstance();
         ItemStack lingeringPotion = PotionContents.createItemStack(Items.LINGERING_POTION, potionType);
         Ingredient spikeIngredient = Ingredient.of(spikes);
         Ingredient potionIngredient = Ingredient.of(lingeringPotion);

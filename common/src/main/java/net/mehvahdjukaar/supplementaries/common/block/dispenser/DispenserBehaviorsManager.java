@@ -118,7 +118,6 @@ public class DispenserBehaviorsManager {
             //default behaviors for modded items
             event.register(ModRegistry.BOMB_ITEM.get(), new ProjectileDispenseBehavior(ModRegistry.BOMB_ITEM.get()));
             event.register(ModRegistry.BOMB_BLUE_ITEM.get(), new AddItemToInventoryBehavior(ModRegistry.BOMB_BLUE_ITEM.get()));
-            event.register(ModRegistry.BOMB_SPIKY_ITEM.get(), new AddItemToInventoryBehavior(ModRegistry.BOMB_SPIKY_ITEM.get()));
         }
         //gunpowder
         if (CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {

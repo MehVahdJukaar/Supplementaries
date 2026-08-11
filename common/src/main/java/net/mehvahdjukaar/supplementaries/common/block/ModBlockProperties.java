@@ -130,12 +130,14 @@ public class ModBlockProperties {
 
             PostType type = null;
             //if (state.getBlock().hasTileEntity(state)) return explosionType;
-            if (state.is(ModTags.COLUMN_SHAPE_4X4)) {
+            //wider tags are checked first: the 4x4 one pulls in all of #minecraft:fences, so a modded fence
+            //that is explicitly listed as thicker would otherwise always resolve to a post
+            if (state.is(ModTags.COLUMN_SHAPE_6X6) || (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.isPalisade(state))) {
+                type = PostType.PALISADE;
+            } else if (state.is(ModTags.COLUMN_SHAPE_4X4)) {
                 if (!state.hasProperty(BlockStateProperties.AXIS) || state.getValue(BlockStateProperties.AXIS) == Direction.Axis.Y) {
                     type = PostType.POST;
                 }
-            } else if (state.is(ModTags.COLUMN_SHAPE_6X6) || (CompatHandler.DECO_BLOCKS && DecoBlocksCompat.isPalisade(state))) {
-                type = PostType.PALISADE;
             } else if (state.is(ModTags.COLUMN_SHAPE_8X8)) {
                 if ((state.getBlock() instanceof WallBlock) && !state.getValue(WallBlock.UP)) {
                     //ignoring not full height ones. might use hitbox here instead

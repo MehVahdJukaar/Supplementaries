@@ -9,6 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.Potion;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterloggedBlock {
@@ -25,6 +27,12 @@ public class BambooSpikesTippedItem extends BlockItem implements SimpleWaterlogg
 
     public BambooSpikesTippedItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
+    }
+
+    //shares its block with the plain spikes item. Without this it would win the Item.BY_BLOCK mapping (being
+    //registered last) and Block.asItem() would hand out poison tipped spikes instead of plain ones
+    @Override
+    public void registerBlocks(Map<Block, Item> blockToItemMap, Item item) {
     }
 
     public static boolean isPotionValid(PotionContents potion) {
