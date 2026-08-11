@@ -13,26 +13,19 @@ import net.minecraft.server.level.ServerLevel;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Which pulleys are attempting a step this tick, mirroring {@link PistonCooperationData}. When two
- * pulleys fire a continuous step on the same tick with the same period and push direction, this is
- * how they discover each other so the resolver runs once with a combined PulleyInfo set, letting
- * them pull a shared structure together (e.g. an elevator on two ropes).
- * <p>
- * Storage, expiry and the same-tick "already handled" marker come from {@link CooperationTable};
- * this class supplies what a pulley attempt consists of and how far apart two of them may be.
- * <p>
- * <b>Server-only instance.</b> The client uses the static {@link #markAttemptingClient} /
- * {@link #getCooperatorsClient} side-channel (same shape as the piston version) because it can't
- * host a WorldSavedData. Both sides mark on the same local analog-driver tick, so the matching
- * {@code triggerEvent} (arriving on the client a few ticks late) sees the same cooperator set on
- * either side.
- */
+// Which pulleys are attempting a step this tick, mirroring PistonCooperationData. Two pulleys firing
+// a continuous step on the same tick with the same period and push direction discover each other
+// here, so the resolver runs once over a combined PulleyInfo set and they pull a shared structure
+// together (an elevator on two ropes, say).
+// Storage, expiry and the same-tick handled marker come from CooperationTable; this class supplies
+// what a pulley attempt consists of and how far apart two of them may be.
+// Server-only instance: the client can't host a WorldSavedData, so it uses the static
+// markAttemptingClient/getCooperatorsClient side-channel like the piston version does. Both sides
+// mark on the same local analog-driver tick, so the matching triggerEvent (arriving a few ticks late
+// on the client) sees the same cooperator set either side.
 public class PulleyCooperationData extends WorldSavedData {
 
-    /**
-     * Cooperator search radius per axis. Roughly matches the resolver's per-pulley budget.
-     */
+    // Cooperator search radius per axis. Roughly matches the resolver's per-pulley budget.
     private static final int MAX_DISTANCE = 12;
 
     private record AttemptInfo(int period, Direction pushDir, long tick) implements CooperationTable.Attempt {
@@ -71,7 +64,7 @@ public class PulleyCooperationData extends WorldSavedData {
         return cooperatorsIn(this.table, primary, period, pushDir, currentTick);
     }
 
-    /** Whether this pulley's chain was already shifted this tick, as part of a group move. */
+    // Whether this pulley's chain was already shifted this tick, as part of a group move.
     public boolean wasConsumed(BlockPos pos, long currentTick) {
         return this.table.wasHandled(pos, currentTick);
     }
@@ -91,11 +84,9 @@ public class PulleyCooperationData extends WorldSavedData {
         return cooperators;
     }
 
-    /**
-     * Plain box around the primary. Unlike the piston test this permits a cooperator in the same
-     * column, since stacked pulleys winding the same rope are a legitimate setup and the resolver
-     * treats every other pulley body as a wall anyway.
-     */
+    // Plain box around the primary. Unlike the piston test this allows a cooperator in the same
+    // column: stacked pulleys winding the same rope are legitimate, and the resolver treats every
+    // other pulley body as a wall anyway.
     private static boolean withinReach(BlockPos candidate, BlockPos primary) {
         return Math.abs(candidate.getX() - primary.getX()) <= MAX_DISTANCE
                 && Math.abs(candidate.getY() - primary.getY()) <= MAX_DISTANCE

@@ -30,6 +30,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,15 +65,17 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
         return stack.isEmpty() ? Items.BOOK.getDefaultInstance() : stack;
     }
 
+    private int countBooks() {
+        return (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
+    }
+
     private void ensureInventoryMatchesBlockState() {
         int expected = this.getBlockState().getValue(BookPileBlock.BOOKS);
-        int actual = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
-        if (actual >= expected) {
+        if (this.countBooks() >= expected) {
             return;
         }
         this.consolidateBookPile();
-        actual = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
-        for (int i = actual; i < expected; i++) {
+        for (int i = this.countBooks(); i < expected; i++) {
             this.setItem(i, Items.BOOK.getDefaultInstance());
         }
         this.setChanged();
@@ -106,10 +109,17 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     @Override
     public void onItemRemoved(Player player, ItemStack stack, int slot) {
         super.onItemRemoved(player, stack, slot);
-        int actualBookCount = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
-        if (actualBookCount == 0) {
+        int books = this.countBooks();
+        if (books == 0) {
             this.level.removeBlock(this.worldPosition, false);
+            return;
         }
+        // Lower BOOKS here, before the setChanged that follows: otherwise the state still claims the
+        // old count and ensureInventoryMatchesBlockState fills the gap back in with a plain book,
+        // duplicating the one the player just took.
+        this.consolidateBookPile();
+        this.level.setBlock(this.worldPosition,
+                this.getBlockState().setValue(BookPileBlock.BOOKS, books), Block.UPDATE_CLIENTS);
     }
 
     //called on change... too soon
@@ -118,13 +128,13 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
         super.serverSideUpdateWhenChanged(registries);
         int expected = this.getBlockState().getValue(BookPileBlock.BOOKS);
-        int actual = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
+        int actual = this.countBooks();
         if (actual < expected) {
             this.ensureInventoryMatchesBlockState();
         } else if (actual > expected) {
             this.consolidateBookPile();
-            actual = (int) this.getItems().stream().filter(i -> !i.isEmpty()).count();
-            this.level.setBlock(this.worldPosition, this.getBlockState().setValue(BookPileBlock.BOOKS, actual), 2);
+            this.level.setBlock(this.worldPosition,
+                    this.getBlockState().setValue(BookPileBlock.BOOKS, actual), Block.UPDATE_CLIENTS);
         }
         this.enchantPower = 0;
         for (int i = 0; i < 4; i++) {
@@ -139,14 +149,16 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
     }
 
     private void consolidateBookPile() {
-        boolean prevEmpty = false;
-        for (int i = 0; i < 4; i++) {
-            var it = this.getItem(i);
-            if (it.isEmpty()) prevEmpty = true;
-            else if (prevEmpty) {
-                this.getItems().set(i - 1, it);
-                this.getItems().set(i, ItemStack.EMPTY);
+        NonNullList<ItemStack> items = this.getItems();
+        int target = 0;
+        for (int i = 0; i < items.size(); i++) {
+            ItemStack stack = items.get(i);
+            if (stack.isEmpty()) continue;
+            if (i != target) {
+                items.set(target, stack);
+                items.set(i, ItemStack.EMPTY);
             }
+            target++;
         }
     }
 

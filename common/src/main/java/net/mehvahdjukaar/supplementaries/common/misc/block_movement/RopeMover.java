@@ -16,7 +16,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
-import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
@@ -25,28 +24,19 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Instant, one-block-at-a-time rope movement. Walks down a rope column, then adds or removes a
- * single rope at the end of it and shifts whatever hangs below by one slot, immediately: a plain
- * {@code setBlock}, no animation and no structure resolving.
- * <p>
- * This is the path for everything driven by hand or by an item:
- * <ul>
- *   <li>{@code AbstractRopeBlock} when a player right-clicks a rope with rope, or shift-clicks to
- *   wind one back up.</li>
- *   <li>{@code RopeArrowEntity}, which lays a rope column where it lands.</li>
- *   <li>Pulleys in <b>legacy mode</b> ({@code pulley_block.continuous_retraction = false}), via
- *   {@code PulleyBlockTile.pullRope} / {@code releaseRope}, including the chaining in
- *   {@code rotateIndirect} where one pulley pokes another through a shared rope.</li>
- * </ul>
- * {@link PulleyMover} is the other half of the story and handles the opposite case: pulleys in
- * continuous mode. There a {@link PulleyStructureResolver} resolves the whole hanging structure
- * first (sticky branching, a pooled push budget, cooperating pulleys), and every block becomes a
- * moving block entity that slides over several ticks. Use that one when the move should animate,
- * carry more than the single block directly under the rope, or be driven by redstone.
- * <p>
- * Only {@link #isCorrectRope} is shared between the two modes.
- */
+// Instant, one-block-at-a-time rope movement. Walks down a rope column, adds or removes a single
+// rope at the end of it and shifts whatever hangs below by one slot, immediately: a plain setBlock,
+// no animation and no structure resolving.
+// This is the path for everything driven by hand or by an item: AbstractRopeBlock when a player
+// right-clicks a rope with rope or shift-clicks to wind one up, RopeArrowEntity laying a column
+// where it lands, and legacy-mode pulleys (pulley_block.continuous_retraction = false) via
+// PulleyBlockTile.pullRope/releaseRope, including rotateIndirect where one pulley pokes another
+// through a shared rope.
+// PulleyMover is the other half: continuous-mode pulleys, where PulleyStructureResolver resolves the
+// whole hanging structure first (sticky branching, pooled push budget, cooperating pulleys) and
+// every block becomes a moving block entity sliding over several ticks. Use that one when the move
+// should animate, carry more than the block directly under the rope, or be driven by redstone.
+// Only isCorrectRope is shared between the two modes.
 public class RopeMover {
 
     public static boolean addRopeDown(BlockPos pos, Level level, @Nullable Player player, InteractionHand hand, Block ropeBlock) {
@@ -165,14 +155,9 @@ public class RopeMover {
     }
 
 
-    /**
-     * Whether a rope may drag this block along. Defers to {@link PistonBaseBlock#isPushable} for the
-     * shared rules (build height, world border, push reactions, the movement blacklist and the
-     * block entity allowance our mixin applies there), and adds the rope-specific ones on top:
-     * pulleys are never dragged, {@link ModTags#ROPE_PUSH_BLACKLIST} blocks whose partner wouldn't
-     * come along are refused, and anything in {@link ModTags#ROPE_HANG_TAG} rides along vertically
-     * regardless of its push reaction.
-     */
+    // Whether a rope may drag this block along: the shared mover rules, plus pulleys are never
+    // dragged, blocks whose partner wouldn't come along (ROPE_PUSH_BLACKLIST) are refused, and
+    // ROPE_HANG_TAG blocks ride along vertically whatever their push reaction.
     public static boolean isPushableByRopes(BlockState state, Level level, BlockPos pos, Direction moveDir) {
         if (state.getBlock() instanceof PulleyBlock) return false; //could be in the tag but easier for addons like this
         if (state.is(ModTags.ROPE_PUSH_BLACKLIST)) return false;
@@ -181,6 +166,6 @@ public class RopeMover {
             return true;
         }
         // Never destroys: the solidity check above already rejected everything a rope could break.
-        return PistonBaseBlock.isPushable(state, level, pos, moveDir, false, moveDir);
+        return PistonMovementHelper.isPushableByOurMovers(state, level, pos, moveDir, false, moveDir);
     }
 }

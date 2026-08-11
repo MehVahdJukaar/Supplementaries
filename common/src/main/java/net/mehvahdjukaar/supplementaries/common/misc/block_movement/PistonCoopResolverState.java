@@ -30,11 +30,9 @@ public class PistonCoopResolverState {
         this.contributingCooperators = Collections.emptySet();
     }
 
-    /**
-     * Worst-case ceiling for this resolve: every registered participant chipping in its own budget.
-     * Deriving it instead of storing it keeps it in lockstep with the post-resolve gate, which caps
-     * on the participants that actually contributed.
-     */
+    // Worst-case ceiling for this resolve: every registered participant chipping in its own budget.
+    // Derived rather than stored so it stays in lockstep with the post-resolve gate, which caps on
+    // the participants that actually contributed.
     public int getPushLimit() {
         return Math.max(1, cooperatingPistons.size()) * PistonMovementHelper.perPistonPushLimit();
     }
@@ -43,24 +41,18 @@ public class PistonCoopResolverState {
         return contributingCooperators;
     }
 
-    /**
-     * Take over the contributing set another resolver's state computed. Needed when Zeta wraps the
-     * vanilla resolver but delegates {@code resolve()} to it: the gate then runs on the delegate's
-     * state while callers still read the wrapper's.
-     */
+    // Take over the contributing set another resolver's state computed. Needed when Zeta wraps the
+    // vanilla resolver but delegates resolve() to it: the gate then runs on the delegate's state
+    // while callers still read the wrapper's.
     public void adoptContributingFrom(PistonCoopResolverState other) {
         this.contributingCooperators = other.contributingCooperators;
     }
 
-    /**
-     * Runs after the resolver's {@code resolve()} returns. Filters cooperators down to those whose
-     * start block actually landed in {@code toPush} (free-riders excluded), remembers them as the
-     * contributing set, and gates on the cooperative budget.
-     * <p>
-     * Effective cap: {@link perPistonPushLimit()} times one plus the contributing cooperators. The
-     * boosted {@link #getPushLimit()} stays in effect inside {@code addBlockLine} as the worst-case
-     * ceiling during chain construction; this post-check enforces the real per-participant budget.
-     */
+    // Runs after the resolver's resolve() returns. Filters cooperators down to those whose start
+    // block actually landed in toPush (free-riders excluded), remembers them as the contributing
+    // set, and gates on the cooperative budget: perPistonPushLimit times one plus the contributors.
+    // The boosted getPushLimit stays the worst-case ceiling inside addBlockLine while the chain is
+    // being built; this post-check enforces the real per-participant budget.
     public boolean gateResolve(boolean originalResult, BlockPos pistonPos, List<BlockPos> toPush) {
         if (!originalResult) return false;
         if (this.cooperatingPistons.isEmpty()) return true;
@@ -77,11 +69,8 @@ public class PistonCoopResolverState {
         return toPush.size() <= (1 + contributing.size()) * PistonMovementHelper.perPistonPushLimit();
     }
 
-    /**
-     * Extends each "is this the piston's own body?" boundary check in {@code addBlockLine}
-     * to also recognise cooperator piston positions: those columns are independent and
-     * shouldn't be traversed into.
-     */
+    // Extends each "is this the piston's own body?" boundary check in addBlockLine to also recognise
+    // cooperator piston positions: those columns are independent and shouldn't be traversed into.
     public boolean wrapEqualsCheck(boolean originalResult, BlockPos candidate) {
         return originalResult || this.cooperatingPistons.contains(candidate);
     }

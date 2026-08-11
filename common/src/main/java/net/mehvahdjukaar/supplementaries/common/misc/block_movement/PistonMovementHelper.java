@@ -5,12 +5,14 @@ import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +37,16 @@ public class PistonMovementHelper {
         // Quark's list exists to protect block entities it doesn't want moved. Honour it whenever
         // Quark is loaded, including when its own module is off and we are doing the moving.
         return state.hasBlockEntity() && CompatHandler.QUARK && QuarkCompat.blacklistsBlockMovement(state);
+    }
+
+    // Pushability for our own movers, ropes and pulleys. Piston rules plus the movement blacklist:
+    // none of this movement would happen without us, so a block declaring it must not be relocated
+    // is off limits whatever its push reaction.
+    public static boolean isPushableByOurMovers(BlockState state, Level level, BlockPos pos,
+                                                Direction movementDirection, boolean allowDestroy,
+                                                Direction moverFacing) {
+        return !isMovementBlacklisted(state) &&
+                PistonBaseBlock.isPushable(state, level, pos, movementDirection, allowDestroy, moverFacing);
     }
 
     @Nullable

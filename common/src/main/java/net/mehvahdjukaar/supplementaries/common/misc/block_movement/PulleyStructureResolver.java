@@ -8,22 +8,18 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 
 import java.util.*;
 
-/**
- * Pulley-side equivalent of vanilla {@code PistonStructureResolver}. Takes one {@link PulleyInfo} per
- * cooperating pulley and resolves all their chains in one pass, so a structure bridged across several
- * ropes moves as a unit and the pulleys pool their push budget.
- * <p>
- * Retracting, the chain moves toward the pulley and the rope adjacent to it is consumed (item +1)
- * instead of animated. Extending, the ropes shift one slot away and a fresh rope fills the vacated
- * top slot. Either way ropes don't count against the budget, and stickiness never propagates through
- * them: sticky branching only fires from the anchor and its own sticky chain.
- */
+// Pulley-side equivalent of vanilla PistonStructureResolver. Takes one PulleyInfo per cooperating
+// pulley and resolves all their chains in one pass, so a structure bridged across several ropes
+// moves as a unit and the pulleys pool their push budget.
+// Retracting, the chain moves toward the pulley and the rope adjacent to it is consumed (item +1)
+// instead of animated. Extending, the ropes shift one slot away and a fresh rope fills the vacated
+// top slot. Either way ropes don't count against the budget, and stickiness never propagates through
+// them: sticky branching only fires from the anchor and its own sticky chain.
 public class PulleyStructureResolver {
 
     public record PulleyInfo(BlockPos pulleyPos, Block ropeBlock, Direction ropeHangDirection, boolean extending) {
@@ -330,8 +326,8 @@ public class PulleyStructureResolver {
         return this.directRopePlacements;
     }
 
-    // Pulleys follow the piston rule, so this defers to PistonBaseBlock.isPushable: same limits,
-    // push reactions and platform hooks. Our mixin on that method applies the movement blacklist and
+    // Pulleys follow the piston rule, so this defers to the piston pushability check: same limits,
+    // push reactions and platform hooks, plus the movement blacklist. Our mixin on that method also
     // neutralises vanilla's !hasBlockEntity() rejection, which is what lets a pulley pull a chest.
     // On top of it, rope movement refuses ROPE_PUSH_BLACKLIST: a pulley shifts single blocks, so
     // anything whose partner wouldn't come along (doors, double blocks) would break.
@@ -339,6 +335,7 @@ public class PulleyStructureResolver {
                                       Direction movementDirection, boolean allowDestroy,
                                       Direction pulleyFacing) {
         if (state.is(ModTags.ROPE_PUSH_BLACKLIST)) return false;
-        return PistonBaseBlock.isPushable(state, level, pos, movementDirection, allowDestroy, pulleyFacing);
+        return PistonMovementHelper.isPushableByOurMovers(state, level, pos, movementDirection,
+                allowDestroy, pulleyFacing);
     }
 }

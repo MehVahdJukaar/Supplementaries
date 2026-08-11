@@ -14,16 +14,11 @@ import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Which pistons are attempting to move this tick, so one that can't resolve a structure alone can
- * find the neighbours pushing the same way and pool their budget.
- * <p>
- * Stored as WorldSavedData (per level, not synced) so entries survive world saves and dimension
- * boundaries are naturally isolated. Entries expire after a while, which lets a rescheduled
- * moveBlocks (running a few ticks after checkIfExtend) still find its cooperators. All of that
- * lives in {@link CooperationTable}, shared with the pulley equivalent; this class only supplies
- * what a piston attempt consists of and which neighbours count as reachable.
- */
+// Which pistons are attempting to move this tick, so one that can't resolve a structure alone finds
+// the neighbours pushing the same way and pools their budget.
+// WorldSavedData (per level, not synced) so entries survive saves and dimensions stay isolated.
+// Storage and expiry live in CooperationTable, shared with the pulley equivalent; this class only
+// supplies what a piston attempt consists of and which neighbours count as reachable.
 public class PistonCooperationData extends WorldSavedData {
 
     private record AttemptInfo(Direction direction, boolean extending, long tick) implements CooperationTable.Attempt {
@@ -62,9 +57,7 @@ public class PistonCooperationData extends WorldSavedData {
         return cooperatorsIn(this.table, pistonPos, dir, extending, currentTick);
     }
 
-    /**
-     * Whether this piston's block event was already posted this tick, as part of a group move.
-     */
+    // Whether this piston's block event was already posted this tick, as part of a group move.
     public boolean hasPosted(BlockPos pos, long tick) {
         return this.table.wasHandled(pos, tick);
     }
@@ -80,14 +73,11 @@ public class PistonCooperationData extends WorldSavedData {
                         && canReachSameStructure(candidate, pistonPos, dir.getAxis()));
     }
 
-    /**
-     * A cooperator has to sit in a different column (nonzero perpendicular offset) and be close
-     * enough both along and across the push axis that one structure could plausibly span the two.
-     * Pistons in the same column are part of one line, not a cooperating pair.
-     * <p>
-     * Deliberately measured against {@code MAX_PUSH_DEPTH} rather than the configured push limit:
-     * this is about how far a structure could reach, which is what bounds who might share one.
-     */
+    // A cooperator sits in a different column (nonzero perpendicular offset) and close enough both
+    // along and across the push axis that one structure could span the two. Same column means one
+    // line, not a cooperating pair.
+    // Measured against MAX_PUSH_DEPTH rather than the configured push limit on purpose: the question
+    // is how far a structure could reach, which is what bounds who might share one.
     private static boolean canReachSameStructure(BlockPos candidate, BlockPos pistonPos, Direction.Axis pushAxis) {
         int dx = candidate.getX() - pistonPos.getX();
         int dy = candidate.getY() - pistonPos.getY();

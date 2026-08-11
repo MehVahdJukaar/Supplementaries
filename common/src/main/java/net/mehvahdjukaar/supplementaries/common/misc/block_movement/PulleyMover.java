@@ -22,36 +22,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Executes a single unit-of-motion for a pulley pull, mirroring vanilla
- * {@code PistonBaseBlock.moveBlocks}. Each call shifts every block in the resolver's
- * {@code toPush} list by one slot toward the cooperating pulleys.
- * <p>
- * This is the continuous-mode pulley path ({@code pulley_block.continuous_retraction = true}): the
- * whole hanging structure moves, over several ticks, as moving block entities. {@link RopeMover} is
- * the instant single-block alternative used by rope items, rope arrows and legacy-mode pulleys.
- * <p>
- * Animation runs through {@link MovingPulleyBlock}, a subclass of vanilla
- * {@link Blocks#MOVING_PISTON}, so every sticky-block-aware mod that plugs into piston pushing
- * automatically extends to pulley pulling as well.
- * <p>
- * <b>Source-piston flag is never set.</b> Vanilla pistons mark one moving block as "source" so
- * its final state becomes AIR (the piston head retracts away). We need no such cleanup: the
- * topmost rope is destroyed inline by {@link #moveOneStep}, whose old slot ends up unclaimed in
- * {@code vacatedSlots} and then gets cleared to air, which is exactly the rope-consumption
- * effect we want.
- */
+// One unit of motion for a pulley pull, mirroring vanilla PistonBaseBlock.moveBlocks: each call
+// shifts every block in the resolver's toPush list one slot toward the cooperating pulleys.
+// This is the continuous-mode path (pulley_block.continuous_retraction = true), where the whole
+// hanging structure moves over several ticks as moving block entities. RopeMover is the instant
+// single-block alternative used by rope items, rope arrows and legacy-mode pulleys.
+// Animation runs through MovingPulleyBlock, a subclass of vanilla MOVING_PISTON, so every
+// sticky-block-aware mod that plugs into piston pushing extends to pulley pulling for free.
+// The source-piston flag is never set. Vanilla marks one moving block as source so its final state
+// becomes AIR (the head retracts away); we need no such cleanup, since the topmost rope is destroyed
+// inline by moveOneStep and its old slot ends up unclaimed in vacatedSlots and cleared to air, which
+// is exactly the rope consumption we want.
 public final class PulleyMover {
 
-    /**
-     * Resolves and executes one unit pull step.
-     *
-     * @param animationTicks how long the animation should last. 0 or 1 falls back to the vanilla
-     *                       2-tick speed.
-     * @return true if the step succeeded: blocks have been turned into moving-block entities and
-     * will settle into their new positions as the animation plays out. False if the resolve failed
-     * or there was nothing to pull, in which case the caller should stop the pull.
-     */
+    // Resolves and executes one unit pull step. animationTicks of 0 or 1 falls back to the vanilla
+    // 2-tick speed. False means the resolve failed or there was nothing to pull, and the caller
+    // should stop pulling; true means the blocks are now moving entities settling into place.
     public static boolean moveOneStep(Level level, PulleyStructureResolver resolver, int animationTicks) {
         if (!resolver.resolve()) {
             return false;

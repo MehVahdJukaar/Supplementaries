@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -30,57 +29,27 @@ import java.util.Map;
 @Mixin(PistonBaseBlock.class)
 public class PistonBaseBlockMixin {
 
-    /**
-     * Remove the vanilla hard-block on pushing block entities. The last line of
-     * isPushable returns {@code !state.hasBlockEntity()}, which rejects every block
-     * with a BE regardless of PushReaction. Returning false here makes it appear as
-     * though the block has no block entity, so blocks whose PushReaction is NORMAL
-     * pass through. Blocks with BLOCK/DESTROY/PUSH_ONLY are already handled earlier
-     * in isPushable and never reach this call.
-     * <p>
-     * BE data is preserved by {@link #supp$captureBeForPistonMove}. When Quark owns the move
-     * (see {@link PistonMovementHelper#BEMovementHandledByUs()}) we pass the vanilla value
-     * through untouched so its own hook on this same call decides, which also keeps its movement
-     * blacklist authoritative.
-     */
+    // isPushable ends on !state.hasBlockEntity(), rejecting every BE block whatever its PushReaction
+    // (BLOCK/DESTROY/PUSH_ONLY already returned earlier). Lying here lets those through; the BE data
+    // is carried by supp$captureBeForPistonMove. Passing the vanilla value back leaves the block
+    // unpushable, which is what we do when Quark owns the move (its own hook on this call decides)
+    // and for blacklisted blocks.
+    // The blacklist check belongs here, not on the return value: without a block entity vanilla
+    // pushes the block on its own, and c:relocation_not_supported is aimed at movers that ignore
+    // getPistonPushReaction, not at overriding a block's own push reaction.
     @WrapOperation(method = "isPushable",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/state/BlockState;hasBlockEntity()Z"))
     private static boolean supp$allowBlockEntityPush(BlockState state, Operation<Boolean> original) {
         if (!PistonMovementHelper.BEMovementHandledByUs()) return original.call(state);
+        if (PistonMovementHelper.isMovementBlacklisted(state)) return original.call(state);
         return false;
     }
 
-    /**
-     * Single enforcement point for "this block is never relocated". Pulleys and ropes run their
-     * pushability through this same method, so one tag covers every mover we have. See
-     * {@link PistonMovementHelper#isMovementBlacklisted}.
-     * <p>
-     * Note this also applies to plain vanilla piston pushes of blocks with no block entity, which
-     * vanilla itself would allow. That is deliberate: {@code c:relocation_not_supported} is how a
-     * block declares it must not be moved, and the blocks in it are only piston-movable in the
-     * first place because {@link #supp$allowBlockEntityPush} let them be.
-     */
-    @ModifyReturnValue(method = "isPushable", at = @At("RETURN"))
-    private static boolean supp$respectMovementBlacklist(boolean original,
-                                                         @Local(argsOnly = true) BlockState state) {
-        return original && !PistonMovementHelper.isMovementBlacklisted(state);
-    }
-
-    /**
-     * Before vanilla places the {@code MOVING_PISTON} block entity at the target
-     * position, snapshot the source block's block entity NBT and attach it to the
-     * new moving-piston BE via {@link ICarryingMovingPiston}.
-     * <p>
-     * At this call site {@code movingPiston.getBlockPos()} is already the target
-     * position; the source is one step opposite to the push direction. The source
-     * block has not been removed yet, so {@code level.getBlockEntity(source)} is
-     * still live.
-     * <p>
-     * The NBT is persisted inside the moving-piston BE (save/load handled by
-     * {@link PistonMovingBlockEntityMixin}) and applied by its {@code finalTick}
-     * once the animation completes.
-     */
+    // Hands the source block's BE nbt to the moving-piston BE before it goes into the chunk.
+    // Here movingPiston.getBlockPos() is already the target, so the source is one step back along
+    // the push direction and still holds its live block entity. PistonMovingBlockEntityMixin saves
+    // the nbt and its finalTick applies it when the animation lands.
     @WrapOperation(method = "moveBlocks",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;setBlockEntity(Lnet/minecraft/world/level/block/entity/BlockEntity;)V"))
@@ -112,15 +81,9 @@ public class PistonBaseBlockMixin {
         original.call(level, movingPiston);
     }
 
-    /**
-     * Snapshot the fluid states of the positions the piston is about to destroy, before the
-     * destroy loop clears them to air. A cauldron pushed into a water/lava source lands on one
-     * of these positions, so we keep the original fluid around to fill it in
-     * {@link #supp$fillPushedCauldron}.
-     * <p>
-     * Captured at the {@code getToPush} call: the structure has already resolved, the resolver
-     * local is live, and the to-destroy fluids are still in the world.
-     */
+    // A cauldron pushed into a water or lava source lands on a to-destroy position, so keep those
+    // fluids around for supp$fillPushedCauldron. Taken at the getToPush call: the structure has
+    // resolved, the resolver local is live and the destroy loop hasn't cleared anything yet.
     @Inject(method = "moveBlocks",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/piston/PistonStructureResolver;getToPush()Ljava/util/List;"))
@@ -137,12 +100,8 @@ public class PistonBaseBlockMixin {
         fluidShare.set(fluids);
     }
 
-    /**
-     * When a pushed cauldron's destination used to hold a fluid (captured in
-     * {@link #supp$snapshotCauldronFluids}), swap the moved state for the filled cauldron so the
-     * moving-piston animation lands a filled one. Ordinal 0 targets the push-loop call only, not
-     * the piston-head call.
-     */
+    // Swap the moved state for its filled variant when the destination held a fluid, so the
+    // animation lands a filled cauldron. Ordinal 0 is the push loop, not the piston-head call.
     @WrapOperation(method = "moveBlocks",
             at = @At(value = "INVOKE", ordinal = 0,
                     target = "Lnet/minecraft/world/level/block/piston/MovingPistonBlock;newMovingBlockEntity(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;ZZ)Lnet/minecraft/world/level/block/entity/BlockEntity;"))
@@ -158,7 +117,7 @@ public class PistonBaseBlockMixin {
         }
         BlockEntity movingBe = original.call(destPos, movingPistonState, movedState, facing, extending, isSourcePiston);
         // Cauldrons that keep their fluid in a block entity (Amendments liquid cauldrons, opted-in
-        // blocks) can't be filled by state alone — carry the fluid so it's applied once the moving
+        // blocks) can't be filled by state alone, so carry the fluid and apply it once the moving
         // animation lands the block.
         if (fluid != null && movingBe instanceof ICarryingMovingPiston carrying
                 && MovedFluidFiller.needsPostPlacement(movedState)) {
