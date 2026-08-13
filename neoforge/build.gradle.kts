@@ -30,7 +30,7 @@ dependencies {
 
     modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
-    // JiJ'd into Moonlight, so not on the dev runtime classpath — add explicitly to avoid missing schema codec class.
+    // JiJ'd into Moonlight, so not on the dev runtime classpath, so add it explicitly to avoid missing schema codec class.
     modRuntimeOnly("net.mehvahdjukaar:codecui-neoforge:${codecui_version}")
 
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")

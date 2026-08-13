@@ -121,7 +121,7 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         PistonMovementHelper.restoreBlockEntity(this.level, this.worldPosition, placed, nbt);
     }
 
-    // Normal completion path: tick() places the moved block itself — it does NOT call
+    // Normal completion path: tick() places the moved block itself; it does NOT call
     // finalTick. Restore right after vanilla sets the block, covering both the air
     // (updateOrDestroy) and non-air (neighborChanged) branches.
     @Inject(method = "tick", at = {

@@ -21,16 +21,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/**
- * Teaches Create's schematic cannon how to charge materials for Supplementaries blocks that have no item form
- * ({@code asItem() == AIR}). Create's default logic returns {@code INVALID} for those and refuses to place them
- * (sign posts, book piles, skull candles, sticks, ...). We compute the cost from the block's own loot drops, so
- * composite / data-carrying blocks pull the correct items — including per-state and per-block-entity variations.
- *
- * <p>Intentionally narrow: blocks that already have an item are left entirely to Create (it may have improved its
- * own handling), and blocks with no drops stay {@code INVALID} so genuinely technical/transient blocks are not
- * made cannon-placeable. This replaces the old hardcoded, per-block-subclass {@code SchematicCannonStuff}.
- */
+// Create's schematic cannon refuses to place blocks with no item form (sign posts, book piles, skull
+// candles...), so we charge those from their loot drops instead, which also gets composite and block
+// entity blocks right. Blocks that do have an item are left to Create, and blocks with no drops stay
+// INVALID so technical blocks don't become cannon placeable.
 public class SchematicRequirements {
 
     public static void register() {

@@ -23,7 +23,7 @@ dependencies {
 
 
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
-    // JiJ'd into Moonlight, so not on the dev runtime classpath — add explicitly to avoid missing schema codec class.
+    // JiJ'd into Moonlight, so not on the dev runtime classpath, so add it explicitly to avoid missing schema codec class.
     modRuntimeOnly("net.mehvahdjukaar:codecui-fabric:${codecui_version}")
 
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")

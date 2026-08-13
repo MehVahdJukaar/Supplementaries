@@ -155,9 +155,6 @@ public final class ModConstants {
     public static final String BARNACLES_NAME = "barnacles";
     public static final String PIRATE_DISC_NAME = "music_disc_heave_ho";
 
-    /**
-     * Bamboo-like wood types use "raft" naming instead of "boat", following {@link WoodType#isBambooLike()}.
-     */
     public static String cannonBoatBaseName(WoodType wood) {
         return wood.isBambooLike() ? CANNON_RAFT_NAME : CANNON_BOAT_NAME;
     }

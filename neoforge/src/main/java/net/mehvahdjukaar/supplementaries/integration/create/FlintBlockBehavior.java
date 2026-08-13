@@ -8,11 +8,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-/**
- * Makes a Flint Block on a moving contraption throw sparks and ignite fire when it scrapes past a
- * flint-metal (iron-like) surface in the world — mirroring how the block sparks when a metal block is
- * pushed against it by a piston.
- */
+// lets a flint block on a contraption spark against metal it scrapes past, same as when a piston
+// pushes metal into it
 public class FlintBlockBehavior implements MovementBehaviour {
 
     @Override

@@ -327,10 +327,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
     }
 
-    /**
-     * Throws a ring of baby bombs out along the face we hit, so a floor blast rains them upward and a
-     * ceiling blast rains them down instead of burying half the cluster in the block we just landed on.
-     */
+    // shoots the babies out along the face we hit, else half the cluster ends up buried in it
     private void spawnCluster(ServerLevel level, Vec3 center, int count) {
         Vec3 normal = Vec3.atLowerCornerOf(this.hitFace.getNormal());
         Vec3 helper = Math.abs(normal.y) > 0.5 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0);
@@ -395,9 +392,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             return isBlue() ? ModRegistry.BOMB_BLUE_ITEM.get() : ModRegistry.BOMB_ITEM.get();
         }
 
-        /**
-         * What a flying bomb renders as: the animated lit fuse sprite, or the smaller shard one for shards.
-         */
         public ItemStack createDisplayStack() {
             ItemStack stack = new ItemStack(getItem());
             stack.set(DataComponents.CUSTOM_MODEL_DATA,
@@ -409,10 +403,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             return this == BLUE ? CommonConfigs.Tools.BOMB_BLUE_SPLIT_COUNT.get() : 0;
         }
 
-        /**
-         * Ticks between hitting something and going off. Shards get a random one so a cluster that lands
-         * all at once still crackles through instead of merging into a single blast.
-         */
+        // babies get a random delay so a cluster crackles through instead of one merged blast
         public int impactFuse(RandomSource random) {
             return this == BLUE_BABY ? 3 + random.nextInt(8) : 0;
         }

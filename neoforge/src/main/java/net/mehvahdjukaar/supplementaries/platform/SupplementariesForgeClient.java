@@ -43,8 +43,6 @@ public class SupplementariesForgeClient {
         //  event.enqueueWork(ClientRegistry::setup);
         VibeChecker.checkVibe();
         // Allocate 8 stencil bits on the main framebuffer. Required by DepthMaskUtils' STENCIL
-        // mode (pulley moving-block clip). Must run on the render thread — enqueueWork ensures
-        // that; FMLClientSetupEvent itself dispatches on the mod-loading thread.
         event.enqueueWork(() -> Minecraft.getInstance().getMainRenderTarget().enableStencil());
     }
 

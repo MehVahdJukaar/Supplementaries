@@ -103,22 +103,15 @@ public class SuppPlatformStuff {
         throw new AssertionError();
     }
 
-    /**
-     * Whether {@code state} is a "sticky" block in the piston sense. NeoForge routes this
-     * through {@code IBlockExtension.isStickyBlock} (so modded sticky variants work);
-     * Fabric falls back to vanilla's private logic of slime-or-honey.
-     */
+    // NeoForge goes through IBlockExtension.isStickyBlock so modded sticky blocks work, Fabric falls
+    // back to vanilla's slime-or-honey check
     @PlatformImpl
     public static boolean isSticky(BlockState state) {
         throw new AssertionError();
     }
 
-    /**
-     * Whether {@code a} and {@code b} should mutually stick in a piston-style chain.
-     * NeoForge: bidirectional {@code IBlockExtension.canStickTo} check. Fabric: vanilla's
-     * private {@code canStickToEachOther} logic — honey/slime mutual exclusion, otherwise
-     * true if either side is sticky.
-     */
+    // NeoForge does a bidirectional IBlockExtension.canStickTo, Fabric mirrors vanilla's private
+    // canStickToEachOther: honey and slime never stick to each other, otherwise either side sticky wins
     @PlatformImpl
     public static boolean canStickToEachOther(BlockState a, BlockState b) {
         throw new AssertionError();
@@ -184,13 +177,8 @@ public class SuppPlatformStuff {
         throw new AssertionError();
     }
 
-    /**
-     * Mirrors the {@code blockstate.onDestroyedByPushReaction(level, pos, direction, fluid)}
-     * call made by the NeoForge-patched {@code PistonBaseBlock.moveBlocks} for each block in
-     * the toDestroy list. No-op on Fabric (the {@code IBlockExtension} hook doesn't exist
-     * there); on NeoForge it dispatches to the standard extension method so mods like
-     * Quark/Create can react to destroy-by-push.
-     */
+    // mirrors what NeoForge's patched PistonBaseBlock.moveBlocks calls on every block it destroys,
+    // so mods like Quark and Create can react. No-op on Fabric, the hook doesn't exist there
     @PlatformImpl
     public static void onDestroyedByPushReaction(BlockState state, Level level, BlockPos pos,
                                                  Direction pushDir) {
