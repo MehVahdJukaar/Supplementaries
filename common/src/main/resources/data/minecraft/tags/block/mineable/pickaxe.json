@@ -66,11 +66,6 @@
     "supplementaries:lapis_bricks",
     "supplementaries:lapis_bricks_stairs",
     "supplementaries:lapis_bricks_wall",
-    "supplementaries:ashen_basalt",
-    "supplementaries:brittlestone",
-    "supplementaries:brittlestone_bricks",
-    "supplementaries:brittlestone_bricks_slab",
-    "supplementaries:brittlestone_bricks_stairs",
-    "supplementaries:brittlestone_bricks_wall"
+    "supplementaries:ashen_basalt"
   ]
 }

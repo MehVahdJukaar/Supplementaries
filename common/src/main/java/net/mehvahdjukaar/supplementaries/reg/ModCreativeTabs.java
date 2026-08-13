@@ -569,13 +569,13 @@ public class ModCreativeTabs {
                 ModConstants.LAPIS_BRICKS_NAME,
                 ModRegistry.LAPIS_BRICKS_BLOCKS.values().toArray(Supplier[]::new));
 
-        adder.add(CreativeModeTabs.BUILDING_BLOCKS,
-                ModConstants.BRITTLESTONE_NAME,
-                ModRegistry.BRITTLESTONE);
+        //adder.add(CreativeModeTabs.BUILDING_BLOCKS,
+        //        ModConstants.BRITTLESTONE_NAME,
+        //        ModRegistry.BRITTLESTONE);
 
-        adder.add(CreativeModeTabs.BUILDING_BLOCKS,
-                ModConstants.BRITTLESTONE_BRICKS_NAME,
-                ModRegistry.BRITTLESTONE_BRICKS_BLOCKS.values().toArray(Supplier[]::new));
+        //adder.add(CreativeModeTabs.BUILDING_BLOCKS,
+        //        ModConstants.BRITTLESTONE_BRICKS_NAME,
+        //        ModRegistry.BRITTLESTONE_BRICKS_BLOCKS.values().toArray(Supplier[]::new));
 
         adder.add(CreativeModeTabs.BUILDING_BLOCKS,
                 ModConstants.CHECKER_BLOCK_NAME,
