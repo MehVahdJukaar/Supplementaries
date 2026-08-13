@@ -9,8 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// Cooperative-piston state attached to each PistonStructureResolver (vanilla or Zeta's wrapper).
-// The resolver mixins shadow their own toPush variant and forward here.
+// attached to each PistonStructureResolver, vanilla or Zeta's. the mixins forward here
 public class PistonCoopResolverState {
 
     private Set<BlockPos> cooperatingPistons = Collections.emptySet();
@@ -27,8 +26,7 @@ public class PistonCoopResolverState {
         this.contributingCooperators = Collections.emptySet();
     }
 
-    // Worst-case ceiling while the chain builds; gateResolve enforces the real per-contributor
-    // budget afterwards.
+    //loose ceiling while the chain builds, gateResolve does the real check after
     public int getPushLimit() {
         return Math.max(1, cooperatingPistons.size()) * PistonMovementHelper.perPistonPushLimit();
     }
@@ -37,14 +35,12 @@ public class PistonCoopResolverState {
         return contributingCooperators;
     }
 
-    // For Zeta delegating resolve() to its vanilla parent: the gate runs on the parent's state
-    // while callers still read the wrapper's.
+    //zeta delegates resolve to its vanilla parent, so the gate runs on the parent's state
     public void adoptContributingFrom(PistonCoopResolverState other) {
         this.contributingCooperators = other.contributingCooperators;
     }
 
-    // Post-resolve: keeps only cooperators whose start block actually landed in toPush, then gates
-    // on the real budget, perPistonPushLimit per contributor plus this piston.
+    //drops cooperators that didn't contribute, then checks the pooled budget
     public boolean gateResolve(boolean originalResult, BlockPos pistonPos, List<BlockPos> toPush) {
         if (!originalResult) return false;
         if (this.cooperatingPistons.isEmpty()) return true;
@@ -61,7 +57,6 @@ public class PistonCoopResolverState {
         return toPush.size() <= (1 + contributing.size()) * PistonMovementHelper.perPistonPushLimit();
     }
 
-    // Cooperator piston bodies count as walls in addBlockLine.
     public boolean wrapEqualsCheck(boolean originalResult, BlockPos candidate) {
         return originalResult || this.cooperatingPistons.contains(candidate);
     }

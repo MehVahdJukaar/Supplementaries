@@ -84,13 +84,12 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
 
         renderer.legs.yRot = -yaw;
 
-        // negative depends on your model convention (likely correct)
         renderer.pivot.xRot = pitch;
 
-        // roll is physically impossible → force zero
+        // cannon can't roll
         renderer.pivot.zRot = 0;
 
-        // fixed adjustment if your model needs it
+        // model is built facing backwards
         renderer.head.yRot = Mth.PI;
         // animation
         float cooldownCounter = tile.getCooldownAnimation(partialTick);

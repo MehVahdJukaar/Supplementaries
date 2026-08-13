@@ -14,10 +14,8 @@ import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import java.util.Map;
 import java.util.Set;
 
-// Which pistons are attempting to move this tick, so one that can't resolve a structure alone
-// finds the neighbours pushing the same way and pools their budget. Per-level, not synced.
-// Storage and expiry live in CooperationTable; this class defines what a piston attempt is and
-// which neighbours count as reachable.
+// pistons attempting to move this tick, so one that can't push alone can pool budget with the
+// neighbours pushing the same way. per level, not synced
 public class PistonCooperationData extends WorldSavedData {
 
     private record AttemptInfo(Direction direction, boolean extending, long tick) implements CooperationTable.Attempt {
@@ -56,7 +54,6 @@ public class PistonCooperationData extends WorldSavedData {
         return cooperatorsIn(this.table, pistonPos, dir, extending, currentTick);
     }
 
-    // Whether this piston's block event was already posted this tick, as part of a group move.
     public boolean hasPosted(BlockPos pos, long tick) {
         return this.table.wasHandled(pos, tick);
     }
@@ -72,8 +69,7 @@ public class PistonCooperationData extends WorldSavedData {
                         && canReachSameStructure(candidate, pistonPos, dir.getAxis()));
     }
 
-    // A cooperator sits in a different column, close enough that one structure could span the two.
-    // MAX_PUSH_DEPTH on purpose, not the configured limit: it bounds how far a structure can reach.
+    //MAX_PUSH_DEPTH and not the configured limit, this is how far a structure can reach
     private static boolean canReachSameStructure(BlockPos candidate, BlockPos pistonPos, Direction.Axis pushAxis) {
         int dx = candidate.getX() - pistonPos.getX();
         int dy = candidate.getY() - pistonPos.getY();
@@ -90,8 +86,7 @@ public class PistonCooperationData extends WorldSavedData {
         return perpDist <= PistonStructureResolver.MAX_PUSH_DEPTH;
     }
 
-    // Side-channel for the client-side moveBlocks animation, which re-runs the resolve and needs
-    // the same cooperative limit. Purely cosmetic: correctness is owned by the saved data above.
+    //for the client animation, which re-runs the resolve. cosmetic only
     private static final CooperationTable<AttemptInfo> CLIENT_TABLE = new CooperationTable<>();
 
     public static void markAttemptingClient(BlockPos pos, Direction dir, boolean extending, long tick) {

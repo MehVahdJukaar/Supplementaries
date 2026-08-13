@@ -204,9 +204,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
                 SuppPlatformStuff.dispenseContent(dc, stack, hit, level, player);
                 dc.checkExtraContent(player, level, stack, hit.getBlockPos());
                 if (craftingRemainingItem != null) {
-                    // emptyContents (the dispenser path) leaves the filled bucket in the hand, unlike the
-                    // normal use path. Swap it for the empty remainder so the read-back below carries the
-                    // empty bucket instead of duping the filled one.
+                    //dispenser path leaves the full bucket in hand, swap it or we dupe it below
                     player.setItemInHand(InteractionHand.MAIN_HAND, craftingRemainingItem.getDefaultInstance());
                 } else success = true;
             }
@@ -234,7 +232,7 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity {
         player.setItemInHand(InteractionHand.MAIN_HAND, oldItemInHand);
 
         if (success) {
-            // only drop when the hand stack was swapped (e.g. cage release leaves an empty cage); plain BlockItem.place mutates the same ref and is a no-op in creative, which would otherwise dupe the placed block
+            //only when the stack was actually swapped, like a cage leaving an empty one. otherwise we dupe in creative
             if (returnedItem != stack) {
                 this.dropMyItemOnGround();
             }

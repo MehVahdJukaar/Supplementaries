@@ -27,7 +27,7 @@ public class BombChargeParticle extends DirectionOrientedBillboardParticle {
 
     static Vec3 position(double age, double lifetime,
                          Vec3 center, double R0, double angularSpeed) {
-        double progress = age / lifetime;        // goes 0 → 1
+        double progress = age / lifetime;        // goes 0 to 1
         double r = R0 * (1 - progress);          // radius shrinks to 0
         double theta = angularSpeed * age;       // orbit angle
 

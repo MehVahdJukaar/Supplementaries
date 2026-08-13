@@ -29,18 +29,8 @@ import java.util.Set;
 @Mixin(PistonBaseBlock.class)
 public class CooperativePistonBaseBlockMixin {
 
-    // Intercepts the extension feasibility resolve in checkIfExtend. Protocol per piston:
-    //  1. Register this piston as attempting to extend this tick.
-    //  2. Try the vanilla single-piston resolve. If it succeeds, mark posted and let vanilla
-    //     post the block event normally.
-    //  3. If vanilla fails, look for same-direction pistons that registered earlier this tick.
-    //     If none exist, return false as usual.
-    //  4. Set cooperators on the SAME resolver and call resolve() again. Both vanilla and Zeta's
-    //     resolver clear their toPush at the start of resolve(), so re-running is safe and avoids
-    //     allocating a second resolver (which would also bypass any Quark/Zeta wrapping applied
-    //     at the original NEW site).
-    //  5. Manually post block events for any cooperators whose events weren't posted yet, then
-    //     return true so vanilla posts this piston's event.
+    // if a piston can't extend alone, retry the resolve together with the ones that registered
+    // earlier this tick. reusing the same resolver keeps any Quark/Zeta wrapping on it
     @WrapOperation(method = "checkIfExtend",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/piston/PistonStructureResolver;resolve()Z"))
@@ -72,9 +62,7 @@ public class CooperativePistonBaseBlockMixin {
         boolean coopResult = resolver.resolve();
         if (!coopResult) return false;
 
-        // Only post events for cooperators that actually shared the pushed structure.
-        // Free-riders are filtered out by the helper's contribution check; their own
-        // vanilla resolve already succeeded independently if applicable.
+        // skip the ones that didn't actually share the pushed structure
         Iterable<BlockPos> contributing = coop.supp$getCoopState().getContributingCooperators();
         for (BlockPos cooperatorPos : contributing) {
             if (!data.hasPosted(cooperatorPos, tick)) {
@@ -89,9 +77,7 @@ public class CooperativePistonBaseBlockMixin {
         return true;
     }
 
-    // Register sticky pistons that are about to retract. Retraction's checkIfExtend never creates
-    // a resolver (it just posts a block event with id 1 or 2), so we hook the blockEvent call
-    // itself to register the piston for cooperative pulling.
+    // retraction never makes a resolver, it just posts a block event, so hook that to register
     @Inject(method = "checkIfExtend",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;blockEvent(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;II)V",
@@ -105,20 +91,10 @@ public class CooperativePistonBaseBlockMixin {
         PistonCooperationData.markAttemptingClient(pos, direction, false, tick);
     }
 
-    // Gate cooperation on the actual resolve() outcome instead of forcing it.
-    //
-    // Extension was already decided in checkIfExtend (the block event is only posted when the
-    // cooperative resolve there succeeded), so we just re-apply the cooperators before this
-    // move's resolve, on the resolver instance the call is actually made on, which preserves
-    // any Quark/Zeta wrapping.
-    //
-    // Retraction has no such pre-gate: checkIfExtend only posts an event. A lone sticky
-    // retraction succeeds on its own unless the pulled structure is too big for one piston, so
-    // we try the resolve alone first and only cooperate when it fails. Cooperating means
-    // pre-retracting the neighbours, then re-resolving on the SAME resolver: safe because
-    // resolve() clears toPush at the top, and re-use keeps the Quark/Zeta wrap. This stops
-    // independent parallel retractions from force-cooperating and orphaning a neighbour's pulled
-    // block (each piston that can retract alone is left to its own event).
+    // extension was already decided in checkIfExtend so we just re-apply the cooperators here.
+    // retraction wasn't, and a lone sticky piston normally pulls fine, so try it alone first and
+    // only cooperate if that fails. otherwise parallel retractions force-cooperate and orphan
+    // each other's pulled block
     @WrapOperation(method = "moveBlocks",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/piston/PistonStructureResolver;resolve()Z"))
@@ -133,14 +109,9 @@ public class CooperativePistonBaseBlockMixin {
         if (cooperators.isEmpty()) return original.call(resolver);
 
         if (!extending) {
-            // Try the retraction alone; only cooperate if one piston can't pull the structure.
             if (original.call(resolver)) return true;
-            // With each cooperator's head still present, the cooperative forward-scan from one
-            // column would hit the other column's PISTON_HEAD (push reaction BLOCK) and fail.
-            // Mimic what each cooperator's own triggerEvent would do moments later: body to
-            // MOVING_PISTON, then head to AIR. Body-first order matters: removing the head while
-            // the body is still STICKY_PISTON makes PistonHeadBlock.onRemove destroyBlock() the
-            // body and pop it as an item.
+            // the other columns' heads are still there and would block the scan, so take them out
+            // early like their own triggerEvent is about to do
             for (BlockPos cooperatorPos : cooperators) {
                 supp$preRetractCooperator(level, cooperatorPos, facing);
             }
@@ -179,6 +150,7 @@ public class CooperativePistonBaseBlockMixin {
         level.setBlockEntity(MovingPistonBlock.newMovingBlockEntity(
                 cooperatorPos, movingPistonState, retractedBody, facing, false, true));
 
+        // after the body, else PistonHeadBlock.onRemove pops the body as an item
         level.setBlock(headPos, Blocks.AIR.defaultBlockState(), 20);
     }
 }

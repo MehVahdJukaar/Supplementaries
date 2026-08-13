@@ -242,15 +242,13 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
     private static BallisticTrajectory findBestTrajectoryGoldenSection(Vec2 targetPoint, float gravity, float drag, float initialPow,
                                                                        float angleTolerance, float targetTolerance,
                                                                        float start, float end) {
-        // ---- FIX: prevent division by zero when targetPoint.x is 0 ----
         float targetSlope;
         if (Math.abs(targetPoint.x) < 1e-8) {
-            // vertical line – treat as an extremely steep slope
+            // vertical line, treat as an extremely steep slope
             targetSlope = targetPoint.y > 0 ? Float.POSITIVE_INFINITY : Float.NEGATIVE_INFINITY;
         } else {
             targetSlope = targetPoint.y / targetPoint.x;
         }
-        // -------------------------------------------------------------
 
         // Define golden ratio
         final float goldenRatio = MthUtils.PHI - 1;
@@ -486,9 +484,7 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
      * @param V0y initial velocity
      */
     public static double arcY(double t, float g, float d, float V0y) {
-        // ---- FIX: added missing gravity term for no drag case ----
         if (d == 1) return V0y * t - 0.5 * g * t * t;
-        // ----------------------------------------------------------
         float k = g / (d - 1);
         double inLog = 1 / Math.log(d);
         return ((V0y - k) * inLog * (Math.pow(d, t) - 1) + k * t);

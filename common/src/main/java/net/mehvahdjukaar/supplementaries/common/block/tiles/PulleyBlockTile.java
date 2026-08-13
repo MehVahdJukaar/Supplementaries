@@ -98,57 +98,33 @@ public class PulleyBlockTile extends ItemDisplayTile {
         else return false;
     }
 
-    /**
-     * No-driver path: rotation source unknown, animation runs at vanilla 2-tick speed.
-     */
     public boolean pullRopeUp() {
         return pullRopeUp(0);
     }
 
-    /**
-     * @param animationTicks ticks the animation should last. 0 = vanilla 2-tick default. A driver
-     *                       (e.g. {@link TurnTableBlockTile}) that knows its own pulse period
-     *                       passes it directly so the animation lasts the same wall-clock time the
-     *                       legacy instant move would have.
-     */
+    //animationTicks 0 means vanilla 2 tick speed. drivers that know their pulse period pass it in
     public boolean pullRopeUp(int animationTicks) {
         if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) {
-            // Client side is a no-op: server is authoritative; the client will receive the block
-            // event and run triggerEvent locally to spawn the moving-piston BEs.
+            //client gets the block event and runs triggerEvent itself
             if (!(level instanceof ServerLevel)) return false;
             return fireContinuousStep(Direction.UP, animationTicks);
         }
         return pullRope(Direction.DOWN, Integer.MAX_VALUE, true);
     }
 
-    /**
-     * Fires a single animated step. The pulley is purely an event initiator: the moving-block
-     * entities spawned by {@code PulleyBlock.triggerEvent} handle the animation autonomously.
-     *
-     * @param pushDir        UP for retract, DOWN for extend.
-     * @param animationTicks how long the animation should last in ticks. 0 = vanilla 2-tick speed.
-     *                       Encoded in the blockEvent param so triggerEvent on both sides can size
-     *                       the moving block entity's progress increment to match.
-     */
+    //fires one step. the moving blocks spawned by PulleyBlock.triggerEvent do the rest
     private boolean fireContinuousStep(Direction pushDir, int animationTicks) {
         if (!(level instanceof ServerLevel serverLevel)) return false;
-        // Ignore input while a step is still animating below us: one rotation at a time. The
-        // pulley's effective cooldown is thus the animation duration of the block(s) it's moving.
-        // (Rope hangs DOWN for a vertical pulley, matching PulleyBlock.triggerEvent.)
+        //one rotation at a time, so the cooldown is however long the animation lasts
         if (PulleyBlock.isChainAnimating(serverLevel, worldPosition, Direction.DOWN)) return false;
 
-        // Register this pulley's cooperative-pull attempt BEFORE firing the step. This is the single
-        // chokepoint every driver (crank, manual, analog) passes through, so registration belongs
-        // here. getCooperators keys on period (== animationTicks), pushDir and tick, letting the
-        // matching triggerEvent resolve the whole driven group as one unit, which is required to
-        // pull a structure bridged across two ropes (a solo resolve can't, and fails on retract).
+        //register before firing. every driver goes through here, and triggerEvent needs the whole
+        //group registered to pull a structure hanging off two ropes
         if (CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get()) {
             long now = serverLevel.getGameTime();
             ModData.COOPERATIVE_PULLEYS.getData(serverLevel)
                     .markAttempting(worldPosition, animationTicks, pushDir, now);
-            // The client re-runs the move locally (MOVING_PULLEY blocks aren't synced), but crank /
-            // manual pulls never execute client-side, so mirror the attempt over the network. It is
-            // queued before the block-event below, so it arrives ahead of the client's triggerEvent.
+            //cranks and manual pulls don't run clientside, so mirror the attempt over
             NetworkHelper.sendToAllClientPlayersInDefaultRange(serverLevel, worldPosition,
                     new ClientBoundPulleyAttemptPacket(worldPosition, animationTicks, pushDir, now));
         }
@@ -161,10 +137,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         return true;
     }
 
-    /**
-     * Resolves the rope block this pulley winds: displayed item if present, else the block
-     * directly along the rope-hang direction. Used by {@code PulleyBlock.triggerEvent}.
-     */
+    //displayed item if there is one, else whatever block is hanging off us
     @Nullable
     public Block resolveRopeBlock(Direction ropeDir) {
         ItemStack stack = getDisplayedItem();
@@ -203,9 +176,6 @@ public class PulleyBlockTile extends ItemDisplayTile {
         return releaseRopeDown(0);
     }
 
-    /**
-     * @see #pullRopeUp(int)
-     */
     public boolean releaseRopeDown(int animationTicks) {
         if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) {
             if (!(level instanceof ServerLevel)) return false;
@@ -213,15 +183,8 @@ public class PulleyBlockTile extends ItemDisplayTile {
         } else return releaseRope(Direction.DOWN, Integer.MAX_VALUE, true);
     }
 
-    /**
-     * Driven by an external analog rotator (e.g. {@link PulleyBlock#rotateAnalog}, called once per
-     * tick by a {@link TurnTableBlockTile}). First call after a gap fires a pull immediately;
-     * subsequent calls within the same drive decrement a cooldown so pulls land at the same
-     * wall-clock cadence the old instant-mode cooldown would have produced.
-     *
-     * @param speed the driver's analog speed value. For a turn table this is its redstone power
-     *              (0-15); the period formula here mirrors {@code TurnTableBlock.getPeriod}.
-     */
+    //called once per tick by an analog rotator like a turn table. speed is its redstone power.
+    //first call fires right away, later ones tick down a cooldown so the cadence stays the same
     public void driveAnalog(Level level, boolean ccw, float speed) {
         long now = level.getGameTime();
         if (this.lastAnalogDriveTick != now - 1) {
@@ -234,10 +197,9 @@ public class PulleyBlockTile extends ItemDisplayTile {
             this.analogCooldown--;
             return;
         }
-        // Mirrors TurnTableBlock.getPeriod(power): power 15 → 4 ticks, power 1 → 60 ticks.
+        // same as TurnTableBlock.getPeriod(power): power 15 is 4 ticks, power 1 is 60 ticks
         int period = Math.max(2, (int) ((60 - speed * 4) + 4));
-        // Cooperative-pull intent is registered centrally in fireContinuousStep (the path every
-        // driver shares), so no per-driver markAttempting is needed here.
+
         if (ccw) {
             releaseRopeDown(period);
         } else {

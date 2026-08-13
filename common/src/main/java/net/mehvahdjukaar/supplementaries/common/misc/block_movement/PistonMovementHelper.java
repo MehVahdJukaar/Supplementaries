@@ -34,14 +34,11 @@ public class PistonMovementHelper {
 
     public static boolean isMovementBlacklisted(BlockState state) {
         if (state.is(ModTags.RELOCATION_NOT_SUPPORTED)) return true;
-        // Quark's list exists to protect block entities it doesn't want moved. Honour it whenever
-        // Quark is loaded, including when its own module is off and we are doing the moving.
+        //honour quark's list even when its own module is off
         return state.hasBlockEntity() && CompatHandler.QUARK && QuarkCompat.blacklistsBlockMovement(state);
     }
 
-    // Pushability for our own movers, ropes and pulleys. Piston rules plus the movement blacklist:
-    // none of this movement would happen without us, so a block declaring it must not be relocated
-    // is off limits whatever its push reaction.
+    //for our own movers. piston rules plus the blacklist, whatever the push reaction says
     public static boolean isPushableByOurMovers(BlockState state, Level level, BlockPos pos,
                                                 Direction movementDirection, boolean allowDestroy,
                                                 Direction moverFacing) {
@@ -68,7 +65,7 @@ public class PistonMovementHelper {
 
     public static boolean matchesCapturedType(BlockEntity be, CompoundTag nbt) {
         String id = nbt.getString("id");
-        // Data captured before we started saving full metadata carries no id; nothing to check.
+        //old data has no id saved
         if (id.isEmpty()) return true;
         ResourceLocation type = ResourceLocation.tryParse(id);
         return type != null && be.getType() == BuiltInRegistries.BLOCK_ENTITY_TYPE.get(type);

@@ -11,13 +11,11 @@ import net.minecraft.client.renderer.GameRenderer;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
-// One block cube mask used to clip later drawn geometry to that volume. Callers must flush their
-// buffer source before beginMask and again before endMask, else unrelated geometry gets masked too.
-// DEPTH writes the cube into the depth buffer: one cheap draw, but those depth values stick around
-// for the rest of the frame, so translucent chunk layers drawn after block entities (slime, glass,
-// water) can end up wrongly occluded.
-// STENCIL writes a sentinel value into the stencil buffer and clears it in endMask, leaving depth
-// alone. Needs the framebuffer to have stencil bits, see MainTargetMixin.
+// clips later geometry to one block cube. flush your buffer source before beginMask and endMask
+// or unrelated stuff gets masked too.
+// DEPTH is one cheap draw but leaves depth values around for the rest of the frame, so translucent
+// chunk layers drawn after block entities can end up wrongly occluded.
+// STENCIL doesn't touch depth but needs stencil bits on the framebuffer, see MainTargetMixin
 public final class DepthMaskUtils {
 
     // anything nonzero works as long as nothing else in the frame writes the same stencil value

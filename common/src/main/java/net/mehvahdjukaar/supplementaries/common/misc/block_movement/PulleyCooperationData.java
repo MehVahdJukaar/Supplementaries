@@ -13,12 +13,10 @@ import net.minecraft.server.level.ServerLevel;
 import java.util.Map;
 import java.util.Set;
 
-// Which pulleys are attempting a step this tick, mirroring PistonCooperationData: pulleys stepping
-// on the same tick with the same period and push direction discover each other here and resolve a
-// shared structure together (an elevator on two ropes, say).
+// same as PistonCooperationData but for pulleys. lets an elevator hanging on two ropes move
 public class PulleyCooperationData extends WorldSavedData {
 
-    // Cooperator search radius per axis. Roughly matches the resolver's per-pulley budget.
+    //search radius per axis
     private static final int MAX_DISTANCE = 12;
 
     private record AttemptInfo(int period, Direction pushDir, long tick) implements CooperationTable.Attempt {
@@ -57,7 +55,6 @@ public class PulleyCooperationData extends WorldSavedData {
         return cooperatorsIn(this.table, primary, period, pushDir, currentTick);
     }
 
-    // Whether this pulley's chain was already shifted this tick, as part of a group move.
     public boolean wasConsumed(BlockPos pos, long currentTick) {
         return this.table.wasHandled(pos, currentTick);
     }
@@ -71,22 +68,19 @@ public class PulleyCooperationData extends WorldSavedData {
         Set<BlockPos> cooperators = table.getCooperators(primary, currentTick, (candidate, attempt) ->
                 attempt.pushDir() == pushDir && attempt.period() == period
                         && withinReach(candidate, primary));
-        // A pulley whose chain already moved this tick can't join a second resolve. The piston
-        // equivalent doesn't filter here: there the marker only tracks event posting.
+        //a chain that already moved this tick can't join a second resolve
         cooperators.removeIf(pos -> table.wasHandled(pos, currentTick));
         return cooperators;
     }
 
-    // Unlike the piston test, same-column cooperators are allowed: stacked pulleys winding the
-    // same rope are legitimate, and the resolver treats other pulley bodies as walls anyway.
+    //unlike pistons, same column is fine. stacked pulleys on one rope are legit
     private static boolean withinReach(BlockPos candidate, BlockPos primary) {
         return Math.abs(candidate.getX() - primary.getX()) <= MAX_DISTANCE
                 && Math.abs(candidate.getY() - primary.getY()) <= MAX_DISTANCE
                 && Math.abs(candidate.getZ() - primary.getZ()) <= MAX_DISTANCE;
     }
 
-    // Client side-channel (WorldSavedData is server-only). Both sides mark on the same local tick,
-    // so the client's late triggerEvent finds the same cooperator set the server resolved with.
+    //client copy, WorldSavedData is server only
     private static final CooperationTable<AttemptInfo> CLIENT_TABLE = new CooperationTable<>();
 
     public static void markAttemptingClient(BlockPos pos, int period, Direction pushDir, long tick) {

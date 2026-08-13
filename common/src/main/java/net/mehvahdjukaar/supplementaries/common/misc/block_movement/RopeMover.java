@@ -24,9 +24,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-// Instant one-block rope movement: plain setBlock, no animation, no structure resolving. Used by
-// rope items, rope arrows and legacy-mode pulleys. PulleyMover is the animated continuous-mode
-// counterpart; only isCorrectRope is shared between the two.
+// instant one block rope movement, no animation. used by rope items, arrows and legacy pulleys
 public class RopeMover {
 
     public static boolean addRopeDown(BlockPos pos, Level level, @Nullable Player player, InteractionHand hand, Block ropeBlock) {
@@ -67,7 +65,7 @@ public class RopeMover {
         if (needsToPush) {
             if (!targetState.canBeReplaced() && placeWhereItWas != null) return false;
             if (!isPushableByRopes(originalState, level, originPos, moveDir)) return false;
-            // Detaching also stops containers from spilling their contents on removal.
+            //also stops containers from spilling on removal
             tileTag = PistonMovementHelper.captureAndDetachBlockEntity(level, originPos);
         }
 
@@ -145,7 +143,7 @@ public class RopeMover {
         if (moveDir.getAxis().isVertical() && state.is(ModTags.ROPE_HANG_TAG)) {
             return true;
         }
-        // Never destroys: the solidity check above already rejected everything a rope could break.
+
         return PistonMovementHelper.isPushableByOurMovers(state, level, pos, moveDir, false, moveDir);
     }
 }

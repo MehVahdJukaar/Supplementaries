@@ -47,13 +47,8 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     public static final EnumProperty<Winding> TYPE = ModBlockProperties.WINDING;
     public static final BooleanProperty FLIPPED = ModBlockProperties.FLIPPED;
 
-    /**
-     * Block-event id meaning "do one chain step". Fired by {@link PulleyBlockTile#pullRopeUp} /
-     * {@link PulleyBlockTile#releaseRopeDown} under the continuous config; the param carries the
-     * direction and animation duration (layout documented at the encoding site). Handled by
-     * {@link #triggerEvent} on BOTH server AND client (vanilla piston pattern) so the moving
-     * block entities exist on the client too.
-     */
+    //block event for one chain step. runs on both sides like vanilla pistons, so the client gets
+    //its moving block entities too. the param carries direction and animation duration
     public static final int EVENT_PULL_STEP = 0;
 
     public PulleyBlock(Properties properties) {
@@ -149,18 +144,8 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     }
 
 
-    /**
-     * True while a chain step this pulley spawned is still mid-animation, so further input must
-     * be ignored: one rotation at a time. Each step places a {@code MovingPulleyBlock} in the
-     * slot directly below the pulley (retract: a rope sliding up into firstSlot) or one slot
-     * further down (extend: firstSlot is transiently AIR while the new rope animates into it from
-     * below). Either occupied slot means the chain is busy. This is the gate that makes the
-     * effective pull cooldown equal the animation duration of the block being moved.
-     * <p>
-     * Critically, it removes the reliance on the resolver "naturally" no-opping: an extend
-     * re-fire would otherwise read the transient air at firstSlot as an empty pulley and dump an
-     * un-animated rope (plus an extra spool spend) every animation tick.
-     */
+    //true while a step is still animating, so we ignore further input. without this an extend
+    //re-fire reads the transient air below the pulley as empty and dumps a rope every tick
     public static boolean isChainAnimating(Level level, BlockPos pulleyPos, Direction ropeHangDir) {
         Block moving = ModRegistry.MOVING_PULLEY_BLOCK.get();
         BlockPos firstSlot = pulleyPos.relative(ropeHangDir);
@@ -168,18 +153,8 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
                 || level.getBlockState(firstSlot.relative(ropeHangDir)).is(moving);
     }
 
-    /**
-     * Handles {@link #EVENT_PULL_STEP}: runs one resolver+move locally. Called on both
-     * server (via the level's runBlockEvents) and client (after the server's
-     * {@code ClientboundBlockEventPacket} arrives). Each side spawns its own moving block
-     * entities so the client sees the slide animation; vanilla pistons rely on exactly this
-     * dual-side execution because {@code PistonMovingBlockEntity.getUpdatePacket} is null and
-     * {@code MovingPistonBlock.newBlockEntity} also returns null, so the only way the client
-     * gets a moving BE is by running the move logic locally.
-     * <p>
-     * The rope always hangs DOWN from the pulley (vertical-pulley assumption). Server-side
-     * bookkeeping happens here too: +1 item and a sound on retract, new rope and -1 item on
-     * extend.
+    //runs one resolve and move locally, on both sides. moving piston BEs are never synced so the
+    //client only gets one by running this itself. server also does the item and sound bookkeeping
      */
     @Override
     protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
@@ -195,16 +170,10 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
         Block ropeBlock = tile.resolveRopeBlock(ropeHangDir);
         if (ropeBlock == null) return false;
 
-        // One rotation at a time: if our own chain is still animating a previous step, swallow
-        // this event. Returning true (not false) matches the "already consumed" handling below,
-        // as the input is intentionally dropped, not a failure.
+        //one rotation at a time. true because we drop the input on purpose, it's not a failure
         if (isChainAnimating(level, pos, ropeHangDir)) return true;
 
-        // Cooperative pulleys: dispatch to the per-level WorldSavedData on the server, the
-        // client static side-channel otherwise. Same semantics either way: if this pulley was
-        // already absorbed into an earlier triggerEvent's resolver call this tick, swallow our
-        // own event so we don't double-shift the chain. Gated by config: when off, each pulley
-        // resolves its own chain only.
+        //if we were already absorbed into another pulley's resolve this tick, drop our event
         long now = level.getGameTime();
         boolean coopEnabled = CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get();
         PulleyCooperationData serverData = coopEnabled && level instanceof ServerLevel serverLevel
@@ -295,9 +264,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
                 (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
     }
 
-    // Extend bookkeeping: -1 displayed item and a place sound. The new rope itself is placed at
-    // firstSlot by the topmost moving block's extend phantom when its animation ends, see
-    // MovingPulleyBlockEntity.tick.
+    //just the item count and sound, the rope itself is placed by the moving block when it lands
     private static void serverFinaliseExtend(Level level, BlockPos pos, PulleyBlockTile tile,
                                              Block ropeBlock) {
         ItemStack stack = tile.getDisplayedItem();

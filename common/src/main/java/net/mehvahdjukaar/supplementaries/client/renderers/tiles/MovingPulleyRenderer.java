@@ -52,12 +52,10 @@ public class MovingPulleyRenderer extends PistonHeadRenderer {
         // Captured once so beginMask + endMask use the same matrix.
         Matrix4f cubeMat = null;
         if (masking) {
-            // Flush prior content so unrelated geometry isn't affected by our mask.
+            //flush or our mask catches unrelated geometry
             if (buffer instanceof MultiBufferSource.BufferSource bs) bs.endBatch();
 
-            // Pulley world position relative to be.getBlockPos():
-            //   Retract (extendPhantom=false): pulley = entity + 1 * pushDir
-            //   Extend  (extendPhantom=true):  pulley = entity - 2 * pushDir
+            //where the pulley is relative to us
             Direction dir = be.getDirection();
             int dist = mpbe.isExtendPhantom() ? -2 : 1;
 

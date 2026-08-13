@@ -12,21 +12,15 @@ public interface ICarryingMovingPiston {
     @Nullable
     CompoundTag supp$getCarriedBlockEntityNbt();
 
-    // Transient BlockEntity built from the carried NBT for rendering, cached so it isn't re-parsed
-    // every frame. Null when there's nothing carried, the moved state has no BE, or the type differs.
+    //block entity built from the carried nbt, cached so we don't parse it every frame
     @Nullable
     BlockEntity supp$getOrCreateCachedCarriedBlockEntity();
 
-    // Applies the carried NBT onto the freshly placed block and clears it. Call right after vanilla
-    // places the moved block, from both tick() (normal finish) and finalTick() (forced early).
+    //call right after the moved block is placed, from both tick and finalTick
     void supp$restoreCarriedBe();
 
-    // Smuggles the fluid that occupied the destination so a cauldron (or other IFluidFillableOnMove
-    // block) can have its block entity filled once it lands. Only set when post-placement is needed,
-    // and not persisted: an interrupted move just leaves the block empty, as it did before.
+    //fluid that was at the destination, so cauldrons and such can be filled once they land
     void supp$setMovedFluidFill(@Nullable FluidState fluid);
 
-    // Applies the carried fluid fill onto the freshly placed block and clears it. Runs right after
-    // supp$restoreCarriedBe on both completion paths.
     void supp$applyMovedFluidFill();
 }
