@@ -19,19 +19,10 @@ classes/
 *.launch
 /unique_lines.txt
 /dev.dev
-/.junie/memory/
-/.codex
-/.aiassistant/
-/.ai/
 
-/.claude/
-/.cursor/
-/.junie/
-/CLAUDE.md
 /build/
 /common/build/
 /fabric/build/
 /neoforge/build/
 /forge/build/
 /loom-deobf/build/
-/.junie/AGENTS.md
