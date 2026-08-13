@@ -28,9 +28,8 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
     @Shadow @Final private List<BlockPos> myToPush;
     @Shadow @Final private PistonStructureResolver parent;
 
-    // Forward cooperator state to the {@code parent} vanilla resolver as well: when Zeta is
-    // globally disabled, {@code resolve()} delegates to {@code parent.resolve()} and vanilla's
-    // mixin needs to see the cooperators on the parent instance.
+    // When Zeta is globally disabled, resolve() delegates to parent.resolve(), so the vanilla
+    // mixin needs to see the cooperators on the parent instance too.
     @Override
     public void supp$setCooperators(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
         this.supp$getCoopState().set(cooperators, pistonDirection, extending);
@@ -39,10 +38,8 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
         }
     }
 
-    // Gate Zeta's resolve on real cooperation. When Zeta is globally disabled, resolve delegates
-    // to parent.resolve(); the parent's vanilla mixin already gated, so skip re-gating here (our
-    // myToPush is empty in that case) and just take over the contributing set it worked out, since
-    // checkIfExtend reads that off this wrapper to decide whose block events to post.
+    // With Zeta disabled the parent's mixin already gated (myToPush is empty here); just adopt its
+    // contributing set, since checkIfExtend reads that off this wrapper.
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
     private boolean supp$gateOnRealCooperation(boolean original) {
         if (!ZetaPistonStructureResolver.GlobalSettings.isEnabled()) {
@@ -54,7 +51,6 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
         return this.supp$getCoopState().gateResolve(original, pistonPos, myToPush);
     }
 
-    // Same boundary-extension as on vanilla, applied to Zeta's overridden addBlockLine.
     @WrapOperation(method = "addBlockLine",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/core/BlockPos;equals(Ljava/lang/Object;)Z"))
@@ -63,9 +59,7 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
         return this.supp$getCoopState().wrapEqualsCheck(original.call(candidate, pistonPosArg), candidate);
     }
 
-    // Zeta reads its push limit once at the top of addBlockLine via GlobalSettings.getPushLimit().
-    // Boost it to the cooperative limit when cooperators are set, leaving the user's
-    // Zeta-configured value alone otherwise.
+    // Boost Zeta's configured push limit to the cooperative one, never lowering it.
     @ModifyExpressionValue(method = "addBlockLine",
             at = @At(value = "INVOKE",
                     target = "Lorg/violetmoon/zeta/piston/ZetaPistonStructureResolver$GlobalSettings;getPushLimit()I"))

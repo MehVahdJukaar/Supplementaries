@@ -9,11 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// Cooperative-piston state attached to a {@code PistonStructureResolver} (or any subclass like
-// Quark/Zeta's wrapper). Holds the cooperators registered for this resolve, and once the gate
-// check has run, the subset that actually contributed to the pushed structure. The two hooks the
-// resolver mixins call live here too, so those mixins only need to shadow their respective
-// {@code toPush} variant and forward to this class.
+// Cooperative-piston state attached to each PistonStructureResolver (vanilla or Zeta's wrapper).
+// The resolver mixins shadow their own toPush variant and forward here.
 public class PistonCoopResolverState {
 
     private Set<BlockPos> cooperatingPistons = Collections.emptySet();
@@ -30,9 +27,8 @@ public class PistonCoopResolverState {
         this.contributingCooperators = Collections.emptySet();
     }
 
-    // Worst-case ceiling for this resolve: every registered participant chipping in its own budget.
-    // Derived rather than stored so it stays in lockstep with the post-resolve gate, which caps on
-    // the participants that actually contributed.
+    // Worst-case ceiling while the chain builds; gateResolve enforces the real per-contributor
+    // budget afterwards.
     public int getPushLimit() {
         return Math.max(1, cooperatingPistons.size()) * PistonMovementHelper.perPistonPushLimit();
     }
@@ -41,18 +37,14 @@ public class PistonCoopResolverState {
         return contributingCooperators;
     }
 
-    // Take over the contributing set another resolver's state computed. Needed when Zeta wraps the
-    // vanilla resolver but delegates resolve() to it: the gate then runs on the delegate's state
+    // For Zeta delegating resolve() to its vanilla parent: the gate runs on the parent's state
     // while callers still read the wrapper's.
     public void adoptContributingFrom(PistonCoopResolverState other) {
         this.contributingCooperators = other.contributingCooperators;
     }
 
-    // Runs after the resolver's resolve() returns. Filters cooperators down to those whose start
-    // block actually landed in toPush (free-riders excluded), remembers them as the contributing
-    // set, and gates on the cooperative budget: perPistonPushLimit times one plus the contributors.
-    // The boosted getPushLimit stays the worst-case ceiling inside addBlockLine while the chain is
-    // being built; this post-check enforces the real per-participant budget.
+    // Post-resolve: keeps only cooperators whose start block actually landed in toPush, then gates
+    // on the real budget, perPistonPushLimit per contributor plus this piston.
     public boolean gateResolve(boolean originalResult, BlockPos pistonPos, List<BlockPos> toPush) {
         if (!originalResult) return false;
         if (this.cooperatingPistons.isEmpty()) return true;
@@ -69,8 +61,7 @@ public class PistonCoopResolverState {
         return toPush.size() <= (1 + contributing.size()) * PistonMovementHelper.perPistonPushLimit();
     }
 
-    // Extends each "is this the piston's own body?" boundary check in addBlockLine to also recognise
-    // cooperator piston positions: those columns are independent and shouldn't be traversed into.
+    // Cooperator piston bodies count as walls in addBlockLine.
     public boolean wrapEqualsCheck(boolean originalResult, BlockPos candidate) {
         return originalResult || this.cooperatingPistons.contains(candidate);
     }

@@ -14,11 +14,10 @@ import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import java.util.Map;
 import java.util.Set;
 
-// Which pistons are attempting to move this tick, so one that can't resolve a structure alone finds
-// the neighbours pushing the same way and pools their budget.
-// WorldSavedData (per level, not synced) so entries survive saves and dimensions stay isolated.
-// Storage and expiry live in CooperationTable, shared with the pulley equivalent; this class only
-// supplies what a piston attempt consists of and which neighbours count as reachable.
+// Which pistons are attempting to move this tick, so one that can't resolve a structure alone
+// finds the neighbours pushing the same way and pools their budget. Per-level, not synced.
+// Storage and expiry live in CooperationTable; this class defines what a piston attempt is and
+// which neighbours count as reachable.
 public class PistonCooperationData extends WorldSavedData {
 
     private record AttemptInfo(Direction direction, boolean extending, long tick) implements CooperationTable.Attempt {
@@ -73,11 +72,8 @@ public class PistonCooperationData extends WorldSavedData {
                         && canReachSameStructure(candidate, pistonPos, dir.getAxis()));
     }
 
-    // A cooperator sits in a different column (nonzero perpendicular offset) and close enough both
-    // along and across the push axis that one structure could span the two. Same column means one
-    // line, not a cooperating pair.
-    // Measured against MAX_PUSH_DEPTH rather than the configured push limit on purpose: the question
-    // is how far a structure could reach, which is what bounds who might share one.
+    // A cooperator sits in a different column, close enough that one structure could span the two.
+    // MAX_PUSH_DEPTH on purpose, not the configured limit: it bounds how far a structure can reach.
     private static boolean canReachSameStructure(BlockPos candidate, BlockPos pistonPos, Direction.Axis pushAxis) {
         int dx = candidate.getX() - pistonPos.getX();
         int dy = candidate.getY() - pistonPos.getY();
@@ -94,15 +90,8 @@ public class PistonCooperationData extends WorldSavedData {
         return perpDist <= PistonStructureResolver.MAX_PUSH_DEPTH;
     }
 
-    // -------------------------------------------------------------------------
-    // Static side-channel for client-side moveBlocks animation.
-    //
-    // checkIfExtend is server-only, but in an integrated server both client and
-    // server share the same JVM. The server thread writes here; the client thread
-    // reads it in supp$gateCoopOnResolve to apply the same cooperative limit,
-    // giving smooth piston animations. Not per-level and purely cosmetic:
-    // correctness is owned by the per-level WorldSavedData.
-    // -------------------------------------------------------------------------
+    // Side-channel for the client-side moveBlocks animation, which re-runs the resolve and needs
+    // the same cooperative limit. Purely cosmetic: correctness is owned by the saved data above.
     private static final CooperationTable<AttemptInfo> CLIENT_TABLE = new CooperationTable<>();
 
     public static void markAttemptingClient(BlockPos pos, Direction dir, boolean extending, long tick) {

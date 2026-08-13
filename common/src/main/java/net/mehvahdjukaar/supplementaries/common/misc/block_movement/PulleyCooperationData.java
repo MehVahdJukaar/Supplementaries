@@ -13,16 +13,9 @@ import net.minecraft.server.level.ServerLevel;
 import java.util.Map;
 import java.util.Set;
 
-// Which pulleys are attempting a step this tick, mirroring PistonCooperationData. Two pulleys firing
-// a continuous step on the same tick with the same period and push direction discover each other
-// here, so the resolver runs once over a combined PulleyInfo set and they pull a shared structure
-// together (an elevator on two ropes, say).
-// Storage, expiry and the same-tick handled marker come from CooperationTable; this class supplies
-// what a pulley attempt consists of and how far apart two of them may be.
-// Server-only instance: the client can't host a WorldSavedData, so it uses the static
-// markAttemptingClient/getCooperatorsClient side-channel like the piston version does. Both sides
-// mark on the same local analog-driver tick, so the matching triggerEvent (arriving a few ticks late
-// on the client) sees the same cooperator set either side.
+// Which pulleys are attempting a step this tick, mirroring PistonCooperationData: pulleys stepping
+// on the same tick with the same period and push direction discover each other here and resolve a
+// shared structure together (an elevator on two ropes, say).
 public class PulleyCooperationData extends WorldSavedData {
 
     // Cooperator search radius per axis. Roughly matches the resolver's per-pulley budget.
@@ -79,26 +72,21 @@ public class PulleyCooperationData extends WorldSavedData {
                 attempt.pushDir() == pushDir && attempt.period() == period
                         && withinReach(candidate, primary));
         // A pulley whose chain already moved this tick can't join a second resolve. The piston
-        // equivalent doesn't filter here, because there the marker only tracks event posting.
+        // equivalent doesn't filter here: there the marker only tracks event posting.
         cooperators.removeIf(pos -> table.wasHandled(pos, currentTick));
         return cooperators;
     }
 
-    // Plain box around the primary. Unlike the piston test this allows a cooperator in the same
-    // column: stacked pulleys winding the same rope are legitimate, and the resolver treats every
-    // other pulley body as a wall anyway.
+    // Unlike the piston test, same-column cooperators are allowed: stacked pulleys winding the
+    // same rope are legitimate, and the resolver treats other pulley bodies as walls anyway.
     private static boolean withinReach(BlockPos candidate, BlockPos primary) {
         return Math.abs(candidate.getX() - primary.getX()) <= MAX_DISTANCE
                 && Math.abs(candidate.getY() - primary.getY()) <= MAX_DISTANCE
                 && Math.abs(candidate.getZ() - primary.getZ()) <= MAX_DISTANCE;
     }
 
-    // -------------------------------------------------------------------------
-    // Client side-channel. WorldSavedData is server-only; the client keeps its own table. Both
-    // sides mark on the same local tick (the analog driver runs on both), so by the time a
-    // blockEvent's triggerEvent runs on the client it finds the same cooperator set the server
-    // resolved with.
-    // -------------------------------------------------------------------------
+    // Client side-channel (WorldSavedData is server-only). Both sides mark on the same local tick,
+    // so the client's late triggerEvent finds the same cooperator set the server resolved with.
     private static final CooperationTable<AttemptInfo> CLIENT_TABLE = new CooperationTable<>();
 
     public static void markAttemptingClient(BlockPos pos, int period, Direction pushDir, long tick) {

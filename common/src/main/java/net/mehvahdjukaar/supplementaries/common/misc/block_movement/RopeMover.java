@@ -24,19 +24,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-// Instant, one-block-at-a-time rope movement. Walks down a rope column, adds or removes a single
-// rope at the end of it and shifts whatever hangs below by one slot, immediately: a plain setBlock,
-// no animation and no structure resolving.
-// This is the path for everything driven by hand or by an item: AbstractRopeBlock when a player
-// right-clicks a rope with rope or shift-clicks to wind one up, RopeArrowEntity laying a column
-// where it lands, and legacy-mode pulleys (pulley_block.continuous_retraction = false) via
-// PulleyBlockTile.pullRope/releaseRope, including rotateIndirect where one pulley pokes another
-// through a shared rope.
-// PulleyMover is the other half: continuous-mode pulleys, where PulleyStructureResolver resolves the
-// whole hanging structure first (sticky branching, pooled push budget, cooperating pulleys) and
-// every block becomes a moving block entity sliding over several ticks. Use that one when the move
-// should animate, carry more than the block directly under the rope, or be driven by redstone.
-// Only isCorrectRope is shared between the two modes.
+// Instant one-block rope movement: plain setBlock, no animation, no structure resolving. Used by
+// rope items, rope arrows and legacy-mode pulleys. PulleyMover is the animated continuous-mode
+// counterpart; only isCorrectRope is shared between the two.
 public class RopeMover {
 
     public static boolean addRopeDown(BlockPos pos, Level level, @Nullable Player player, InteractionHand hand, Block ropeBlock) {
@@ -68,8 +58,6 @@ public class RopeMover {
                                        BlockPos originPos, Direction moveDir,
                                        //if null it will make the move operation override any target block
                                        @Nullable Block placeWhereItWas) {
-        //check below can be moved down
-        //check below block is replaceable
         BlockState originalState = level.getBlockState(originPos);
         BlockPos targetPos = originPos.relative(moveDir);
         BlockState targetState = level.getBlockState(targetPos);
@@ -79,16 +67,12 @@ public class RopeMover {
         if (needsToPush) {
             if (!targetState.canBeReplaced() && placeWhereItWas != null) return false;
             if (!isPushableByRopes(originalState, level, originPos, moveDir)) return false;
-            // Blacklists (ours and Quark's) are enforced by isPushableByRopes, so anything reaching
-            // here may be carried. Detaching also stops containers from spilling on removal.
+            // Detaching also stops containers from spilling their contents on removal.
             tileTag = PistonMovementHelper.captureAndDetachBlockEntity(level, originPos);
         }
 
-        //gets clear state for new position
         FluidState originalFluid = level.getFluidState(originPos);
 
-        //replace original block with air
-        //place rope
         if (placeWhereItWas != null) {
             level.setBlock(originPos, originalFluid.createLegacyBlock(), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
             ItemStack stack = new ItemStack(placeWhereItWas);
@@ -117,7 +101,6 @@ public class RopeMover {
             originalState = MovedFluidFiller.fillIfMovedIntoFluid(originalState, level, targetPos, targetFluid);
         }
 
-        //clear existing block to new position
         originalState = Block.updateFromNeighbourShapes(originalState, level, targetPos);
         level.setBlockAndUpdate(targetPos, originalState);
         if (tileTag != null) {
@@ -155,9 +138,6 @@ public class RopeMover {
     }
 
 
-    // Whether a rope may drag this block along: the shared mover rules, plus pulleys are never
-    // dragged, blocks whose partner wouldn't come along (ROPE_PUSH_BLACKLIST) are refused, and
-    // ROPE_HANG_TAG blocks ride along vertically whatever their push reaction.
     public static boolean isPushableByRopes(BlockState state, Level level, BlockPos pos, Direction moveDir) {
         if (state.getBlock() instanceof PulleyBlock) return false; //could be in the tag but easier for addons like this
         if (state.is(ModTags.ROPE_PUSH_BLACKLIST)) return false;
