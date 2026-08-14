@@ -26,9 +26,18 @@
     }
   ],
   "tool": {
-    "type": "farmersdelight:item_ability",
-    "fabric:type": "farmersdelight:item_ability",
-    "action": "pickaxe_dig"
+    "type": "neoforge:compound",
+    "fabric:type": "fabric:any",
+    "ingredients": [
+      {
+        "type": "farmersdelight:item_ability",
+        "fabric:type": "farmersdelight:item_ability",
+        "action": "pickaxe_dig"
+      },
+      {
+        "tag": "minecraft:pickaxes"
+      }
+    ]
   },
   "result": [
     {
