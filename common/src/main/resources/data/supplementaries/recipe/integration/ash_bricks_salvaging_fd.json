@@ -27,12 +27,15 @@
   ],
   "tool": {
     "type": "farmersdelight:item_ability",
+    "fabric:type": "farmersdelight:item_ability",
     "action": "pickaxe_dig"
   },
   "result": [
     {
-      "item": "supplementaries:ash_brick",
-      "count": 4
+      "item": {
+        "id": "supplementaries:ash_brick",
+        "count": 4
+      }
     }
   ]
 }

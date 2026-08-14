@@ -27,12 +27,15 @@
   ],
   "tool": {
     "type": "farmersdelight:item_ability",
+    "fabric:type": "farmersdelight:item_ability",
     "action": "shears_dig"
   },
   "result": [
     {
-      "item": "minecraft:leather",
-      "count": 2
+      "item": {
+        "id": "minecraft:leather",
+        "count": 2
+      }
     }
   ]
 }

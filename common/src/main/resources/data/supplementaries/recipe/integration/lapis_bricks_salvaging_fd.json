@@ -27,12 +27,15 @@
   ],
   "tool": {
     "type": "farmersdelight:item_ability",
+    "fabric:type": "farmersdelight:item_ability",
     "action": "pickaxe_dig"
   },
   "result": [
     {
-      "item": "minecraft:lapis_lazuli",
-      "count": 4
+      "item": {
+        "id": "minecraft:lapis_lazuli",
+        "count": 4
+      }
     }
   ]
 }
