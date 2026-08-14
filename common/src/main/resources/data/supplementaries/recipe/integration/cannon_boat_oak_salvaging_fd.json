@@ -1,0 +1,56 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "cannon_boat"
+    },
+    {
+      "modid": "farmersdelight",
+      "condition": "fabric:mod_loaded"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "cannon_boat"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "supplementaries:cannon_boat_oak"
+    }
+  ],
+  "tool": {
+    "type": "neoforge:compound",
+    "fabric:type": "fabric:any",
+    "ingredients": [
+      {
+        "type": "farmersdelight:item_ability",
+        "fabric:type": "farmersdelight:item_ability",
+        "action": "hoe_dig"
+      },
+      {
+        "tag": "minecraft:hoes"
+      }
+    ]
+  },
+  "result": [
+    {
+      "item": {
+        "id": "minecraft:oak_boat",
+        "count": 1
+      }
+    },
+    {
+      "item": {
+        "id": "supplementaries:cannon",
+        "count": 1
+      }
+    }
+  ]
+}

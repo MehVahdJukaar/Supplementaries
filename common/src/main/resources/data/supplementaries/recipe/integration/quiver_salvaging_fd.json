@@ -1,0 +1,50 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "quiver"
+    },
+    {
+      "modid": "farmersdelight",
+      "condition": "fabric:mod_loaded"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "quiver"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "supplementaries:quiver"
+    }
+  ],
+  "tool": {
+    "type": "neoforge:compound",
+    "fabric:type": "fabric:any",
+    "ingredients": [
+      {
+        "type": "farmersdelight:item_ability",
+        "fabric:type": "farmersdelight:item_ability",
+        "action": "shears_dig"
+      },
+      {
+        "tag": "c:tools/shear"
+      }
+    ]
+  },
+  "result": [
+    {
+      "item": {
+        "id": "minecraft:leather",
+        "count": 2
+      }
+    }
+  ]
+}

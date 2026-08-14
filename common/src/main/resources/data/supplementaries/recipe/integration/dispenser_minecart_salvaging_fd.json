@@ -1,0 +1,59 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "dispenser_minecart"
+    },
+    {
+      "modid": "farmersdelight",
+      "condition": "fabric:mod_loaded"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "dispenser_minecart"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "farmersdelight"
+    }
+  ],
+  "type": "farmersdelight:cutting",
+  "ingredients": [
+    {
+      "item": "supplementaries:dispenser_minecart"
+    }
+  ],
+  "tool": {
+    "type": "neoforge:compound",
+    "fabric:type": "fabric:any",
+    "ingredients": [
+      {
+        "type": "farmersdelight:item_ability",
+        "fabric:type": "farmersdelight:item_ability",
+        "action": "hoe_dig"
+      },
+      {
+        "tag": "minecraft:hoes"
+      }
+    ]
+  },
+  "result": [
+    {
+      "item": {
+        "id": "minecraft:minecart",
+        "count": 1
+      }
+    },
+    {
+      "item": {
+        "id": "minecraft:dispenser",
+        "count": 1
+      }
+    }
+  ],
+  "sound": {
+    "sound_id": "minecraft:block.metal.break"
+  }
+}
