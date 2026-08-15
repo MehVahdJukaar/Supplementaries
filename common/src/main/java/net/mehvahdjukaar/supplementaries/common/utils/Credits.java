@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.Function;
@@ -72,13 +71,11 @@ public class Credits implements Serializable {
     }
 
     private static <T> T readFromURL(String link, Function<Reader, T> readerConsumer) throws IOException {
-        URL url = new URL(link);
-
-        URLConnection connection = url.openConnection();
-
-        String encoding = connection.getContentEncoding();
-        Charset charset = (encoding == null) ? StandardCharsets.UTF_8 : Charset.forName(encoding);
-        try (Reader reader = new BufferedReader(new InputStreamReader(url.openStream(), charset))) {
+        URLConnection connection = new URL(link).openConnection();
+        connection.setConnectTimeout(15000);
+        connection.setReadTimeout(15000);
+        try (Reader reader = new BufferedReader(
+                new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
             return readerConsumer.apply(reader);
         }
     }
@@ -98,7 +95,7 @@ public class Credits implements Serializable {
 
     private void addSpecialPlayer(String name, boolean isDev, boolean hasGlobe, boolean hasStatue, String id, String... alias) {
         UUID onlineId = id == null ? null : UUID.fromString(id);
-        addSpecialPlayer(name, isDev, hasGlobe, hasStatue, onlineId);
+        addSpecialPlayer(name, isDev, hasGlobe, hasStatue, onlineId, alias);
     }
 
     private void addSpecialPlayer(String name, boolean isDev, boolean hasGlobe, boolean hasStatue, @Nullable UUID onlineId, String... alias) {

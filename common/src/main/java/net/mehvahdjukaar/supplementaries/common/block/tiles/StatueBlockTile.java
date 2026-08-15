@@ -85,15 +85,19 @@ public class StatueBlockTile extends ItemDisplayTile {
     }
 
     private void updateSkin() {
+        Pair<UUID, String> profile = null;
         if (this.hasCustomName()) {
             String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
-            Pair<UUID, String> profile = Credits.INSTANCE.statues().get(name);
-            if (profile != null) {
-                this.setPlayerSkin(new ResolvableProfile(
-                        Optional.empty(), Optional.of(profile.getFirst()), new PropertyMap()));
-            }
-        } else this.playerSkin = null;
-
+            profile = Credits.INSTANCE.statues().get(name);
+        }
+        if (profile == null) {
+            this.playerSkin = null;
+            return;
+        }
+        UUID id = profile.getFirst();
+        this.setPlayerSkin(id != null ?
+                new ResolvableProfile(Optional.empty(), Optional.of(id), new PropertyMap()) :
+                new ResolvableProfile(Optional.of(profile.getSecond()), Optional.empty(), new PropertyMap()));
     }
 
     @Override
