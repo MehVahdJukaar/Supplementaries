@@ -12,13 +12,8 @@ import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Pulley-side moving block. Behaves identically to {@link MovingPistonBlock} but routes
- * through {@link MovingPulleyBlockEntity} so the animation duration can be customised
- * per-instance (matched to the driving turn table's pulse period). Same null
- * {@code newBlockEntity} pattern as vanilla: the BE is created manually by
- * {@code PulleyMover} via {@link #newMovingBlockEntity}.
- */
+// vanilla moving piston but with a MovingPulleyBlockEntity so the animation speed can vary.
+// like vanilla, newBlockEntity is null and PulleyMover creates the BE via newMovingBlockEntity
 public class MovingPulleyBlock extends MovingPistonBlock {
 
     public MovingPulleyBlock(Properties properties) {

@@ -44,10 +44,8 @@ public class PulleyStructureResolver {
     public PulleyStructureResolver(Level level, List<PulleyInfo> pulleys) {
         if (pulleys.isEmpty()) throw new IllegalArgumentException("need at least one pulley");
         PulleyInfo first = pulleys.getFirst();
-        Direction sharedPush = first.pushDirection();
-        boolean sharedExtending = first.extending();
         for (PulleyInfo p : pulleys) {
-            if (p.pushDirection() != sharedPush || p.extending() != sharedExtending) {
+            if (p.pushDirection() != first.pushDirection() || p.extending() != first.extending()) {
                 throw new IllegalArgumentException("all pulleys must share push direction and extending mode");
             }
         }
@@ -55,12 +53,12 @@ public class PulleyStructureResolver {
         this.pulleys = pulleys;
         this.pulleyPositions = new HashSet<>();
         for (PulleyInfo p : pulleys) this.pulleyPositions.add(p.pulleyPos());
-        this.pushDirection = sharedPush;
-        this.extending = sharedExtending;
+        this.pushDirection = first.pushDirection();
+        this.extending = first.extending();
         this.totalPushLimit = pulleys.size() * CommonConfigs.Redstone.PULLEY_PULL_LIMIT.get();
     }
 
-    private int budgetUsage() {
+    private int blocksCountingTowardLimit() {
         int n = 0;
         for (BlockPos p : toPush) {
             if (!ropePositions.contains(p)) n++;
@@ -77,64 +75,7 @@ public class PulleyStructureResolver {
         directRopePlacements.clear();
 
         for (PulleyInfo pulley : pulleys) {
-            int contributionMark = toPush.size();
-            Direction ropeDir = pulley.ropeHangDirection();
-            BlockPos firstSlot = pulley.pulleyPos().relative(ropeDir);
-            BlockState firstState = level.getBlockState(firstSlot);
-
-            //retracting needs a rope to eat, extending can start bare
-            if (!extending && !RopeMover.isCorrectRope(pulley.ropeBlock(), firstState, ropeDir)) {
-                continue;
-            }
-
-            BlockPos walkPos;
-            if (!extending) {
-                consumedRopes.add(firstSlot);
-                walkPos = firstSlot.relative(ropeDir);
-            } else {
-                walkPos = firstSlot;
-            }
-            while (true) {
-                BlockState state = level.getBlockState(walkPos);
-                if (!RopeMover.isCorrectRope(pulley.ropeBlock(), state, ropeDir)) break;
-                if (!toPush.contains(walkPos)) {
-                    toPush.add(walkPos);
-                    ropePositions.add(walkPos);
-                }
-                walkPos = walkPos.relative(ropeDir);
-            }
-
-            BlockPos anchorPos = walkPos;
-            BlockState anchorState = level.getBlockState(anchorPos);
-            boolean anchorIsAir = anchorState.isAir();
-            boolean anchorIsPulley = pulleyPositions.contains(anchorPos);
-            boolean anchorPullable = !anchorIsAir && !anchorIsPulley
-                    && isPullable(anchorState, level, anchorPos, pushDirection, false, ropeDir);
-
-            if (!anchorPullable) {
-                if (anchorIsAir || anchorIsPulley) {
-                    //column just shortens by one
-                    if (toPush.size() > contributionMark) {
-                        contributedPulleys.add(pulley.pulleyPos());
-                    } else if (extending && anchorIsAir) {
-                        //open air, still drop a fresh rope in
-                        directRopePlacements.put(firstSlot, pulley.ropeBlock().defaultBlockState());
-                        contributedPulleys.add(pulley.pulleyPos());
-                    }
-                    continue;
-                }
-                //don't wind rope around something we can't move
-                return false;
-            }
-
-            if (toPush.contains(anchorPos)) {
-                contributedPulleys.add(pulley.pulleyPos());
-                continue;
-            }
-            if (!addBlockLine(anchorPos, pushDirection)) return false;
-            if (toPush.size() > contributionMark) {
-                contributedPulleys.add(pulley.pulleyPos());
-            }
+            if (!addChain(pulley)) return false;
         }
         //indexed, addBranchingBlocks appends to toPush while we walk it
         for (BlockPos pos : toPush) {
@@ -143,6 +84,52 @@ public class PulleyStructureResolver {
                 return false;
             }
         }
+        return true;
+    }
+
+    public boolean hasNothingToMove() {
+        return toPush.isEmpty() && toDestroy.isEmpty() && directRopePlacements.isEmpty();
+    }
+
+    //walks one pulley's rope down to whatever it hangs on and adds that like a piston would
+    private boolean addChain(PulleyInfo pulley) {
+        int sizeBefore = toPush.size();
+        Direction ropeDir = pulley.ropeHangDirection();
+        BlockPos firstSlot = pulley.pulleyPos().relative(ropeDir);
+        BlockPos walkPos = firstSlot;
+        if (!extending) {
+            //retracting needs a rope to eat, extending can start bare
+            if (!RopeMover.isCorrectRope(pulley.ropeBlock(), level.getBlockState(firstSlot), ropeDir)) return true;
+            consumedRopes.add(firstSlot);
+            walkPos = firstSlot.relative(ropeDir);
+        }
+        while (RopeMover.isCorrectRope(pulley.ropeBlock(), level.getBlockState(walkPos), ropeDir)) {
+            if (!toPush.contains(walkPos)) {
+                toPush.add(walkPos);
+                ropePositions.add(walkPos);
+            }
+            walkPos = walkPos.relative(ropeDir);
+        }
+
+        BlockPos anchorPos = walkPos;
+        BlockState anchorState = level.getBlockState(anchorPos);
+        boolean anchorIsAir = anchorState.isAir();
+        if (anchorIsAir || pulleyPositions.contains(anchorPos)) {
+            //nothing hangs off the rope, the column just shortens or grows by one
+            boolean movedSomeRope = toPush.size() > sizeBefore;
+            if (movedSomeRope) {
+                contributedPulleys.add(pulley.pulleyPos());
+            } else if (extending && anchorIsAir) {
+                directRopePlacements.put(firstSlot, pulley.ropeBlock().defaultBlockState());
+                contributedPulleys.add(pulley.pulleyPos());
+            }
+            return true;
+        }
+        //don't wind rope around something we can't move
+        if (!isPullable(anchorState, level, anchorPos, pushDirection, false, ropeDir)) return false;
+
+        if (!toPush.contains(anchorPos) && !addBlockLine(anchorPos, pushDirection)) return false;
+        contributedPulleys.add(pulley.pulleyPos());
         return true;
     }
 
@@ -158,7 +145,7 @@ public class PulleyStructureResolver {
         if (this.toPush.contains(originPos)) return true;
 
         int trailingCount = 1;
-        if (this.budgetUsage() + trailingCount > this.totalPushLimit) return false;
+        if (this.blocksCountingTowardLimit() + trailingCount > this.totalPushLimit) return false;
 
         BlockState prevTrailingState;
         while (SuppPlatformStuff.isSticky(currentState)) {
@@ -169,13 +156,13 @@ public class PulleyStructureResolver {
                     || !SuppPlatformStuff.canStickToEachOther(prevTrailingState, currentState)
                     || !isPullable(currentState, this.level, trailingPos, this.pushDirection, false, this.pushDirection.getOpposite())
                     || this.pulleyPositions.contains(trailingPos)
-                    // else a sticky anchor would drag the rope above it along
+                    //else a sticky anchor would drag the rope above it along
                     || this.ropePositions.contains(trailingPos)
                     || this.consumedRopes.contains(trailingPos)) {
                 break;
             }
             trailingCount++;
-            if (this.budgetUsage() + trailingCount > this.totalPushLimit) return false;
+            if (this.blocksCountingTowardLimit() + trailingCount > this.totalPushLimit) return false;
         }
 
         int addedToThisLine = 0;
@@ -188,7 +175,7 @@ public class PulleyStructureResolver {
         while (true) {
             BlockPos forwardPos = originPos.relative(this.pushDirection, forwardScanStep);
 
-            //reached the pulley mouth
+            //reached a pulley mouth
             if (this.consumedRopes.contains(forwardPos)) return true;
 
             int collisionIndex = this.toPush.indexOf(forwardPos);
@@ -217,7 +204,7 @@ public class PulleyStructureResolver {
                 return true;
             }
 
-            if (this.budgetUsage() >= this.totalPushLimit) return false;
+            if (this.blocksCountingTowardLimit() >= this.totalPushLimit) return false;
 
             this.toPush.add(forwardPos);
             addedToThisLine++;
@@ -260,10 +247,6 @@ public class PulleyStructureResolver {
 
     public List<BlockPos> getToDestroy() {
         return this.toDestroy;
-    }
-
-    public Set<BlockPos> getRopePositions() {
-        return this.ropePositions;
     }
 
     public Set<BlockPos> getConsumedRopes() {

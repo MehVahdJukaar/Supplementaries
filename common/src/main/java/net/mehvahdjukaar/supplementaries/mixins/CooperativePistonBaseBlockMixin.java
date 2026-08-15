@@ -6,7 +6,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICooperativePiston;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCooperationData;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -42,36 +41,24 @@ public class CooperativePistonBaseBlockMixin {
         if (!(level instanceof ServerLevel serverLevel)) return original.call(resolver);
 
         long tick = level.getGameTime();
-        PistonCooperationData data = ModData.COOPERATIVE_PISTONS.getData(serverLevel);
+        PistonCooperationData data = PistonCooperationData.get(serverLevel);
         data.markAttempting(pos, direction, true, tick);
-        PistonCooperationData.markAttemptingClient(pos, direction, true, tick);
 
-        boolean vanillaResult = original.call(resolver);
-        if (vanillaResult) {
+        if (original.call(resolver)) {
             data.markPosted(pos, tick);
             return true;
         }
 
-        Set<BlockPos> cooperators = data.getCooperators(pos, direction, true, tick);
+        Set<BlockPos> cooperators = PistonCooperationData.getCooperators(level, pos, direction, true, tick);
         if (cooperators.isEmpty()) return false;
+        if (!supp$resolveTogether(resolver, cooperators, pos, direction, true)) return false;
 
-        Set<BlockPos> allPistons = new HashSet<>(cooperators);
-        allPistons.add(pos);
-        ICooperativePiston coop = (ICooperativePiston) resolver;
-        coop.supp$setCooperators(allPistons, direction, true);
-        boolean coopResult = resolver.resolve();
-        if (!coopResult) return false;
-
-        // skip the ones that didn't actually share the pushed structure
-        Iterable<BlockPos> contributing = coop.supp$getCoopState().getContributingCooperators();
+        // only the ones that actually shared the pushed structure get fired
+        Iterable<BlockPos> contributing = ((ICooperativePiston) resolver).supp$getCoopState().getContributingCooperators();
         for (BlockPos cooperatorPos : contributing) {
-            if (!data.hasPosted(cooperatorPos, tick)) {
-                level.blockEvent(cooperatorPos,
-                        level.getBlockState(cooperatorPos).getBlock(),
-                        0,
-                        direction.get3DDataValue());
-                data.markPosted(cooperatorPos, tick);
-            }
+            if (data.hasPosted(cooperatorPos, tick)) continue;
+            level.blockEvent(cooperatorPos, level.getBlockState(cooperatorPos).getBlock(), 0, direction.get3DDataValue());
+            data.markPosted(cooperatorPos, tick);
         }
         data.markPosted(pos, tick);
         return true;
@@ -86,9 +73,7 @@ public class CooperativePistonBaseBlockMixin {
                                          @Local Direction direction) {
         if (!CommonConfigs.Tweaks.COOPERATIVE_PISTONS.get()) return;
         if (!(level instanceof ServerLevel serverLevel)) return;
-        long tick = level.getGameTime();
-        ModData.COOPERATIVE_PISTONS.getData(serverLevel).markAttempting(pos, direction, false, tick);
-        PistonCooperationData.markAttemptingClient(pos, direction, false, tick);
+        PistonCooperationData.get(serverLevel).markAttempting(pos, direction, false, level.getGameTime());
     }
 
     // extension was already decided in checkIfExtend so we just re-apply the cooperators here.
@@ -105,7 +90,7 @@ public class CooperativePistonBaseBlockMixin {
                                            @Local(argsOnly = true) boolean extending) {
         if (!CommonConfigs.Tweaks.COOPERATIVE_PISTONS.get()) return original.call(resolver);
 
-        Set<BlockPos> cooperators = supp$lookupCooperators(level, pos, facing, extending);
+        Set<BlockPos> cooperators = PistonCooperationData.getCooperators(level, pos, facing, extending, level.getGameTime());
         if (cooperators.isEmpty()) return original.call(resolver);
 
         if (!extending) {
@@ -116,21 +101,16 @@ public class CooperativePistonBaseBlockMixin {
                 supp$preRetractCooperator(level, cooperatorPos, facing);
             }
         }
-
-        Set<BlockPos> allPistons = new HashSet<>(cooperators);
-        allPistons.add(pos);
-        ((ICooperativePiston) resolver)
-                .supp$setCooperators(allPistons, facing, extending);
-        return original.call(resolver);
+        return supp$resolveTogether(resolver, cooperators, pos, facing, extending);
     }
 
     @Unique
-    private static Set<BlockPos> supp$lookupCooperators(Level level, BlockPos pos, Direction facing, boolean extending) {
-        if (level instanceof ServerLevel serverLevel) {
-            return ModData.COOPERATIVE_PISTONS.getData(serverLevel)
-                    .getCooperators(pos, facing, extending, level.getGameTime());
-        }
-        return PistonCooperationData.getCooperatorsClient(pos, facing, extending, level.getGameTime());
+    private static boolean supp$resolveTogether(PistonStructureResolver resolver, Set<BlockPos> cooperators,
+                                                BlockPos pos, Direction facing, boolean extending) {
+        Set<BlockPos> allPistons = new HashSet<>(cooperators);
+        allPistons.add(pos);
+        ((ICooperativePiston) resolver).supp$setCooperators(allPistons, facing, extending);
+        return resolver.resolve();
     }
 
     @Unique

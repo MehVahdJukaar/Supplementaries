@@ -65,8 +65,6 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
         return ModRegistry.MOVING_PULLEY_BLOCK_TILE.get();
     }
 
-    // super's constructor
-    // hardcodes the PISTON type, which would fail validation on our block
     @Override
     public boolean isValidBlockState(BlockState state) {
         return getType().isValid(state);

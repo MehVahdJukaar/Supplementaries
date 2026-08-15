@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 
 import java.util.Map;
@@ -17,6 +18,10 @@ import java.util.Set;
 // pistons attempting to move this tick, so one that can't push alone can pool budget with the
 // neighbours pushing the same way. per level, not synced
 public class PistonCooperationData extends WorldSavedData {
+
+    //for the client animation, which re-runs the resolve. cosmetic only, written by the
+    //integrated server as it goes
+    private static final CooperationTable<AttemptInfo> CLIENT_TABLE = new CooperationTable<>();
 
     private record AttemptInfo(Direction direction, boolean extending, long tick) implements CooperationTable.Attempt {
         static final Codec<AttemptInfo> CODEC = RecordCodecBuilder.create(i -> i.group(
@@ -45,13 +50,22 @@ public class PistonCooperationData extends WorldSavedData {
         return ModData.COOPERATIVE_PISTONS;
     }
 
+    public static PistonCooperationData get(ServerLevel level) {
+        return ModData.COOPERATIVE_PISTONS.getData(level);
+    }
+
     public void markAttempting(BlockPos pos, Direction dir, boolean extending, long tick) {
-        this.table.markAttempting(pos, new AttemptInfo(dir, extending, tick));
+        AttemptInfo attempt = new AttemptInfo(dir, extending, tick);
+        this.table.markAttempting(pos, attempt);
+        CLIENT_TABLE.markAttempting(pos, attempt);
         setDirty();
     }
 
-    public Set<BlockPos> getCooperators(BlockPos pistonPos, Direction dir, boolean extending, long currentTick) {
-        return cooperatorsIn(this.table, pistonPos, dir, extending, currentTick);
+    public static Set<BlockPos> getCooperators(Level level, BlockPos pistonPos, Direction dir, boolean extending, long currentTick) {
+        CooperationTable<AttemptInfo> table = level instanceof ServerLevel serverLevel ? get(serverLevel).table : CLIENT_TABLE;
+        return table.getCooperators(pistonPos, currentTick, (candidate, attempt) ->
+                attempt.direction() == dir && attempt.extending() == extending
+                        && canReachSameStructure(candidate, pistonPos, dir.getAxis()));
     }
 
     public boolean hasPosted(BlockPos pos, long tick) {
@@ -60,13 +74,6 @@ public class PistonCooperationData extends WorldSavedData {
 
     public void markPosted(BlockPos pos, long tick) {
         this.table.markHandled(pos, tick);
-    }
-
-    private static Set<BlockPos> cooperatorsIn(CooperationTable<AttemptInfo> table, BlockPos pistonPos,
-                                               Direction dir, boolean extending, long currentTick) {
-        return table.getCooperators(pistonPos, currentTick, (candidate, attempt) ->
-                attempt.direction() == dir && attempt.extending() == extending
-                        && canReachSameStructure(candidate, pistonPos, dir.getAxis()));
     }
 
     //MAX_PUSH_DEPTH and not the configured limit, this is how far a structure can reach
@@ -84,17 +91,5 @@ public class PistonCooperationData extends WorldSavedData {
         if (perpX == 0 && perpY == 0 && perpZ == 0) return false;
         int perpDist = Math.max(Math.abs(perpX), Math.max(Math.abs(perpY), Math.abs(perpZ)));
         return perpDist <= PistonStructureResolver.MAX_PUSH_DEPTH;
-    }
-
-    //for the client animation, which re-runs the resolve. cosmetic only
-    private static final CooperationTable<AttemptInfo> CLIENT_TABLE = new CooperationTable<>();
-
-    public static void markAttemptingClient(BlockPos pos, Direction dir, boolean extending, long tick) {
-        CLIENT_TABLE.markAttempting(pos, new AttemptInfo(dir, extending, tick));
-    }
-
-    public static Set<BlockPos> getCooperatorsClient(BlockPos pistonPos, Direction dir, boolean extending,
-                                                     long currentTick) {
-        return cooperatorsIn(CLIENT_TABLE, pistonPos, dir, extending, currentTick);
     }
 }

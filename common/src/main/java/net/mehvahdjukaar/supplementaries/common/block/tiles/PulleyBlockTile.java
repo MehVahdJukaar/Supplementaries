@@ -38,10 +38,8 @@ import java.util.List;
 
 public class PulleyBlockTile extends ItemDisplayTile {
 
-    // Cooldown between analog-driven pulls. 0 = fire on this call. Transient; not persisted.
+    //ticks left before the next analog driven step. not saved
     private int analogCooldown = 0;
-    // Game tick of the last driveAnalog call. Used to detect gaps so a restart fires immediately
-    // instead of waiting for whatever residual cooldown was left from a previous drive.
     private long lastAnalogDriveTick = -1L;
 
     public PulleyBlockTile(BlockPos pos, BlockState state) {
@@ -107,19 +105,19 @@ public class PulleyBlockTile extends ItemDisplayTile {
         if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) {
             //client gets the block event and runs triggerEvent itself
             if (!(level instanceof ServerLevel)) return false;
-            return fireContinuousStep(Direction.UP, animationTicks);
+            return fireContinuousStep(false, animationTicks);
         }
         return pullRope(Direction.DOWN, Integer.MAX_VALUE, true);
     }
 
-    //fires one step. the moving blocks spawned by PulleyBlock.triggerEvent do the rest
-    private boolean fireContinuousStep(Direction pushDir, int animationTicks) {
+    //posts one step event, PulleyBlock.triggerEvent does the actual move on both sides
+    private boolean fireContinuousStep(boolean extending, int animationTicks) {
         if (!(level instanceof ServerLevel serverLevel)) return false;
-        //one rotation at a time, so the cooldown is however long the animation lasts
+        //one rotation at a time
         if (PulleyBlock.isChainAnimating(serverLevel, worldPosition, Direction.DOWN)) return false;
+        Direction pushDir = extending ? Direction.DOWN : Direction.UP;
 
-        //register before firing. every driver goes through here, and triggerEvent needs the whole
-        //group registered to pull a structure hanging off two ropes
+        //register before firing, triggerEvent needs the whole group to pull a shared structure
         if (CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get()) {
             long now = serverLevel.getGameTime();
             ModData.COOPERATIVE_PULLEYS.getData(serverLevel)
@@ -129,11 +127,8 @@ public class PulleyBlockTile extends ItemDisplayTile {
                     new ClientBoundPulleyAttemptPacket(worldPosition, animationTicks, pushDir, now));
         }
 
-        // Param layout (8-bit limit per ClientboundBlockEventPacket): bit 0 = extending flag
-        // (0 = retract, 1 = extend), bits 1-7 = animationTicks clamped to 0..127. 0 = vanilla speed.
-        int extendingBit = pushDir == Direction.DOWN ? 1 : 0;
-        int param = extendingBit | ((Math.min(animationTicks, 127) & 0x7F) << 1);
-        serverLevel.blockEvent(worldPosition, getBlockState().getBlock(), PulleyBlock.EVENT_PULL_STEP, param);
+        serverLevel.blockEvent(worldPosition, getBlockState().getBlock(), PulleyBlock.EVENT_PULL_STEP,
+                PulleyBlock.packStepParam(extending, animationTicks));
         return true;
     }
 
@@ -179,7 +174,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
     public boolean releaseRopeDown(int animationTicks) {
         if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) {
             if (!(level instanceof ServerLevel)) return false;
-            return fireContinuousStep(Direction.DOWN, animationTicks);
+            return fireContinuousStep(true, animationTicks);
         } else return releaseRope(Direction.DOWN, Integer.MAX_VALUE, true);
     }
 
@@ -187,17 +182,15 @@ public class PulleyBlockTile extends ItemDisplayTile {
     //first call fires right away, later ones tick down a cooldown so the cadence stays the same
     public void driveAnalog(Level level, boolean ccw, float speed) {
         long now = level.getGameTime();
-        if (this.lastAnalogDriveTick != now - 1) {
-            // Either a fresh start or the driver paused, so reset and fire on this call.
-            this.analogCooldown = 0;
-        }
+        boolean driverPaused = this.lastAnalogDriveTick != now - 1;
+        if (driverPaused) this.analogCooldown = 0;
         this.lastAnalogDriveTick = now;
 
         if (this.analogCooldown > 0) {
             this.analogCooldown--;
             return;
         }
-        // same as TurnTableBlock.getPeriod(power): power 15 is 4 ticks, power 1 is 60 ticks
+        //same as TurnTableBlock.getPeriod(power): power 15 is 4 ticks, power 1 is 60 ticks
         int period = Math.max(2, (int) ((60 - speed * 4) + 4));
 
         if (ccw) {
@@ -229,9 +222,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     //called when another pulley indirectly rotates this through a rope or chain
     public boolean rotateIndirect(Player player, InteractionHand hand, Block ropeBlock, Direction moveDir, boolean retracting) {
-        // Cross-pulley chaining is disabled in continuous mode (per user spec): in that mode
-        // a pulley is purely a fire-and-forget event initiator and shouldn't recursively
-        // poke other pulleys. The animation system isn't designed to drive multi-pulley chains.
+        //continuous mode is event driven and doesn't chain pulleys through ropes
         if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) return false;
         ItemStack stack = getDisplayedItem();
         if (stack.isEmpty()) {

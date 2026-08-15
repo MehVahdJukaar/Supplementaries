@@ -79,8 +79,6 @@ public class RoadSignStructure extends Structure {
         // In nether, it will be netherrack, lava, and air. End will only be endstone and air. It depends on what block
         // the chunk generator will place for that dimension.
 
-        // Combine the column of blocks with land height and you get the top block itself which you can spawnParticleOnBoundingBox.
-
         BlockState state = noisecolumn.getBlock(y);
 
         /*

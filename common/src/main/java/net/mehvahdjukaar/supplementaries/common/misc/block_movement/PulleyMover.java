@@ -26,17 +26,9 @@ import java.util.Map;
 // slot per call. RopeMover is the instant version
 public final class PulleyMover {
 
-    //false means stop pulling
-    public static boolean moveOneStep(Level level, PulleyStructureResolver resolver, int animationTicks) {
-        if (!resolver.resolve()) {
-            return false;
-        }
-
+    //resolver must have been resolved already, this just applies it
+    public static void moveOneStep(Level level, PulleyStructureResolver resolver, int animationTicks) {
         List<BlockPos> toPush = resolver.getToPush();
-        if (toPush.isEmpty() && resolver.getToDestroy().isEmpty() && resolver.getDirectRopePlacements().isEmpty()) {
-            return false;
-        }
-
         Direction pushDir = resolver.getPushDirection();
 
         //whatever is left over at the end is cleared to air
@@ -133,7 +125,5 @@ public final class PulleyMover {
             BlockPos pos = toPush.get(k);
             level.updateNeighborsAt(pos, originalStates.get(k).getBlock());
         }
-
-        return true;
     }
 }

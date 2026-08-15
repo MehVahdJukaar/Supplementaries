@@ -1,1 +1,2 @@
-- removed brittlestone which is a beta feature that was wrongfully added.
+- fixed a concurrency issue
+- added missing contributor textures
