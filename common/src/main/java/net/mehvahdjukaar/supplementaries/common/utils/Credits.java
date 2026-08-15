@@ -35,7 +35,9 @@ public class Credits implements Serializable {
                     (json, typeOfT, context) -> CODEC.parse(JsonOps.INSTANCE, json).getOrThrow()).create();
 
     //empty default one
-    public static Credits INSTANCE = new Credits(Map.of(), List.of(), List.of(), List.of(), List.of(), List.of());
+    public static volatile Credits INSTANCE = new Credits(Map.of(), List.of(), List.of(), List.of(), List.of(), List.of());
+
+    private static volatile int generation = 0;
 
     private final transient List<UUID> devs = new ArrayList<>();
     private final transient Map<String, Pair<UUID, String>> statues = new HashMap<>();
@@ -80,16 +82,27 @@ public class Credits implements Serializable {
         }
     }
 
+    /**
+     * Changes every time a new credits file lands. Anything that caches something looked up from INSTANCE has to
+     * store this alongside it and redo the lookup when it no longer matches, since the fetch runs on its own thread
+     * and usually finishes well after the game has already asked for globes and statues.
+     */
+    public static int generation() {
+        return generation;
+    }
+
     public static void fetchFromServer() {
         Thread creditsFetcher = new Thread(() -> {
 
             String link = "https://raw.githubusercontent.com/MehVahdJukaar/Supplementaries/master/credits.json";
             try {
                 INSTANCE = readFromURL(link, r -> GSON.fromJson(r, Credits.class));
+                generation++;
             } catch (Exception e) {
                 Supplementaries.LOGGER.warn("Failed to fetch contributors data from url {}, {}", link, e);
             }
-        });
+        }, "SupplementariesCreditsFetcher");
+        creditsFetcher.setDaemon(true);
         creditsFetcher.start();
     }
 

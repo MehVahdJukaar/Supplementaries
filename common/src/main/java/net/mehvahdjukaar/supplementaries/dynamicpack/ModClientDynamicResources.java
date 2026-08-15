@@ -18,6 +18,7 @@ import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.TextUtils;
 import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsClient;
@@ -144,6 +145,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
 
         GlobeManager.refreshColorsAndTextures(manager);
         ColorHelper.refreshBubbleColors(manager);
+        TextUtils.clearCachedTexts();
     }
 
     @Override

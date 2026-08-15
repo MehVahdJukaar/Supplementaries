@@ -1,17 +1,14 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import com.mojang.authlib.properties.PropertyMap;
-import com.mojang.datafixers.util.Pair;
 import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.NoticeBoardBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StatueBlock;
-import net.mehvahdjukaar.supplementaries.common.utils.Credits;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
+import net.mehvahdjukaar.supplementaries.common.utils.StatueSkins;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -23,16 +20,7 @@ import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
-
-import static net.minecraft.world.level.block.entity.SkullBlockEntity.CHECKED_MAIN_THREAD_EXECUTOR;
-
 public class StatueBlockTile extends ItemDisplayTile {
-
-    @Nullable
-    private ResolvableProfile playerSkin = null;
 
     //clientside
     private StatuePose pose = StatuePose.STANDING;
@@ -41,14 +29,6 @@ public class StatueBlockTile extends ItemDisplayTile {
 
     public StatueBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.STATUE_TILE.get(), pos, state);
-    }
-
-    @Override
-    protected void applyImplicitComponents(DataComponentInput componentInput) {
-        super.applyImplicitComponents(componentInput);
-        if (componentInput.get(DataComponents.CUSTOM_NAME) != null) {
-            this.updateSkin();
-        }
     }
 
     public StatuePose getPose() {
@@ -65,45 +45,12 @@ public class StatueBlockTile extends ItemDisplayTile {
 
     @Nullable
     public ResolvableProfile getPlayerSkin() {
-        return playerSkin;
-    }
-
-    // skull code
-    public void setPlayerSkin(@Nullable ResolvableProfile owner) {
-        synchronized (this) {
-            this.playerSkin = owner;
-        }
-
-        if (this.playerSkin != null && !this.playerSkin.isResolved()) {
-            this.playerSkin.resolve().thenAcceptAsync(resolvableProfile -> {
-                this.playerSkin = resolvableProfile;
-                this.setChanged();
-            }, CHECKED_MAIN_THREAD_EXECUTOR);
-        } else {
-            this.setChanged();
-        }
-    }
-
-    private void updateSkin() {
-        Pair<UUID, String> profile = null;
-        if (this.hasCustomName()) {
-            String name = this.getCustomName().getString().toLowerCase(Locale.ROOT);
-            profile = Credits.INSTANCE.statues().get(name);
-        }
-        if (profile == null) {
-            this.playerSkin = null;
-            return;
-        }
-        UUID id = profile.getFirst();
-        this.setPlayerSkin(id != null ?
-                new ResolvableProfile(Optional.empty(), Optional.of(id), new PropertyMap()) :
-                new ResolvableProfile(Optional.of(profile.getSecond()), Optional.empty(), new PropertyMap()));
+        return this.hasCustomName() ? StatueSkins.get(this.getCustomName().getString()) : null;
     }
 
     @Override
     public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
         super.clientSideUpdateWhenChanged(registries);
-        this.updateSkin();
         ItemStack stack = this.getDisplayedItem();
         this.pose = StatuePose.getPose(stack);
         this.isWaving = this.getBlockState().getValue(StatueBlock.POWERED);

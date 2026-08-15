@@ -34,6 +34,7 @@ public class GlobeManager {
     private static final IntList SEPIA_COLORS = new IntArrayList();
     private static final Map<String, GlobeRenderData> NAME_CACHE = new HashMap<>();
     private static final Map<String, Float> MODEL_ID_MAP = new HashMap<>();
+    private static int creditsGeneration = -1;
 
     public static void refreshTextures() {
         TEXTURE_CACHE.clear();
@@ -59,6 +60,8 @@ public class GlobeManager {
     }
 
     public static GlobeRenderData computeRenderData(boolean sheared, @Nullable Component customName) {
+        // credits land on their own thread, usually after the resource reload that built the cache
+        if (creditsGeneration != Credits.generation()) recomputeCache();
         if (sheared) {
             return SpecialGlobe.SHEARED;
         } else if (customName != null) {
@@ -108,6 +111,7 @@ public class GlobeManager {
     }
 
     private static void recomputeCache() {
+        creditsGeneration = Credits.generation();
         NAME_CACHE.clear();
         for (SpecialGlobe type : SpecialGlobe.values()) {
             if (type.keyWords.length == 0) continue;

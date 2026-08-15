@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
 import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
@@ -21,8 +20,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import static net.mehvahdjukaar.supplementaries.client.GlobeManager.DEFAULT_DATA;
-
 public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     private final boolean sepia;
@@ -33,15 +30,13 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
     private Component customName = null;
     private float yaw = 0;
     private float prevYaw = 0;
-    private GlobeRenderData renderData;
+    // only set by the gui showcase, which has no level to work out a globe from
+    private GlobeRenderData forcedRenderData = null;
 
 
     public GlobeBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.GLOBE_TILE.get(), pos, state);
         this.sepia = state.is(ModRegistry.GLOBE_SEPIA.get());
-        if (PlatHelper.getPhysicalSide().isClient()) {
-            renderData = DEFAULT_DATA;
-        }
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, GlobeBlockTile tile) {
@@ -72,11 +67,12 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     @NotNull
     public GlobeRenderData getRenderData() {
-        return renderData;
+        if (this.forcedRenderData != null) return this.forcedRenderData;
+        return GlobeManager.computeRenderData(this.sheared, this.customName);
     }
 
     public void setRenderData(GlobeRenderData data) {
-        this.renderData = data;
+        this.forcedRenderData = data;
     }
 
     public boolean isSepia() {
@@ -85,12 +81,6 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     public void toggleShearing() {
         this.sheared = !this.sheared;
-        this.updateRenderData();
-    }
-
-    private void updateRenderData() {
-        if (this.level == null || !this.level.isClientSide) return;
-        this.renderData = GlobeManager.computeRenderData(this.sheared, this.customName);
     }
 
     @Override
@@ -105,7 +95,6 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     public void setCustomName(Component name) {
         this.customName = name;
-        this.updateRenderData();
     }
 
     public Component getDefaultName() {
@@ -120,7 +109,6 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
         }
         this.yaw = tag.getFloat("Yaw");
         this.sheared = tag.getBoolean("Sheared");
-        this.updateRenderData();
     }
 
     @Override
