@@ -26,10 +26,12 @@ import java.util.function.Consumer;
 
 public final class SafeOwner implements TooltipProvider {
 
+    // field order must match the constructor. lenient on owner because older versions wrote the
+    // owner name string under the "owner" key, which would otherwise fail to parse and kill the whole item
     public static final Codec<SafeOwner> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            UUIDUtil.CODEC.optionalFieldOf("owner").forGetter(s -> Optional.ofNullable(s.owner)),
-            Codec.STRING.optionalFieldOf("password").forGetter(s -> Optional.ofNullable(s.password)),
-            Codec.STRING.optionalFieldOf("ownerName").forGetter(s -> Optional.ofNullable(s.ownerName))
+            UUIDUtil.CODEC.lenientOptionalFieldOf("owner").forGetter(s -> Optional.ofNullable(s.owner)),
+            Codec.STRING.optionalFieldOf("ownerName").forGetter(s -> Optional.ofNullable(s.ownerName)),
+            Codec.STRING.optionalFieldOf("password").forGetter(s -> Optional.ofNullable(s.password))
     ).apply(instance, SafeOwner::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, SafeOwner> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC), s -> Optional.ofNullable(s.owner),

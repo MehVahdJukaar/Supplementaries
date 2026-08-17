@@ -98,6 +98,13 @@
     {"id":"botania:mana_cookie","required":false},
 
     {"id":"nomansland:honeyed_apple","required":false},
-    {"id":"nomansland:syruped_pear","required":false}
+    {
+      "id": "nomansland:syruped_pear",
+      "required": false
+    },
+    {
+      "id": "buzzier_bees:honey_apple",
+      "required": false
+    }
   ]
 }
