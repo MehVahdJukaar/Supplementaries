@@ -1,2 +1,3 @@
-- fixed a concurrency issue
-- added missing contributor textures
+- fixes #1923
+- fixes #2139
+- fixes #2122
