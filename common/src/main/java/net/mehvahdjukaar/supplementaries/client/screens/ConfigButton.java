@@ -2,11 +2,14 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
+import net.mehvahdjukaar.moonlight.api.client.gui.GuiHelper;
+import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.mehvahdjukaar.supplementaries.integration.QuarkClientCompat;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -15,44 +18,93 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ConfigButton extends Button {
 
-    public ConfigButton(int x, int y) {
-        super(x, y, 20, 20, Component.literal("s"), ConfigButton::click, Button.DEFAULT_NARRATION);
+    // Quark puts its own config button in the exact same slot. Ours draws over it instead of moving out of the way
+    private static final int Z_OVER_OTHER_BUTTONS = 300;
+    private static final int GEAR_SIZE = 12;
+
+    // sends the player to every mod's configs, so it wears a gear instead of our letter
+    private final boolean opensModList;
+
+    public ConfigButton(int x, int y, boolean opensModList) {
+        super(x, y, 20, 20, Component.literal("s"), b -> ((ConfigButton) b).open(), Button.DEFAULT_NARRATION);
+        this.opensModList = opensModList;
     }
 
-    public static void click(Button button) {
+    private void open() {
+        Minecraft mc = Minecraft.getInstance();
+        if (this.opensModList) {
+            Screen modList = ClientHelper.getModsListScreen(mc.screen, null);
+            if (modList != null) {
+                mc.setScreen(modList);
+                return;
+            }
+        }
         ConfigUtils.openModConfigs();
     }
 
-    public static void setupConfigButton(Screen screen, List<? extends GuiEventListener> listeners, Consumer<GuiEventListener> adder) {
-        if (screen instanceof TitleScreen || screen instanceof PauseScreen) {
-            boolean isOnRight;
-            if (CompatHandler.QUARK) {
-                isOnRight = QuarkClientCompat.shouldHaveSuppButtonOnRight();
-            } else isOnRight = true;
+    public static void setupConfigButton(Screen screen, List<? extends GuiEventListener> listeners,
+                                         Consumer<AbstractWidget> adder, Consumer<AbstractWidget> remover) {
+        if (!(screen instanceof TitleScreen) && !(screen instanceof PauseScreen)) return;
 
-            List<String> targets = isOnRight ?
-                    Arrays.asList(Component.translatable("menu.online").getString(), Component.translatable("fml.menu.modoptions").getString(), Component.translatable("menu.shareToLan").getString())
-                    : Arrays.asList(Component.translatable("menu.options").getString(), Component.translatable("fml.menu.mods").getString());
+        List<String> targets = Arrays.asList(
+                Component.translatable("menu.online").getString(),
+                Component.translatable("fml.menu.modoptions").getString(),
+                Component.translatable("menu.shareToLan").getString());
 
-            for (GuiEventListener w : listeners) {
-                if (w instanceof AbstractWidget b) {
-                    String name = b.getMessage().getString();
-                    if (targets.contains(name)) {
-                        int spacing = 4;
-                        GuiEventListener button = new ConfigButton(b.getX() + (isOnRight ? b.getWidth() + spacing : -20 - spacing),
-                                b.getY() + ClientConfigs.General.CONFIG_BUTTON_Y_OFF.get());
-                        adder.accept(button);
-                        return;
-                    }
-                }
+        for (GuiEventListener w : listeners) {
+            if (w instanceof AbstractWidget b && targets.contains(b.getMessage().getString())) {
+                int spacing = 4;
+                ConfigButton button = new ConfigButton(b.getX() + b.getWidth() + spacing,
+                        b.getY() + ClientConfigs.General.CONFIG_BUTTON_Y_OFF.get(),
+                        ClientConfigs.General.CONFIG_BUTTON_OPENS_MOD_LIST.get());
+                addOnTop(button, listeners, adder, remover);
+                return;
             }
         }
+    }
+
+    private static void addOnTop(ConfigButton button, List<? extends GuiEventListener> listeners,
+                                 Consumer<AbstractWidget> adder, Consumer<AbstractWidget> remover) {
+        List<AbstractWidget> covered = new ArrayList<>();
+        for (GuiEventListener w : listeners) {
+            if (w instanceof AbstractWidget other && button.overlaps(other)) covered.add(other);
+        }
+        adder.accept(button);
+        for (AbstractWidget w : covered) {
+            remover.accept(w);
+            // it can refuse to come out, and adding it back then would leave two of it
+            if (!listeners.contains(w)) adder.accept(w);
+        }
+    }
+
+    private boolean overlaps(AbstractWidget other) {
+        return this.getX() < other.getX() + other.getWidth() && other.getX() < this.getX() + this.width
+                && this.getY() < other.getY() + other.getHeight() && other.getY() < this.getY() + this.height;
+    }
+
+    @Override
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        graphics.pose().pushPose();
+        graphics.pose().translate(0f, 0f, (float) Z_OVER_OTHER_BUTTONS);
+        super.renderWidget(graphics, mouseX, mouseY, partialTick);
+        if (this.opensModList) {
+            graphics.blitSprite(GuiHelper.CONFIG_GEAR, this.getX() + (this.width - GEAR_SIZE) / 2,
+                    this.getY() + (this.height - GEAR_SIZE) / 2, GEAR_SIZE, GEAR_SIZE);
+        }
+        graphics.pose().popPose();
+    }
+
+    // the label is kept for narration, it just isn't drawn under the gear
+    @Override
+    public void renderString(GuiGraphics graphics, Font font, int color) {
+        if (!this.opensModList) super.renderString(graphics, font, color);
     }
 
     @VirtualOverride("neoforge")

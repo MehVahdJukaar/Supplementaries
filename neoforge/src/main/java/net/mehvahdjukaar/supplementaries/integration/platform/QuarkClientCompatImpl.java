@@ -17,7 +17,6 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.neoforged.neoforge.common.NeoForge;
 import org.violetmoon.quark.api.event.UsageTickerEvent;
 import org.violetmoon.quark.base.Quark;
-import org.violetmoon.quark.base.config.QuarkGeneralConfig;
 import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 
 public class QuarkClientCompatImpl {
@@ -35,10 +34,6 @@ public class QuarkClientCompatImpl {
 
     public static void setupClient() {
         ClientHelper.registerRenderType(QuarkCompatImpl.TATER_IN_A_JAR.get(), RenderType.cutout());
-    }
-
-    public static boolean shouldHaveSuppButtonOnRight() {
-        return !(QuarkGeneralConfig.qButtonOnRight && QuarkGeneralConfig.enableQButton);
     }
 
     public static boolean canRenderBlackboardTooltip() {

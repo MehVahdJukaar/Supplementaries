@@ -22,11 +22,6 @@ public class QuarkClientCompat {
     }
 
     @PlatformImpl
-    public static boolean shouldHaveSuppButtonOnRight() {
-        throw new AssertionError();
-    }
-
-    @PlatformImpl
     public static boolean canRenderBlackboardTooltip() {
         throw new AssertionError();
     }

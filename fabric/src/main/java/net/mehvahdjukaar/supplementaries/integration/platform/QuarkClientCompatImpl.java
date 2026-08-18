@@ -12,10 +12,6 @@ public class QuarkClientCompatImpl {
     public static void setupClient() {
     }
 
-    public static boolean shouldHaveSuppButtonOnRight() {
-        return false;
-    }
-
     public static boolean canRenderBlackboardTooltip() {
         return false;
     }

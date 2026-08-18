@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
@@ -20,7 +21,7 @@ import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.entity.EntityType;
 
@@ -33,11 +34,8 @@ public class ClientEventsFabric {
 
         ItemTooltipCallback.EVENT.register(ClientEvents::onItemTooltip);
         ScreenEvents.AFTER_INIT.register((m, s, x, y) -> {
-            List<? extends GuiEventListener> listeners = s.children();
-            ClientEvents.addConfigButton(s, listeners, e -> {
-                List<GuiEventListener> c = (List<GuiEventListener>) s.children();
-                c.add(e);
-            });
+            List<AbstractWidget> buttons = Screens.getButtons(s);
+            ClientEvents.addConfigButton(s, s.children(), buttons::add, buttons::remove);
         });
 
         ClientPreAttackCallback.EVENT.register((minecraft, localPlayer, i) -> {

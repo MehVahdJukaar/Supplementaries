@@ -26,6 +26,7 @@ import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
@@ -75,9 +76,10 @@ public class ClientEvents {
     }
 
     @EventCalled
-    public static void addConfigButton(Screen screen, List<? extends GuiEventListener> listeners, Consumer<GuiEventListener> adder) {
+    public static void addConfigButton(Screen screen, List<? extends GuiEventListener> listeners,
+                                       Consumer<AbstractWidget> adder, Consumer<AbstractWidget> remover) {
         if (ClientConfigs.General.CONFIG_BUTTON.get()) {
-            ConfigButton.setupConfigButton(screen, listeners, adder);
+            ConfigButton.setupConfigButton(screen, listeners, adder, remover);
         }
     }
 

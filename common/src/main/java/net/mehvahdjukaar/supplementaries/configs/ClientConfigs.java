@@ -257,6 +257,7 @@ public class ClientConfigs {
     public static class General {
 
         public static final Supplier<Boolean> CONFIG_BUTTON;
+        public static final Supplier<Boolean> CONFIG_BUTTON_OPENS_MOD_LIST;
         public static final Supplier<Integer> CONFIG_BUTTON_Y_OFF;
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
@@ -287,6 +288,8 @@ public class ClientConfigs {
                     .define("no_incompatible_mods_screen", false);
             CONFIG_BUTTON = builder.comment("Enable Quark style config button on main menu")
                     .define("configs_button", true);
+            CONFIG_BUTTON_OPENS_MOD_LIST = builder.comment("Make the config button open Moonlight's mod list, where every installed mod's config can be reached, instead of going straight to Supplementaries' own config")
+                    .define("configs_button_opens_mod_list", true);
             CONFIG_BUTTON_Y_OFF = builder.comment("Config button Y offset")
                     .define("configs_button_y_offset", 0, -10000, 10000);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")

@@ -60,7 +60,7 @@ public class ClientEventsForge {
 
     @SubscribeEvent
     public static void onScreenInit(ScreenEvent.Init.Post event) {
-        ClientEvents.addConfigButton(event.getScreen(), event.getListenersList(), event::addListener);
+        ClientEvents.addConfigButton(event.getScreen(), event.getListenersList(), event::addListener, event::removeListener);
     }
 
     @SubscribeEvent
