@@ -1,6 +1,10 @@
+- added placeable breeze rods
 - improved config button
 - fixes #2095
 - fixes #2085
 - fixes #2058
 - fixes #2104
 - fixes #2103
+- fixes #2119
+- fixes #2081
+- fixes #1969

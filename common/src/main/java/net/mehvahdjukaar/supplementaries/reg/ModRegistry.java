@@ -887,6 +887,14 @@ public class ModRegistry {
                     .sound(SoundType.GILDED_BLACKSTONE))
     );
 
+    //breeze rod
+    public static final Supplier<Block> BREEZE_ROD_BLOCK = regBlock(BREEZE_ROD_NAME, () -> new BreezeRodBlock(
+            BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_LIGHT_BLUE)
+                    .strength(0.25F, 0F)
+                    .sound(SoundType.GLASS))
+    );
+
     //daub
     public static final RegSupplier<Block> DAUB = regWithItem(DAUB_NAME, () -> new Block(
             BlockBehaviour.Properties.of()

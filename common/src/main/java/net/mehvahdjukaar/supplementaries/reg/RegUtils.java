@@ -69,6 +69,7 @@ public class RegUtils {
         }
         if (CommonConfigs.Tweaks.PLACEABLE_RODS.get()) {
             AdditionalItemPlacementsAPI.registerPlacement(Items.BLAZE_ROD, new SuppAdditionalPlacement(ModRegistry.BLAZE_ROD_BLOCK.get()));
+            AdditionalItemPlacementsAPI.registerPlacement(Items.BREEZE_ROD, new SuppAdditionalPlacement(ModRegistry.BREEZE_ROD_BLOCK.get()));
         }
         if (CommonConfigs.Tweaks.PLACEABLE_GUNPOWDER.get()) {
             AdditionalItemPlacementsAPI.registerPlacement(Items.GUNPOWDER, new SuppAdditionalPlacement(ModRegistry.GUNPOWDER_BLOCK.get()));

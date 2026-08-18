@@ -38,6 +38,7 @@ public class ModParticles {
     public static final Supplier<ParticleType<ColorParticleOption>> STREAMER_PARTICLE_DYED = regComplex("streamer_dyed",
             ColorParticleOption::codec, ColorParticleOption::streamCodec);
     public static final Supplier<SimpleParticleType> WIND_STREAM = reg("wind_stream");
+    public static final Supplier<SimpleParticleType> WIND_SWIRL = reg("wind_swirl");
     public static final Supplier<SimpleParticleType> ROTATION_TRAIL = reg("rotation_trail");
     public static final Supplier<SimpleParticleType> ROTATION_TRAIL_EMITTER = reg("rotation_trail_emitter");
     public static final Supplier<SimpleParticleType> SPARKLE_PARTICLE = reg("sparkle");

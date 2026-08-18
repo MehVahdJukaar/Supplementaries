@@ -1210,7 +1210,7 @@ public class CommonConfigs {
             PLACEABLE_STICKS = builder.comment("Allow placeable sticks")
                     .icon("minecraft:stick")
                     .feature("sticks");
-            PLACEABLE_RODS = builder.comment("Allow placeable blaze rods")
+            PLACEABLE_RODS = builder.comment("Allow placeable blaze and breeze rods")
                     .icon("minecraft:blaze_rod")
                     .feature("blaze_rods");
             builder.pop();

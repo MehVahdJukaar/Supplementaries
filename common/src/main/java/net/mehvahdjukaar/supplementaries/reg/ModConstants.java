@@ -109,6 +109,7 @@ public final class ModConstants {
     public static final String BLOCK_GENERATOR_NAME = "block_generator";
     public static final String STICK_NAME = "stick";
     public static final String BLAZE_ROD_NAME = "blaze_rod";
+    public static final String BREEZE_ROD_NAME = "breeze_rod";
     public static final String DAUB_NAME = "daub";
     public static final String WATTLE_AND_DAUB = "wattle_and_daub";
     public static final String DAUB_FRAME_NAME = "daub_frame";
