@@ -27,6 +27,8 @@ public class ConfigButton extends Button {
 
     private static final int Z_OVER_OTHER_BUTTONS = 300;
     private static final int GEAR_SIZE = 16;
+    private static final int ANCHOR_SPACING = 4;
+    private static final int CORNER_MARGIN = 4;
 
     // sends the player to every mod's configs, so it wears a gear instead of our letter
     private final boolean opensModList;
@@ -52,21 +54,26 @@ public class ConfigButton extends Button {
                                          Consumer<AbstractWidget> adder, Consumer<AbstractWidget> remover) {
         if (!(screen instanceof TitleScreen) && !(screen instanceof PauseScreen)) return;
 
+        AbstractWidget anchor = findAnchorButton(listeners);
+        int x = anchor == null ? CORNER_MARGIN : anchor.getX() + anchor.getWidth() + ANCHOR_SPACING;
+        int y = anchor == null ? CORNER_MARGIN : anchor.getY();
+
+        ConfigButton button = new ConfigButton(x, y + ClientConfigs.General.CONFIG_BUTTON_Y_OFF.get(),
+                ClientConfigs.General.CONFIG_BUTTON_OPENS_MOD_LIST.get());
+        addOnTop(button, listeners, adder, remover);
+    }
+
+    // menus that have none of these get the button in the corner instead
+    private static AbstractWidget findAnchorButton(List<? extends GuiEventListener> listeners) {
         List<String> targets = Arrays.asList(
                 Component.translatable("menu.online").getString(),
                 Component.translatable("fml.menu.modoptions").getString(),
                 Component.translatable("menu.shareToLan").getString());
 
         for (GuiEventListener w : listeners) {
-            if (w instanceof AbstractWidget b && targets.contains(b.getMessage().getString())) {
-                int spacing = 4;
-                ConfigButton button = new ConfigButton(b.getX() + b.getWidth() + spacing,
-                        b.getY() + ClientConfigs.General.CONFIG_BUTTON_Y_OFF.get(),
-                        ClientConfigs.General.CONFIG_BUTTON_OPENS_MOD_LIST.get());
-                addOnTop(button, listeners, adder, remover);
-                return;
-            }
+            if (w instanceof AbstractWidget b && targets.contains(b.getMessage().getString())) return b;
         }
+        return null;
     }
 
     private static void addOnTop(ConfigButton button, List<? extends GuiEventListener> listeners,

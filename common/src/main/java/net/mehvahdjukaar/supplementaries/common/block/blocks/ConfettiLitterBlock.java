@@ -80,7 +80,8 @@ public class ConfettiLitterBlock extends HorizontalDirectionalBlock {
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        return MultifaceBlock.canAttachTo(level, Direction.UP, pos, level.getBlockState(pos.below()));
+        BlockPos below = pos.below();
+        return MultifaceBlock.canAttachTo(level, Direction.DOWN, below, level.getBlockState(below));
     }
 
     @Override
