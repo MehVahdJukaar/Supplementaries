@@ -7,10 +7,16 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.Mth;
 
 
 public class BombExplosionEmitterParticle extends NoRenderParticle {
     private static final int MAXIMUM_TIME = 4;
+    // the blast eats blocks well past its nominal radius, so the cloud has to reach out there too
+    private static final double SPREAD = 1.6;
+    private static final double DENSITY = 1.5;
+    private static final int MIN_PARTICLES = 5;
+    private static final int MAX_PARTICLES = 150;
 
     private final double radius;
 
@@ -21,14 +27,15 @@ public class BombExplosionEmitterParticle extends NoRenderParticle {
 
     @Override
     public void tick() {
-        float amountMult = 0.75f;
-        // scale with area
-        for (int i = 0; i < (radius * radius * radius) * amountMult; ++i) {
+        // scale with volume
+        int count = Mth.clamp(Mth.ceil(radius * radius * radius * DENSITY), MIN_PARTICLES, MAX_PARTICLES);
+        for (int i = 0; i < count; ++i) {
 
             double phi = Math.acos(2 * random.nextDouble() - 1);// Inverse of cumulative distribution function for uniform distribution in [0, π]
             double theta = random.nextDouble() * 2 * Math.PI;
 
-            double r = (random.nextDouble() - random.nextDouble()) * radius * 1.5;
+            // cube root spreads them evenly through the ball. A plain random clumps them all in the middle
+            double r = radius * SPREAD * Math.cbrt(random.nextDouble());
 
             double d0 = this.x + r * Math.sin(phi) * Math.cos(theta);
             double d1 = this.y + r * Math.sin(phi) * Math.sin(theta);

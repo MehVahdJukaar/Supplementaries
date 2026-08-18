@@ -36,6 +36,7 @@ import net.minecraft.world.entity.projectile.LargeFireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomModelData;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -48,11 +49,15 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     // overrides in the bomb item models: the lit fuse animation while flying, and the smaller shard sprite
     public static final int PROJECTILE_MODEL_DATA = 1;
     public static final int BABY_MODEL_DATA = 2;
-    // speed the baby bombs of a blue bomb are flung out at. Tuned so their arc lasts long enough
-    // to act as a fuse and lands them roughly 2 to 4 blocks out
-    private static final float CLUSTER_SPEED = 0.4f;
+    // speed the baby bombs of a blue bomb are flung out at. Low so they land close to the parent
+    private static final float CLUSTER_SPEED = 0.25f;
     private static final float CLUSTER_INACCURACY = 1.5f;
+    // half a second where a fresh baby bomb can't go off, so the cluster doesn't merge into one blast
+    private static final int BABY_ARMING_TICKS = 10;
     private static final int WEAKNESS_DURATION = 20 * 30;
+    // status effects aren't applied by the explosion itself, so they get a bit more reach than the
+    // twice-the-radius one a vanilla blast has
+    private static final double BLAST_EFFECT_RANGE = 2.5;
 
     private final boolean hasFuse = CommonConfigs.Tools.BOMB_FUSE.get() != 0;
     private final ParticleTrailEmitter trailEmitter = ParticleTrailEmitter.builder()
@@ -62,8 +67,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             .build();
     private BombType type = BombType.NORMAL;
     private boolean active = true;
-    // ticks left before going off. -1 means it hasn't hit anything yet
-    private int fuseTimer = -1;
+    // ticks left before this one can go off at all. Only baby bombs get one
+    private int armingTimer = 0;
+    private boolean hasHit = false;
     private boolean superCharged = false;
     // face of the block we landed on. Baby bombs are flung along it so they end up in open space
     private Direction hitFace = Direction.UP;
@@ -90,20 +96,19 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         return this.type;
     }
 
-    // the item is what actually gets rendered, and it's defaulted during the super constructor,
-    // before we know our type. Has to be re-set here or every bomb flies looking like a normal one
     private void setType(BombType type) {
         this.type = type;
         this.setItem(type.createDisplayStack());
+        this.armingTimer = type.armingTicks();
     }
 
-    //data to be saved when the entity gets unloaded
     @Override
     public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("Active", this.active);
         compound.putInt("Type", this.type.ordinal());
-        compound.putInt("Timer", this.fuseTimer);
+        compound.putInt("ArmingTimer", this.armingTimer);
+        compound.putBoolean("Hit", this.hasHit);
     }
 
     @Override
@@ -111,10 +116,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         super.readAdditionalSaveData(compound);
         this.active = compound.getBoolean("Active");
         this.type = BombType.values()[compound.getInt("Type")];
-        this.fuseTimer = compound.getInt("Timer");
+        this.armingTimer = compound.getInt("ArmingTimer");
+        this.hasHit = compound.getBoolean("Hit");
     }
 
-    //this is extra data needed when an entity creation packet is sent from server to client
     @Override
     public void readSpawnData(RegistryFriendlyByteBuf buffer) {
         this.type = buffer.readEnum(BombType.class);
@@ -132,7 +137,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     @Override
     protected Item getDefaultItem() {
-        // called from defineSynchedData while the super constructor runs, before type is assigned
         return this.type == null ? ModRegistry.BOMB_ITEM.get() : this.type.getItem();
     }
 
@@ -167,7 +171,12 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
 
     @Override
     public boolean hasReachedEndOfLife() {
-        return super.hasReachedEndOfLife() || this.fuseTimer == 0;
+        return super.hasReachedEndOfLife() || (this.hasHit && this.armingTimer == 0);
+    }
+
+    @Override
+    public boolean ignoreExplosion(Explosion explosion) {
+        return explosion.getDirectSourceEntity() instanceof BombEntity || super.ignoreExplosion(explosion);
     }
 
     @Override
@@ -175,8 +184,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         if (this.active && this.isInWater() && !this.type.isWaterProof()) {
             this.turnOff();
         }
-        if (this.fuseTimer > 0) {
-            this.fuseTimer--;
+        if (this.armingTimer > 0) {
+            this.armingTimer--;
         }
         super.tick();
     }
@@ -206,7 +215,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     public void playerTouch(Player entityIn) {
         if (!this.level().isClientSide) {
-            // hand back a plain item, not the in-flight display stack with its model override
             if (!this.active && entityIn.getInventory().add(new ItemStack(this.type.getItem()))) {
                 entityIn.take(this, 1);
                 this.remove(RemovalReason.DISCARDED);
@@ -243,10 +251,11 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         Level level = level();
         if (level.isClientSide || this.hasFuse) return;
 
-        if (this.fuseTimer == -1) {
-            this.fuseTimer = this.superCharged ? 0 : this.type.impactFuse(level.getRandom());
-        }
-        if (this.fuseTimer == 0 && !this.isRemoved()) {
+        this.hasHit = true;
+        // still arming: it just sits there and goes off as soon as the timer runs out
+        if (this.armingTimer > 0) return;
+
+        if (!this.isRemoved()) {
             this.reachedEndOfLife();
         }
     }
@@ -265,7 +274,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         return ProjectileStats.BOMB_GRAVITY;
     }
 
-    //createMiniExplosion
     @Override
     public void reachedEndOfLife() {
         Level level = level();
@@ -318,7 +326,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     }
 
     private void applyBlastEffects(ServerLevel level, Vec3 center) {
-        double radius = this.type.getRadius();
+        double radius = this.type.getRadius() * BLAST_EFFECT_RANGE;
         for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class,
                 AABB.ofSize(center, radius * 2, radius * 2, radius * 2))) {
             if (e.distanceToSqr(center) <= radius * radius) {
@@ -335,12 +343,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         Vec3 up = normal.cross(right);
 
         RandomSource random = level.getRandom();
-        // the whole ring is rotated so two bombs in the same spot don't scatter along the same lines
         double ringOffset = random.nextDouble();
         for (int i = 0; i < count; i++) {
-            // evenly spaced slots with a bit of wobble, so they stay spread instead of bunching up
             double yaw = (ringOffset + (i + Mth.lerp(random.nextDouble(), -0.3, 0.3)) / count) * Math.PI * 2;
-            // how far each shard tips away from the surface: low values graze it, high ones pop straight out
             double lift = Mth.lerp(random.nextDouble(), 0.55, 0.9);
             double spread = Math.sqrt(1 - lift * lift);
             Vec3 dir = right.scale(Math.cos(yaw) * spread)
@@ -364,7 +369,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     public enum BombType {
         NORMAL,
         BLUE,
-        // the shards a blue bomb scatters. Never thrown by hand, only spawned by a detonating BLUE
         BLUE_BABY;
 
         public double getRadius() {
@@ -383,7 +387,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             return this == BLUE || this == BLUE_BABY;
         }
 
-        // blue powder keeps burning underwater, and so do its shards
         public boolean isWaterProof() {
             return isBlue();
         }
@@ -403,9 +406,8 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             return this == BLUE ? CommonConfigs.Tools.BOMB_BLUE_SPLIT_COUNT.get() : 0;
         }
 
-        // babies get a random delay so a cluster crackles through instead of one merged blast
-        public int impactFuse(RandomSource random) {
-            return this == BLUE_BABY ? 3 + random.nextInt(8) : 0;
+        public int armingTicks() {
+            return this == BLUE_BABY ? BABY_ARMING_TICKS : 0;
         }
 
         public void applyStatusEffects(LivingEntity entity) {
@@ -420,7 +422,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             }
         }
 
-        // five shards firing full blast sounds on top of each other is a wall of noise
         public float explosionVolume() {
             return this == BLUE_BABY ? 1.4f : 4f;
         }

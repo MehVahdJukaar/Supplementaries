@@ -19,7 +19,7 @@ public class BreezeRodBlock extends StickBlock {
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (random.nextFloat() > 1.15f) return;
+        if (random.nextFloat() > 0.2f) return;
         List<Direction.Axis> axes = new ArrayList<>(3);
         for (var e : AXIS2PROPERTY.entrySet()) {
             if (state.getValue(e.getValue())) axes.add(e.getKey());

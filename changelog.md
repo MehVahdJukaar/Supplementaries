@@ -1,3 +1,4 @@
+- fixed placeable rod models showing a mismatched texture on the rod that was already there
 - added placeable breeze rods
 - improved config button
 - fixes #2095

@@ -1061,16 +1061,16 @@ public class CommonConfigs {
             BOMB_COOLDOWN = builder.comment("Enable bomb item cooldown")
                     .define("cooldown", true);
             builder.push("blue_bomb");
-            BOMB_BLUE_RADIUS = builder.comment("Bomb explosion radius (damage depends on this)")
-                    .define("explosion_radius", 2d, 0.1, 10);
-            BOMB_BLUE_BREAKS = builder.comment("Do bombs break blocks like tnt?")
+            BOMB_BLUE_RADIUS = builder.comment("Blue bomb explosion radius. Same blast as a normal bomb, just a bit bigger")
+                    .define("explosion_radius", 3d, 0.1, 10);
+            BOMB_BLUE_BREAKS = builder.comment("Do blue bombs break blocks like tnt?")
                     .define("break_blocks", BombEntity.BreakingMode.WEAK);
             BOMB_BLUE_SPLIT_COUNT = builder.comment("How many baby bombs a blue bomb scatters when it goes off. Set to 0 to turn it into a plain, bigger bomb")
                     .define("split_count", 5, 0, 32);
             BOMB_BLUE_BABY_RADIUS = builder.comment("Explosion radius of the baby bombs scattered by a blue bomb")
-                    .define("baby_explosion_radius", 1.6, 0.1, 10);
+                    .define("baby_explosion_radius", 1.2, 0.1, 10);
             BOMB_BLUE_BABY_FIRE = builder.comment("Seconds of fire baby bombs set nearby entities on fire for. 0 to disable")
-                    .define("baby_fire_duration", 4, 0, 100);
+                    .define("baby_fire_duration", 5, 0, 100);
             builder.pop();
             builder.pop();
 

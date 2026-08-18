@@ -66,7 +66,7 @@ public class WindSwirlParticle extends TextureSheetParticle {
         this.hasPhysics = false;
         this.setSize(0.01f, 0.01f);
 
-        //the whole ring creeps along the rod on top of the streak climbing inside it
+        //the whole ring creeps along the rod on top of the streak sliding up inside it
         float drift = 0.002f + this.random.nextFloat() * 0.004f;
         this.xd = this.axisDir.x() * drift;
         this.yd = this.axisDir.y() * drift;
@@ -102,6 +102,9 @@ public class WindSwirlParticle extends TextureSheetParticle {
         tail -= wrap;
         head -= wrap;
 
+        //the streak stays flat and slides up the box instead of tilting into a helix
+        float climb = (progress - 0.5f) * (BOX_HEIGHT - STREAK_THICKNESS);
+
         int light = this.getLightColor(partialTicks);
         int lu = VertexUtil.lightU(light);
         int lv = VertexUtil.lightV(light);
@@ -117,19 +120,13 @@ public class WindSwirlParticle extends TextureSheetParticle {
                 drawSegment(buffer, poseStack, side,
                         (from - sideStart) * 4, (to - sideStart) * 4,
                         (from - tail) / STREAK_LENGTH, (to - tail) / STREAK_LENGTH,
-                        head + wrap, cx, cy, cz, a, lu, lv);
+                        climb, cx, cy, cz, a, lu, lv);
             }
         }
     }
 
-    //how high up the box a point of the streak sits. the tail is still low while the head is already climbing
-    private float streakHeight(float streakU, float head) {
-        float climbed = (head - (1 - streakU) * STREAK_LENGTH - this.startOffset) / LAPS;
-        return (Mth.clamp(climbed, 0, 1) - 0.5f) * (BOX_HEIGHT - STREAK_THICKNESS);
-    }
-
     private void drawSegment(VertexConsumer buffer, PoseStack poseStack, int side,
-                             float from, float to, float u0, float u1, float head,
+                             float from, float to, float u0, float u1, float climb,
                              float cx, float cy, float cz, float a, int lu, int lv) {
         Vector3f normal = this.sideNormals[side];
         Vector3f tangent = this.sideNormals[(side + 1) & 3];
@@ -138,24 +135,19 @@ public class WindSwirlParticle extends TextureSheetParticle {
         float su1 = this.sprite.getU(u1);
         float sv0 = this.sprite.getV(0);
         float sv1 = this.sprite.getV(1);
-        float half = STREAK_THICKNESS / 2;
-        float fromMid = streakHeight(u0, head);
-        float toMid = streakHeight(u1, head);
-        float fromTop = fromMid + half;
-        float fromBottom = fromMid - half;
-        float toTop = toMid + half;
-        float toBottom = toMid - half;
+        float top = climb + STREAK_THICKNESS / 2;
+        float bottom = climb - STREAK_THICKNESS / 2;
 
         //both windings so the far sides of the ring show up too
-        vertex(buffer, poseStack, normal, tangent, from, fromTop, su0, sv0, cx, cy, cz, a, lu, lv);
-        vertex(buffer, poseStack, normal, tangent, to, toTop, su1, sv0, cx, cy, cz, a, lu, lv);
-        vertex(buffer, poseStack, normal, tangent, to, toBottom, su1, sv1, cx, cy, cz, a, lu, lv);
-        vertex(buffer, poseStack, normal, tangent, from, fromBottom, su0, sv1, cx, cy, cz, a, lu, lv);
+        vertex(buffer, poseStack, normal, tangent, from, top, su0, sv0, cx, cy, cz, a, lu, lv);
+        vertex(buffer, poseStack, normal, tangent, to, top, su1, sv0, cx, cy, cz, a, lu, lv);
+        vertex(buffer, poseStack, normal, tangent, to, bottom, su1, sv1, cx, cy, cz, a, lu, lv);
+        vertex(buffer, poseStack, normal, tangent, from, bottom, su0, sv1, cx, cy, cz, a, lu, lv);
 
-        vertex(buffer, poseStack, normal, tangent, from, fromBottom, su0, sv1, cx, cy, cz, a, lu, lv);
-        vertex(buffer, poseStack, normal, tangent, to, toBottom, su1, sv1, cx, cy, cz, a, lu, lv);
-        vertex(buffer, poseStack, normal, tangent, to, toTop, su1, sv0, cx, cy, cz, a, lu, lv);
-        vertex(buffer, poseStack, normal, tangent, from, fromTop, su0, sv0, cx, cy, cz, a, lu, lv);
+        vertex(buffer, poseStack, normal, tangent, from, bottom, su0, sv1, cx, cy, cz, a, lu, lv);
+        vertex(buffer, poseStack, normal, tangent, to, bottom, su1, sv1, cx, cy, cz, a, lu, lv);
+        vertex(buffer, poseStack, normal, tangent, to, top, su1, sv0, cx, cy, cz, a, lu, lv);
+        vertex(buffer, poseStack, normal, tangent, from, top, su0, sv0, cx, cy, cz, a, lu, lv);
     }
 
     private void vertex(VertexConsumer buffer, PoseStack poseStack, Vector3f normal, Vector3f tangent,
