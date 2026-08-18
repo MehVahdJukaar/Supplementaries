@@ -2,11 +2,11 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
-import net.mehvahdjukaar.moonlight.api.client.gui.GuiHelper;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,9 +25,8 @@ import java.util.function.Consumer;
 
 public class ConfigButton extends Button {
 
-    // Quark puts its own config button in the exact same slot. Ours draws over it instead of moving out of the way
     private static final int Z_OVER_OTHER_BUTTONS = 300;
-    private static final int GEAR_SIZE = 12;
+    private static final int GEAR_SIZE = 16;
 
     // sends the player to every mod's configs, so it wears a gear instead of our letter
     private final boolean opensModList;
@@ -95,8 +94,12 @@ public class ConfigButton extends Button {
         graphics.pose().translate(0f, 0f, (float) Z_OVER_OTHER_BUTTONS);
         super.renderWidget(graphics, mouseX, mouseY, partialTick);
         if (this.opensModList) {
-            graphics.blitSprite(GuiHelper.CONFIG_GEAR, this.getX() + (this.width - GEAR_SIZE) / 2,
+            graphics.blitSprite(ModTextures.CONFIG_GEAR, this.getX() + (this.width - GEAR_SIZE) / 2,
                     this.getY() + (this.height - GEAR_SIZE) / 2, GEAR_SIZE, GEAR_SIZE);
+        }
+        if (this.isHovered && ClientConfigs.General.CONFIG_BUTTON_RAINBOW.get()) {
+            graphics.renderOutline(this.getX(), this.getY(), this.width, this.height,
+                    ColorHelper.getRainbowColorPost(3) | 0xFF000000);
         }
         graphics.pose().popPose();
     }
@@ -109,7 +112,8 @@ public class ConfigButton extends Button {
 
     @VirtualOverride("neoforge")
     public int getFGColor() {
-        return this.isHovered ? ColorHelper.getRainbowColorPost(3) : 0xFFAA00;
+        boolean rainbow = this.isHovered && ClientConfigs.General.CONFIG_BUTTON_RAINBOW.get();
+        return rainbow ? ColorHelper.getRainbowColorPost(3) : 0xFFAA00;
     }
 
 }

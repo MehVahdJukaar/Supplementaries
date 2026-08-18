@@ -61,7 +61,7 @@ dependencies {
     modCompileOnly("curse.maven:realistic-horse-genetics-339184:4685235")
     //modImplementation("curse.maven:forgified-fabric-api-889079:6289153")
 
-    modImplementation("curse.maven:exposure-871755:7033927")
+    modImplementation("curse.maven:exposure-871755:8223555")
 
     modCompileOnly("curse.maven:cc-tweaked-282001:5714512")
     modCompileOnly("curse.maven:curios-309927:5296876")

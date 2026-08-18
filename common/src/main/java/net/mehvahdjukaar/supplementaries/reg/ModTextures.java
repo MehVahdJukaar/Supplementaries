@@ -69,6 +69,7 @@ public class ModTextures {
     public static final ResourceLocation SLIME_GUI_OVERLAY = Supplementaries.res("textures/gui/slime_overlay.png");
     public static final ResourceLocation BLACKBOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/blackboard.png");
     public static final ResourceLocation CONFIG_BACKGROUND = Supplementaries.res("textures/gui/config_background.png");
+    public static final ResourceLocation CONFIG_GEAR = Supplementaries.res("config");
     public static final ResourceLocation NOTICE_BOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/notice_board_gui.png");
     public static final ResourceLocation LUNCH_BASKET_GUI_TEXTURE = Supplementaries.res("textures/gui/lunch_basket_gui.png");
     public static final ResourceLocation SACK_GUI_TEXTURE = Supplementaries.res("textures/gui/sack_gui.png");

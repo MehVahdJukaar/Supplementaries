@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "tconstruct:flint_and_brick",
+      "required": false
+    }
+  ]
+}

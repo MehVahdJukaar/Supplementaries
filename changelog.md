@@ -1,3 +1,6 @@
-- fixes #1923
-- fixes #2139
-- fixes #2122
+- improved config button
+- fixes #2095
+- fixes #2085
+- fixes #2058
+- fixes #2104
+- fixes #2103

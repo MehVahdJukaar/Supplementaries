@@ -52,7 +52,7 @@ dependencies {
     modCompileOnly("curse.maven:quark-243121:8146177")
     modCompileOnly("curse.maven:zeta-968868:7980010")
 
-    modImplementation("curse.maven:exposure-871755:7033927")
+    modImplementation("curse.maven:exposure-871755:8223555")
 
     modCompileOnly("dev.engine-room.flywheel:flywheel-neoforge-${flywheel_forge_version}")
     modCompileOnly("dev.engine-room.vanillin:vanillin-neoforge-${vanillin_version}")

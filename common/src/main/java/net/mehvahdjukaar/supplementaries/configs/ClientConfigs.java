@@ -259,6 +259,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> CONFIG_BUTTON;
         public static final Supplier<Boolean> CONFIG_BUTTON_OPENS_MOD_LIST;
         public static final Supplier<Integer> CONFIG_BUTTON_Y_OFF;
+        public static final Supplier<Boolean> CONFIG_BUTTON_RAINBOW;
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
         public static final Supplier<Boolean> NO_OPTIFINE_WARN;
@@ -292,6 +293,8 @@ public class ClientConfigs {
                     .define("configs_button_opens_mod_list", true);
             CONFIG_BUTTON_Y_OFF = builder.comment("Config button Y offset")
                     .define("configs_button_y_offset", 0, -10000, 10000);
+            CONFIG_BUTTON_RAINBOW = builder.comment("Outline the config button with a rainbow when hovered")
+                    .define("configs_button_rainbow_outline", true);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")
                     .define("tooltip_hints", true);
             PLACEABLE_TOOLTIP = builder.comment("Show tooltips items that have been made placeable")

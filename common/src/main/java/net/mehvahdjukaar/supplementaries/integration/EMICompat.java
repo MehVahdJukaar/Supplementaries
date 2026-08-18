@@ -51,7 +51,7 @@ public class EMICompat implements EmiPlugin {
         registry.addRecipe(new Grind(Items.ENCHANTED_GOLDEN_APPLE, Items.GOLDEN_APPLE,
                 Supplementaries.res("unenchanted_golden_apple")));
         registry.addRecipe(new Grind(ModRegistry.BOMB_BLUE_ITEM.get(), ModRegistry.BOMB_ITEM.get(),
-                Supplementaries.res("unenchanted_golden_apple")));
+                Supplementaries.res("unenchanted_blue_bomb")));
 
         registry.addRecipe(
                 EmiWorldInteractionRecipe.builder()

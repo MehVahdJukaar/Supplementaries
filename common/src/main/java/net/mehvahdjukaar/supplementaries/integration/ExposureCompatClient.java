@@ -9,8 +9,8 @@ import io.github.mortuusars.exposure.world.camera.frame.Frame;
 import io.github.mortuusars.exposure.world.item.AlbumItem;
 import io.github.mortuusars.exposure.world.item.PhotographItem;
 import io.github.mortuusars.exposure.world.item.StackedPhotographsItem;
+import io.github.mortuusars.exposure.world.item.component.StackedPhotographs;
 import io.github.mortuusars.exposure.world.item.component.album.AlbumPage;
-import io.github.mortuusars.exposure.world.item.util.ItemAndStack;
 import net.mehvahdjukaar.moonlight.api.misc.TField;
 import net.mehvahdjukaar.moonlight.api.misc.TMethod;
 import net.minecraft.resources.ResourceLocation;
@@ -60,15 +60,15 @@ public class ExposureCompatClient {
                 return getFrameTexture(stack, frame);
             }
             case StackedPhotographsItem stackedPhotographsItem -> {
-                List<ItemAndStack<PhotographItem>> photos = stackedPhotographsItem.getPhotographs(stack);
+                StackedPhotographs photos = stackedPhotographsItem.getPhotographs(stack);
                 int size = photos.size();
                 if (size > 0) {
-                    ItemAndStack<PhotographItem> frameItem =
-                            photos.get((page) % size);
-                    ItemStack s = frameItem.getItemStack();
-                    Frame frame = frameItem.getItem().getFrame(s);
+                    ItemStack s = photos.getItemUnsafe((page) % size);
+                    if (s.getItem() instanceof PhotographItem photographItem) {
+                        Frame frame = photographItem.getFrame(s);
 
-                    return getFrameTexture(s, frame);
+                        return getFrameTexture(s, frame);
+                    }
                 }
             }
             case AlbumItem album -> {
