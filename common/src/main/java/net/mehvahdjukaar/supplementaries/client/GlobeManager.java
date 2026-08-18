@@ -71,6 +71,14 @@ public class GlobeManager {
         return DEFAULT_DATA;
     }
 
+    @Nullable
+    public static GlobeRenderData supporterRenderData(String playerName) {
+        if (creditsGeneration != Credits.generation()) recomputeCache();
+        String name = playerName.toLowerCase(Locale.ROOT);
+        if (!Credits.INSTANCE.globes().containsKey(name)) return null;
+        return NAME_CACHE.get(name);
+    }
+
     //for supporter globe item texture
     //Disabled because it requires too much maintenance
     public static Float getNamedGlobeTextureID(String text) {

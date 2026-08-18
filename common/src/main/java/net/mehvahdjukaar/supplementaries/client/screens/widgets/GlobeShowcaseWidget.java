@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.GlobeManager;
+import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -53,6 +54,7 @@ public class GlobeShowcaseWidget extends AbstractWidget {
 
     private final GlobeBlockTile tile;
     private final RandomSource random = RandomSource.create();
+    private final GlobeRenderData defaultData;
 
     private float dragYaw;
     private float dragged;      // how far this press has moved, so a drag doesn't also spin it
@@ -64,7 +66,14 @@ public class GlobeShowcaseWidget extends AbstractWidget {
         this.tile = new GlobeBlockTile(BlockPos.ZERO, ModRegistry.GLOBE.get().defaultBlockState());
         // its own world, seeded off the mod version, so it changes with every release
         String version = PlatHelper.getModVersion(Supplementaries.MOD_ID);
-        this.tile.setRenderData(GlobeManager.seededRenderData(version == null ? 0 : version.hashCode()));
+        this.defaultData = GlobeManager.seededRenderData(version == null ? 0 : version.hashCode());
+        this.tile.setRenderData(this.defaultData);
+    }
+
+    private void refreshRenderData() {
+        // the account name, not the player entity, so this also works from the main menu
+        GlobeRenderData owned = GlobeManager.supporterRenderData(Minecraft.getInstance().getUser().getName());
+        this.tile.setRenderData(owned == null ? this.defaultData : owned);
     }
 
     @Override
@@ -72,6 +81,8 @@ public class GlobeShowcaseWidget extends AbstractWidget {
         BlockEntityRenderer<GlobeBlockTile> renderer = Minecraft.getInstance()
                 .getBlockEntityRenderDispatcher().getRenderer(this.tile);
         if (renderer == null) return;
+
+        this.refreshRenderData();
 
         float slot = Math.min(this.width, this.height) * SLOT_FILL;
 
