@@ -8,7 +8,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FireChargeItem;
-import net.minecraft.world.item.FlintAndSteelItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -25,8 +24,8 @@ class LightUpLumiseneLiquidBehavior implements ItemUseOnBlockBehavior {
 
     @Override
     public boolean appliesToItem(Item item) {
-        // same as ILightable ones
-        return item instanceof FlintAndSteelItem || item.builtInRegistryHolder().is(ILightable.FLINT_AND_STEELS) || item instanceof FireChargeItem;
+        // same as ILightable ones. default instance is the best we can do here as this is item based
+        return item instanceof FireChargeItem || ILightable.isIgniter(item.getDefaultInstance());
     }
 
     @Override

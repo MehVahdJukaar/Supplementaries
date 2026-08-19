@@ -176,7 +176,7 @@ public class BellowsBlockTile extends BlockEntity {
 
         for (Entity entity : list) {
 
-            if (!this.inLineOfSight(entity, facing, level)) continue;
+            if (!this.inLineOfSight(entity, facing, range, level)) continue;
             if (facing == Direction.UP) maxVelocity *= 0.5D;
             AABB entityBB = entity.getBoundingBox();
             double dist;
@@ -213,6 +213,7 @@ public class BellowsBlockTile extends BlockEntity {
                     dist = entity.getZ() - b;
                 }
             }
+            if (dist > range) continue;
             //dist, vel>0
             velocity *= (range - dist) / range;
 
@@ -336,19 +337,19 @@ public class BellowsBlockTile extends BlockEntity {
         }
     }
 
-    public boolean inLineOfSight(Entity entity, Direction facing, Level level) {
+    public boolean inLineOfSight(Entity entity, Direction facing, float range, Level level) {
         int x = facing.getStepX() * (Mth.floor(entity.getX()) - this.worldPosition.getX());
         int y = facing.getStepY() * (Mth.floor(entity.getY()) - this.worldPosition.getY());
         int z = facing.getStepZ() * (Mth.floor(entity.getZ()) - this.worldPosition.getZ());
-        boolean flag = true;
-
-        for (int i = 1; i < Math.abs(x + y + z); i++) {
-
+        // entities are picked by hitbox, so a big one (contraptions, ships) can be in range while its position
+        // is thousands of blocks away. without the clamp we'd walk there block by block, loading chunks as we go
+        int distance = Math.min((int) range, x + y + z);
+        for (int i = 1; i < distance; i++) {
             if (Block.canSupportCenter(level, this.worldPosition.relative(facing, i), facing.getOpposite())) {
-                flag = false;
+                return false;
             }
         }
-        return flag;
+        return true;
     }
 
     protected void spawnParticle(Level world, BlockPos pos, Direction dir, AirType airType) {

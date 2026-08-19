@@ -6,6 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.CannonBoatEntity;
+import net.mehvahdjukaar.supplementaries.integration.SableCompatClient;
 import net.minecraft.client.Camera;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
@@ -17,7 +18,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -126,8 +126,7 @@ public class CannonController {
             Vec3 actualCameraPos = camera.getPosition().add(lookDir2.normalize());
             Vec3 endPos = actualCameraPos.add(lookDir2.scale(maxRange));
 
-            hit = level.clip(new ClipContext(actualCameraPos, endPos,
-                    ClipContext.Block.OUTLINE, ClipContext.Fluid.ANY, entity));
+            hit = SableCompatClient.clipIncludingSubLevels(level, entity, actualCameraPos, endPos, partialTick);
 
             BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, hit.getLocation(), shootingMode);
 
