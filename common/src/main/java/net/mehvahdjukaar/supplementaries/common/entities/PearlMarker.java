@@ -65,7 +65,7 @@ public class PearlMarker extends Entity {
         this.setInvulnerable(true);
     }
 
-    private static boolean isValidBlock(BlockState p) {
+    public static boolean isTeleportableBlock(BlockState p) {
         Block b = p.getBlock();
         return b instanceof DispenserBlock || b instanceof CannonBlock || b instanceof TrappedPresentBlock;
     }
@@ -157,18 +157,18 @@ public class PearlMarker extends Entity {
         if (!dead) {
             BlockPos pos = blockPosition();
             BlockState state = level.getBlockState(pos);
-            if (!(isValidBlock(state))) {
+            if (!(isTeleportableBlock(state))) {
                 PistonMovingBlockEntity piston = null;
                 boolean didOffset = false;
 
                 BlockEntity tile = level.getBlockEntity(pos);
-                if (tile instanceof PistonMovingBlockEntity p && isValidBlock(p.getMovedState())) {
+                if (tile instanceof PistonMovingBlockEntity p && isTeleportableBlock(p.getMovedState())) {
                     piston = p;
                 } else for (Direction d : Direction.values()) {
                     BlockPos offPos = pos.relative(d);
                     tile = level.getBlockEntity(offPos);
 
-                    if (tile instanceof PistonMovingBlockEntity p && isValidBlock(p.getMovedState())) {
+                    if (tile instanceof PistonMovingBlockEntity p && isTeleportableBlock(p.getMovedState())) {
                         piston = p;
                         break;
                     }

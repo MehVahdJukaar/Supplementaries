@@ -4,6 +4,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.ParticleUtil;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.BellowsBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.SableCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -167,61 +168,41 @@ public class BellowsBlockTile extends BlockEntity {
 
     private void pushEntities(Direction facing, float period, float range, Level level) {
 
-        double velocity = CommonConfigs.Redstone.BELLOWS_BASE_VEL_SCALING.get() / period; // Affects acceleration
+        double baseVelocity = CommonConfigs.Redstone.BELLOWS_BASE_VEL_SCALING.get() / period; // Affects acceleration
         double maxVelocity = CommonConfigs.Redstone.BELLOWS_MAX_VEL.get(); // Affects max speed
+        if (facing == Direction.UP) maxVelocity *= 0.5D;
 
         AABB facingBox = AABB.encapsulatingFullBlocks(worldPosition, worldPosition.relative(facing, (int) range));
 
-        List<Entity> list = level.getEntitiesOfClass(Entity.class, facingBox);
+        for (Entity entity : level.getEntitiesOfClass(Entity.class, facingBox)) {
 
-        for (Entity entity : list) {
+            //an entity on a ship has its coordinates in that ship's frame, not ours
+            SableCompat.SubLevelTransform transform = SableCompat.transformBetween(this, entity);
 
-            if (!this.inLineOfSight(entity, facing, range, level)) continue;
-            if (facing == Direction.UP) maxVelocity *= 0.5D;
-            AABB entityBB = entity.getBoundingBox();
-            double dist;
-            double b;
-            switch (facing) {
-                case NORTH -> {
-                    b = worldPosition.getZ();
-                    if (entityBB.maxZ > b) continue;
-                    dist = b - entity.getZ();
-                }
-                case EAST -> {
-                    b = worldPosition.getX() + 1d;
-                    if (entityBB.minX < b) continue;
-                    dist = entity.getX() - b;
-                }
-                case WEST -> {
-                    b = worldPosition.getX();
-                    if (entityBB.maxX > b) continue;
-                    dist = b - entity.getX();
-                }
-                case UP -> {
-                    b = worldPosition.getY() + 1d;
-                    if (entityBB.minY < b) continue;
-                    dist = entity.getY() - b;
-                }
-                case DOWN -> {
-                    b = worldPosition.getY();
-                    if (entityBB.maxY > b) continue;
-                    dist = b - entity.getY();
-                }
-                default -> {
-                    b = worldPosition.getZ() + 1d;
-                    if (entityBB.minZ < b) continue;
-                    dist = entity.getZ() - b;
-                }
-            }
-            if (dist > range) continue;
-            //dist, vel>0
-            velocity *= (range - dist) / range;
+            double gap = gapInFront(transform.entityBoxToBlockSpace(entity.getBoundingBox()), facing);
+            //behind us or already touching the nozzle
+            if (gap < 0) continue;
+            if (!this.inLineOfSight(gap, facing, level)) continue;
 
-            if (Math.abs(entity.getDeltaMovement().get(facing.getAxis())) < maxVelocity) {
-                entity.push(facing.getStepX() * velocity, facing.getStepY() * velocity, facing.getStepZ() * velocity);
+            double velocity = baseVelocity * Math.max(0, (range - gap) / range);
+            Vec3 blowDir = transform.directionToEntitySpace(Vec3.atLowerCornerOf(facing.getNormal()));
+
+            if (Math.abs(entity.getDeltaMovement().dot(blowDir)) < maxVelocity) {
+                entity.push(blowDir.x * velocity, blowDir.y * velocity, blowDir.z * velocity);
                 entity.hurtMarked = true;
             }
         }
+    }
+
+    private double gapInFront(AABB box, Direction facing) {
+        return switch (facing) {
+            case NORTH -> worldPosition.getZ() - box.maxZ;
+            case SOUTH -> box.minZ - (worldPosition.getZ() + 1d);
+            case WEST -> worldPosition.getX() - box.maxX;
+            case EAST -> box.minX - (worldPosition.getX() + 1d);
+            case DOWN -> worldPosition.getY() - box.maxY;
+            case UP -> box.minY - (worldPosition.getY() + 1d);
+        };
     }
 
     private void blowParticles(float air, Direction facing, Level level, boolean waterInFront) {
@@ -337,14 +318,8 @@ public class BellowsBlockTile extends BlockEntity {
         }
     }
 
-    public boolean inLineOfSight(Entity entity, Direction facing, float range, Level level) {
-        int x = facing.getStepX() * (Mth.floor(entity.getX()) - this.worldPosition.getX());
-        int y = facing.getStepY() * (Mth.floor(entity.getY()) - this.worldPosition.getY());
-        int z = facing.getStepZ() * (Mth.floor(entity.getZ()) - this.worldPosition.getZ());
-        // entities are picked by hitbox, so a big one (contraptions, ships) can be in range while its position
-        // is thousands of blocks away. without the clamp we'd walk there block by block, loading chunks as we go
-        int distance = Math.min((int) range, x + y + z);
-        for (int i = 1; i < distance; i++) {
+    public boolean inLineOfSight(double gap, Direction facing, Level level) {
+        for (int i = 1; i <= Mth.floor(gap); i++) {
             if (Block.canSupportCenter(level, this.worldPosition.relative(facing, i), facing.getOpposite())) {
                 return false;
             }

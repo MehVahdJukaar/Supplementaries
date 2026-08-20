@@ -14,12 +14,19 @@ public class EnderPearlBehavior extends GenericProjectileBehavior {
     @Override
     public boolean fireInner(ItemStack stack, ServerLevel level, Vec3 pos, Vec3 facing,
                              float scaledPower, int inaccuracy, @Nullable Entity owner) {
-        Projectile pearl = PearlMarker.createPearlToDispenseAndPlaceMarker(level, BlockPos.containing(pos), owner, pos);
+        Projectile pearl = PearlMarker.createPearlToDispenseAndPlaceMarker(level,
+                findShooterBlock(level, pos, facing), owner, pos);
 
         pearl.shoot(facing.x, facing.y, facing.z, scaledPower, inaccuracy);
 
         pearl.setPos(pos);
         level.addFreshEntity(pearl);
         return true;
+    }
+
+    private static BlockPos findShooterBlock(ServerLevel level, Vec3 firePos, Vec3 facing) {
+        BlockPos behindMuzzle = BlockPos.containing(firePos.subtract(facing.normalize().scale(0.5)));
+        if (PearlMarker.isTeleportableBlock(level.getBlockState(behindMuzzle))) return behindMuzzle;
+        return BlockPos.containing(firePos);
     }
 }
