@@ -5,6 +5,7 @@ import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
@@ -19,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -417,5 +419,14 @@ public class BlockUtil {
         return part == BedPart.FOOT ? dir : dir.getOpposite();
     }
 
+    @Nullable
+    public static BlockEntity getBlockEntitySafely(BlockGetter world, BlockPos pos) {
+        try {
+            return world.getBlockEntity(pos);
+        } catch (Exception e) {
+            Supplementaries.LOGGER.error("Failed to access block entity at {}", pos, e);
+            return null;
+        }
+    }
 
 }

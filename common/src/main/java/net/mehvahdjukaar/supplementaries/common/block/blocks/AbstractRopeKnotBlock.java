@@ -7,10 +7,10 @@ import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.block.IRotatable;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlock;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.PostType;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.RopeKnotBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -123,12 +123,8 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
-            try {
-                return tile.getShape();
-            } catch (Exception e) {
-                Supplementaries.LOGGER.error("Failed to get block shape for rope knot block at {}", pos);
-            }
+        if (BlockUtil.getBlockEntitySafely(world, pos) instanceof RopeKnotBlockTile tile) {
+            return tile.getShape();
         }
         return super.getShape(state, world, pos, context);
     }
@@ -145,12 +141,8 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (world.getBlockEntity(pos) instanceof RopeKnotBlockTile tile) {
-            try {
-                return tile.getCollisionShape();
-            } catch (Exception e) {
-                Supplementaries.LOGGER.error("Failed to get collision shape for rope knot block at {}", pos);
-            }
+        if (BlockUtil.getBlockEntitySafely(world, pos) instanceof RopeKnotBlockTile tile) {
+            return tile.getCollisionShape();
         }
         return super.getCollisionShape(state, world, pos, context);
     }

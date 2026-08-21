@@ -4,6 +4,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.moonlight.api.block.MimicBlock;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.FrameBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
@@ -97,7 +98,7 @@ public class FrameBlock extends MimicBlock implements EntityBlock, IFrameBlock {
     @Override
     public VoxelShape getOcclusionShape(BlockState state, BlockGetter reader, BlockPos pos) {
         if (state.getValue(HAS_BLOCK)) {
-            if (reader.getBlockEntity(pos) instanceof FrameBlockTile tile && !tile.getHeldBlock().isAir()) {
+            if (BlockUtil.getBlockEntitySafely(reader, pos) instanceof FrameBlockTile tile && !tile.getHeldBlock().isAir()) {
                 return Shapes.block();
             }
         }

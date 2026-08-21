@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BellowsBlockTile;
+import net.mehvahdjukaar.supplementaries.common.utils.BlockUtil;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
@@ -68,7 +69,7 @@ public class BellowsBlock extends Block implements EntityBlock {
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         if (context instanceof EntityCollisionContext &&
-                worldIn.getBlockEntity(pos) instanceof BellowsBlockTile tile) {
+                BlockUtil.getBlockEntitySafely(worldIn, pos) instanceof BellowsBlockTile tile) {
             float height = tile.getHeight(1);
             if (state.getValue(FACING).getAxis() == Direction.Axis.Y) {
                 return createVoxelShapeY(height);
