@@ -28,6 +28,8 @@ public class FeatherBlock extends Block {
 
     private static final TreeMap<Float, VoxelShape> COLLISIONS;
 
+    private static final double WALK_KICK_RISE = 0.015;
+
     static {
         COLLISIONS = new TreeMap<>();
         float y = (float) COLLISION_SHAPE.max(Direction.Axis.Y);
@@ -77,17 +79,21 @@ public class FeatherBlock extends Block {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos blockPos, Entity entity) {
-        if (!level.isClientSide) {
+        //client side only, no point networking a kicked up feather
+        if (level.isClientSide) {
             if (!(entity instanceof LivingEntity) || entity.getBlockStateOn().is(this)) {
 
                 RandomSource random = level.getRandom();
                 boolean isMoving = entity.xOld != entity.getX() || entity.zOld != entity.getZ();
                 if (isMoving && random.nextInt(10) == 0) {
-                    double dy = 0.001;
-
-                    NetworkHelper.sendToAllClientPlayersInParticleRange((ServerLevel) level, blockPos,
-                            new ClientBoundParticlePacket(entity.position(), ClientBoundParticlePacket.Kind.FEATHER,
-                                    new Vec3(0, dy, 0), 1));
+                    Vec3 p = entity.position();
+                    level.addParticle(ModParticles.FEATHER_PARTICLE.get(),
+                            p.x + random.nextGaussian() * 0.35,
+                            p.y,
+                            p.z + random.nextGaussian() * 0.35,
+                            random.nextGaussian() * 0.007,
+                            WALK_KICK_RISE,
+                            random.nextGaussian() * 0.007);
                 }
             }
         }

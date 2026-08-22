@@ -11,10 +11,19 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
 public class FeatherParticle extends TextureSheetParticle {
-    private final float rotSpeed;
 
-    private boolean fallingAnim = false;
-    private int animationOffset;
+    //each feather texture is drawn at a different tilt. this cancels it out so they all spin around the same axis
+    private static final float[] SPRITE_TILTS = {43, 0, -16};
+    private static final int GROUND_LIFETIME = 20;
+    private static final int FADE_TICKS = 10;
+    //how fast the flutter dies down, in ticks
+    private static final double FLUTTER_DAMPING = 20;
+
+    private final float rotSpeed;
+    private final int spinPhaseOffset;
+
+    private boolean fluttering = false;
+    private int flutterStartAge;
     private float rotOffset = 0;
     private int groundTime = 0;
 
@@ -22,22 +31,21 @@ public class FeatherParticle extends TextureSheetParticle {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn);
         this.quadSize *= (float) (1.3125F + this.random.nextFloat() * 0.15);
         this.lifetime = 360 + this.random.nextInt(60);
-        this.rotSpeed = 2f * (0.045f + this.random.nextFloat() * 0.08f) + ((float) speedY - 0.03f);
-        this.animationOffset = (int) ((this.random.nextFloat() * ((float) Math.PI * 2F)) / this.rotSpeed);
+        this.rotSpeed = Mth.clamp(2f * (0.045f + this.random.nextFloat() * 0.08f) + ((float) speedY - 0.03f), 0.02f, 0.5f);
+        this.spinPhaseOffset = (int) ((this.random.nextFloat() * ((float) Math.PI * 2F)) / this.rotSpeed);
         this.xd = speedX + (this.random.nextFloat() * 2.0D - 1.0D) * 0.008F;
-        this.yd = speedY; //+ (this.random.nextFloat() * 2.0D - 1.0D) * (double) 0.05F;
+        this.yd = speedY;
         this.zd = speedZ + (this.random.nextFloat() * 2.0D - 1.0D) * 0.008F;
         this.gravity = 0.007F;
     }
 
-    public void setRotOffset(int spriteIndex) {
-        int[] offsets = new int[]{43, 0, -16};
-        this.rotOffset = offsets[spriteIndex] * Mth.DEG_TO_RAD;
+    private void setRotOffset(int spriteIndex) {
+        this.rotOffset = SPRITE_TILTS[spriteIndex % SPRITE_TILTS.length] * Mth.DEG_TO_RAD;
     }
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     @Override
@@ -45,7 +53,7 @@ public class FeatherParticle extends TextureSheetParticle {
         this.xo = this.x;
         this.yo = this.y;
         this.zo = this.z;
-        if (++this.age >= this.lifetime || this.groundTime > 20) {
+        if (++this.age >= this.lifetime || this.groundTime > GROUND_LIFETIME) {
             this.remove();
         } else {
             this.yd -= 0.04D * (double) this.gravity;
@@ -55,70 +63,46 @@ public class FeatherParticle extends TextureSheetParticle {
             this.yd *= this.friction;
             this.zd *= this.friction;
 
-            //this.yd = Math.max(this.yd, -0.02F); //0.008
-
-            if (this.onGround && this.yd > 0) {
-                this.onGround = false;
-            }
-
             if (!this.onGround) {
 
-                if (!this.fallingAnim) {
-                    float rot = (float) (((this.age + this.animationOffset) * this.rotSpeed) % (2 * Math.PI));
+                if (!this.fluttering) {
+                    float rot = (float) (((this.age + this.spinPhaseOffset) * this.rotSpeed) % (2 * Math.PI));
 
+                    //wait for the spin to come back around to flat before handing over, so the angle doesn't jump
                     if (this.yd <= 0 && rot > 0 && rot < 0.01 + this.rotSpeed * 2) {
-                        this.fallingAnim = true;
-                        if (this.oRoll > 6) {
-                            //this.oRoll = (float) (this.oRoll - Math.PI*2);
-                        }
-                        this.animationOffset = this.age;
+                        this.fluttering = true;
+                        this.flutterStartAge = this.age;
                     }
 
                     this.oRoll = this.roll;
                     this.roll = rot;
 
                 } else {
-                    int t = this.age - this.animationOffset;
+                    int t = this.age - this.flutterStartAge;
 
-                    //0.5
-                    //frequency scaling
-                    //TODO: tweak these 2
-                    double freq = 1 - this.rotSpeed; //ClientConfigs.general.TEST1.get() - this.rotSpeed
-
-                    //attenuation
-                    double k = 20 * 1d;//ClientConfigs.general.TEST2.get();
-
-                    //minimum amplitude
-                    float min = (float) (freq / 2f);
-
-                    float amp = (float) ((freq - min) * Math.exp(-t / k)) + min;
-
-                    //amp(0)
-                    float w = (float) (this.rotSpeed / (freq));
+                    double swingFreq = 1 - this.rotSpeed;
+                    float minAmplitude = (float) (swingFreq / 2f);
+                    float amplitude = (float) ((swingFreq - minAmplitude) * Math.exp(-t / FLUTTER_DAMPING)) + minAmplitude;
+                    float angularSpeed = (float) (this.rotSpeed / swingFreq);
 
                     this.oRoll = this.roll;
-                    this.roll = Mth.sin(t * w) * amp; //(float) Math.PI * this.rotSpeed * 1.6F;
-                    /*
-                    float amp = 0.5f;
-                    if(ageWithOffset < 30){
-                        amp += (30 - ageWithOffset)*0.01;
-                        this.rotSpeed -= 0.002f;
-                    }*/
-
-
+                    this.roll = Mth.sin(t * angularSpeed) * amplitude;
                 }
             } else {
                 this.groundTime++;
                 this.oRoll = this.roll;
                 this.yd = 0.0D;
             }
+
+            int ticksLeft = Math.min(this.lifetime - this.age, GROUND_LIFETIME - this.groundTime);
+            this.alpha = ticksLeft >= FADE_TICKS ? 1 : Math.max(0, ticksLeft / (float) FADE_TICKS);
         }
     }
 
     @Override
     public void render(VertexConsumer builder, Camera camera, float partialTicks) {
         Quaternionf quaternion;
-        if (this.roll == 0.0F) {
+        if (this.roll == 0.0F && this.rotOffset == 0.0F) {
             quaternion = camera.rotation();
         } else {
             quaternion = new Quaternionf(camera.rotation());
@@ -134,10 +118,11 @@ public class FeatherParticle extends TextureSheetParticle {
     @Override
     protected void renderRotatedQuad(VertexConsumer vertexConsumer, Camera camera, Quaternionf quaternionf, float f) {
         Vec3 vec3 = camera.getPosition();
-        float offset = 0.125f;
+        //lift by the half extent so a landed feather rests on the surface instead of sinking into it
+        float lift = this.getQuadSize(f);
 
         float g = (float) (Mth.lerp(f, this.xo, this.x) - vec3.x());
-        float h = (float) (Mth.lerp(f, this.yo, this.y) - vec3.y()) + offset;
+        float h = (float) (Mth.lerp(f, this.yo, this.y) - vec3.y()) + lift;
         float i = (float) (Mth.lerp(f, this.zo, this.z) - vec3.z());
         this.renderRotatedQuad(vertexConsumer, quaternionf, g, h, i, f);
     }
@@ -153,10 +138,9 @@ public class FeatherParticle extends TextureSheetParticle {
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
             FeatherParticle particle = new FeatherParticle(worldIn, x, y, z, xSpeed, ySpeed, zSpeed);
-            particle.setColor(1, 1, 1);
-            int i = particle.random.nextInt(3); //hard coding sprite set size (3). ugly
+            int i = particle.random.nextInt(SPRITE_TILTS.length);
             particle.setRotOffset(i);
-            particle.setSprite(spriteSet.get(i, 2));
+            particle.setSprite(spriteSet.get(i, SPRITE_TILTS.length - 1));
             return particle;
         }
     }
