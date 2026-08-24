@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.client.renderers.entities.models;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.mehvahdjukaar.moonlight.api.client.anim.KeyframeAnimationHandler;
+import net.mehvahdjukaar.moonlight.api.client.model.RootModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.SkibidiAnimations;
 import net.mehvahdjukaar.supplementaries.common.entities.HatStandEntity;
 import net.minecraft.client.model.HumanoidModel;
@@ -14,7 +16,7 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRootModel {
+public class HatStandModel extends HumanoidModel<HatStandEntity> implements RootModel {
 
     private final ModelPart basePlate;
     private final ModelPart neck;
@@ -72,7 +74,7 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
     }
 
     @Override
-    public ModelPart getRoot() {
+    public ModelPart root() {
         return root;
     }
 
@@ -86,7 +88,7 @@ public class HatStandModel extends HumanoidModel<HatStandEntity> implements IRoo
         Pose pose = entity.getPose();
         if (pose != Pose.STANDING) {
 
-            GenericAnimationStuff.animate(this, entity.skibidiAnimation, SkibidiAnimations.DEFAULT, ageInTicks, 1.24f);
+            KeyframeAnimationHandler.animate(this, entity.skibidiAnimation, SkibidiAnimations.DEFAULT, ageInTicks, 1.24f);
 
             dummyHead.y += pose == Pose.SPIN_ATTACK ? 0 : 9;
 

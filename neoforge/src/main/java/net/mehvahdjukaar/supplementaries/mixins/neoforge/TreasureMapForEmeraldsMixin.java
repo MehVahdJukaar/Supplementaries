@@ -56,6 +56,7 @@ public abstract class TreasureMapForEmeraldsMixin {
                 ResourceLocation decoration = this.destinationType.getKey().location();
                 ItemStack map = QuarkCompat.makeAdventurerQuill(serverLevel, this.destination,
                         100, true, 2, decoration, null, 0);
+                if (map.isEmpty()) return;
                 map.set(DataComponents.CUSTOM_NAME, Component.translatable(this.displayName));
                 int uses = 2;
                 int xp = (int) ((this.villagerXp * this.maxUses) / (float) uses);
