@@ -29,12 +29,13 @@ public class ConfigButton extends Button {
     private static final int GEAR_SIZE = 16;
     private static final int ANCHOR_SPACING = 4;
     private static final int CORNER_MARGIN = 4;
+    private static final int BUTTON_SIZE = 20;
+    private static final int BOTTOM_TEXT_CLEARANCE = 12;
 
-    // sends the player to every mod's configs, so it wears a gear instead of our letter
     private final boolean opensModList;
 
     public ConfigButton(int x, int y, boolean opensModList) {
-        super(x, y, 20, 20, Component.literal("s"), b -> ((ConfigButton) b).open(), Button.DEFAULT_NARRATION);
+        super(x, y, BUTTON_SIZE, BUTTON_SIZE, Component.literal("s"), b -> ((ConfigButton) b).open(), Button.DEFAULT_NARRATION);
         this.opensModList = opensModList;
     }
 
@@ -55,15 +56,21 @@ public class ConfigButton extends Button {
         if (!(screen instanceof TitleScreen) && !(screen instanceof PauseScreen)) return;
 
         AbstractWidget anchor = findAnchorButton(listeners);
-        int x = anchor == null ? CORNER_MARGIN : anchor.getX() + anchor.getWidth() + ANCHOR_SPACING;
-        int y = anchor == null ? CORNER_MARGIN : anchor.getY();
+        int x;
+        int y;
+        if (anchor != null) {
+            x = anchor.getX() + anchor.getWidth() + ANCHOR_SPACING;
+            y = anchor.getY();
+        } else {
+            x = CORNER_MARGIN;
+            y = screen.height - BUTTON_SIZE - CORNER_MARGIN - BOTTOM_TEXT_CLEARANCE;
+        }
 
         ConfigButton button = new ConfigButton(x, y + ClientConfigs.General.CONFIG_BUTTON_Y_OFF.get(),
                 ClientConfigs.General.CONFIG_BUTTON_OPENS_MOD_LIST.get());
         addOnTop(button, listeners, adder, remover);
     }
 
-    // menus that have none of these get the button in the corner instead
     private static AbstractWidget findAnchorButton(List<? extends GuiEventListener> listeners) {
         List<String> targets = Arrays.asList(
                 Component.translatable("menu.online").getString(),
@@ -85,7 +92,6 @@ public class ConfigButton extends Button {
         adder.accept(button);
         for (AbstractWidget w : covered) {
             remover.accept(w);
-            // it can refuse to come out, and adding it back then would leave two of it
             if (!listeners.contains(w)) adder.accept(w);
         }
     }
@@ -111,7 +117,6 @@ public class ConfigButton extends Button {
         graphics.pose().popPose();
     }
 
-    // the label is kept for narration, it just isn't drawn under the gear
     @Override
     public void renderString(GuiGraphics graphics, Font font, int color) {
         if (!this.opensModList) super.renderString(graphics, font, color);
