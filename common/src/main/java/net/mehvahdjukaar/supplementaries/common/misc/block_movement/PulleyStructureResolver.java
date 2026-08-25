@@ -77,8 +77,10 @@ public class PulleyStructureResolver {
         for (PulleyInfo pulley : pulleys) {
             if (!addChain(pulley)) return false;
         }
-        //indexed, addBranchingBlocks appends to toPush while we walk it
-        for (BlockPos pos : toPush) {
+        //indexed on purpose, addBranchingBlocks appends to toPush while we walk it
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < toPush.size(); i++) {
+            BlockPos pos = toPush.get(i);
             if (ropePositions.contains(pos)) continue;
             if (SuppPlatformStuff.isSticky(level.getBlockState(pos)) && !addBranchingBlocks(pos)) {
                 return false;

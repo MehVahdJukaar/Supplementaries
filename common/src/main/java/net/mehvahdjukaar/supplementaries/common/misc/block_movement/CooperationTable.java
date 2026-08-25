@@ -35,7 +35,7 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
         if (this.attempts.size() <= 1) return cooperators;
         for (Map.Entry<Long, A> entry : this.attempts.entrySet()) {
             A attempt = entry.getValue();
-            if (currentTick - attempt.tick() > MAX_AGE) continue;
+            if (isStale(currentTick, attempt.tick())) continue;
             BlockPos candidate = BlockPos.of(entry.getKey());
             if (candidate.equals(primary)) continue;
             if (!isCooperator.test(candidate, attempt)) continue;
@@ -56,7 +56,12 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
     }
 
     private void purge(long currentTick) {
-        this.attempts.entrySet().removeIf(e -> currentTick - e.getValue().tick() > MAX_AGE);
-        this.handled.entrySet().removeIf(e -> currentTick - e.getValue() > MAX_AGE);
+        this.attempts.entrySet().removeIf(e -> isStale(currentTick, e.getValue().tick()));
+        this.handled.entrySet().removeIf(e -> isStale(currentTick, e.getValue()));
+    }
+
+    private static boolean isStale(long currentTick, long tick) {
+        long age = currentTick - tick;
+        return age < 0 || age > MAX_AGE;
     }
 }

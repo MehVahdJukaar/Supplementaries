@@ -1,2 +1,2 @@
-- misc fixes
-- fixes #2142
+- fixed an issue with pulleys
+- fixed some recipes

@@ -218,6 +218,8 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     }
 
     private static boolean canJoinResolve(Level level, BlockPos cooperatorPos, Block ropeBlock, Direction ropeHangDir) {
+        //getBlockEntity would force load the chunk
+        if (!level.isLoaded(cooperatorPos)) return false;
         if (!(level.getBlockEntity(cooperatorPos) instanceof PulleyBlockTile cooperatorTile)) return false;
         //its own gate just skipped this step, pulling it in would hit the same transient air
         if (isChainAnimating(level, cooperatorPos, ropeHangDir)) return false;
