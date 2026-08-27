@@ -67,6 +67,12 @@
         "has_statue": true,
         "uuid": "0acaca97-ca7d-4b90-ba4b-f524a5101cd4"
     },
+    "jinou": {
+      "has_globe": true
+    },
+    "drong": {
+      "has_globe": true
+    },
     "goldninja100gn": {
       "uuid": "5ab06274-4c85-455c-88a9-e269e9ec5bc1",
       "has_statue": true
