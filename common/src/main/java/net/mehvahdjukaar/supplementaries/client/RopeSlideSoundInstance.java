@@ -2,10 +2,8 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -27,7 +25,6 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
         this.delay = 1; //wait a second before starting
         this.volume = 0.0F;
         this.ropeTicks = 0;
-        SoundManager soundManager = Minecraft.getInstance().getSoundManager();
     }
 
     @Override
@@ -73,14 +70,13 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
 
     @Override
     public boolean canPlaySound() {
-        return !this.player.isRemoved() && !this.player.isSilent() && player.onClimbable();
+        return !this.player.isRemoved() && !this.player.isSilent();
     }
 
     // why is this needed? because we want a silent sound that gets
     // activated on will BUT if we set volume to 0 that wont be enough as the game will still play it
     @Override
     protected void stop() {
-        //insert moe bar meme
         // this.soundManager.queueTickingSound(this);
         this.stopToggle = true;
     }
