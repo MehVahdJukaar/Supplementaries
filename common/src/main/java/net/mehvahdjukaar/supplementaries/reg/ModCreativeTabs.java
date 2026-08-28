@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
+import net.mehvahdjukaar.moonlight.api.platform.TabAdderHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.items.BambooSpikesTippedItem;
@@ -15,10 +14,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
@@ -28,7 +24,6 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class ModCreativeTabs {
@@ -47,7 +42,7 @@ public class ModCreativeTabs {
 
     public static void registerItemsToTabs(RegHelper.ItemToTabEvent event) {
 
-        TabAdder adder = new TabAdder(event);
+        var adder = new TabAdderHelper(event, CommonConfigs::isEnabled).intoSingleTab(MOD_TAB);
 
         List<Supplier<? extends ItemLike>> sconces = new ArrayList<>(ModRegistry.SCONCES);
         sconces.add(ModRegistry.SCONCE_LEVER);
@@ -250,7 +245,7 @@ public class ModCreativeTabs {
                 ModConstants.PRESENT_NAME,
                 ModRegistry.PRESENTS.values().toArray(Supplier[]::new));
 
-        event.addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(Items.INFESTED_DEEPSLATE), makeSpikeItems());
+        adder.event().addAfter(CreativeModeTabs.FUNCTIONAL_BLOCKS, i -> i.is(Items.INFESTED_DEEPSLATE), makeSpikeItems());
 
         adder.after(Items.INFESTED_DEEPSLATE, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.FODDER_NAME,
@@ -606,7 +601,7 @@ public class ModCreativeTabs {
                 ModRegistry.IRON_GATE);
 
         if (CompatHandler.QUARK && QuarkCompat.isGoldBarsOn()) {
-            adder.afterML("quark:gold_bars", CreativeModeTabs.BUILDING_BLOCKS,
+            adder.after("quark:gold_bars", CreativeModeTabs.BUILDING_BLOCKS,
                     ModConstants.IRON_GATE_NAME,
                     ModRegistry.GOLD_GATE);
         } else if (CommonConfigs.Building.GOLD_BARS_ENABLED.get()) {
@@ -651,177 +646,4 @@ public class ModCreativeTabs {
         }
         return items.toArray(ItemStack[]::new);
     }
-
-    public static final class TabAdder {
-        private final RegHelper.ItemToTabEvent event;
-
-        private final List<ItemStack> uniqueStacksAdded = new ArrayList<>();
-
-        public TabAdder(RegHelper.ItemToTabEvent event) {
-            this.event = event;
-        }
-
-        private static boolean isTagOn(String... tags) {
-            for (var t : tags)
-                if (BuiltInRegistries.ITEM.getTag(TagKey.create(Registries.ITEM, ResourceLocation.parse(t))).isPresent()) {
-                    return true;
-                }
-            return false;
-        }
-
-        private void before(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemStack... items) {
-            if (MOD_TAB != null) {
-                add(tab, items);
-            } else event.addBefore(tab, target, items);
-        }
-
-        private void before(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemLike... items) {
-            before(tab, target, Arrays.stream(items)
-                    .map(i -> i.asItem().getDefaultInstance()).toArray(ItemStack[]::new));
-        }
-
-        private void after(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemStack... items) {
-            if (MOD_TAB != null) {
-                add(tab, items);
-            } else event.addAfter(tab, target, items);
-        }
-
-        private void after(ResourceKey<CreativeModeTab> tab, Predicate<ItemStack> target, ItemLike... items) {
-            after(tab, target, Arrays.stream(items)
-                    .map(i -> i.asItem().getDefaultInstance()).toArray(ItemStack[]::new));
-        }
-
-        private void add(ResourceKey<CreativeModeTab> tab, ItemStack... items) {
-            ResourceKey<CreativeModeTab> tabKey = MOD_TAB == null ? tab : MOD_TAB.getKey();
-            for (ItemStack stack : items) {
-                if (isUnique(stack)) {
-                    event.add(tabKey, stack);
-                }
-            }
-        }
-
-        private void add(ResourceKey<CreativeModeTab> tab, ItemLike... items) {
-            add(tab, Arrays.stream(items)
-                    .map(i -> i.asItem().getDefaultInstance()).toArray(ItemStack[]::new));
-        }
-
-        private boolean isUnique(ItemStack stack) {
-            Preconditions.checkNotNull(stack);
-            Preconditions.checkNotNull(stack.getItem());
-            if (MOD_TAB == null) return true;
-            for (var s : uniqueStacksAdded) {
-                if (s.getItem() == stack.getItem()) {
-                    if (ItemStack.isSameItemSameComponents(s, stack)) {
-                        return false;
-                    }
-                }
-            }
-            uniqueStacksAdded.add(stack);
-            return true;
-        }
-
-        private void after(TagKey<Item> target,
-                           ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
-            after(i -> i.is(target), tab, key, items);
-        }
-
-        private void after(ItemLike target,
-                           ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
-            after(i -> i.is(target.asItem()), tab, key, items);
-        }
-
-        private void after(Predicate<ItemStack> targetPred,
-                           ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
-            if (CommonConfigs.isEnabled(key)) {
-                var first = items[0].get();
-                if (first instanceof ItemStack) {
-                    ItemStack[] entries = Arrays.stream(items).map(s -> (ItemStack) s.get()).toArray(ItemStack[]::new);
-                    after(tab, targetPred, entries);
-                } else if (first instanceof Collection<?>) {
-                    for (Object i : items) {
-                        if (!(i instanceof Collection<?> c)) continue;
-                        ItemLike[] entries = c.stream().map(s -> (ItemLike) s).toArray(ItemLike[]::new);
-                        after(tab, targetPred, entries);
-                    }
-                } else {
-                    ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
-                    after(tab, targetPred, entries);
-                }
-            }
-        }
-
-        private void before(TagKey<Item> target,
-                            ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
-            before(i -> i.is(target), tab, key, items);
-        }
-
-        private void before(ItemLike target,
-                            ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
-            before(i -> i.is(target.asItem()), tab, key, items);
-        }
-
-        private void before(Predicate<ItemStack> targetPred,
-                            ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
-            if (CommonConfigs.isEnabled(key)) {
-                if (items[0].get() instanceof ItemStack) {
-                    ItemStack[] entries = Arrays.stream(items).map(s -> (ItemStack) s.get()).toArray(ItemStack[]::new);
-                    before(tab, targetPred, entries);
-                } else {
-                    ItemLike[] entries = Arrays.stream(items).map(s -> (ItemLike) s.get()).toArray(ItemLike[]::new);
-                    before(tab, targetPred, entries);
-                }
-            }
-        }
-
-        private void add(ResourceKey<CreativeModeTab> tab, String key, Supplier<?>... items) {
-            if (CommonConfigs.isEnabled(key)) {
-                ItemLike[] entries = Arrays.stream(items).map((s -> (ItemLike) (s.get()))).toArray(ItemLike[]::new);
-                add(tab, entries);
-            }
-        }
-
-        private void afterML(Item target,
-                             ResourceKey<CreativeModeTab> tab, String key, String modLoaded,
-                             Supplier<?>... items) {
-            if (PlatHelper.isModLoaded(modLoaded)) {
-                after(target, tab, key, items);
-            }
-        }
-
-        private void afterML(String modTarget,
-                             ResourceKey<CreativeModeTab> tab, String key,
-                             Supplier<?>... items) {
-            ResourceLocation id = ResourceLocation.tryParse(modTarget);
-            BuiltInRegistries.ITEM.getOptional(id).ifPresent(target -> after(target, tab, key, items));
-        }
-
-        private void afterTL(Item target,
-                             ResourceKey<CreativeModeTab> tab, String key,
-                             List<String> tags,
-                             Supplier<?>... items) {
-            if (isTagOn(tags.toArray(String[]::new))) {
-                after(target, tab, key, items);
-            }
-        }
-
-        private void beforeML(Item target,
-                              ResourceKey<CreativeModeTab> tab,
-                              String key, String modLoaded,
-                              Supplier<?>... items) {
-            if (PlatHelper.isModLoaded(modLoaded)) {
-                before(target, tab, key, items);
-            }
-        }
-
-        private void beforeTL(Item target,
-                              ResourceKey<CreativeModeTab> tab, String key,
-                              List<String> tags,
-                              Supplier<?>... items) {
-            if (isTagOn(tags.toArray(String[]::new))) {
-                after(target, tab, key, items);
-            }
-        }
-    }
-
-
 }
