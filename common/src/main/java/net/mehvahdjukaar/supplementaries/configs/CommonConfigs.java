@@ -723,6 +723,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> PLUNDERER_ENABLED;
         public static final Supplier<Boolean> GALLEONS_ENABLED;
         public static final Supplier<Double> NAVAL_RAID_CHANCE;
+        public static final Supplier<Double> NAVAL_RAID_PLUNDERER_CHANCE;
         public static final Supplier<Double> CANNONBALL_POWER_SCALING;
         public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
 
@@ -872,6 +873,8 @@ public class CommonConfigs {
             GALLEONS_ENABLED = builder.feature(ModConstants.GALLEON_NAME);
             NAVAL_RAID_CHANCE = builder.comment("Chance for a raid wave to spawn in open water near the village instead of on land. Such waves arrive on boats steered by plunderers, which take the place of some of the wave pillagers. The rest swim along and hop on when a seat is free. Set to 0 to disable")
                     .define("naval_raid_chance", 0.75, 0, 1);
+            NAVAL_RAID_PLUNDERER_CHANCE = builder.comment("Chance for a naval wave pillager to be replaced by a plunderer. 1 replaces them all")
+                    .define("naval_raid_plunderer_chance", 0.5, 0, 1);
             builder.pop();
 
             PIRATE_DISC_ENABLED = builder.feature(ModConstants.PIRATE_DISC_NAME);

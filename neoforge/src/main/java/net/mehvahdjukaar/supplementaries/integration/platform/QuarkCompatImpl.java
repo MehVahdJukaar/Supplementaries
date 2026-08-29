@@ -29,6 +29,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
@@ -41,7 +42,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import org.jetbrains.annotations.Nullable;
 import org.violetmoon.quark.addons.oddities.block.be.MagnetizedBlockBlockEntity;
 import org.violetmoon.quark.addons.oddities.block.be.TinyPotatoBlockEntity;
@@ -270,17 +270,14 @@ public class QuarkCompatImpl {
     }
 
     public static float getEncumbermentFromBackpack(ItemStack stack) {
-        float j = 0;
-
-        if (stack.getItem() instanceof BackpackItem) {
-            var handlerOpt = stack.getCapability(Capabilities.ItemHandler.ITEM, null);
-            if (handlerOpt != null) {
-                for (int i = 0; i < handlerOpt.getSlots(); ++i) {
-                    ItemStack slotItem = handlerOpt.getStackInSlot(i);
-                    j += SackItem.getEncumber(slotItem);
-                }
-            }
+        if (!(stack.getItem() instanceof BackpackItem)) return 0;
+        //quark never registers an item handler cap for it so we read the component it keeps its items in
+        ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
+        if (contents == null) return 0;
+        float amount = 0;
+        for (ItemStack slotItem : contents.nonEmptyItems()) {
+            amount += SackItem.getEncumber(slotItem);
         }
-        return j;
+        return amount;
     }
 }

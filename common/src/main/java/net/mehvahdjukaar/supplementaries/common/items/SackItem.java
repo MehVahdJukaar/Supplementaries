@@ -45,7 +45,8 @@ public class SackItem extends BlockItem {
         if (slotItem.is(ModTags.OVERENCUMBERING)) {
             ItemContainerContents contents = slotItem.get(DataComponents.CONTAINER);
             if (contents != null) {
-                return contents != ItemContainerContents.EMPTY ? 1 : 0;
+                //cant compare against EMPTY, a sack thats been emptied and reloaded gets a fresh instance
+                return contents.nonEmptyStream().findAny().isPresent() ? 1 : 0;
             } else {
                 return slotItem.getCount() / (float) slotItem.getMaxStackSize();
             }

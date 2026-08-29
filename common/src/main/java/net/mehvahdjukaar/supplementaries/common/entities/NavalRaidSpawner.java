@@ -25,7 +25,6 @@ public final class NavalRaidSpawner {
 
     private static final int BOAT_SPREAD = 4;
     private static final int BOAT_POS_ATTEMPTS = 8;
-    private static final float PLUNDERER_REPLACE_CHANCE = 0.5F;
     private static final int BOARD_BOAT_GOAL_PRIORITY = 2;
     private static final int ABANDON_SHIP_GOAL_PRIORITY = 3;
     private static final int BOARD_BOAT_TRY_INTERVAL = 40;
@@ -46,7 +45,8 @@ public final class NavalRaidSpawner {
 
     // only some pillagers become captains. The rest swim and hitch a ride
     public static EntityType<?> navalRaiderType(EntityType<?> type, RandomSource random) {
-        boolean becomesPlunderer = type == EntityType.PILLAGER && random.nextFloat() < PLUNDERER_REPLACE_CHANCE;
+        boolean becomesPlunderer = type == EntityType.PILLAGER &&
+                random.nextFloat() < CommonConfigs.Functional.NAVAL_RAID_PLUNDERER_CHANCE.get();
         return becomesPlunderer ? ModEntities.PLUNDERER.get() : type;
     }
 

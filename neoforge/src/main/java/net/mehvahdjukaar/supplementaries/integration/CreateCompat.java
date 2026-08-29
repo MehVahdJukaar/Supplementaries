@@ -127,6 +127,14 @@ public class CreateCompat {
                 CreateRegistries.DISPLAY_SOURCE);
 
         RegHelper.register(
+                Supplementaries.res("wind_vane_source"), () -> {
+                    var obj = new WindVaneDisplaySource();
+                    DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.WIND_VANE_TILE.get(), List.of(obj));
+                    return obj;
+                },
+                CreateRegistries.DISPLAY_SOURCE);
+
+        RegHelper.register(
                 Supplementaries.res("item_display_source"), () -> {
                     var obj = new ItemDisplayDisplaySource();
                     DisplaySource.BY_BLOCK_ENTITY.register(ModRegistry.PEDESTAL_TILE.get(), List.of(obj));
