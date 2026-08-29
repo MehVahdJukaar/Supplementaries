@@ -20,10 +20,8 @@ public class IAmTheCaptainGoal extends Goal {
         if (this.mob.getVehicle() instanceof Boat b) {
             LivingEntity captain = b.getControllingPassenger();
             if (captain == null || captain == this.mob) return false;
-            if (captain.getType().is(ModTags.CAN_STEER_BOAT)) {
-                return false;
-            }
-
+            // someone who cant steer took the front seat
+            return !captain.getType().is(ModTags.CAN_STEER_BOAT);
         }
         return false;
     }

@@ -147,14 +147,18 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
 
     @Override
     protected void customServerAiStep() {
-        if (this.getControlledVehicle() instanceof Boat) {
-            this.moveControl = boatController;
-            this.navigation = boatNavigation;
-        } else {
-            this.moveControl = defaultController;
-            this.navigation = defaultNavigation;
-        }
+        updateBoatControls();
         super.customServerAiStep();
+    }
+
+    private void updateBoatControls() {
+        boolean driving = this.getControlledVehicle() instanceof Boat;
+        PathNavigation wantedNavigation = driving ? boatNavigation : defaultNavigation;
+        if (this.navigation != wantedNavigation) {
+            this.navigation.stop();
+            this.navigation = wantedNavigation;
+            this.moveControl = driving ? boatController : defaultController;
+        }
     }
 
     @Override
