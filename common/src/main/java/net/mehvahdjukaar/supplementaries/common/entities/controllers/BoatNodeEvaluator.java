@@ -154,9 +154,21 @@ public class BoatNodeEvaluator extends NodeEvaluator {
         return type == PathType.WATER ? WATER_MALUS : IMPASSABLE;
     }
 
+    // GoalUtilsMixin routes hasMalus here so random stroll picks water spots
+    public float getPathfindingMalus(PathType type, Mob mob) {
+        return getMalus(type);
+    }
+
     private PathType getCachedPathType(int x, int y, int z) {
         return pathTypeCache.computeIfAbsent(BlockPos.asLong(x, y, z),
                 l -> getPathTypeOfMob(currentContext, x, y, z, mob));
+    }
+
+    // called outside of a pathfind, where prepare() never ran
+    @Override
+    public PathType getPathType(Mob mob, BlockPos pos) {
+        this.entityHeight = Mth.floor(mob.getBbHeight() + 1.0F);
+        return super.getPathType(mob, pos);
     }
 
     @Override

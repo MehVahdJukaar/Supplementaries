@@ -869,6 +869,8 @@
   "supplementaries.configuration.cannonball.break_radius.description": "Radius of the 'explosion' when a cannonball hits a block. Set to 0 to disable",
   "supplementaries.configuration.plunderer": "Plunderer",
   "supplementaries.configuration.plunderer.galleon": "Galleon",
+  "supplementaries.configuration.plunderer.naval_raid_chance": "Naval Raid Chance",
+  "supplementaries.configuration.plunderer.naval_raid_chance.description": "Chance for a raid wave to spawn in open water near the village instead of on land. Such waves arrive on boats steered by plunderers, which take the place of the wave pillagers. Set to 0 to disable",
   "supplementaries.configuration.cannon.music_disc_heave_ho": "Music Disc Heave Ho",
   "supplementaries.configuration.present": "Present",
   "supplementaries.configuration.present.trapped_present": "Trapped Present",

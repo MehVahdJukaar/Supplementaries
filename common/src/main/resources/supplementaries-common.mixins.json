@@ -52,6 +52,7 @@
     "PlayerMixin",
     "PlayerProjectileMixin",
     "ProjectileWeaponItemMixin",
+    "RaidMixin",
     "RedMerchantSpawnerMixin",
     "ServerGamePacketListenerMixin",
     "ServerLevelMixin",
