@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.supplementaries.common.entities.goals.AbandonShipGoal;
+import net.mehvahdjukaar.supplementaries.common.entities.goals.BoardBoatGoal;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -10,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
@@ -23,7 +25,10 @@ public final class NavalRaidSpawner {
 
     private static final int BOAT_SPREAD = 4;
     private static final int BOAT_POS_ATTEMPTS = 8;
+    private static final float PLUNDERER_REPLACE_CHANCE = 0.5F;
+    private static final int BOARD_BOAT_GOAL_PRIORITY = 2;
     private static final int ABANDON_SHIP_GOAL_PRIORITY = 3;
+    private static final int BOARD_BOAT_TRY_INTERVAL = 40;
 
     public static boolean isEnabled() {
         return CommonConfigs.Functional.PLUNDERER_ENABLED.get() && CommonConfigs.Functional.NAVAL_RAID_CHANCE.get() > 0;
@@ -39,8 +44,10 @@ public final class NavalRaidSpawner {
         return isEnabled() && level.getFluidState(waveSpawnPos.below()).is(FluidTags.WATER);
     }
 
-    public static EntityType<?> navalRaiderType(EntityType<?> type) {
-        return type == EntityType.PILLAGER ? ModEntities.PLUNDERER.get() : type;
+    // only some pillagers become captains. The rest swim and hitch a ride
+    public static EntityType<?> navalRaiderType(EntityType<?> type, RandomSource random) {
+        boolean becomesPlunderer = type == EntityType.PILLAGER && random.nextFloat() < PLUNDERER_REPLACE_CHANCE;
+        return becomesPlunderer ? ModEntities.PLUNDERER.get() : type;
     }
 
     private static boolean isOpenWater(ServerLevel level, BlockPos heightmapPos) {
@@ -73,6 +80,14 @@ public final class NavalRaidSpawner {
             }
         }
 
+        if (captains.isEmpty() && !crew.isEmpty()) {
+            PlundererEntity captain = ModEntities.PLUNDERER.get().create(level);
+            if (captain != null) {
+                raid.joinRaid(wave, captain, spawnPos, false);
+                captains.add(captain);
+            }
+        }
+
         List<Boat> boats = new ArrayList<>();
         for (PlundererEntity captain : captains) {
             boats.add(spawnCaptainedBoat(level, raid, captain, spawnPos));
@@ -80,19 +95,10 @@ public final class NavalRaidSpawner {
 
         int nextFreeBoat = 0;
         for (Raider raider : crew) {
-            Boat boat;
             if (nextFreeBoat < boats.size()) {
-                boat = boats.get(nextFreeBoat++);
-            } else {
-                PlundererEntity extraCaptain = ModEntities.PLUNDERER.get().create(level);
-                if (extraCaptain == null) break;
-                raid.joinRaid(wave, extraCaptain, spawnPos, false);
-                boat = spawnCaptainedBoat(level, raid, extraCaptain, spawnPos);
-                boats.add(boat);
-                nextFreeBoat = boats.size();
+                raider.startRiding(boats.get(nextFreeBoat++), true);
             }
-            raider.startRiding(boat, true);
-            ensureCanAbandonShip(raider);
+            ensureNavalGoals(raider);
         }
     }
 
@@ -125,11 +131,17 @@ public final class NavalRaidSpawner {
         return (float) (Mth.atan2(dz, dx) * Mth.RAD_TO_DEG) - 90;
     }
 
-    private static void ensureCanAbandonShip(Mob mob) {
-        boolean hasGoal = mob.goalSelector.getAvailableGoals().stream()
-                .anyMatch(g -> g.getGoal() instanceof AbandonShipGoal);
-        if (!hasGoal) {
+    private static void ensureNavalGoals(Mob mob) {
+        if (!hasGoal(mob, AbandonShipGoal.class)) {
             mob.goalSelector.addGoal(ABANDON_SHIP_GOAL_PRIORITY, new AbandonShipGoal(mob));
         }
+        if (!hasGoal(mob, BoardBoatGoal.class)) {
+            mob.goalSelector.addGoal(BOARD_BOAT_GOAL_PRIORITY, new BoardBoatGoal(mob, 1, BOARD_BOAT_TRY_INTERVAL, true));
+        }
+    }
+
+    private static boolean hasGoal(Mob mob, Class<? extends Goal> goalClass) {
+        return mob.goalSelector.getAvailableGoals().stream()
+                .anyMatch(g -> goalClass.isInstance(g.getGoal()));
     }
 }

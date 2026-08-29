@@ -54,7 +54,7 @@ public abstract class RaidMixin {
     private Entity supp$swapRosterRaiderType(EntityType<?> type, Level level, Operation<Entity> original,
                                              @Share("naval") LocalBooleanRef naval) {
         if (naval.get()) {
-            type = NavalRaidSpawner.navalRaiderType(type);
+            type = NavalRaidSpawner.navalRaiderType(type, this.level.random);
         }
         return original.call(type, level);
     }

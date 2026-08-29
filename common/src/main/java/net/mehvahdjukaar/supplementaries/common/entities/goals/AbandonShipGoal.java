@@ -38,6 +38,8 @@ public class AbandonShipGoal extends Goal {
                 //my captain my captain
                 return false;
             }
+            // flyers like vexes never navigate, so the stuck checks below cant free them
+            if (this.mob.isNoGravity()) return true;
             if (!vehicle.isInWater()) return true;
             if (vehicle.onGround()) return true;
             PathNavigation nav = this.mob.getNavigation();
