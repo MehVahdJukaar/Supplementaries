@@ -17,28 +17,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CelebrateVillagersSurvivedRaid.class)
 public class CelebrateVillagersSurvivedRaidMixin {
 
-    @Inject(method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V", at = {
-            @At("TAIL")
-    })
-    protected void tick(ServerLevel level, Villager owner, long gameTime, CallbackInfo ci) {
-        RandomSource randomSource = owner.getRandom();
-        if (randomSource.nextInt(200) == 0) {
-            if (!CommonConfigs.Tools.POPPER_ENABLED.get()) return;
+    @Inject(method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/npc/Villager;J)V",
+            at = @At("TAIL"))
+    protected void supp$popConfetti(ServerLevel level, Villager owner, long gameTime, CallbackInfo ci) {
+        RandomSource random = owner.getRandom();
+        if (random.nextInt(200) != 0) return;
+        if (!CommonConfigs.Tools.POPPER_ENABLED.get()) return;
 
-            Vec3 viewVector = owner.getLookAngle();
-            Vec3 spawnPos = owner.getEyePosition().add(viewVector.scale(0.2)).add(0d, -0.25, 0d);
+        float upwardsTilt = 30;
+        Vec3 dir = owner.calculateViewVector(owner.getXRot() - random.nextFloat() * upwardsTilt,
+                owner.getYRot()).normalize();
+        Vec3 spawnPos = owner.getEyePosition().add(dir.scale(0.2)).add(0, -0.25, 0);
 
-            float degInc = 30;
-            viewVector = owner.calculateViewVector(owner.getXRot() +
-                    randomSource.nextFloat() * degInc, owner.getYRot()).normalize();
-            ClientBoundParticlePacket packet = new ClientBoundParticlePacket(spawnPos, ClientBoundParticlePacket.Kind.CONFETTI, viewVector);
-
-            if (!level.isClientSide) {
-                NetworkHelper.sendToAllClientPlayersTrackingEntity(owner, packet);
-
-                level.gameEvent(owner, GameEvent.EXPLODE, owner.position());
-            }
-        }
-
+        NetworkHelper.sendToAllClientPlayersTrackingEntity(owner,
+                new ClientBoundParticlePacket(spawnPos, ClientBoundParticlePacket.Kind.CONFETTI, dir));
+        level.gameEvent(owner, GameEvent.EXPLODE, owner.position());
     }
 }

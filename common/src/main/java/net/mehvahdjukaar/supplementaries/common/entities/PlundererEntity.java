@@ -254,7 +254,6 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
             ItemStack itemStack = this.getMainHandItem();
             if (itemStack.is(Items.GOLDEN_SWORD)) {
                 //TODO: proper ench provider
-                //TODO: confetti villagers
                 EnchantmentHelper.enchantItemFromProvider(itemStack, level.registryAccess(),
                         VanillaEnchantmentProviders.RAID_VINDICATOR_POST_WAVE_5, difficulty, random);
             }
