@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client;
 
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
@@ -29,6 +30,8 @@ public class RopeSlideSoundInstance extends AbstractTickableSoundInstance {
 
     @Override
     public void tick() {
+        //some mod ticks us with no client player. shouldnt be possible, onClimbable needs it
+        if (Minecraft.getInstance().player == null) return;
         this.stopToggle = false;
         this.x = this.player.getX();
         this.y = this.player.getY();
