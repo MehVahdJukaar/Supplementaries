@@ -1,1 +1,3 @@
-- fixed a very rare issue on servers
+- plunderers can now spawn in raid when raid spawn on water
+- they will have boats that other pillagers can use
+- improved plunderers boat navigation
