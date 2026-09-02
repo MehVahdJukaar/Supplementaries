@@ -49,8 +49,7 @@ public class PistonBaseBlockMixin {
             //nonsense check, idk what mod triggered this. pls report if you know
             throw new IllegalStateException("Another mod passed a null moving-piston BlockEntity into " +
                     "Level.setBlockEntity during PistonBaseBlock.moveBlocks. This is not a Supplementaries bug; " +
-                    "some other mod is overriding MovingPistonBlock.newMovingBlockEntity and returning null. " +
-                    "Carpet is a known mod that does this.");
+                    "some other mod is overriding MovingPistonBlock.newMovingBlockEntity and returning null. ");
         }
         if (!PistonMovementHelper.isBEMovementIsHandledByUs()) {
             original.call(level, movingPiston);
