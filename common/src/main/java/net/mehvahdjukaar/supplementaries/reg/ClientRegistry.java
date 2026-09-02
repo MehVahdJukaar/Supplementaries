@@ -412,8 +412,6 @@ public class ClientRegistry {
         event.register(ModRegistry.CANNON_TILE.get(), CannonBlockTileRenderer::new);
         event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
         event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), SlidyBlockRenderer::new);
-        // Custom renderer: vanilla piston rendering + a leading phantom block, used to render
-        // the consumed top rope sliding into the pulley alongside the chain shift.
         event.register(ModRegistry.MOVING_PULLEY_BLOCK_TILE.get(), MovingPulleyRenderer::new);
     }
 

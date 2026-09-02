@@ -79,25 +79,6 @@ public class ClientConfigs {
         FABULOUS
     }
 
-    /**
-     * How the topmost pulley-driven moving block is clipped against the pulley body so it appears
-     * to disappear into / emerge from it.
-     * <ul>
-     *   <li>{@code OFF}: no masking; the moving block can poke through the pulley.</li>
-     *   <li>{@code STENCIL}: writes a 1-block stencil volume at the pulley and tests against it
-     *       only when drawing the carried block. Doesn't touch the depth buffer, so translucents
-     *       (slime, glass, water) drawn later in the frame are unaffected.</li>
-     *   <li>{@code DEPTH}: writes a 1-block depth volume at the pulley. Simpler, no stencil
-     *       requirements, but its depth values persist through the rest of the frame and can
-     *       cause translucent layers (slime etc.) drawn after BE rendering to clip incorrectly.</li>
-     * </ul>
-     */
-    public enum PulleyMaskMode {
-        OFF,
-        STENCIL,
-        DEPTH
-    }
-
     public static class Items {
 
         public static final Supplier<QuiverLayer.QuiverMode> QUIVER_RENDER_MODE;
@@ -340,7 +321,6 @@ public class ClientConfigs {
         public static final Supplier<Boolean> SPEAKER_BLOCK_MUTE;
         public static final Supplier<Double> ROPE_WOBBLE_AMPLITUDE;
         public static final Supplier<Double> ROPE_WOBBLE_PERIOD;
-        public static final Supplier<PulleyMaskMode> PULLEY_MASK_MODE;
 
         static {
 
@@ -458,18 +438,6 @@ public class ClientConfigs {
             ROPE_WOBBLE_PERIOD = builder.comment("Period of rope wobbling effect")
                     .define("wobbling_period", 12d, 0.01, 200);
             builder.pop();
-
-            builder.icon("pulley_block").push("pulley");
-            PULLEY_MASK_MODE = builder.comment("""
-                            How the topmost moving block of a continuous-mode pulley is clipped
-                            against the pulley body so it appears to disappear into / emerge from it.
-                             - OFF: no masking, the block may poke through the pulley
-                             - STENCIL: clean clip using stencil buffer (recommended)
-                             - DEPTH: simpler depth-buffer clip; can interact poorly with translucent
-                               blocks (slime, glass, water) rendered after BE pass""")
-                    .define("mask_mode", PulleyMaskMode.OFF);
-            builder.pop();
-
 
             builder.pop();
         }

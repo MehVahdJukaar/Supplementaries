@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-// attached to each PistonStructureResolver, vanilla or Zeta's. the mixins forward here
+//attached to each PistonStructureResolver, vanilla or Zeta's
 public class PistonCoopResolverState {
 
     private Set<BlockPos> cooperatingPistons = Collections.emptySet();
@@ -28,14 +28,14 @@ public class PistonCoopResolverState {
 
     //loose ceiling while the chain builds, gateResolve does the real check after
     public int getPushLimit() {
-        return Math.max(1, cooperatingPistons.size()) * PistonMovementHelper.perPistonPushLimit();
+        return Math.max(1, cooperatingPistons.size()) * PistonMovementHelper.getPerPistonPushLimit();
     }
 
     public Iterable<BlockPos> getContributingCooperators() {
         return contributingCooperators;
     }
 
-    //zeta delegates resolve to its vanilla parent, so the gate runs on the parent's state
+    // zeta delegates resolve to its vanilla parent, so the gate runs on the parent's state
     public void adoptContributingFrom(PistonCoopResolverState other) {
         this.contributingCooperators = other.contributingCooperators;
     }
@@ -43,6 +43,7 @@ public class PistonCoopResolverState {
     //drops cooperators that didn't contribute, then checks the pooled budget
     public boolean gateResolve(boolean originalResult, BlockPos pistonPos, List<BlockPos> toPush) {
         if (!originalResult) return false;
+
         if (this.cooperatingPistons.isEmpty()) return true;
         if (this.pistonDirection == null) return true;
 
@@ -54,7 +55,7 @@ public class PistonCoopResolverState {
             if (toPush.contains(start)) contributing.add(cooperatorPos);
         }
         this.contributingCooperators = contributing;
-        return toPush.size() <= (1 + contributing.size()) * PistonMovementHelper.perPistonPushLimit();
+        return toPush.size() <= (1 + contributing.size()) * PistonMovementHelper.getPerPistonPushLimit();
     }
 
     public boolean wrapEqualsCheck(boolean originalResult, BlockPos candidate) {

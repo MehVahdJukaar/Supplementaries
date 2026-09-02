@@ -53,10 +53,12 @@ public class CommonConfigs {
 
         builderReference = new WeakReference<>(builder);
 
-        Redstone.init();
+        // order matters: dependsOn() needs the feature it points at to be defined already, so ropes (functional) come
+        // before pulleys and buntings, and antique ink (tools) before sepia globes
         Functional.init();
-        Building.init();
         Tools.init();
+        Redstone.init();
+        Building.init();
         General.init();
         Tweaks.init();
 
@@ -109,10 +111,8 @@ public class CommonConfigs {
     public static boolean isEnabled(String key) {
         if (!CONFIG_HOLDER.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
-            case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get() && Tools.ANTIQUE_INK_ENABLED.get();
-            case ModConstants.PULLEY_BLOCK_NAME -> Redstone.PULLEY_ENABLED.get() && Functional.ROPE_ENABLED.get();
-            case ModConstants.BUNTING_NAME -> Building.BUNTINGS_ENABLED.get() && Functional.ROPE_ENABLED.get();
-            case ModConstants.ROPE_ARROW_NAME -> Tools.ROPE_ARROW_ENABLED.get() && Functional.ROPE_ENABLED.get();
+            // the config name is 'sepia_globe', so the default lookup by name would miss it
+            case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
             // every feature() gate/leaf is registered in the config holder by name (see Moonlight ConfigBuilder),
@@ -293,7 +293,7 @@ public class CommonConfigs {
 
             builder.push("pulley_block");
             builder.comment("Pulleys are automatically disabled if 'rope' feature is disabled");
-            PULLEY_ENABLED = builder.mainFeature();
+            PULLEY_ENABLED = builder.dependsOn(Functional.ROPE_ENABLED).mainFeature();
             PULLEY_CONTINUOUS = builder.comment("""
                             If true, pulleys retract their rope chain over multiple ticks, animating each block via vanilla moving-piston entities.\s
                             Connected blocks become moving blocks (so they push entities, drop sand etc) and multiple pulleys can cooperate to pull a single heavy contraption, useful for elevators.\s
@@ -562,7 +562,8 @@ public class CommonConfigs {
             builder.push("globe");
             GLOBE_ENABLED = builder.mainFeature();
             GLOBE_COORDINATES = builder.comment("Displays current coordinates when using a globe").define("show_coordinates", true);
-            GLOBE_SEPIA = builder.feature("sepia_globe");
+            builder.comment("Sepia globes are automatically disabled if 'antique_ink' feature is disabled");
+            GLOBE_SEPIA = builder.dependsOn(Tools.ANTIQUE_INK_ENABLED).feature("sepia_globe");
             builder.pop();
 
             builder.push(ModConstants.WAY_SIGN_NAME);
@@ -630,7 +631,7 @@ public class CommonConfigs {
             TILE_ENABLED = builder.feature(ModConstants.STONE_TILE_NAME);
             BLACKSTONE_TILE_ENABLED = builder.feature(ModConstants.BLACKSTONE_TILE_NAME);
             builder.comment("Buntings are automatically disabled if 'rope' feature is disabled");
-            BUNTINGS_ENABLED = builder.feature(ModConstants.BUNTING_NAME);
+            BUNTINGS_ENABLED = builder.dependsOn(Functional.ROPE_ENABLED).feature(ModConstants.BUNTING_NAME);
             builder.push(ModConstants.SCONCE_NAME);
             SCONCE_ENABLED = builder.mainFeature();
             SCONCE_LEVER_ENABLED = builder.feature(ModConstants.SCONCE_LEVER_NAME);
@@ -870,7 +871,8 @@ public class CommonConfigs {
 
             builder.push("plunderer");
             PLUNDERER_ENABLED = builder.mainFeature();
-            GALLEONS_ENABLED = builder.feature(ModConstants.GALLEON_NAME);
+            builder.comment("Galleons are automatically disabled if 'rope' feature is disabled");
+            GALLEONS_ENABLED = builder.dependsOn(ROPE_ENABLED).feature(ModConstants.GALLEON_NAME);
             NAVAL_RAID_CHANCE = builder.comment("Chance for a raid wave to spawn in open water near the village instead of on land. Such waves arrive on boats steered by plunderers, which take the place of some of the wave pillagers. The rest swim along and hop on when a seat is free. Set to 0 to disable")
                     .define("naval_raid_chance", 0.75, 0, 1);
             NAVAL_RAID_PLUNDERER_CHANCE = builder.comment("Chance for a naval wave pillager to be replaced by a plunderer. 1 replaces them all")
@@ -1037,7 +1039,7 @@ public class CommonConfigs {
             //rope arrow
             builder.push("rope_arrow");
             builder.comment("Rope arrows are automatically disabled if 'rope' feature is disabled");
-            ROPE_ARROW_ENABLED = builder.mainFeature();
+            ROPE_ARROW_ENABLED = builder.dependsOn(Functional.ROPE_ENABLED).mainFeature();
             ROPE_ARROW_CAPACITY = builder.comment("Max number of rope items allowed to be stored inside a rope arrow")
                     .gameRestart()
                     .define("capacity", 32, 1, 256);

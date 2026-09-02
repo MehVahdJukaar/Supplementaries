@@ -19,15 +19,15 @@ import org.jetbrains.annotations.Nullable;
 
 public class PistonMovementHelper {
 
-    public static boolean BEMovementHandledByUs() {
-        return CommonConfigs.Tweaks.PUSH_BLOCK_ENTITIES.get() && !BEMovementHandledByQuark();
+    public static boolean isBEMovementIsHandledByUs() {
+        return CommonConfigs.Tweaks.PUSH_BLOCK_ENTITIES.get() && !isBEMovementHandledByQuark();
     }
 
-    public static boolean BEMovementHandledByQuark() {
+    public static boolean isBEMovementHandledByQuark() {
         return CompatHandler.QUARK && QuarkCompat.isMovingTileEntitiesEnabled();
     }
 
-    public static int perPistonPushLimit() {
+    public static int getPerPistonPushLimit() {
         if (CompatHandler.QUARK) return QuarkCompat.getPistonPushLimit();
         return PistonStructureResolver.MAX_PUSH_DEPTH;
     }

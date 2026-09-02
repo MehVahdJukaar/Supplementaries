@@ -60,7 +60,7 @@ public interface IRopeConnection {
 
     boolean canSideAcceptConnection(BlockState state, Direction direction);
 
-    // ==== Shared connection-state machinery (used by AbstractRopeBlock and the rope-tomato) ====
+    //shared connection-state machinery
 
     boolean hasConnection(Direction dir, BlockState state);
 
@@ -85,7 +85,6 @@ public interface IRopeConnection {
         return this.shouldConnectToFace(thisState, world.getBlockState(facingPos), facingPos, dir, world);
     }
 
-    // computes every connection plus the knot, for placement
     default BlockState withConnections(BlockState state, BlockPos pos, LevelReader world) {
         for (Direction dir : Direction.values()) {
             state = setConnection(dir, state, shouldConnectToDir(state, pos, world, dir));
@@ -93,7 +92,6 @@ public interface IRopeConnection {
         return state.setValue(ModBlockProperties.KNOT, hasMiddleKnot(state));
     }
 
-    // recomputes the connection towards the changed face (plus the knot), for updateShape
     default BlockState updateConnection(BlockState state, Direction facing, BlockPos currentPos, LevelReader world) {
         if (facing == Direction.UP) {
             state = setConnection(Direction.DOWN, state, shouldConnectToDir(state, currentPos, world, Direction.DOWN));

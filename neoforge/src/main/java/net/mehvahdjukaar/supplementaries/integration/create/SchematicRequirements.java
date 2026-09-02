@@ -5,6 +5,7 @@ import com.simibubi.create.content.schematics.requirement.ItemRequirement;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -20,18 +21,18 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Stream;
 
-// Create's schematic cannon refuses to place blocks with no item form (sign posts, book piles, skull
-// candles...), so we charge those from their loot drops instead, which also gets composite and block
-// entity blocks right. Blocks that do have an item are left to Create, and blocks with no drops stay
-// INVALID so technical blocks don't become cannon placeable.
 public class SchematicRequirements {
 
     public static void register() {
-        for (Block block : BuiltInRegistries.BLOCK) {
-            ResourceLocation key = BuiltInRegistries.BLOCK.getKey(block);
+        var holders = BuiltInRegistries.BLOCK.holders().iterator();
+        while (holders.hasNext()) {
+            Holder<Block> holder = holders.next();
+            Block block = holder.value();
+            ResourceLocation key = holder.unwrapKey().orElseThrow().location();
             if (!key.getNamespace().equals(Supplementaries.MOD_ID)) continue;
-            // Create's defaultOf already yields the right thing when the block has an item form
+            //create defaultOf already returns the right thing when the block has an item form
             if (block.asItem() != Items.AIR) continue;
             SchematicRequirementRegistries.BLOCKS.register(block, SchematicRequirements::fromDrops);
         }
@@ -39,7 +40,7 @@ public class SchematicRequirements {
 
     private static ItemRequirement fromDrops(BlockState state, @Nullable BlockEntity be) {
         MinecraftServer server = PlatHelper.getCurrentServer();
-        if (server == null) return ItemRequirement.INVALID; // no loot tables available (e.g. remote client)
+        if (server == null) return ItemRequirement.INVALID;
         ServerLevel level = server.overworld();
         BlockPos pos = be != null ? be.getBlockPos() : BlockPos.ZERO;
         LootParams.Builder params = new LootParams.Builder(level)

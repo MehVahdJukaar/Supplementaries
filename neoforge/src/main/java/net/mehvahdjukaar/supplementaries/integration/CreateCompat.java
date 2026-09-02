@@ -52,16 +52,6 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
-/**
- * Create integration: display link sources/targets, contraption movement behaviours, the present-recipient
- * item attribute, and cannons aimed/fired while mounted on trains and contraptions.
- *
- * <p>Create only ships on NeoForge for this Minecraft version, so this whole integration is NeoForge-only and
- * references Create directly &mdash; including {@link com.simibubi.create.content.contraptions.AbstractContraptionEntity},
- * which no longer needs a platform bridge. This class is only class-loaded when Create is present
- * (see {@link CompatHandler#CREATE}). Genuinely client-only code is split into {@link CreateClientCompat};
- * client-only overrides of Create methods are marked {@code @ClientOnly}.
- */
 public class CreateCompat {
 
     public static final Supplier<ItemAttributeType> PRESENT_ATTRIBUTE = RegHelper.
@@ -188,8 +178,6 @@ public class CreateCompat {
         return true;
     }
 
-    // === helpers used by the movement behaviours / display targets (no AbstractContraptionEntity) ===
-
     public static boolean isContraption(MovementContext context, Entity passenger) {
         return false;
         //TODO: add back
@@ -244,9 +232,6 @@ public class CreateCompat {
         }
     }
 
-    // === contraption helpers: these hard-cast to Create's AbstractContraptionEntity. Create is NeoForge-only
-    //     for this version, so they live here directly (no cross-loader bridge needed). ===
-
     public static void registerCannonBehaviours(Block cannon) {
         MovingInteractionBehaviour.REGISTRY.register(cannon, new MovingInteractionBehaviour() {
             @Override
@@ -262,7 +247,6 @@ public class CreateCompat {
         });
     }
 
-    /** True if the entity is a Create contraption (AbstractContraptionEntity). */
     public static boolean isContraptionEntity(Entity entity) {
         return entity instanceof AbstractContraptionEntity;
     }
@@ -319,10 +303,6 @@ public class CreateCompat {
         c.getBlocks().put(localPos, new StructureTemplate.StructureBlockInfo(info.pos(), info.state(), nbt));
     }
 
-    /**
-     * Add a mode-selector scroll input to a display-link source config line. Keys are resolved as
-     * {@code create.<optionPrefix>.<option>} and {@code create.<titleKey>}.
-     */
     public static void addDisplaySourceModeConfig(ModularGuiLineBuilder builder, int width, String configKey,
                                                   String titleKey, String optionPrefix, String... options) {
         List<MutableComponent> opts = new ArrayList<>();

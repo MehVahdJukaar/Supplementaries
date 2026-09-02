@@ -68,8 +68,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
             return null;
         }
         if (random.nextFloat() < CommonConfigs.Redstone.MINESHAFT_ELEVATOR.get() &&
-                CommonConfigs.Redstone.PULLEY_ENABLED.get() &&
-                CommonConfigs.Functional.ROPE_ENABLED.get() &&
+                CommonConfigs.Redstone.PULLEY_ENABLED.get() && // already false without ropes
                 CommonConfigs.Redstone.TURN_TABLE_ENABLED.get()) {
             byte height = 12;
 

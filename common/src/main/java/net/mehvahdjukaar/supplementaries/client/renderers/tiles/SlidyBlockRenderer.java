@@ -25,7 +25,7 @@ public class SlidyBlockRenderer implements BlockEntityRenderer<MovingSlidyBlockE
     @Override
     public void render(MovingSlidyBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         Level level = blockEntity.getLevel();
-        if (level != null && blockEntity.getDirection() != null) {
+        if (level != null) {
             BlockPos blockPos = blockEntity.getBlockPos().relative(blockEntity.getMovementDirection().getOpposite());
             BlockState blockState = blockEntity.getMovedState();
             if (!blockState.isAir()) {
@@ -48,7 +48,9 @@ public class SlidyBlockRenderer implements BlockEntityRenderer<MovingSlidyBlockE
     private void renderBlock(BlockPos pos, BlockState state, PoseStack poseStack, MultiBufferSource bufferSource, Level level, boolean extended, int packedOverlay) {
         RenderType renderType = ItemBlockRenderTypes.getMovingBlockRenderType(state);
         VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
-        this.blockRenderer.getModelRenderer().tesselateBlock(level, this.blockRenderer.getBlockModel(state), state, pos, poseStack, vertexConsumer, extended, RandomSource.create(), state.getSeed(pos), packedOverlay);
+        this.blockRenderer.getModelRenderer().tesselateBlock(level, this.blockRenderer.getBlockModel(state),
+                state, pos, poseStack, vertexConsumer, extended, RandomSource.create(),
+                state.getSeed(pos), packedOverlay);
     }
 
     @Override

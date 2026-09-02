@@ -14,18 +14,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
-// Fills blocks moved into a fluid source by a piston or pulley. Vanilla and Amendments cauldrons are
-// built in, other blocks opt in via IFluidFillableOnMove.
-// Two phases: fillIfMovedIntoFluid picks the state that lands (baked into the moving block animation),
-// applyPostPlacement fills in block entity data once that state is actually in the world.
 public class MovedFluidFiller {
 
+    //TODO: remove
     public static boolean reactsToFluid(BlockState state) {
         Block b = state.getBlock();
         return b instanceof IFluidFillableOnMove || b instanceof AbstractCauldronBlock;
     }
 
-    // returns the unchanged state when nothing should happen
     public static BlockState fillIfMovedIntoFluid(BlockState movedState, Level level, BlockPos destPos, FluidState destFluid) {
         if (!CommonConfigs.Tweaks.MOVED_CAULDRON_FILLING.get()) return movedState;
 
@@ -39,8 +35,7 @@ public class MovedFluidFiller {
             } else if (destFluid.is(Fluids.LAVA) && movedState.is(Blocks.CAULDRON) || movedState.is(Blocks.LAVA_CAULDRON)) {
                 return Blocks.LAVA_CAULDRON.defaultBlockState();
             } else if (CompatHandler.AMENDMENTS) {
-                // Amendments stores modded fluids in a block entity, so the state alone isn't enough:
-                // this picks the right cauldron block, and applyPostPlacement() fills the tank after.
+                // Amendments stores modded fluids in a block entity
                 return AmendmentsCompat.fillCauldronWithFluid(level, destPos, movedState, destFluid);
             }
         }
@@ -52,7 +47,6 @@ public class MovedFluidFiller {
         return CompatHandler.AMENDMENTS && AmendmentsCompat.isModCauldron(placedState);
     }
 
-    // safe to call for any placed block, no-ops unless it actually needs it
     public static void applyPostPlacement(Level level, BlockPos destPos, FluidState destFluid) {
         if (!CommonConfigs.Tweaks.MOVED_CAULDRON_FILLING.get()) return;
         if (destFluid.isEmpty()) return;

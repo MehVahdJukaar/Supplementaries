@@ -19,6 +19,7 @@ import org.violetmoon.zeta.piston.ZetaPistonStructureResolver;
 import java.util.List;
 import java.util.Set;
 
+//Zeta replaces piston structure resolver. not cool
 @Pseudo
 @OptionalMixin("org.violetmoon.zeta.piston.ZetaPistonStructureResolver")
 @Mixin(ZetaPistonStructureResolver.class)
@@ -28,8 +29,6 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
     @Shadow @Final private List<BlockPos> myToPush;
     @Shadow @Final private PistonStructureResolver parent;
 
-    // When Zeta is globally disabled, resolve() delegates to parent.resolve(), so the vanilla
-    // mixin needs to see the cooperators on the parent instance too.
     @Override
     public void supp$setCooperators(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
         this.supp$getCoopState().set(cooperators, pistonDirection, extending);
@@ -38,8 +37,6 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
         }
     }
 
-    // With Zeta disabled the parent's mixin already gated (myToPush is empty here); just adopt its
-    // contributing set, since checkIfExtend reads that off this wrapper.
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
     private boolean supp$gateOnRealCooperation(boolean original) {
         if (!ZetaPistonStructureResolver.GlobalSettings.isEnabled()) {
@@ -59,7 +56,6 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
         return this.supp$getCoopState().wrapEqualsCheck(original.call(candidate, pistonPosArg), candidate);
     }
 
-    // Boost Zeta's configured push limit to the cooperative one, never lowering it.
     @ModifyExpressionValue(method = "addBlockLine",
             at = @At(value = "INVOKE",
                     target = "Lorg/violetmoon/zeta/piston/ZetaPistonStructureResolver$GlobalSettings;getPushLimit()I"))

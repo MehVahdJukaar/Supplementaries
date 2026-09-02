@@ -77,10 +77,6 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         if (!(movedState.getBlock() instanceof EntityBlock entityBlock)) return null;
         BlockEntity be = entityBlock.newBlockEntity(this.worldPosition, movedState);
         if (be == null) return null;
-        // Render with default state if NBT hasn't arrived yet: covers the brief gap when the moving
-        // piston BE is constructed locally on the client (block event handler) before our hook
-        // attaches the carried NBT. When NBT arrives, the setter invalidates the cache and the next
-        // call rebuilds with the NBT applied.
         CompoundTag nbt = this.supp$carriedBeNbt;
         if (nbt != null && PistonMovementHelper.matchesCapturedType(be, nbt)) {
             be.loadWithComponents(nbt, this.level.registryAccess());
@@ -105,10 +101,6 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         }
     }
 
-    // Deliberately not gated on BeMoverHelper: pulley moves reach this through the
-    // inherited finalTick and must keep working even when Quark owns piston moves. For a
-    // Quark-owned piston move our capture never ran, so there is no NBT here and this no-ops
-    // rather than replacing the block entity Quark just populated.
     @Override
     public void supp$restoreCarriedBe() {
         CompoundTag nbt = this.supp$carriedBeNbt;
@@ -116,14 +108,10 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         this.supp$cachedCarriedBE = null;
         if (nbt == null || this.level == null) return;
         BlockState placed = this.level.getBlockState(this.worldPosition);
-        // Still mid-move or the block never landed: nothing to restore onto.
         if (placed.isAir() || placed.is(Blocks.MOVING_PISTON)) return;
         PistonMovementHelper.restoreBlockEntity(this.level, this.worldPosition, placed, nbt);
     }
 
-    // Normal completion path: tick() places the moved block itself; it does NOT call
-    // finalTick. Restore right after vanilla sets the block, covering both the air
-    // (updateOrDestroy) and non-air (neighborChanged) branches.
     @Inject(method = "tick", at = {
             @At(value = "INVOKE", shift = At.Shift.AFTER,
                     target = "Lnet/minecraft/world/level/block/Block;updateOrDestroy(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/core/BlockPos;I)V"),
@@ -137,8 +125,6 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         carrying.supp$applyMovedFluidFill();
     }
 
-    // Interrupt path: a new piston action force-finishes this move before the animation
-    // completes, calling finalTick() instead of letting tick() finish it.
     @Inject(method = "finalTick", at = @At("TAIL"))
     private void supp$restoreCarriedBeOnFinalTick(CallbackInfo ci) {
         this.supp$restoreCarriedBe();
