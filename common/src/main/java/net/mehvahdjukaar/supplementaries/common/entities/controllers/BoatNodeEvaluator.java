@@ -20,8 +20,6 @@ import net.minecraft.world.level.pathfinder.Target;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-// Surface only pathing for a mob driving a boat. Nodes are the top water block of a column.
-// A boat can never climb, so neighbors are same level or a drop. Anything that is not water is impassable.
 public class BoatNodeEvaluator extends NodeEvaluator {
 
     // a floating hull bottom sits roughly this far above the water block bottom
@@ -125,7 +123,6 @@ public class BoatNodeEvaluator extends NodeEvaluator {
         return side != null && side.costMalus >= 0 && side.y == from.y;
     }
 
-    @Nullable
     private Node findNeighbor(int x, int y, int z) {
         PathType type = getCachedPathType(x, y, z);
         if (type == PathType.WATER) {
@@ -194,14 +191,14 @@ public class BoatNodeEvaluator extends NodeEvaluator {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, y, z);
         BlockState state = level.getBlockState(pos);
         FluidState fluid = state.getFluidState();
-        boolean water = fluid.is(FluidTags.WATER);
-        if (!water && !fluid.isEmpty()) return PathType.BLOCKED;
+        boolean isWater = fluid.is(FluidTags.WATER);
+        if (!isWater && !fluid.isEmpty()) return PathType.BLOCKED;
         if (!hullClears(state, level, pos)) return PathType.BLOCKED;
         for (int dy = 1; dy < entityHeight; dy++) {
             pos.set(x, y + dy, z);
             if (!isHeadroom(level.getBlockState(pos), level, pos)) return PathType.BLOCKED;
         }
-        return water ? PathType.WATER : PathType.OPEN;
+        return isWater ? PathType.WATER : PathType.OPEN;
     }
 
     // lily pads, carpets and such sit below the floating hull. Slabs and fences dont

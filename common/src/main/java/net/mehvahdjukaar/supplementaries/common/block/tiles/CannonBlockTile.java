@@ -69,7 +69,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     private int cooldownTimer = 0;
     private int fuseTimer = 0;
     private byte powerLevel = 1;
-    // client-render texture sync: tracks whether the gunpowder-loaded state was last broadcast
+    //lazy sync. cant use on change trick as would break manouvering
     private boolean lastSyncedLoaded = false;
 
     private BallisticData trajectoryData = BallisticData.LINE;
@@ -129,10 +129,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         }
     }
 
-    // Tiny ember sparks flying off the wick at the back of the cannon while the fuse burns.
-    // Ported from the bedrock razz_sup:ember_spark wick emitter.
     private void spawnFuseSparks() {
-        // roughly 2 sparks every 3 ticks, matching the bedrock emitter rate
         if (this.fuseTimer % 3 != 0) return;
         RandomSource rand = this.level.random;
         Quaternionf rot = this.getWorldOrientation(1);
@@ -142,11 +139,10 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         double wy = pos.y + 1 / 16f + wick.y;
         double wz = pos.z + wick.z;
         for (int i = 0; i < 2; i++) {
-            // scatter mostly down and backwards in cannon-local space, then rotate into the world
             Vector3f dir = new Vector3f(
                     (rand.nextFloat() - 0.5f) * 1.6f,
                     -0.15f - rand.nextFloat() * 0.85f,
-                    -0.15f - rand.nextFloat() * 1.0f).normalize();
+                    -0.15f - rand.nextFloat()).normalize();
             rot.transform(dir);
             float speed = (0.7f + rand.nextFloat() * 0.7f) / 20f;
             this.level.addParticle(ModParticles.EMBER_SPARK_PARTICLE.get(),
@@ -395,14 +391,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public void ignite(@Nullable Entity entityWhoIgnited) {
         //do nothing if its already ignited
         if (this.fuseTimer > 0) return;
-
-        // the server decides whether the cannon can actually fire (needs a projectile and enough gunpowder);
-        // the client just plays the fuse when the server syncs the ignite, so no gunpowder -> no fire state at all
         if (this.level != null && !this.level.isClientSide && !this.hasRequiredFuelAndProjectiles()) return;
-
-        // called from server when firing
         this.fuseTimer = CommonConfigs.Functional.CANNON_FUSE_TIME.get();
-
         this.entityWhoIgnitedId = entityWhoIgnited != null ? entityWhoIgnited.getUUID() : null;
         //particles
         if (this.level instanceof ServerLevel serverLevel) {
@@ -581,8 +571,6 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return restraint.rotated(dir);
     }
 
-    // Network. The reference frame decides how the aim travels: a world cannon locates itself by block pos,
-    // a contraption cannon needs its own packet (no server-side block entity exists inside a contraption).
     public void syncToServer(boolean ignite, boolean removeOwner, Player playerWhoChangedIt) {
         referenceFrame.syncToServer(this, this.getWantedLocalRotation(), this.getPowerLevel(),
                 ignite, removeOwner, playerWhoChangedIt);
@@ -613,11 +601,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return referenceFrame instanceof WorldReferenceFrame;
     }
 
-    /**
-     * Bakes a cannon's aim into save NBT without a live block entity - used to persist aim into a Create
-     * contraption's stored block data.
-     */
-    public static CompoundTag buildAimNbt(CompoundTag base, BlockState state, Quaternionf localRot, byte firePower) {
+    // needed to persist aim into create contraptions
+    public static CompoundTag saveAimInNBT(CompoundTag base, BlockState state, Quaternionf localRot, byte firePower) {
         Quaternionf additional = Axis.YP.rotationDegrees(-state.getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
         Quaternionf rig = localRot.mul(additional.invert(new Quaternionf()), new Quaternionf());
         base.put("orientation", ExtraCodecs.QUATERNIONF.encodeStart(NbtOps.INSTANCE, rig).getOrThrow());

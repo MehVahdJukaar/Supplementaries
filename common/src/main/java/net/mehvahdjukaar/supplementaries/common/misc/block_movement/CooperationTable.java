@@ -60,8 +60,8 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
         this.handled.entrySet().removeIf(e -> isStale(currentTick, e.getValue()));
     }
 
+    //symmetric, gives it some slack due to server packet timing issues
     private static boolean isStale(long currentTick, long tick) {
-        long age = currentTick - tick;
-        return age < 0 || age > MAX_AGE;
+        return Math.abs(currentTick - tick) > MAX_AGE;
     }
 }

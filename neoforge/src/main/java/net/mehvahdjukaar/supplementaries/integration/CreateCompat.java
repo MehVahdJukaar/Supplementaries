@@ -299,7 +299,7 @@ public class CreateCompat {
         StructureTemplate.StructureBlockInfo info = c.getBlocks().get(localPos);
         if (info == null) return;
         CompoundTag nbt = info.nbt() != null ? info.nbt().copy() : new CompoundTag();
-        CannonBlockTile.buildAimNbt(nbt, info.state(), localRot, firePower);
+        CannonBlockTile.saveAimInNBT(nbt, info.state(), localRot, firePower);
         c.getBlocks().put(localPos, new StructureTemplate.StructureBlockInfo(info.pos(), info.state(), nbt));
     }
 
