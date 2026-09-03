@@ -31,7 +31,7 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
 
     @Override
     public void supp$setCooperators(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
-        this.supp$getCoopState().set(cooperators, pistonDirection, extending);
+        this.supp$getCooperationState().set(cooperators, pistonDirection, extending);
         if (this.parent instanceof ICooperativePiston parentCoop) {
             parentCoop.supp$setCooperators(cooperators, pistonDirection, extending);
         }
@@ -41,11 +41,11 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
     private boolean supp$gateOnRealCooperation(boolean original) {
         if (!ZetaPistonStructureResolver.GlobalSettings.isEnabled()) {
             if (this.parent instanceof ICooperativePiston parentCoop) {
-                this.supp$getCoopState().adoptContributingFrom(parentCoop.supp$getCoopState());
+                this.supp$getCooperationState().adoptContributingFrom(parentCoop.supp$getCooperationState());
             }
             return original;
         }
-        return this.supp$getCoopState().gateResolve(original, pistonPos, myToPush);
+        return this.supp$getCooperationState().gateResolve(original, pistonPos, myToPush);
     }
 
     @WrapOperation(method = "addBlockLine",
@@ -53,13 +53,13 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
                     target = "Lnet/minecraft/core/BlockPos;equals(Ljava/lang/Object;)Z"))
     private boolean supp$wrapPistonEqualsCheck(BlockPos candidate, Object pistonPosArg,
                                                Operation<Boolean> original) {
-        return this.supp$getCoopState().wrapEqualsCheck(original.call(candidate, pistonPosArg), candidate);
+        return this.supp$getCooperationState().wrapEqualsCheck(original.call(candidate, pistonPosArg), candidate);
     }
 
     @ModifyExpressionValue(method = "addBlockLine",
             at = @At(value = "INVOKE",
                     target = "Lorg/violetmoon/zeta/piston/ZetaPistonStructureResolver$GlobalSettings;getPushLimit()I"))
     private int supp$boostPushLimit(int original) {
-        return Math.max(original, this.supp$getCoopState().getPushLimit());
+        return Math.max(original, this.supp$getCooperationState().getPushLimit());
     }
 }

@@ -19,8 +19,7 @@ import java.util.Set;
 // neighbours pushing the same way. per level, not synced
 public class PistonCooperationData extends WorldSavedData {
 
-    //for the client animation, which re-runs the resolve. cosmetic only, written by the
-    //integrated server as it goes
+    //animation only
     private static final CooperationTable<AttemptInfo> CLIENT_TABLE = new CooperationTable<>();
 
     private record AttemptInfo(Direction direction, boolean extending, long tick) implements CooperationTable.Attempt {
@@ -85,11 +84,11 @@ public class PistonCooperationData extends WorldSavedData {
         int pushOffset = Math.abs(pushAxis.choose(dx, dy, dz));
         if (pushOffset >= PistonStructureResolver.MAX_PUSH_DEPTH) return false;
 
-        int perpX = pushAxis == Direction.Axis.X ? 0 : dx;
-        int perpY = pushAxis == Direction.Axis.Y ? 0 : dy;
-        int perpZ = pushAxis == Direction.Axis.Z ? 0 : dz;
-        if (perpX == 0 && perpY == 0 && perpZ == 0) return false;
-        int perpDist = Math.max(Math.abs(perpX), Math.max(Math.abs(perpY), Math.abs(perpZ)));
+        int targetX = pushAxis == Direction.Axis.X ? 0 : dx;
+        int targetY = pushAxis == Direction.Axis.Y ? 0 : dy;
+        int targetZ = pushAxis == Direction.Axis.Z ? 0 : dz;
+        if (targetX == 0 && targetY == 0 && targetZ == 0) return false;
+        int perpDist = Math.max(Math.abs(targetX), Math.max(Math.abs(targetY), Math.abs(targetZ)));
         return perpDist <= PistonStructureResolver.MAX_PUSH_DEPTH;
     }
 }

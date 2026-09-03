@@ -114,9 +114,6 @@ public class QuarkCompatImpl {
     }
 
     public static boolean blacklistsBlockMovement(BlockState state) {
-        // The single-arg overload is the raw blacklist check. The two-arg one passes its first
-        // argument straight through when the module is off, which would report every block entity
-        // as blacklisted.
         return PistonsMoveTileEntitiesModule.shouldMoveTE(state);
     }
 

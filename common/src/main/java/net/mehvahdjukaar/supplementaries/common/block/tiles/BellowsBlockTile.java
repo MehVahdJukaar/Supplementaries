@@ -177,7 +177,7 @@ public class BellowsBlockTile extends BlockEntity {
         for (Entity entity : level.getEntitiesOfClass(Entity.class, facingBox)) {
 
             //an entity on a ship has its coordinates in that ship's frame, not ours
-            SableCompat.SubLevelTransform transform = SableCompat.transformBetween(this, entity);
+            SableCompat.SubLevelTransform transform = SableCompat.subLevelsBetween(this, entity);
 
             double gap = gapInFront(transform.entityBoxToBlockSpace(entity.getBoundingBox()), facing);
             //behind us or already touching the nozzle

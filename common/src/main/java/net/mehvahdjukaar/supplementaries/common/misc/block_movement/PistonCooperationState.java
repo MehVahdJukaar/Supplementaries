@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 //attached to each PistonStructureResolver, vanilla or Zeta's
-public class PistonCoopResolverState {
+public class PistonCooperationState {
 
     private Set<BlockPos> cooperatingPistons = Collections.emptySet();
     private Set<BlockPos> contributingCooperators = Collections.emptySet();
@@ -26,7 +26,6 @@ public class PistonCoopResolverState {
         this.contributingCooperators = Collections.emptySet();
     }
 
-    //loose ceiling while the chain builds, gateResolve does the real check after
     public int getPushLimit() {
         return Math.max(1, cooperatingPistons.size()) * PistonMovementHelper.getPerPistonPushLimit();
     }
@@ -35,8 +34,7 @@ public class PistonCoopResolverState {
         return contributingCooperators;
     }
 
-    // zeta delegates resolve to its vanilla parent, so the gate runs on the parent's state
-    public void adoptContributingFrom(PistonCoopResolverState other) {
+    public void adoptContributingFrom(PistonCooperationState other) {
         this.contributingCooperators = other.contributingCooperators;
     }
 

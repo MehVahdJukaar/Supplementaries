@@ -11,11 +11,38 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaterniondc;
+import org.joml.Quaternionf;
 
 public class SableCompatClient {
+
+    public record WorldPose(Vec3 pos, Quaternionf orientation, boolean onSubLevel) {
+    }
+
+    public static WorldPose projectOutOfSubLevel(BlockEntity be, Vec3 pos, Quaternionf orientation,
+                                                 float partialTicks) {
+        ClientSubLevelAccess subLevel = SableCompanion.INSTANCE.getContainingClient(be);
+        if (subLevel == null) return new WorldPose(pos, orientation, false);
+        Pose3dc subPose = subLevel.renderPose(partialTicks);
+        Quaterniondc q = subPose.orientation();
+        Quaternionf subOrientation = new Quaternionf((float) q.x(), (float) q.y(), (float) q.z(), (float) q.w());
+        return new WorldPose(subPose.transformPosition(pos),
+                subOrientation.mul(orientation, new Quaternionf()), true);
+    }
+
+    public static Vec3 projectOutOfSubLevel(BlockEntity be, Vec3 pos, float partialTicks) {
+        ClientSubLevelAccess subLevel = SableCompanion.INSTANCE.getContainingClient(be);
+        return subLevel == null ? pos : subLevel.renderPose(partialTicks).transformPosition(pos);
+    }
+
+    public static Vec3 projectIntoSubLevel(BlockEntity be, Vec3 worldPos, float partialTicks) {
+        ClientSubLevelAccess subLevel = SableCompanion.INSTANCE.getContainingClient(be);
+        return subLevel == null ? worldPos : subLevel.renderPose(partialTicks).transformPositionInverse(worldPos);
+    }
 
     public static HitResult clipIncludingSubLevels(BlockGetter level, Entity entity, Vec3 start, Vec3 end,
                                                    float partialTicks) {

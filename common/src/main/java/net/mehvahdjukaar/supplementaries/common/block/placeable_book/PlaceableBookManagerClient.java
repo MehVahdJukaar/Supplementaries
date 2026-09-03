@@ -25,15 +25,8 @@ import static net.minecraft.server.packs.resources.SimpleJsonResourceReloadListe
 
 public class PlaceableBookManagerClient {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    //client
-    //static, just 1 instance exists
     private static final MapRegistry<List<BookModelVisuals.VariantModelList>> bookVisuals = new MapRegistry<>("placeable_books_visuals");
-    // Visuals to fall back to when a book item can't be matched to a known variant (e.g. porting
-    // old worlds whose stored book item data no longer matches any variant). Falling back to the
-    // normal book's color list lets the renderer pick a random color instead of showing vanilla's
-    // purple/black missing-texture cube.
     private static final ResourceLocation FALLBACK_VISUALS = Supplementaries.res("normal_book");
-    // last resort if even the normal book visuals are missing: a plain brown book (a real, registered model)
     private static final BookModelVisuals missingModel = new BookModelVisuals(
             RenderUtil.getStandaloneModelLocation(Supplementaries.res("block/books/book_brown")),
             -1, 0, false);
@@ -41,7 +34,7 @@ public class PlaceableBookManagerClient {
     private static List<BookModelVisuals> getFallbackModels() {
         var list = bookVisuals.getValue(FALLBACK_VISUALS);
         if (list != null && !list.isEmpty()) {
-            return list.get(0).models();
+            return list.getFirst().models();
         }
         return List.of(missingModel);
     }

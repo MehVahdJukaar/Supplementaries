@@ -43,12 +43,12 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
     }
 
     @Override
-    public void supp$setMovedFluidFill(@Nullable FluidState fluid) {
+    public void supp$setMovedFluid(@Nullable FluidState fluid) {
         this.supp$movedFluidFill = fluid;
     }
 
     @Override
-    public void supp$applyMovedFluidFill() {
+    public void supp$applyMovedFluid() {
         FluidState fluid = this.supp$movedFluidFill;
         this.supp$movedFluidFill = null;
         if (fluid == null || this.level == null) return;
@@ -122,12 +122,12 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
                                                     PistonMovingBlockEntity blockEntity, CallbackInfo ci) {
         ICarryingMovingPiston carrying = (ICarryingMovingPiston) blockEntity;
         carrying.supp$restoreCarriedBe();
-        carrying.supp$applyMovedFluidFill();
+        carrying.supp$applyMovedFluid();
     }
 
     @Inject(method = "finalTick", at = @At("TAIL"))
     private void supp$restoreCarriedBeOnFinalTick(CallbackInfo ci) {
         this.supp$restoreCarriedBe();
-        this.supp$applyMovedFluidFill();
+        this.supp$applyMovedFluid();
     }
 }

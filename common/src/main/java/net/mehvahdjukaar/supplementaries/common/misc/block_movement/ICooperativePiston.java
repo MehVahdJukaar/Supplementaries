@@ -6,9 +6,8 @@ import net.minecraft.core.Direction;
 import java.util.Set;
 
 public interface ICooperativePiston {
-
     // only needed for our zeta hacks, just delegates to coopstate.set
     void supp$setCooperators(Set<BlockPos> cooperatingPistons, Direction pistonDirection, boolean extending);
 
-    PistonCoopResolverState supp$getCoopState();
+    PistonCooperationState supp$getCooperationState();
 }

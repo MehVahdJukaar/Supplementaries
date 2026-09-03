@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.ProjectileStats;
 import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.misc.explosion.CannonBallExplosion;
+import net.mehvahdjukaar.supplementaries.integration.SableCompat;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonballExplosionPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -170,10 +171,11 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
             float scaling = 5;
             float maxAmount = (float) (vel * vel * scaling);
 
-            //centered on cannonball so we always get rid of all blocks around it so we can move freely next tick
-            Vec3 loc = this.position();
-
             BlockPos pos = result.getBlockPos();
+            //centered on cannonball so we always get rid of all blocks around it so we can move freely next tick
+            Vec3 loc = SableCompat.subLevelsBetween(level(), pos, this)
+                    .entityPointToBlockSpace(this.position());
+
             CannonballWhitelist wl = this.getItem().get(ModComponents.CANNONBALL_WHITELIST.get());
             //similar to level explode
             Float exploded = explodeWithCannonball(level(), loc, pos, maxAmount, (float) radius, wl, movement);

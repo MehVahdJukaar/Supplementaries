@@ -96,7 +96,7 @@ public class PistonBaseBlockMixin {
         BlockEntity movingBe = original.call(destPos, movingPistonState, movedState, facing, extending, isSourcePiston);
         if (fluid != null && movingBe instanceof ICarryingMovingPiston carrying
                 && MovedFluidFiller.needsPostPlacement(movedState)) {
-            carrying.supp$setMovedFluidFill(fluid);
+            carrying.supp$setMovedFluid(fluid);
         }
         return movingBe;
     }

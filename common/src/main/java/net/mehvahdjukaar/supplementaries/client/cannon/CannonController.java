@@ -90,7 +90,9 @@ public class CannonController {
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
 
         if (!isActive()) return false;
-        Vec3 centerCannonPos = cannon.getGlobalPosition(partialTick);
+        //the camera and the raycast work in world space, the cannon's own coords dont when it sits on a sublevel
+        Vec3 centerCannonPos = SableCompatClient.projectOutOfSubLevel(cannon,
+                cannon.getGlobalPosition(partialTick), partialTick);
 
         if (lastCameraPos == null) {
             lastCameraPos = camera.getPosition();
@@ -128,7 +130,8 @@ public class CannonController {
 
             hit = SableCompatClient.clipIncludingSubLevels(level, entity, actualCameraPos, endPos, partialTick);
 
-            BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, hit.getLocation(), shootingMode);
+            Vec3 target = SableCompatClient.projectIntoSubLevel(cannon, hit.getLocation(), partialTick);
+            BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, target, shootingMode);
 
             if (comp != null) {
                 trajectory = comp.trajectory();
@@ -151,10 +154,6 @@ public class CannonController {
             if (yawAdd != 0 || pitchAdd != 0) needsToUpdateServer = true;
 
             if (cannon.shouldRotatePlayerFaceWhenManeuvering()) {
-                //make player face camera while maneuvering.
-                //set rotation directly (idempotent) instead of turn()-ing toward yHeadRot:
-                //onPlayerRotated runs once per render frame but yHeadRot only updates once per tick,
-                //so a turn()-based convergence accumulates with framerate (spins at high fps, stalls on vsync)
                 LocalPlayer player = Minecraft.getInstance().player;
                 float wantedYaw = (float) Mth.wrapDegrees(lastCameraYaw + yawAdd);
                 float wantedPitch = (float) Mth.clamp(lastCameraPitch + pitchAdd, -90, 90);

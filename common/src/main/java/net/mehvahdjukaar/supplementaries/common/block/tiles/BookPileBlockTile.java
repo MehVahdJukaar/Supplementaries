@@ -114,9 +114,6 @@ public class BookPileBlockTile extends ItemDisplayTile implements IExtraModelDat
             this.level.removeBlock(this.worldPosition, false);
             return;
         }
-        // Lower BOOKS here, before the setChanged that follows: otherwise the state still claims the
-        // old count and ensureInventoryMatchesBlockState fills the gap back in with a plain book,
-        // duplicating the one the player just took.
         this.consolidateBookPile();
         this.level.setBlock(this.worldPosition,
                 this.getBlockState().setValue(BookPileBlock.BOOKS, books), Block.UPDATE_CLIENTS);

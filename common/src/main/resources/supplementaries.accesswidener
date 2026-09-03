@@ -11,7 +11,7 @@ accessible field net/minecraft/client/renderer/GameRenderer effectActive Z
 accessible field net/minecraft/world/entity/vehicle/Boat deltaRotation F
 accessible method net/minecraft/world/entity/vehicle/Boat controlBoat ()V
 accessible method net/minecraft/world/entity/ai/navigation/PathNavigation shouldTargetNextNodeInDirection (Lnet/minecraft/world/phys/Vec3;)Z
-
+accessible field net/minecraft/world/level/block/piston/PistonBaseBlock isSticky Z
 accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance endTime I
 accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance startTime I
 

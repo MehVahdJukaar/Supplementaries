@@ -11,9 +11,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import vectorwing.farmersdelight.common.block.TomatoBlock;
 
-// Hooks FD's extensible climbing API so the tomato crop climbs onto our rope/stick and turns into our
-// compat blocks (which then keep climbing on their own, inheriting these methods). canClimbBlock keeps
-// the bonemeal/validation paths aware of our blocks too.
 @Pseudo
 @Mixin(TomatoBlock.class)
 public abstract class CompatFarmersDelightTomatoMixin extends Block {

@@ -12,7 +12,6 @@ public interface ICarryingMovingPiston {
     @Nullable
     CompoundTag supp$getCarriedBlockEntityNbt();
 
-    //block entity built from the carried nbt, cached so we don't parse it every frame
     @Nullable
     BlockEntity supp$getOrCreateCachedCarriedBlockEntity();
 
@@ -20,7 +19,7 @@ public interface ICarryingMovingPiston {
     void supp$restoreCarriedBe();
 
     //fluid that was at the destination, so cauldrons and such can be filled once they land
-    void supp$setMovedFluidFill(@Nullable FluidState fluid);
+    void supp$setMovedFluid(@Nullable FluidState fluid);
 
-    void supp$applyMovedFluidFill();
+    void supp$applyMovedFluid();
 }

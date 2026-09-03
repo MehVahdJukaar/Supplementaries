@@ -22,18 +22,13 @@ import org.jetbrains.annotations.Nullable;
 public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
 
     private float progressStep = 0.5F;
-
-    // fake rope rendered one slot off the carried block. on retract it's the rope being eaten by
-    // the pulley and is never placed, on extend it's the new rope and gets placed at the end
     @Nullable
     private BlockState leadingState;
-
     private boolean extendPhantom = false;
 
     public MovingPulleyBlockEntity(BlockPos pos, BlockState blockState) {
         super(pos, blockState);
     }
-
     public MovingPulleyBlockEntity(BlockPos pos, BlockState blockState, BlockState movedState,
                                    Direction direction, boolean extending, boolean isSourcePiston) {
         super(pos, blockState, movedState, direction, extending, isSourcePiston);
@@ -94,9 +89,7 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
         this.extendPhantom = tag.getBoolean("supp_extend_phantom");
     }
 
-    // copy of PistonMovingBlockEntity.tick with progressStep instead of the hardcoded 0.5F.
-    // can't just call super's since its finalization is gated on the block being MOVING_PISTON.
-    // keep in sync when porting
+    //copy of PistonMovingBlockEntity.tick with progressStep instead of the hardcoded 0.5F.
     public static void tick(Level level, BlockPos pos, BlockState state, MovingPulleyBlockEntity be) {
         be.lastTicked = level.getGameTime();
         be.progressO = be.progress;
@@ -125,7 +118,6 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
                         }
                         level.setBlock(pos, movedAfter, 67);
                         level.neighborChanged(pos, movedAfter.getBlock(), pos);
-                        // chest contents, sign text and so on
                         CompoundTag carriedNbt = ((ICarryingMovingPiston) be).supp$getCarriedBlockEntityNbt();
                         if (carriedNbt != null) {
                             PistonMovementHelper.restoreBlockEntity(level, pos, movedAfter, carriedNbt);

@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCoopResolverState;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCooperationState;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICooperativePiston;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,24 +23,24 @@ import java.util.Set;
 public abstract class PistonStructureResolverMixin implements ICooperativePiston {
 
     @Unique
-    private final PistonCoopResolverState supp$coopState = new PistonCoopResolverState();
+    private final PistonCooperationState supp$cooperationState = new PistonCooperationState();
 
     @Shadow @Final private List<BlockPos> toPush;
     @Shadow @Final private BlockPos pistonPos;
 
     @Override
     public void supp$setCooperators(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
-        this.supp$coopState.set(cooperators, pistonDirection, extending);
+        this.supp$cooperationState.set(cooperators, pistonDirection, extending);
     }
 
     @Override
-    public PistonCoopResolverState supp$getCoopState() {
-        return this.supp$coopState;
+    public PistonCooperationState supp$getCooperationState() {
+        return this.supp$cooperationState;
     }
 
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
     private boolean supp$gateOnRealCooperation(boolean original) {
-        return supp$coopState.gateResolve(original, pistonPos, toPush);
+        return supp$cooperationState.gateResolve(original, pistonPos, toPush);
     }
 
     // Cooperator piston bodies act as walls too; catches all three BlockPos.equals(pistonPos) sites.
@@ -49,19 +49,19 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
                     target = "Lnet/minecraft/core/BlockPos;equals(Ljava/lang/Object;)Z"))
     private boolean supp$wrapPistonEqualsCheck(BlockPos candidate, Object pistonPosArg,
                                                Operation<Boolean> original) {
-        return supp$coopState.wrapEqualsCheck(
+        return supp$cooperationState.wrapEqualsCheck(
                 original.call(candidate, pistonPosArg), candidate);
     }
 
     @Expression("? > @(12)")
     @ModifyExpressionValue(method = "addBlockLine", at = @At("MIXINEXTRAS:EXPRESSION"), require = 2)
     private int supp$modifyTrailingLimit(int original) {
-        return supp$coopState.getPushLimit();
+        return supp$cooperationState.getPushLimit();
     }
 
     @Expression("? >= @(12)")
     @ModifyExpressionValue(method = "addBlockLine", at = @At("MIXINEXTRAS:EXPRESSION"), require = 1)
     private int supp$modifyForwardLimit(int original) {
-        return supp$coopState.getPushLimit();
+        return supp$cooperationState.getPushLimit();
     }
 }
