@@ -3,6 +3,6 @@
   "values": [
     {"id":"spelunkery:depth_gauge","required":false},
     {"id":"supplementaries:altimeter","required":true},
-    {"id":"caverns_and_chasms:altimeter","required":false}
+    {"id":"caverns_and_chasms:depth_gauge","required":false}
   ]
 }
