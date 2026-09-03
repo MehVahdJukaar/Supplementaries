@@ -19,6 +19,7 @@ classes/
 *.launch
 /unique_lines.txt
 /dev.dev
+*.py
 
 /build/
 /common/build/
