@@ -1,8 +1,0 @@
-- cannonball flying in air
-- awning bounce
-- cannon menouver sound
-- redo blue bombs
-- new bomb sounds
-- awning placement set
-- gingerbread stuff
-- doormat add item sound
