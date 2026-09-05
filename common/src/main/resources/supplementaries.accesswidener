@@ -12,6 +12,7 @@ accessible field net/minecraft/world/entity/vehicle/Boat deltaRotation F
 accessible method net/minecraft/world/entity/vehicle/Boat controlBoat ()V
 accessible method net/minecraft/world/entity/ai/navigation/PathNavigation shouldTargetNextNodeInDirection (Lnet/minecraft/world/phys/Vec3;)Z
 accessible field net/minecraft/world/level/block/piston/PistonBaseBlock isSticky Z
+accessible method net/minecraft/world/level/block/piston/PistonBaseBlock getNeighborSignal (Lnet/minecraft/world/level/SignalGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Z
 accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance endTime I
 accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance startTime I
 

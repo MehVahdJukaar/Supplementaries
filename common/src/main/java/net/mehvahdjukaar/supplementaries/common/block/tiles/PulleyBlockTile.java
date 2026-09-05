@@ -6,7 +6,7 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.PulleyContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPulleyAttemptPacket;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.RopeMover;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.InstantPulleyMover;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -156,7 +156,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         }
         if (stack.getCount() + 1 > stack.getMaxStackSize() || !(stack.getItem() instanceof BlockItem)) return false;
         Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-        boolean success = RopeMover.removeRope(worldPosition.relative(moveDir), level, ropeBlock, moveDir, maxDist);
+        boolean success = InstantPulleyMover.removeRope(worldPosition.relative(moveDir), level, ropeBlock, moveDir, maxDist);
         if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
             level.playSound(null, worldPosition, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
@@ -207,7 +207,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         if (stack.getCount() < 1 || !(stack.getItem() instanceof BlockItem bi)) return false;
         Block ropeBlock = bi.getBlock();
 
-        boolean success = RopeMover.addRope(worldPosition.relative(dir), level, null, InteractionHand.MAIN_HAND, ropeBlock, dir, maxDist);
+        boolean success = InstantPulleyMover.addRope(worldPosition.relative(dir), level, null, InteractionHand.MAIN_HAND, ropeBlock, dir, maxDist);
         if (success) {
             SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
             level.playSound(null, worldPosition, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
@@ -247,7 +247,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         List<Direction> remaining = new ArrayList<>();
         int maxSideDist = 7;
         for (var d : order) {
-            if (RopeMover.isCorrectRope(ropeBlock, level.getBlockState(worldPosition.relative(d)), d)) {
+            if (InstantPulleyMover.isCorrectRope(ropeBlock, level.getBlockState(worldPosition.relative(d)), d)) {
                 if (moveConnected(retracting, maxSideDist, d)) {
                     return true;
                 }

@@ -6,8 +6,8 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ContinuousPulleyMover;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PulleyCooperationData;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PulleyMover;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PulleyStructureResolver;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -206,7 +206,7 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
                 }
             }
         }
-        PulleyMover.moveOneStep(level, resolver, animationTicks);
+        ContinuousPulleyMover.moveOneStep(level, resolver, animationTicks);
 
         //so the joined pulleys drop their own event this tick
         if (coop) {

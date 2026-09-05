@@ -5,10 +5,12 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.mehvahdjukaar.moonlight.api.misc.OptionalMixin;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICooperativePiston;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICooperativePistons;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -23,7 +25,7 @@ import java.util.Set;
 @Pseudo
 @OptionalMixin("org.violetmoon.zeta.piston.ZetaPistonStructureResolver")
 @Mixin(ZetaPistonStructureResolver.class)
-public abstract class ZetaPistonStructureResolverMixin implements ICooperativePiston {
+public abstract class ZetaPistonStructureResolverMixin implements ICooperativePistons {
 
     @Shadow @Final private BlockPos pistonPos;
     @Shadow @Final private List<BlockPos> myToPush;
@@ -32,7 +34,7 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
     @Override
     public void supp$setCooperators(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
         this.supp$getCooperationState().set(cooperators, pistonDirection, extending);
-        if (this.parent instanceof ICooperativePiston parentCoop) {
+        if (this.parent instanceof ICooperativePistons parentCoop) {
             parentCoop.supp$setCooperators(cooperators, pistonDirection, extending);
         }
     }
@@ -40,7 +42,7 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
     private boolean supp$gateOnRealCooperation(boolean original) {
         if (!ZetaPistonStructureResolver.GlobalSettings.isEnabled()) {
-            if (this.parent instanceof ICooperativePiston parentCoop) {
+            if (this.parent instanceof ICooperativePistons parentCoop) {
                 this.supp$getCooperationState().adoptContributingFrom(parentCoop.supp$getCooperationState());
             }
             return original;
@@ -54,6 +56,13 @@ public abstract class ZetaPistonStructureResolverMixin implements ICooperativePi
     private boolean supp$wrapPistonEqualsCheck(BlockPos candidate, Object pistonPosArg,
                                                Operation<Boolean> original) {
         return this.supp$getCooperationState().wrapEqualsCheck(original.call(candidate, pistonPosArg), candidate);
+    }
+
+    @WrapOperation(method = "addBlockLine",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
+    private BlockState supp$hideCooperatorHeads(Level level, BlockPos pos, Operation<BlockState> original) {
+        return this.supp$getCooperationState().hideCooperatorHeads(original.call(level, pos), pos);
     }
 
     @ModifyExpressionValue(method = "addBlockLine",

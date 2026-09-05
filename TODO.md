@@ -471,3 +471,9 @@
 - glowy plant for the end used for end lamp
 - sculk speaker, redirects all noteblocks to itself
 - - block that lets the player change weather (drum/ritual block)
+- coop pistons on dedicated server: client table was only written in singleplayer so pooled push failed its clientside
+  resolve and the wall teleported. added ClientBoundPistonAttemptPacket sent from PistonCooperationData.markAttempting,
+  check it in game on a real server
+- coop pistons: attempts table is per level and any piston within 12 blocks perpendicular that fired in the last 20
+  ticks gets picked as cooperator candidate, gateResolve drops non contributing ones but the pooled limit during resolve
+  is still inflated by them

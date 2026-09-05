@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class PistonMovementHelper {
+public class BlockMovementHelper {
 
     public static boolean isBEMovementIsHandledByUs() {
         return CommonConfigs.Tweaks.PUSH_BLOCK_ENTITIES.get() && !isBEMovementHandledByQuark();

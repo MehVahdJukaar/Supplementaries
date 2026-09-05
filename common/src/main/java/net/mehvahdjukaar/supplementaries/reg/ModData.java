@@ -6,7 +6,6 @@ import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCooperationData;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PulleyCooperationData;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,11 +14,6 @@ import static net.mehvahdjukaar.supplementaries.Supplementaries.res;
 
 public class ModData {
 
-
-    public static final WorldSavedDataType<PistonCooperationData> COOPERATIVE_PISTONS = RegHelper.registerWorldSavedData(
-            Supplementaries.res("cooperative_pistons"),
-            PistonCooperationData::new, () -> PistonCooperationData.CODEC, null,
-            true);
 
     public static final WorldSavedDataType<PulleyCooperationData> COOPERATIVE_PULLEYS = RegHelper.registerWorldSavedData(
             Supplementaries.res("cooperative_pulleys"),

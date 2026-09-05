@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.block.tiles;
 
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonMovementHelper;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.BlockMovementHelper;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -120,7 +120,7 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
                         level.neighborChanged(pos, movedAfter.getBlock(), pos);
                         CompoundTag carriedNbt = ((ICarryingMovingPiston) be).supp$getCarriedBlockEntityNbt();
                         if (carriedNbt != null) {
-                            PistonMovementHelper.restoreBlockEntity(level, pos, movedAfter, carriedNbt);
+                            BlockMovementHelper.restoreBlockEntity(level, pos, movedAfter, carriedNbt);
                         }
                     }
                 }

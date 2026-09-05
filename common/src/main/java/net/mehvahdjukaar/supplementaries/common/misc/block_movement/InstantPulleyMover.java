@@ -25,7 +25,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 // instant one block rope movement, no animation. used by rope items, arrows and legacy pulleys
-public class RopeMover {
+public class InstantPulleyMover {
 
     public static boolean addRopeDown(BlockPos pos, Level level, @Nullable Player player, InteractionHand hand, Block ropeBlock) {
         return addRope(pos, level, player, hand, ropeBlock, Direction.DOWN, Integer.MAX_VALUE);
@@ -66,7 +66,7 @@ public class RopeMover {
             if (!targetState.canBeReplaced() && placeWhereItWas != null) return false;
             if (!isPushableByRopes(originalState, level, originPos, moveDir)) return false;
             //also stops containers from spilling on removal
-            tileTag = PistonMovementHelper.captureAndDetachBlockEntity(level, originPos);
+            tileTag = BlockMovementHelper.captureAndDetachBlockEntity(level, originPos);
         }
 
         FluidState originalFluid = level.getFluidState(originPos);
@@ -102,7 +102,7 @@ public class RopeMover {
         originalState = Block.updateFromNeighbourShapes(originalState, level, targetPos);
         level.setBlockAndUpdate(targetPos, originalState);
         if (tileTag != null) {
-            PistonMovementHelper.restoreBlockEntity(level, targetPos, originalState, tileTag);
+            BlockMovementHelper.restoreBlockEntity(level, targetPos, originalState, tileTag);
         }
         //populate any block-entity data for cauldron-like blocks moved into a fluid
         MovedFluidFiller.applyPostPlacement(level, targetPos, targetFluid);
@@ -144,6 +144,6 @@ public class RopeMover {
             return true;
         }
 
-        return PistonMovementHelper.isPushableByOurMovers(state, level, pos, moveDir, false, moveDir);
+        return BlockMovementHelper.isPushableByOurMovers(state, level, pos, moveDir, false, moveDir);
     }
 }

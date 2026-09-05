@@ -22,9 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// continuous pulley motion, like PistonBaseBlock.moveBlocks. shifts the resolved structure one
-// slot per call. RopeMover is the instant version
-public final class PulleyMover {
+// continuous pulley motion, like PistonBaseBlock.moveBlocks.
+// RopeMover is the instant version
+public final class ContinuousPulleyMover {
 
     //resolver must have been resolved already, this just applies it
     public static void moveOneStep(Level level, PulleyStructureResolver resolver, int animationTicks) {
@@ -40,7 +40,7 @@ public final class PulleyMover {
             originalStates.add(state);
             vacatedSlots.put(pos, state);
             if (state.hasBlockEntity()) {
-                CompoundTag nbt = PistonMovementHelper.captureAndDetachBlockEntity(level, pos);
+                CompoundTag nbt = BlockMovementHelper.captureAndDetachBlockEntity(level, pos);
                 if (nbt != null) carriedBeNbt.put(pos.immutable(), nbt);
             }
         }
@@ -58,7 +58,6 @@ public final class PulleyMover {
             BlockState destroyState = level.getBlockState(pos);
             BlockEntity be = destroyState.hasBlockEntity() ? level.getBlockEntity(pos) : null;
             Block.dropResources(destroyState, level, pos, be);
-            //neoforge only
             SuppPlatformStuff.onDestroyedByPushReaction(destroyState, level, pos, pushDir);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 18);
             level.gameEvent(GameEvent.BLOCK_DESTROY, pos, Context.of(destroyState));

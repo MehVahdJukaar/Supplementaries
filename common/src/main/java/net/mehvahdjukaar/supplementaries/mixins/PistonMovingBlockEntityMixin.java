@@ -2,7 +2,7 @@ package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonMovementHelper;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.BlockMovementHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 
@@ -78,7 +78,7 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         BlockEntity be = entityBlock.newBlockEntity(this.worldPosition, movedState);
         if (be == null) return null;
         CompoundTag nbt = this.supp$carriedBeNbt;
-        if (nbt != null && PistonMovementHelper.matchesCapturedType(be, nbt)) {
+        if (nbt != null && BlockMovementHelper.matchesCapturedType(be, nbt)) {
             be.loadWithComponents(nbt, this.level.registryAccess());
         }
         be.setLevel(this.level);
@@ -109,7 +109,7 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         if (nbt == null || this.level == null) return;
         BlockState placed = this.level.getBlockState(this.worldPosition);
         if (placed.isAir() || placed.is(Blocks.MOVING_PISTON)) return;
-        PistonMovementHelper.restoreBlockEntity(this.level, this.worldPosition, placed, nbt);
+        BlockMovementHelper.restoreBlockEntity(this.level, this.worldPosition, placed, nbt);
     }
 
     @Inject(method = "tick", at = {

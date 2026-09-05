@@ -2,6 +2,10 @@ package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -9,28 +13,39 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//attached to each PistonStructureResolver, vanilla or Zeta's
+//attached to each PistonStructureResolver
 public class PistonCooperationState {
 
     private Set<BlockPos> cooperatingPistons = Collections.emptySet();
     private Set<BlockPos> contributingCooperators = Collections.emptySet();
+    private Set<BlockPos> cooperatorHeads = Collections.emptySet();
     @Nullable
     private Direction pistonDirection;
     private boolean extending;
-
 
     public void set(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
         this.cooperatingPistons = cooperators;
         this.pistonDirection = pistonDirection;
         this.extending = extending;
         this.contributingCooperators = Collections.emptySet();
+        this.cooperatorHeads = new HashSet<>();
+        if (!extending) {
+            for (BlockPos cooperatorPos : cooperators) cooperatorHeads.add(cooperatorPos.relative(pistonDirection));
+        }
+    }
+
+    //a pull walks toward the piston and stops on air, vanilla removes its own head before resolving for that reason.
+    //cooperator heads stay put until we know the outcome, PistonHeadBlock.onRemove pops a still extended base
+    public BlockState hideCooperatorHeads(BlockState original, BlockPos pos) {
+        if (original.is(Blocks.PISTON_HEAD) && cooperatorHeads.contains(pos)) return Blocks.AIR.defaultBlockState();
+        return original;
     }
 
     public int getPushLimit() {
-        return Math.max(1, cooperatingPistons.size()) * PistonMovementHelper.getPerPistonPushLimit();
+        return Math.max(1, cooperatingPistons.size()) * BlockMovementHelper.getPerPistonPushLimit();
     }
 
-    public Iterable<BlockPos> getContributingCooperators() {
+    public Set<BlockPos> getContributingCooperators() {
         return contributingCooperators;
     }
 
@@ -53,7 +68,7 @@ public class PistonCooperationState {
             if (toPush.contains(start)) contributing.add(cooperatorPos);
         }
         this.contributingCooperators = contributing;
-        return toPush.size() <= (1 + contributing.size()) * PistonMovementHelper.getPerPistonPushLimit();
+        return toPush.size() <= (1 + contributing.size()) * BlockMovementHelper.getPerPistonPushLimit();
     }
 
     public boolean wrapEqualsCheck(boolean originalResult, BlockPos candidate) {

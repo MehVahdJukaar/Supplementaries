@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiPredicate;
 
-// keeps track of who tried to move on which tick, for both pistons and pulleys
+// keeps track of who tried to move on which tick
 public class CooperationTable<A extends CooperationTable.Attempt> {
 
     private static final int MAX_AGE = 20;
@@ -17,7 +17,6 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
         long tick();
     }
 
-    //concurrent because the client tables are written by the integrated server thread
     private final Map<Long, A> attempts = new ConcurrentHashMap<>();
     private final Map<Long, Long> handled = new ConcurrentHashMap<>();
 

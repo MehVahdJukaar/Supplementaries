@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonMovementHelper;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.BlockMovementHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
@@ -33,8 +33,8 @@ public class PistonBaseBlockMixin {
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/state/BlockState;hasBlockEntity()Z"))
     private static boolean supp$allowBlockEntityPush(BlockState state, Operation<Boolean> original) {
-        if (!PistonMovementHelper.isBEMovementIsHandledByUs()) return original.call(state);
-        if (PistonMovementHelper.isMovementBlacklisted(state)) return original.call(state);
+        if (!BlockMovementHelper.isBEMovementIsHandledByUs()) return original.call(state);
+        if (BlockMovementHelper.isMovementBlacklisted(state)) return original.call(state);
         return false;
     }
 
@@ -51,13 +51,13 @@ public class PistonBaseBlockMixin {
                     "Level.setBlockEntity during PistonBaseBlock.moveBlocks. This is not a Supplementaries bug; " +
                     "some other mod is overriding MovingPistonBlock.newMovingBlockEntity and returning null. ");
         }
-        if (!PistonMovementHelper.isBEMovementIsHandledByUs()) {
+        if (!BlockMovementHelper.isBEMovementIsHandledByUs()) {
             original.call(level, movingPiston);
             return;
         }
         Direction direction = extending ? facing : facing.getOpposite();
         BlockPos sourcePos = movingPiston.getBlockPos().relative(direction.getOpposite());
-        CompoundTag compound = PistonMovementHelper.captureAndDetachBlockEntity(level, sourcePos);
+        CompoundTag compound = BlockMovementHelper.captureAndDetachBlockEntity(level, sourcePos);
         if (compound != null && movingPiston instanceof ICarryingMovingPiston carrying) {
             carrying.supp$setCarriedBlockEntityNbt(compound);
         }

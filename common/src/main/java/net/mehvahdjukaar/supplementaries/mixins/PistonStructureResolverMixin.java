@@ -6,10 +6,12 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PistonCooperationState;
-import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICooperativePiston;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICooperativePistons;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 @Mixin(PistonStructureResolver.class)
-public abstract class PistonStructureResolverMixin implements ICooperativePiston {
+public abstract class PistonStructureResolverMixin implements ICooperativePistons {
 
     @Unique
     private final PistonCooperationState supp$cooperationState = new PistonCooperationState();
@@ -51,6 +53,13 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
                                                Operation<Boolean> original) {
         return supp$cooperationState.wrapEqualsCheck(
                 original.call(candidate, pistonPosArg), candidate);
+    }
+
+    @WrapOperation(method = "addBlockLine",
+            at = @At(value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
+    private BlockState supp$hideCooperatorHeads(Level level, BlockPos pos, Operation<BlockState> original) {
+        return supp$cooperationState.hideCooperatorHeads(original.call(level, pos), pos);
     }
 
     @Expression("? > @(12)")

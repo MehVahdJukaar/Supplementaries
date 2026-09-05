@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 import java.util.Map;
 import java.util.Set;
 
-// same as PistonCooperationData but for pulleys. lets an elevator hanging on two ropes move
+// lets an elevator hanging on two ropes move
 public class PulleyCooperationData extends WorldSavedData {
 
     //search radius per axis

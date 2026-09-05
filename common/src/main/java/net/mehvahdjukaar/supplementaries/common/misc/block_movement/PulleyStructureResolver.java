@@ -101,11 +101,12 @@ public class PulleyStructureResolver {
         BlockPos walkPos = firstSlot;
         if (!extending) {
             //retracting needs a rope to eat, extending can start bare
-            if (!RopeMover.isCorrectRope(pulley.ropeBlock(), level.getBlockState(firstSlot), ropeDir)) return true;
+            if (!InstantPulleyMover.isCorrectRope(pulley.ropeBlock(), level.getBlockState(firstSlot), ropeDir))
+                return true;
             consumedRopes.add(firstSlot);
             walkPos = firstSlot.relative(ropeDir);
         }
-        while (RopeMover.isCorrectRope(pulley.ropeBlock(), level.getBlockState(walkPos), ropeDir)) {
+        while (InstantPulleyMover.isCorrectRope(pulley.ropeBlock(), level.getBlockState(walkPos), ropeDir)) {
             if (!toPush.contains(walkPos)) {
                 toPush.add(walkPos);
                 ropePositions.add(walkPos);
@@ -281,7 +282,7 @@ public class PulleyStructureResolver {
                                       Direction movementDirection, boolean allowDestroy,
                                       Direction pulleyFacing) {
         if (state.is(ModTags.ROPE_PUSH_BLACKLIST)) return false;
-        return PistonMovementHelper.isPushableByOurMovers(state, level, pos, movementDirection,
+        return BlockMovementHelper.isPushableByOurMovers(state, level, pos, movementDirection,
                 allowDestroy, pulleyFacing);
     }
 }
