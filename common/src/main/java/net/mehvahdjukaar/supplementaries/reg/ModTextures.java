@@ -133,7 +133,6 @@ public class ModTextures {
     public static final ResourceLocation BUBBLE_BLOCK_COLORS_TEXTURE = Supplementaries.res("block/bubble_block_colors");
 
     public static final ResourceLocation FLAG_ICON = Supplementaries.res("item/gui_slots/empty_slot_flag");
-    public static final ResourceLocation BANNER_ICON = Supplementaries.res("item/gui_slots/empty_slot_banner");
     public static final ResourceLocation MAP_ICON = Supplementaries.res("item/gui_slots/empty_slot_map");
     public static final ResourceLocation ROPE_ICON = Supplementaries.res("item/gui_slots/empty_slot_rope");
     public static final ResourceLocation CHAIN_ICON = Supplementaries.res("item/gui_slots/empty_slot_chain");
@@ -166,9 +165,6 @@ public class ModTextures {
         }
         return ImmutableList.copyOf(l);
     });
-
-    public static final List<ResourceLocation> BANNER_SLOT_ICONS =
-            List.of(BANNER_ICON, FLAG_ICON);
 
     public static final List<ResourceLocation> PULLEY_SLOT_ICONS =
             List.of(ROPE_ICON, CHAIN_ICON);

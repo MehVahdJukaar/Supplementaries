@@ -1,5 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
+import net.mehvahdjukaar.moonlight.api.block.IDirectionalStickyBlock;
+import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.QuarkCompat;
@@ -36,6 +38,24 @@ public class BlockMovementHelper {
         if (state.is(ModTags.RELOCATION_NOT_SUPPORTED)) return true;
         //honour quark's list even when its own module is off
         return state.hasBlockEntity() && CompatHandler.QUARK && QuarkCompat.blacklistsBlockMovement(state);
+    }
+
+    public static boolean isSticky(BlockState state) {
+        if (state.getBlock() instanceof IDirectionalStickyBlock s) return s.isEverSticky(state);
+        return SuppPlatformStuff.isSticky(state);
+    }
+
+    public static boolean canStickToEachOther(BlockState first, BlockState second, Direction firstToSecond) {
+        boolean directional = false;
+        if (first.getBlock() instanceof IDirectionalStickyBlock s) {
+            if (!s.canStickTo(first, firstToSecond, second)) return false;
+            directional = true;
+        }
+        if (second.getBlock() instanceof IDirectionalStickyBlock s) {
+            if (!s.canStickTo(second, firstToSecond.getOpposite(), first)) return false;
+            directional = true;
+        }
+        return directional || SuppPlatformStuff.canStickToEachOther(first, second);
     }
 
     //for our own movers. piston rules plus the blacklist, whatever the push reaction says

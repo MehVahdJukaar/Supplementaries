@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
 import com.google.common.collect.Lists;
-import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -82,7 +81,7 @@ public class PulleyStructureResolver {
         for (int i = 0; i < toPush.size(); i++) {
             BlockPos pos = toPush.get(i);
             if (ropePositions.contains(pos)) continue;
-            if (SuppPlatformStuff.isSticky(level.getBlockState(pos)) && !addBranchingBlocks(pos)) {
+            if (BlockMovementHelper.isSticky(level.getBlockState(pos)) && !addBranchingBlocks(pos)) {
                 return false;
             }
         }
@@ -128,7 +127,6 @@ public class PulleyStructureResolver {
             }
             return true;
         }
-        //don't wind rope around something we can't move
         if (!isPullable(anchorState, level, anchorPos, pushDirection, false, ropeDir)) return false;
 
         if (!toPush.contains(anchorPos) && !addBlockLine(anchorPos, pushDirection)) return false;
@@ -151,12 +149,12 @@ public class PulleyStructureResolver {
         if (this.blocksCountingTowardLimit() + trailingCount > this.totalPushLimit) return false;
 
         BlockState prevTrailingState;
-        while (SuppPlatformStuff.isSticky(currentState)) {
+        while (BlockMovementHelper.isSticky(currentState)) {
             BlockPos trailingPos = originPos.relative(this.pushDirection.getOpposite(), trailingCount);
             prevTrailingState = currentState;
             currentState = this.level.getBlockState(trailingPos);
             if (currentState.isAir()
-                    || !SuppPlatformStuff.canStickToEachOther(prevTrailingState, currentState)
+                    || !BlockMovementHelper.canStickToEachOther(prevTrailingState, currentState, this.pushDirection.getOpposite())
                     || !isPullable(currentState, this.level, trailingPos, this.pushDirection, false, this.pushDirection.getOpposite())
                     || this.pulleyPositions.contains(trailingPos)
                     //else a sticky anchor would drag the rope above it along
@@ -187,7 +185,7 @@ public class PulleyStructureResolver {
                 for (int k = 0; k <= collisionIndex + addedToThisLine; k++) {
                     BlockPos mergedPos = this.toPush.get(k);
                     if (this.ropePositions.contains(mergedPos)) continue;
-                    if (SuppPlatformStuff.isSticky(this.level.getBlockState(mergedPos)) && !this.addBranchingBlocks(mergedPos)) {
+                    if (BlockMovementHelper.isSticky(this.level.getBlockState(mergedPos)) && !this.addBranchingBlocks(mergedPos)) {
                         return false;
                     }
                 }
@@ -231,7 +229,7 @@ public class PulleyStructureResolver {
             if (direction.getAxis() != this.pushDirection.getAxis()) {
                 BlockPos neighborPos = fromPos.relative(direction);
                 BlockState neighborState = this.level.getBlockState(neighborPos);
-                if (SuppPlatformStuff.canStickToEachOther(neighborState, fromState)
+                if (BlockMovementHelper.canStickToEachOther(neighborState, fromState, direction.getOpposite())
                         && !this.addBlockLine(neighborPos, direction)) {
                     return false;
                 }

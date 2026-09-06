@@ -35,17 +35,16 @@ public class FlagItemRenderer extends ItemStackRenderer {
             matrixStackIn.pushPose();
             DyeColor color = ((FlagItem) stack.getItem()).getColor();
 
-            if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
-                renderBanner(bannerModel.get(), 0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
-                return;
-            }
-
             matrixStackIn.translate(-0.71875, 0, 0);
             Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             matrixStackIn.translate(0.5 + 0.0625, 0, 0.5);
             matrixStackIn.mulPose(RotHlpr.Y90);
-            FlagBlockTileRenderer.renderPatterns(matrixStackIn, bufferIn, patterns, combinedLightIn,
-                    color);
+            if (ClientConfigs.Blocks.FLAG_BANNER.get()) {
+                renderBanner(bannerModel.get(), 0, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn, patterns, color);
+            } else {
+                FlagBlockTileRenderer.renderPatterns(matrixStackIn, bufferIn, patterns, combinedLightIn,
+                        color);
+            }
 
             matrixStackIn.popPose();
         }
