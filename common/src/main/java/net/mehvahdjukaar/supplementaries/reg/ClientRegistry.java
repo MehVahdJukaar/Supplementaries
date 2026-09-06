@@ -24,6 +24,8 @@ import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredH
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.JarredModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.HatStandModel;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.PlundererModel;
@@ -66,7 +68,9 @@ import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.SkullBlockRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
 import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
@@ -77,6 +81,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.*;
@@ -169,6 +174,7 @@ public class ClientRegistry {
 
 
         ClientHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
+        ClientHelper.addEntityLayersRegistration(ClientRegistry::registerEntityLayers);
         ClientHelper.addBlockEntityRenderersRegistration(ClientRegistry::registerBlockEntityRenderers);
         ClientHelper.addBlockColorsRegistration(ClientRegistry::registerBlockColors);
         ClientHelper.addItemColorsRegistration(ClientRegistry::registerItemColors);
@@ -383,6 +389,27 @@ public class ClientRegistry {
         event.register(ModEntities.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
         event.register(ModEntities.FALLING_SACK.get(), FallingBlockRenderer::new);
         event.register(ModEntities.PEARL_MARKER.get(), NoopRenderer::new);
+    }
+
+    @EventCalled
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static void registerEntityLayers(EntityType<? extends LivingEntity> type, LivingEntityRenderer<?, ?> renderer,
+                                             ClientHelper.EntityLayerEvent.LayerAdder adder,
+                                             EntityRendererProvider.Context context) {
+        var models = context.getModelSet();
+        if (type == EntityType.PLAYER) {
+            adder.add(new QuiverLayer(renderer, false));
+            adder.add(new JarredHeadLayer(renderer, models));
+            adder.add(new PartyHatLayer.Generic(renderer, models));
+        } else if (type == EntityType.SKELETON || type == EntityType.STRAY) {
+            adder.add(new QuiverLayer(renderer, true));
+        } else if (type == EntityType.CREEPER) {
+            adder.add(new PartyHatLayer.Creeper(renderer, models, context.getItemInHandRenderer()));
+        }
+        //dragon has no head to slime
+        if (type != EntityType.ENDER_DRAGON) {
+            adder.add(new SlimedLayer<>(renderer));
+        }
     }
 
     @EventCalled

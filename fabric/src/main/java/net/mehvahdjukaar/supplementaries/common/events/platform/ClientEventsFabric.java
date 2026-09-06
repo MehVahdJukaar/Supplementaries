@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
@@ -12,9 +11,6 @@ import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.hud.SlimedOverlayHud;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.PartyHatLayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
-import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.SlimedLayer;
 import net.mehvahdjukaar.supplementaries.common.events.ClientEvents;
 import net.mehvahdjukaar.supplementaries.common.utils.IQuiverPlayer;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
@@ -22,8 +18,6 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.world.entity.EntityType;
 
 import java.util.List;
 
@@ -50,22 +44,6 @@ public class ClientEventsFabric {
 
 
         HudRenderCallback.EVENT.register(ClientEventsFabric::onRenderHud);
-
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((t, r, e, c) -> {
-            if (r instanceof PlayerRenderer) {
-                e.register(new QuiverLayer(r, false));
-
-            } else if (t == EntityType.SKELETON) {
-                e.register(new QuiverLayer(r, true));
-            } else if (t == EntityType.STRAY) {
-                e.register(new QuiverLayer(r, true));
-            } else if (t == EntityType.CREEPER) {
-                e.register(new PartyHatLayer.Creeper(r, c.getModelSet(), c.getItemInHandRenderer()));
-            } else if (t == EntityType.CREEPER) {
-                e.register(new PartyHatLayer.Creeper(r, c.getModelSet(), c.getItemInHandRenderer()));
-            }
-            e.register(new SlimedLayer<>(r));
-        });
 
     }
 
