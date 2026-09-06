@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.stream.IntStream;
 
 public class HourGlassBlockTile extends ItemDisplayTile {
-    private HourglassTimeData sandData = HourglassTimeData.EMPTY;
+    private HourglassTimeData sandData = null;
     private float progress = 0; //0-1 percentage of progress
     private float prevProgress = 0;
     private int power = 0;
@@ -34,12 +34,13 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, HourGlassBlockTile tile) {
         Direction dir = pState.getValue(HourGlassBlock.FACING);
-        if (!tile.sandData.isEmpty()) {
+        HourglassTimeData data = tile.getSandData();
+        if (!data.isEmpty()) {
             tile.prevProgress = tile.progress;
             if (dir == Direction.UP && tile.progress != 1) {
-                tile.progress = Math.min(tile.progress + tile.sandData.getIncrement(), 1f);
+                tile.progress = Math.min(tile.progress + data.getIncrement(), 1f);
             } else if (dir == Direction.DOWN && tile.progress != 0) {
-                tile.progress = Math.max(tile.progress - tile.sandData.getIncrement(), 0f);
+                tile.progress = Math.max(tile.progress - data.getIncrement(), 0f);
             }
         }
 
@@ -81,7 +82,12 @@ public class HourGlassBlockTile extends ItemDisplayTile {
     }
 
     public HourglassTimeData getSandData() {
-        return sandData;
+        //resolved late cause level is still null when loadAdditional runs on the server
+        if (this.sandData == null) {
+            this.sandData = HourglassTimesManager.getInstance(this.level.registryAccess())
+                    .getData(this.getDisplayedItem().getItem());
+        }
+        return this.sandData;
     }
 
     public float getProgress(float partialTicks) {
@@ -90,7 +96,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
 
     public ResourceLocation getTexture() {
         if (this.cachedTexture == null) {
-            this.cachedTexture = this.sandData.computeTexture(this.getDisplayedItem(), this.level);
+            this.cachedTexture = this.getSandData().computeTexture(this.getDisplayedItem(), this.level);
         }
         return this.cachedTexture;
     }
@@ -100,7 +106,7 @@ public class HourGlassBlockTile extends ItemDisplayTile {
         this.progress = tag.getFloat("Progress");
         this.prevProgress = tag.getFloat("PrevProgress");
         this.cachedTexture = null;
-        this.sandData = HourglassTimeData.EMPTY;
+        this.sandData = null;
         super.loadAdditional(tag, registries);
     }
 
