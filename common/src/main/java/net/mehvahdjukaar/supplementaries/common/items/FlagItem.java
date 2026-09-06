@@ -5,6 +5,8 @@ import net.mehvahdjukaar.moonlight.api.client.LoomItemRenderer;
 import net.mehvahdjukaar.moonlight.api.item.ILoomItem;
 import net.mehvahdjukaar.supplementaries.client.renderers.FlagLoomRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
+import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
@@ -32,6 +34,11 @@ public class FlagItem extends BlockItem implements IColored, ILoomItem {
     @Override
     public DyeColor getLoomBaseColor(ItemStack stack) {
         return this.getColor();
+    }
+
+    @Override
+    public ResourceLocation getLoomSlotIcon() {
+        return ModTextures.FLAG_ICON;
     }
 
     @Override

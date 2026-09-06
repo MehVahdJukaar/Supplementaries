@@ -14,7 +14,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -178,8 +177,6 @@ public class PulleyBlockTile extends ItemDisplayTile {
         } else return releaseRope(Direction.DOWN, Integer.MAX_VALUE, true);
     }
 
-    //called once per tick by an analog rotator like a turn table. speed is its redstone power.
-    //first call fires right away, later ones tick down a cooldown so the cadence stays the same
     public void driveAnalog(Level level, boolean ccw, float speed) {
         long now = level.getGameTime();
         boolean driverPaused = this.lastAnalogDriveTick != now - 1;
@@ -220,9 +217,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
     }
 
 
-    //called when another pulley indirectly rotates this through a rope or chain
     public boolean rotateIndirect(Player player, InteractionHand hand, Block ropeBlock, Direction moveDir, boolean retracting) {
-        //continuous mode is event driven and doesn't chain pulleys through ropes
         if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) return false;
         ItemStack stack = getDisplayedItem();
         if (stack.isEmpty()) {
@@ -277,15 +272,9 @@ public class PulleyBlockTile extends ItemDisplayTile {
         }
     }
 
-
-    //no need since it doesn't display stuff
+    //needed for continuous stuff
     @Override
     public boolean needsToUpdateClientWhenChanged() {
-        return false;
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return null;
+        return true;
     }
 }
