@@ -1,4 +1,4 @@
 {
   "loader": "supplementaries:blackboard",
-  "frame": "supplementaries:block/blackboard_frame"
+  "frame": "supplementaries:special_models/block/blackboard_frame"
 }

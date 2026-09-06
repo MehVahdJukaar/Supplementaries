@@ -1,17 +1,17 @@
 {
   "loader": "neoforge:separate_transforms",
   "base": {
-    "parent": "supplementaries:item/flute_in_hand"
+    "parent": "supplementaries:special_models/item/flute_in_hand"
   },
   "perspectives": {
     "gui": {
-      "parent": "supplementaries:item/flute_gui"
+      "parent": "supplementaries:special_models/item/flute_gui"
     },
     "ground": {
-      "parent": "supplementaries:item/flute_gui"
+      "parent": "supplementaries:special_models/item/flute_gui"
     },
     "fixed": {
-      "parent": "supplementaries:item/flute_gui"
+      "parent": "supplementaries:special_models/item/flute_gui"
     }
   },
   "textures": {

@@ -3,7 +3,7 @@
     {
       "models": [
         {
-          "model": "supplementaries:block/books/book_tattered",
+          "model": "supplementaries:special_models/block/books/book_tattered",
           "color": "brown"
         }
       ],
@@ -14,7 +14,7 @@
     {
       "models": [
         {
-          "model": "supplementaries:block/books/book_written",
+          "model": "supplementaries:special_models/block/books/book_written",
           "color": "brown"
         }
       ]

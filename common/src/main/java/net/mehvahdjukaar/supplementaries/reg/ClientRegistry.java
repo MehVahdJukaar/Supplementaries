@@ -4,14 +4,12 @@ import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.mehvahdjukaar.moonlight.api.client.CoreShaderContainer;
-import net.mehvahdjukaar.moonlight.api.client.LoomSlotIcons;
 import net.mehvahdjukaar.moonlight.api.client.gui.ConfigScreenExtensions;
 import net.mehvahdjukaar.moonlight.api.client.model.NestedModelLoader;
 import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGeneric;
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -157,7 +155,7 @@ public class ClientRegistry {
     }
 
     private static ModelResourceLocation modelRes(String name) {
-        return RenderUtil.getStandaloneModelLocation(Supplementaries.res(name));
+        return RenderUtil.getStandaloneModelLocation(Supplementaries.res("special_models/" + name));
     }
 
     public static void init() {
@@ -167,6 +165,7 @@ public class ClientRegistry {
         ConfigScreenExtensions.registerShowcase(Supplementaries.MOD_ID, GlobeShowcaseWidget.SHOWCASE);
         ClientHelper.addClientReloadListener(() -> MobHeadShadersManager.INSTANCE, Supplementaries.res("mob_head_effects"));
         ClientHelper.addClientReloadListener(() -> FlowerBoxModelsManager.INSTANCE, Supplementaries.res("flower_box_plants"));
+        ClientHelper.addClientReloadListener(() -> PlaceableBookManagerClient.INSTANCE, Supplementaries.res("placeable_books_visuals"));
 
 
         ClientHelper.addEntityRenderersRegistration(ClientRegistry::registerEntityRenderers);
@@ -175,7 +174,6 @@ public class ClientRegistry {
         ClientHelper.addItemColorsRegistration(ClientRegistry::registerItemColors);
         ClientHelper.addParticleRegistration(ClientRegistry::registerParticles);
         ClientHelper.addModelLayerRegistration(ClientRegistry::registerModelLayers);
-        ClientHelper.addSpecialModelRegistration(ClientRegistry::registerSpecialModels);
         ClientHelper.addTooltipComponentRegistration(ClientRegistry::registerTooltipComponent);
         ClientHelper.addModelLoaderRegistration(ClientRegistry::registerModelLoaders);
         ClientHelper.addItemDecoratorsRegistration(ClientRegistry::registerItemDecorators);
@@ -186,8 +184,6 @@ public class ClientRegistry {
     }
 
     public static void setup() {
-
-        LoomSlotIcons.add(ModTextures.FLAG_ICON);
 
         //compat
         CompatHandlerClient.setup(); //if this fails other stuff below will to. In other words we'll at least know that it failed since nothing will work anymore
@@ -436,30 +432,6 @@ public class ClientRegistry {
         var renderer = new FlagItemRenderer();
         for (var f : ModRegistry.FLAGS.values()) {
             event.register(f.get(), renderer);
-        }
-    }
-
-    @EventCalled
-    private static void registerSpecialModels(ClientHelper.SpecialModelEvent event) {
-        WAY_SIGN_MODELS.get().values().forEach(event::register);
-        PlaceableBookManagerClient.registerExtraModels(event);
-        event.register(BLACKBOARD_FRAME);
-        event.register(BOAT_MODEL);
-        event.register(LUNCH_BOX_ITEM_MODEL);
-        event.register(LUNCH_BOX_OPEN_ITEM_MODEL);
-        event.register(LUNCH_BOX_DYED_ITEM_MODEL);
-        event.register(LUNCH_BOX_OPEN_DYED_ITEM_MODEL);
-        event.register(ALTIMETER_TEMPLATE);
-        event.register(ALTIMETER_OVERLAY);
-
-        //not needed on forge
-        if (PlatHelper.getPlatform().isFabric()) {
-            event.register(FLUTE_3D_MODEL);
-            event.register(FLUTE_2D_MODEL);
-            event.register(QUIVER_2D_MODEL);
-            event.register(QUIVER_3D_MODEL);
-            event.register(POPPER_GUI_MODEL);
-            event.register(POPPER_HEAD_MODEL);
         }
     }
 

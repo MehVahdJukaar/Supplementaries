@@ -3,7 +3,7 @@
     {
       "models": [
         {
-          "model": "supplementaries:block/books/book_enchanted",
+          "model": "supplementaries:special_models/block/books/book_enchanted",
           "color": "brown",
           "has_glint": true
         }

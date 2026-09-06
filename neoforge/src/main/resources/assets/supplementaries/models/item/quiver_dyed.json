@@ -1,17 +1,17 @@
 {
   "loader": "neoforge:separate_transforms",
   "base": {
-    "parent": "supplementaries:item/quiver_in_hand_dyed"
+    "parent": "supplementaries:special_models/item/quiver_in_hand_dyed"
   },
   "perspectives": {
     "gui": {
-      "parent": "supplementaries:item/quiver_gui_dyed"
+      "parent": "supplementaries:special_models/item/quiver_gui_dyed"
     },
     "ground": {
-      "parent": "supplementaries:item/quiver_gui_dyed"
+      "parent": "supplementaries:special_models/item/quiver_gui_dyed"
     },
     "fixed": {
-      "parent": "supplementaries:item/quiver_gui_dyed"
+      "parent": "supplementaries:special_models/item/quiver_gui_dyed"
     }
   },
   "overrides": [

@@ -216,7 +216,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             StaticResource spItemModel = StaticResource.getOrThrow(manager,
                     ResType.ITEM_MODELS.getPath(Supplementaries.res("way_sign_oak")));
             StaticResource spBlockModel = StaticResource.getOrThrow(manager,
-                    ResType.BLOCK_MODELS.getPath(Supplementaries.res("way_signs/way_sign_oak")));
+                    ResType.MODELS.getPath(Supplementaries.res("special_models/block/way_signs/way_sign_oak")));
             ModRegistry.WAY_SIGN_ITEMS.forEach((wood, sign) -> {
                 if (wood == VanillaWoodTypes.OAK) return;
                 String id = Utils.getID(sign).getPath();
