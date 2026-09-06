@@ -432,6 +432,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             uuid = entityWhoIgnitedId;
         }
         if (uuid == null) return null;
+        //mobs shoot these too. with no owner the ball just hits the boat it came from
+        if (level instanceof ServerLevel sl) return sl.getEntity(uuid);
         return level.getPlayerByUUID(uuid);
     }
 
@@ -519,7 +521,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public Quaternionf getWorldOrientation(float partialTicks) {
         Quaternionf localRot = getLocalOrientation(partialTicks);
         Quaternionf referenceRot = referenceFrame.getRotation(partialTicks);
-        return localRot.mul(referenceRot);
+        //frame rot goes on the outside, like the pose stack does when rendering
+        return referenceRot.mul(localRot);
     }
 
     private Quaternionf getWantedLocalRotation() {

@@ -1,2 +1,3 @@
-- misc fixes
-- improved cannon handling on sable stuff (experimental)
+- fixed pulley animation on first pull
+- fixed cannon boat shoot range
+- fixed flags banner config item renderer
