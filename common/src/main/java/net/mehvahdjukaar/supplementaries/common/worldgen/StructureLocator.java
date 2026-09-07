@@ -267,40 +267,26 @@ public class StructureLocator {
             RandomSpreadStructurePlacement placement, ChunkPos chunkPosition,
             BlockPos searchCenter) {
 
-        LocatedStructure foundStructures = null;
-        // The target set usually contains 1 structure since it's unlikely that
-        // 2 structures have the same placement
-
         // This check is performance-sensitive
         StructureCheckResult checkResult = structureManager.checkStructurePresence(
                 chunkPosition, targetStructures.value(), placement, skipKnownStructures);
+        if (checkResult == StructureCheckResult.START_NOT_PRESENT) return null;
 
-        if (checkResult != StructureCheckResult.START_NOT_PRESENT) {
-            if (!skipKnownStructures && checkResult == StructureCheckResult.START_PRESENT) {
-                // For already generated chunks, include structures without start data
-                foundStructures = LocatedStructure.relativeTo(
-                        placement.getLocatePos(chunkPosition),
-                        targetStructures, null, searchCenter);
-            } else {
-                ChunkAccess chunk = level.getChunk(
-                        chunkPosition.x, chunkPosition.z, ChunkStatus.STRUCTURE_STARTS);
-                StructureStart structureStart = structureManager.getStartForStructure(
-                        SectionPos.bottomOf(chunk), targetStructures.value(), chunk);
+        //when we dont need the start we trust the presence check and never load the chunk.
+        if (!skipKnownStructures) {
+            return LocatedStructure.relativeTo(placement.getLocatePos(chunkPosition),
+                    targetStructures, null, searchCenter);
+        }
 
-                if (structureStart != null && structureStart.isValid() &&
-                        (!skipKnownStructures || structureStart.canBeReferenced())) {
-                    foundStructures = LocatedStructure.relativeTo(
-                            placement.getLocatePos(structureStart.getChunkPos()),
-                            targetStructures,
-                            structureStart, searchCenter);
-                }
-            }
+        ChunkAccess chunk = level.getChunk(chunkPosition.x, chunkPosition.z, ChunkStatus.STRUCTURE_STARTS);
+        StructureStart structureStart = structureManager.getStartForStructure(
+                SectionPos.bottomOf(chunk), targetStructures.value(), chunk);
+
+        if (structureStart != null && structureStart.isValid() && structureStart.canBeReferenced()) {
+            return LocatedStructure.relativeTo(placement.getLocatePos(structureStart.getChunkPos()),
+                    targetStructures, structureStart, searchCenter);
         }
-        if (foundStructures != null) {
-            //Supplementaries.LOGGER.info("Found structure {} at {}, chunk {}",
-            //      targetStructures.getRegisteredName(), foundStructures.position(), chunkPosition);
-        }
-        return foundStructures;
+        return null;
     }
 
     // Used for map items to find a random structure
