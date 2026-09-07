@@ -248,14 +248,14 @@ public class StructureLocator {
             //I believe this is what takes the most time to execute
             StructureCheckResult structurecheckresult = structureManager.checkStructurePresence(chunkpos, holder.value(), skipKnown);
             if (structurecheckresult != StructureCheckResult.START_NOT_PRESENT) {
-                if (!skipKnown && structurecheckresult == StructureCheckResult.START_PRESENT) {
-                    //for not new chunk the ones without start are grabbed too?
+                //when we dont need the start we trust the presence check and never load the chunk
+                if (!skipKnown) {
                     foundStructures.add(new LocatedStruct(placement.getLocatePos(chunkpos), holder, null));
                 } else {
                     ChunkAccess chunkaccess = level.getChunk(chunkpos.x, chunkpos.z, ChunkStatus.STRUCTURE_STARTS);
                     StructureStart structurestart = structureManager.getStartForStructure(SectionPos.bottomOf(chunkaccess), holder.value(), chunkaccess);
                     if (structurestart != null && structurestart.isValid() &&
-                            (!skipKnown || structurestart.canBeReferenced())) { //if it has not other references
+                            structurestart.canBeReferenced()) { //if it has not other references
                         foundStructures.add(new LocatedStruct(
                                 placement.getLocatePos(structurestart.getChunkPos()),
                                 holder,

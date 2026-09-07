@@ -22,7 +22,11 @@ import java.util.concurrent.Executors;
 //Turn back now while you can. You have been warned
 public class BlockGeneratorBlockTile extends BlockEntity {
 
-    private static final ExecutorService EXECUTORS = Executors.newCachedThreadPool();
+    private static final ExecutorService EXECUTOR = Executors.newSingleThreadExecutor(r -> {
+        Thread t = new Thread(r, "supplementaries-way-sign-locator");
+        t.setDaemon(true);
+        return t;
+    });
 
     private CompletableFuture<List<StructureLocator.LocatedStruct>> threadResult;
     private boolean firstTick = true;
@@ -42,7 +46,7 @@ public class BlockGeneratorBlockTile extends BlockEntity {
             tile.threadResult = CompletableFuture.supplyAsync(() -> StructureLocator.findNearestMapFeatures(
                     (ServerLevel) level, ModTags.WAY_SIGN_DESTINATIONS, pos, 250,
                     false, 2, 8),
-                    EXECUTORS).exceptionally(exception -> {
+                    EXECUTOR).exceptionally(exception -> {
                 throwError(pos, exception);
                 return null; // Handle exception by returning null
             });
