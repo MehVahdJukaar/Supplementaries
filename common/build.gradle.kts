@@ -3,6 +3,7 @@ plugins {
 }
 
 common {
+    neoformVersion = "1.21.1-20240808.144430"
     accessWidener()
 }
 

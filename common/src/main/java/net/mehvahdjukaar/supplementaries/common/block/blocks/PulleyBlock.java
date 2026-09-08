@@ -272,8 +272,15 @@ public class PulleyBlock extends RotatedPillarBlock implements EntityBlock, IRot
     public void rotateAnalog(BlockState state, Level level, BlockPos pos, Direction fromDir, boolean ccw, float speed) {
         if (!CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) return;
         if (!fromDir.getAxis().isHorizontal() || state.getValue(AXIS) != fromDir.getAxis()) return;
-        if (level.getBlockEntity(pos) instanceof PulleyBlockTile tile) {
-            tile.driveAnalog(level, ccw, speed);
+        //daisy chain mode
+        BlockPos.MutableBlockPos cursor = pos.mutable();
+        BlockState current = state;
+        while (current.is(this) && current.getValue(AXIS) == fromDir.getAxis()) {
+            if (level.getBlockEntity(cursor) instanceof PulleyBlockTile tile) {
+                tile.driveAnalog(level, ccw, speed);
+            }
+            cursor.move(fromDir);
+            current = level.getBlockState(cursor);
         }
     }
 
