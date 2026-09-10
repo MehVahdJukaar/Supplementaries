@@ -1,19 +1,18 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import dev.ryanhcode.sable.companion.SableCompanion;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TurnTableBlockTile;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.SableCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -156,7 +155,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
 
             float increment = state.getValue(INVERTED) ? angleIncrement : -1 * angleIncrement;
             Vec3 origin = pos.getBottomCenter();
-            origin = SableCompanion.INSTANCE.projectOutOfSubLevel(world, (Position) origin);
+            origin = SableCompat.projectOutOfSubLevel(world, origin);
             Vec3 oldPos = e.position();
             Vec3 oldOffset = oldPos.subtract(origin);
             Vec3 newOffset = rotateY(oldOffset, increment);

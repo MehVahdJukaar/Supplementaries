@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 
-import dev.ryanhcode.sable.companion.SableCompanion;
 import net.mehvahdjukaar.moonlight.api.block.IWashable;
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
@@ -10,11 +9,11 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.SableCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Position;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -67,7 +66,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     public static void displayCurrentCoordinates(Level level, Player player, BlockPos pos) {
-        Position pp = SableCompanion.INSTANCE.projectOutOfSubLevel(level, (Position) Vec3.atLowerCornerOf(pos));
+        Vec3 pp = SableCompat.projectOutOfSubLevel(level, Vec3.atLowerCornerOf(pos));
 
         String x = String.valueOf(pp.x());
         String z = String.valueOf(pp.z());

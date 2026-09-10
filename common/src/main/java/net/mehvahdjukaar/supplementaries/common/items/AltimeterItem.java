@@ -1,9 +1,8 @@
 package net.mehvahdjukaar.supplementaries.common.items;
 
-import dev.ryanhcode.sable.companion.SableCompanion;
 import net.mehvahdjukaar.supplementaries.common.utils.VibeChecker;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
-import net.minecraft.core.Position;
+import net.mehvahdjukaar.supplementaries.integration.SableCompat;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -24,7 +23,7 @@ public class AltimeterItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         VibeChecker.assertSameLevel(level, player);
         if (level.isClientSide && ClientConfigs.Items.DEPTH_METER_CLICK.get()) {
-            Position pp = SableCompanion.INSTANCE.projectOutOfSubLevel(level, (Position) Vec3.atLowerCornerOf(player.blockPosition()));
+            Vec3 pp = SableCompat.projectOutOfSubLevel(level, Vec3.atLowerCornerOf(player.blockPosition()));
 
             player.displayClientMessage(Component.translatable("message.supplementaries.altimeter", pp.y()), true);
             player.swing(usedHand);

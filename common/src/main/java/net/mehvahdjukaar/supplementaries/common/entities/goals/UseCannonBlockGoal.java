@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.entity.ai.village.poi.PoiManager;
@@ -143,8 +144,12 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
         super.tick();
         if (isReachedTarget()) {
 
+            LivingEntity target = mob.getTarget();
+            //can use runs every other tick. this doesnt...
+            if (target == null) return;
+
             Level level = mob.level();
-            var cannonTile = (CannonBlockTile) level.getBlockEntity(this.blockPos);
+            if (!(level.getBlockEntity(this.blockPos) instanceof CannonBlockTile cannonTile)) return;
             lastTile = cannonTile;
             lastTile.setCurrentUser(mob.getUUID());
 
@@ -157,7 +162,7 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
             boolean canShoot = igniteCannonCooldown <= 0;
             //check if we are in the way and move out incase we are
             Vec3 center = Vec3.atCenterOf(cannonTile.getBlockPos());
-            Vec3 targetPos = mob.getTarget().position();
+            Vec3 targetPos = target.position();
             Vec3 myPos = mob.position();
 
             Vec3 toTarget = targetPos.subtract(center);
@@ -176,9 +181,9 @@ public class UseCannonBlockGoal extends MoveToBlockGoal {
                 moveAroundCannon(wantedDir);
                 return;
             }
-            this.mob.getLookControl().setLookAt(mob.getTarget());
+            this.mob.getLookControl().setLookAt(target);
 
-            if (aimCannonAndShoot(cannonTile, mob, mob.getTarget(), canShoot)) {
+            if (aimCannonAndShoot(cannonTile, mob, target, canShoot)) {
                 igniteCannonCooldown = shootCooldown();
                 ticksSinceShot = 0;
             }

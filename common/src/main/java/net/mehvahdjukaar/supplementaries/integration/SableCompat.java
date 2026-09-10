@@ -4,6 +4,7 @@ import dev.ryanhcode.sable.companion.SableCompanion;
 import dev.ryanhcode.sable.companion.SubLevelAccess;
 import dev.ryanhcode.sable.companion.math.BoundingBox3d;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -13,6 +14,10 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
 
 public class SableCompat {
+
+    public static Vec3 projectOutOfSubLevel(Level level, Vec3 pos) {
+        return SableCompanion.INSTANCE.projectOutOfSubLevel(level, (Position) pos);
+    }
 
     /**
      * Bridges a block entity and an entity that might not share the same space, like a block on a ship and a mob
