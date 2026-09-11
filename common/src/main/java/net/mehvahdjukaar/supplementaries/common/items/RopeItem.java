@@ -31,16 +31,15 @@ public class RopeItem extends BlockItem {
         if (player == null || Utils.mayPerformBlockAction(player, context.getClickedPos(), context.getItemInHand())) {
             Level world = context.getLevel();
 
-            // #1915: clicking a rope places at the bottom of its chain instead.
-            // getClickedPos() is the placement target, not the clicked block, so use the hit result
             BlockPos hitPos = context.getHitResult().getBlockPos();
             BlockState blockHit = world.getBlockState(hitPos);
-            if (blockHit.is(ModRegistry.ROPE.get())) {
+            boolean extendsChainDown = blockHit.is(ModRegistry.ROPE.get()) && context.getClickedFace().getAxis() == Direction.Axis.Y;
+            if (extendsChainDown) {
                 BlockPos.MutableBlockPos cursor = hitPos.mutable();
                 while (world.getBlockState(cursor.below()).is(ModRegistry.ROPE.get())) {
                     cursor.move(0, -1, 0);
                 }
-                return super.place(BlockPlaceContext.at(context, cursor.immutable(), Direction.UP));
+                return super.place(BlockPlaceContext.at(context, cursor.immutable(), Direction.DOWN));
             }
 
             BlockPos pos = context.getClickedPos().relative(context.getClickedFace().getOpposite());

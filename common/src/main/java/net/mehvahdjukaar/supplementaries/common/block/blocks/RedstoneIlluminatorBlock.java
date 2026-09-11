@@ -40,7 +40,7 @@ public class RedstoneIlluminatorBlock extends Block {
         super.neighborChanged(state, level, pos, neighborBlock, fromPos, moving);
         if (!level.isClientSide) {
             int pow = level.getBestNeighborSignal(pos);
-            level.setBlock(pos, state.setValue(POWER, Mth.clamp(pow, 0, 15)), 2);
+            level.setBlockAndUpdate(pos, state.setValue(POWER, Mth.clamp(pow, 0, 15)));
         }
     }
 
