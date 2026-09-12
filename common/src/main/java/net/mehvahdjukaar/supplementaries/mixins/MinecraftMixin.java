@@ -12,7 +12,7 @@ public abstract class MinecraftMixin {
     @ModifyExpressionValue(method = "handleKeybinds", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/KeyMapping;consumeClick()Z", ordinal = 0))
     private boolean supp$cancelF5WhenControllingCannon(boolean original) {
-        if (CannonController.isActive()) return false;
+        if (CannonController.isActive() && !CannonController.isInside()) return false;
         return original;
     }
 }

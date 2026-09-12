@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleData;
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AshLayerBlock;
 import net.mehvahdjukaar.supplementaries.common.block.faucet.FaucetBehaviorsManager;
@@ -127,6 +128,7 @@ public class ServerEvents {
     public static void onPlayerLoggedIn(ServerPlayer player) {
 
         VibeChecker.checkVibe(player);
+        PickleData.onPlayerLogin(player);
     }
 
     @EventCalled

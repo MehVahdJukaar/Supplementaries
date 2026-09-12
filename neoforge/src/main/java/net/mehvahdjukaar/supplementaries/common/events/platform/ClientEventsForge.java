@@ -27,6 +27,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.client.event.sound.PlaySoundSourceEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
@@ -66,6 +67,11 @@ public class ClientEventsForge {
     @SubscribeEvent
     public static void onClientEndTick(ClientTickEvent.Post event) {
         ClientEvents.onClientTick(Minecraft.getInstance());
+    }
+
+    @SubscribeEvent
+    public static void onLoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
+        ClientEvents.onDisconnect();
     }
 
     @SubscribeEvent

@@ -7,6 +7,8 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
 import net.mehvahdjukaar.supplementaries.client.ModMaterials;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonRiderRenderer;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonTrajectoryRenderer;
 import net.mehvahdjukaar.supplementaries.client.renderers.VertexModels;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
@@ -111,6 +113,14 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
                 : (!tile.getFuel().isEmpty() ? ModMaterials.CANNON_LOADED_MATERIAL : ModMaterials.CANNON_MATERIAL);
         VertexConsumer builder = material.buffer(bufferSource, RenderType::entityCutout);
         renderer.model.render(poseStack, builder, packedLight, packedOverlay);
+
+        if (tile.hasRider()) {
+            poseStack.pushPose();
+            renderer.legs.translateAndRotate(poseStack);
+            renderer.pivot.translateAndRotate(poseStack);
+            CannonRiderRenderer.renderRider(tile, partialTick, poseStack, bufferSource, packedLight);
+            poseStack.popPose();
+        }
         poseStack.popPose();
     }
 
@@ -167,6 +177,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
     public void render(CannonBlockTile tile, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource,
                        int packedLight, int packedOverlay) {
 
+        if (CannonController.hidesCannon(tile)) return;
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.5, 0.5);

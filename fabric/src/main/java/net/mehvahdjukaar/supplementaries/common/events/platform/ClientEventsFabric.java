@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
@@ -41,6 +42,7 @@ public class ClientEventsFabric {
 
 
         ClientTickEvents.END_CLIENT_TICK.register(ClientEvents::onClientTick);
+        ClientPlayConnectionEvents.DISCONNECT.register((h, c) -> ClientEvents.onDisconnect());
 
 
         HudRenderCallback.EVENT.register(ClientEventsFabric::onRenderHud);

@@ -4,7 +4,6 @@
   "plugin": "net.mehvahdjukaar.supplementaries.mixins.MixinPlugin",
   "client": [
     "BlockEntityRendererDispatcherMixin",
-    "ChatMixin",
     "LevelRendererMixin",
     "ParrotLayerMixin",
     "compat.CompatEmbFluidRendererMixin",

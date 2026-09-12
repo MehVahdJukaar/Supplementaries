@@ -12,6 +12,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -83,6 +84,7 @@ public record SyncCannonPacket(
                 cannon.setChanged();
                 if (stopControlling) {
                     cannon.setCurrentUser(null);
+                    if (entity instanceof Player p && cannon.isRider(p) && !cannon.isFiring()) cannon.dismount();
                 }
                 cannon.syncToClients(ignite);
             } else {

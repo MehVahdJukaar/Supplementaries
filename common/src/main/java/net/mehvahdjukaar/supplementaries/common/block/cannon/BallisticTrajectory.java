@@ -484,7 +484,8 @@ public record BallisticTrajectory(Vec2 pointHit, float pitch, double finalTime, 
      * @param V0y initial velocity
      */
     public static double arcY(double t, float g, float d, float V0y) {
-        if (d == 1) return V0y * t - 0.5 * g * t * t;
+        //half a tick of gravity back, entities move before it gets applied
+        if (d == 1) return (V0y + 0.5 * g) * t - 0.5 * g * t * t;
         float k = g / (d - 1);
         double inLog = 1 / Math.log(d);
         return ((V0y - k) * inLog * (Math.pow(d, t) - 1) + k * t);

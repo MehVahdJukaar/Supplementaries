@@ -8,6 +8,7 @@ import net.minecraft.network.codec.StreamCodec;
 
 public record BallisticData(float drag, float gravity, float initialSpeed) {
     public static final BallisticData LINE = new BallisticData(1, 0, 1);
+    public static final BallisticData PLAYER = new BallisticData(1, 0.08f, 0.6f); //no drag?
 
     public static final Codec<BallisticData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.FLOAT.fieldOf("drag").forGetter(BallisticData::drag),

@@ -18,11 +18,11 @@ public class GuiMixin {
     }
 
     @Inject(method = "renderExperienceLevel", at = @At("HEAD"), cancellable = true)
-    public void vista$cancelXPLevel(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    public void supp$cannonCancelXPLevel(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (CannonController.cancelsXPBar()) ci.cancel();
     }
 
-    @Inject(method = "renderHotbarAndDecorations", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "renderItemHotbar", at = @At("HEAD"), cancellable = true)
     public void supp$cannonCancelHotbar(GuiGraphics guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
         if (CannonController.cancelsHotBar()) ci.cancel();
     }

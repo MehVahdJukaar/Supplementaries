@@ -19,6 +19,11 @@ public class CannonUtils {
 
     public static BallisticTrajectory3D computeTrajectory(
             CannonBlockTile cannon, Vec3 targetPos, ShootingMode shootingMode) {
+        return computeTrajectory(cannon, targetPos, shootingMode, cannon.getBallisticData());
+    }
+
+    public static BallisticTrajectory3D computeTrajectory(
+            CannonBlockTile cannon, Vec3 targetPos, ShootingMode shootingMode, BallisticData ballistic) {
         Vec3 cannonPos = cannon.getGlobalPosition(0);
 
         Vec3 localTarget = targetPos.subtract(cannonPos);
@@ -26,7 +31,6 @@ public class CannonUtils {
         localTarget = localTarget.add(localTarget.normalize().scale(0.05f));
 
         YawPitchRestraint restraints = cannon.getOrientationRestraints();
-        BallisticData ballistic = cannon.getBallisticData();
         float minPitch = restraints.minPitchDeg() * Mth.DEG_TO_RAD;
         float maxPitch = restraints.maxPitchDeg() * Mth.DEG_TO_RAD;
 

@@ -1,6 +1,8 @@
 package net.mehvahdjukaar.supplementaries.client.cannon;
 
+import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticData;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.BallisticTrajectory3D;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.CannonUtils;
 import net.mehvahdjukaar.supplementaries.common.block.cannon.ShootingMode;
@@ -44,6 +46,8 @@ public class CannonController {
     private static float lastCameraYaw = 0;
     private static float lastCameraPitch = 0;
     private static boolean turnedLastTick = false;
+    private static boolean startedInside = false;
+    private static boolean wasInside = false;
 
     public static void startControlling(CannonBlockTile cannon) {
         Minecraft mc = Minecraft.getInstance();
@@ -52,7 +56,9 @@ public class CannonController {
             shootingMode = cannon.getBallisticData().drag() != 0 ? ShootingMode.DOWN : ShootingMode.STRAIGHT;
             lastCameraType = mc.options.getCameraType();
         } //if not it means we entered from manoeuvre mode gui
-        mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+        startedInside = cannon.isRider(mc.player);
+        wasInside = startedInside;
+        mc.options.setCameraType(startedInside ? CameraType.FIRST_PERSON : CameraType.THIRD_PERSON_BACK);
         MutableComponent message = Component.translatable("message.supplementaries.cannon.maneuver",
                 mc.options.keyShift.getTranslatedKeyMessage(),
                 mc.options.keyAttack.getTranslatedKeyMessage());
@@ -77,8 +83,11 @@ public class CannonController {
         lastZoomOut = 0;
         lastCameraPos = null;
         turnedLastTick = false;
-        if (lastCameraType != null) {
-            Minecraft.getInstance().options.setCameraType(lastCameraType);
+        startedInside = false;
+        wasInside = false;
+        var options = Minecraft.getInstance().options;
+        if (lastCameraType != null && !options.getCameraType().isFirstPerson()) {
+            options.setCameraType(lastCameraType);
         }
     }
 
@@ -86,13 +95,27 @@ public class CannonController {
         return cannon != null;
     }
 
+    public static boolean isInside() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        return cannon != null && player != null && cannon.isRider(player);
+    }
+
+    public static boolean isFirstPersonAiming() {
+        return isInside() && Minecraft.getInstance().options.getCameraType().isFirstPerson();
+    }
+
+    public static ShootingMode getShootingMode() {
+        return isFirstPersonAiming() ? ShootingMode.STRAIGHT : shootingMode;
+    }
+
+    public static boolean hidesCannon(CannonBlockTile tile) {
+        return cannon == tile && isFirstPersonAiming();
+    }
+
     public static boolean setupCamera(Camera camera, BlockGetter level, Entity entity,
                                       boolean detached, boolean thirdPersonReverse, float partialTick) {
 
         if (!isActive()) return false;
-        //the camera and the raycast work in world space, the cannon's own coords dont when it sits on a sublevel
-        Vec3 centerCannonPos = SableCompatClient.projectOutOfSubLevel(cannon,
-                cannon.getGlobalPosition(partialTick), partialTick);
 
         if (lastCameraPos == null) {
             lastCameraPos = camera.getPosition();
@@ -101,24 +124,47 @@ public class CannonController {
         }
 
         // lerp camera
-        Vec3 targetCameraPos = centerCannonPos.add(0, 2, 0);
-        float targetYRot = camera.getYRot() + yawIncrease;
-        float targetXRot = Mth.clamp(camera.getXRot() + pitchIncrease, -90, 90);
+        float targetYRot = lastCameraYaw + yawIncrease;
+        float targetXRot = Mth.clamp(lastCameraPitch + pitchIncrease, -90, 90);
+        yawIncrease = 0;
+        pitchIncrease = 0;
+
+        boolean inside = isInside();
+        var options = Minecraft.getInstance().options;
+
+        if (inside && options.getCameraType() == CameraType.THIRD_PERSON_FRONT) {
+            options.setCameraType(CameraType.FIRST_PERSON);
+        }
+        boolean firstPerson = inside && options.getCameraType().isFirstPerson();
+
+        if (firstPerson) {
+            cannon.setWorldOrientation(EntityAngles.of(targetXRot, targetYRot).toQuaternion());
+            cannon.snapToWantedRotationInstantly();
+        }
+
+        Vec3 centerCannonPos = SableCompatClient.projectOutOfSubLevel(cannon,
+                firstPerson ? cannon.getMuzzlePosition(partialTick) : cannon.getGlobalPosition(partialTick), partialTick);
+
+        Vec3 targetCameraPos = firstPerson ? centerCannonPos : centerCannonPos.add(0, 2, 0);
 
         camera.setPosition(targetCameraPos);
         camera.setRotation(targetYRot, targetXRot);
 
         lastCameraPos = camera.getPosition();
-        lastCameraYaw = camera.getYRot();
-        lastCameraPitch = camera.getXRot();
+        lastCameraYaw = targetYRot;
+        lastCameraPitch = targetXRot;
         lastZoomOut = camera.getMaxZoom(4);
 
-        float horizontalOffset = -1;
+        if (!firstPerson) {
+            float horizontalOffset = -1;
+            camera.move(-lastZoomOut, 0, horizontalOffset);
+        }
 
-        camera.move(-lastZoomOut, 0, horizontalOffset);
-
-        yawIncrease = 0;
-        pitchIncrease = 0;
+        if (firstPerson) {
+            trajectory = null;
+            turnedLastTick = false;
+            return true;
+        }
 
         if (!cannon.isFiring()) {
 
@@ -131,7 +177,8 @@ public class CannonController {
             hit = SableCompatClient.clipIncludingSubLevels(level, entity, actualCameraPos, endPos, partialTick);
 
             Vec3 target = SableCompatClient.projectIntoSubLevel(cannon, hit.getLocation(), partialTick);
-            BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, target, shootingMode);
+            BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, target, shootingMode,
+                    inside ? BallisticData.PLAYER : cannon.getBallisticData());
 
             if (comp != null) {
                 trajectory = comp.trajectory();
@@ -148,6 +195,7 @@ public class CannonController {
     // true cancels the thing
     public static boolean onPlayerRotated(double yawAdd, double pitchAdd) {
         if (CannonController.isActive()) {
+            if (isFirstPersonAiming() && cannon.isFiring()) return true;
             float scale = 0.2f;
             yawIncrease += (float) (yawAdd * scale);
             pitchIncrease += (float) (pitchAdd * scale);
@@ -232,6 +280,12 @@ public class CannonController {
         Player player = Minecraft.getInstance().player;
         if (player == null) return;
         if (!isActive()) return;
+        boolean inside = isInside();
+        if (wasInside && !inside) {
+            stopControllingAndSync();
+            return;
+        }
+        wasInside = inside;
         if (cannon.stillValid(player)) {
             if (needsToUpdateServer) {
                 needsToUpdateServer = false;

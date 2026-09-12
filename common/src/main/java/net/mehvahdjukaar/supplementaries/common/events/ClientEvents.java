@@ -7,8 +7,10 @@ import net.mehvahdjukaar.moonlight.api.item.additional_placements.AdditionalItem
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.supplementaries.client.renderers.entities.funny.PickleData;
 import net.mehvahdjukaar.supplementaries.client.MobHeadShadersManager;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
@@ -150,6 +152,11 @@ public class ClientEvents {
         CannonController.onClientTick(minecraft);
     }
 
+    @EventCalled
+    public static void onDisconnect() {
+        PickleData.onPlayerLogOff();
+    }
+
     public static double getRopeWobble(double partialTicks) {
         Player p = Minecraft.getInstance().player;
         if (p != null && !Minecraft.getInstance().isPaused() && !p.isSpectator()) {
@@ -202,6 +209,14 @@ public class ClientEvents {
         if (CannonController.isActive()) {
             CannonController.onInputUpdate(instance);
             preventShiftTillNextKeyUp = true;
+        } else if (CannonBlockTile.riddenBy(player) != null) {
+            instance.up = false;
+            instance.down = false;
+            instance.left = false;
+            instance.right = false;
+            instance.forwardImpulse = 0;
+            instance.leftImpulse = 0;
+            instance.jumping = false;
         } else if (preventShiftTillNextKeyUp) {
             if (!instance.shiftKeyDown) {
                 preventShiftTillNextKeyUp = false;

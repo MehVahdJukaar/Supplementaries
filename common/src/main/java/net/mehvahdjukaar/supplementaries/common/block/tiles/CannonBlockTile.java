@@ -14,10 +14,12 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticDa
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.entities.ICannonRider;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.CannonballWhitelist;
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonAnimationPacket;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundLaunchCannonRiderPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -33,12 +35,14 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
@@ -60,6 +64,9 @@ import java.util.UUID;
 public class CannonBlockTile extends OpenableContainerBlockTile implements IOneUserInteractable {
 
     public static final int MAX_POWER_LEVEL = 4;
+    public static final double BARREL_LENGTH = 0.45;
+    private static final double SEAT_SLACK = 0.05;
+    private static final int MAX_FLIGHT_TICKS = 300;
     private final OrientationRig orientation = new OrientationRig();
     @Nullable
     public Object ccPeripheral = null;
@@ -77,6 +84,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     @Nullable
     private UUID entityWhoIgnitedId = null;
+    @Nullable
+    private UUID riderId = null;
 
     //not saved
     @Nullable
@@ -114,6 +123,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public void tick() {
         this.orientation.tick();
+        this.tickRider();
 
         if (this.cooldownTimer > 0) {
             this.cooldownTimer -= 1;
@@ -167,7 +177,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         if (this.getLevel() instanceof ServerLevel sl) {
             //level.blockEvent(worldPosition, this.getBlockState().getBlock(), 1, 0);
             Entity entityWhoIgnited = this.getEntityWhoIgnited();
-            if (this.shootProjectile(sl, entityWhoIgnited)) {
+            boolean shot = this.hasRider() ? this.launchRider() : this.shootProjectile(sl, entityWhoIgnited);
+            if (shot) {
                 referenceFrame.applyRecoil(this.getCannonRecoil());
 
                 if (!(entityWhoIgnited instanceof Player pl) || !pl.isCreative()) {
@@ -185,6 +196,14 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
                 NetworkHelper.sendToAllClientPlayersInRange(sl,
                         BlockPos.containing(this.getGlobalPosition(1)), 128,
                         new ClientBoundCannonAnimationPacket(referenceFrame.makeNetworkTarget(), true));
+            }
+        } else if (this.hasRider()) {
+            //we burn the same fuse, waiting for the server to say we got shot
+            //means watching our own body leave from the cannon camera
+            Player rider = this.getRider();
+            if (rider != null && rider.isLocalPlayer()) {
+                this.setRider(null);
+                launchPlayer(rider, this.getRiderLaunchVelocity());
             }
         }
         this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
@@ -219,6 +238,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         if (tag.contains("ignited_by")) {
             this.entityWhoIgnitedId = tag.getUUID("ignited_by");
         }
+        this.riderId = tag.hasUUID("rider") ? tag.getUUID("rider") : null;
         if (tag.contains("break_whitelist")) {
             this.breakWhitelist = CannonballWhitelist.CODEC.parse(NbtOps.INSTANCE,
                             tag.get("break_whitelist")).resultOrPartial(Supplementaries.LOGGER::error)
@@ -278,7 +298,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     public boolean hasRequiredFuelAndProjectiles() {
-        return !getProjectile().isEmpty() && !getFuel().isEmpty() &&
+        return (hasRider() || !getProjectile().isEmpty()) && !getFuel().isEmpty() &&
                 getFuel().getCount() >= powerLevel;
     }
 
@@ -311,7 +331,10 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return this.saveWithoutMetadata(registries);
+        CompoundTag tag = this.saveWithoutMetadata(registries);
+        //rider is never persisted. a world reload leaves nobody in the cannon
+        if (riderId != null) tag.putUUID("rider", riderId);
+        return tag;
     }
 
     public ItemStack getProjectile() {
@@ -370,6 +393,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         if (index == 0) return stack.is(Items.GUNPOWDER);
+        if (this.hasRider()) return false;
         return !stack.is(ModTags.CANNON_BLACKLIST);
     }
 
@@ -423,6 +447,36 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
         return behavior.fire(projectile.copy(), serverLevel, this.getGlobalPosition(1), 0.5f,
                 facing, firePower, 0, entityWhoFired);
+    }
+
+    private boolean launchRider() {
+        Player rider = this.getRider();
+        if (rider != null) {
+            this.setRider(null);
+            Vec3 velocity = this.getRiderLaunchVelocity();
+            launchPlayer(rider, velocity);
+            if (rider instanceof ServerPlayer sp) {
+                NetworkHelper.sendToClientPlayer(sp, new ClientBoundLaunchCannonRiderPacket(velocity));
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private Vec3 getRiderLaunchVelocity() {
+        return new Vec3(this.getGlobalFacing(1))
+                .scale(this.getFirePower() * BallisticData.PLAYER.initialSpeed());
+    }
+
+    public static void launchPlayer(Player player, Vec3 velocity) {
+        //client shoots itself as soon as its own fuse runs out, so the server packet is just a fallback
+        if (((ICannonRider) player).supplementaries$getCannonFlightTicks() > 0) return;
+        releaseRider(player);
+        ((ICannonRider) player).supplementaries$setCannonFlightTicks(MAX_FLIGHT_TICKS);
+        //keeps the hitbox flat while it clears the barrel. also lets you actually glide if you wear an elytra
+        player.startFallFlying();
+        player.setDeltaMovement(velocity);
+        player.fallDistance = 0;
     }
 
     @Nullable
@@ -489,6 +543,128 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         }
     }
 
+
+    private void tickRider() {
+        if (riderId == null || level == null) return;
+        Player rider = level.getPlayerByUUID(riderId);
+        if (rider == null || rider.isRemoved() || rider.isSpectator()) {
+            if (!level.isClientSide) dismount();
+        } else if (((ICannonRider) rider).supplementaries$getCannonFlightTicks() == 0) {
+            //a just launched rider is still listed here on the client until the shot syncs
+            ((ICannonRider) rider).supplementaries$setCannonPos(this.getBlockPos());
+        }
+    }
+
+    public boolean hasRider() {
+        return riderId != null;
+    }
+
+    @Nullable
+    public Player getRider() {
+        return riderId == null || level == null ? null : level.getPlayerByUUID(riderId);
+    }
+
+    public boolean isRider(Player player) {
+        return player.getUUID().equals(riderId);
+    }
+
+    public boolean canMount(Player player) {
+        return riderId == null && !player.isPassenger() && !this.isFiring()
+                && this.getProjectile().isEmpty();
+    }
+
+    public void mount(Player player) {
+        this.setRider(player.getUUID());
+        ((ICannonRider) player).supplementaries$setCannonFlightTicks(0);
+        ((ICannonRider) player).supplementaries$setCannonPos(this.getBlockPos());
+        player.setDeltaMovement(Vec3.ZERO);
+        player.fallDistance = 0;
+        this.keepRiderSeated(player);
+    }
+
+    //the client owns its own position, so the server only corrects real drift and always via a teleport packet
+    public void keepRiderSeated(Player player) {
+        Vec3 seat = this.getSeatPosition(1);
+        if (player.distanceToSqr(seat) > SEAT_SLACK) placePlayer(player, seat);
+    }
+
+    private static void placePlayer(Player player, Vec3 pos) {
+        if (player instanceof ServerPlayer sp) {
+            sp.connection.teleport(pos.x, pos.y, pos.z, sp.getYRot(), sp.getXRot());
+        } else {
+            player.setPos(pos);
+        }
+    }
+
+    public void dismount() {
+        if (riderId == null) return;
+        Player rider = this.getRider();
+        this.setRider(null);
+        if (rider == null) return;
+        releaseRider(rider);
+        if (level == null || level.isClientSide) return;
+        Vec3 spot = findDismountSpot(rider);
+        if (spot != null) placePlayer(rider, spot);
+    }
+
+    @Nullable
+    private Vec3 findDismountSpot(Player rider) {
+        BlockPos pos = this.getBlockPos();
+        Vector3f facing = this.getGlobalFacing(1);
+        Direction dir = Direction.getNearest(facing.x, 0, facing.z);
+        for (int[] offset : DismountHelper.offsetsForDirection(dir)) {
+            Vec3 spot = DismountHelper.findSafeDismountLocation(rider.getType(), level,
+                    pos.offset(offset[0], 0, offset[1]), false);
+            if (spot != null) return spot;
+        }
+        return DismountHelper.findSafeDismountLocation(rider.getType(), level, pos.above(), false);
+    }
+
+    private void setRider(@Nullable UUID uuid) {
+        this.riderId = uuid;
+        this.setChanged();
+        if (this.level instanceof ServerLevel sl) {
+            BlockState s = this.getBlockState();
+            sl.sendBlockUpdated(this.getBlockPos(), s, s, 3);
+        }
+    }
+
+    public static void releaseRider(Player player) {
+        ((ICannonRider) player).supplementaries$setCannonPos(null);
+        player.fallDistance = 0;
+    }
+
+    @Nullable
+    public static CannonBlockTile riddenBy(Player player) {
+        BlockPos pos = ((ICannonRider) player).supplementaries$getCannonPos();
+        if (pos == null) return null;
+        if (player.level().getBlockEntity(pos) instanceof CannonBlockTile tile
+                && player.getUUID().equals(tile.riderId)) {
+            return tile;
+        }
+        releaseRider(player);
+        return null;
+    }
+
+    public Vec3 getSeatPosition(float partialTicks) {
+        return this.getGlobalPosition(partialTicks).subtract(0, 0.3, 0);
+    }
+
+    public Vec3 getMuzzlePosition(float partialTicks) {
+        return this.getGlobalPosition(partialTicks)
+                .add(new Vec3(this.getGlobalFacing(partialTicks)).scale(BARREL_LENGTH));
+    }
+
+    public boolean isOnMuzzleSide(Vec3 point) {
+        return point.subtract(this.getGlobalPosition(1))
+                .dot(new Vec3(this.getGlobalFacing(1))) > 0;
+    }
+
+    @Override
+    public void setRemoved() {
+        this.dismount();
+        super.setRemoved();
+    }
 
     //new stuff
 

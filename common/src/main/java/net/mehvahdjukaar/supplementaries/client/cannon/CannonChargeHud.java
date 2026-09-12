@@ -9,6 +9,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +31,7 @@ public class CannonChargeHud implements LayeredDraw.Layer {
         int iconLeft = screenWidth / 2 + 96;
         int iconTop = screenHeight - 22;
         int iconW = 14;
-        ResourceLocation tr = switch (CannonController.shootingMode.ordinal()) {
+        ResourceLocation tr = switch (CannonController.getShootingMode().ordinal()) {
             case 0 -> ModTextures.CANNON_TRAJECTORY_0_SPRITE;
             case 1 -> ModTextures.CANNON_TRAJECTORY_1_SPRITE;
             default -> ModTextures.CANNON_TRAJECTORY_2_SPRITE;
@@ -42,29 +43,41 @@ public class CannonChargeHud implements LayeredDraw.Layer {
         graphics.blitSprite(tr2, iconLeft, iconTop, iconW, iconW);
     }
 
-    private static void renderCrossHair(GuiGraphics graphics, int screenWidth, int screenHeight) {
-        graphics.pose().pushPose();
-        graphics.pose().translate(0, 0, -90);
+    private static void renderBarrelOverlay(GuiGraphics graphics) {
+        int w = graphics.guiWidth();
+        int h = graphics.guiHeight();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.depthMask(false);
+        graphics.blit(ModTextures.CANNON_OVERLAY_TEXTURE, 0, 0, -90, 0, 0, w, h, w, h);
+        RenderSystem.depthMask(true);
+    }
 
-        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+    //replaces the vanilla one from GuiMixin so it renders in the same layer with the same state
+    public static void renderCrossHair(GuiGraphics graphics) {
         int w = 9;
         ResourceLocation hitType;
-        if (CannonController.shootingMode == ShootingMode.STRAIGHT) {
+        if (CannonController.getShootingMode() == ShootingMode.STRAIGHT) {
             hitType = ModTextures.CANNON_CROSSHAIR_AIM_SPRITE;
         } else if (CannonController.trajectory == null || CannonController.trajectory.miss()) {
             hitType = ModTextures.CANNON_CROSSHAIR_MISS_SPRITE;
         } else hitType = ModTextures.CANNON_CROSSHAIR_HIT_SPRITE;
 
-        graphics.blitSprite(hitType, (screenWidth - w) / 2, (screenHeight - w) / 2, w, w);
-
+        RenderSystem.enableBlend();
+        RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        graphics.blitSprite(hitType, (graphics.guiWidth() - w) / 2, (graphics.guiHeight() - w) / 2, w, w);
         RenderSystem.defaultBlendFunc();
-
-        graphics.pose().popPose();
+        RenderSystem.disableBlend();
     }
 
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
         if (mc.options.hideGui) return;
+
+        if (mc.options.getCameraType().isFirstPerson() && CannonBlockTile.riddenBy(mc.player) != null) {
+            renderBarrelOverlay(graphics);
+        }
+
         if (CannonController.isActive()) {
 
             CannonBlockTile cannon = CannonController.cannon;
@@ -75,11 +88,9 @@ public class CannonChargeHud implements LayeredDraw.Layer {
 
             renderHotBar(graphics, screenWidth, screenHeight, cannon);
 
-            renderCrossHair(graphics, screenWidth, screenHeight);
-
             renderBar(graphics, screenWidth, screenHeight, cannon, deltaTracker.getGameTimeDeltaPartialTick(false));
 
-            renderTrajectoryIcons(graphics, screenWidth, screenHeight);
+            if (!CannonController.isFirstPersonAiming()) renderTrajectoryIcons(graphics, screenWidth, screenHeight);
 
             RenderSystem.enableDepthTest();
 
@@ -101,8 +112,20 @@ public class CannonChargeHud implements LayeredDraw.Layer {
         graphics.pose().popPose();
         Player player = Minecraft.getInstance().player;
         int yPos = screenHeight - 16 - 3;
-        this.renderSlot(graphics, left + 1 + 47 + 2, yPos, player, cannon.getProjectile(), 1);
+        if (cannon.getRider() instanceof AbstractClientPlayer rider) {
+            renderFace(graphics, left + 1 + 47 + 2, yPos, rider);
+        } else {
+            this.renderSlot(graphics, left + 1 + 47 + 2, yPos, player, cannon.getProjectile(), 1);
+        }
         this.renderSlot(graphics, left + 1 + 113 + 2, yPos, player, cannon.getFuel(), 1);
+    }
+
+    private static void renderFace(GuiGraphics graphics, int x, int y, AbstractClientPlayer rider) {
+        ResourceLocation skin = rider.getSkin().texture();
+        RenderSystem.enableBlend();
+        graphics.blit(skin, x, y, 16, 16, 8, 8, 8, 8, 64, 64);
+        graphics.blit(skin, x, y, 16, 16, 40, 8, 8, 8, 64, 64);
+        RenderSystem.disableBlend();
     }
 
     private void renderBar(GuiGraphics graphics, int screenWidth, int screenHeight, CannonBlockTile cannon,

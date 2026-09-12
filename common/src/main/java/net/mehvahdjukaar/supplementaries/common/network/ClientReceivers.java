@@ -96,6 +96,10 @@ public class ClientReceivers {
         });
     }
 
+    public static void handleLaunchCannonRiderPacket(ClientBoundLaunchCannonRiderPacket message) {
+        withPlayerDo(p -> CannonBlockTile.launchPlayer(p, message.velocity()));
+    }
+
     public static void handleLoginPacket(ClientBoundSendLoginPacket message) {
         withPlayerDo(p -> PlayerSuggestionBoxWidget.setUsernameCache(message.usernameCache()));
     }
