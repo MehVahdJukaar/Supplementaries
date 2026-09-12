@@ -33,13 +33,13 @@ public class RopeItem extends BlockItem {
 
             BlockPos hitPos = context.getHitResult().getBlockPos();
             BlockState blockHit = world.getBlockState(hitPos);
-            boolean extendsChainDown = blockHit.is(ModRegistry.ROPE.get()) && context.getClickedFace().getAxis() == Direction.Axis.Y;
-            if (extendsChainDown) {
+            if (blockHit.is(ModRegistry.ROPE.get())) {
                 BlockPos.MutableBlockPos cursor = hitPos.mutable();
                 while (world.getBlockState(cursor.below()).is(ModRegistry.ROPE.get())) {
                     cursor.move(0, -1, 0);
                 }
-                return super.place(BlockPlaceContext.at(context, cursor.immutable(), Direction.DOWN));
+                BlockPlaceContext chainEnd = BlockPlaceContext.at(context, cursor.immutable(), Direction.DOWN);
+                if (chainEnd.canPlace()) return super.place(chainEnd);
             }
 
             BlockPos pos = context.getClickedPos().relative(context.getClickedFace().getOpposite());
