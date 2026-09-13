@@ -192,7 +192,7 @@ public class CCCompatImpl {
 
         @LuaFunction
         public void setPower(int inPower) {
-            byte power = (byte) Math.min(Math.max(inPower, 1), CannonBlockTile.MAX_POWER_LEVEL);
+            byte power = (byte) Math.clamp(inPower, 1, CannonBlockTile.MAX_POWER_LEVEL);
             tile.setFirePower(power);
             tile.syncToClients(false);
         }

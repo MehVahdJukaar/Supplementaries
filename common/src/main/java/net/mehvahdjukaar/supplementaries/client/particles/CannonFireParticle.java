@@ -182,17 +182,11 @@ public class CannonFireParticle extends TextureSheetParticle {
                                                  double xSpeed, double ySpeed, double zSpeed) {
             float pitch = type.pitch();
             float yaw = type.yaw();
-            float size = type.size();
 
-            Vec3 offset = Vec3.directionFromRotation(pitch, yaw);
-            offset = offset.scale(6.501 / 16f);
-            offset = offset.add(0, 2 / 16f, 0);
-            offset = offset.scale(size);
-
-            return new CannonFireParticle(level, x + offset.x, y + offset.y, z + offset.z,
+            return new CannonFireParticle(level, x, y, z,
                     pitch * Mth.DEG_TO_RAD,
                     -yaw * Mth.DEG_TO_RAD,
-                    sprites, sprites2.get(), size, xSpeed, ySpeed, zSpeed);
+                    sprites, sprites2.get(), type.size(), xSpeed, ySpeed, zSpeed);
         }
     }
 

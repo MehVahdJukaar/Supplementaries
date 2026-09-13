@@ -188,8 +188,8 @@ public class CannonBlock extends DirectionalBlock implements EntityBlock, ILight
         var r = this.lightableInteractWithPlayerItem(state, level, pos, player, hand, stack);
         if (r.consumesAction()) return r;
         if (level.getBlockEntity(pos) instanceof CannonBlockTile tile) {
-            if (stack.isEmpty() && !player.isSecondaryUseActive()
-                    && tile.canMount(player) && tile.isOnMuzzleSide(hitResult.getLocation())) {
+            if (stack.isEmpty() && player.isSecondaryUseActive()
+                    && tile.canMount(player) && tile.isOnMuzzle(hitResult.getLocation())) {
                 if (player instanceof ServerPlayer sp) {
                     tile.mount(player);
                     tile.setCurrentUser(player.getUUID());

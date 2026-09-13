@@ -73,10 +73,6 @@ public class PlayerMixin implements IQuiverEntity, ICannonRider {
         }
         CannonBlockTile cannon = CannonBlockTile.riddenBy(player);
         if (cannon == null) return;
-        if (!player.level().isClientSide && player.isShiftKeyDown()) {
-            cannon.dismount();
-            return;
-        }
         Vec3 seat = cannon.getSeatPosition(1);
         if (player.level().isClientSide) {
             player.setPos(seat);

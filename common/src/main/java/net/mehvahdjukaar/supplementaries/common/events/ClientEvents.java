@@ -212,6 +212,8 @@ public class ClientEvents {
             instance.forwardImpulse = 0;
             instance.leftImpulse = 0;
             instance.jumping = false;
+            instance.shiftKeyDown = false;
+            preventShiftTillNextKeyUp = true;
         } else if (preventShiftTillNextKeyUp) {
             if (!instance.shiftKeyDown) {
                 preventShiftTillNextKeyUp = false;

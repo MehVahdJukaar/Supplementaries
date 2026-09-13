@@ -231,8 +231,16 @@ public class CannonController {
         cannon.sendOpenGuiRequest();
     }
 
-    private static void onKeyShift() {
-        stopControllingAndSync();
+    private static boolean onKeyShift() {
+        if (isActive()) {
+            stopControllingAndSync();
+            return true;
+        }
+        LocalPlayer player = Minecraft.getInstance().player;
+        CannonBlockTile ridden = CannonBlockTile.riddenBy(player);
+        if (ridden == null) return false;
+        ridden.syncToServer(false, true, player);
+        return true;
     }
 
     public static boolean onMouseScrolled(double scrollDelta) {
@@ -298,10 +306,11 @@ public class CannonController {
 
     //called by mixin. its cancellable. maybe switch all to this
     public static boolean onEarlyKeyPress(int key, int scanCode, int action, int modifiers) {
-        if (!isActive()) return false;
+        if (action != GLFW.GLFW_PRESS) return false;
         var options = Minecraft.getInstance().options;
 
-        if (action != GLFW.GLFW_PRESS) return false;
+        if (options.keyShift.matches(key, scanCode)) return onKeyShift();
+        if (!isActive()) return false;
         if (key == 256) {
             stopControllingAndSync();
             return true;
@@ -311,10 +320,6 @@ public class CannonController {
         }
         if (options.keyJump.matches(key, scanCode)) {
             onKeyJump();
-            return true;
-        }
-        if (options.keyShift.matches(key, scanCode)) {
-            onKeyShift();
             return true;
         }
         return false;

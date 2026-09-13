@@ -42,8 +42,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -64,8 +64,9 @@ import java.util.UUID;
 public class CannonBlockTile extends OpenableContainerBlockTile implements IOneUserInteractable {
 
     public static final int MAX_POWER_LEVEL = 4;
-    public static final double BARREL_LENGTH = 0.45;
-    private static final double SEAT_SLACK = 0.05;
+    public static final double BARREL_LENGTH = 6.501 / 16;
+    private static final double BARREL_HEIGHT = 1 / 16f;
+    private static final double SEAT_DISTASNCE_SLACK = 0.05;
     private static final int MAX_FLIGHT_TICKS = 300;
     private final OrientationRig orientation = new OrientationRig();
     @Nullable
@@ -143,11 +144,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         if (this.fuseTimer % 3 != 0) return;
         RandomSource rand = this.level.random;
         Quaternionf rot = this.getWorldOrientation(1);
-        Vec3 pos = this.getGlobalPosition(1);
-        Vector3f wick = rot.transform(new Vector3f(0, 0, -0.4f));
-        double wx = pos.x + wick.x;
-        double wy = pos.y + 1 / 16f + wick.y;
-        double wz = pos.z + wick.z;
+        Vec3 wick = this.getWickPosition(1);
         for (int i = 0; i < 2; i++) {
             Vector3f dir = new Vector3f(
                     (rand.nextFloat() - 0.5f) * 1.6f,
@@ -156,7 +153,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             rot.transform(dir);
             float speed = (0.7f + rand.nextFloat() * 0.7f) / 20f;
             this.level.addParticle(ModParticles.EMBER_SPARK_PARTICLE.get(),
-                    wx, wy, wz, dir.x * speed, dir.y * speed, dir.z * speed);
+                    wick.x, wick.y, wick.z, dir.x * speed, dir.y * speed, dir.z * speed);
         }
     }
 
@@ -469,11 +466,10 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     public static void launchPlayer(Player player, Vec3 velocity) {
-        //client shoots itself as soon as its own fuse runs out, so the server packet is just a fallback
-        if (((ICannonRider) player).supplementaries$getCannonFlightTicks() > 0) return;
+        ICannonRider rider = (ICannonRider) player;
+        if (rider.supplementaries$getCannonFlightTicks() > 0) return;
         releaseRider(player);
-        ((ICannonRider) player).supplementaries$setCannonFlightTicks(MAX_FLIGHT_TICKS);
-        //keeps the hitbox flat while it clears the barrel. also lets you actually glide if you wear an elytra
+        rider.supplementaries$setCannonFlightTicks(MAX_FLIGHT_TICKS);
         player.startFallFlying();
         player.setDeltaMovement(velocity);
         player.fallDistance = 0;
@@ -549,9 +545,12 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         Player rider = level.getPlayerByUUID(riderId);
         if (rider == null || rider.isRemoved() || rider.isSpectator()) {
             if (!level.isClientSide) dismount();
-        } else if (((ICannonRider) rider).supplementaries$getCannonFlightTicks() == 0) {
-            //a just launched rider is still listed here on the client until the shot syncs
-            ((ICannonRider) rider).supplementaries$setCannonPos(this.getBlockPos());
+        } else {
+            ICannonRider cannonRider = (ICannonRider) rider;
+            if (cannonRider.supplementaries$getCannonFlightTicks() == 0) {
+                //a just launched rider is still listed here on the client until the shot syncs
+                cannonRider.supplementaries$setCannonPos(this.getBlockPos());
+            }
         }
     }
 
@@ -582,13 +581,14 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         this.keepRiderSeated(player);
     }
 
-    //the client owns its own position, so the server only corrects real drift and always via a teleport packet
     public void keepRiderSeated(Player player) {
         Vec3 seat = this.getSeatPosition(1);
-        if (player.distanceToSqr(seat) > SEAT_SLACK) placePlayer(player, seat);
+        if (player.distanceToSqr(seat) > SEAT_DISTASNCE_SLACK) {
+            positionRider(player, seat);
+        }
     }
 
-    private static void placePlayer(Player player, Vec3 pos) {
+    private static void positionRider(Player player, Vec3 pos) {
         if (player instanceof ServerPlayer sp) {
             sp.connection.teleport(pos.x, pos.y, pos.z, sp.getYRot(), sp.getXRot());
         } else {
@@ -604,7 +604,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         releaseRider(rider);
         if (level == null || level.isClientSide) return;
         Vec3 spot = findDismountSpot(rider);
-        if (spot != null) placePlayer(rider, spot);
+        if (spot != null) positionRider(rider, spot);
     }
 
     @Nullable
@@ -650,14 +650,24 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return this.getGlobalPosition(partialTicks).subtract(0, 0.3, 0);
     }
 
-    public Vec3 getMuzzlePosition(float partialTicks) {
-        return this.getGlobalPosition(partialTicks)
-                .add(new Vec3(this.getGlobalFacing(partialTicks)).scale(BARREL_LENGTH));
+    private Vec3 getPointAlongBarrel(float partialTicks, double distanceFromCenter) {
+        Vector3f offset = this.getWorldOrientation(partialTicks)
+                .transform(new Vector3f(0, 0, (float) distanceFromCenter));
+        return this.getGlobalPosition(partialTicks).add(offset.x, BARREL_HEIGHT + offset.y, offset.z);
     }
 
-    public boolean isOnMuzzleSide(Vec3 point) {
-        return point.subtract(this.getGlobalPosition(1))
-                .dot(new Vec3(this.getGlobalFacing(1))) > 0;
+    public Vec3 getMuzzlePosition(float partialTicks) {
+        return this.getPointAlongBarrel(partialTicks, BARREL_LENGTH);
+    }
+
+    public Vec3 getWickPosition(float partialTicks) {
+        return this.getPointAlongBarrel(partialTicks, -BARREL_LENGTH);
+    }
+
+    public boolean isOnMuzzle(Vec3 point) {
+        double muzzleHitboxRadius = 0.35;
+        return point.distanceToSqr(this.getMuzzlePosition(1)) <
+                muzzleHitboxRadius * muzzleHitboxRadius;
     }
 
     @Override

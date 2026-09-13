@@ -558,7 +558,8 @@ public class ClientReceivers {
         speed = speed.scale(0.3);
         var opt = new CannonFireParticle.Options(eulerAngles.pitch(), eulerAngles.yaw(), 1);
         speed = Vec3.ZERO;
-        level.addParticle(opt, pos.x, pos.y, pos.z, speed.x, speed.y, speed.z);
+        Vec3 muzzle = cannon.getMuzzlePosition(1);
+        level.addParticle(opt, muzzle.x, muzzle.y, muzzle.z, speed.x, speed.y, speed.z);
         RandomSource ran = level.random;
 
         CannonUtils.spawnDustRing(level, poseStack, speed);
@@ -573,17 +574,10 @@ public class ClientReceivers {
 
     private static PoseStack calculateGlobalCannonNozzleTransform(CannonBlockTile cannon) {
         PoseStack poseStack = new PoseStack();
-        Quaternionf globalRot = cannon.getWorldOrientation(1);
-        Vec3 pos = cannon.getGlobalPosition(1);
-        poseStack.translate(pos.x, pos.y + 1 / 16f, pos.z);
-        poseStack.mulPose(globalRot);
-        poseStack.translate(0, 0, 0.4);
+        Vec3 muzzle = cannon.getMuzzlePosition(1);
+        poseStack.translate(muzzle.x, muzzle.y, muzzle.z);
+        poseStack.mulPose(cannon.getWorldOrientation(1));
         return poseStack;
-    }
-
-    //triangle distribution?
-    private double r(RandomSource random, double a) {
-        return a * (random.nextFloat() + random.nextFloat() - 1);
     }
 
 }
