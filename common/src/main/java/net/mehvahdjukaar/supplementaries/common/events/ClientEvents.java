@@ -12,7 +12,6 @@ import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.renderers.CapturedMobCache;
 import net.mehvahdjukaar.supplementaries.client.screens.ConfigButton;
-import net.mehvahdjukaar.supplementaries.client.screens.FunnyScreen;
 import net.mehvahdjukaar.supplementaries.client.screens.WelcomeMessageScreen;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
 import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
@@ -21,7 +20,6 @@ import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsH
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
 import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
-import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.minecraft.ChatFormatting;
@@ -94,10 +92,6 @@ public class ClientEvents {
                 disabled = !disabled;
             }
             if (!disabled) newScreen = WelcomeMessageScreen.createOptifine(newScreen);
-        }
-        boolean unfunny = ClientConfigs.General.UNFUNNY.get();
-        if (MiscUtils.Festivity.compute().isAprilsFool()) {
-            newScreen = new FunnyScreen(newScreen, unfunny);
         }
         if (!ClientConfigs.General.NO_INCOMPATIBLE_MODS.get() && WelcomeMessageScreen.hasIncompat() && !PlatHelper.isDev()) {
             newScreen = WelcomeMessageScreen.createIncompatibleMods(newScreen);
