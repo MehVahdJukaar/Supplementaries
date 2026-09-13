@@ -6,9 +6,12 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.GrouperMatch;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -51,7 +54,7 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction facing = context.getHorizontalDirection();
+        Direction facing = context.getHorizontalDirection().getOpposite();
         return this.defaultBlockState().setValue(FACING, facing)
                 .setValue(MATCH, findMatch(context.getLevel(), context.getClickedPos(), facing));
     }
@@ -59,38 +62,61 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         if (state.getValue(MATCH) != GrouperMatch.NONE) {
-            this.updateNeighborsInFront(level, pos, state);
+            this.updateNeighborsBehind(level, pos, state);
         }
     }
 
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
         super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        if (neighborBlock == this) {
+            this.updateNextTick(level, pos);
+        } else {
+            this.updateMatchState(state, level, pos);
+        }
+    }
+
+    @Override
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        if (direction.getAxis() == state.getValue(FACING).getClockWise().getAxis()) {
+            this.updateNextTick(level, pos);
+        }
+        return state;
+    }
+
+    private void updateNextTick(LevelAccessor level, BlockPos pos) {
+        if (!level.getBlockTicks().hasScheduledTick(pos, this)) {
+            level.scheduleTick(pos, this, 1);
+        }
+    }
+
+    @Override
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        this.updateMatchState(state, level, pos);
+    }
+
+    private void updateMatchState(BlockState state, Level level, BlockPos pos) {
         GrouperMatch match = findMatch(level, pos, state.getValue(FACING));
         if (match == state.getValue(MATCH)) return;
-        level.setBlock(pos, state.setValue(MATCH, match), 3);
-        this.updateNeighborsInFront(level, pos, state);
+        level.setBlockAndUpdate(pos, state.setValue(MATCH, match));
+        this.updateNeighborsBehind(level, pos, state);
     }
 
-    //strong power has to go through whatever is in front, so that block's own neighbors need poking too
-    private void updateNeighborsInFront(Level level, BlockPos pos, BlockState state) {
-        level.updateNeighborsAt(pos.relative(state.getValue(FACING)), this);
+    private void updateNeighborsBehind(Level level, BlockPos pos, BlockState state) {
+        level.updateNeighborsAt(pos.relative(state.getValue(FACING).getOpposite()), this);
     }
 
-    private GrouperMatch findMatch(BlockGetter level, BlockPos pos, Direction facing) {
+    private static GrouperMatch findMatch(BlockGetter level, BlockPos pos, Direction facing) {
         BlockState left = level.getBlockState(pos.relative(facing.getCounterClockWise()));
         BlockState right = level.getBlockState(pos.relative(facing.getClockWise()));
         if (left.isAir() || !left.is(right.getBlock())) return GrouperMatch.NONE;
-        if (left.is(this)) {
-            return left.getValue(FACING) == right.getValue(FACING) ? GrouperMatch.FULL : GrouperMatch.PARTIAL;
-        }
         return left == right ? GrouperMatch.FULL : GrouperMatch.PARTIAL;
     }
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!isMoving && !state.is(newState.getBlock()) && state.getValue(MATCH) != GrouperMatch.NONE) {
-            this.updateNeighborsInFront(level, pos, state);
+            this.updateNeighborsBehind(level, pos, state);
         }
         super.onRemove(state, level, pos, newState, isMoving);
     }
@@ -102,7 +128,7 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
 
     @Override
     public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction side) {
-        return side == state.getValue(FACING).getOpposite() ? state.getValue(MATCH).power : 0;
+        return side == state.getValue(FACING) ? state.getValue(MATCH).power : 0;
     }
 
     @Override
@@ -112,6 +138,6 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
 
     @VirtualOverride("neoforge")
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
-        return direction == state.getValue(FACING).getOpposite();
+        return direction == state.getValue(FACING);
     }
 }
