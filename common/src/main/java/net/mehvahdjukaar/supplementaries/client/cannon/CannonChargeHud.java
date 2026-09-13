@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -46,10 +47,21 @@ public class CannonChargeHud implements LayeredDraw.Layer {
     private static void renderBarrelOverlay(GuiGraphics graphics) {
         int w = graphics.guiWidth();
         int h = graphics.guiHeight();
+        int size = Math.min(w, h);
+        int left = (w - size) / 2;
+        int top = (h - size) / 2;
+        int right = left + size;
+        int bottom = top + size;
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.depthMask(false);
-        graphics.blit(ModTextures.CANNON_OVERLAY_TEXTURE, 0, 0, -90, 0, 0, w, h, w, h);
+        int barrelBorderColor = 0xff1d1d1d;
+
+        graphics.blit(ModTextures.CANNON_OVERLAY_TEXTURE, left, top, -90, 0, 0, size, size, size, size);
+        graphics.fill(RenderType.guiOverlay(), 0, 0, w, top, -90, barrelBorderColor);
+        graphics.fill(RenderType.guiOverlay(), 0, bottom, w, h, -90, barrelBorderColor);
+        graphics.fill(RenderType.guiOverlay(), 0, top, left, bottom, -90, barrelBorderColor);
+        graphics.fill(RenderType.guiOverlay(), right, top, w, bottom, -90, barrelBorderColor);
         RenderSystem.depthMask(true);
     }
 

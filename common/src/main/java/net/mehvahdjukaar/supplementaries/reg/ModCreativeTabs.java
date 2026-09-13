@@ -86,6 +86,10 @@ public class ModCreativeTabs {
                 ModConstants.PEDESTAL_NAME,
                 ModRegistry.PEDESTAL);
 
+        adder.after(Items.DECORATED_POT, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.PIGNATA_NAME,
+                ModRegistry.PIGNATA);
+
         adder.before(Items.COMPOSTER, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.BLACKBOARD_NAME,
                 ModRegistry.BLACKBOARD);
@@ -370,6 +374,10 @@ public class ModCreativeTabs {
         adder.after(Items.OBSERVER, CreativeModeTabs.REDSTONE_BLOCKS,
                 ModConstants.RELAYER_NAME,
                 ModRegistry.RELAYER);
+
+        adder.after(Items.OBSERVER, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.GROUPER_NAME,
+                ModRegistry.GROUPER);
 
         adder.after(Items.LIGHTNING_ROD, CreativeModeTabs.REDSTONE_BLOCKS,
                 ModConstants.WIND_VANE_NAME,

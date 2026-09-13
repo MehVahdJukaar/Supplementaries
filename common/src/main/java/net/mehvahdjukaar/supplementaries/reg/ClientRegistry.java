@@ -127,6 +127,7 @@ public class ClientRegistry {
     public static final ModelLayerLocation CANNON_MODEL = loc("cannon");
     public static final ModelLayerLocation WIND_VANE_MODEL = loc("wind_vane");
     public static final ModelLayerLocation BUNTING_MODEL = loc("bunting");
+    public static final ModelLayerLocation PIGNATA_MODEL = loc("pignata");
 
     //special models locations
     public static final ModelResourceLocation FLUTE_3D_MODEL = modelRes("item/flute_in_hand");
@@ -439,6 +440,7 @@ public class ClientRegistry {
         event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
         event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), SlidyBlockRenderer::new);
         event.register(ModRegistry.MOVING_PULLEY_BLOCK_TILE.get(), MovingPulleyRenderer::new);
+        event.register(ModRegistry.PIGNATA_TILE.get(), PignataBlockTileRenderer::new);
     }
 
     @EventCalled
@@ -455,6 +457,7 @@ public class ClientRegistry {
         event.register(ModRegistry.JAR_ITEM.get(), new JarItemRenderer());
         event.register(ModRegistry.BLACKBOARD_ITEM.get(), new BlackboardItemRenderer());
         event.register(ModRegistry.BUBBLE_BLOCK_ITEM.get(), new BubbleBlockItemRenderer());
+        event.register(ModRegistry.PIGNATA.get().asItem(), new TileDelegateItemRenderer(ModRegistry.PIGNATA_TILE, ModRegistry.PIGNATA));
         event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new LunchBoxItemRenderer());
         var renderer = new FlagItemRenderer();
         for (var f : ModRegistry.FLAGS.values()) {
@@ -554,6 +557,7 @@ public class ClientRegistry {
         event.register(CANNON_MODEL, CannonBlockTileRenderer::createMesh);
         event.register(WIND_VANE_MODEL, WindVaneBlockTileRenderer::createMesh);
         event.register(BUNTING_MODEL, BuntingBlockTileRenderer::createMesh);
+        event.register(PIGNATA_MODEL, PignataBlockTileRenderer::createMesh);
     }
 
     //same as spider head. We do this because texture pack like to decapitate the spider model. Looking at you, Fresh

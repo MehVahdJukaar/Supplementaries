@@ -221,6 +221,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> DISPENSER_MINECART_ENABLED;
         public static final Supplier<Boolean> DISPENSER_MINECART_ANGLE;
         public static final Supplier<Boolean> RELAYER_ENABLED;
+        public static final Supplier<Boolean> GROUPER_ENABLED;
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_CHAINED;
         public static final Supplier<Boolean> PULLEY_ENABLED;
@@ -347,6 +348,7 @@ public class CommonConfigs {
             GOLD_TRAPDOOR_ENABLED = builder.feature(ModConstants.GOLD_TRAPDOOR_NAME);
             LOCK_BLOCK_ENABLED = builder.feature(ModConstants.LOCK_BLOCK_NAME);
             RELAYER_ENABLED = builder.feature(ModConstants.RELAYER_NAME);
+            GROUPER_ENABLED = builder.feature(ModConstants.GROUPER_NAME);
 
             builder.pop();
         }

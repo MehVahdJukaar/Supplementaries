@@ -61,6 +61,7 @@
     "supplementaries:urn",
     "supplementaries:jar",
     "supplementaries:relayer",
+    "supplementaries:grouper",
     "supplementaries:crystal_display",
     "supplementaries:lapis_bricks_slab",
     "supplementaries:lapis_bricks",

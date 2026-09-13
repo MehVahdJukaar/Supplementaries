@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "supplementaries:block/grouper/grouper_side",
+    "down": "supplementaries:block/grouper/grouper_top",
+    "up": "supplementaries:block/grouper/grouper_top",
+    "north": "supplementaries:block/grouper/grouper_front_off",
+    "south": "supplementaries:block/grouper/grouper_back_off",
+    "east": "supplementaries:block/grouper/grouper_side",
+    "west": "supplementaries:block/grouper/grouper_side"
+  }
+}

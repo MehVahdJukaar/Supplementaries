@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=north,match=none": {
+      "model": "supplementaries:block/grouper_off"
+    },
+    "facing=north,match=partial": {
+      "model": "supplementaries:block/grouper_semi"
+    },
+    "facing=north,match=full": {
+      "model": "supplementaries:block/grouper_on"
+    },
+    "facing=east,match=none": {
+      "model": "supplementaries:block/grouper_off",
+      "y": 90
+    },
+    "facing=east,match=partial": {
+      "model": "supplementaries:block/grouper_semi",
+      "y": 90
+    },
+    "facing=east,match=full": {
+      "model": "supplementaries:block/grouper_on",
+      "y": 90
+    },
+    "facing=south,match=none": {
+      "model": "supplementaries:block/grouper_off",
+      "y": 180
+    },
+    "facing=south,match=partial": {
+      "model": "supplementaries:block/grouper_semi",
+      "y": 180
+    },
+    "facing=south,match=full": {
+      "model": "supplementaries:block/grouper_on",
+      "y": 180
+    },
+    "facing=west,match=none": {
+      "model": "supplementaries:block/grouper_off",
+      "y": 270
+    },
+    "facing=west,match=partial": {
+      "model": "supplementaries:block/grouper_semi",
+      "y": 270
+    },
+    "facing=west,match=full": {
+      "model": "supplementaries:block/grouper_on",
+      "y": 270
+    }
+  }
+}

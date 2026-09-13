@@ -1,0 +1,34 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "grouper"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "grouper"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "111",
+    "2#2",
+    "111"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:redstone"
+    },
+    "1": {
+      "item": "minecraft:prismarine"
+    },
+    "2": {
+      "item": "minecraft:sea_lantern"
+    }
+  },
+  "result": {
+    "id": "supplementaries:grouper"
+  }
+}

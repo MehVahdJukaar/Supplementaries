@@ -95,6 +95,7 @@ public class ClientEvents {
             }
             if (!disabled) newScreen = WelcomeMessageScreen.createOptifine(newScreen);
         }
+        newScreen = WelcomeMessageScreen.setup(newScreen);
         if (!ClientConfigs.General.NO_INCOMPATIBLE_MODS.get() && WelcomeMessageScreen.hasIncompat() && !PlatHelper.isDev()) {
             newScreen = WelcomeMessageScreen.createIncompatibleMods(newScreen);
         }

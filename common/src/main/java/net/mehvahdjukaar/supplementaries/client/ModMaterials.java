@@ -48,6 +48,7 @@ public class ModMaterials {
     public static final Material CANNON_TARGET_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res("block/cannon_target"));
     public static final Material CANNON_TARGET_RED_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res("block/cannon_target_charging"));
     public static final Material WIND_VANE_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS, Supplementaries.res("block/wind_vane"));
+    public static final Material PIGNATA_MATERIAL = new Material(LOCATION_BLOCKS, Supplementaries.res("block/pignata"));
     public static final Map<DyeColor, Material> BUNTING_MATERIAL =
             Arrays.stream(DyeColor.values()).collect(Collectors.toMap(Function.identity(),
                     c -> new Material(TextureAtlas.LOCATION_BLOCKS,

@@ -75,6 +75,7 @@ public final class ModConstants {
     public static final String RAKED_GRAVEL_NAME = "raked_gravel";
     public static final String COG_BLOCK_NAME = "cog_block";
     public static final String RELAYER_NAME = "relayer";
+    public static final String GROUPER_NAME = "grouper";
     public static final String SPRING_LAUNCHER_NAME = "spring_launcher";
     public static final String PISTON_LAUNCHER_HEAD_NAME = "spring_launcher_head";
     public static final String PISTON_LAUNCHER_ARM_NAME = "spring_launcher_arm";
@@ -155,6 +156,7 @@ public final class ModConstants {
     public static final String SPIDER_HEAD_NAME = "spider_head";
     public static final String BARNACLES_NAME = "barnacles";
     public static final String PIRATE_DISC_NAME = "music_disc_heave_ho";
+    public static final String PIGNATA_NAME = "pignata";
 
     public static String cannonBoatBaseName(WoodType wood) {
         return wood.isBambooLike() ? CANNON_RAFT_NAME : CANNON_BOAT_NAME;

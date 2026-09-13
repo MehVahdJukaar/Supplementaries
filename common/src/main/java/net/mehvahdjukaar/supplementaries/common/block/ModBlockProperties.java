@@ -81,6 +81,7 @@ public class ModBlockProperties {
     public static final EnumProperty<RakeDirection> RAKE_DIRECTION = EnumProperty.create("shape", RakeDirection.class);
     public static final EnumProperty<DisplayStatus> ITEM_STATUS = EnumProperty.create("item_status", DisplayStatus.class);
     public static final EnumProperty<Rune> RUNE = EnumProperty.create("rune", Rune.class);
+    public static final EnumProperty<GrouperMatch> GROUPER_MATCH = EnumProperty.create("match", GrouperMatch.class);
     public static final EnumProperty<Bunting> NORTH_BUNTING = EnumProperty.create("north", Bunting.class);
     public static final EnumProperty<Bunting> SOUTH_BUNTING = EnumProperty.create("south", Bunting.class);
     public static final EnumProperty<Bunting> WEST_BUNTING = EnumProperty.create("west", Bunting.class);
@@ -244,6 +245,25 @@ public class ModBlockProperties {
             else t = NONE;
             return Pair.of(t, ForgeHelper.getCraftingRemainingItem(item).map(ItemStack::getItem)
                     .orElse(Items.AIR));
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
+    }
+
+    public enum GrouperMatch implements StringRepresentable {
+        NONE("none", 0),
+        PARTIAL("partial", 7),
+        FULL("full", 15);
+
+        private final String name;
+        public final int power;
+
+        GrouperMatch(String name, int power) {
+            this.name = name;
+            this.power = power;
         }
 
         @Override

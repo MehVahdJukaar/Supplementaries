@@ -133,7 +133,10 @@ public class MiscUtils {
         private static boolean isThisModInDev() {
             Path dir = Path.of("").toAbsolutePath();
             try {
-                if (dir.resolve("dev.dev").toFile().exists()) return true;
+                for (int i = 0; i < 4 && dir != null; i++) {
+                    if (dir.resolve("supplementaries.dev").toFile().exists()) return true;
+                    dir = dir.getParent();
+                }
             }catch (Exception ignored){}
             return false;
         }

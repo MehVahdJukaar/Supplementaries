@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.GrouperMatch;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.*;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.*;
 import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
@@ -578,6 +579,12 @@ public class ModRegistry {
             BlockBehaviour.Properties.ofFullCopy(Blocks.OBSERVER).isRedstoneConductor((s, l, p) -> false)
     ));
 
+    //block comparator
+    public static final Supplier<Block> GROUPER = regWithItem(GROUPER_NAME, () -> new GrouperBlock(
+            BlockBehaviour.Properties.ofFullCopy(Blocks.PRISMARINE)
+                    .lightLevel(s -> s.getValue(GrouperBlock.MATCH) == GrouperMatch.NONE ? 0 : 5)
+    ));
+
     //piston launcher base
     public static final Supplier<Block> SPRING_LAUNCHER = regWithItem(SPRING_LAUNCHER_NAME, () -> new SpringLauncherBlock(
             BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)
@@ -713,6 +720,16 @@ public class ModRegistry {
     public static final Supplier<BlockEntityType<WindVaneBlockTile>> WIND_VANE_TILE = regTile(
             WIND_VANE_NAME, () -> PlatHelper.newBlockEntityType(
                     WindVaneBlockTile::new, WIND_VANE.get()));
+
+    //pignata
+    public static final Supplier<Block> PIGNATA = regWithItem(PIGNATA_NAME, () -> new PignataBlock(
+            BlockBehaviour.Properties.ofFullCopy(Blocks.DECORATED_POT)
+                    .noOcclusion()
+    ));
+
+    public static final Supplier<BlockEntityType<PignataBlockTile>> PIGNATA_TILE = regTile(
+            PIGNATA_NAME, () -> PlatHelper.newBlockEntityType(
+                    PignataBlockTile::new, PIGNATA.get()));
 
     //faucet
     public static final Supplier<Block> FAUCET = regWithItem(FAUCET_NAME, () -> new FaucetBlock(
