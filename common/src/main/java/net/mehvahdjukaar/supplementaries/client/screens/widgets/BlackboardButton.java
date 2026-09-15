@@ -97,7 +97,7 @@ public abstract class BlackboardButton implements GuiEventListener, Renderable, 
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
-        return mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + size) && mouseY < (this.y + size);
+        return GuiHelper.isMouseOver(mouseX, mouseY, this.x, this.y, size, size);
     }
 
     @Override

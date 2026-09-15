@@ -12,7 +12,7 @@ import net.mehvahdjukaar.supplementaries.client.GlobeRenderData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.GlobeBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
-import net.minecraft.Util;
+import net.mehvahdjukaar.moonlight.api.client.gui.FrameClock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -42,7 +42,6 @@ public class GlobeShowcaseWidget extends AbstractWidget {
         }
     };
 
-    // the display transform every block model gets in an inventory slot, so it's seen from the same angle
     private static final float GUI_TILT = 30f;
     private static final float GUI_YAW = 225f;
     private static final float GUI_SCALE = 0.625f;
@@ -57,21 +56,19 @@ public class GlobeShowcaseWidget extends AbstractWidget {
     private final GlobeRenderData defaultData;
 
     private float dragYaw;
-    private float dragged;      // how far this press has moved, so a drag doesn't also spin it
+    private float dragged;
     private float tickTimer;
-    private long lastMs = -1;
+    private final FrameClock clock = new FrameClock();
 
     public GlobeShowcaseWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.translatable("block.supplementaries.globe"));
         this.tile = new GlobeBlockTile(BlockPos.ZERO, ModRegistry.GLOBE.get().defaultBlockState());
-        // its own world, seeded off the mod version, so it changes with every release
         String version = PlatHelper.getModVersion(Supplementaries.MOD_ID);
         this.defaultData = GlobeManager.seededRenderData(version == null ? 0 : version.hashCode());
         this.tile.setRenderData(this.defaultData);
     }
 
     private void refreshRenderData() {
-        // the account name, not the player entity, so this also works from the main menu
         GlobeRenderData owned = GlobeManager.supporterRenderData(Minecraft.getInstance().getUser().getName());
         this.tile.setRenderData(owned == null ? this.defaultData : owned);
     }
@@ -89,8 +86,6 @@ public class GlobeShowcaseWidget extends AbstractWidget {
         PoseStack pose = graphics.pose();
         pose.pushPose();
         pose.translate(this.getX() + this.width / 2f, this.getY() + this.height / 2f, 150);
-        // same chain an item goes through in a slot: the negative y cancels out the gui projection's own flip, so the
-        // quads keep their winding and the culled block render types don't turn inside out
         pose.scale(slot, -slot, slot);
         pose.mulPose(Axis.XP.rotationDegrees(GUI_TILT));
         pose.mulPose(Axis.YP.rotationDegrees(GUI_YAW + this.dragYaw));
@@ -99,7 +94,6 @@ public class GlobeShowcaseWidget extends AbstractWidget {
 
         Lighting.setupFor3DItems();
         MultiBufferSource.BufferSource buffer = graphics.bufferSource();
-        // the stand is the block's own model, only the globe on top of it belongs to the block entity
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(this.tile.getBlockState(), pose, buffer,
                 LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
         renderer.render(this.tile, this.advance(), pose, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
@@ -108,10 +102,7 @@ public class GlobeShowcaseWidget extends AbstractWidget {
     }
 
     private float advance() {
-        long now = Util.getMillis();
-        float dt = this.lastMs < 0 ? 0 : Math.min((now - this.lastMs) / 1000f, 0.1f); // clamp screen-reopen gaps
-        this.lastMs = now;
-        this.tickTimer += dt;
+        this.tickTimer += this.clock.advance();
         while (this.tickTimer >= SECONDS_PER_TICK) {
             this.tickTimer -= SECONDS_PER_TICK;
             this.tile.decaySpin();
