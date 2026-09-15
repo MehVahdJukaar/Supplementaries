@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.mehvahdjukaar.moonlight.api.client.util.LOD;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.NoticeBoardBlockTileRenderer;
@@ -68,7 +69,7 @@ public class NoticeBoardScreen extends AbstractContainerScreen<NoticeBoardContai
 
     @Override
     public boolean keyPressed(int key, int b, int c) {
-        if (key == 256) {
+        if (key == InputConstants.KEY_ESCAPE) {
             this.minecraft.player.closeContainer();
             return true;
         }

@@ -152,7 +152,7 @@ public abstract class SelectableContainerItemHud implements LayeredDraw.Layer {
                 return true;
             }
         }
-        int number = key - 48;
+        int number = key - GLFW.GLFW_KEY_0;
         if (number >= 1 && number <= 9) {
             if (number <= itemUsed.getMaxSlots()) {
                 sendSetSlot(number - 1);

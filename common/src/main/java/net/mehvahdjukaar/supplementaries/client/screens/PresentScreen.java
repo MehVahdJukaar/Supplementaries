@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.MultiLineEditBoxWidget;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.PlayerSuggestionBoxWidget;
@@ -181,7 +182,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
 
     @Override
     public boolean keyPressed(int key, int a, int b) {
-        if (key == 256) {
+        if (key == InputConstants.KEY_ESCAPE) {
             this.minecraft.player.closeContainer();
         }
         return this.recipient.keyPressed(key, a, b) || this.recipient.canConsumeInput() ||
@@ -191,7 +192,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
 
     @Override
     public boolean mouseDragged(double dx, double dy, int key, double mouseX, double mouseY) {
-        if (key == 0) {
+        if (key == InputConstants.MOUSE_BUTTON_LEFT) {
             if (this.descriptionBox.mouseDragged(dx, dy, key, mouseX, mouseY)) return true;
         }
         return super.mouseDragged(dx, dy, key, mouseX, mouseY);

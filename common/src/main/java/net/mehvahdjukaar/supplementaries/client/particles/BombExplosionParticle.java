@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.particles;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.particles.SimpleParticleType;
 
 
@@ -23,7 +24,7 @@ public class BombExplosionParticle extends TextureSheetParticle {
 
     @Override
     public int getLightColor(float partialTick) {
-        return 15728880;
+        return LightTexture.FULL_BRIGHT;
     }
 
     @Override

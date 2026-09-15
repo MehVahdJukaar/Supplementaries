@@ -7,6 +7,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SignPostBlockTile;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.FramedBlocksCompat;
+import net.minecraft.util.CommonColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.LightTexture;
@@ -44,7 +45,7 @@ public class SignPostScreen extends TextHolderEditScreen<SignPostBlockTile> {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, CommonColors.WHITE);
 
         Lighting.setupForFlatItems();
 

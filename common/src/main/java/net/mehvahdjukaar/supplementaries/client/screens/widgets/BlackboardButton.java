@@ -1,18 +1,16 @@
 package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.mehvahdjukaar.supplementaries.client.screens.BlackBoardScreen;
-import net.minecraft.client.Minecraft;
+import net.mehvahdjukaar.moonlight.api.client.gui.GuiHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
 
 
 public abstract class BlackboardButton implements GuiEventListener, Renderable, NarratableEntry {
@@ -69,7 +67,7 @@ public abstract class BlackboardButton implements GuiEventListener, Renderable, 
         if (this.isValidClickButton(button)) {
             boolean flag = this.isMouseOver(mouseX, mouseY);
             if (flag) {
-                this.playDownSound(Minecraft.getInstance().getSoundManager());
+                GuiHelper.playClickSound();
                 this.onClick();
                 return true;
             }
@@ -80,7 +78,7 @@ public abstract class BlackboardButton implements GuiEventListener, Renderable, 
     protected abstract void onClick();
 
     protected boolean isValidClickButton(int button) {
-        return button == 0;
+        return button == InputConstants.MOUSE_BUTTON_LEFT;
     }
 
     public boolean isShouldDrawOverlay() {
@@ -100,11 +98,6 @@ public abstract class BlackboardButton implements GuiEventListener, Renderable, 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
         return mouseX >= this.x && mouseY >= this.y && mouseX < (this.x + size) && mouseY < (this.y + size);
-    }
-
-
-    public void playDownSound(SoundManager handler) {
-        handler.play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
     @Override

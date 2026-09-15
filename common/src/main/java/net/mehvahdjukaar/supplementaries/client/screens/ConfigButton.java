@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.util.FastColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -97,8 +98,7 @@ public class ConfigButton extends Button {
     }
 
     private boolean overlaps(AbstractWidget other) {
-        return this.getX() < other.getX() + other.getWidth() && other.getX() < this.getX() + this.width
-                && this.getY() < other.getY() + other.getHeight() && other.getY() < this.getY() + this.height;
+        return this.getRectangle().overlaps(other.getRectangle());
     }
 
     @Override
@@ -112,7 +112,7 @@ public class ConfigButton extends Button {
         }
         if (this.isHovered && ClientConfigs.General.CONFIG_BUTTON_RAINBOW.get()) {
             graphics.renderOutline(this.getX(), this.getY(), this.width, this.height,
-                    ColorHelper.getRainbowColorPost(3) | 0xFF000000);
+                    FastColor.ARGB32.opaque(ColorHelper.getRainbowColorPost(3)));
         }
         graphics.pose().popPose();
     }

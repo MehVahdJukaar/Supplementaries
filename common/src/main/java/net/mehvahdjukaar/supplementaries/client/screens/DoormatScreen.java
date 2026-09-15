@@ -8,6 +8,7 @@ import net.mehvahdjukaar.moonlight.api.client.util.TextUtil;
 import net.mehvahdjukaar.supplementaries.client.renderers.tiles.DoormatBlockTileRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.DoormatBlock;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.DoormatBlockTile;
+import net.minecraft.util.CommonColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -16,6 +17,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.LightTexture;
 
 public class DoormatScreen extends TextHolderEditScreen<DoormatBlockTile> {
 
@@ -36,7 +38,7 @@ public class DoormatScreen extends TextHolderEditScreen<DoormatBlockTile> {
         super.render(graphics, mouseX, mouseY, partialTicks);
 
         Lighting.setupForFlatItems();
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, CommonColors.WHITE);
 
 
         MultiBufferSource.BufferSource bufferSource = this.minecraft.renderBuffers().bufferSource();
@@ -56,7 +58,7 @@ public class DoormatScreen extends TextHolderEditScreen<DoormatBlockTile> {
         poseStack.mulPose(RotHlpr.Z90);
 
         BlockRenderDispatcher blockRenderer = Minecraft.getInstance().getBlockRenderer();
-        blockRenderer.renderSingleBlock(state, graphics.pose(), bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
+        blockRenderer.renderSingleBlock(state, graphics.pose(), bufferSource, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
 
         poseStack.popPose();
 

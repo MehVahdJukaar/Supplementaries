@@ -11,6 +11,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.tiles.FlagBlockTileRen
 import net.mehvahdjukaar.supplementaries.common.items.FlagItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.Holder;
@@ -50,7 +51,7 @@ public class FlagLoomRenderer implements LoomItemRenderer {
         pose.translate(-1, -0.5, -1.1875);
         Lighting.setupForFlatItems();
 
-        FlagBlockTileRenderer.renderPatterns(pose, buffer, patterns, 15728880, flag.getColor());
+        FlagBlockTileRenderer.renderPatterns(pose, buffer, patterns, LightTexture.FULL_BRIGHT, flag.getColor());
 
         pose.popPose();
         buffer.endBatch();

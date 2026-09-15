@@ -19,6 +19,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,8 +49,8 @@ public class FaucetBakedModel implements CustomBakedModel {
                 if (fluid != null) {
                     List<BakedQuad> liquidQuads = liquid.getQuads(state, side, rand);
                     if (!liquidQuads.isEmpty()) {
-                        int color = ColorUtils.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)) | (0xff000000);
-                        int col2 = (color & 0x00FFFFFF) | (40 << 24);
+                        int color = FastColor.ARGB32.opaque(ColorUtils.swapFormat(data.get(ModBlockProperties.FLUID_COLOR)));
+                        int col2 = FastColor.ARGB32.color(40, color);
                         TextureAtlasSprite sprite = ModMaterials.get(fluid.getFlowingTexture()).sprite();
 
                         BakedQuadsTransformer transformer = BakedQuadsTransformer.create()

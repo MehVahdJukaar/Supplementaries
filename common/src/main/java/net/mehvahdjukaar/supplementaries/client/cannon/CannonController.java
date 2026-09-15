@@ -311,7 +311,7 @@ public class CannonController {
 
         if (options.keyShift.matches(key, scanCode)) return onKeyShift();
         if (!isActive()) return false;
-        if (key == 256) {
+        if (key == GLFW.GLFW_KEY_ESCAPE) {
             stopControllingAndSync();
             return true;
         } else if (options.keyInventory.matches(key, scanCode)) {

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.google.common.base.Preconditions;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.TrappedPresentBlockTile;
@@ -123,7 +124,7 @@ public class TrappedPresentScreen extends AbstractContainerScreen<TrappedPresent
 
     @Override
     public boolean keyPressed(int key, int a, int b) {
-        if (key == 256) {
+        if (key == InputConstants.KEY_ESCAPE) {
             this.minecraft.player.closeContainer();
         }
         return super.keyPressed(key, a, b);

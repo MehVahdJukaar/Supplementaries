@@ -1,11 +1,13 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppClientPlatformStuff;
 import net.mehvahdjukaar.supplementaries.client.screens.widgets.ISlider;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.SpeakerBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetSpeakerBlockPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.minecraft.util.CommonColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -114,7 +116,7 @@ public class SpeakerBlockScreen extends Screen {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (super.keyPressed(keyCode, scanCode, modifiers)) {
             return true;
-        } else if (keyCode != 257 && keyCode != 335) {
+        } else if (keyCode != InputConstants.KEY_RETURN && keyCode != InputConstants.KEY_NUMPADENTER) {
             return false;
         } else {
             this.onDone();
@@ -125,7 +127,7 @@ public class SpeakerBlockScreen extends Screen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (this.volumeSlider == this.getFocused()) {
-            if (button == 0) {
+            if (button == InputConstants.MOUSE_BUTTON_LEFT) {
                 this.volumeSlider.onReleased(mouseX, mouseY);
                 this.setFocused(this.editBox);
             }
@@ -136,6 +138,6 @@ public class SpeakerBlockScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, CommonColors.WHITE);
     }
 }

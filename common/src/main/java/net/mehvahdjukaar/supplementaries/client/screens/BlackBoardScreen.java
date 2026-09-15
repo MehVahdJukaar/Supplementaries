@@ -8,6 +8,7 @@ import net.mehvahdjukaar.supplementaries.client.screens.widgets.DyeBlackBoardBut
 import net.mehvahdjukaar.supplementaries.common.block.tiles.BlackboardBlockTile;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetBlackboardPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.minecraft.util.CommonColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -172,7 +173,7 @@ public class BlackBoardScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, 16777215);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, CommonColors.WHITE);
 
         // RenderSystem.enableDepthTest();
         super.render(graphics, mouseX, mouseY, partialTicks);

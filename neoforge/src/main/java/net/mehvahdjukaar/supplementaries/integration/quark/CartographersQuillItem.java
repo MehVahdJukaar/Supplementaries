@@ -20,6 +20,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -245,7 +246,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         if (layer == 0) return -1;
         Integer c = stack.get(ModComponents.QUILL_COLOR.get());
         if (c == null) return 0;
-        return 0xFF000000 | (c & 0xFFFFFF);
+        return FastColor.ARGB32.opaque(c);
     }
 
     @Nullable

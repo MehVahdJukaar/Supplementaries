@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.client.screens.widgets;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.util.CommonColors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -65,11 +66,11 @@ public class PlayerSuggestionBoxWidget extends MultiLineEditBoxWidget {
                 x += this.font.width(cache.lines[0].contents);
             }
 
-            graphics.drawString(font, this.suggestion, x, this.getY(), -8355712, false);
+            graphics.drawString(font, this.suggestion, x, this.getY(), CommonColors.GRAY, false);
         }
 
         if (this.getText().isEmpty()) {
-            graphics.drawString(font, EMPTY_SEARCH, this.getX(), this.getY(), 0, false);
+            graphics.drawString(font, EMPTY_SEARCH, this.getX(), this.getY(), CommonColors.BLACK, false);
         } else {
             if (this.selectedPlayer != null) {
                 this.selectedPlayer.render(graphics, this.getX(), this.getY(), this.width, this.height, partialTicks);

@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.supplementaries.common.inventories.VariableSizeContainerMenu;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.gui.GuiGraphics;
@@ -71,7 +72,7 @@ public class VariableSizeContainerScreen extends AbstractContainerScreen<Variabl
 
     @Override
     public boolean keyPressed(int key, int b, int c) {
-        if (key == 256) {
+        if (key == InputConstants.KEY_ESCAPE) {
             this.minecraft.player.closeContainer();
             return true;
         }

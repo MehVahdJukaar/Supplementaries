@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.Util;
+import net.minecraft.util.CommonColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
@@ -264,7 +265,7 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
         DisplayCache displayCache = this.getDisplayCache();
 
         for (LineInfo lineInfo : displayCache.lines) {
-            graphics.drawString(this.font, lineInfo.asComponent, lineInfo.x, lineInfo.y, -16777216, false);
+            graphics.drawString(this.font, lineInfo.asComponent, lineInfo.x, lineInfo.y, CommonColors.BLACK, false);
         }
 
         if (this.isFocused()) {
@@ -277,9 +278,9 @@ public class MultiLineEditBoxWidget extends AbstractWidget {
         if (this.frameTick / 6 % 2 == 0) {
             pos2i = this.convertLocalToScreen(pos2i);
             if (!isEndOfText) {
-                graphics.fill(pos2i.x, pos2i.y - 1, pos2i.x + 1, pos2i.y + 9, -16777216);
+                graphics.fill(pos2i.x, pos2i.y - 1, pos2i.x + 1, pos2i.y + 9, CommonColors.BLACK);
             } else {
-                graphics.drawString(this.font, "_", pos2i.x, pos2i.y, 0, false);
+                graphics.drawString(this.font, "_", pos2i.x, pos2i.y, CommonColors.BLACK, false);
             }
         }
     }

@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.client.screens;
 
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundSetTextHolderPacket;
@@ -81,16 +82,14 @@ public abstract class TextHolderEditScreen<T extends BlockEntity & ITextHolderPr
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // up arrow
-        if (keyCode == 265) {
+        if (keyCode == InputConstants.KEY_UP) {
             this.scrollText(1);
             return true;
         }
-        // !down arrow, !enter, !enter, handles special keys
-        else if (keyCode != 264 && keyCode != 257 && keyCode != 335) {
+        // handles special keys
+        else if (keyCode != InputConstants.KEY_DOWN && keyCode != InputConstants.KEY_RETURN && keyCode != InputConstants.KEY_NUMPADENTER) {
             return this.textInputUtil.keyPressed(keyCode) || super.keyPressed(keyCode, scanCode, modifiers);
         }
-        // down arrow, enter
         else {
             this.scrollText(-1);
             return true;

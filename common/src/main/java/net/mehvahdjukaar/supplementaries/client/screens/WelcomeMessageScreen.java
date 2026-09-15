@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.minecraft.util.CommonColors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -118,7 +119,7 @@ public class WelcomeMessageScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         super.render(graphics, mouseX, mouseY, partialTicks);
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 30, 16777215);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 30, CommonColors.WHITE);
         this.message.renderCentered(graphics, this.width / 2, 55);
         this.suggestions.renderCentered(graphics, this.width / 2, 180);
     }
@@ -239,7 +240,7 @@ public class WelcomeMessageScreen extends Screen {
 
         private void drawMultiLineCenteredString(GuiGraphics guiGraphics, Font fr, Component str, int x, int y) {
             for (FormattedCharSequence s : fr.split(str, this.width)) {
-                guiGraphics.drawString(fr, s, (int) (x - fr.width(s) / 2.0), y, 0xFFFFFF, true);
+                guiGraphics.drawString(fr, s, (int) (x - fr.width(s) / 2.0), y, CommonColors.WHITE, true);
                 y += fr.lineHeight;
             }
         }
@@ -297,9 +298,9 @@ public class WelcomeMessageScreen extends Screen {
                     int y = top + 2;
                     for (FormattedCharSequence string : strings) {
                         if (center)
-                            guiGraphics.drawString(font, string, (int) (left + (width - font.width(string)) / 2F), y, 0xFFFFFF, false);
+                            guiGraphics.drawString(font, string, (int) (left + (width - font.width(string)) / 2F), y, CommonColors.WHITE, false);
                         else
-                            guiGraphics.drawString(font, string, left + 5, y, 0xFFFFFF, false);
+                            guiGraphics.drawString(font, string, left + 5, y, CommonColors.WHITE, false);
                         y += font.lineHeight;
                     }
                 }

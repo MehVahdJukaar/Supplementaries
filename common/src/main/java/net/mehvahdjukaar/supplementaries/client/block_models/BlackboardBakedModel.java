@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.core.Direction;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Vector3f;
@@ -146,7 +147,7 @@ public class BlackboardBakedModel implements CustomBakedModel {
                     current = b;
                 }
                 //draws prev quad
-                int tint = 255 << 24 | BlackboardBlock.colorFromByte(prevColor);
+                int tint = FastColor.ARGB32.opaque(BlackboardBlock.colorFromByte(prevColor));
                 TextureAtlasSprite sprite = prevColor == 0 ? black : white;
                 quads.add(createPixelQuad((15 - x) / 16f, (16 - length - startY) / 16f,
                         1 / 16f, length / 16f, sprite, tint, rotation,
