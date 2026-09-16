@@ -116,6 +116,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+        blockInteractions.clear();
         tileInteraction.clear();
         sourceFluidInteractions.clear();
         itemInteractions.clear();
@@ -179,31 +180,35 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
     public void onLevelLoad(ServerLevel level) {
         BlockTestLevel testLevel = BlockTestLevel.get(level);
-        Player player = FakePlayerManager.getDefault(testLevel);
-        InteractionHand hand = InteractionHand.MAIN_HAND;
-        BlockState emptyCauldron = Blocks.CAULDRON.defaultBlockState();
-        for (var e : CauldronInteraction.EMPTY.map().entrySet()) {
-            Item i = e.getKey();
-            CauldronInteraction interaction = e.getValue();
-            // skip vanilla. we already registered them
-            if (!Utils.getID(i).getNamespace().equals("minecraft")) {
-                testLevel.setup();
-                ItemStack fullBucket = i.getDefaultInstance();
-                ItemStack fullBucketCopy = fullBucket.copy();
-                player.setItemInHand(hand, fullBucket);
-                interaction.interact(emptyCauldron, testLevel, BlockPos.ZERO, player, hand, fullBucket);
-                BlockState fullCauldron = testLevel.blockState;
-                if (fullCauldron != null) {
-                    // reject layered cauldrons as we dont know how to treat them due to conversion issues (forge only)
-                    if (fullCauldron.hasProperty(LayeredCauldronBlock.LEVEL) && PlatHelper.getPlatform().isForge()) {
-                        continue;
+
+        try {
+            Player player = FakePlayerManager.getDefault(testLevel);
+            InteractionHand hand = InteractionHand.MAIN_HAND;
+            BlockState emptyCauldron = Blocks.CAULDRON.defaultBlockState();
+            for (var e : CauldronInteraction.EMPTY.map().entrySet()) {
+                Item i = e.getKey();
+                CauldronInteraction interaction = e.getValue();
+                // skip vanilla. we already registered them
+                if (!Utils.getID(i).getNamespace().equals("minecraft")) {
+                    testLevel.setup();
+                    ItemStack fullBucket = i.getDefaultInstance();
+                    ItemStack fullBucketCopy = fullBucket.copy();
+                    player.setItemInHand(hand, fullBucket);
+                    interaction.interact(emptyCauldron, testLevel, BlockPos.ZERO, player, hand, fullBucket);
+                    BlockState fullCauldron = testLevel.blockState;
+                    if (fullCauldron != null) {
+                        // reject layered cauldrons as we dont know how to treat them due to conversion issues (forge only)
+                        if (fullCauldron.hasProperty(LayeredCauldronBlock.LEVEL) && PlatHelper.getPlatform().isForge()) {
+                            continue;
+                        }
+                        registerInteraction(new FullBucketCauldronInteraction(fullCauldron, fullBucketCopy));
                     }
-                    registerInteraction(new FullBucketCauldronInteraction(fullCauldron, fullBucketCopy));
                 }
             }
-
+        } finally {
+            testLevel.setup();
+            FakeLevelManager.invalidate(testLevel);
         }
-        FakeLevelManager.invalidate(testLevel);
     }
 
     protected void registerInteraction(Object interaction) {
