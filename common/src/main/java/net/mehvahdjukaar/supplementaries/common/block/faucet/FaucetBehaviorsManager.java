@@ -50,10 +50,12 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
             Codec.either(DataItemInteraction.CODEC, DataFluidInteraction.CODEC);
 
     private static final Set<Consumer<IFaucetEvent>> SERVER_LISTENERS = new HashSet<>();
-    private final List<FaucetSource.BlState> blockInteractions = new ArrayList<>();
+    private static final SidedInstance<FaucetBehaviorsManager> INSTANCES = SidedInstance.of(FaucetBehaviorsManager::new);
     public static FaucetBehaviorsManager getInstance(HolderLookup.Provider ra) {
         return INSTANCES.get(ra);
-    }    private static final SidedInstance<FaucetBehaviorsManager> INSTANCES = SidedInstance.of(FaucetBehaviorsManager::new);
+    }
+
+    private final List<FaucetSource.BlState> blockInteractions = new ArrayList<>();
     private final List<FaucetSource.Tile> tileInteraction = new ArrayList<>();
     private final List<FaucetSource.Fluid> sourceFluidInteractions = new ArrayList<>();
     private final List<FaucetItemSource> itemInteractions = new ArrayList<>();
@@ -61,6 +63,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
     private final List<FaucetTarget.Tile> targetTileInteractions = new ArrayList<>();
     private final List<FaucetTarget.Fluid> targetFluidInteractions = new ArrayList<>();
     private final HolderLookup.Provider registryAccess;
+
     public FaucetBehaviorsManager(HolderLookup.Provider ra) {
         super(new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create(),
                 "faucet_interactions");
@@ -116,6 +119,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
 
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profiler) {
+        blockInteractions.clear();
         tileInteraction.clear();
         sourceFluidInteractions.clear();
         itemInteractions.clear();
@@ -203,6 +207,7 @@ public class FaucetBehaviorsManager extends SimpleJsonResourceReloadListener {
             }
 
         }
+        testLevel.setup();
         FakeLevelManager.invalidate(testLevel);
     }
 

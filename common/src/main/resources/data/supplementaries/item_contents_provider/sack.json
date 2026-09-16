@@ -1,0 +1,9 @@
+{
+  "type": "iteminteractions:container",
+  "supported_items": "supplementaries:sack",
+  "background_color": "#D79B73",
+  "inventory_width": 3,
+  "inventory_height": 3,
+  "filter_container_items": true,
+  "disallowed_item_contents": []
+}
