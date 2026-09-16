@@ -222,6 +222,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> DISPENSER_MINECART_ANGLE;
         public static final Supplier<Boolean> RELAYER_ENABLED;
         public static final Supplier<Boolean> GROUPER_ENABLED;
+        public static final Supplier<Boolean> GROUPER_ENTITIES;
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_ENABLED;
         public static final Supplier<Boolean> CRYSTAL_DISPLAY_CHAINED;
         public static final Supplier<Boolean> PULLEY_ENABLED;
@@ -348,7 +349,13 @@ public class CommonConfigs {
             GOLD_TRAPDOOR_ENABLED = builder.feature(ModConstants.GOLD_TRAPDOOR_NAME);
             LOCK_BLOCK_ENABLED = builder.feature(ModConstants.LOCK_BLOCK_NAME);
             RELAYER_ENABLED = builder.feature(ModConstants.RELAYER_NAME);
-            GROUPER_ENABLED = builder.feature(ModConstants.GROUPER_NAME);
+
+            builder.push(ModConstants.GROUPER_NAME);
+            GROUPER_ENABLED = builder.mainFeature();
+            GROUPER_ENTITIES = builder.comment("Lets groupers compare entities on their sides when both sides are air or liquid. " +
+                            "Same entity type gives weak power. Full power needs an exact match: same dropped item or item frame item, same mob variant, villager profession or name tag")
+                    .define("compare_entities", true);
+            builder.pop();
 
             builder.pop();
         }

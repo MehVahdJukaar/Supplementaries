@@ -4,27 +4,46 @@ import com.mojang.serialization.MapCodec;
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.GrouperMatch;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.VariantHolder;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.npc.VillagerDataHolder;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class GrouperBlock extends HorizontalDirectionalBlock {
 
     public static final EnumProperty<GrouperMatch> MATCH = ModBlockProperties.GROUPER_MATCH;
     private static final MapCodec<GrouperBlock> CODEC = simpleCodec(GrouperBlock::new);
+    private static final int MAX_ENTITIES_PER_SIDE = 16;
 
     public GrouperBlock(Properties properties) {
         super(properties);
@@ -55,12 +74,17 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction facing = context.getHorizontalDirection().getOpposite();
-        return this.defaultBlockState().setValue(FACING, facing)
-                .setValue(MATCH, findMatch(context.getLevel(), context.getClickedPos(), facing));
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        GrouperMatch match = comparesEntities(level, pos, facing) ? GrouperMatch.NONE : findBlockMatch(level, pos, facing);
+        return this.defaultBlockState().setValue(FACING, facing).setValue(MATCH, match);
     }
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        if (!oldState.is(this) && comparesEntities(level, pos, state.getValue(FACING))) {
+            this.updateNextTick(level, pos);
+        }
         if (state.getValue(MATCH) != GrouperMatch.NONE) {
             this.updateNeighborsBehind(level, pos, state);
         }
@@ -92,11 +116,27 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
 
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        this.updateMatchState(state, level, pos);
+        Direction facing = state.getValue(FACING);
+        if (!comparesEntities(level, pos, facing)) {
+            this.updateMatchState(state, level, pos);
+            return;
+        }
+        List<Entity> left = getEntitiesInside(level, pos.relative(facing.getCounterClockWise()));
+        List<Entity> right = left.isEmpty() ? List.of() : getEntitiesInside(level, pos.relative(facing.getClockWise()));
+        this.setMatch(state, level, pos, findEntityMatch(left, right));
+        level.scheduleTick(pos, this, left.isEmpty() ? 10 : 2);
     }
 
     private void updateMatchState(BlockState state, Level level, BlockPos pos) {
-        GrouperMatch match = findMatch(level, pos, state.getValue(FACING));
+        Direction facing = state.getValue(FACING);
+        if (comparesEntities(level, pos, facing)) {
+            this.updateNextTick(level, pos);
+            return;
+        }
+        this.setMatch(state, level, pos, findBlockMatch(level, pos, facing));
+    }
+
+    private void setMatch(BlockState state, Level level, BlockPos pos, GrouperMatch match) {
         if (match == state.getValue(MATCH)) return;
         level.setBlockAndUpdate(pos, state.setValue(MATCH, match));
         this.updateNeighborsBehind(level, pos, state);
@@ -106,7 +146,60 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
         level.updateNeighborsAt(pos.relative(state.getValue(FACING).getOpposite()), this);
     }
 
-    private static GrouperMatch findMatch(BlockGetter level, BlockPos pos, Direction facing) {
+    private static boolean isOpenSide(BlockState state) {
+        return state.isAir() || state.getBlock() instanceof LiquidBlock;
+    }
+
+    private static boolean comparesEntities(BlockGetter level, BlockPos pos, Direction facing) {
+        return CommonConfigs.Redstone.GROUPER_ENTITIES.get()
+                && isOpenSide(level.getBlockState(pos.relative(facing.getCounterClockWise())))
+                && isOpenSide(level.getBlockState(pos.relative(facing.getClockWise())));
+    }
+
+    private static List<Entity> getEntitiesInside(Level level, BlockPos pos) {
+        List<Entity> entities = new ArrayList<>();
+        level.getEntities(EntityTypeTest.forClass(Entity.class), new AABB(pos), EntitySelector.NO_SPECTATORS, entities, MAX_ENTITIES_PER_SIDE);
+        return entities;
+    }
+
+    private static GrouperMatch findEntityMatch(List<Entity> left, List<Entity> right) {
+        GrouperMatch match = GrouperMatch.NONE;
+        for (Entity l : left) {
+            for (Entity r : right) {
+                if (l.getType() != r.getType()) continue;
+                if (isExactEntityMatch(l, r)) return GrouperMatch.FULL;
+                match = GrouperMatch.PARTIAL;
+            }
+        }
+        return match;
+    }
+
+    //special entity matches here
+    private static boolean isExactEntityMatch(Entity a, Entity b) {
+        if (a instanceof ItemEntity ia && b instanceof ItemEntity ib) {
+            return ItemStack.isSameItemSameComponents(ia.getItem(), ib.getItem());
+        }
+        if (a instanceof ItemFrame fa && b instanceof ItemFrame fb) {
+            return ItemStack.isSameItemSameComponents(fa.getItem(), fb.getItem());
+        }
+        if (a instanceof FallingBlockEntity fa && b instanceof FallingBlockEntity fb) {
+            return fa.getBlockState() == fb.getBlockState();
+        }
+        if (a instanceof LivingEntity la && b instanceof LivingEntity lb && la.isBaby() != lb.isBaby()) return false;
+        if (a.hasCustomName() || b.hasCustomName()) {
+            return Objects.equals(a.getCustomName(), b.getCustomName());
+        }
+        if (a instanceof Sheep sa && b instanceof Sheep sb) return sa.getColor() == sb.getColor();
+        if (a instanceof VillagerDataHolder va && b instanceof VillagerDataHolder vb) {
+            return va.getVillagerData().getProfession() == vb.getVillagerData().getProfession();
+        }
+        if (a instanceof VariantHolder<?> va && b instanceof VariantHolder<?> vb) {
+            return Objects.equals(va.getVariant(), vb.getVariant());
+        }
+        return false;
+    }
+
+    private static GrouperMatch findBlockMatch(BlockGetter level, BlockPos pos, Direction facing) {
         BlockState left = level.getBlockState(pos.relative(facing.getCounterClockWise()));
         BlockState right = level.getBlockState(pos.relative(facing.getClockWise()));
         if (left.isAir() || !left.is(right.getBlock())) return GrouperMatch.NONE;
