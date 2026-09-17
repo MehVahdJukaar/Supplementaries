@@ -25,11 +25,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
@@ -42,13 +42,15 @@ import java.util.Objects;
 public class GrouperBlock extends HorizontalDirectionalBlock {
 
     public static final EnumProperty<GrouperMatch> MATCH = ModBlockProperties.GROUPER_MATCH;
+    public static final BooleanProperty OPEN_SIDES = ModBlockProperties.OPEN_SIDES;
     private static final MapCodec<GrouperBlock> CODEC = simpleCodec(GrouperBlock::new);
     private static final int MAX_ENTITIES_PER_SIDE = 16;
+    private static final int ENTITY_SCAN_RATE = 8; //hopper rate
 
     public GrouperBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH).setValue(MATCH, GrouperMatch.NONE));
+                .setValue(FACING, Direction.NORTH).setValue(MATCH, GrouperMatch.NONE).setValue(OPEN_SIDES, false));
     }
 
     @Override
@@ -58,7 +60,7 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, MATCH);
+        builder.add(FACING, MATCH, OPEN_SIDES);
     }
 
     @Override
@@ -76,13 +78,15 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
         Direction facing = context.getHorizontalDirection().getOpposite();
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        GrouperMatch match = comparesEntities(level, pos, facing) ? GrouperMatch.NONE : findBlockMatch(level, pos, facing);
-        return this.defaultBlockState().setValue(FACING, facing).setValue(MATCH, match);
+        BlockState state = this.defaultBlockState().setValue(FACING, facing)
+                .setValue(OPEN_SIDES, hasOpenSides(level, pos, facing));
+        GrouperMatch match = comparesEntities(state) ? GrouperMatch.NONE : findBlockMatch(level, pos, facing);
+        return state.setValue(MATCH, match);
     }
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-        if (!oldState.is(this) && comparesEntities(level, pos, state.getValue(FACING))) {
+        if (!oldState.is(this) && comparesEntities(state)) {
             this.updateNextTick(level, pos);
         }
         if (state.getValue(MATCH) != GrouperMatch.NONE) {
@@ -102,12 +106,15 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
 
     @Override
     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        if (direction.getAxis() == state.getValue(FACING).getClockWise().getAxis()) {
-            this.updateNextTick(level, pos);
-        }
-        return state;
+        if (direction.getAxis() != state.getValue(FACING).getClockWise().getAxis()) return state;
+        this.updateNextTick(level, pos);
+        BlockPos otherPos = pos.relative(direction.getOpposite());
+        boolean openSides = isOpenSide(neighborState, level, neighborPos, direction.getOpposite())
+                && isOpenSide(level.getBlockState(otherPos), level, otherPos, direction);
+        return state.setValue(OPEN_SIDES, openSides);
     }
 
+    //experimental ticking via block tick
     private void updateNextTick(LevelAccessor level, BlockPos pos) {
         if (!level.getBlockTicks().hasScheduledTick(pos, this)) {
             level.scheduleTick(pos, this, 1);
@@ -117,19 +124,19 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         Direction facing = state.getValue(FACING);
-        if (!comparesEntities(level, pos, facing)) {
+        if (!comparesEntities(state)) {
             this.updateMatchState(state, level, pos);
             return;
         }
         List<Entity> left = getEntitiesInside(level, pos.relative(facing.getCounterClockWise()));
         List<Entity> right = left.isEmpty() ? List.of() : getEntitiesInside(level, pos.relative(facing.getClockWise()));
         this.setMatch(state, level, pos, findEntityMatch(left, right));
-        level.scheduleTick(pos, this, left.isEmpty() ? 10 : 2);
+        level.scheduleTick(pos, this, ENTITY_SCAN_RATE);
     }
 
     private void updateMatchState(BlockState state, Level level, BlockPos pos) {
         Direction facing = state.getValue(FACING);
-        if (comparesEntities(level, pos, facing)) {
+        if (comparesEntities(state)) {
             this.updateNextTick(level, pos);
             return;
         }
@@ -146,14 +153,19 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
         level.updateNeighborsAt(pos.relative(state.getValue(FACING).getOpposite()), this);
     }
 
-    private static boolean isOpenSide(BlockState state) {
-        return state.isAir() || state.getBlock() instanceof LiquidBlock;
+    private static boolean isOpenSide(BlockState state, BlockGetter level, BlockPos pos, Direction towardsGrouper) {
+        return !state.isFaceSturdy(level, pos, towardsGrouper);
     }
 
-    private static boolean comparesEntities(BlockGetter level, BlockPos pos, Direction facing) {
-        return CommonConfigs.Redstone.GROUPER_ENTITIES.get()
-                && isOpenSide(level.getBlockState(pos.relative(facing.getCounterClockWise())))
-                && isOpenSide(level.getBlockState(pos.relative(facing.getClockWise())));
+    private static boolean hasOpenSides(BlockGetter level, BlockPos pos, Direction facing) {
+        BlockPos left = pos.relative(facing.getCounterClockWise());
+        BlockPos right = pos.relative(facing.getClockWise());
+        return isOpenSide(level.getBlockState(left), level, left, facing.getClockWise())
+                && isOpenSide(level.getBlockState(right), level, right, facing.getCounterClockWise());
+    }
+
+    private static boolean comparesEntities(BlockState state) {
+        return state.getValue(OPEN_SIDES) && CommonConfigs.Redstone.GROUPER_ENTITIES.get();
     }
 
     private static List<Entity> getEntitiesInside(Level level, BlockPos pos) {
