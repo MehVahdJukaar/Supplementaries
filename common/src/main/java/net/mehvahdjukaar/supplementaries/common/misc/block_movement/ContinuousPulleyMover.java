@@ -23,53 +23,40 @@ import java.util.List;
 import java.util.Map;
 
 // continuous pulley motion, like PistonBaseBlock.moveBlocks.
-// RopeMover is the instant version
+// InstantPulleyMover is the instant version
 public final class ContinuousPulleyMover {
 
-    //resolver must have been resolved already, this just applies it
-    public static void moveOneStep(Level level, PulleyStructureResolver resolver, int animationTicks) {
-        List<BlockPos> toPush = resolver.getToPush();
-        Direction pushDir = resolver.getPushDirection();
+    public static void moveOneStep(Level level, PulleyStructureResolver resolvedStructure, int animationTicks) {
+        List<BlockPos> toPush = resolvedStructure.getToPush();
+        Direction pushDir = resolvedStructure.getPushDirection();
 
-        //whatever is left over at the end is cleared to air
-        Map<BlockPos, BlockState> vacatedSlots = new HashMap<>();
+        Map<BlockPos, BlockState> slotsNotRefilledByMove = new HashMap<>();
         List<BlockState> originalStates = new ArrayList<>();
         Map<BlockPos, CompoundTag> carriedBeNbt = new HashMap<>();
         for (BlockPos pos : toPush) {
             BlockState state = level.getBlockState(pos);
             originalStates.add(state);
-            vacatedSlots.put(pos, state);
+            slotsNotRefilledByMove.put(pos, state);
             if (state.hasBlockEntity()) {
                 CompoundTag nbt = BlockMovementHelper.captureAndDetachBlockEntity(level, pos);
                 if (nbt != null) carriedBeNbt.put(pos.immutable(), nbt);
             }
         }
-        //before the loop overwrites them, needed to render the rope sliding into the pulley
-        Map<BlockPos, BlockState> consumedRopeStates = new HashMap<>();
-        for (BlockPos consumedPos : resolver.getConsumedRopes()) {
-            consumedRopeStates.put(consumedPos.immutable(), level.getBlockState(consumedPos));
+        Map<BlockPos, BlockState> retractedRopeStatesBeforeOverwrite = new HashMap<>();
+        for (BlockPos retractedPos : resolvedStructure.getRopesRetractedIntoPulleys()) {
+            retractedRopeStatesBeforeOverwrite.put(retractedPos.immutable(), level.getBlockState(retractedPos));
         }
-        Map<BlockPos, BlockState> extendingPhantomStates = resolver.getExtendingPhantomSources();
+        Map<BlockPos, BlockState> ropesEmergingFromPulleys = resolvedStructure.getRopesEmergingFromPulleys();
 
-        List<BlockPos> destroyList = resolver.getToDestroy();
+        List<BlockPos> toDestroy = resolvedStructure.getToDestroy();
+        destroyBlocksInTheWay(level, toDestroy, pushDir);
 
-        for (int j = destroyList.size() - 1; j >= 0; --j) {
-            BlockPos pos = destroyList.get(j);
-            BlockState destroyState = level.getBlockState(pos);
-            BlockEntity be = destroyState.hasBlockEntity() ? level.getBlockEntity(pos) : null;
-            Block.dropResources(destroyState, level, pos, be);
-            SuppPlatformStuff.onDestroyedByPushReaction(destroyState, level, pos, pushDir);
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 18);
-            level.gameEvent(GameEvent.BLOCK_DESTROY, pos, Context.of(destroyState));
-        }
-
-        //always ours, even at vanilla speed. MOVING_PISTON drops the phantom rope states
         Block movingBlock = ModRegistry.MOVING_PULLEY_BLOCK.get();
         for (int j = toPush.size() - 1; j >= 0; --j) {
             BlockPos srcPos = toPush.get(j);
             BlockState srcState = originalStates.get(j);
             BlockPos dstPos = srcPos.relative(pushDir);
-            vacatedSlots.remove(dstPos);
+            slotsNotRefilledByMove.remove(dstPos);
             BlockState movingState = movingBlock.defaultBlockState()
                     .setValue(MovingPistonBlock.FACING, pushDir)
                     .setValue(MovingPistonBlock.TYPE, PistonType.DEFAULT);
@@ -77,15 +64,13 @@ public final class ContinuousPulleyMover {
             MovingPulleyBlockEntity movingBe = MovingPulleyBlock.newMovingBlockEntity(
                     dstPos, movingState, srcState, pushDir, true, false);
             movingBe.setAnimationDuration(animationTicks);
-            //retract, the phantom slides into the pulley
-            BlockState consumedHere = consumedRopeStates.get(dstPos);
-            if (consumedHere != null) {
-                movingBe.setLeadingState(consumedHere);
+            BlockState ropeSlidingIntoPulley = retractedRopeStatesBeforeOverwrite.get(dstPos);
+            if (ropeSlidingIntoPulley != null) {
+                movingBe.setLeadingState(ropeSlidingIntoPulley);
             }
-            //extend, the phantom comes out of the pulley and lands there
-            BlockState extendPhantomHere = extendingPhantomStates.get(srcPos);
-            if (extendPhantomHere != null) {
-                movingBe.setLeadingState(extendPhantomHere);
+            BlockState ropeEmergingFromPulley = ropesEmergingFromPulleys.get(srcPos);
+            if (ropeEmergingFromPulley != null) {
+                movingBe.setLeadingState(ropeEmergingFromPulley);
                 movingBe.setExtendPhantom(true);
             }
             CompoundTag srcBeNbt = carriedBeNbt.get(srcPos);
@@ -96,26 +81,43 @@ public final class ContinuousPulleyMover {
         }
 
         BlockState air = Blocks.AIR.defaultBlockState();
-        for (BlockPos vacated : vacatedSlots.keySet()) {
+        for (BlockPos vacated : slotsNotRefilledByMove.keySet()) {
             level.setBlock(vacated, air, 82);
         }
 
-        //nothing moved to carry a phantom, place the rope directly
-        for (Map.Entry<BlockPos, BlockState> entry : resolver.getDirectRopePlacements().entrySet()) {
+        for (Map.Entry<BlockPos, BlockState> entry : resolvedStructure.getRopesPlacedWithoutAnimation().entrySet()) {
             if (level.getBlockState(entry.getKey()).isAir()) {
                 level.setBlock(entry.getKey(), entry.getValue(), 3);
             }
         }
 
-        for (Map.Entry<BlockPos, BlockState> entry : vacatedSlots.entrySet()) {
+        updateNeighboursLikeVanillaPiston(level, slotsNotRefilledByMove, toDestroy, toPush, originalStates);
+    }
+
+    private static void destroyBlocksInTheWay(Level level, List<BlockPos> toDestroy, Direction pushDir) {
+        for (int j = toDestroy.size() - 1; j >= 0; --j) {
+            BlockPos pos = toDestroy.get(j);
+            BlockState destroyState = level.getBlockState(pos);
+            BlockEntity be = destroyState.hasBlockEntity() ? level.getBlockEntity(pos) : null;
+            Block.dropResources(destroyState, level, pos, be);
+            SuppPlatformStuff.onDestroyedByPushReaction(destroyState, level, pos, pushDir);
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 18);
+            level.gameEvent(GameEvent.BLOCK_DESTROY, pos, Context.of(destroyState));
+        }
+    }
+
+    private static void updateNeighboursLikeVanillaPiston(Level level, Map<BlockPos, BlockState> slotsNotRefilledByMove,
+                                                          List<BlockPos> toDestroy, List<BlockPos> toPush, List<BlockState> originalStates) {
+        BlockState air = Blocks.AIR.defaultBlockState();
+        for (Map.Entry<BlockPos, BlockState> entry : slotsNotRefilledByMove.entrySet()) {
             BlockPos pos = entry.getKey();
             entry.getValue().updateIndirectNeighbourShapes(level, pos, 2);
             air.updateNeighbourShapes(level, pos, 2);
             air.updateIndirectNeighbourShapes(level, pos, 2);
         }
 
-        for (int k = destroyList.size() - 1; k >= 0; --k) {
-            BlockPos pos = destroyList.get(k);
+        for (int k = toDestroy.size() - 1; k >= 0; --k) {
+            BlockPos pos = toDestroy.get(k);
             level.getBlockState(pos).updateIndirectNeighbourShapes(level, pos, 2);
             level.updateNeighborsAt(pos, level.getBlockState(pos).getBlock());
         }

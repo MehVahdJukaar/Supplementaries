@@ -17,15 +17,14 @@ import java.util.Set;
 // lets an elevator hanging on two ropes move
 public class PulleyCooperationData extends WorldSavedData {
 
-    //search radius per axis
-    private static final int MAX_DISTANCE = 12;
+    private static final int COOPERATION_RADIUS_PER_AXIS = 12;
 
     //client mirror, WorldSavedData is server only. filled by ClientBoundPulleyAttemptPacket
     private static final CooperationTable<AttemptInfo> CLIENT_TABLE = new CooperationTable<>();
 
-    private record AttemptInfo(int period, Direction pushDir, long tick) implements CooperationTable.Attempt {
+    private record AttemptInfo(int animationTicks, Direction pushDir, long tick) implements CooperationTable.Attempt {
         static final Codec<AttemptInfo> CODEC = RecordCodecBuilder.create(i -> i.group(
-                Codec.INT.fieldOf("period").forGetter(AttemptInfo::period),
+                Codec.INT.fieldOf("period").forGetter(AttemptInfo::animationTicks),
                 Direction.CODEC.fieldOf("dir").forGetter(AttemptInfo::pushDir),
                 Codec.LONG.fieldOf("tick").forGetter(AttemptInfo::tick)
         ).apply(i, AttemptInfo::new));
@@ -50,30 +49,30 @@ public class PulleyCooperationData extends WorldSavedData {
         return ModData.COOPERATIVE_PULLEYS;
     }
 
-    public void markAttempting(BlockPos pos, int period, Direction pushDir, long tick) {
-        this.table.markAttempting(pos, new AttemptInfo(period, pushDir, tick));
+    public void markAttempting(BlockPos pos, int animationTicks, Direction pushDir, long tick) {
+        this.table.markAttempting(pos, new AttemptInfo(animationTicks, pushDir, tick));
         setDirty();
     }
 
-    public static void markAttemptingClient(BlockPos pos, int period, Direction pushDir, long tick) {
-        CLIENT_TABLE.markAttempting(pos, new AttemptInfo(period, pushDir, tick));
+    public static void markAttemptingClient(BlockPos pos, int animationTicks, Direction pushDir, long tick) {
+        CLIENT_TABLE.markAttempting(pos, new AttemptInfo(animationTicks, pushDir, tick));
     }
 
-    public static Set<BlockPos> getCooperators(Level level, BlockPos primary, int period, Direction pushDir, long currentTick) {
+    public static Set<BlockPos> getCooperators(Level level, BlockPos primary, int animationTicks, Direction pushDir, long currentTick) {
         CooperationTable<AttemptInfo> table = tableFor(level);
         Set<BlockPos> cooperators = table.getCooperators(primary, currentTick, (candidate, attempt) ->
-                attempt.pushDir() == pushDir && attempt.period() == period
+                attempt.pushDir() == pushDir && attempt.animationTicks() == animationTicks
                         && withinReach(candidate, primary));
         //a chain that already moved this tick can't join a second resolve
         cooperators.removeIf(pos -> table.wasHandled(pos, currentTick));
         return cooperators;
     }
 
-    public static boolean wasConsumed(Level level, BlockPos pos, long currentTick) {
+    public static boolean wasMovedThisTick(Level level, BlockPos pos, long currentTick) {
         return tableFor(level).wasHandled(pos, currentTick);
     }
 
-    public static void markConsumed(Level level, BlockPos pos, long tick) {
+    public static void markMovedThisTick(Level level, BlockPos pos, long tick) {
         tableFor(level).markHandled(pos, tick);
     }
 
@@ -86,8 +85,8 @@ public class PulleyCooperationData extends WorldSavedData {
 
     //unlike pistons, same column is fine. stacked pulleys on one rope are legit
     private static boolean withinReach(BlockPos candidate, BlockPos primary) {
-        return Math.abs(candidate.getX() - primary.getX()) <= MAX_DISTANCE
-                && Math.abs(candidate.getY() - primary.getY()) <= MAX_DISTANCE
-                && Math.abs(candidate.getZ() - primary.getZ()) <= MAX_DISTANCE;
+        return Math.abs(candidate.getX() - primary.getX()) <= COOPERATION_RADIUS_PER_AXIS
+                && Math.abs(candidate.getY() - primary.getY()) <= COOPERATION_RADIUS_PER_AXIS
+                && Math.abs(candidate.getZ() - primary.getZ()) <= COOPERATION_RADIUS_PER_AXIS;
     }
 }

@@ -71,7 +71,11 @@ public class TurnTableBlock extends Block implements EntityBlock {
     }
 
     public static int getPeriod(BlockState state) {
-        return (60 - state.getValue(POWER) * 4) + 4;
+        return getPeriod(state.getValue(POWER));
+    }
+
+    public static int getPeriod(int power) {
+        return (60 - power * 4) + 4;
     }
 
     @Override

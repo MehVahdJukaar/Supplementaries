@@ -333,7 +333,7 @@ public class MineshaftElevatorPiece extends MineshaftPieces.MineShaftPiece {
         BlockPos.MutableBlockPos contraptionPos = new BlockPos.MutableBlockPos(minX + 2, maxY + 1, minZ + 2);
 
         this.placeBlock(level, ModRegistry.PULLEY_BLOCK.get().defaultBlockState()
-                .setValue(PulleyBlock.TYPE, hasRope ? ModBlockProperties.Winding.ROPE : ModBlockProperties.Winding.CHAIN)
+                .setValue(PulleyBlock.WINDING, hasRope ? ModBlockProperties.Winding.ROPE : ModBlockProperties.Winding.CHAIN)
                 .setValue(PulleyBlock.AXIS, d.getAxis()), contraptionPos.getX(), contraptionPos.getY(), contraptionPos.getZ(), box);
 
         if (boundingBox.isInside(contraptionPos) && level.getBlockEntity(contraptionPos) instanceof PulleyBlockTile tile) {

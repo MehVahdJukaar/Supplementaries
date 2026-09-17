@@ -12,18 +12,18 @@ import net.minecraft.world.level.material.PushReaction;
 
 import java.util.*;
 
-// pulley version of PistonStructureResolver. resolves all cooperating chains in one pass so a
+// pulley version of PistonStructureResolver. resolves all cooperating rope columns in one pass so a
 // structure hanging off several ropes moves as one. ropes are free and never sticky
 public class PulleyStructureResolver {
 
-    public record PulleyInfo(BlockPos pulleyPos, Block ropeBlock, Direction ropeHangDirection, boolean extending) {
+    public record RopeColumn(BlockPos pulleyPos, Block ropeBlock, Direction ropeHangDirection, boolean extending) {
         public Direction pushDirection() {
             return extending ? ropeHangDirection : ropeHangDirection.getOpposite();
         }
     }
 
     private final Level level;
-    private final List<PulleyInfo> pulleys;
+    private final List<RopeColumn> pulleys;
     private final Set<BlockPos> pulleyPositions;
     private final Direction pushDirection;
     private final boolean extending;
@@ -33,17 +33,14 @@ public class PulleyStructureResolver {
     private final List<BlockPos> toDestroy = Lists.newArrayList();
 
     private final Set<BlockPos> ropePositions = new HashSet<>();
-    //top rope of each retracting chain, eaten by the pulley instead of moved
-    private final Set<BlockPos> consumedRopes = new HashSet<>();
-    //only these earn the rope item
-    private final Set<BlockPos> contributedPulleys = new HashSet<>();
-    //placed instantly by the mover, there's no moved block to hang a phantom off
-    private final Map<BlockPos, BlockState> directRopePlacements = new HashMap<>();
+    private final Set<BlockPos> ropesRetractedIntoPulleys = new HashSet<>();
+    private final Set<BlockPos> pulleysWhoseColumnMoves = new HashSet<>();
+    private final Map<BlockPos, BlockState> ropesPlacedWithoutAnimation = new HashMap<>();
 
-    public PulleyStructureResolver(Level level, List<PulleyInfo> pulleys) {
+    public PulleyStructureResolver(Level level, List<RopeColumn> pulleys) {
         if (pulleys.isEmpty()) throw new IllegalArgumentException("need at least one pulley");
-        PulleyInfo first = pulleys.getFirst();
-        for (PulleyInfo p : pulleys) {
+        RopeColumn first = pulleys.getFirst();
+        for (RopeColumn p : pulleys) {
             if (p.pushDirection() != first.pushDirection() || p.extending() != first.extending()) {
                 throw new IllegalArgumentException("all pulleys must share push direction and extending mode");
             }
@@ -51,7 +48,7 @@ public class PulleyStructureResolver {
         this.level = level;
         this.pulleys = pulleys;
         this.pulleyPositions = new HashSet<>();
-        for (PulleyInfo p : pulleys) this.pulleyPositions.add(p.pulleyPos());
+        for (RopeColumn p : pulleys) this.pulleyPositions.add(p.pulleyPos());
         this.pushDirection = first.pushDirection();
         this.extending = first.extending();
         this.totalPushLimit = pulleys.size() * CommonConfigs.Redstone.PULLEY_PULL_LIMIT.get();
@@ -69,12 +66,12 @@ public class PulleyStructureResolver {
         toPush.clear();
         toDestroy.clear();
         ropePositions.clear();
-        consumedRopes.clear();
-        contributedPulleys.clear();
-        directRopePlacements.clear();
+        ropesRetractedIntoPulleys.clear();
+        pulleysWhoseColumnMoves.clear();
+        ropesPlacedWithoutAnimation.clear();
 
-        for (PulleyInfo pulley : pulleys) {
-            if (!addChain(pulley)) return false;
+        for (RopeColumn pulley : pulleys) {
+            if (!addRopeColumnAndWhatHangsOnIt(pulley)) return false;
         }
         //indexed on purpose, addBranchingBlocks appends to toPush while we walk it
         //noinspection ForLoopReplaceableByForEach
@@ -89,20 +86,18 @@ public class PulleyStructureResolver {
     }
 
     public boolean hasNothingToMove() {
-        return toPush.isEmpty() && toDestroy.isEmpty() && directRopePlacements.isEmpty();
+        return toPush.isEmpty() && toDestroy.isEmpty() && ropesPlacedWithoutAnimation.isEmpty();
     }
 
-    //walks one pulley's rope down to whatever it hangs on and adds that like a piston would
-    private boolean addChain(PulleyInfo pulley) {
+    private boolean addRopeColumnAndWhatHangsOnIt(RopeColumn pulley) {
         int sizeBefore = toPush.size();
         Direction ropeDir = pulley.ropeHangDirection();
         BlockPos firstSlot = pulley.pulleyPos().relative(ropeDir);
         BlockPos walkPos = firstSlot;
         if (!extending) {
-            //retracting needs a rope to eat, extending can start bare
-            if (!InstantPulleyMover.isCorrectRope(pulley.ropeBlock(), level.getBlockState(firstSlot), ropeDir))
-                return true;
-            consumedRopes.add(firstSlot);
+            boolean hasRopeToRetract = InstantPulleyMover.isCorrectRope(pulley.ropeBlock(), level.getBlockState(firstSlot), ropeDir);
+            if (!hasRopeToRetract) return true;
+            ropesRetractedIntoPulleys.add(firstSlot);
             walkPos = firstSlot.relative(ropeDir);
         }
         while (InstantPulleyMover.isCorrectRope(pulley.ropeBlock(), level.getBlockState(walkPos), ropeDir)) {
@@ -116,21 +111,21 @@ public class PulleyStructureResolver {
         BlockPos anchorPos = walkPos;
         BlockState anchorState = level.getBlockState(anchorPos);
         boolean anchorIsAir = anchorState.isAir();
-        if (anchorIsAir || pulleyPositions.contains(anchorPos)) {
-            //nothing hangs off the rope, the column just shortens or grows by one
+        boolean nothingHangsOnRope = anchorIsAir || pulleyPositions.contains(anchorPos);
+        if (nothingHangsOnRope) {
             boolean movedSomeRope = toPush.size() > sizeBefore;
             if (movedSomeRope) {
-                contributedPulleys.add(pulley.pulleyPos());
+                pulleysWhoseColumnMoves.add(pulley.pulleyPos());
             } else if (extending && anchorIsAir) {
-                directRopePlacements.put(firstSlot, pulley.ropeBlock().defaultBlockState());
-                contributedPulleys.add(pulley.pulleyPos());
+                ropesPlacedWithoutAnimation.put(firstSlot, pulley.ropeBlock().defaultBlockState());
+                pulleysWhoseColumnMoves.add(pulley.pulleyPos());
             }
             return true;
         }
         if (!isPullable(anchorState, level, anchorPos, pushDirection, false, ropeDir)) return false;
 
         if (!toPush.contains(anchorPos) && !addBlockLine(anchorPos, pushDirection)) return false;
-        contributedPulleys.add(pulley.pulleyPos());
+        pulleysWhoseColumnMoves.add(pulley.pulleyPos());
         return true;
     }
 
@@ -142,7 +137,7 @@ public class PulleyStructureResolver {
         if (!isPullable(currentState, this.level, originPos, this.pushDirection, false, approachDir))
             return true;
         if (this.pulleyPositions.contains(originPos)) return true;
-        if (this.consumedRopes.contains(originPos)) return true;
+        if (this.ropesRetractedIntoPulleys.contains(originPos)) return true;
         if (this.toPush.contains(originPos)) return true;
 
         int trailingCount = 1;
@@ -159,7 +154,7 @@ public class PulleyStructureResolver {
                     || this.pulleyPositions.contains(trailingPos)
                     //else a sticky anchor would drag the rope above it along
                     || this.ropePositions.contains(trailingPos)
-                    || this.consumedRopes.contains(trailingPos)) {
+                    || this.ropesRetractedIntoPulleys.contains(trailingPos)) {
                 break;
             }
             trailingCount++;
@@ -176,8 +171,8 @@ public class PulleyStructureResolver {
         while (true) {
             BlockPos forwardPos = originPos.relative(this.pushDirection, forwardScanStep);
 
-            //reached a pulley mouth
-            if (this.consumedRopes.contains(forwardPos)) return true;
+            boolean reachedPulleyMouth = this.ropesRetractedIntoPulleys.contains(forwardPos);
+            if (reachedPulleyMouth) return true;
 
             int collisionIndex = this.toPush.indexOf(forwardPos);
             if (collisionIndex > -1) {
@@ -250,37 +245,36 @@ public class PulleyStructureResolver {
         return this.toDestroy;
     }
 
-    public Set<BlockPos> getConsumedRopes() {
-        return this.consumedRopes;
+    public Set<BlockPos> getRopesRetractedIntoPulleys() {
+        return this.ropesRetractedIntoPulleys;
     }
 
-    //extend only. the mover animates these as rope coming out of the pulley
-    public Map<BlockPos, BlockState> getExtendingPhantomSources() {
-        Map<BlockPos, BlockState> result = new HashMap<>();
-        if (!extending) return result;
-        for (PulleyInfo p : pulleys) {
+    public Map<BlockPos, BlockState> getRopesEmergingFromPulleys() {
+        Map<BlockPos, BlockState> emergingRopes = new HashMap<>();
+        if (!extending) return emergingRopes;
+        for (RopeColumn p : pulleys) {
             BlockPos firstSlot = p.pulleyPos().relative(p.ropeHangDirection());
             if (toPush.contains(firstSlot)) {
-                result.put(firstSlot, p.ropeBlock().defaultBlockState());
+                emergingRopes.put(firstSlot, p.ropeBlock().defaultBlockState());
             }
         }
-        return result;
+        return emergingRopes;
     }
 
-    public Set<BlockPos> getContributedPulleys() {
-        return this.contributedPulleys;
+    public Set<BlockPos> getPulleysWhoseColumnMoves() {
+        return this.pulleysWhoseColumnMoves;
     }
 
-    public Map<BlockPos, BlockState> getDirectRopePlacements() {
-        return this.directRopePlacements;
+    public Map<BlockPos, BlockState> getRopesPlacedWithoutAnimation() {
+        return this.ropesPlacedWithoutAnimation;
     }
 
     //piston rules plus the rope blacklist, for stuff like doors whose other half wouldn't follow
     private static boolean isPullable(BlockState state, Level level, BlockPos pos,
                                       Direction movementDirection, boolean allowDestroy,
-                                      Direction pulleyFacing) {
+                                      Direction approachDir) {
         if (state.is(ModTags.ROPE_PUSH_BLACKLIST)) return false;
         return BlockMovementHelper.isPushableByOurMovers(state, level, pos, movementDirection,
-                allowDestroy, pulleyFacing);
+                allowDestroy, approachDir);
     }
 }

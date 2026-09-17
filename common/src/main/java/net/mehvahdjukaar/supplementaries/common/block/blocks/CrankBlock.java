@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import net.mehvahdjukaar.moonlight.api.block.WaterBlock;
 import net.mehvahdjukaar.moonlight.api.util.math.MthUtils;
-import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -102,8 +101,13 @@ public class CrankBlock extends WaterBlock {
             if (dir.getAxis() != Direction.Axis.Y) {
                 BlockPos behind = pos.relative(dir);
                 BlockState backState = level.getBlockState(behind);
-                if (backState.is(ModRegistry.PULLEY_BLOCK.get()) && dir.getAxis() == backState.getValue(PulleyBlock.AXIS)) {
-                    ((PulleyBlock) backState.getBlock()).windPulley(backState, behind, level, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir);
+                if (backState.getBlock() instanceof PulleyBlock pulley && dir.getAxis() == backState.getValue(PulleyBlock.AXIS)) {
+                    if (pulley.canRotateAnalog(backState, level, behind, dir)) {
+                        boolean extending = ccw != (dir.getAxisDirection() == Direction.AxisDirection.NEGATIVE);
+                        pulley.windByCrank(backState, level, behind, dir, extending);
+                    } else {
+                        pulley.windPulley(backState, behind, level, ccw ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90, dir);
+                    }
                 }
             }
         }

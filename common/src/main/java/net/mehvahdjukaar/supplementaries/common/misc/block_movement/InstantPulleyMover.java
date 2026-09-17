@@ -40,7 +40,7 @@ public class InstantPulleyMover {
         if (isCorrectRope(ropeBlock, state, moveDir)) {
             return addRope(pos.relative(moveDir), level, player, hand, ropeBlock, moveDir, maxDist);
         } else if (state.getBlock() instanceof PulleyBlock && level.getBlockEntity(pos) instanceof PulleyBlockTile te) {
-            return te.rotateIndirect(player, hand, ropeBlock, moveDir, false);
+            return te.passRopeThroughInstantly(ropeBlock, moveDir, true);
         } else {
             return placeAndMove(player, hand, level, pos, moveDir, ropeBlock);
         }
@@ -114,22 +114,22 @@ public class InstantPulleyMover {
         return removeRope(pos, level, ropeBlock, Direction.DOWN, Integer.MAX_VALUE);
     }
 
-    public static boolean removeRope(BlockPos pos, Level level, Block ropeBlock, Direction moveUpDir, int maxDist) {
+    public static boolean removeRope(BlockPos pos, Level level, Block ropeBlock, Direction ropeDir, int maxDist) {
         if (maxDist <= 0) {
             return false;
         } else maxDist--;
         BlockState state = level.getBlockState(pos);
-        if (isCorrectRope(ropeBlock, state, moveUpDir)) {
-            return removeRope(pos.relative(moveUpDir), level, ropeBlock, moveUpDir, maxDist);
+        if (isCorrectRope(ropeBlock, state, ropeDir)) {
+            return removeRope(pos.relative(ropeDir), level, ropeBlock, ropeDir, maxDist);
 
         } else if (state.getBlock() instanceof PulleyBlock
                 && level.getBlockEntity(pos) instanceof PulleyBlockTile te && !te.isEmpty()) {
-            return te.rotateIndirect(null, InteractionHand.MAIN_HAND, ropeBlock, moveUpDir, true);
+            return te.passRopeThroughInstantly(ropeBlock, ropeDir, false);
         } else {
-            BlockPos up = pos.relative(moveUpDir.getOpposite());
-            if ((level.getBlockState(up).getBlock() != ropeBlock)) return false;
-            if (!placeAndMove(null, InteractionHand.MAIN_HAND, level, pos, moveUpDir.getOpposite(), null)) {
-                level.setBlockAndUpdate(up, level.getFluidState(up).createLegacyBlock());
+            BlockPos ropeEndPos = pos.relative(ropeDir.getOpposite());
+            if ((level.getBlockState(ropeEndPos).getBlock() != ropeBlock)) return false;
+            if (!placeAndMove(null, InteractionHand.MAIN_HAND, level, pos, ropeDir.getOpposite(), null)) {
+                level.setBlockAndUpdate(ropeEndPos, level.getFluidState(ropeEndPos).createLegacyBlock());
             }
             return true;
         }

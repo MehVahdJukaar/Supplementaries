@@ -4,9 +4,14 @@ import net.mehvahdjukaar.moonlight.api.block.ItemDisplayTile;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Winding;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.TurnTableBlock;
 import net.mehvahdjukaar.supplementaries.common.inventories.PulleyContainerMenu;
-import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPulleyAttemptPacket;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ContinuousPulleyMover;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.InstantPulleyMover;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PulleyCooperationData;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PulleyStructureResolver;
+import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PulleyStructureResolver.RopeColumn;
+import net.mehvahdjukaar.supplementaries.common.network.ClientBoundPulleyAttemptPacket;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
@@ -18,12 +23,10 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.Rotation;
@@ -37,29 +40,43 @@ import java.util.List;
 
 public class PulleyBlockTile extends ItemDisplayTile {
 
-    //ticks left before the next analog driven step. not saved
-    private int analogCooldown = 0;
+    public static final Direction ROPE_HANG_DIRECTION = Direction.DOWN;
+
+    private static final int MOVE_ROPE_COLUMN_ONE_STEP_EVENT = 0;
+    private static final int MAX_ANIMATION_TICKS_FITTING_IN_EVENT_PARAM = 127;
+
+    private static final int VANILLA_PISTON_ANIMATION_TICKS = 2;
+    private static final int CRANK_ANIMATION_TICKS = 4;
+    private static final int TICKS_CRANK_KEEPS_WINDING_AFTER_LAST_USE = 5;
+    private static final int MAX_SIDEWAYS_ROPE_LENGTH = 7;
+
+    private int ticksUntilNextAnalogStep = 0;
     private long lastAnalogDriveTick = -1L;
+    private long lastCrankTick = -100L;
+    private boolean crankExtending = false;
 
     public PulleyBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.PULLEY_BLOCK_TILE.get(), pos, state);
     }
 
-    public static Winding getContentType(Item item) {
-        Winding type = Winding.NONE;
-        if (item instanceof BlockItem bi && bi.getBlock() instanceof ChainBlock || item.builtInRegistryHolder().is(ModTags.CHAINS))
-            type = Winding.CHAIN;
-        else if (item.builtInRegistryHolder().is(ModTags.ROPES)) type = Winding.ROPE;
-        return type;
+    public static Winding getWindingOf(Item item) {
+        boolean isChain = item instanceof BlockItem bi && bi.getBlock() instanceof ChainBlock || item.builtInRegistryHolder().is(ModTags.CHAINS);
+        if (isChain) return Winding.CHAIN;
+        if (item.builtInRegistryHolder().is(ModTags.ROPES)) return Winding.ROPE;
+        return Winding.NONE;
+    }
+
+    public static boolean canBeWound(Item item) {
+        return getWindingOf(item) != Winding.NONE;
     }
 
     @Override
     public void serverSideUpdateWhenChanged(HolderLookup.Provider registries) {
         super.serverSideUpdateWhenChanged(registries);
-        Winding type = getContentType(this.getDisplayedItem().getItem());
+        Winding winding = getWindingOf(this.getDisplayedItem().getItem());
         BlockState state = this.getBlockState();
-        if (state.getValue(PulleyBlock.TYPE) != type) {
-            level.setBlockAndUpdate(this.worldPosition, state.setValue(PulleyBlock.TYPE, type));
+        if (state.getValue(PulleyBlock.WINDING) != winding) {
+            level.setBlockAndUpdate(this.worldPosition, state.setValue(PulleyBlock.WINDING, winding));
         }
     }
 
@@ -70,7 +87,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return (getContentType(stack.getItem()) != Winding.NONE);
+        return canBeWound(stack.getItem());
     }
 
     @Override
@@ -88,127 +105,214 @@ public class PulleyBlockTile extends ItemDisplayTile {
         return 64;
     }
 
-
-    public boolean rotateDirectly(Rotation rot) {
-        if (rot == Rotation.CLOCKWISE_90) return this.pullRopeUp();
-        else if (rot == Rotation.COUNTERCLOCKWISE_90) return this.releaseRopeDown();
-        else return false;
-    }
-
-    public boolean pullRopeUp() {
-        return pullRopeUp(0);
-    }
-
-    //animationTicks 0 means vanilla 2 tick speed. drivers that know their pulse period pass it in
-    public boolean pullRopeUp(int animationTicks) {
-        if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) {
-            //client gets the block event and runs triggerEvent itself
-            if (!(level instanceof ServerLevel)) return false;
-            return fireContinuousStep(false, animationTicks);
-        }
-        return pullRope(Direction.DOWN, Integer.MAX_VALUE, true);
-    }
-
-    //posts one step event, PulleyBlock.triggerEvent does the actual move on both sides
-    private boolean fireContinuousStep(boolean extending, int animationTicks) {
-        if (!(level instanceof ServerLevel serverLevel)) return false;
-        //one rotation at a time
-        if (PulleyBlock.isChainAnimating(serverLevel, worldPosition, Direction.DOWN)) return false;
-        Direction pushDir = extending ? Direction.DOWN : Direction.UP;
-
-        //register before firing, triggerEvent needs the whole group to pull a shared structure
-        if (CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get()) {
-            long now = serverLevel.getGameTime();
-            ModData.COOPERATIVE_PULLEYS.getData(serverLevel)
-                    .markAttempting(worldPosition, animationTicks, pushDir, now);
-            //cranks and manual pulls don't run clientside, so mirror the attempt over
-            NetworkHelper.sendToAllClientPlayersInDefaultRange(serverLevel, worldPosition,
-                    new ClientBoundPulleyAttemptPacket(worldPosition, animationTicks, pushDir, now));
-        }
-
-        serverLevel.blockEvent(worldPosition, getBlockState().getBlock(), PulleyBlock.EVENT_PULL_STEP,
-                PulleyBlock.packStepParam(extending, animationTicks));
+    @Override
+    public boolean needsToUpdateClientWhenChanged() {
         return true;
     }
 
-    //displayed item if there is one, else whatever block is hanging off us
+
+    public boolean windByRotation(Rotation rot) {
+        if (rot == Rotation.CLOCKWISE_90) return moveRopeOneBlock(false, VANILLA_PISTON_ANIMATION_TICKS);
+        if (rot == Rotation.COUNTERCLOCKWISE_90) return moveRopeOneBlock(true, VANILLA_PISTON_ANIMATION_TICKS);
+        return false;
+    }
+
+    public void windByAnalogRotation(boolean extending, float speed) {
+        long now = level.getGameTime();
+        boolean driverPaused = this.lastAnalogDriveTick != now - 1;
+        if (driverPaused) this.ticksUntilNextAnalogStep = 0;
+        this.lastAnalogDriveTick = now;
+
+        if (this.ticksUntilNextAnalogStep > 0) {
+            this.ticksUntilNextAnalogStep--;
+            return;
+        }
+        int ticksPerStep = Math.max(2, TurnTableBlock.getPeriod((int) speed));
+        moveRopeOneBlock(extending, ticksPerStep);
+        this.ticksUntilNextAnalogStep = ticksPerStep;
+    }
+
+    public void windByCrank(boolean extending) {
+        this.lastCrankTick = level.getGameTime();
+        this.crankExtending = extending;
+        keepWindingWhileCranked();
+    }
+
+    public void keepWindingWhileCranked() {
+        boolean stillCranking = level.getGameTime() - this.lastCrankTick <= TICKS_CRANK_KEEPS_WINDING_AFTER_LAST_USE;
+        if (!stillCranking) return;
+        moveRopeOneBlock(this.crankExtending, CRANK_ANIMATION_TICKS);
+        level.scheduleTick(worldPosition, getBlockState().getBlock(), 1);
+    }
+
+    private boolean moveRopeOneBlock(boolean extending, int animationTicks) {
+        if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) {
+            return postMoveRopeColumnOneStepEvent(extending, animationTicks);
+        }
+        if (extending) return extendInstantly(ROPE_HANG_DIRECTION, Integer.MAX_VALUE, true);
+        return retractInstantly(ROPE_HANG_DIRECTION, Integer.MAX_VALUE, true);
+    }
+
+
+    private boolean postMoveRopeColumnOneStepEvent(boolean extending, int animationTicks) {
+        if (!(level instanceof ServerLevel serverLevel)) return false;
+        if (isRopeColumnAnimating()) return false;
+
+        if (CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get()) {
+            registerAttemptSoCooperatorsCanJoin(serverLevel, animationTicks, pushDirection(extending));
+        }
+        serverLevel.blockEvent(worldPosition, getBlockState().getBlock(), MOVE_ROPE_COLUMN_ONE_STEP_EVENT,
+                packEventParam(extending, animationTicks));
+        return true;
+    }
+
+    private void registerAttemptSoCooperatorsCanJoin(ServerLevel serverLevel, int animationTicks, Direction pushDir) {
+        long now = serverLevel.getGameTime();
+        ModData.COOPERATIVE_PULLEYS.getData(serverLevel).markAttempting(worldPosition, animationTicks, pushDir, now);
+        NetworkHelper.sendToAllClientPlayersInDefaultRange(serverLevel, worldPosition,
+                new ClientBoundPulleyAttemptPacket(worldPosition, animationTicks, pushDir, now));
+    }
+
+    private static int packEventParam(boolean extending, int animationTicks) {
+        return (extending ? 1 : 0) | (Math.min(animationTicks, MAX_ANIMATION_TICKS_FITTING_IN_EVENT_PARAM) << 1);
+    }
+
+    private static boolean unpackExtending(int eventParam) {
+        return (eventParam & 1) != 0;
+    }
+
+    private static int unpackAnimationTicks(int eventParam) {
+        return (eventParam >>> 1) & MAX_ANIMATION_TICKS_FITTING_IN_EVENT_PARAM;
+    }
+
+    @Override
+    public boolean triggerEvent(int id, int param) {
+        if (id != MOVE_ROPE_COLUMN_ONE_STEP_EVENT) return super.triggerEvent(id, param);
+        return resolveAndMoveRopeColumnOnBothSides(unpackExtending(param), unpackAnimationTicks(param));
+    }
+
+    private boolean resolveAndMoveRopeColumnOnBothSides(boolean extending, int animationTicks) {
+        Block ropeBlock = getWoundOrHangingRopeBlock();
+        if (ropeBlock == null) return false;
+
+        long now = level.getGameTime();
+        boolean cooperative = CommonConfigs.Redstone.COOPERATIVE_PULLEYS.get();
+        boolean alreadyMovedByCooperator = cooperative && PulleyCooperationData.wasMovedThisTick(level, worldPosition, now);
+        boolean inputIsDroppedNotFailed = isRopeColumnAnimating() || alreadyMovedByCooperator;
+        if (inputIsDroppedNotFailed) return true;
+
+        List<RopeColumn> columnsMovingTogether = new ArrayList<>();
+        columnsMovingTogether.add(new RopeColumn(worldPosition, ropeBlock, ROPE_HANG_DIRECTION, extending));
+        if (cooperative) addCooperatingRopeColumns(columnsMovingTogether, ropeBlock, extending, animationTicks, now);
+
+        PulleyStructureResolver resolver = new PulleyStructureResolver(level, columnsMovingTogether);
+        if (!resolver.resolve() || resolver.hasNothingToMove()) return false;
+
+        if (!level.isClientSide) {
+            for (BlockPos movingPulleyPos : resolver.getPulleysWhoseColumnMoves()) {
+                if (level.getBlockEntity(movingPulleyPos) instanceof PulleyBlockTile movingPulley) {
+                    movingPulley.onRopeColumnStartedMoving(ropeBlock, extending);
+                }
+            }
+        }
+        ContinuousPulleyMover.moveOneStep(level, resolver, animationTicks);
+
+        if (cooperative) {
+            for (RopeColumn column : columnsMovingTogether) {
+                PulleyCooperationData.markMovedThisTick(level, column.pulleyPos(), now);
+            }
+        }
+        return true;
+    }
+
+    private void addCooperatingRopeColumns(List<RopeColumn> columns, Block ropeBlock, boolean extending, int animationTicks, long now) {
+        for (BlockPos cooperatorPos : PulleyCooperationData.getCooperators(level, worldPosition, animationTicks, pushDirection(extending), now)) {
+            if (!level.isLoaded(cooperatorPos)) continue;
+            if (level.getBlockEntity(cooperatorPos) instanceof PulleyBlockTile cooperator && cooperator.canMoveTogetherWithColumnOf(ropeBlock)) {
+                columns.add(new RopeColumn(cooperatorPos, ropeBlock, ROPE_HANG_DIRECTION, extending));
+            }
+        }
+    }
+
+    private boolean canMoveTogetherWithColumnOf(Block otherRopeBlock) {
+        return !isRopeColumnAnimating() && getWoundOrHangingRopeBlock() == otherRopeBlock;
+    }
+
+    private boolean isRopeColumnAnimating() {
+        Block moving = ModRegistry.MOVING_PULLEY_BLOCK.get();
+        BlockPos firstSlot = worldPosition.relative(ROPE_HANG_DIRECTION);
+        return level.getBlockState(firstSlot).is(moving)
+                || level.getBlockState(firstSlot.relative(ROPE_HANG_DIRECTION)).is(moving);
+    }
+
+    private static Direction pushDirection(boolean extending) {
+        return extending ? ROPE_HANG_DIRECTION : ROPE_HANG_DIRECTION.getOpposite();
+    }
+
     @Nullable
-    public Block resolveRopeBlock(Direction ropeDir) {
+    private Block getWoundOrHangingRopeBlock() {
         ItemStack stack = getDisplayedItem();
         if (!stack.isEmpty() && stack.getItem() instanceof BlockItem bi) {
             return bi.getBlock();
         }
         if (level == null) return null;
-        Block adjacent = level.getBlockState(worldPosition.relative(ropeDir)).getBlock();
-        if (getContentType(adjacent.asItem()) != Winding.NONE) return adjacent;
+        Block hanging = level.getBlockState(worldPosition.relative(ROPE_HANG_DIRECTION)).getBlock();
+        if (canBeWound(hanging.asItem())) return hanging;
         return null;
     }
 
-    public boolean pullRope(Direction moveDir, int maxDist, boolean addItem) {
-        ItemStack stack = this.getDisplayedItem();
-        boolean addNewItem = false;
-        if (stack.isEmpty()) {
-            Item i = level.getBlockState(worldPosition.below()).getBlock().asItem();
-            if (getContentType(i) == Winding.NONE) return false;
-            stack = new ItemStack(i);
-            addNewItem = true;
+    private void onRopeColumnStartedMoving(Block ropeBlock, boolean extending) {
+        ItemStack stack = getDisplayedItem();
+        if (extending) {
+            if (stack.isEmpty() || !stack.is(ropeBlock.asItem())) return;
+            stack.shrink(1);
+            setChanged();
+        } else if (stack.isEmpty()) {
+            setDisplayedItem(new ItemStack(ropeBlock));
+        } else if (stack.is(ropeBlock.asItem()) && stack.getCount() < stack.getMaxStackSize()) {
+            stack.grow(1);
+            setChanged();
         }
-        if (stack.getCount() + 1 > stack.getMaxStackSize() || !(stack.getItem() instanceof BlockItem)) return false;
-        Block ropeBlock = ((BlockItem) stack.getItem()).getBlock();
-        boolean success = InstantPulleyMover.removeRope(worldPosition.relative(moveDir), level, ropeBlock, moveDir, maxDist);
+        playWindingSound(ropeBlock, extending);
+    }
+
+    private void playWindingSound(Block ropeBlock, boolean extending) {
+        SoundType soundType = ropeBlock.defaultBlockState().getSoundType();
+        level.playSound(null, worldPosition, extending ? soundType.getPlaceSound() : soundType.getBreakSound(),
+                SoundSource.BLOCKS, (soundType.getVolume() + 1.0F) / 2.0F, soundType.getPitch() * 0.8F);
+    }
+
+
+    public boolean retractInstantly(Direction ropeDir, int maxDist, boolean storeRetractedRope) {
+        ItemStack stack = this.getDisplayedItem();
+        boolean startsNewStack = false;
+        if (stack.isEmpty()) {
+            Item hangingItem = level.getBlockState(worldPosition.below()).getBlock().asItem();
+            if (!canBeWound(hangingItem)) return false;
+            stack = new ItemStack(hangingItem);
+            startsNewStack = true;
+        }
+        if (stack.getCount() + 1 > stack.getMaxStackSize() || !(stack.getItem() instanceof BlockItem bi)) return false;
+        Block ropeBlock = bi.getBlock();
+        boolean success = InstantPulleyMover.removeRope(worldPosition.relative(ropeDir), level, ropeBlock, ropeDir, maxDist);
         if (success) {
-            SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
-            level.playSound(null, worldPosition, soundtype.getBreakSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            if (addNewItem) this.setDisplayedItem(stack);
-            else if (addItem) stack.grow(1);
+            playWindingSound(ropeBlock, false);
+            if (startsNewStack) this.setDisplayedItem(stack);
+            else if (storeRetractedRope) stack.grow(1);
             this.setChanged();
         }
         return success;
     }
 
-    public boolean releaseRopeDown() {
-        return releaseRopeDown(0);
-    }
-
-    public boolean releaseRopeDown(int animationTicks) {
-        if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) {
-            if (!(level instanceof ServerLevel)) return false;
-            return fireContinuousStep(true, animationTicks);
-        } else return releaseRope(Direction.DOWN, Integer.MAX_VALUE, true);
-    }
-
-    public void driveAnalog(Level level, boolean ccw, float speed) {
-        long now = level.getGameTime();
-        boolean driverPaused = this.lastAnalogDriveTick != now - 1;
-        if (driverPaused) this.analogCooldown = 0;
-        this.lastAnalogDriveTick = now;
-
-        if (this.analogCooldown > 0) {
-            this.analogCooldown--;
-            return;
-        }
-        //same as TurnTableBlock.getPeriod(power): power 15 is 4 ticks, power 1 is 60 ticks
-        int period = Math.max(2, (int) ((60 - speed * 4) + 4));
-
-        if (ccw) {
-            releaseRopeDown(period);
-        } else {
-            pullRopeUp(period);
-        }
-        this.analogCooldown = period;
-    }
-
-    public boolean releaseRope(Direction dir, int maxDist, boolean removeItem) {
-
+    public boolean extendInstantly(Direction ropeDir, int maxDist, boolean spendWoundRope) {
         ItemStack stack = this.getDisplayedItem();
         if (stack.getCount() < 1 || !(stack.getItem() instanceof BlockItem bi)) return false;
         Block ropeBlock = bi.getBlock();
 
-        boolean success = InstantPulleyMover.addRope(worldPosition.relative(dir), level, null, InteractionHand.MAIN_HAND, ropeBlock, dir, maxDist);
+        boolean success = InstantPulleyMover.addRope(worldPosition.relative(ropeDir), level, null, InteractionHand.MAIN_HAND, ropeBlock, ropeDir, maxDist);
         if (success) {
-            SoundType soundtype = ropeBlock.defaultBlockState().getSoundType();
-            level.playSound(null, worldPosition, soundtype.getPlaceSound(), SoundSource.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
-            if (removeItem) {
+            playWindingSound(ropeBlock, true);
+            if (spendWoundRope) {
                 stack.shrink(1);
                 this.setChanged();
             }
@@ -216,46 +320,36 @@ public class PulleyBlockTile extends ItemDisplayTile {
         return success;
     }
 
-
-    public boolean rotateIndirect(Player player, InteractionHand hand, Block ropeBlock, Direction moveDir, boolean retracting) {
+    public boolean passRopeThroughInstantly(Block ropeBlock, Direction incomingRopeDir, boolean extending) {
         if (CommonConfigs.Redstone.PULLEY_CONTINUOUS.get()) return false;
         ItemStack stack = getDisplayedItem();
         if (stack.isEmpty()) {
-            if (retracting) {
-                return false;
-            } else {
-                this.setDisplayedItem(new ItemStack(ropeBlock));
-                return true;
-            }
+            if (!extending) return false;
+            this.setDisplayedItem(new ItemStack(ropeBlock));
+            return true;
         }
 
         if (!stack.is(ropeBlock.asItem())) return false;
         BlockState state = getBlockState();
         Direction.Axis axis = state.getValue(PulleyBlock.AXIS);
-        if (axis == moveDir.getAxis()) return false;
+        if (axis == incomingRopeDir.getAxis()) return false;
 
         level.setBlockAndUpdate(worldPosition, state.cycle(PulleyBlock.FLIPPED));
 
-        Direction[] order = moveDir.getAxis().isHorizontal() ? new Direction[]{Direction.DOWN} :
-                new Direction[]{moveDir, moveDir.getClockWise(axis), moveDir.getCounterClockWise(axis)};
+        Direction[] ropeExitOrder = incomingRopeDir.getAxis().isHorizontal() ? new Direction[]{Direction.DOWN} :
+                new Direction[]{incomingRopeDir, incomingRopeDir.getClockWise(axis), incomingRopeDir.getCounterClockWise(axis)};
 
-        List<Direction> remaining = new ArrayList<>();
-        int maxSideDist = 7;
-        for (var d : order) {
-            if (InstantPulleyMover.isCorrectRope(ropeBlock, level.getBlockState(worldPosition.relative(d)), d)) {
-                if (moveConnected(retracting, maxSideDist, d)) {
-                    return true;
-                }
-                //returns if we found a rope but failed
-                return false;
-            } else remaining.add(d);
+        List<Direction> exitsWithoutRope = new ArrayList<>();
+        for (var exitDir : ropeExitOrder) {
+            boolean ropeAlreadyExitsHere = InstantPulleyMover.isCorrectRope(ropeBlock, level.getBlockState(worldPosition.relative(exitDir)), exitDir);
+            if (ropeAlreadyExitsHere) return moveRopeInstantlyAtExit(exitDir, extending);
+            exitsWithoutRope.add(exitDir);
         }
-        for (var d : remaining) {
-            if (moveConnected(retracting, maxSideDist, d)) {
-                return true;
-            }
+        for (var exitDir : exitsWithoutRope) {
+            if (moveRopeInstantlyAtExit(exitDir, extending)) return true;
         }
-        if (retracting) {
+        boolean unwindsOwnRopeInstead = !extending;
+        if (unwindsOwnRopeInstead) {
             stack.shrink(1);
             this.setChanged();
             return true;
@@ -263,18 +357,9 @@ public class PulleyBlockTile extends ItemDisplayTile {
         return false;
     }
 
-    private boolean moveConnected(boolean retracting, int maxSideDist, Direction d) {
-        int dist = d == Direction.DOWN ? Integer.MAX_VALUE : maxSideDist;
-        if (retracting) {
-            return pullRope(d, dist, false);
-        } else {
-            return releaseRope(d, dist, false);
-        }
-    }
-
-    //needed for continuous stuff
-    @Override
-    public boolean needsToUpdateClientWhenChanged() {
-        return true;
+    private boolean moveRopeInstantlyAtExit(Direction exitDir, boolean extending) {
+        int maxDist = exitDir == Direction.DOWN ? Integer.MAX_VALUE : MAX_SIDEWAYS_ROPE_LENGTH;
+        if (extending) return extendInstantly(exitDir, maxDist, false);
+        return retractInstantly(exitDir, maxDist, false);
     }
 }

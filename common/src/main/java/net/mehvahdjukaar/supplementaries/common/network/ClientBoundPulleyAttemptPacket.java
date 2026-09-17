@@ -16,20 +16,20 @@ public class ClientBoundPulleyAttemptPacket implements Message {
             Supplementaries.res("s2c_pulley_attempt"), ClientBoundPulleyAttemptPacket::new);
 
     public final BlockPos pos;
-    public final int period;
+    public final int animationTicks;
     public final Direction pushDir;
     public final long tick;
 
-    public ClientBoundPulleyAttemptPacket(BlockPos pos, int period, Direction pushDir, long tick) {
+    public ClientBoundPulleyAttemptPacket(BlockPos pos, int animationTicks, Direction pushDir, long tick) {
         this.pos = pos;
-        this.period = period;
+        this.animationTicks = animationTicks;
         this.pushDir = pushDir;
         this.tick = tick;
     }
 
     public ClientBoundPulleyAttemptPacket(RegistryFriendlyByteBuf buffer) {
         this.pos = buffer.readBlockPos();
-        this.period = buffer.readVarInt();
+        this.animationTicks = buffer.readVarInt();
         this.pushDir = buffer.readEnum(Direction.class);
         this.tick = buffer.readVarLong();
     }
@@ -37,14 +37,14 @@ public class ClientBoundPulleyAttemptPacket implements Message {
     @Override
     public void write(RegistryFriendlyByteBuf buffer) {
         buffer.writeBlockPos(this.pos);
-        buffer.writeVarInt(this.period);
+        buffer.writeVarInt(this.animationTicks);
         buffer.writeEnum(this.pushDir);
         buffer.writeVarLong(this.tick);
     }
 
     @Override
     public void handle(Context context) {
-        PulleyCooperationData.markAttemptingClient(this.pos, this.period, this.pushDir, this.tick);
+        PulleyCooperationData.markAttemptingClient(this.pos, this.animationTicks, this.pushDir, this.tick);
     }
 
     @Override

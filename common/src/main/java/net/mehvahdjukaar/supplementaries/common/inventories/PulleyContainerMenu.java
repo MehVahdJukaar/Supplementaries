@@ -1,7 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.inventories;
 
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
-import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
 import net.mehvahdjukaar.supplementaries.reg.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
@@ -35,7 +34,7 @@ public class PulleyContainerMenu extends AbstractContainerMenu implements IConta
         this.addSlot(new Slot(inventory, 0, 79, 39) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return PulleyBlockTile.getContentType(stack.getItem()) != ModBlockProperties.Winding.NONE;
+                return PulleyBlockTile.canBeWound(stack.getItem());
             }
         });
 
