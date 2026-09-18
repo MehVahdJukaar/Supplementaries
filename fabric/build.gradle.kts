@@ -56,6 +56,9 @@ dependencies {
     modCompileOnly("curse.maven:goated-805646:5935888")
     //modImplementation("curse.maven:inmis-369254:6952335")
     modCompileOnly("maven.modrinth:sodium:mc1.21.1-0.8.12-beta.1-fabric")
+    //voxy 1.21.1 port (m3t4f1v3/voxy#166), build it and drop the jar in fabric/mods
+    modRuntimeOnly(fileTree("mods") { include("voxy-*.jar") })
+    modRuntimeOnly("maven.modrinth:sodium:mc1.21.1-0.6.13-fabric")
     //modImplementation("curse.maven:resourceful-lib-570073:5793501") //v2.1.29 | Chipped, Handcrafted, Cozy
     //modImplementation("curse.maven:midnightlib-488090:5687799")
 

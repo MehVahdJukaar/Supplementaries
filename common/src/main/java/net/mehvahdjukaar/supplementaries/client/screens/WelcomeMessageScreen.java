@@ -35,11 +35,14 @@ public class WelcomeMessageScreen extends Screen {
                     .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://legacy.curseforge.com/minecraft/mc-mods/amendments")));
     private static final Component IM_TITLE = Component.translatable("gui.supplementaries.incompatible_mods.title")
             .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
+    private static final Component VOXY_URL = Component.literal("Voxy: see the issue HERE")
+            .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).applyFormat(ChatFormatting.UNDERLINE)
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/m3t4f1v3/voxy/pull/166")));
 
     //leave accessible
     public static final ArrayList<String> MODS_WITH_KNOWN_ISSUES =
             new ArrayList<>(PlatHelper.getPlatform().isFabric() ?
-                    List.of("particular") : List.of());
+                    List.of("particular", "voxy") : List.of());
 
     private static final String IM_LIST_TEXT = MODS_WITH_KNOWN_ISSUES.stream()
             .filter(PlatHelper::isModLoaded)
@@ -81,7 +84,7 @@ public class WelcomeMessageScreen extends Screen {
         return new WelcomeMessageScreen(screen, 60, IM_TITLE,
                 Component.translatable("gui.supplementaries.incompatible_mods.message",
                         Component.literal(IM_LIST_TEXT).withStyle(ChatFormatting.RED)),
-                null, ClientConfigs::disableIncompatWarn);
+                PlatHelper.isModLoaded("voxy") ? VOXY_URL : null, ClientConfigs::disableIncompatWarn);
     }
 
     public static boolean hasIncompat() {

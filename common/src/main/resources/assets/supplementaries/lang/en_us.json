@@ -1367,5 +1367,8 @@
   "supplementaries.configuration.flute.note_particles": "Note Particles",
   "supplementaries.configuration.flute.note_particles.description": "Display visual particles when a playing a flute",
   "supplementaries.configuration.plunderer.galleon.description": "Galleons are automatically disabled if 'rope' feature is disabled",
-  "supplementaries.configuration.globe.sepia_globe.description": "Sepia globes are automatically disabled if 'antique_ink' feature is disabled"
+  "supplementaries.configuration.globe.sepia_globe.description": "Sepia globes are automatically disabled if 'antique_ink' feature is disabled",
+  "supplementaries.configuration.grouper": "Grouper",
+  "supplementaries.configuration.grouper.compare_entities": "Compare Entities",
+  "supplementaries.configuration.grouper.compare_entities.description": "Lets groupers compare entities on their sides when both sides are air or liquid. Same entity type gives weak power. Full power needs an exact match: same dropped item or item frame item, same mob variant, villager profession or name tag"
 }
