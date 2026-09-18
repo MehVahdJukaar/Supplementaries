@@ -637,7 +637,7 @@
       "supplementaries:entity/plunderer/idle3",
       "supplementaries:entity/plunderer/idle4"
     ],
-    "subtitle": "subtitles.entity.plunderer.ambient"
+    "subtitle": "subtitles.supplementaries.plunderer.ambient"
   },
   "entity.plunderer.celebrate": {
     "sounds": [
@@ -646,14 +646,14 @@
       "supplementaries:entity/plunderer/celebrate3",
       "supplementaries:entity/plunderer/celebrate4"
     ],
-    "subtitle": "subtitles.entity.plunderer.celebrate"
+    "subtitle": "subtitles.supplementaries.plunderer.celebrate"
   },
   "entity.plunderer.death": {
     "sounds": [
       "supplementaries:entity/plunderer/death1",
       "supplementaries:entity/plunderer/death2"
     ],
-    "subtitle": "subtitles.entity.plunderer.death"
+    "subtitle": "subtitles.supplementaries.plunderer.death"
   },
   "entity.plunderer.hurt": {
     "sounds": [
@@ -662,7 +662,7 @@
       "supplementaries:entity/plunderer/hurt3",
       "supplementaries:entity/plunderer/hurt4"
     ],
-    "subtitle": "subtitles.entity.plunderer.hurt"
+    "subtitle": "subtitles.supplementaries.plunderer.hurt"
   },
   "entity.parrot.imitate.plunderer": {
     "sounds": [
