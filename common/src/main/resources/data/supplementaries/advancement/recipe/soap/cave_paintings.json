@@ -1,0 +1,63 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "soap"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "alexscaves"
+    }
+  ],
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "soap"
+    },
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "alexscaves"
+    }
+  ],
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cave_paintings": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#alexscaves:cave_paintings"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_soap": {
+      "conditions": {
+        "items": [
+          {
+            "items": "supplementaries:soap"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "supplementaries:soap/cave_paintings"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cave_paintings",
+      "has_soap"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "supplementaries:soap/cave_paintings"
+    ]
+  }
+}
