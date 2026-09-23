@@ -96,7 +96,13 @@ public class GlobeManager {
 
         for (var res : manager.listResources("textures/entity/globes/palettes",
                 r -> r.getPath().endsWith(".png")).keySet()) {
-            var l = SpriteUtils.parsePaletteStrip(manager, res, targetColors);
+            List<Integer> l;
+            try {
+                l = SpriteUtils.parsePaletteStrip(manager, res, targetColors);
+            } catch (Exception e) {
+                Supplementaries.LOGGER.error("Failed to read globe palette {}", res, e);
+                continue;
+            }
             String name = res.getPath();
             name = name.substring(name.lastIndexOf("/") + 1).replace(".png", "");
             if (name.equals("sepia")) {
@@ -110,8 +116,9 @@ public class GlobeManager {
             Supplementaries.LOGGER.error("Could not find any globe palette in textures/entity/globes/palettes");
         }
 
-        if (SEPIA_COLORS.isEmpty())
-            throw new RuntimeException("Could not find sepia globe palette in textures/entity/globes/palettes");
+        if (SEPIA_COLORS.isEmpty()) {
+            Supplementaries.LOGGER.error("Could not find sepia globe palette in textures/entity/globes/palettes");
+        }
 
         recomputeCache();
 
@@ -178,9 +185,11 @@ public class GlobeManager {
         private final ResourceLocation texture;
         private final ResourceLocation textureSepia;
         private final Model model;
+
         SpecialGlobe(Component tr, ResourceLocation texture, ResourceLocation textureSepia, String... key) {
             this(tr, texture, textureSepia, Model.GLOBE, key);
         }
+
         SpecialGlobe(Component tr, ResourceLocation texture,
                      ResourceLocation textureSepia, Model model, String... keywords) {
             this.keyWords = keywords;

@@ -15,17 +15,21 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
 
     public interface Attempt {
         long tick();
+
+        default boolean isStale(long currentTick) {
+            return Math.abs(currentTick - tick()) > MAX_AGE;
+        }
     }
 
     private final Map<Long, A> attempts = new ConcurrentHashMap<>();
-    private final Map<Long, Long> handled = new ConcurrentHashMap<>();
+    private final Map<Long, Long> movedTickByPos = new ConcurrentHashMap<>();
 
     public Map<Long, A> attempts() {
         return this.attempts;
     }
 
     public void markAttempting(BlockPos pos, A attempt) {
-        purge(attempt.tick());
+        removeStale(attempt.tick());
         this.attempts.put(pos.asLong(), attempt);
     }
 
@@ -34,7 +38,7 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
         if (this.attempts.size() <= 1) return cooperators;
         for (Map.Entry<Long, A> entry : this.attempts.entrySet()) {
             A attempt = entry.getValue();
-            if (isStale(currentTick, attempt.tick())) continue;
+            if (attempt.isStale(currentTick)) continue;
             BlockPos candidate = BlockPos.of(entry.getKey());
             if (candidate.equals(primary)) continue;
             if (!isCooperator.test(candidate, attempt)) continue;
@@ -44,23 +48,19 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
     }
 
     //same tick only. using MAX_AGE here stalls repeated input like crank spam
-    public boolean wasHandled(BlockPos pos, long currentTick) {
-        Long tick = this.handled.get(pos.asLong());
+    public boolean wasMovedThisTick(BlockPos pos, long currentTick) {
+        Long tick = this.movedTickByPos.get(pos.asLong());
         return tick != null && tick == currentTick;
     }
 
-    public void markHandled(BlockPos pos, long tick) {
-        purge(tick);
-        this.handled.put(pos.asLong(), tick);
+    public void markMoved(BlockPos pos, long tick) {
+        removeStale(tick);
+        this.movedTickByPos.put(pos.asLong(), tick);
     }
 
-    private void purge(long currentTick) {
-        this.attempts.entrySet().removeIf(e -> isStale(currentTick, e.getValue().tick()));
-        this.handled.entrySet().removeIf(e -> isStale(currentTick, e.getValue()));
+    private void removeStale(long currentTick) {
+        this.attempts.entrySet().removeIf(e -> e.getValue().isStale(currentTick));
+        this.movedTickByPos.entrySet().removeIf(e -> e.getValue().isStale(currentTick));
     }
 
-    //symmetric, gives it some slack due to server packet timing issues
-    private static boolean isStale(long currentTick, long tick) {
-        return Math.abs(currentTick - tick) > MAX_AGE;
-    }
 }

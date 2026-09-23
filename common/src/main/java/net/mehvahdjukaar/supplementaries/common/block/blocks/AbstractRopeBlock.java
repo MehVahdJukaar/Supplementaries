@@ -147,7 +147,7 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
     public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         BlockPos.MutableBlockPos mutable = pos.mutable().move(Direction.UP);
         BlockState upstate = world.getBlockState(mutable);
-        if (upstate.is(this)) {
+        if (upstate.getBlock() instanceof AbstractRopeBlock) {
             return true;
         } else if (IRopeConnection.isSupportingCeiling(mutable, world)) {
             return true;
@@ -224,8 +224,8 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
                 }
             }
             if (!player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
-                if (level.getBlockState(pos.below()).is(this)
-                        || level.getBlockState(pos.above()).is(this)) {
+                if (level.getBlockState(pos.below()).getBlock() instanceof AbstractRopeBlock
+                        || level.getBlockState(pos.above()).getBlock() instanceof AbstractRopeBlock) {
                     if (InstantPulleyMover.removeRopeDown(pos.below(), level, this)) {
                         level.playSound(player, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.BLOCKS, 1, 0.6f);
                         if (!player.getAbilities().instabuild) {
@@ -239,7 +239,7 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
             if (hasConnection(Direction.DOWN, state)) {
                 if (!level.isClientSide) {
                     //TODO: proper sound event here
-                    level.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, player == null ? SoundSource.BLOCKS : SoundSource.PLAYERS, 0.8F, 1.3F);
+                    level.playSound(null, pos, SoundEvents.SNOW_GOLEM_SHEAR, SoundSource.PLAYERS, 0.8F, 1.3F);
                     BlockState newState = setConnection(Direction.DOWN, state, false).setValue(KNOT, true);
                     level.setBlock(pos, newState, 3);
                     //refreshTextures below

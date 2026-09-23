@@ -64,16 +64,16 @@ public class PulleyCooperationData extends WorldSavedData {
                 attempt.pushDir() == pushDir && attempt.animationTicks() == animationTicks
                         && withinReach(candidate, primary));
         //a chain that already moved this tick can't join a second resolve
-        cooperators.removeIf(pos -> table.wasHandled(pos, currentTick));
+        cooperators.removeIf(pos -> table.wasMovedThisTick(pos, currentTick));
         return cooperators;
     }
 
     public static boolean wasMovedThisTick(Level level, BlockPos pos, long currentTick) {
-        return tableFor(level).wasHandled(pos, currentTick);
+        return tableFor(level).wasMovedThisTick(pos, currentTick);
     }
 
     public static void markMovedThisTick(Level level, BlockPos pos, long tick) {
-        tableFor(level).markHandled(pos, tick);
+        tableFor(level).markMoved(pos, tick);
     }
 
     private static CooperationTable<AttemptInfo> tableFor(Level level) {

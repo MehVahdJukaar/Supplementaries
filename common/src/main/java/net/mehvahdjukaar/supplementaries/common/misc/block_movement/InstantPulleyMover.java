@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
@@ -47,15 +48,19 @@ public class InstantPulleyMover {
     }
 
     public static boolean isCorrectRope(Block ropeBlock, BlockState state, Direction direction) {
-        if (state.getBlock() instanceof ChainBlock && state.getValue(ChainBlock.AXIS) != direction.getAxis())
+        if (state.getBlock() instanceof ChainBlock && state.getValue(ChainBlock.AXIS) != direction.getAxis()) {
             return false;
-        return ropeBlock == state.getBlock();
+        }
+        if (ropeBlock == state.getBlock()) {
+            return true;
+        }
+        return ropeBlock instanceof AbstractRopeBlock && state.getBlock() instanceof AbstractRopeBlock;
     }
 
-    public static boolean placeAndMove(@Nullable Player player, InteractionHand hand, Level level,
-                                       BlockPos originPos, Direction moveDir,
-                                       //if null it will make the move operation override any target block
-                                       @Nullable Block placeWhereItWas) {
+    private static boolean placeAndMove(@Nullable Player player, InteractionHand hand, Level level,
+                                        BlockPos originPos, Direction moveDir,
+                                        //if null it will make the move operation override any target block
+                                        @Nullable Block placeWhereItWas) {
         BlockState originalState = level.getBlockState(originPos);
         BlockPos targetPos = originPos.relative(moveDir);
         BlockState targetState = level.getBlockState(targetPos);
@@ -86,6 +91,11 @@ public class InstantPulleyMover {
             }
         } else {
             level.setBlockAndUpdate(originPos, originalFluid.createLegacyBlock());
+            boolean nothingHangsFromRope = !needsToPush;
+            if (nothingHangsFromRope) {
+                level.setBlockAndUpdate(targetPos, level.getFluidState(targetPos).createLegacyBlock());
+                return true;
+            }
         }
 
         FluidState targetFluid = level.getFluidState(targetPos);
@@ -127,7 +137,7 @@ public class InstantPulleyMover {
             return te.passRopeThroughInstantly(ropeBlock, ropeDir, false);
         } else {
             BlockPos ropeEndPos = pos.relative(ropeDir.getOpposite());
-            if ((level.getBlockState(ropeEndPos).getBlock() != ropeBlock)) return false;
+            if (!isCorrectRope(ropeBlock, level.getBlockState(ropeEndPos), ropeDir)) return false;
             if (!placeAndMove(null, InteractionHand.MAIN_HAND, level, pos, ropeDir.getOpposite(), null)) {
                 level.setBlockAndUpdate(ropeEndPos, level.getFluidState(ropeEndPos).createLegacyBlock());
             }
@@ -135,15 +145,13 @@ public class InstantPulleyMover {
         }
     }
 
-
-    public static boolean isPushableByRopes(BlockState state, Level level, BlockPos pos, Direction moveDir) {
+    private static boolean isPushableByRopes(BlockState state, Level level, BlockPos pos, Direction moveDir) {
         if (state.getBlock() instanceof PulleyBlock) return false; //could be in the tag but easier for addons like this
         if (state.is(ModTags.ROPE_PUSH_BLACKLIST)) return false;
         if (!state.isSolid()) return false;
         if (moveDir.getAxis().isVertical() && state.is(ModTags.ROPE_HANG_TAG)) {
             return true;
         }
-
         return BlockMovementHelper.isPushableByOurMovers(state, level, pos, moveDir, false, moveDir);
     }
 }

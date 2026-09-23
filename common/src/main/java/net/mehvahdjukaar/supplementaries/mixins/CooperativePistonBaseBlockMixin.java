@@ -21,11 +21,11 @@ public class CooperativePistonBaseBlockMixin {
     @WrapOperation(method = "checkIfExtend",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/piston/PistonStructureResolver;resolve()Z"))
-    private boolean supp$tryExtendTogether(PistonStructureResolver resolver, Operation<Boolean> original,
+    private boolean supp$checkExtendTogether(PistonStructureResolver resolver, Operation<Boolean> original,
                                            @Local(argsOnly = true) Level level,
                                            @Local(argsOnly = true) BlockPos pos,
                                            @Local Direction direction) {
-        return PistonCooperationLogic.tryExtendTogether(resolver, () -> original.call(resolver), level, pos, direction);
+        return PistonCooperationLogic.checkExtendTogether(resolver, () -> original.call(resolver), level, pos, direction);
     }
 
     //the retract branch has no resolver, just a block event

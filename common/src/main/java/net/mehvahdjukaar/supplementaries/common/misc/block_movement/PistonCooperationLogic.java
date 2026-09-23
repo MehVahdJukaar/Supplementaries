@@ -21,12 +21,12 @@ import java.util.function.BooleanSupplier;
 //piston side of the cooperation stuff. the mixin just forwards here
 public class PistonCooperationLogic {
 
-    public static boolean tryExtendTogether(PistonStructureResolver resolver, BooleanSupplier resolveAlone,
+    public static boolean checkExtendTogether(PistonStructureResolver resolver, BooleanSupplier resolveAlone,
                                             Level level, BlockPos pos, Direction facing) {
         if (!CommonConfigs.Tweaks.COOPERATIVE_PISTONS.get()) return resolveAlone.getAsBoolean();
         if (!(level instanceof ServerLevel serverLevel)) return resolveAlone.getAsBoolean();
 
-        PistonAttemptsTracker.mark(serverLevel, pos, facing, true);
+        PistonAttemptsTracker.markAttempting(serverLevel, pos, facing, true);
         if (resolveAlone.getAsBoolean()) return true;
 
         Set<BlockPos> cooperators = PistonAttemptsTracker.getCooperators(serverLevel, pos, facing, true);
@@ -46,7 +46,7 @@ public class PistonCooperationLogic {
     public static void markRetractingThisTick(Level level, BlockPos pos, Direction facing) {
         if (!CommonConfigs.Tweaks.COOPERATIVE_PISTONS.get()) return;
         if (level instanceof ServerLevel serverLevel) {
-            PistonAttemptsTracker.mark(serverLevel, pos, facing, false);
+            PistonAttemptsTracker.markAttempting(serverLevel, pos, facing, false);
         }
     }
 

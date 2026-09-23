@@ -23,14 +23,14 @@ public class PistonCooperationState {
     private Direction pistonDirection;
     private boolean extending;
 
-    public void set(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
-        this.cooperatingPistons = cooperators;
+    public void setCooperators(Set<BlockPos> allPistons, Direction pistonDirection, boolean extending) {
+        this.cooperatingPistons = allPistons;
         this.pistonDirection = pistonDirection;
         this.extending = extending;
         this.contributingCooperators = Collections.emptySet();
         this.cooperatorHeads = new HashSet<>();
         if (!extending) {
-            for (BlockPos cooperatorPos : cooperators) cooperatorHeads.add(cooperatorPos.relative(pistonDirection));
+            for (BlockPos cooperatorPos : allPistons) cooperatorHeads.add(cooperatorPos.relative(pistonDirection));
         }
     }
 
@@ -49,29 +49,29 @@ public class PistonCooperationState {
         return contributingCooperators;
     }
 
-    public void adoptContributingFrom(PistonCooperationState other) {
+    public void copyContributorsFrom(PistonCooperationState other) {
         this.contributingCooperators = other.contributingCooperators;
     }
 
     //drops cooperators that didn't contribute, then checks the pooled budget
-    public boolean gateResolve(boolean originalResult, BlockPos pistonPos, List<BlockPos> toPush) {
+    public boolean keepContributorsAndCheckPushLimit(boolean originalResult, BlockPos pistonPos, List<BlockPos> toPush) {
         if (!originalResult) return false;
 
         if (this.cooperatingPistons.isEmpty()) return true;
         if (this.pistonDirection == null) return true;
 
-        int offset = this.extending ? 1 : 2;
+        int distanceToFirstMoved = this.extending ? 1 : 2;
         Set<BlockPos> contributing = new HashSet<>();
         for (BlockPos cooperatorPos : this.cooperatingPistons) {
             if (cooperatorPos.equals(pistonPos)) continue;
-            BlockPos start = cooperatorPos.relative(this.pistonDirection, offset);
-            if (toPush.contains(start)) contributing.add(cooperatorPos);
+            BlockPos firstMovedPos = cooperatorPos.relative(this.pistonDirection, distanceToFirstMoved);
+            if (toPush.contains(firstMovedPos)) contributing.add(cooperatorPos);
         }
         this.contributingCooperators = contributing;
         return toPush.size() <= (1 + contributing.size()) * BlockMovementHelper.getPerPistonPushLimit();
     }
 
-    public boolean wrapEqualsCheck(boolean originalResult, BlockPos candidate) {
-        return originalResult || this.cooperatingPistons.contains(candidate);
+    public boolean isAnyMovingPiston(boolean isThisPiston, BlockPos candidate) {
+        return isThisPiston || this.cooperatingPistons.contains(candidate);
     }
 }

@@ -4,11 +4,14 @@ import net.mehvahdjukaar.moonlight.api.resources.ResType;
 import net.mehvahdjukaar.moonlight.api.resources.textures.SpriteUtils;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.HSLColor;
 import net.mehvahdjukaar.moonlight.api.util.math.colors.RGBColor;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+
+import java.util.List;
 
 public class ColorHelper {
     private static float[][] soapColors;
@@ -88,8 +91,13 @@ public class ColorHelper {
     }
 
     public static void refreshBubbleColors(ResourceManager manager) {
-        var c = SpriteUtils.parsePaletteStrip(manager, ResType.TEXTURES.getPath(ModTextures.BUBBLE_BLOCK_COLORS_TEXTURE), 6);
-        //int[] c = new int[]{0xd3a4f7, 0xf3c1f0, 0xd3a4f7, 0xa2c0f8, 0xa2f8df, 0xa2c0f8,};
+        List<Integer> c;
+        try {
+            c = SpriteUtils.parsePaletteStrip(manager, ResType.TEXTURES.getPath(ModTextures.BUBBLE_BLOCK_COLORS_TEXTURE), 6);
+        } catch (Exception e) {
+            Supplementaries.LOGGER.error("Failed to read bubble block palette", e);
+            c = List.of(0xd3a4f7, 0xf3c1f0, 0xd3a4f7, 0xa2c0f8, 0xa2f8df, 0xa2c0f8);
+        }
         float[][] temp = new float[c.size()][];
         for (int i = 0; i < c.size(); i++) {
             int j = c.get(i);

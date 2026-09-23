@@ -309,7 +309,7 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
 
         @VirtualOverride("neoforge")
         public int getSlotLimit(int slot) {
-            return 99;
+            return Integer.MAX_VALUE;
         }
 
         protected int getStackLimit(int slot, ItemStack stack) {

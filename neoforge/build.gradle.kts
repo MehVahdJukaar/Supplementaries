@@ -131,7 +131,7 @@ dependencies {
     // Sodium's NeoForge CF/Modrinth download is a bootstrap wrapper that bundles the real mod as a
     // nested JarJar, so the classes never reach the compile classpath. We extract that inner jar
     // (already mojmap-mapped) and drop it in neoforge/mods, resolved via the flatDir repo below.
-    compileOnly(":sodium-neoforge:0.8.12-beta.1")
+    compileOnly(":sodium-neoforge:0.8.13")
     modCompileOnly("curse.maven:resourceful-lib-570073:5793500") //v2.1.29 | Chipped, Handcrafted, Cozy
     modCompileOnly("curse.maven:athena-841890:5629395") //v2.1.29 | Chipped, Handcrafted, Cozy
 

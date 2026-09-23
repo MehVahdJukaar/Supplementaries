@@ -32,7 +32,7 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
 
     @Override
     public void supp$setCooperators(Set<BlockPos> cooperators, Direction pistonDirection, boolean extending) {
-        this.supp$cooperationState.set(cooperators, pistonDirection, extending);
+        this.supp$cooperationState.setCooperators(cooperators, pistonDirection, extending);
     }
 
     @Override
@@ -42,7 +42,7 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
 
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
     private boolean supp$gateOnRealCooperation(boolean original) {
-        return supp$cooperationState.gateResolve(original, pistonPos, toPush);
+        return supp$cooperationState.keepContributorsAndCheckPushLimit(original, pistonPos, toPush);
     }
 
     // Cooperator piston bodies act as walls too; catches all three BlockPos.equals(pistonPos) sites.
@@ -51,7 +51,7 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
                     target = "Lnet/minecraft/core/BlockPos;equals(Ljava/lang/Object;)Z"))
     private boolean supp$wrapPistonEqualsCheck(BlockPos candidate, Object pistonPosArg,
                                                Operation<Boolean> original) {
-        return supp$cooperationState.wrapEqualsCheck(
+        return supp$cooperationState.isAnyMovingPiston(
                 original.call(candidate, pistonPosArg), candidate);
     }
 
