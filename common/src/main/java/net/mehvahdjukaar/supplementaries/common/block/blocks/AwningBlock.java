@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -160,6 +161,12 @@ public class AwningBlock extends WaterBlock implements IColored {
             }
         }
         return super.getCollisionShape(state, level, pos, context);
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        //fall through ones are only solid from above, can walk through them sideways
+        return CommonConfigs.Building.AWNING_FALL_THROUGH.get();
     }
 
     @Override

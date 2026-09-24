@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
@@ -104,6 +105,13 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
                 || !(context instanceof EntityCollisionContext ec && ec.getEntity() instanceof LivingEntity) ?
                 getShape(state, worldIn, pos, context) : Shapes.empty());
 
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        boolean isHorizontal = !hasConnection(Direction.UP, state) && !hasConnection(Direction.DOWN, state);
+        if (isHorizontal && CommonConfigs.Functional.ROPE_HORIZONTAL.get()) return false;
+        return super.isPathfindable(state, pathComputationType);
     }
 
     @Override

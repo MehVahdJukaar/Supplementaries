@@ -142,7 +142,7 @@ public class StickBlock extends WaterBlock implements IRotatable { // IRotationL
 
     @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
-        return super.isPathfindable(state, pathComputationType);
+        return false;
     }
 
     @Override

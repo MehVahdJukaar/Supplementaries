@@ -15,6 +15,7 @@ import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -28,6 +29,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -145,6 +148,18 @@ public abstract class AbstractRopeKnotBlock extends MimicBlock implements Simple
             return tile.getCollisionShape();
         }
         return super.getCollisionShape(state, world, pos, context);
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
+    }
+
+    @VirtualOverride("neoforge")
+    public @Nullable PathType getBlockPathType(BlockState state, BlockGetter level, BlockPos pos, @Nullable Mob mob) {
+        boolean tallerThanABlock = BlockUtil.getBlockEntitySafely(level, pos) instanceof RopeKnotBlockTile tile
+                && tile.getCollisionShape().max(Direction.Axis.Y) > 1;
+        return tallerThanABlock ? PathType.FENCE : null;
     }
 
     protected Pair<Map<BlockState, VoxelShape>, Map<BlockState, VoxelShape>> makeShapes() {

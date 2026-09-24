@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -155,6 +156,11 @@ public class FlowerBoxBlock extends WaterBlock implements EntityBlock {
             case WEST -> wall ? SHAPE_WEST : SHAPE_WEST_FLOOR;
             default -> wall ? SHAPE_NORTH : SHAPE_NORTH_FLOOR;
         };
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 
     @VirtualOverride("neoforge")
