@@ -506,6 +506,15 @@
       "supplementaries:block/globe_spin"
     ]
   },
+  "block.wind_vane.spin": {
+    "subtitle": "subtitles.supplementaries.wind_vane.spin",
+    "sounds": [
+      "supplementaries:block/wind_vane_spin_0",
+      "supplementaries:block/wind_vane_spin_1",
+      "supplementaries:block/wind_vane_spin_2",
+      "supplementaries:block/wind_vane_spin_3"
+    ]
+  },
   "block.faucet.turn": {
     "subtitle": "subtitles.supplementaries.faucet.turn",
     "sounds": [

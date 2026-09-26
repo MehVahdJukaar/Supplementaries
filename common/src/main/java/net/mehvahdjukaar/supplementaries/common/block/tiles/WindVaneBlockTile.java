@@ -6,10 +6,13 @@ import net.mehvahdjukaar.supplementaries.integration.BreezyCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.WilderWildCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -69,6 +72,10 @@ public class WindVaneBlockTile extends BlockEntity {
 
             tile.yaw = Mth.wrapDegrees(tile.yaw);
 
+            if (tile.windChargedTicks == 0) {
+                playCreak(pLevel, pPos, power);
+            }
+
         }
 
         if (tile.windChargedTicks > 0) {
@@ -78,6 +85,18 @@ public class WindVaneBlockTile extends BlockEntity {
                 WindVaneBlock.updatePower(pState, pLevel, pPos, false);
             }
         }
+    }
+
+    private static void playCreak(Level level, BlockPos pos, int power) {
+        RandomSource random = level.random;
+        int oneIn = switch (power) {
+            case 0 -> 1600;
+            case 1 -> 500;
+            default -> 300;
+        };
+        if (random.nextInt(oneIn) != 0) return;
+        float pitch = 0.85f + power * 0.12f + random.nextFloat() * 0.1f;
+        level.playLocalSound(pos, ModSounds.WIND_VANE_SPIN.get(), SoundSource.BLOCKS, 0.5f + power * 0.1f, pitch, false);
     }
 
     private static float trapezoidal(float x, float rise) {

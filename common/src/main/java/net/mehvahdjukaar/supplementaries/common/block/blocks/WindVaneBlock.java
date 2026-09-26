@@ -7,8 +7,10 @@ import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.WindVaneBlockTile;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -65,6 +67,7 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
         if (explosion.canTriggerBlocks() && level.getBlockEntity(pos) instanceof WindVaneBlockTile tile) {
 
             level.blockEvent(pos, this, 1, 0);
+            level.playSound(null, pos, ModSounds.WIND_VANE_SPIN.get(), SoundSource.BLOCKS, 1, 1);
         }
     }
 

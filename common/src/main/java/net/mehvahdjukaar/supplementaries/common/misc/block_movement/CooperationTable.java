@@ -17,7 +17,7 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
         long tick();
 
         default boolean isStale(long currentTick) {
-            return Math.abs(currentTick - tick()) > MAX_AGE;
+            return CooperationTable.isStale(currentTick, tick());
         }
     }
 
@@ -60,7 +60,10 @@ public class CooperationTable<A extends CooperationTable.Attempt> {
 
     private void removeStale(long currentTick) {
         this.attempts.entrySet().removeIf(e -> e.getValue().isStale(currentTick));
-        this.movedTickByPos.entrySet().removeIf(e -> e.getValue().isStale(currentTick));
+        this.movedTickByPos.entrySet().removeIf(e -> isStale(currentTick, e.getValue()));
     }
 
+    private static boolean isStale(long currentTick, long tick) {
+        return Math.abs(currentTick - tick) > MAX_AGE;
+    }
 }
