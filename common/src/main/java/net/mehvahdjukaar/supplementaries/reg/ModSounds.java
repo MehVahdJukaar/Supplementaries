@@ -75,6 +75,7 @@ public class ModSounds {
     public static final Supplier<SoundEvent> BELLOWS_BLOW = regSound("block.bellows.blow");
     public static final Supplier<SoundEvent> BELLOWS_RETRACT = regSound("block.bellows.retract");
     public static final Supplier<SoundEvent> GLOBE_SPIN = regSound("block.globe.spin");
+    public static final Supplier<SoundEvent> WIND_VANE_SPIN = regSound("block.wind_vane.spin");
     public static final Supplier<SoundEvent> FAUCET = regSound("block.faucet.turn");
     public static final Supplier<SoundEvent> SLINGSHOT_CHARGE_0 = regSound("item.slingshot.charge_0");
     public static final Supplier<SoundEvent> SLINGSHOT_CHARGE_1 = regSound("item.slingshot.charge_1");
