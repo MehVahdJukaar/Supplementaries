@@ -98,7 +98,7 @@ dependencies {
     modCompileOnly("curse.maven:the-bumblezone-forge-362479:5889009")
     modCompileOnly("curse.maven:bookshelf-228525:3927538")
     modImplementation("curse.maven:decorative-blocks-reborn-1327768:6897419")
-    modCompileOnly("curse.maven:map-atlases-forge-519759:4902239")
+    modCompileOnly("pebjebs.mapatlases:map_atlases-neoforge:1.21-6.7.3") { isTransitive = false }
     //- Only For TESTING - can be commented out or enabled
     modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140") // v4.0.0.2 | BOP, Regions-Unexplored
     modRuntimeOnly("curse.maven:glitchcore-955399:5660740") // v2.1.0.0 | BOP

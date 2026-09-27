@@ -732,8 +732,10 @@ public class CommonConfigs {
         public static final Supplier<Double> CANNONBALL_RADIUS;
         public static final Supplier<Boolean> PLUNDERER_ENABLED;
         public static final Supplier<Boolean> GALLEONS_ENABLED;
+        public static final Supplier<Boolean> NAVAL_RAID_WHEN_NO_LAND;
         public static final Supplier<Double> NAVAL_RAID_CHANCE;
-        public static final Supplier<Double> NAVAL_RAID_PLUNDERER_CHANCE;
+        public static final Supplier<Integer> NAVAL_RAID_MIN_BOATS;
+        public static final Supplier<Integer> NAVAL_RAID_MAX_BOATS;
         public static final Supplier<Double> CANNONBALL_POWER_SCALING;
         public static final Supplier<Boolean> PIRATE_DISC_ENABLED;
 
@@ -882,10 +884,14 @@ public class CommonConfigs {
             PLUNDERER_ENABLED = builder.mainFeature();
             builder.comment("Galleons are automatically disabled if 'rope' feature is disabled");
             GALLEONS_ENABLED = builder.dependsOn(ROPE_ENABLED).feature(ModConstants.GALLEON_NAME);
-            NAVAL_RAID_CHANCE = builder.comment("Chance for a raid wave to spawn in open water near the village instead of on land. Such waves arrive on boats steered by plunderers, which take the place of some of the wave pillagers. The rest swim along and hop on when a seat is free. Set to 0 to disable")
-                    .define("naval_raid_chance", 0.75, 0, 1);
-            NAVAL_RAID_PLUNDERER_CHANCE = builder.comment("Chance for a naval wave pillager to be replaced by a plunderer. 1 replaces them all")
-                    .define("naval_raid_plunderer_chance", 0.5, 0, 1);
+            NAVAL_RAID_WHEN_NO_LAND = builder.comment("When a raid finds no land to spawn a wave on (village surrounded by water) vanilla just cancels it. With this on the whole wave spawns on open water instead, riding boats steered by plunderers")
+                    .define("naval_raid_when_no_land", true);
+            NAVAL_RAID_CHANCE = builder.comment("Chance for some of a raid wave pillagers to arrive on boats from open water near the village instead of on land. Each boat carries a plunderer at the helm, which takes the place of one of the wave pillagers, and one more pillager. Raid size is unchanged. Set to 0 to disable")
+                    .define("naval_raid_chance", 0.4, 0, 1);
+            NAVAL_RAID_MIN_BOATS = builder.comment("Boats on the first wave")
+                    .define("naval_raid_min_boats", 1, 0, 8);
+            NAVAL_RAID_MAX_BOATS = builder.comment("Boats on the last wave. Waves in between scale linearly. Never more than the wave has pillagers to fill them")
+                    .define("naval_raid_max_boats", 2, 0, 8);
             builder.pop();
 
             PIRATE_DISC_ENABLED = builder.feature(ModConstants.PIRATE_DISC_NAME);
