@@ -24,65 +24,39 @@ import java.util.Map;
 
 public class RandomRotationModel implements CustomBakedModel {
 
-    // Precompute to avoid race conditions due to sodium and company
+    //precomputed, sodium calls this from multiple threads...
     private final Map<Direction, List<BakedQuad>[]> quadCache = new EnumMap<>(Direction.class);
     private final BakedModel wrapped;
 
     public RandomRotationModel(BakedModel back, ModelState modelTransform) {
         this.wrapped = back;
 
-        RandomSource rand = RandomSource.create(42); // deterministic seed
+        RandomSource rand = RandomSource.create(42);
         for (Direction side : Direction.values()) {
-
             @SuppressWarnings("unchecked")
             List<BakedQuad>[] rotations = new List[4];
-
             for (int i = 0; i < 4; i++) {
-                float angle = i * 90f;
-                rotations[i] = buildRotatedQuads(side, rand, angle);
+                rotations[i] = buildRotatedQuads(side, rand, i * 90f);
             }
-
             quadCache.put(side, rotations);
         }
     }
 
-    private List<BakedQuad> buildRotatedQuads(Direction side,
-                                              RandomSource rand,
-                                              float angle) {
-
-        List<BakedQuad> result = new ArrayList<>();
-
+    private List<BakedQuad> buildRotatedQuads(Direction side, RandomSource rand, float angle) {
+        List<BakedQuad> list = new ArrayList<>();
         for (BakedQuad q : wrapped.getQuads(null, side, rand)) {
-
-            Direction normal = q.getDirection();
-
-            Quaternionf rotation = new Quaternionf()
-                    .rotateAxis(angle * Mth.DEG_TO_RAD, normal.step());
-
-            Matrix4f matrix = new Matrix4f().rotate(rotation);
-
-            BakedQuadsTransformer transformer =
-                    BakedQuadsTransformer.create().applyingTransform(matrix);
-
-            result.add(transformer.transform(q));
+            Quaternionf rotation = new Quaternionf().rotateAxis(angle * Mth.DEG_TO_RAD, q.getDirection().step());
+            var transformer = BakedQuadsTransformer.create().applyingTransform(new Matrix4f().rotate(rotation));
+            list.add(transformer.transform(q));
         }
-
-        return List.copyOf(result); // immutable
+        return List.copyOf(list);
     }
 
+
     @Override
-    public List<BakedQuad> getBlockQuads(BlockState state,
-                                         Direction side,
-                                         RandomSource rand,
-                                         RenderType renderType,
-                                         ExtraModelData data) {
-
-        if (side == null) {
-            return wrapped.getQuads(state, null, rand);
-        }
-
-        int index = rand.nextInt(4);
-        return quadCache.get(side)[index];
+    public List<BakedQuad> getBlockQuads(BlockState state, Direction side, RandomSource rand, RenderType renderType, ExtraModelData data) {
+        if (side == null) return wrapped.getQuads(state, null, rand);
+        return quadCache.get(side)[rand.nextInt(4)];
     }
 
     @Override

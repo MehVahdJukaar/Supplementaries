@@ -30,10 +30,8 @@ public class WindTrailParticle extends DirectionOrientedBillboardParticle {
         this.lifetime = 5 + random.nextInt(10);
 
         double normalizedTick = (double) entity.tickCount / lifetime;
-
-        // Map normalized value to the desired age transition
+        // young entities get older particles
         if (normalizedTick < 0.5) {
-            // As tickCount increases from 0 to lifetime/2, age increases smoothly from 0 to maximum
             this.age += random.nextInt(Mth.ceil((0.5 - normalizedTick) * lifetime));
         }
 
@@ -51,8 +49,7 @@ public class WindTrailParticle extends DirectionOrientedBillboardParticle {
     private void updateAlpha() {
         this.alpha = (float) (this.maxAlpha * Mth.clamp(this.speed() * 1 - 0.15, 0, 1));
         float percentage = (this.age / (float) this.lifetime);
-        // Apply fading effect towards the end of the lifetime
-        float fadeStart = 0.5f; // Start fading when 80% of the lifetime is reached
+        float fadeStart = 0.5f;
         if (percentage > fadeStart) {
             float fadeFactor = (1.0f - percentage) / (1.0f - fadeStart);
             this.alpha *= fadeFactor;
