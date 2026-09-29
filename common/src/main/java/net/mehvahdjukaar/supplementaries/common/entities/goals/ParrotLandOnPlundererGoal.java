@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities.goals;
 
 import net.mehvahdjukaar.supplementaries.common.entities.PlundererEntity;
-import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
+import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamableAttachment;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.ShoulderRidingEntity;
@@ -18,8 +18,8 @@ public class ParrotLandOnPlundererGoal extends Goal {
     @Override
     public boolean canUse() {
         //get owner just returns players, for not
-        LivingEntityTamable tamable = ModData.LIVING_TAMABLE.getOrCreate(this.entity);
-        if (!(tamable.getOwner(this.entity) instanceof PlundererEntity pl)) {
+        LivingEntityTamableAttachment tamable = ModData.LIVING_TAMABLE.getOrNull(this.entity);
+        if (tamable == null || !(tamable.getOwner(this.entity) instanceof PlundererEntity pl)) {
             return false;
         }
         this.plunderer = pl;

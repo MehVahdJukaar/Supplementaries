@@ -4,7 +4,7 @@ import net.mehvahdjukaar.moonlight.api.misc.IAttachmentType;
 import net.mehvahdjukaar.moonlight.api.misc.WorldSavedDataType;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
+import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamableAttachment;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.PulleyCooperationData;
 import net.mehvahdjukaar.supplementaries.common.misc.globe.GlobeData;
@@ -34,10 +34,10 @@ public class ModData {
             LivingEntity.class
     );
 
-    public static final IAttachmentType<LivingEntityTamable, LivingEntity> LIVING_TAMABLE = RegHelper.registerDataAttachment(
+    public static final IAttachmentType<LivingEntityTamableAttachment, LivingEntity> LIVING_TAMABLE = RegHelper.registerDataAttachment(
             res("living_tamable"),
-            () -> RegHelper.AttachmentBuilder.create(LivingEntityTamable::new)
-                    .persistent(LivingEntityTamable.CODEC),
+            () -> RegHelper.AttachmentBuilder.create(LivingEntityTamableAttachment::new)
+                    .persistent(LivingEntityTamableAttachment.CODEC),
             LivingEntity.class
     );
 

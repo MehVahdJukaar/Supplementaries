@@ -3,7 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatMoveController;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.BoatPathNavigation;
 import net.mehvahdjukaar.supplementaries.common.entities.controllers.LookControlWithSpyglass;
-import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamable;
+import net.mehvahdjukaar.supplementaries.common.entities.data.LivingEntityTamableAttachment;
 import net.mehvahdjukaar.supplementaries.common.entities.goals.*;
 import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -427,7 +427,7 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
     private void respawnEntityOnShoulder(CompoundTag entityCompound) {
         if (!this.level().isClientSide && !entityCompound.isEmpty()) {
             EntityType.create(entityCompound, this.level()).ifPresent((entity) -> {
-                LivingEntityTamable tamable = ModData.LIVING_TAMABLE.getOrCreate((LivingEntity) entity);
+                LivingEntityTamableAttachment tamable = ModData.LIVING_TAMABLE.getOrCreate((LivingEntity) entity);
                 tamable.setOwner(this);
                 entity.setPos(this.getX(), this.getY() + 0.699999988079071, this.getZ());
                 ((ServerLevel) this.level()).addWithUUID(entity);
