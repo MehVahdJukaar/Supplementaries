@@ -87,7 +87,7 @@ public final class ContinuousPulleyMover {
 
         for (Map.Entry<BlockPos, BlockState> entry : resolvedStructure.getRopesPlacedWithoutAnimation().entrySet()) {
             if (level.getBlockState(entry.getKey()).isAir()) {
-                level.setBlock(entry.getKey(), entry.getValue(), 3);
+                level.setBlock(entry.getKey(), Block.updateFromNeighbourShapes(entry.getValue(), level, entry.getKey()), 3);
             }
         }
 

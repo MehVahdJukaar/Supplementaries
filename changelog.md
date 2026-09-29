@@ -1,4 +1,1 @@
-- fixed pulley animation on first pull
-- fixed cannon boat shoot range
-- fixed flags banner config item renderer
-- changed hourglass load method some
+- fixed a isue with pulleys

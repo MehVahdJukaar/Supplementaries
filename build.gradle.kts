@@ -29,7 +29,7 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("net.mehvahdjukaar:candlelight:1.2.6")
+        compileOnly("net.mehvahdjukaar:candlelight:1.2.4")
     }
 
     tasks.withType<JavaCompile> {
@@ -59,7 +59,6 @@ subprojects {
         }
     }
 
-    // The upload plugin does not expose CurseForge's mandatory environment group, so add it here.
     tasks.withType<net.darkhax.curseforgegradle.TaskPublishCurseForge>().configureEach {
         doFirst {
             uploadArtifacts.forEach { it.addEnvironment("Client", "Server") }

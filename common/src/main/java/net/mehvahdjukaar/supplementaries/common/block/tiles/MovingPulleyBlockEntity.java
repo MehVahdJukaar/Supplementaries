@@ -104,7 +104,7 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
                     if (be.extendPhantom && be.leadingState != null) {
                         BlockPos phantomLandPos = pos.relative(be.getDirection().getOpposite());
                         if (level.getBlockState(phantomLandPos).isAir()) {
-                            level.setBlock(phantomLandPos, be.leadingState, 3);
+                            level.setBlock(phantomLandPos, Block.updateFromNeighbourShapes(be.leadingState, level, phantomLandPos), 3);
                         }
                     }
                     BlockState movedAfter = Block.updateFromNeighbourShapes(be.getMovedState(), level, pos);
