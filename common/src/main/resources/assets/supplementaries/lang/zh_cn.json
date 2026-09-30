@@ -885,7 +885,7 @@
   "supplementaries.configuration.plunderer.naval_raid_when_no_land": "无陆地时海盗袭击",
   "supplementaries.configuration.plunderer.naval_raid_when_no_land.description": "原版下，若袭击无法找到生成波次的空间（如在被水体包围的村庄），则只会取消袭击。启用此项时，整个波次会刷在开放水域上，并改为由游掠者驾驶的船只组成",
   "supplementaries.configuration.plunderer.naval_raid_chance": "海盗袭击概率",
-  "supplementaries.configuration.plunderer.naval_raid_chance.description": "袭击中部分灾厄村民不从陆地上靠近、而从村庄附近的开放水域上乘船抵达的概率。每艘船都由游掠者驾驶，且搭载有一名灾厄村民乘客；游掠者会替代波次中的一个名额。袭击人数不会变动。设为0以禁用",
+  "supplementaries.configuration.plunderer.naval_raid_chance.description": "袭击中部分掠夺者不从陆地上靠近、而从村庄附近的开放水域上乘船抵达的概率。每艘船都由游掠者驾驶，且搭载有一名掠夺者乘客；游掠者会替代波次中的一个掠夺者名额。袭击人数不会变动。设为0以禁用",
   "supplementaries.configuration.plunderer.naval_raid_min_boats": "海盗袭击最小船数",
   "supplementaries.configuration.plunderer.naval_raid_min_boats.description": "第一波的船数",
   "supplementaries.configuration.plunderer.naval_raid_max_boats": "海盗袭击最大船数",
