@@ -14,6 +14,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -42,17 +43,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CartographersQuillItem extends PathfindersQuillItem {
 
-    private static final Map<Key, InteractionResultHolder<BlockPos>> RESULTS = new ConcurrentHashMap<>();
-    private static final Set<Key> COMPUTING = ConcurrentHashMap.newKeySet();
+    private static final Map<SearchKey, InteractionResultHolder<BlockPos>> RESULTS = new ConcurrentHashMap<>();
+    private static final Set<SearchKey> COMPUTING = ConcurrentHashMap.newKeySet();
 
     public CartographersQuillItem() {
-        // Pass null module so Zeta's auto registration is skipped. We register through RegUtils.
         super(null, new Item.Properties().stacksTo(1));
     }
 
     @Override
     public List<ItemStack> appendItemsToCreativeTab(RegistryAccess access) {
-        // Don't inherit Quark's per-biome list - we only have one item.
         return List.of(new ItemStack(this));
     }
 
@@ -89,15 +88,18 @@ public class CartographersQuillItem extends PathfindersQuillItem {
 
     @Override
     protected int getIterations() {
-        // unused since we force multithreading, but provide a sane value for the fallback path
         return 32;
     }
 
     @Override
     protected boolean isMultiThreaded() {
-        // The structure search is expensive; always run off-thread to avoid the lag spikes
-        // that motivated this feature in the first place.
         return true;
+    }
+
+    @Nullable
+    @Override
+    public ResourceLocation getTarget(ItemStack stack) {
+        return stack.get(ModComponents.QUILL_STRUCTURE.get());
     }
 
     @Override
@@ -111,14 +113,9 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     }
 
     @Nullable
-    @Override
-    public ResourceLocation getTarget(ItemStack stack) {
-        return stack.get(ModComponents.QUILL_STRUCTURE.get());
-    }
-
-    @Nullable
     private static Holder<Structure> getStructureHolder(ServerLevel level, ResourceLocation key) {
-        Registry<Structure> reg = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        Registry<Structure> reg = level.registryAccess()
+                .registryOrThrow(Registries.STRUCTURE);
         return reg.getHolder(ResourceKey.create(reg.key(), key)).orElse(null);
     }
 
@@ -130,9 +127,9 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         ItemStack map = AdventurerMapsHandler.createStructureMap(level, targetPos, holder,
                 getZoom(original), getDecoration(original), getMapName(original), getColor(original));
 
-        var customName = original.get(net.minecraft.core.component.DataComponents.CUSTOM_NAME);
+        var customName = original.get(DataComponents.CUSTOM_NAME);
         if (customName != null) {
-            map.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, customName);
+            map.set(DataComponents.CUSTOM_NAME, customName);
         }
         return map;
     }
@@ -144,7 +141,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         int radius = getSearchRadius(stack);
         boolean skipKnown = getSkipKnown(stack);
 
-        Key key = new Key(GlobalPos.of(level.dimension(), center), target, radius, skipKnown);
+        SearchKey key = new SearchKey(GlobalPos.of(level.dimension(), center), target, radius, skipKnown);
 
         if (COMPUTING.contains(key)) {
             return InteractionResultHolder.pass(BlockPos.ZERO);
@@ -166,7 +163,6 @@ public class CartographersQuillItem extends PathfindersQuillItem {
     @Override
     protected InteractionResultHolder<BlockPos> searchIterative(ResourceLocation target, ItemStack stack,
                                                                 ServerLevel level, Player player, int maxIter) {
-        // Synchronous fallback; not used when isMultiThreaded() == true but keep it sane.
         return doSearch(target, level, getStartPos(stack, player), getSearchRadius(stack), getSkipKnown(stack));
     }
 
@@ -242,6 +238,7 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         return stack;
     }
 
+    //remove if not used by external calls
     public static int getItemColor(ItemStack stack, int layer) {
         if (layer == 0) return -1;
         Integer c = stack.get(ModComponents.QUILL_COLOR.get());
@@ -269,6 +266,6 @@ public class CartographersQuillItem extends PathfindersQuillItem {
         return selected.unwrapKey().map(ResourceKey::location).orElse(null);
     }
 
-    private record Key(GlobalPos pos, ResourceLocation structure, int radius, boolean skipKnown) {
+    private record SearchKey(GlobalPos pos, ResourceLocation structure, int radius, boolean skipKnown) {
     }
 }

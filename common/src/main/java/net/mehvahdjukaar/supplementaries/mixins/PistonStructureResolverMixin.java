@@ -41,11 +41,10 @@ public abstract class PistonStructureResolverMixin implements ICooperativePiston
     }
 
     @ModifyReturnValue(method = "resolve", at = @At("RETURN"))
-    private boolean supp$gateOnRealCooperation(boolean original) {
+    private boolean supp$checkCooperators(boolean original) {
         return supp$cooperationState.keepContributorsAndCheckPushLimit(original, pistonPos, toPush);
     }
 
-    // Cooperator piston bodies act as walls too; catches all three BlockPos.equals(pistonPos) sites.
     @WrapOperation(method = "addBlockLine",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/core/BlockPos;equals(Ljava/lang/Object;)Z"))

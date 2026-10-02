@@ -53,8 +53,7 @@ public class CommonConfigs {
 
         builderReference = new WeakReference<>(builder);
 
-        // order matters: dependsOn() needs the feature it points at to be defined already, so ropes (functional) come
-        // before pulleys and buntings, and antique ink (tools) before sepia globes
+        //order matters
         Functional.init();
         Tools.init();
         Redstone.init();

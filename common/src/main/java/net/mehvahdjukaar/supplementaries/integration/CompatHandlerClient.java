@@ -22,7 +22,6 @@ public class CompatHandlerClient {
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.setupClient();
         if (ENDERGETIC) EndergeticCompat.setupClient();
         if (QUARK) QuarkClientCompat.setupClient();
-        // Create client setup runs from the NeoForge CompatHandlerClientImpl.doSetup() (Create is NeoForge-only).
         if (FLYWHEEL) FlywheelCompat.setupClient();
 
     }
