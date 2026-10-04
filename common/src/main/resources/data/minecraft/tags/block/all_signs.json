@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:way_sign"
-    ]
+    "supplementaries:way_sign",
+    "supplementaries:way_sign_wall"
+  ]
 }
