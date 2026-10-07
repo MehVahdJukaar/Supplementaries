@@ -102,7 +102,7 @@ public class Song {
         try {
             int currentIndex = (int) (timeSinceStarted / this.getTempo()) % this.notes.length;
             int n = notes[currentIndex];
-            while (n > 1) {
+            while (n > 0) {
                 toPlay.add(Mth.clamp(n % 100, 0, 25));
                 n = n / 100;
             }
