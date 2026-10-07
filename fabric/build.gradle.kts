@@ -11,6 +11,7 @@ fabric {
 
 val moonlight_version: String by extra
 val codecui_version: String by extra
+val polytone_version: String by extra
 val cloth_version: String by extra
 val cca_version: String by extra
 val mixin_squared_version: String by extra
@@ -24,6 +25,7 @@ dependencies {
 
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
     modRuntimeOnly("net.mehvahdjukaar:codecui-fabric:${codecui_version}")
+    modImplementation("net.mehvahdjukaar:polytone-fabric:${polytone_version}")
 
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")

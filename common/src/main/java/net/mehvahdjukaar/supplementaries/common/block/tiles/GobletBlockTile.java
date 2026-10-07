@@ -8,6 +8,8 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluid;
 import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidTank;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.PolytoneCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -71,7 +73,10 @@ public class GobletBlockTile extends BlockEntity implements ISoftFluidTankProvid
         this.getOrCreateFluidTank(registries).load(tag, registries);
 
         if (this.level != null) {
-            if (this.level.isClientSide) this.requestModelReload();
+            if (this.level.isClientSide) {
+                this.requestModelReload();
+                if (CompatHandler.POLYTONE) PolytoneCompat.markDirty(worldPosition);
+            }
         }
     }
 

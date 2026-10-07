@@ -23,6 +23,7 @@ public class CompatHandlerClient {
         if (ENDERGETIC) EndergeticCompat.setupClient();
         if (QUARK) QuarkClientCompat.setupClient();
         if (FLYWHEEL) FlywheelCompat.setupClient();
+        if (POLYTONE) PolytoneCompat.setupClient();
 
     }
 

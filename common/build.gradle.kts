@@ -16,6 +16,7 @@ val vanillin_version: String by extra
 val shulker_box_tooltip_version: String by extra
 val sable_companion_version: String by extra
 val emi_version: String by extra
+val polytone_version: String by extra
 
 dependencies {
 
@@ -25,6 +26,7 @@ dependencies {
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:${mixin_squared_version}")
 
     modCompileOnly("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
+    modCompileOnly("net.mehvahdjukaar:polytone-common:${polytone_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-common:${moonlight_version}")
 
 

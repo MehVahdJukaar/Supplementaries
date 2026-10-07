@@ -20,6 +20,8 @@ import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.PolytoneCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -112,6 +114,7 @@ public class JarBlockTile extends ItemDisplayTile implements IMobContainerProvid
     public void clientSideUpdateWhenChanged(HolderLookup.Provider registries) {
         super.clientSideUpdateWhenChanged(registries);
         requestModelReload();
+        if (CompatHandler.POLYTONE) PolytoneCompat.markDirty(worldPosition);
     }
 
     // does all the calculation for handling player interaction.

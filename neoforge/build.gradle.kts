@@ -13,6 +13,7 @@ neoForge {
 }
 val moonlight_version: String by extra
 val codecui_version: String by extra
+val polytone_version: String by extra
 val mixin_squared_version: String by extra
 val flywheel_forge_version: String by extra
 val ponder_version: String by extra
@@ -31,6 +32,7 @@ dependencies {
     modImplementation("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     accessTransformers("net.mehvahdjukaar:moonlight-neoforge:${moonlight_version}")
     modRuntimeOnly("net.mehvahdjukaar:codecui-neoforge:${codecui_version}")
+    modImplementation("net.mehvahdjukaar:polytone-neoforge:${polytone_version}")
     modRuntimeOnly("net.mehvahdjukaar:heraldics-neoforge:1.21.1-1.2.2")
 
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")

@@ -79,6 +79,7 @@ public class CompatHandler {
     public static final boolean YACL = isLoaded("yet_another_config_lib_v3");
     public static final boolean FLAN = isLoaded("flan");
     public static final boolean BREEZY = isLoaded("breezy");
+    public static final boolean POLYTONE = isLoaded("polytone");
     public static final boolean WILDER_WILD = isLoaded("wilder-wild");
     public static final boolean SHIMMER = isLoaded("shimmer");
     public static final boolean BUMBLEZONE = isLoaded("the_bumblezone");

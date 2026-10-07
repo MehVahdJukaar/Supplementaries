@@ -16,6 +16,8 @@ import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.PolytoneCompat;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -240,6 +242,9 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         super.loadAdditional(tag, registries);
         this.transferCooldown = tag.getInt("TransferCooldown");
         this.tempFluidHolder.load(tag, registries);
+        if (this.level != null && this.level.isClientSide && CompatHandler.POLYTONE) {
+            PolytoneCompat.markDirty(worldPosition);
+        }
     }
 
     @Override
