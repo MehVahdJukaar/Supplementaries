@@ -2,6 +2,8 @@ package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
 import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -91,6 +93,10 @@ public class RopeBlock extends AbstractRopeBlock {
     @Override
     public BlockState setConnection(Direction dir, BlockState state, boolean value) {
         return state.setValue(FACING_TO_PROPERTY_MAP.get(dir), value);
+    }
+
+    public static boolean canHoldLeashKnot(BlockState state) {
+        return state.getBlock() == ModRegistry.ROPE.get() && CommonConfigs.Functional.ROPE_LEASH_KNOTS.get();
     }
 
 }

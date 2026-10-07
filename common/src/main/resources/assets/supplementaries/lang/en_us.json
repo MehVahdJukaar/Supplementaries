@@ -804,6 +804,8 @@
   "supplementaries.configuration.rope.slide_on_fall.description": "Makes sliding down ropes as fast as free falling, still negating fall damage",
   "supplementaries.configuration.rope.horizontal_ropes": "Horizontal Ropes",
   "supplementaries.configuration.rope.horizontal_ropes.description": "Enables horizontal placement of ropes. Disabling will make ropes always non solid",
+  "supplementaries.configuration.rope.lead_knots": "Lead Knots",
+  "supplementaries.configuration.rope.lead_knots.description": "Leads can be tied to ropes",
   "supplementaries.configuration.jar": "Jar",
   "supplementaries.configuration.jar.capacity": "Capacity",
   "supplementaries.configuration.jar.capacity.description": "Jar liquid capacity: leave at 12 for pixel accuracy",

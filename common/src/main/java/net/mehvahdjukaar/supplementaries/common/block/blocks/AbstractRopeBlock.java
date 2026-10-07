@@ -25,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.LeadItem;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -226,6 +227,11 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
             }
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         } else if (stack.isEmpty()) {
+            //leading mobs wins over pulling the rope up
+            if (RopeBlock.canHoldLeashKnot(state) && !LeadItem.leashableInArea(level, pos, l -> l.getLeashHolder() == player).isEmpty()) {
+                if (!level.isClientSide) LeadItem.bindPlayerMobs(player, level, pos);
+                return ItemInteractionResult.sidedSuccess(level.isClientSide);
+            }
             if (hasConnection(Direction.UP, state)) {
                 if (findConnectedPulley(level, pos, player, 0, player.isShiftKeyDown() ? Rotation.COUNTERCLOCKWISE_90 : Rotation.CLOCKWISE_90)) {
                     return ItemInteractionResult.sidedSuccess(level.isClientSide);

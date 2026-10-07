@@ -706,6 +706,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ROPE_HORIZONTAL;
         public static final Supplier<ReplaceTableMode> ROPE_REPLACE_LOOT_TABLES;
         public static final Supplier<Boolean> ROPE_SLIDE;
+        public static final Supplier<Boolean> ROPE_LEASH_KNOTS;
         public static final Supplier<Boolean> URN_ENABLED;
         public static final Supplier<Double> URN_ENTITY_SPAWN_CHANCE;
         public static final Supplier<Boolean> URN_PILE_ENABLED;
@@ -758,6 +759,8 @@ public class CommonConfigs {
             // .define("rope_override", Supplementaries.res("rope"));
             ROPE_HORIZONTAL = builder.comment("Enables horizontal placement of ropes. Disabling will make ropes always non solid")
                     .define("horizontal_ropes", true);
+            ROPE_LEASH_KNOTS = builder.comment("Leads can be tied to ropes")
+                    .define("lead_knots", true);
             ROPE_REPLACE_LOOT_TABLES = PlatHelper.getPlatform().isFabric() ? () -> ReplaceTableMode.NONE :
                     builder.comment("Use this config to turn allow supplementaries to replace all items tagged as #supplementaries:ropes with supplementaries own rope or turn them to air instead. This is applied to all loot tables (chests and drops)")
                     .define("replace_in_loot_tables", ReplaceTableMode.NONE);

@@ -59,6 +59,7 @@ import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
@@ -128,6 +129,8 @@ public class ClientRegistry {
     public static final ModelLayerLocation WIND_VANE_MODEL = loc("wind_vane");
     public static final ModelLayerLocation BUNTING_MODEL = loc("bunting");
     public static final ModelLayerLocation PIGNATA_MODEL = loc("pignata");
+    public static final ModelLayerLocation ROPE_LEASH_KNOT_MODEL = loc("rope_leash_knot");
+    public static final ModelLayerLocation SMALL_ROPE_LEASH_KNOT_MODEL = loc("rope_leash_knot_small");
 
     //special models locations
     public static final ModelResourceLocation FLUTE_3D_MODEL = modelRes("item/flute_in_hand");
@@ -558,6 +561,24 @@ public class ClientRegistry {
         event.register(WIND_VANE_MODEL, WindVaneBlockTileRenderer::createMesh);
         event.register(BUNTING_MODEL, BuntingBlockTileRenderer::createMesh);
         event.register(PIGNATA_MODEL, PignataBlockTileRenderer::createMesh);
+        event.register(ROPE_LEASH_KNOT_MODEL, ClientRegistry::createRopeLeashKnot);
+        event.register(SMALL_ROPE_LEASH_KNOT_MODEL, ClientRegistry::createSmallRopeLeashKnot);
+    }
+
+    private static LayerDefinition createRopeLeashKnot() {
+        MeshDefinition mesh = new MeshDefinition();
+        mesh.getRoot().addOrReplaceChild("knot", CubeListBuilder.create()
+                .texOffs(0, 0)
+                .addBox(-3.0F, -8.0F, -3.0F, 6.0F, 6.0F, 6.0F), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 32, 32);
+    }
+
+    private static LayerDefinition createSmallRopeLeashKnot() {
+        MeshDefinition mesh = new MeshDefinition();
+        mesh.getRoot().addOrReplaceChild("knot", CubeListBuilder.create()
+                .texOffs(2, 2)
+                .addBox(-2, -8, -2, 4, 4, 4, new CubeDeformation(0.01f)), PartPose.ZERO);
+        return LayerDefinition.create(mesh, 32, 32);
     }
 
     //same as spider head. We do this because texture pack like to decapitate the spider model. Looking at you, Fresh
