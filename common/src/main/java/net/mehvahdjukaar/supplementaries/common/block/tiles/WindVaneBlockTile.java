@@ -24,11 +24,13 @@ public class WindVaneBlockTile extends BlockEntity {
 
     private float yaw = 0;
     private float prevYaw = 0;
-    private float offset = 0;
-
+    //accumulated instead of using game time so power changes dont make it snap
+    private double swayTime;
 
     public WindVaneBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.WIND_VANE_TILE.get(), pos, state);
+        float tp = (float) (Math.PI * 2);
+        this.swayTime = 400 * (Mth.sin((0.005f * pos.getX()) % tp) + Mth.sin((0.005f * pos.getZ()) % tp) + Mth.sin((0.005f * pos.getY()) % tp));
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, WindVaneBlockTile tile) {
@@ -42,17 +44,14 @@ public class WindVaneBlockTile extends BlockEntity {
         } else {
             int power = pState.getValue(WindVaneBlock.WIND_STRENGTH);
             float tp = (float) (2f * Math.PI);
-            float t = pLevel.getGameTime() % 24000 + tile.offset;
-            float b = (float) Math.max(1, (power * ClientConfigs.Blocks.WIND_VANE_POWER_SCALING.get()));
+            tile.swayTime += Math.max(1, (power * ClientConfigs.Blocks.WIND_VANE_POWER_SCALING.get()));
             double maxAngle1 = ClientConfigs.Blocks.WIND_VANE_ANGLE_1.get();
             double maxAngle2 = ClientConfigs.Blocks.WIND_VANE_ANGLE_2.get();
             double period1 = ClientConfigs.Blocks.WIND_VANE_PERIOD_1.get();
             double period2 = ClientConfigs.Blocks.WIND_VANE_PERIOD_2.get();
-            float newYaw = (float) (maxAngle1 * Mth.sin((float) (tp * ((t * b / period1) % 360)))
-                    + maxAngle2 * Mth.sin((float) (tp * ((t * b / period2) % 360))));
+            float newYaw = (float) (maxAngle1 * Mth.sin((float) (tp * ((tile.swayTime / period1) % 1)))
+                    + maxAngle2 * Mth.sin((float) (tp * ((tile.swayTime / period2) % 1))));
 
-
-//TODO: this is shit, not smooth and bad. redo
             float windCharged = (float) tile.windChargedTicks / WIND_CHARGED_DURATION;
             float rise = 0.3f;
             float trapezoidal = trapezoidal(1 - windCharged, rise);
@@ -67,7 +66,6 @@ public class WindVaneBlockTile extends BlockEntity {
             //tile.yaw = Mth.clamp(tile.yaw, currentYaw - 8, currentYaw + 8);
 
             float p = 1 - (windCharged * windCharged);
-            if (windCharged < rise) p = 1;
             tile.yaw += (p * 360 * 5f);
 
             tile.yaw = Mth.wrapDegrees(tile.yaw);
@@ -90,9 +88,9 @@ public class WindVaneBlockTile extends BlockEntity {
     private static void playCreak(Level level, BlockPos pos, int power) {
         RandomSource random = level.random;
         int oneIn = switch (power) {
-            case 0 -> 1600;
-            case 1 -> 500;
-            default -> 300;
+            case 0 -> 1200;
+            case 1 -> 380;
+            default -> 220;
         };
         if (random.nextInt(oneIn) != 0) return;
         float pitch = 0.85f + power * 0.12f + random.nextFloat() * 0.1f;
@@ -127,10 +125,6 @@ public class WindVaneBlockTile extends BlockEntity {
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.windChargedTicks = tag.getInt("wind_charged_ticks");
-
-
-        float tp = (float) (Math.PI * 2);
-        this.offset = 400 * (Mth.sin((0.005f * this.worldPosition.getX()) % tp) + Mth.sin((0.005f * this.worldPosition.getZ()) % tp) + Mth.sin((0.005f * this.worldPosition.getY()) % tp));
     }
 
     @Override
@@ -140,7 +134,7 @@ public class WindVaneBlockTile extends BlockEntity {
     }
 
     public float getYaw(float partialTicks) {
-        return yaw;//Mth.lerp(partialTicks, prevYaw, yaw);
+        return Mth.rotLerp(partialTicks, prevYaw, yaw);
     }
 
     public void setWindCharged() {
