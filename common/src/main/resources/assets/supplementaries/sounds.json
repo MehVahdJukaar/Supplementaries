@@ -220,6 +220,22 @@
       "supplementaries:item/confetti_popper_2"
     ]
   },
+  "entity.pignata.burst": {
+    "subtitle": "subtitles.supplementaries.pignata.burst",
+    "sounds": [
+      "supplementaries:entity/pignata/pignata_burst_0",
+      "supplementaries:entity/pignata/pignata_burst_1",
+      "supplementaries:entity/pignata/pignata_burst_2"
+    ]
+  },
+  "entity.pignata.hit": {
+    "subtitle": "subtitles.supplementaries.pignata.hit",
+    "sounds": [
+      "supplementaries:entity/pignata/pignata_hit_0",
+      "supplementaries:entity/pignata/pignata_hit_1",
+      "supplementaries:entity/pignata/pignata_hit_2"
+    ]
+  },
   "block.gunpowder.ignite": {
     "subtitle": "subtitles.supplementaries.gunpowder.ignite",
     "sounds": [
