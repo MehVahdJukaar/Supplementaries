@@ -49,8 +49,10 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     // overrides in the bomb item models: the lit fuse animation while flying, and the smaller shard sprite
     public static final int PROJECTILE_MODEL_DATA = 1;
     public static final int BABY_MODEL_DATA = 2;
-    // speed the baby bombs of a blue bomb are flung out at. Low so they land close to the parent
-    private static final float CLUSTER_SPEED = 0.25f;
+    private static final byte BREAK_EVENT = 3;
+    private static final byte EXPLODE_EVENT = 10;
+    private static final byte TURN_OFF_EVENT = 67;
+    private static final float BABY_BOMB_CLUSTER_SPEED = 0.25f;
     private static final float CLUSTER_INACCURACY = 1.5f;
     // half a second where a fresh baby bomb can't go off, so the cluster doesn't merge into one blast
     private static final int BABY_ARMING_TICKS = 10;
@@ -67,7 +69,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             .build();
     private BombType type = BombType.NORMAL;
     private boolean active = true;
-    // ticks left before this one can go off at all. Only baby bombs get one
     private int armingTimer = 0;
     private boolean hasHit = false;
     private boolean superCharged = false;
@@ -150,15 +151,15 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     @Override
     public void handleEntityEvent(byte id) {
         switch (id) {
-            case 3 -> {
+            case BREAK_EVENT -> {
                 spawnBreakParticles();
                 this.discard();
             }
-            case 10 -> {
+            case EXPLODE_EVENT -> {
                 spawnBreakParticles();
                 this.discard();
             }
-            case 67 -> {
+            case TURN_OFF_EVENT -> {
                 RandomSource random = level().getRandom();
                 for (int i = 0; i < 10; ++i) {
                     level().addParticle(ParticleTypes.SMOKE, this.getX() + 0.25f - random.nextFloat() * 0.5f, this.getY() + 0.45f - random.nextFloat() * 0.5f, this.getZ() + 0.25f - random.nextFloat() * 0.5f, 0, 0.005, 0);
@@ -206,7 +207,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     public void turnOff() {
         Level level = level();
         if (!level.isClientSide()) {
-            level.broadcastEntityEvent(this, (byte) 67);
+            level.broadcastEntityEvent(this, TURN_OFF_EVENT);
             this.playEntityOnFireExtinguishedSound();
         }
         this.active = false;
@@ -284,9 +285,9 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             if (this.active) {
                 this.createExplosion();
                 //spawn particles
-                level.broadcastEntityEvent(this, (byte) 10);
+                level.broadcastEntityEvent(this, EXPLODE_EVENT);
             } else {
-                level.broadcastEntityEvent(this, (byte) 3);
+                level.broadcastEntityEvent(this, BREAK_EVENT);
             }
             this.discard();
         }
@@ -355,7 +356,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             Vec3 spawnPos = center.add(dir.scale(0.4));
             BombEntity baby = new BombEntity(level, spawnPos.x, spawnPos.y, spawnPos.z, BombType.BLUE_BABY);
             baby.setOwner(this.getOwner());
-            baby.shoot(dir.x, dir.y, dir.z, CLUSTER_SPEED, CLUSTER_INACCURACY);
+            baby.shoot(dir.x, dir.y, dir.z, BABY_BOMB_CLUSTER_SPEED, CLUSTER_INACCURACY);
             level.addFreshEntity(baby);
         }
     }

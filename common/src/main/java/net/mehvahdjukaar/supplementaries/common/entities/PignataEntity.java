@@ -290,10 +290,6 @@ public class PignataEntity extends Entity implements Leashable {
 
     private void tickFree() {
         Entity holder = getLeashHolder();
-        if (holder == null && isInWater()) {
-            popAsItem();
-            return;
-        }
         Vec3 movement = getDeltaMovement();
         if (!isNoGravity()) movement = movement.add(0, -0.04, 0);
         if (holder != null) movement = constrainToLeash(holder, movement);
@@ -319,7 +315,7 @@ public class PignataEntity extends Entity implements Leashable {
     private void land(double landingSpeed) {
         AABB underCenter = new AABB(getX() - 0.1, getY() - 0.1, getZ() - 0.1, getX() + 0.1, getY(), getZ() + 0.1);
         if (level().noCollision(this, underCenter)) {
-            popAsItem();
+            burst(null);
             return;
         }
         //just placed ones also land, from a tiny height
@@ -370,7 +366,7 @@ public class PignataEntity extends Entity implements Leashable {
         return horizontal.lengthSqr() < 1.0E-6 ? Vec3.ZERO : horizontal.normalize();
     }
 
-    //y is unused by the swing so it carries whether to spawn hit particles
+    //y = spawn particles or not
     private void wobble(Vec3 push, boolean wasHit) {
         this.entityData.set(DATA_HIT_IMPULSE, new Vector3f((float) push.x, wasHit ? 1 : 0, (float) push.z));
         this.entityData.set(DATA_HIT_COUNTER, this.entityData.get(DATA_HIT_COUNTER) + 1);
@@ -403,7 +399,7 @@ public class PignataEntity extends Entity implements Leashable {
             table.getRandomItems(params, lootTableSeed, stack -> spill(stack, center));
         }
         this.gameEvent(GameEvent.ENTITY_DIE, cause);
-        destroy();
+        this.destroy();
     }
 
     private void spill(ItemStack stack, Vec3 center) {
@@ -411,12 +407,6 @@ public class PignataEntity extends Entity implements Leashable {
                 random.nextGaussian() * 0.15, 0.2 + random.nextDouble() * 0.2, random.nextGaussian() * 0.15);
         item.setDefaultPickUpDelay();
         level().addFreshEntity(item);
-    }
-
-    private void popAsItem() {
-        level().broadcastEntityEvent(this, POP_EVENT);
-        this.spawnAtLocation(toItemStack());
-        destroy();
     }
 
     private void destroy() {

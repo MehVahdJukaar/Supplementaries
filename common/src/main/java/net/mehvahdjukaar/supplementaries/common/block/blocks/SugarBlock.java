@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SugarBlock extends ConcretePowderBlock {
+    public static final int DISSOLVE_EVENT = 1;
 
     public SugarBlock(BlockBehaviour.Properties properties) {
         super(Blocks.WATER, properties);
@@ -61,13 +62,13 @@ public class SugarBlock extends ConcretePowderBlock {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (touchesLiquid(level, pos)) {
-            level.blockEvent(pos, state.getBlock(), 1, 0);
+            level.blockEvent(pos, state.getBlock(), DISSOLVE_EVENT, 0);
         } else super.tick(state, level, pos, random);
     }
 
     @Override
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
-        if (id == 1) {
+        if (id == DISSOLVE_EVENT) {
             if (level.isClientSide) {
                 this.spawnDissolveParticles(level, pos);
             }

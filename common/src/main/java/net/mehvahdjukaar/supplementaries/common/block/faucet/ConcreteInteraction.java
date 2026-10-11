@@ -15,7 +15,7 @@ class ConcreteInteraction implements FaucetTarget.BlState {
         //sugar is instance of concrete...
         if (offer.fluid().is(MLBuiltinSoftFluids.WATER)) {
             if (state.getBlock() instanceof SugarBlock) {
-                level.blockEvent(pos, state.getBlock(), 1, 0);
+                level.blockEvent(pos, state.getBlock(), SugarBlock.DISSOLVE_EVENT, 0);
                 return 1;
             }
             if (state.getBlock() instanceof ConcretePowderBlock cp) {

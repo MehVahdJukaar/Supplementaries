@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CannonBallEntity extends ImprovedProjectileEntity {
+    private static final byte BREAK_EVENT = 3;
 
     //for collisions that we should ignore since they were handled by the other entity
     private final List<CannonBallEntity> justCollidedWith = new ArrayList<>();
@@ -140,7 +141,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
                 new ItemParticleOption(ParticleTypes.ITEM, this.getItem());
 
         //TODO use block particles with config, spawn more and maybe use send particles insteaed
-        if (id == 3) {
+        if (id == BREAK_EVENT) {
             float speed = 0.05f;
             for (int i = 0; i < 8; ++i) {
                 double k = this.random.nextGaussian() * speed;
@@ -184,7 +185,7 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
 
             if (this.getDeltaMovement().lengthSqr() < (0.2 * 0.2) || exploded == 0) {
                 this.playSound(ModSounds.CANNONBALL_BREAK.get(), 1.0F, 1.5F);
-                this.level().broadcastEntityEvent(this, (byte) 3);
+                this.level().broadcastEntityEvent(this, BREAK_EVENT);
                 this.discard();
             } else {
                 // advance until we go as far as we would have gone had we not had any collisions

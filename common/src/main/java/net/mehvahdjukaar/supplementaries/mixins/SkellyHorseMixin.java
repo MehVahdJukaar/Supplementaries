@@ -10,6 +10,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -83,7 +84,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements IConvert
 
         if (this.supplementaries$fleshCount >= CommonConfigs.Tweaks.ZOMBIE_HORSE_COST.get()) {
             this.supplementaries$conversionTime = 200;
-            this.level().broadcastEntityEvent(this, (byte) 16);
+            this.level().broadcastEntityEvent(this, EntityEvent.ZOMBIE_CONVERTING);
         }
 
         stack.consume(1, player);
@@ -139,7 +140,7 @@ public abstract class SkellyHorseMixin extends AbstractHorse implements IConvert
 
     @Override
     public void handleEntityEvent(byte id) {
-        if (id == 16) {
+        if (id == EntityEvent.ZOMBIE_CONVERTING) {
             if (!this.isSilent()) {
                 this.level().playLocalSound(this.getX(), this.getEyeY(), this.getZ(), SoundEvents.ZOMBIE_VILLAGER_CURE, this.getSoundSource(), 1.0F + this.random.nextFloat(), this.random.nextFloat() * 0.7F + 0.3F, false);
             }

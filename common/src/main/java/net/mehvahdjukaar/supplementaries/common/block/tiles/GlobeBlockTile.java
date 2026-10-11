@@ -21,6 +21,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public class GlobeBlockTile extends BlockEntity implements Nameable {
+    public static final int SPIN_EVENT = 1;
+    public static final int SHEAR_EVENT = 2;
 
     private final boolean sepia;
 
@@ -139,14 +141,14 @@ public class GlobeBlockTile extends BlockEntity implements Nameable {
 
     @Override
     public boolean triggerEvent(int id, int type) {
-        if (id == 1) {
+        if (id == SPIN_EVENT) {
             this.spin();
             this.level.playSound(null, this.worldPosition,
                     ModSounds.GLOBE_SPIN.get(),
                     SoundSource.BLOCKS, 0.65f,
                     MthUtils.nextWeighted(level.random, 0.2f) + 0.9f);
             return true;
-        } else if (id == 2) {
+        } else if (id == SHEAR_EVENT) {
             level.addDestroyBlockEffect(worldPosition, getBlockState());
             return true;
         } else {

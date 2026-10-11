@@ -100,7 +100,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
             //calls event on server and client through packet
             if (powered) {
                 leve.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
-                leve.blockEvent(pos, state.getBlock(), 1, 0);
+                leve.blockEvent(pos, state.getBlock(), GlobeBlockTile.SPIN_EVENT, 0);
             }
         }
     }
@@ -123,7 +123,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
                 }
 
                 level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, pos);
-                level.blockEvent(pos, state.getBlock(), 1, 0);
+                level.blockEvent(pos, state.getBlock(), GlobeBlockTile.SPIN_EVENT, 0);
                 if (CommonConfigs.Building.GLOBE_COORDINATES.get()) {
                     displayCurrentCoordinates(level, player, pos);
                 }
@@ -143,7 +143,7 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
                 level.sendBlockUpdated(pos, state, state, 3);
                 level.playSound(player, pos, SoundEvents.SHEEP_SHEAR, SoundSource.BLOCKS, 1, 1);
                 if (!level.isClientSide) {
-                    level.blockEvent(pos, state.getBlock(), 2, 0);
+                    level.blockEvent(pos, state.getBlock(), GlobeBlockTile.SHEAR_EVENT, 0);
                 }
                 return ItemInteractionResult.sidedSuccess(level.isClientSide);
             }

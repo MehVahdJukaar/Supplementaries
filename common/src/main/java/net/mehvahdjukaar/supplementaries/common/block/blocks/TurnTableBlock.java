@@ -49,6 +49,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public static final BooleanProperty INVERTED = BlockStateProperties.INVERTED;
     public static final BooleanProperty ROTATING = ModBlockProperties.ROTATING;
+    public static final int ROTATE_EVENT = 0;
 
     public TurnTableBlock(Properties properties) {
         super(properties);
@@ -218,7 +219,7 @@ public class TurnTableBlock extends Block implements EntityBlock {
 
     @Override
     public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
-        if (eventID == 0) {
+        if (eventID == ROTATE_EVENT) {
             if (world.isClientSide && ClientConfigs.Blocks.TURN_TABLE_PARTICLES.get()) {
                 Direction dir = state.getValue(TurnTableBlock.FACING);
                 BlockPos front = pos.relative(dir);

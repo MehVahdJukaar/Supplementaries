@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlockSource;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.SoapBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.Util;
@@ -101,7 +102,7 @@ public class MovingSlidyBlockEntity extends PistonMovingBlockEntity {
                     Util.shuffle(dirs, level.random);
                     for (Direction randomDir : dirs) {
                         if (MovingSlidyBlock.maybeMove(movedState, level, pos, randomDir)) {
-                            level.blockEvent(pos.below(), ModRegistry.SOAP_BLOCK.get(), 0, 0);
+                            level.blockEvent(pos.below(), ModRegistry.SOAP_BLOCK.get(), SoapBlock.SUDS_EVENT, 0);
                             level.gameEvent(null, GameEvent.BLOCK_ACTIVATE, pos);
                             break;
                         }

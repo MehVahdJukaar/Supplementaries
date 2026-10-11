@@ -60,6 +60,7 @@ public class GunpowderBlock extends LightUpBlock {
     public static final EnumProperty<RedstoneSide> SOUTH = BlockStateProperties.SOUTH_REDSTONE;
     public static final EnumProperty<RedstoneSide> WEST = BlockStateProperties.WEST_REDSTONE;
     public static final IntegerProperty BURNING = ModBlockProperties.BURNING;
+    private static final int LIGHT_UP_EVENT = 0;
 
 
     public static final Map<Direction, EnumProperty<RedstoneSide>> PROPERTY_BY_DIRECTION = Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, NORTH, Direction.EAST, EAST, Direction.SOUTH, SOUTH, Direction.WEST, WEST));
@@ -454,7 +455,7 @@ public class GunpowderBlock extends LightUpBlock {
         if (ret) {
             //spawn particles when first lit
             if (!world.isClientSide()) {
-                ((Level) world).blockEvent(pos, this, 0, 0);
+                ((Level) world).blockEvent(pos, this, LIGHT_UP_EVENT, 0);
             }
             world.scheduleTick(pos, this, getDelay());
         }
@@ -466,7 +467,7 @@ public class GunpowderBlock extends LightUpBlock {
         if (!this.isLitUp(state, level, pos)) {
             //spawn particles when first lit
             if (!level.isClientSide()) {
-                ((Level) level).blockEvent(pos, this, 0, 0);
+                ((Level) level).blockEvent(pos, this, LIGHT_UP_EVENT, 0);
             }
             setLitUp(state, level, pos, true);
             level.playSound(null, pos, ModSounds.GUNPOWDER_IGNITE.get(), SoundSource.BLOCKS, 2.0f,
@@ -529,7 +530,7 @@ public class GunpowderBlock extends LightUpBlock {
     //called when first lit
     @Override
     public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
-        if (eventID == 0) {
+        if (eventID == LIGHT_UP_EVENT) {
             this.animateTick(state.setValue(BURNING, 1), world, pos, world.random);
             return true;
         }

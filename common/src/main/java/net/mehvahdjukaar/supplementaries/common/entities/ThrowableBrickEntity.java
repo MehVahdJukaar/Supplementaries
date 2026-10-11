@@ -38,6 +38,7 @@ import java.util.UUID;
 
 public class ThrowableBrickEntity extends ImprovedProjectileEntity {
     private static final GameProfile BRICK_PLAYER = new GameProfile(UUID.randomUUID(), "Throwable Brick Fake Player");
+    private static final byte BREAK_EVENT = 3;
 
     public ThrowableBrickEntity(EntityType<? extends ThrowableBrickEntity> type, Level world) {
         super(type, world);
@@ -68,7 +69,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
 
     @Override
     public void handleEntityEvent(byte id) {
-        if (id == 3) {
+        if (id == BREAK_EVENT) {
             ParticleOptions particle = this.makeParticle();
 
             for (int i = 0; i < 8; ++i) {
@@ -137,7 +138,7 @@ public class ThrowableBrickEntity extends ImprovedProjectileEntity {
         if (!this.level().isClientSide) {
             Vec3 v = result.getLocation();
             this.level().playSound(null, v.x, v.y, v.z, SoundEvents.NETHER_BRICKS_BREAK, SoundSource.NEUTRAL, 0.75F, 1);
-            this.level().broadcastEntityEvent(this, (byte) 3);
+            this.level().broadcastEntityEvent(this, BREAK_EVENT);
             this.remove(RemovalReason.DISCARDED);
         }
 

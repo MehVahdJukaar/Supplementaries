@@ -120,7 +120,7 @@ public class TrappedPresentBlockTile extends AbstractPresentBlockTile {
                 stack.shrink(1);
             }
 
-            sl.blockEvent(pos, this.getBlockState().getBlock(), 0, 0);
+            sl.blockEvent(pos, this.getBlockState().getBlock(), TrappedPresentBlock.DETONATE_EVENT, 0);
         }
 
     }

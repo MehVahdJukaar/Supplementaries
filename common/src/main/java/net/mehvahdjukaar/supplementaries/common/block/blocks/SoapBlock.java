@@ -14,6 +14,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class SoapBlock extends Block {
+    public static final int SUDS_EVENT = 0;
+
     public SoapBlock(Properties properties) {
         super(properties);
     }
@@ -25,7 +27,7 @@ public class SoapBlock extends Block {
 
     @Override
     public boolean triggerEvent(BlockState pState, Level level, BlockPos pos, int pId, int pParam) {
-        if (pId == 0) {
+        if (pId == SUDS_EVENT) {
             RandomSource r = level.random;
             for (int i = 0; i < 2; i++) {
                 level.addParticle(ModParticles.SUDS_PARTICLE.get(), pos.getX() + r.nextFloat(), pos.getY() + 1.1, pos.getZ() + r.nextFloat(),
@@ -80,7 +82,7 @@ public class SoapBlock extends Block {
                     m = m.yRot(angle * Mth.DEG_TO_RAD);
                     //PACKET HERE
                     entity.setDeltaMovement(entity.getDeltaMovement().add(m.x, 0.0F, m.z));
-                    level.blockEvent(pPos, state.getBlock(), 0, 0);
+                    level.blockEvent(pPos, state.getBlock(), SUDS_EVENT, 0);
                 }
             }
         }
@@ -88,7 +90,7 @@ public class SoapBlock extends Block {
             SlimedData data = ModData.SLIMED_DATA.getOrCreate(le);
             if (data != null && rand.nextFloat() < slipChance) {
                 data.clear(le);
-                level.blockEvent(pPos, state.getBlock(), 0, 0);
+                level.blockEvent(pPos, state.getBlock(), SUDS_EVENT, 0);
             }
         }
     }

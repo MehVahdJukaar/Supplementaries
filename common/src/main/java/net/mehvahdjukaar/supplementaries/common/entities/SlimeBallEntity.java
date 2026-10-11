@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 public class SlimeBallEntity extends ImprovedProjectileEntity {
+    private static final byte BREAK_EVENT = 3;
 
     private int bounces = 0;
 
@@ -112,12 +113,12 @@ public class SlimeBallEntity extends ImprovedProjectileEntity {
     }
 
     private void addParticleEffects() {
-        this.level().broadcastEntityEvent(this, (byte) 3);
+        this.level().broadcastEntityEvent(this, BREAK_EVENT);
     }
 
     @Override
     public void handleEntityEvent(byte id) {
-        if (id == 3) {
+        if (id == BREAK_EVENT) {
             ParticleOptions particleOptions = new ItemParticleOption(ParticleTypes.ITEM, this.getItem());
 
             for (int i = 0; i < 8; ++i) {

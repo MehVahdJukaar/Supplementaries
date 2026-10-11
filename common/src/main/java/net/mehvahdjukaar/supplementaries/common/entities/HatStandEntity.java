@@ -50,6 +50,7 @@ public class HatStandEntity extends LivingEntity {
     public static final EntityDataAccessor<Rotations> DATA_HEAD_POSE = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.ROTATIONS);
     public static final EntityDataAccessor<OptionalInt> FACING_TARGET = SynchedEntityData.defineId(HatStandEntity.class, EntityDataSerializers.OPTIONAL_UNSIGNED_INT);
     private static final Rotations DEFAULT_HEAD_POSE = new Rotations(0.0F, 0.0F, 0.0F);
+    private static final byte HIT_EVENT = 32;
     public final SwingAnimation swingAnimation;
     public final AnimationState skibidiAnimation;
     private final NonNullList<ItemStack> helmet = NonNullList.withSize(1, ItemStack.EMPTY);
@@ -341,7 +342,7 @@ public class HatStandEntity extends LivingEntity {
                         } else {
                             long l = this.level().getGameTime();
                             if (l - this.lastHit > 5L && !isDirectArrow) {
-                                this.level().broadcastEntityEvent(this, (byte) 32);
+                                this.level().broadcastEntityEvent(this, HIT_EVENT);
                                 this.gameEvent(GameEvent.ENTITY_DAMAGE, source.getEntity());
                                 this.lastHit = l;
                             } else {
@@ -358,7 +359,7 @@ public class HatStandEntity extends LivingEntity {
 
     @Override
     public void handleEntityEvent(byte id) {
-        if (id == 32) {
+        if (id == HIT_EVENT) {
             if (this.level().isClientSide) {
                 this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ARMOR_STAND_HIT, this.getSoundSource(), 0.3F, 1.0F, false);
                 this.lastHit = this.level().getGameTime();

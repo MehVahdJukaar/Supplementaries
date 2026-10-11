@@ -150,7 +150,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserI
         if (level instanceof ServerLevel server && !this.message.equals("")) {
             // particle
             BlockPos pos = this.getBlockPos();
-            level.blockEvent(pos, this.getBlockState().getBlock(), 0, 0);
+            level.blockEvent(pos, this.getBlockState().getBlock(), SpeakerBlock.SPEAK_EVENT, 0);
 
             Style style = !state.getValue(SpeakerBlock.ANTIQUE) ? Style.EMPTY.applyFormats(ChatFormatting.ITALIC) :
                     Style.EMPTY.withFont(ModTextures.ANTIQUABLE_FONT).applyFormats(ChatFormatting.ITALIC);

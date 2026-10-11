@@ -29,6 +29,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock implements ILighta
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty ON_COOLDOWN = BlockStateProperties.TRIGGERED;
+    public static final int DETONATE_EVENT = 0;
 
     public TrappedPresentBlock(DyeColor color, Properties properties) {
         super(color, properties);
@@ -50,7 +51,7 @@ public class TrappedPresentBlock extends AbstractPresentBlock implements ILighta
 
     @Override
     public boolean triggerEvent(BlockState pState, Level pLevel, BlockPos pPos, int pId, int pParam) {
-        if (pId == 0 && pState.getValue(ON_COOLDOWN)) {
+        if (pId == DETONATE_EVENT && pState.getValue(ON_COOLDOWN)) {
             if (pLevel.isClientSide) {
                 RandomSource random = pLevel.random;
 

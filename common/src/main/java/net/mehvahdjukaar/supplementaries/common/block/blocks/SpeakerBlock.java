@@ -40,6 +40,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
     public static final BooleanProperty ANTIQUE = ModBlockProperties.ANTIQUE;
 
     private static final int POWERED_TICKS = 40;
+    public static final int SPEAK_EVENT = 0;
 
     public SpeakerBlock(Properties properties) {
         super(properties);
@@ -143,7 +144,7 @@ public class SpeakerBlock extends Block implements EntityBlock {
 
     @Override
     public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int eventID, int eventParam) {
-        if (eventID == 0) {
+        if (eventID == SPEAK_EVENT) {
             Direction facing = state.getValue(FACING);
             world.addParticle(ModParticles.SPEAKER_SOUND.get(), pos.getX() + 0.5 + facing.getStepX() * 0.725, pos.getY() + 0.5,
                     pos.getZ() + 0.5 + facing.getStepZ() * 0.725, world.random.nextInt(24) / 24.0D, 0.0D, 0.0D);

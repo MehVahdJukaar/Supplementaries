@@ -39,6 +39,7 @@ import java.util.function.BiConsumer;
 public class WindVaneBlock extends WaterBlock implements EntityBlock {
     public static final IntegerProperty WIND_STRENGTH = ModBlockProperties.WIND_STRENGTH;
     protected static final VoxelShape SHAPE = Block.box(2, 0D, 2, 14, 16, 14);
+    private static final int WIND_CHARGE_EVENT = 1;
 
     public WindVaneBlock(Properties properties) {
         super(properties);
@@ -66,14 +67,14 @@ public class WindVaneBlock extends WaterBlock implements EntityBlock {
         super.onExplosionHit(state, level, pos, explosion, dropConsumer);
         if (explosion.canTriggerBlocks() && level.getBlockEntity(pos) instanceof WindVaneBlockTile tile) {
 
-            level.blockEvent(pos, this, 1, 0);
+            level.blockEvent(pos, this, WIND_CHARGE_EVENT, 0);
             level.playSound(null, pos, ModSounds.WIND_VANE_SPIN.get(), SoundSource.BLOCKS, 1, 1);
         }
     }
 
     @Override
     protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
-        if (id == 1) {
+        if (id == WIND_CHARGE_EVENT) {
             if (level.getBlockEntity(pos) instanceof WindVaneBlockTile tile) {
                 tile.setWindCharged();
                 return true;

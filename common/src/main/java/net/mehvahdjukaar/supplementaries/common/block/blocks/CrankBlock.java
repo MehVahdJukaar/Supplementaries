@@ -41,6 +41,7 @@ public class CrankBlock extends WaterBlock {
     public static final IntegerProperty POWER = BlockStateProperties.POWER;
     protected static final EnumMap<Direction, VoxelShape> SHAPES =
             MthUtils.getAllRotatedVoxelShapes(Block.box(2, 2, 11, 14, 14, 16));
+    private static final int SMOKE_EVENT = 0;
 
     public CrankBlock(Properties properties) {
         super(properties);
@@ -81,7 +82,7 @@ public class CrankBlock extends WaterBlock {
 
     @Override
     public boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
-        if (id == 0) {
+        if (id == SMOKE_EVENT) {
             if (level.isClientSide) addParticle(state, level, pos, ParticleTypes.SMOKE);
             return true;
         }
@@ -92,7 +93,7 @@ public class CrankBlock extends WaterBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide) {
             //send particles
-            level.blockEvent(pos, this, 0, 0);
+            level.blockEvent(pos, this, SMOKE_EVENT, 0);
 
             boolean ccw = player.isShiftKeyDown();
             this.turn(state, level, pos, ccw, player);
