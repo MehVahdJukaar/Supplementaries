@@ -11,14 +11,14 @@ import net.minecraft.util.FastColor;
 
 public class DrawableBlackBoardButton extends BlackboardButton {
 
-    public static final int SIZE = 6;
+    public static final int MAX_SIZE = 6;
 
+    //greater than 16 for offboard
     private final int u;
     private final int v;
 
-    public DrawableBlackBoardButton(BlackBoardScreen screen, int centerX, int centerY, int u, int v, byte color) {
-        super(screen, centerX - ((8 - u) * SIZE), centerY - ((-v) * SIZE), color, SIZE,
-                ModTextures.BLACKBOARD_OUTLINE_SPRITE);
+    public DrawableBlackBoardButton(BlackBoardScreen screen, int x, int y, int size, int u, int v, byte color) {
+        super(screen, x, y, color, size, ModTextures.BLACKBOARD_OUTLINE_SPRITE);
         this.u = u;
         this.v = v;
     }
@@ -68,7 +68,7 @@ public class DrawableBlackBoardButton extends BlackboardButton {
         int offset = this.color > 0 ? 16 : 0;
         graphics.blit(ModTextures.BLACKBOARD_GUI_TEXTURE,
                 this.x, this.y,
-                (float) (this.u + offset) * size, (float) this.v * size,
+                (float) (this.u % 16 + offset) * size, (float) (this.v % 16) * size,
                 size, size, 32 * size, 16 * size);
     }
 
