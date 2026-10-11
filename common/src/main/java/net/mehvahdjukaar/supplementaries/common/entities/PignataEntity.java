@@ -97,6 +97,9 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
     private float swingZO;
     private float swingSpeedX;
     private float swingSpeedZ;
+    private float swingPivotY;
+    private float swingPivotYO;
+    private int restingTicks;
 
     private Vec3 lastClientMovement = Vec3.ZERO;
     private int lerpSteps;
@@ -254,7 +257,7 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
         } else {
             breakLeashIfKnotFell();
             if (damage > 0 && tickCount % CommonConfigs.Building.PIGNATA_HEAL_INTERVAL.get() == 0) {
-                damage = Math.max(0, damage - 2); //one heart
+                damage = Math.max(0, damage - 2);
             }
         }
         if (this.isRemoved()) return;
@@ -296,7 +299,6 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
             movement = movement.add(getLeashConstraintPull(holder, movement));
         }
 
-        boolean wasOnGround = onGround();
         this.setDeltaMovement(movement);
         this.move(MoverType.SELF, movement);
 
@@ -306,12 +308,9 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
             after = after.multiply(friction, 1, friction);
         }
         this.setDeltaMovement(after);
-
-        //fall damage can burst it during move
-        if (onGround() && !wasOnGround && holder == null && !this.isRemoved()) {
-            land(-movement.y);
+        if (isPushable()) {
+            pushTouchingEntities();
         }
-        if (isPushable()) pushTouchingEntities();
     }
 
     //like boats
@@ -325,19 +324,6 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
     @Override
     protected double getDefaultGravity() {
         return 0.04;
-    }
-
-    private void land(double landingSpeed) {
-        AABB underCenter = new AABB(getX() - 0.1, getY() - 0.1, getZ() - 0.1, getX() + 0.1, getY(), getZ() + 0.1);
-        if (level().noCollision(this, underCenter)) {
-            burst(null);
-            return;
-        }
-        //just placed ones also land, from a tiny height
-        if (landingSpeed > 0.2) {
-            wobble(new Vec3(random.nextGaussian() * 0.05, 0, random.nextGaussian() * 0.05), false);
-            this.playSound(SoundEvents.WOOL_FALL, 1, 0.9f);
-        }
     }
 
     @Override
@@ -392,8 +378,8 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
         super.onSyncedDataUpdated(key);
         if (key == DATA_HIT_COUNTER && level().isClientSide && !this.firstTick) {
             Vector3f push = this.entityData.get(DATA_HIT_IMPULSE);
-            swingSpeedX += push.x;
-            swingSpeedZ += push.z;
+            swingSpeedX += push.x * getSwingDirection();
+            swingSpeedZ += push.z * getSwingDirection();
             if (push.y > 0) spawnHitParticles(push);
         }
     }
@@ -433,7 +419,7 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
     }
 
     private void spillItem(ItemStack stack, Vec3 center) {
-        Vec3 speed = new Vec3(random.nextGaussian(), random.nextGaussian(), random.nextGaussian()).normalize().scale(0.3);
+        Vec3 speed = new Vec3(random.nextGaussian(), random.nextGaussian(), random.nextGaussian()).normalize().scale(0.35 + random.nextFloat() * 0.15);
         ItemEntity item = new ItemEntity(level(), center.x, center.y, center.z, stack, speed.x, speed.y, speed.z);
         item.setDefaultPickUpDelay();
         level().addFreshEntity(item);
@@ -634,24 +620,34 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
         }
     }
 
-    public boolean isSwingingFromFeet() {
-        return !isHooked() && onGround() && !isLeashTaut();
+    private boolean isSwingingFromFeet() {
+        return !isHooked() && onGround();
+    }
+
+    private float getSwingDirection() {
+        return isSwingingFromFeet() ? -1 : 1;
     }
 
     private void tickSwing() {
         swingXO = swingX;
         swingZO = swingZ;
+        swingPivotYO = swingPivotY;
         //the body lags behind whatever moves the pivot
         Vec3 movement = this.position().subtract(xo, yo, zo);
         Vec3 acceleration = movement.subtract(lastClientMovement);
         lastClientMovement = movement;
 
         boolean fromFeet = isSwingingFromFeet();
+        //eased so a tilted one doesn't pop when it lands or lifts off
+        swingPivotY += ((fromFeet ? 0 : getBbHeight()) - swingPivotY) * 0.3f;
         float stiffness = fromFeet ? 0.3f : 0.1f;
         float damping = fromFeet ? 0.25f : 0.06f;
-        Vec2 target = getRopeTilt();
-        swingSpeedX += (target.x - swingX) * stiffness - swingSpeedX * damping - (float) acceleration.x * 1.5f;
-        swingSpeedZ += (target.y - swingZ) * stiffness - swingSpeedZ * damping - (float) acceleration.z * 1.5f;
+        float lag = getSwingDirection() * 1.5f;
+        // hangs straight down once it stops moving
+        restingTicks = movement.lengthSqr() < 1.0E-4 ? restingTicks + 1 : 0;
+        Vec2 target = getRopeTilt().scale(1 - Math.min(restingTicks / 20f, 1));
+        swingSpeedX += (target.x - swingX) * stiffness - swingSpeedX * damping - (float) acceleration.x * lag;
+        swingSpeedZ += (target.y - swingZ) * stiffness - swingSpeedZ * damping - (float) acceleration.z * lag;
         swingX = Mth.clamp(swingX + swingSpeedX, -1.3f, 1.3f);
         swingZ = Mth.clamp(swingZ + swingSpeedZ, -1.3f, 1.3f);
     }
@@ -659,12 +655,16 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
     //lines the body up with the leahs. fake physics
     private Vec2 getRopeTilt() {
         Entity holder = getLeashHolder();
-        if (holder == null || isHooked() || !isLeashTaut()) return Vec2.ZERO;
+        if (holder == null || isHooked() || onGround() || !isLeashTaut()) return Vec2.ZERO;
         Vec3 rope = holder.getRopeHoldPosition(1).subtract(getHookPoint());
         double horizontal = rope.horizontalDistance();
         if (horizontal < 1.0E-4) return Vec2.ZERO;
         float tilt = (float) Math.min(Mth.atan2(horizontal, rope.y), 1.2);
         return new Vec2((float) (-rope.x / horizontal * tilt), (float) (-rope.z / horizontal * tilt));
+    }
+
+    public float getSwingPivotY(float partialTicks) {
+        return Mth.lerp(partialTicks, swingPivotYO, swingPivotY);
     }
 
     public float getSwingX(float partialTicks) {
@@ -708,7 +708,7 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
     private void spawnHitParticles(Vector3f push) {
         Vec3 center = this.position().add(0, getBbHeight() / 2, 0);
         for (int i = 0; i < 6; i++) {
-            level().addParticle(randomConfetti(),
+            level().addParticle(ModParticles.CONFETTI_PARTICLE.get(),
                     center.x + random.nextGaussian() * 0.2, center.y + random.nextGaussian() * 0.2, center.z + random.nextGaussian() * 0.2,
                     push.x * 0.5 + random.nextGaussian() * 0.05, 0.05 + random.nextFloat() * 0.1, push.z * 0.5 + random.nextGaussian() * 0.05);
         }
@@ -736,8 +736,10 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
 
     @Override
     public void setLeashedTo(Entity leashHolder, boolean broadcastPacket) {
+        boolean isNewLeash = leashData == null;
+        //needed due to fence moves and loading keep the old length
         Leashable.super.setLeashedTo(leashHolder, broadcastPacket);
-        if (!level().isClientSide) {
+        if (isNewLeash && !level().isClientSide) {
             double distance = getHookPoint().distanceTo(leashHolder.getRopeHoldPosition(1));
             this.entityData.set(DATA_LEASH_LENGTH, (float) Mth.clamp(distance, 1.5, 6));
         }

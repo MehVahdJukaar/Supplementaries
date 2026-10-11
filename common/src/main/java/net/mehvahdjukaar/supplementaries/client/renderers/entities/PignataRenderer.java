@@ -63,12 +63,10 @@ public class PignataRenderer extends EntityRenderer<PignataEntity> {
         Vec3 followOffset = entity.getMovingAnchorRenderOffset(partialTicks);
         if (followOffset != null) poseStack.translate(followOffset.x, followOffset.y, followOffset.z);
 
-        boolean fromFeet = entity.isSwingingFromFeet();
-        float pivotY = fromFeet ? 0 : entity.getBbHeight();
-        float sign = fromFeet ? -1 : 1;
+        float pivotY = entity.getSwingPivotY(partialTicks);
         poseStack.translate(0, pivotY, 0);
-        poseStack.mulPose(Axis.ZP.rotation(sign * entity.getSwingX(partialTicks)));
-        poseStack.mulPose(Axis.XP.rotation(-sign * entity.getSwingZ(partialTicks)));
+        poseStack.mulPose(Axis.ZP.rotation(entity.getSwingX(partialTicks)));
+        poseStack.mulPose(Axis.XP.rotation(-entity.getSwingZ(partialTicks)));
         poseStack.translate(0, -pivotY, 0);
 
         poseStack.mulPose(Axis.YP.rotationDegrees(-entityYaw));

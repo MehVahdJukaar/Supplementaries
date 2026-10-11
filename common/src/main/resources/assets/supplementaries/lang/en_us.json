@@ -1389,5 +1389,8 @@
   "supplementaries.configuration.grouper.compare_entities": "Compare Entities",
   "supplementaries.configuration.grouper.compare_entities.description": "Lets groupers compare entities on their sides when both sides are air or liquid. Same entity type gives weak power. Full power needs an exact match: same dropped item or item frame item, same mob variant, villager profession or name tag",
   "supplementaries.configuration.blackboard.connected_gui": "Connected Gui",
-  "supplementaries.configuration.blackboard.connected_gui.description": "Opening a blackboard gui also shows up to a 3x3 of connected blackboards so you can draw on all of them at once"
+  "supplementaries.configuration.blackboard.connected_gui.description": "Opening a blackboard gui also shows up to a 3x3 of connected blackboards so you can draw on all of them at once",
+  "supplementaries.configuration.pignata": "Pignata",
+  "supplementaries.configuration.pignata.heal_interval": "Heal Interval",
+  "supplementaries.configuration.pignata.heal_interval.description": "Ticks a pignata takes to heal one heart of damage"
 }
