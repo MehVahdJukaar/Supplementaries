@@ -446,6 +446,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> FIRE_PIT_ENABLED;
         public static final Supplier<Boolean> WICKER_FENCE_ENABLED;
         public static final Supplier<Boolean> PIGNATA_ENABLED;
+        public static final Supplier<Integer> PIGNATA_HEAL_INTERVAL;
         public static final Supplier<Boolean> AWNING_ENABLED;
         public static final Supplier<Boolean> AWNING_SLANT;
         public static final Supplier<Boolean> AWNING_FALL_THROUGH;
@@ -661,7 +662,11 @@ public class CommonConfigs {
             CANDLE_HOLDER_ENABLED = builder.feature(ModConstants.CANDLE_HOLDER_NAME);
             FIRE_PIT_ENABLED = builder.feature(ModConstants.FIRE_PIT_NAME);
             WICKER_FENCE_ENABLED = builder.feature(ModConstants.WICKER_FENCE_NAME);
-            PIGNATA_ENABLED = builder.feature(ModConstants.PIGNATA_NAME);
+            builder.push(ModConstants.PIGNATA_NAME);
+            PIGNATA_ENABLED = builder.mainFeature();
+            PIGNATA_HEAL_INTERVAL = builder.comment("Ticks a pignata takes to heal one heart of damage")
+                    .define("heal_interval", 10, 1, 1000);
+            builder.pop();
             //   SPEEDOMETER_ENABLED = builder.feature(ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();

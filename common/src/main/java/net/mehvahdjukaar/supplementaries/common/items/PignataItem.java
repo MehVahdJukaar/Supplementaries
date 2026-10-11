@@ -6,7 +6,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -18,7 +17,6 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,7 +58,6 @@ public class PignataItem extends Item implements Equipable {
                     pos, MobSpawnType.SPAWN_EGG, false, false);
             if (pignata == null) return InteractionResult.FAIL;
             pignata.moveTo(bottom.x, bottom.y, bottom.z, Mth.wrapDegrees(context.getRotation() + 180), 0);
-            pignata.setContents(stack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
             boolean placedOnFloor = face == Direction.UP;
             if (!placedOnFloor && PignataAnchorBlock.canHangBelow(level, pos.above())) {
                 pignata.hookTo(pos);

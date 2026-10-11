@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.common.entities;
 
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PignataAnchorBlock;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
@@ -13,6 +14,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -29,6 +31,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.MoverType;
@@ -59,6 +62,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class PignataEntity extends Entity implements Leashable, ContainerEntity {
@@ -72,6 +77,7 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
     private static final byte POP_EVENT = 61;
 
     private static final float DAMAGE_TO_BURST = 10;
+    private static final int MAX_DROP_ITEM_ENTITIES = 32;
     private static final double YANK_OFF_HOOK_SLACK = 1;
     private static final double SNAPPING_LEASH_SLACK = 6;
     private static final double BLOWN_OFF_HOOK_SPEED = 0.6;
@@ -246,10 +252,10 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
             tickLerp();
             tickSwing();
         } else {
-            Leashable.tickLeash(this);
             breakLeashIfKnotFell();
-            //half a heart a second
-            if (damage > 0 && tickCount % 20 == 0) damage = Math.max(0, damage - 1);
+            if (damage > 0 && tickCount % CommonConfigs.Building.PIGNATA_HEAL_INTERVAL.get() == 0) {
+                damage = Math.max(0, damage - 2); //one heart
+            }
         }
         if (this.isRemoved()) return;
         BlockPos hookPos = getHookPos();
@@ -285,9 +291,10 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
     private void tickFree() {
         Entity holder = getLeashHolder();
         Vec3 movement = getDeltaMovement();
-        if (!isNoGravity()) movement = movement.add(0, -0.04, 0);
-        if (holder != null) movement = constrainToLeash(holder, movement);
-        if (this.isRemoved()) return;
+        movement = movement.add(0, -getGravity(), 0);
+        if (holder != null) {
+            movement = movement.add(getLeashConstraintPull(holder, movement));
+        }
 
         boolean wasOnGround = onGround();
         this.setDeltaMovement(movement);
@@ -304,6 +311,20 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
         if (onGround() && !wasOnGround && holder == null && !this.isRemoved()) {
             land(-movement.y);
         }
+        if (isPushable()) pushTouchingEntities();
+    }
+
+    //like boats
+    private void pushTouchingEntities() {
+        AABB touching = getBoundingBox().inflate(0.2, -0.01, 0.2);
+        for (Entity entity : level().getEntities(this, touching, EntitySelector.pushableBy(this))) {
+            this.push(entity);
+        }
+    }
+
+    @Override
+    protected double getDefaultGravity() {
+        return 0.04;
     }
 
     private void land(double landingSpeed) {
@@ -389,25 +410,31 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
 
     private void spillEverything(ServerLevel serverLevel, @Nullable Entity cause) {
         Vec3 center = this.position().add(0, getBbHeight() / 2, 0);
-        for (ItemStack stack : contents) {
-            if (!stack.isEmpty()) spill(stack, center);
+        List<ItemStack> loot = new ArrayList<>(contents);
+        if (lootTable != null) {
+            LootTable table = serverLevel.getServer().reloadableRegistries().getLootTable(lootTable);
+            LootParams.Builder params = new LootParams.Builder(serverLevel)
+                    .withParameter(LootContextParams.ORIGIN, center)
+                    .withOptionalParameter(LootContextParams.THIS_ENTITY, cause);
+            if (cause instanceof ServerPlayer player) {
+                params.withLuck(player.getLuck());
+                CriteriaTriggers.GENERATE_LOOT.trigger(player, lootTable);
+            }
+            table.getRandomItems(params.create(LootContextParamSets.CHEST), lootTableSeed, loot::add);
         }
-        if (lootTable == null) return;
-        LootTable table = serverLevel.getServer().reloadableRegistries().getLootTable(lootTable);
-        LootParams.Builder params = new LootParams.Builder(serverLevel)
-                .withParameter(LootContextParams.ORIGIN, center)
-                .withOptionalParameter(LootContextParams.THIS_ENTITY, cause);
-        if (cause instanceof ServerPlayer player) {
-            params.withLuck(player.getLuck());
-            CriteriaTriggers.GENERATE_LOOT.trigger(player, lootTable);
+        int singleItems = 0;
+        for (ItemStack stack : loot) {
+            while (!stack.isEmpty() && singleItems < MAX_DROP_ITEM_ENTITIES) {
+                spillItem(stack.split(1), center);
+                singleItems++;
+            }
+            if (!stack.isEmpty()) spillItem(stack, center);
         }
-        //not unpacked into the slots first, a big table doesnt fit in 9
-        table.getRandomItems(params.create(LootContextParamSets.CHEST), lootTableSeed, stack -> spill(stack, center));
     }
 
-    private void spill(ItemStack stack, Vec3 center) {
-        ItemEntity item = new ItemEntity(level(), center.x, center.y, center.z, stack,
-                random.nextGaussian() * 0.15, 0.2 + random.nextDouble() * 0.2, random.nextGaussian() * 0.15);
+    private void spillItem(ItemStack stack, Vec3 center) {
+        Vec3 speed = new Vec3(random.nextGaussian(), random.nextGaussian(), random.nextGaussian()).normalize().scale(0.3);
+        ItemEntity item = new ItemEntity(level(), center.x, center.y, center.z, stack, speed.x, speed.y, speed.z);
         item.setDefaultPickUpDelay();
         level().addFreshEntity(item);
     }
@@ -434,7 +461,10 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
         if (!level().isClientSide) {
             unpackChestVehicleLootTable(player);
             ItemStack toStuff = player.hasInfiniteMaterials() ? held.copy() : held;
-            if (!stuffItemInside(toStuff)) return InteractionResult.FAIL;
+            if (!stuffItemInside(toStuff)) {
+                player.displayClientMessage(Component.translatable("message.supplementaries.pignata.full"), true);
+                return InteractionResult.FAIL;
+            }
             this.playSound(SoundEvents.BUNDLE_INSERT, 1, 0.8f + random.nextFloat() * 0.4f);
             wobble(new Vec3(random.nextGaussian() * 0.05, 0, random.nextGaussian() * 0.05), false);
         }
@@ -555,8 +585,7 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
 
     @Override
     public boolean canBeCollidedWith() {
-        //solid ones never overlap the player so they would never get pushed
-        return !isPushable();
+        return true;
     }
 
     @Override
@@ -627,7 +656,7 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
         swingZ = Mth.clamp(swingZ + swingSpeedZ, -1.3f, 1.3f);
     }
 
-    //lines the body up with a taut rope
+    //lines the body up with the leahs. fake physics
     private Vec2 getRopeTilt() {
         Entity holder = getLeashHolder();
         if (holder == null || isHooked() || !isLeashTaut()) return Vec2.ZERO;
@@ -735,20 +764,21 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
         return holder != null && getHookPoint().distanceTo(holder.getRopeHoldPosition(1)) > getLeashLength() - 0.3;
     }
 
-    private Vec3 constrainToLeash(Entity holder, Vec3 movement) {
-        Vec3 holdPoint = holder.getRopeHoldPosition(1);
-        Vec3 hook = getHookPoint();
-        Vec3 fromHolder = hook.add(movement).subtract(holdPoint);
+    private Vec3 getLeashConstraintPull(Entity holder, Vec3 movement) {
+        Vec3 fencePos = holder.getRopeHoldPosition(1);
+        Vec3 hookPos = getHookPoint();
+        Vec3 movedHookPos = hookPos.add(movement);
+        Vec3 fromHolder = movedHookPos.subtract(fencePos);
         double distance = fromHolder.length();
         double length = getLeashLength();
         if (distance > length + SNAPPING_LEASH_SLACK) {
             dropLeash(true, true);
-            return movement;
+            return Vec3.ZERO;
         }
-        if (distance <= length) return movement;
+        if (distance <= length) return Vec3.ZERO;
         this.resetFallDistance();
-        Vec3 onRope = holdPoint.add(fromHolder.scale(length / distance));
-        return onRope.subtract(hook);
+        Vec3 onRope = fencePos.add(fromHolder.scale(length / distance));
+        return onRope.subtract(movedHookPos);
     }
 
     //knots only check their fence every 100 ticks
