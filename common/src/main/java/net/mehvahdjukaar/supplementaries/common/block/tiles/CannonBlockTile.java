@@ -396,7 +396,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack itemStack, @Nullable Direction direction) {
-        return canPlaceItem((direction == null) || direction.getAxis().isHorizontal() ? 1 : 0, itemStack);
+        return canPlaceItem(direction == Direction.DOWN ? 0 : 1, itemStack);
     }
 
     @Override
@@ -406,7 +406,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     @Override
     public int[] getSlotsForFace(Direction side) {
-        return new int[]{side.getAxis().isHorizontal() ? 1 : 0};
+        return new int[]{side == Direction.DOWN ? 0 : 1};
     }
 
     public void ignite(@Nullable Entity entityWhoIgnited) {
