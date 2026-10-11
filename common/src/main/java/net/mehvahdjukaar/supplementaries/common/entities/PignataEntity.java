@@ -4,29 +4,27 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.PignataAnchorBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModSounds;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
-import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -34,12 +32,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Leashable;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.decoration.LeashFenceKnotEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.vehicle.ContainerEntity;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,7 +61,7 @@ import org.joml.Vector3f;
 
 import java.util.Optional;
 
-public class PignataEntity extends Entity implements Leashable {
+public class PignataEntity extends Entity implements Leashable, ContainerEntity {
 
     private static final EntityDataAccessor<Optional<BlockPos>> DATA_HOOK_POS = SynchedEntityData.defineId(PignataEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     private static final EntityDataAccessor<Float> DATA_LEASH_LENGTH = SynchedEntityData.defineId(PignataEntity.class, EntityDataSerializers.FLOAT);
@@ -117,11 +119,7 @@ public class PignataEntity extends Entity implements Leashable {
             this.entityData.set(DATA_LEASH_LENGTH, tag.getFloat("LeashLength"));
         }
         this.damage = tag.getFloat("Damage");
-        ContainerHelper.loadAllItems(tag, contents, registryAccess());
-        if (tag.contains("LootTable", Tag.TAG_STRING)) {
-            this.lootTable = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.parse(tag.getString("LootTable")));
-            this.lootTableSeed = tag.getLong("LootTableSeed");
-        }
+        readChestVehicleSaveData(tag, registryAccess());
         this.leashData = readLeashData(tag);
     }
 
@@ -131,11 +129,7 @@ public class PignataEntity extends Entity implements Leashable {
         if (hookPos != null) tag.put("Hook", NbtUtils.writeBlockPos(hookPos));
         tag.putFloat("LeashLength", getLeashLength());
         tag.putFloat("Damage", damage);
-        ContainerHelper.saveAllItems(tag, contents, registryAccess());
-        if (lootTable != null) {
-            tag.putString("LootTable", lootTable.location().toString());
-            tag.putLong("LootTableSeed", lootTableSeed);
-        }
+        addChestVehicleSaveData(tag, registryAccess());
         writeLeashData(tag, leashData);
     }
 
@@ -164,7 +158,7 @@ public class PignataEntity extends Entity implements Leashable {
     }
 
     private Vec3 getHookPoint() {
-        return this.position().add(0, this.getBbHeight(), 0);
+        return this.position().add(getLeashOffset(1));
     }
 
     public void hookTo(BlockPos pos) {
@@ -386,20 +380,29 @@ public class PignataEntity extends Entity implements Leashable {
     public void burst(@Nullable Entity cause) {
         if (!(level() instanceof ServerLevel serverLevel)) return;
         level().broadcastEntityEvent(this, BURST_EVENT);
+        if (serverLevel.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+            spillEverything(serverLevel, cause);
+        }
+        this.gameEvent(GameEvent.ENTITY_DIE, cause);
+        this.destroy();
+    }
+
+    private void spillEverything(ServerLevel serverLevel, @Nullable Entity cause) {
         Vec3 center = this.position().add(0, getBbHeight() / 2, 0);
         for (ItemStack stack : contents) {
             if (!stack.isEmpty()) spill(stack, center);
         }
-        if (lootTable != null) {
-            LootTable table = serverLevel.getServer().reloadableRegistries().getLootTable(lootTable);
-            LootParams params = new LootParams.Builder(serverLevel)
-                    .withParameter(LootContextParams.ORIGIN, center)
-                    .withOptionalParameter(LootContextParams.THIS_ENTITY, cause)
-                    .create(LootContextParamSets.CHEST);
-            table.getRandomItems(params, lootTableSeed, stack -> spill(stack, center));
+        if (lootTable == null) return;
+        LootTable table = serverLevel.getServer().reloadableRegistries().getLootTable(lootTable);
+        LootParams.Builder params = new LootParams.Builder(serverLevel)
+                .withParameter(LootContextParams.ORIGIN, center)
+                .withOptionalParameter(LootContextParams.THIS_ENTITY, cause);
+        if (cause instanceof ServerPlayer player) {
+            params.withLuck(player.getLuck());
+            CriteriaTriggers.GENERATE_LOOT.trigger(player, lootTable);
         }
-        this.gameEvent(GameEvent.ENTITY_DIE, cause);
-        this.destroy();
+        //not unpacked into the slots first, a big table doesnt fit in 9
+        table.getRandomItems(params.create(LootContextParamSets.CHEST), lootTableSeed, stack -> spill(stack, center));
     }
 
     private void spill(ItemStack stack, Vec3 center) {
@@ -426,27 +429,19 @@ public class PignataEntity extends Entity implements Leashable {
         if (leashResult != InteractionResult.PASS) return leashResult;
 
         ItemStack held = player.getItemInHand(hand);
-        if (held.isEmpty()) {
-            if (!player.isSecondaryUseActive()) return InteractionResult.PASS;
-            if (!level().isClientSide) {
-                ItemStack item = toItemStack();
-                if (!player.getInventory().add(item)) this.spawnAtLocation(item);
-                this.playSound(SoundEvents.ITEM_PICKUP, 0.5f, 1);
-                destroy();
-            }
-            return InteractionResult.sidedSuccess(level().isClientSide);
-        }
+
         if (!held.getItem().canFitInsideContainerItems()) return InteractionResult.PASS;
         if (!level().isClientSide) {
+            unpackChestVehicleLootTable(player);
             ItemStack toStuff = player.hasInfiniteMaterials() ? held.copy() : held;
-            if (!stuff(toStuff)) return InteractionResult.FAIL;
+            if (!stuffItemInside(toStuff)) return InteractionResult.FAIL;
             this.playSound(SoundEvents.BUNDLE_INSERT, 1, 0.8f + random.nextFloat() * 0.4f);
             wobble(new Vec3(random.nextGaussian() * 0.05, 0, random.nextGaussian() * 0.05), false);
         }
         return InteractionResult.sidedSuccess(level().isClientSide);
     }
 
-    private boolean stuff(ItemStack stack) {
+    private boolean stuffItemInside(ItemStack stack) {
         int countBefore = stack.getCount();
         for (int i = 0; i < contents.size() && !stack.isEmpty(); i++) {
             ItemStack slot = contents.get(i);
@@ -461,19 +456,91 @@ public class PignataEntity extends Entity implements Leashable {
         return stack.getCount() != countBefore;
     }
 
-    public void setContents(ItemContainerContents itemContents) {
-        itemContents.copyInto(contents);
+    @Override
+    public NonNullList<ItemStack> getItemStacks() {
+        return contents;
     }
 
-    public ItemStack toItemStack() {
-        ItemStack stack = new ItemStack(ModRegistry.PIGNATA.get());
-        if (contents.stream().anyMatch(s -> !s.isEmpty())) {
-            stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(contents));
-        }
-        if (this.hasCustomName()) {
-            stack.set(DataComponents.CUSTOM_NAME, this.getCustomName());
-        }
-        return stack;
+    @Override
+    public void clearItemStacks() {
+        contents.clear();
+    }
+
+    @Nullable
+    @Override
+    public ResourceKey<LootTable> getLootTable() {
+        return lootTable;
+    }
+
+    @Override
+    public void setLootTable(@Nullable ResourceKey<LootTable> lootTable) {
+        this.lootTable = lootTable;
+    }
+
+    @Override
+    public long getLootTableSeed() {
+        return lootTableSeed;
+    }
+
+    @Override
+    public void setLootTableSeed(long lootTableSeed) {
+        this.lootTableSeed = lootTableSeed;
+    }
+
+    @Override
+    public int getContainerSize() {
+        return contents.size();
+    }
+
+    @Override
+    public ItemStack getItem(int slot) {
+        return getChestVehicleItem(slot);
+    }
+
+    @Override
+    public ItemStack removeItem(int slot, int amount) {
+        return removeChestVehicleItem(slot, amount);
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int slot) {
+        return removeChestVehicleItemNoUpdate(slot);
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        setChestVehicleItem(slot, stack);
+    }
+
+    @Override
+    public SlotAccess getSlot(int slot) {
+        return getChestVehicleSlot(slot);
+    }
+
+    //hoppers can fill it but not empty it
+    @Override
+    public boolean canTakeItem(Container target, int slot, ItemStack stack) {
+        return false;
+    }
+
+    @Override
+    public void setChanged() {
+    }
+
+    @Override
+    public boolean stillValid(Player player) {
+        return isChestVehicleStillValid(player);
+    }
+
+    @Override
+    public void clearContent() {
+        clearChestVehicleContent();
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
+        return null;
     }
 
     @Override
@@ -488,7 +555,13 @@ public class PignataEntity extends Entity implements Leashable {
 
     @Override
     public boolean canBeCollidedWith() {
-        return true;
+        //solid ones never overlap the player so they would never get pushed
+        return !isPushable();
+    }
+
+    @Override
+    public boolean isPushable() {
+        return isLeashed() && !isHooked();
     }
 
     @Override
@@ -610,7 +683,7 @@ public class PignataEntity extends Entity implements Leashable {
                     center.x + random.nextGaussian() * 0.2, center.y + random.nextGaussian() * 0.2, center.z + random.nextGaussian() * 0.2,
                     push.x * 0.5 + random.nextGaussian() * 0.05, 0.05 + random.nextFloat() * 0.1, push.z * 0.5 + random.nextGaussian() * 0.05);
         }
-        spawnBreakParticles(12, new Vec3(push.x * 0.3, 0.1, push.z * 0.3), 0);
+        spawnBreakParticles(20, new Vec3(push.x * 0.3, 0.1, push.z * 0.3), 0);
     }
 
     private void spawnBreakParticles(int count, Vec3 dir, double speed) {

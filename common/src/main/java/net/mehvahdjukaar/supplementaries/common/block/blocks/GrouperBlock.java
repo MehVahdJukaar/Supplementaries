@@ -45,7 +45,7 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
     public static final BooleanProperty OPEN_SIDES = ModBlockProperties.OPEN_SIDES;
     private static final MapCodec<GrouperBlock> CODEC = simpleCodec(GrouperBlock::new);
     private static final int MAX_ENTITIES_PER_SIDE = 16;
-    private static final int ENTITY_SCAN_RATE = 8; //hopper rate
+    private static final int ENTITY_SCAN_RATE = 8; //same as hopper rate
 
     public GrouperBlock(Properties properties) {
         super(properties);
