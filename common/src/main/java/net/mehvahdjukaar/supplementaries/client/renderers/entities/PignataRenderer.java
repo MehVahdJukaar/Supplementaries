@@ -70,6 +70,10 @@ public class PignataRenderer extends EntityRenderer<PignataEntity> {
         poseStack.translate(0, -pivotY, 0);
 
         poseStack.mulPose(Axis.YP.rotationDegrees(-entityYaw));
+        float centerY = entity.getBbHeight() / 2;
+        poseStack.translate(0, centerY, 0);
+        poseStack.scale(0.998f, 0.998f, 0.998f);
+        poseStack.translate(0, -centerY, 0);
         renderModel(model, poseStack, buffer, light, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
     }

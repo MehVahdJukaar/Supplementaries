@@ -461,8 +461,10 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     private Vec3 getRiderLaunchVelocity() {
+        //half a tick of gravity back, players move before it gets applied
         return new Vec3(this.getGlobalFacing(1))
-                .scale(this.getFirePower() * BallisticData.PLAYER.initialSpeed());
+                .scale(this.getFirePower() * BallisticData.PLAYER.initialSpeed())
+                .subtract(0, 0.5 * BallisticData.PLAYER.gravity(), 0);
     }
 
     public static void launchPlayer(Player player, Vec3 velocity) {

@@ -700,7 +700,7 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
                     .normalize().scale(0.15 + random.nextFloat() * 0.25);
             level().addParticle(randomConfetti(), center.x, center.y, center.z, speed.x, speed.y, speed.z);
         }
-        spawnBreakParticles(40, Vec3.ZERO, 0.15);
+        spawnBreakParticles(50, Vec3.ZERO, 0.15);
         level().playLocalSound(getX(), getY(), getZ(), ModSounds.PIGNATA_BURST.get(), SoundSource.NEUTRAL,
                 1, 0.9f + random.nextFloat() * 0.2f, false);
     }
@@ -712,7 +712,7 @@ public class PignataEntity extends Entity implements Leashable, ContainerEntity 
                     center.x + random.nextGaussian() * 0.2, center.y + random.nextGaussian() * 0.2, center.z + random.nextGaussian() * 0.2,
                     push.x * 0.5 + random.nextGaussian() * 0.05, 0.05 + random.nextFloat() * 0.1, push.z * 0.5 + random.nextGaussian() * 0.05);
         }
-        spawnBreakParticles(20, new Vec3(push.x * 0.3, 0.1, push.z * 0.3), 0);
+        spawnBreakParticles(12, new Vec3(push.x * 0.3, 0.1, push.z * 0.3), 0);
     }
 
     private void spawnBreakParticles(int count, Vec3 dir, double speed) {

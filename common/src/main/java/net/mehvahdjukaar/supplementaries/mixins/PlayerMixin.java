@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
+import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
 import net.mehvahdjukaar.supplementaries.common.entities.ICannonRider;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
@@ -19,6 +20,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+
+//i already know so many mods will break this cannon stuff
 @Mixin(Player.class)
 public class PlayerMixin implements IQuiverEntity, ICannonRider {
 
@@ -62,6 +65,14 @@ public class PlayerMixin implements IQuiverEntity, ICannonRider {
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 suppl$dontSteerMidFlight(Vec3 travelVector) {
         return supplementaries$cannonFlightTicks > 0 ? Vec3.ZERO : travelVector;
+    }
+
+    @Inject(method = "travel", at = @At("HEAD"))
+    private void suppl$dragMidFlight(Vec3 travelVector, CallbackInfo ci) {
+        if (supplementaries$cannonFlightTicks > 0) {
+            Player player = (Player) (Object) this;
+            player.setDeltaMovement(player.getDeltaMovement().scale(BallisticData.PLAYER.drag()));
+        }
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
