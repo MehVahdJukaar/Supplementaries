@@ -157,6 +157,7 @@ public final class ModConstants {
     public static final String BARNACLES_NAME = "barnacles";
     public static final String PIRATE_DISC_NAME = "music_disc_heave_ho";
     public static final String PIGNATA_NAME = "pignata";
+    public static final String PIGNATA_ANCHOR_NAME = "pignata_anchor";
 
     public static String cannonBoatBaseName(WoodType wood) {
         return wood.isBambooLike() ? CANNON_RAFT_NAME : CANNON_BOAT_NAME;

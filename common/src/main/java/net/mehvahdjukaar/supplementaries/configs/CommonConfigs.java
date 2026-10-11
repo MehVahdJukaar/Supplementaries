@@ -370,6 +370,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> BLACKBOARD_ENABLED;
         public static final Supplier<Boolean> BLACKBOARD_COLOR;
         public static final Supplier<BlackboardBlock.UseMode> BLACKBOARD_MODE;
+        public static final Supplier<Boolean> BLACKBOARD_CONNECTED_GUI;
         public static final Supplier<Boolean> GOLD_BARS_ENABLED;
         public static final Supplier<Boolean> IRON_GATE_ENABLED;
         public static final Supplier<Boolean> DOUBLE_IRON_GATE;
@@ -444,6 +445,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> CANDLE_HOLDER_ENABLED;
         public static final Supplier<Boolean> FIRE_PIT_ENABLED;
         public static final Supplier<Boolean> WICKER_FENCE_ENABLED;
+        public static final Supplier<Boolean> PIGNATA_ENABLED;
         public static final Supplier<Boolean> AWNING_ENABLED;
         public static final Supplier<Boolean> AWNING_SLANT;
         public static final Supplier<Boolean> AWNING_FALL_THROUGH;
@@ -470,6 +472,8 @@ public class CommonConfigs {
                     .define("colored_blackboard", PlatHelper.isModLoaded("chalk"));
             BLACKBOARD_MODE = builder.comment("Interaction mode for blackboards")
                     .define("interaction_mode", BlackboardBlock.UseMode.BOTH);
+            BLACKBOARD_CONNECTED_GUI = builder.comment("Opening a blackboard gui also shows up to a 3x3 of connected blackboards so you can draw on all of them at once")
+                    .define("connected_gui", true);
             builder.pop();
 
 
@@ -657,6 +661,7 @@ public class CommonConfigs {
             CANDLE_HOLDER_ENABLED = builder.feature(ModConstants.CANDLE_HOLDER_NAME);
             FIRE_PIT_ENABLED = builder.feature(ModConstants.FIRE_PIT_NAME);
             WICKER_FENCE_ENABLED = builder.feature(ModConstants.WICKER_FENCE_NAME);
+            PIGNATA_ENABLED = builder.feature(ModConstants.PIGNATA_NAME);
             //   SPEEDOMETER_ENABLED = builder.feature(ModConstants.SPEEDOMETER_NAME,ModConstants.SPEEDOMETER_NAME, false);
 
             builder.pop();

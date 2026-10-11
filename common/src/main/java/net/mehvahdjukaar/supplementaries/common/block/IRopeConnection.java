@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.block;
 
+import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingSlidyBlock;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
@@ -8,6 +9,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.FaceAttachedHorizontalDirectionalBlock;
+import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -30,9 +32,11 @@ public interface IRopeConnection {
     }
 
     static boolean isSupportingCeiling(BlockState upState, BlockPos pos, LevelReader world) {
-        if (upState.getBlock() instanceof IRopeConnection ropeConnection) {
+        Block block = upState.getBlock();
+        if (block instanceof IRopeConnection ropeConnection) {
             return ropeConnection.canSideAcceptConnection(upState, Direction.DOWN);
         }
+        if (block instanceof MovingPistonBlock) return true;
         return (Block.canSupportCenter(world, pos, Direction.DOWN) && upState.isSolid()) || upState.is(ModTags.ROPE_SUPPORT_TAG);
     }
 

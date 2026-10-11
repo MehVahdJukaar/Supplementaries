@@ -60,6 +60,8 @@ public class ModSounds {
     public static final Supplier<SoundEvent> CANNON_FIRE = regSound("block.cannon.fire");
     public static final Supplier<SoundEvent> CANNON_IGNITE = regSound("block.cannon.ignite");
     public static final Supplier<SoundEvent> CONFETTI_POPPER = regSound("item.confetti_popper");
+    public static final Supplier<SoundEvent> PIGNATA_BURST = regSound("entity.pignata.burst");
+    public static final Supplier<SoundEvent> PIGNATA_HIT = regSound("entity.pignata.hit");
     public static final Supplier<SoundEvent> SLIDY_BLOCK_PLACE = regSound("block.slidy_block.place");
     public static final Supplier<SoundEvent> SLIDY_BLOCK_BREAK = regSound("block.slidy_block.break");
     public static final Supplier<SoundEvent> SLIDY_BLOCK_HIt = regSound("block.slidy_block.hit");

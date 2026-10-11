@@ -34,8 +34,6 @@ public class CompatHandler {
     public static final boolean CONFIGURED = isLoaded("configured");
     public static final boolean SOUL_FIRED = isLoaded("soul_fire_d") && false;
     public static final boolean OREGANIZED = isLoaded("oreganized");
-    // Create has no Fabric build for this Minecraft version (latest Create Fabric release is 1.20.1), so the
-    // integration is disabled there even if a stale Create jar happens to be present.
     public static final boolean CREATE = isLoaded("create") && !PlatHelper.getPlatform().isFabric();
     public static final boolean TORCHSLAB = isLoaded("torchslabmod");
     public static final boolean CURIOS = isLoaded("curios") || isClassPresent("top.theillusivec4.curios.api.CuriosApi");
@@ -79,9 +77,9 @@ public class CompatHandler {
     public static final boolean YACL = isLoaded("yet_another_config_lib_v3");
     public static final boolean FLAN = isLoaded("flan");
     public static final boolean BREEZY = isLoaded("breezy");
-    public static final boolean POLYTONE = isLoaded("polytone");
     public static final boolean WILDER_WILD = isLoaded("wilder-wild");
     public static final boolean SHIMMER = isLoaded("shimmer");
+    public static final boolean POLYTONE = isLoaded("polytone");
     public static final boolean BUMBLEZONE = isLoaded("the_bumblezone");
     public static final boolean CAVE_ENHANCEMENTS = isLoaded("cave_enhancements");
     public static final boolean CUSTOM_PLAYER_MODELS = isLoaded("cpm");
@@ -140,8 +138,6 @@ public class CompatHandler {
         //if (inspirations) CauldronRecipes.registerStuff();
     }
 
-    // Create only ships on NeoForge for this Minecraft version, so the actual CreateCompat calls live in the
-    // platform CompatHandlerImpl: NeoForge routes to CreateCompat, Fabric is a no-op. Keeps common Create-agnostic.
     @PlatformImpl
     public static void setupPlat() {
         throw new AssertionError();

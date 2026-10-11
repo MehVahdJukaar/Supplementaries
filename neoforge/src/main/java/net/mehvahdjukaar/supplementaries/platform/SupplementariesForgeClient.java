@@ -1,7 +1,7 @@
 package net.mehvahdjukaar.supplementaries.platform;
 
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonManeuverHud;
 import net.mehvahdjukaar.supplementaries.client.hud.SlimedOverlayHud;
 import net.mehvahdjukaar.supplementaries.client.hud.platform.SelectableContainerItemHudImpl;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.models.EndermanSkullModel;
@@ -51,7 +51,7 @@ public class SupplementariesForgeClient {
                 SelectableContainerItemHudImpl.getInstance());
 
         event.registerAbove(VanillaGuiLayers.EXPERIENCE_BAR, Supplementaries.res("cannon_charge"),
-                CannonChargeHud.INSTANCE);
+                CannonManeuverHud.INSTANCE);
 
         event.registerBelow(VanillaGuiLayers.CAMERA_OVERLAYS, Supplementaries.res("slimed"),
                 SlimedOverlayHud.INSTANCE);

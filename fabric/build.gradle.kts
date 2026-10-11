@@ -25,7 +25,7 @@ dependencies {
 
     modImplementation("net.mehvahdjukaar:moonlight-fabric:${moonlight_version}")
     modRuntimeOnly("net.mehvahdjukaar:codecui-fabric:${codecui_version}")
-    modImplementation("net.mehvahdjukaar:polytone-fabric:${polytone_version}")
+    modCompileOnly("net.mehvahdjukaar:polytone-fabric:${polytone_version}")
 
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
     implementation("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${mixin_squared_version}")
@@ -58,7 +58,7 @@ dependencies {
     modCompileOnly("curse.maven:goated-805646:5935888")
     //modImplementation("curse.maven:inmis-369254:6952335")
     modCompileOnly("maven.modrinth:sodium:mc1.21.1-0.8.13-fabric")
-    modRuntimeOnly("maven.modrinth:sodium:mc1.21.1-0.6.13-fabric")
+//    modRuntimeOnly("maven.modrinth:sodium:mc1.21.1-0.6.13-fabric")
     //modImplementation("curse.maven:resourceful-lib-570073:5793501") //v2.1.29 | Chipped, Handcrafted, Cozy
     //modImplementation("curse.maven:midnightlib-488090:5687799")
 
@@ -92,8 +92,6 @@ dependencies {
 
     modCompileOnly("curse.maven:immediatelyfast-686911:6285506")
     //modImplementation("curse.maven:spectrum-556967:5080474")
-    // Create integration disabled on Fabric: Create Fabric has no build for this Minecraft version
-    // (latest release is for 1.20.1). See CompatHandler.CREATE.
     //modCompileOnly("curse.maven:create-fabric-624165:7286603")
     //modCompileOnly("io.github.fabricators_of_create.Porting-Lib:entity:2.3.15+1.20.1")
 

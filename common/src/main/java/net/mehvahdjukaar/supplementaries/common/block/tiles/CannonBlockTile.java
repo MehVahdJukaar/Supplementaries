@@ -67,7 +67,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     public static final double BARREL_LENGTH = 6.501 / 16;
     private static final double BARREL_HEIGHT = 1 / 16f;
     private static final double SEAT_DISTASNCE_SLACK = 0.05;
-    private static final int MAX_FLIGHT_TICKS = 300;
+    private static final int MAX_FLIGHT_TICKS = 300; //TODO: remove
     private final OrientationRig orientation = new OrientationRig();
     @Nullable
     public Object ccPeripheral = null;
@@ -790,7 +790,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return referenceFrame instanceof WorldReferenceFrame;
     }
 
-    // needed to persist aim into create contraptions
+    //needed to persist aim into create contraptions
     public static CompoundTag saveAimInNBT(CompoundTag base, BlockState state, Quaternionf localRot, byte firePower) {
         Quaternionf additional = Axis.YP.rotationDegrees(-state.getValue(CannonBlock.ROTATE_TILE).ordinal() * 90);
         Quaternionf rig = localRot.mul(additional.invert(new Quaternionf()), new Quaternionf());

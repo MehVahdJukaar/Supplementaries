@@ -36,6 +36,14 @@ public class FlagItemRenderer extends ItemStackRenderer {
             DyeColor color = ((FlagItem) stack.getItem()).getColor();
 
             matrixStackIn.translate(-0.71875, 0, 0);
+            boolean heldByEntity = transformType == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND || transformType == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
+            if (heldByEntity) {
+                matrixStackIn.translate(0.5, 0, 0.5);
+                matrixStackIn.scale(2, 2, 2);
+                matrixStackIn.translate(-0.5, -0.4, -0.5);
+                Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+                matrixStackIn.translate(0, 1, 0);
+            }
             Minecraft.getInstance().getBlockRenderer().renderSingleBlock(state, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
             matrixStackIn.translate(0.5 + 0.0625, 0, 0.5);
             matrixStackIn.mulPose(RotHlpr.Y90);

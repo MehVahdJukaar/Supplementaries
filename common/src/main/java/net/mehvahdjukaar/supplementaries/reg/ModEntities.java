@@ -27,6 +27,12 @@ public class ModEntities {
     //hat stand
     public static final Supplier<EntityType<HatStandEntity>> HAT_STAND = regEntity(HAT_STAND_NAME,
             HatStandEntity::new, MobCategory.MISC, 10 / 16f, 0.75f, 10, false, 3);
+    //pignata
+    public static final Supplier<EntityType<PignataEntity>> PIGNATA = regEntity(PIGNATA_NAME, () ->
+            EntityType.Builder.of(PignataEntity::new, MobCategory.MISC)
+                    .sized(0.75F, 1F)
+                    .clientTrackingRange(10)
+                    .updateInterval(2));
     //red trader
     public static final Supplier<EntityType<RedMerchantEntity>> RED_MERCHANT = regEntity(RED_MERCHANT_NAME,
             RedMerchantEntity::new, MobCategory.CREATURE, 0.6F, 1.95F, 10, true, 3);

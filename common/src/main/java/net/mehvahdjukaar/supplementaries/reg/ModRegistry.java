@@ -722,14 +722,20 @@ public class ModRegistry {
                     WindVaneBlockTile::new, WIND_VANE.get()));
 
     //pignata
-    public static final Supplier<Block> PIGNATA = regWithItem(PIGNATA_NAME, () -> new PignataBlock(
-            BlockBehaviour.Properties.ofFullCopy(Blocks.DECORATED_POT)
-                    .noOcclusion()
-    ));
+    public static final Supplier<Item> PIGNATA = regItem(PIGNATA_NAME, () -> new PignataItem(
+            new Item.Properties().stacksTo(16)));
 
-    public static final Supplier<BlockEntityType<PignataBlockTile>> PIGNATA_TILE = regTile(
-            PIGNATA_NAME, () -> PlatHelper.newBlockEntityType(
-                    PignataBlockTile::new, PIGNATA.get()));
+    public static final Supplier<Block> PIGNATA_ANCHOR = regBlock(PIGNATA_ANCHOR_NAME, () -> new PignataAnchorBlock(
+            BlockBehaviour.Properties.of()
+                    .noCollission()
+                    .noOcclusion()
+                    .instabreak()
+                    .randomTicks()
+                    .forceSolidOn()
+                    .noLootTable()
+                    .pushReaction(PushReaction.NORMAL)
+                    .sound(SoundType.WOOL)
+    ));
 
     //faucet
     public static final Supplier<Block> FAUCET = regWithItem(FAUCET_NAME, () -> new FaucetBlock(

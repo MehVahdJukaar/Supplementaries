@@ -44,7 +44,14 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
 
     private static final Map<ResourceKey<Level>, Pair<TextureAtlasSprite, Int2ObjectMap<BakedModel>>> MODEL_CACHE = new HashMap<>();
 
+    private static BakedModel lastTemplate = null;
+
     public static Map<ResourceKey<Level>, Pair<TextureAtlasSprite, Int2ObjectMap<BakedModel>>> getModelCache() {
+        BakedModel template = ClientHelper.getModel(Minecraft.getInstance().getModelManager(), ClientRegistry.ALTIMETER_TEMPLATE);
+        if (template != lastTemplate) {
+            MODEL_CACHE.clear();
+            lastTemplate = template;
+        }
         if (MODEL_CACHE.isEmpty()) {
             List<ResourceLocation> resourceLocations = new ArrayList<>(ClientConfigs.Items.DEPTH_METER_DIMENSIONS.get());
             resourceLocations.add(Level.OVERWORLD.location());
@@ -59,10 +66,6 @@ public class AltimeterItemRenderer extends ItemStackRenderer {
             }
         }
         return MODEL_CACHE;
-    }
-
-    public static void onReload() {
-        MODEL_CACHE.clear();
     }
 
     private static double calculateDepthIndex(@Nullable ClientLevel level, int textureH) {

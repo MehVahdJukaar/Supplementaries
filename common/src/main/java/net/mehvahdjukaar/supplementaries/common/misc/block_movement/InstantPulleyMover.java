@@ -4,6 +4,8 @@ import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeBlock;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.PulleyBlock;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PulleyBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.PignataEntity;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -116,6 +118,9 @@ public class InstantPulleyMover {
         }
         //populate any block-entity data for cauldron-like blocks moved into a fluid
         MovedFluidFiller.applyPostPlacement(level, targetPos, targetFluid);
+        if (originalState.is(ModRegistry.PIGNATA_ANCHOR.get())) {
+            PignataEntity.onAnchorMoved(level, originPos, targetPos);
+        }
 
         return true;
     }

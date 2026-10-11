@@ -59,7 +59,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
         Quaternionf cannonHeadRot = tile.getLocalOrientation(partialTick);
 
         // Debug (world space)
-        if (PlatHelper.isDev()) {
+        if (PlatHelper.isDev() && false) {
             poseStack.pushPose();
             poseStack.translate(0, 0.02, 0);
             renderDebug(poseStack, bufferSource, cannonHeadRot, 0xff00ffff);
@@ -75,7 +75,7 @@ public class CannonBlockTileRenderer implements BlockEntityRenderer<CannonBlockT
                 .mul(cannonHeadRot);
 
         // Debug (should overlap with world debug)
-        if (PlatHelper.isDev()) {
+        if (PlatHelper.isDev() && false) {
             renderDebug(poseStack, bufferSource, localRot, 0xffff00ff);
         }
 

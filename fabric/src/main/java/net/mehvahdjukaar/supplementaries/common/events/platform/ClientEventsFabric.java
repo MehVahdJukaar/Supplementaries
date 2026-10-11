@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
-import net.mehvahdjukaar.supplementaries.client.cannon.CannonChargeHud;
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonManeuverHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.client.hud.SlimedOverlayHud;
@@ -52,7 +52,7 @@ public class ClientEventsFabric {
     private static void onRenderHud(GuiGraphics graphics, DeltaTracker partialTicks) {
         SelectableContainerItemHud.getInstance().render(graphics, partialTicks);
         SlimedOverlayHud.INSTANCE.render(graphics, partialTicks);
-        CannonChargeHud.INSTANCE.render(graphics, partialTicks);
+        CannonManeuverHud.INSTANCE.render(graphics, partialTicks);
         //equivalent of forge event to check beybind. more efficent like this on forge
         Minecraft mc = Minecraft.getInstance();
         if (!ClientRegistry.QUIVER_KEYBIND.isUnbound() && mc.player instanceof IQuiverPlayer qe) {

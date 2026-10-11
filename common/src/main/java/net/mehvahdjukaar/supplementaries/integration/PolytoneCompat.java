@@ -17,8 +17,6 @@ public class PolytoneCompat {
 
     public static void setupClient() {
         VoxelVolumeApi.registerCallback(VoxelVolumeApi.Activation.ONLY_WITH_COLORED_LIGHT_PACKS, event -> {
-            event.addBlockLight(ModFluids.LUMISENE_BLOCK.get(),
-                    blockState -> new ResolvedPointLight(0xfff9bfff, blockState.getLightEmission()));
             event.addBlockEntityCallback(ModRegistry.JAR_TILE.get(), (tile, cell) -> colorFromFluid(tile, JarBlockTile::getSoftFluidTank, cell));
             event.addBlockEntityCallback(ModRegistry.GOBLET_TILE.get(), (tile, cell) -> colorFromFluid(tile, GobletBlockTile::getSoftFluidTank, cell));
             event.addBlockEntityCallback(ModRegistry.FAUCET_TILE.get(), (tile, cell) -> colorFromFluid(tile, t -> t.tempFluidHolder, cell));

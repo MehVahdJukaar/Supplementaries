@@ -3,18 +3,25 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.block.IColored;
 import net.mehvahdjukaar.moonlight.api.client.LoomItemRenderer;
 import net.mehvahdjukaar.moonlight.api.item.ILoomItem;
+import net.mehvahdjukaar.moonlight.api.item.IThirdPersonAnimationProvider;
 import net.mehvahdjukaar.supplementaries.client.renderers.FlagLoomRenderer;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.FlagBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.AnimationUtils;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
 import java.util.function.Supplier;
 
-public class FlagItem extends BlockItem implements IColored, ILoomItem {
+public class FlagItem extends BlockItem implements IColored, ILoomItem, IThirdPersonAnimationProvider {
 
     public FlagItem(Block block, Properties properties) {
         super(block, properties);
@@ -44,5 +51,25 @@ public class FlagItem extends BlockItem implements IColored, ILoomItem {
     @Override
     public Supplier<LoomItemRenderer> getLoomRenderer() {
         return () -> FlagLoomRenderer.INSTANCE;
+    }
+
+    @Override
+    public <T extends LivingEntity> boolean poseRightArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand) {
+        holdPoleUp(model.rightArm, entity, 1);
+        return true;
+    }
+
+    @Override
+    public <T extends LivingEntity> boolean poseLeftArm(ItemStack stack, HumanoidModel<T> model, T entity, HumanoidArm mainHand) {
+        holdPoleUp(model.leftArm, entity, -1);
+        return true;
+    }
+
+    private static void holdPoleUp(ModelPart arm, LivingEntity entity, int dir) {
+        arm.xRot = -1.3F;
+        arm.yRot = 0;
+        //unbobs
+        float partialTicks = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+        AnimationUtils.bobModelPart(arm, entity.tickCount + partialTicks, -dir);
     }
 }

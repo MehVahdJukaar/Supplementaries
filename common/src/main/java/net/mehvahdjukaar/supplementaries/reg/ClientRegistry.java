@@ -388,6 +388,7 @@ public class ClientRegistry {
         event.register(ModEntities.DISPENSER_MINECART.get(), c -> new MinecartRenderer<>(c, ModelLayers.HOPPER_MINECART));
         event.register(ModEntities.RED_MERCHANT.get(), RedMerchantRenderer::new);
         event.register(ModEntities.HAT_STAND.get(), HatStandRenderer::new);
+        event.register(ModEntities.PIGNATA.get(), PignataRenderer::new);
         event.register(ModEntities.ROPE_ARROW.get(), RopeArrowRenderer::new);
         event.register(ModEntities.FALLING_URN.get(), FallingBlockRenderer::new);
         event.register(ModEntities.FALLING_ASH.get(), FallingBlockRendererGeneric::new);
@@ -443,7 +444,6 @@ public class ClientRegistry {
         event.register(ModRegistry.BUNTING_TILE.get(), BuntingBlockTileRenderer::new);
         event.register(ModRegistry.MOVING_SLIDY_BLOCK_TILE.get(), SlidyBlockRenderer::new);
         event.register(ModRegistry.MOVING_PULLEY_BLOCK_TILE.get(), MovingPulleyRenderer::new);
-        event.register(ModRegistry.PIGNATA_TILE.get(), PignataBlockTileRenderer::new);
     }
 
     @EventCalled
@@ -460,7 +460,6 @@ public class ClientRegistry {
         event.register(ModRegistry.JAR_ITEM.get(), new JarItemRenderer());
         event.register(ModRegistry.BLACKBOARD_ITEM.get(), new BlackboardItemRenderer());
         event.register(ModRegistry.BUBBLE_BLOCK_ITEM.get(), new BubbleBlockItemRenderer());
-        event.register(ModRegistry.PIGNATA.get().asItem(), new TileDelegateItemRenderer(ModRegistry.PIGNATA_TILE, ModRegistry.PIGNATA));
         event.register(ModRegistry.LUNCH_BASKET_ITEM.get(), new LunchBoxItemRenderer());
         var renderer = new FlagItemRenderer();
         for (var f : ModRegistry.FLAGS.values()) {
@@ -560,7 +559,7 @@ public class ClientRegistry {
         event.register(CANNON_MODEL, CannonBlockTileRenderer::createMesh);
         event.register(WIND_VANE_MODEL, WindVaneBlockTileRenderer::createMesh);
         event.register(BUNTING_MODEL, BuntingBlockTileRenderer::createMesh);
-        event.register(PIGNATA_MODEL, PignataBlockTileRenderer::createMesh);
+        event.register(PIGNATA_MODEL, PignataRenderer::createMesh);
         event.register(ROPE_LEASH_KNOT_MODEL, ClientRegistry::createRopeLeashKnot);
         event.register(SMALL_ROPE_LEASH_KNOT_MODEL, ClientRegistry::createSmallRopeLeashKnot);
     }

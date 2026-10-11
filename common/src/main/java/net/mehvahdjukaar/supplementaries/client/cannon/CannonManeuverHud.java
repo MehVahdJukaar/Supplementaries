@@ -17,12 +17,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public class CannonChargeHud implements LayeredDraw.Layer {
+public class CannonManeuverHud implements LayeredDraw.Layer {
 
-    public static final CannonChargeHud INSTANCE = new CannonChargeHud();
+    public static final CannonManeuverHud INSTANCE = new CannonManeuverHud();
     protected final Minecraft mc;
 
-    protected CannonChargeHud() {
+    protected CannonManeuverHud() {
         this.mc = Minecraft.getInstance();
     }
 
@@ -86,7 +86,7 @@ public class CannonChargeHud implements LayeredDraw.Layer {
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
         if (mc.options.hideGui) return;
 
-        if (mc.options.getCameraType().isFirstPerson() && CannonBlockTile.riddenBy(mc.player) != null) {
+        if (CannonBlockTile.riddenBy(mc.player) != null) {
             renderBarrelOverlay(graphics);
         }
 
