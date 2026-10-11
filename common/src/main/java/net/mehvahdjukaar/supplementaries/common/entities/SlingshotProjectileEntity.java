@@ -221,8 +221,10 @@ public class SlingshotProjectileEntity extends ImprovedProjectileEntity implemen
                         && level instanceof ServerLevel sl) {
                     BlockPos pos = context.getClickedPos();
                     BlockState placed = level.getBlockState(pos);
-                    TntBehavior.igniteTntHack(placed, sl, pos);
-                    level.removeBlock(pos, false);
+                    if (TntBehavior.isTNTLikeBlock(placed)) {
+                        TntBehavior.igniteTntHack(placed, sl, pos);
+                        level.removeBlock(pos, false);
+                    }
                 }
             }
             //bucket

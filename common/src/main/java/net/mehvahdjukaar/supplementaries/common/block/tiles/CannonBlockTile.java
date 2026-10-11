@@ -208,7 +208,7 @@ public class CannonBlockTile extends OpeneableContainerBlockEntity implements IO
     }
 
     private void recomputeTrajectoryData() {
-        if (level.isClientSide) return;
+        if (level == null || level.isClientSide) return;
         if (trajectoryFor != getProjectile().getItem()) {
             computeTrajectoryData();
         }

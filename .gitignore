@@ -19,3 +19,5 @@ classes/
 .vscode
 .settings
 *.launch
+/docs/
+/supplementaries.dev
