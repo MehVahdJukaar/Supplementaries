@@ -1,1 +1,3 @@
-- minor fixes
+- fixed a deadlock with cannons on structures
+- added some missig supporter globes
+- misc improtant fixes
