@@ -197,11 +197,15 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
         if (a instanceof FallingBlockEntity fa && b instanceof FallingBlockEntity fb) {
             return fa.getBlockState() == fb.getBlockState();
         }
-        if (a instanceof LivingEntity la && b instanceof LivingEntity lb && la.isBaby() != lb.isBaby()) return false;
+        if (a instanceof LivingEntity la && b instanceof LivingEntity lb && la.isBaby() != lb.isBaby()) {
+            return false;
+        }
         if (a.hasCustomName() || b.hasCustomName()) {
             return Objects.equals(a.getCustomName(), b.getCustomName());
         }
-        if (a instanceof Sheep sa && b instanceof Sheep sb) return sa.getColor() == sb.getColor();
+        if (a instanceof Sheep sa && b instanceof Sheep sb) {
+            return sa.getColor() == sb.getColor();
+        }
         if (a instanceof VillagerDataHolder va && b instanceof VillagerDataHolder vb) {
             return va.getVillagerData().getProfession() == vb.getVillagerData().getProfession();
         }
