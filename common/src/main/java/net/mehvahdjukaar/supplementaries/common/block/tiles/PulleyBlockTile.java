@@ -200,6 +200,7 @@ public class PulleyBlockTile extends ItemDisplayTile {
         boolean alreadyMovedByCooperator = cooperative && PulleyCooperationData.wasMovedThisTick(level, worldPosition, now);
         boolean inputIsDroppedNotFailed = isRopeColumnAnimating() || alreadyMovedByCooperator;
         if (inputIsDroppedNotFailed) return true;
+        if (!hasRopeOrRoomForOneStep(ropeBlock, extending)) return false;
 
         List<RopeColumn> columnsMovingTogether = new ArrayList<>();
         columnsMovingTogether.add(new RopeColumn(worldPosition, ropeBlock, ROPE_HANG_DIRECTION, extending));
@@ -228,14 +229,21 @@ public class PulleyBlockTile extends ItemDisplayTile {
     private void addCooperatingRopeColumns(List<RopeColumn> columns, Block ropeBlock, boolean extending, int animationTicks, long now) {
         for (BlockPos cooperatorPos : PulleyCooperationData.getCooperators(level, worldPosition, animationTicks, pushDirection(extending), now)) {
             if (!level.isLoaded(cooperatorPos)) continue;
-            if (level.getBlockEntity(cooperatorPos) instanceof PulleyBlockTile cooperator && cooperator.canMoveTogetherWithColumnOf(ropeBlock)) {
+            if (level.getBlockEntity(cooperatorPos) instanceof PulleyBlockTile cooperator && cooperator.canMoveTogetherWithColumnOf(ropeBlock, extending)) {
                 columns.add(new RopeColumn(cooperatorPos, ropeBlock, ROPE_HANG_DIRECTION, extending));
             }
         }
     }
 
-    private boolean canMoveTogetherWithColumnOf(Block otherRopeBlock) {
-        return !isRopeColumnAnimating() && getWoundOrHangingRopeBlock() == otherRopeBlock;
+    private boolean canMoveTogetherWithColumnOf(Block otherRopeBlock, boolean extending) {
+        return !isRopeColumnAnimating() && getWoundOrHangingRopeBlock() == otherRopeBlock
+                && hasRopeOrRoomForOneStep(otherRopeBlock, extending);
+    }
+
+    private boolean hasRopeOrRoomForOneStep(Block ropeBlock, boolean extending) {
+        ItemStack stack = getDisplayedItem();
+        if (extending) return stack.is(ropeBlock.asItem());
+        return stack.isEmpty() || (stack.is(ropeBlock.asItem()) && stack.getCount() < stack.getMaxStackSize());
     }
 
     private boolean isRopeColumnAnimating() {
