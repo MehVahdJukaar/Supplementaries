@@ -80,13 +80,13 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
         BlockPos pos = context.getClickedPos();
         BlockState state = this.defaultBlockState().setValue(FACING, facing)
                 .setValue(OPEN_SIDES, hasOpenSides(level, pos, facing));
-        GrouperMatch match = comparesEntities(state) ? GrouperMatch.NONE : findBlockMatch(level, pos, facing);
+        GrouperMatch match = canCompareEntities(state) ? GrouperMatch.NONE : findBlockMatch(level, pos, facing);
         return state.setValue(MATCH, match);
     }
 
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-        if (!oldState.is(this) && comparesEntities(state)) {
+        if (!oldState.is(this) && canCompareEntities(state)) {
             this.updateNextTick(level, pos);
         }
         if (state.getValue(MATCH) != GrouperMatch.NONE) {
@@ -124,7 +124,7 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
     @Override
     public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         Direction facing = state.getValue(FACING);
-        if (!comparesEntities(state)) {
+        if (!canCompareEntities(state)) {
             this.updateMatchState(state, level, pos);
             return;
         }
@@ -136,7 +136,7 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
 
     private void updateMatchState(BlockState state, Level level, BlockPos pos) {
         Direction facing = state.getValue(FACING);
-        if (comparesEntities(state)) {
+        if (canCompareEntities(state)) {
             this.updateNextTick(level, pos);
             return;
         }
@@ -164,7 +164,7 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
                 && isOpenSide(level.getBlockState(right), level, right, facing.getCounterClockWise());
     }
 
-    private static boolean comparesEntities(BlockState state) {
+    private static boolean canCompareEntities(BlockState state) {
         return state.getValue(OPEN_SIDES) && CommonConfigs.Redstone.GROUPER_ENTITIES.get();
     }
 
@@ -229,6 +229,7 @@ public class GrouperBlock extends HorizontalDirectionalBlock {
         }
         super.onRemove(state, level, pos, newState, isMoving);
     }
+
 
     @Override
     public boolean isSignalSource(BlockState state) {

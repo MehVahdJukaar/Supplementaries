@@ -133,6 +133,7 @@ public class QuarkCompat {
         throw new AssertionError();
     }
 
+    @Contract
     @PlatformImpl
     public static boolean isGoldBarsOn() {
         throw new AssertionError();

@@ -14,6 +14,7 @@ import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.resources.textures.*;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
+import net.mehvahdjukaar.moonlight.api.util.TextHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.BlackboardTextureManager;
@@ -52,9 +53,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                 ClientConfigs.General.DYNAMIC_ASSETS_GEN_MODE.get().toStrategy());
     }
 
-    private static TextureImage createWaySignItemTexture(ResourceManager manager,
-                                                         WoodType wood, Respriter respriter)
-            throws IOException {
+    private static TextureImage createWaySignItemTexture(ResourceManager manager, WoodType wood, Respriter respriter) throws IOException {
         Item signItem = wood.getItemOfThis("sign");
         if (signItem != null) {
             try (TextureImage vanillaSign = TextureImage.open(manager,
@@ -95,7 +94,7 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
                 String path = id.getPath();
                 path = path.replace("tags/", "").replace(".json", "");
                 String tr = path.substring(path.lastIndexOf("/") + 1);
-                jo.addProperty("supplementaries:" + path, LangBuilder.getReadableName(tr));
+                jo.addProperty("supplementaries:" + path, TextHelper.getReadableName(tr));
             }
         }
     }
@@ -446,9 +445,9 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             String key = Potion.getName(holder, "item.supplementaries.bamboo_spikes_tipped.effect.");
             String arrowName = lang.getEntry(Potion.getName(holder, "item.minecraft.tipped_arrow.effect."));
             if (arrowName == null) {
-                lang.addEntry(key, String.format(bambooSpikes, LangBuilder.getReadableName(Utils.getID(p).getPath())));
+                lang.addEntry(key, String.format(bambooSpikes, TextHelper.getReadableName(Utils.getID(p).getPath())));
             } else lang.addEntry(key, String.format(bambooSpikes,
-                    LangBuilder.getReadableName(arrowName.toLowerCase(Locale.ROOT)
+                    TextHelper.getReadableName(arrowName.toLowerCase(Locale.ROOT)
                             .replace("arrow of ", ""))));
         }
 
