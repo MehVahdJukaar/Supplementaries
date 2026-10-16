@@ -43,7 +43,6 @@ public class ModNetwork {
         event.registerServerBound(ServerBoundSetPresentPacket.CODEC);
         event.registerServerBound(ServerBoundSetTrappedPresentPacket.CODEC);
         event.registerServerBound(ServerBoundCycleSelectableContainerItemPacket.CODEC);
-        event.registerServerBound(ServerBoundRequestConfigReloadPacket.CODEC);
         event.registerServerBound(ServerBoundRequestOpenCannonGuiMessage.CODEC);
 
         event.registerBidirectional(SyncCannonPacket.CODEC);
