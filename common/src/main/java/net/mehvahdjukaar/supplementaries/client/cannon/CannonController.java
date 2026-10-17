@@ -14,8 +14,10 @@ import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -248,8 +250,12 @@ public class CannonController {
 
         if (scrollDelta != 0) {
             byte newPower = (byte) (1 + Math.floorMod((int) (cannon.getPowerLevel() - 1 + scrollDelta), CannonBlockTile.MAX_POWER_LEVEL));
-            cannon.setFirePower(newPower);
-            needsToUpdateServer = true;
+            if (newPower != cannon.getPowerLevel()) {
+                cannon.setFirePower(newPower);
+                needsToUpdateServer = true;
+                Minecraft.getInstance().getSoundManager()
+                        .play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 3));
+            }
         }
         return true;
     }

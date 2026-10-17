@@ -26,7 +26,7 @@ public class CannonRiderRenderer {
                 .getEntityRenderDispatcher().getRenderer(rider);
 
         poseStack.pushPose();
-        poseStack.translate(0, -1 / 16, 6.5f / 16f);
+        poseStack.translate(0, -2 / 16f, 6.5f / 16f);
         //cannon space has y pointing down (block base rotation), flip it back or the head renders upside down
         poseStack.mulPose(Axis.XP.rotationDegrees(180));
         poseStack.translate(0, -HEAD_PIVOT_HEIGHT, 0);

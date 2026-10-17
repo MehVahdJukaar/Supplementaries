@@ -37,10 +37,11 @@ public class CannonTrajectoryRenderer {
                               int packedLight, int packedOverlay, float partialTicks) {
         if (cannon != tile) return;
         if (hit == null || trajectory == null || !showsTrajectory) return;
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.options.hideGui) return;
 
         boolean rendersRed = !tile.readyToFire();
 
-        Minecraft mc = Minecraft.getInstance();
         boolean debug = PlatHelper.isDev() || !mc.showOnlyReducedInfo() && mc.getEntityRenderDispatcher().shouldRenderHitBoxes();
 
         //trajectory and hit are both in the cannon's own space, so the block lookup has to stay there too
