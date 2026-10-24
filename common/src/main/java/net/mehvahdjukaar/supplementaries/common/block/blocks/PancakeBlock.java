@@ -6,11 +6,13 @@ import net.mehvahdjukaar.moonlight.api.fluids.SoftFluidStack;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties.Topping;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -33,6 +35,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -75,12 +78,26 @@ public class PancakeBlock extends WaterBlock implements ISoftFluidConsumer {
                 this.removeLayer(state, pos, level, player);
                 return InteractionResult.CONSUME;
             } else {
-                Minecraft.getInstance().particleEngine.destroy(player.blockPosition().above(1), state);
+                spawnEatingCrumbs(level, hitResult, state);
                 return InteractionResult.SUCCESS;
             }
         }
         return InteractionResult.PASS;
 
+    }
+
+    //nudged out of the face so they dont start inside the block
+    private static void spawnEatingCrumbs(Level level, BlockHitResult hit, BlockState state) {
+        RandomSource random = level.getRandom();
+        Vec3 bite = hit.getLocation().add(Vec3.atLowerCornerOf(hit.getDirection().getNormal()).scale(0.05));
+        BlockParticleOption crumb = new BlockParticleOption(ParticleTypes.BLOCK, state);
+        for (int i = 0; i < 6; i++) {
+            level.addParticle(crumb,
+                    bite.x + (random.nextFloat() - 0.5) * 0.2,
+                    bite.y + (random.nextFloat() - 0.5) * 0.2,
+                    bite.z + (random.nextFloat() - 0.5) * 0.2,
+                    0, 0.05, 0);
+        }
     }
 
     @Override

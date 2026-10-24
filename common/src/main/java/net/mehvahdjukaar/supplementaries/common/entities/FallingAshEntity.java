@@ -87,7 +87,7 @@ public class FallingAshEntity extends ImprovedFallingBlockEntity {
 
             this.move(MoverType.SELF, this.getDeltaMovement());
             BlockPos pos = this.blockPosition();
-            if (level.getFluidState(pos).is(FluidTags.WATER)) {
+            if (level.getFluidState(pos).is(FluidTags.WATER) || level.getBlockState(pos).is(BlockTags.FIRE)) {
                 this.discard();
                 return;
             }

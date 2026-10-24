@@ -49,16 +49,17 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
     // overrides in the bomb item models: the lit fuse animation while flying, and the smaller shard sprite
     public static final int PROJECTILE_MODEL_DATA = 1;
     public static final int BABY_MODEL_DATA = 2;
+
     private static final byte BREAK_EVENT = 3;
     private static final byte EXPLODE_EVENT = 10;
     private static final byte TURN_OFF_EVENT = 67;
+
     private static final float BABY_BOMB_CLUSTER_SPEED = 0.25f;
-    private static final float CLUSTER_INACCURACY = 1.5f;
+    private static final float BABY_CLUSTER_INACCURACY = 1.5f;
     // half a second where a fresh baby bomb can't go off, so the cluster doesn't merge into one blast
     private static final int BABY_ARMING_TICKS = 10;
     private static final int WEAKNESS_DURATION = 20 * 30;
-    // status effects aren't applied by the explosion itself, so they get a bit more reach than the
-    // twice-the-radius one a vanilla blast has
+    //status effects aren't applied by the explosion itself, so they get a bit more reach than vanilla blast has
     private static final double BLAST_EFFECT_RANGE = 2.5;
 
     private final boolean hasFuse = CommonConfigs.Tools.BOMB_FUSE.get() != 0;
@@ -305,7 +306,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
 
         int cluster = this.type.splitCount();
-        // a supercharged bomb that splits pays out in extra shards instead of a second big blast
         if (this.superCharged) {
             if (cluster > 0) {
                 cluster *= 2;
@@ -336,7 +336,6 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
         }
     }
 
-    // shoots the babies out along the face we hit, else half the cluster ends up buried in it
     private void spawnCluster(ServerLevel level, Vec3 center, int count) {
         Vec3 normal = Vec3.atLowerCornerOf(this.hitFace.getNormal());
         Vec3 helper = Math.abs(normal.y) > 0.5 ? new Vec3(1, 0, 0) : new Vec3(0, 1, 0);
@@ -356,7 +355,7 @@ public class BombEntity extends ImprovedProjectileEntity implements IExtraClient
             Vec3 spawnPos = center.add(dir.scale(0.4));
             BombEntity baby = new BombEntity(level, spawnPos.x, spawnPos.y, spawnPos.z, BombType.BLUE_BABY);
             baby.setOwner(this.getOwner());
-            baby.shoot(dir.x, dir.y, dir.z, BABY_BOMB_CLUSTER_SPEED, CLUSTER_INACCURACY);
+            baby.shoot(dir.x, dir.y, dir.z, BABY_BOMB_CLUSTER_SPEED, BABY_CLUSTER_INACCURACY);
             level.addFreshEntity(baby);
         }
     }
