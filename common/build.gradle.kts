@@ -33,7 +33,7 @@ dependencies {
     modCompileOnly("curse.maven:farmers-delight-398521:8083481")
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-neoforge:${shulker_box_tooltip_version}")
     modCompileOnly("net.mehvahdjukaar:amendments-neoforge:1.21-2.0.9")
-    modCompileOnly("curse.maven:entity-model-features-844662:8063559")
+    modCompileOnly("curse.maven:entity-model-features-844662:9188526")
     modCompileOnly("dev.emi:emi-xplat-mojmap:${emi_version}")
     modImplementation("curse.maven:jei-238222:7420587")
     modCompileOnly("curse.maven:jade-324717:7545219")

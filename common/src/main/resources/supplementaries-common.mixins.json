@@ -96,6 +96,7 @@
     "PageButtonMixin",
     "ParrotMixin",
     "PistonHeadRendererMixin",
+    "PlayerModelMixin",
     "PlayerRendererMixin",
     "PlayerSocialManagerMixin",
     "RemotePlayerMixin",

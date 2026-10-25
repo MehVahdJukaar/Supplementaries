@@ -10,8 +10,5 @@ public interface ICannonRider {
 
     void supplementaries$setCannonPos(@Nullable BlockPos pos);
 
-    int supplementaries$getCannonFlightTicks();
-
-    //TODO:remove, cannon shodlt alter player, just show where it would land
-    void supplementaries$setCannonFlightTicks(int ticks);
+    CannonFlight supplementaries$getCannonFlight();
 }

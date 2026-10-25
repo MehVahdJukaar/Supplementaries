@@ -1,8 +1,8 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
-import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticData;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonFlight;
 import net.mehvahdjukaar.supplementaries.common.entities.ICannonRider;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class PlayerMixin implements IQuiverEntity, ICannonRider {
     private BlockPos supplementaries$cannonPos = null;
 
     @Unique
-    private int supplementaries$cannonFlightTicks = 0;
+    private final CannonFlight supplementaries$cannonFlight = new CannonFlight((Player) (Object) this);
 
     @Override
     public ItemStack supplementaries$getQuiver() {
@@ -52,36 +52,24 @@ public class PlayerMixin implements IQuiverEntity, ICannonRider {
     }
 
     @Override
-    public int supplementaries$getCannonFlightTicks() {
-        return supplementaries$cannonFlightTicks;
-    }
-
-    @Override
-    public void supplementaries$setCannonFlightTicks(int ticks) {
-        this.supplementaries$cannonFlightTicks = ticks;
-        ((Player) (Object) this).setDiscardFriction(ticks > 0);
+    public CannonFlight supplementaries$getCannonFlight() {
+        return supplementaries$cannonFlight;
     }
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 suppl$dontSteerMidFlight(Vec3 travelVector) {
-        return supplementaries$cannonFlightTicks > 0 ? Vec3.ZERO : travelVector;
+        return supplementaries$cannonFlight.isFlying() ? Vec3.ZERO : travelVector;
     }
 
     @Inject(method = "travel", at = @At("HEAD"))
     private void suppl$dragMidFlight(Vec3 travelVector, CallbackInfo ci) {
-        if (supplementaries$cannonFlightTicks > 0) {
-            Player player = (Player) (Object) this;
-            player.setDeltaMovement(player.getDeltaMovement().scale(BallisticData.PLAYER.drag()));
-        }
+        if (supplementaries$cannonFlight.isFlying()) supplementaries$cannonFlight.applyDrag();
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void suppl$holdInCannon(CallbackInfo ci) {
         Player player = (Player) (Object) this;
-        if (supplementaries$cannonFlightTicks > 0) {
-            boolean landed = player.onGround() || player.isInWater() || player.isPassenger();
-            this.supplementaries$setCannonFlightTicks(landed ? 0 : supplementaries$cannonFlightTicks - 1);
-        }
+        if (supplementaries$cannonFlight.isFlying()) supplementaries$cannonFlight.tick();
         CannonBlockTile cannon = CannonBlockTile.riddenBy(player);
         if (cannon == null) return;
         Vec3 seat = cannon.getSeatPosition(1);
@@ -106,7 +94,16 @@ public class PlayerMixin implements IQuiverEntity, ICannonRider {
         Player player = (Player) (Object) this;
         if (CannonBlockTile.riddenBy(player) != null) {
             player.setPose(Pose.SWIMMING);
+        } else if (supplementaries$cannonFlight.isFlying()) {
+            player.setPose(Pose.FALL_FLYING); //same hitbox as elytra
         }
+    }
+
+    @Inject(method = "causeFallDamage", at = @At("HEAD"), cancellable = true)
+    private void suppl$landSafelyFromCannon(float fallDistance, float multiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        if (!supplementaries$cannonFlight.isFlying()) return;
+        supplementaries$cannonFlight.playLandingSound(fallDistance);
+        cir.setReturnValue(false);
     }
 
     @Inject(method = "hurt", at = @At("RETURN"))

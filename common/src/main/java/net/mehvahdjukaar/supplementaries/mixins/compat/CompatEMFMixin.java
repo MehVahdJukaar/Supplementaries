@@ -16,6 +16,6 @@ public class CompatEMFMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void supp$setDimensions(EMFPartData emfPartData, int variant, String part, String id, EMFModelPartRoot root, CallbackInfo ci) {
-        ((IModelPartExtension) (Object) this).moonlight$setDimensions(emfPartData.textureSize[0], emfPartData.textureSize[1]);
+        ((IModelPartExtension) this).moonlight$setDimensions(emfPartData.textureSize[0], emfPartData.textureSize[1]);
     }
 }

@@ -33,7 +33,7 @@ dependencies {
 
 
     modCompileOnly("com.misterpemodder:shulkerboxtooltip-fabric:${shulker_box_tooltip_version}")
-    modCompileOnly("curse.maven:entity-model-features-844662:8063557")
+    modCompileOnly("curse.maven:entity-model-features-844662:9188523")
     modCompileOnly("dev.emi:emi-fabric:${emi_version}")
     modCompileOnly("curse.maven:jei-238222:7420583")
     modCompileOnly("curse.maven:roughly-enough-items-310111:6199139")

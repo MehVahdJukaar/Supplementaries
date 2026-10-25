@@ -97,7 +97,11 @@ public class ClientReceivers {
     }
 
     public static void handleLaunchCannonRiderPacket(ClientBoundLaunchCannonRiderPacket message) {
-        withPlayerDo(p -> CannonBlockTile.launchPlayer(p, message.velocity()));
+        withLevelDo(l -> {
+            if (l.getEntity(message.playerId()) instanceof Player p) {
+                CannonBlockTile.launchPlayer(p, message.velocity());
+            }
+        });
     }
 
     public static void handleLoginPacket(ClientBoundSendLoginPacket message) {

@@ -7,16 +7,17 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.Vec3;
 
-public record ClientBoundLaunchCannonRiderPacket(Vec3 velocity) implements Message {
+public record ClientBoundLaunchCannonRiderPacket(int playerId, Vec3 velocity) implements Message {
     public static final TypeAndCodec<RegistryFriendlyByteBuf, ClientBoundLaunchCannonRiderPacket> CODEC = Message.makeType(
             Supplementaries.res("s2c_launch_cannon_rider"), ClientBoundLaunchCannonRiderPacket::new);
 
     public ClientBoundLaunchCannonRiderPacket(RegistryFriendlyByteBuf buf) {
-        this(buf.readVec3());
+        this(buf.readVarInt(), buf.readVec3());
     }
 
     @Override
     public void write(RegistryFriendlyByteBuf buf) {
+        buf.writeVarInt(this.playerId);
         buf.writeVec3(this.velocity);
     }
 

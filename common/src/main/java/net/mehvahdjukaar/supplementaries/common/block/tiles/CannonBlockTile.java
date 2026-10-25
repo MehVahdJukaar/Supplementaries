@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.BallisticDa
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.FireBehaviorsManager;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IBallisticBehavior;
 import net.mehvahdjukaar.supplementaries.common.block.fire_behaviors.IFireItemBehavior;
+import net.mehvahdjukaar.supplementaries.common.entities.CannonFlight;
 import net.mehvahdjukaar.supplementaries.common.entities.ICannonRider;
 import net.mehvahdjukaar.supplementaries.common.inventories.CannonContainerMenu;
 import net.mehvahdjukaar.supplementaries.common.items.CannonBallItem;
@@ -452,9 +453,8 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             this.setRider(null);
             Vec3 velocity = this.getRiderLaunchVelocity();
             launchPlayer(rider, velocity);
-            if (rider instanceof ServerPlayer sp) {
-                NetworkHelper.sendToClientPlayer(sp, new ClientBoundLaunchCannonRiderPacket(velocity));
-            }
+            NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(rider,
+                    new ClientBoundLaunchCannonRiderPacket(rider.getId(), velocity));
             return true;
         }
         return false;
@@ -468,13 +468,10 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
     }
 
     public static void launchPlayer(Player player, Vec3 velocity) {
-        ICannonRider rider = (ICannonRider) player;
-        if (rider.supplementaries$getCannonFlightTicks() > 0) return;
+        CannonFlight flight = ((ICannonRider) player).supplementaries$getCannonFlight();
+        if (flight.isFlying()) return;
         releaseRider(player);
-        rider.supplementaries$setCannonFlightTicks(MAX_FLIGHT_TICKS);
-        player.startFallFlying();
-        player.setDeltaMovement(velocity);
-        player.fallDistance = 0;
+        flight.start(velocity, MAX_FLIGHT_TICKS);
     }
 
     @Nullable
@@ -549,7 +546,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             if (!level.isClientSide) dismount();
         } else {
             ICannonRider cannonRider = (ICannonRider) rider;
-            if (cannonRider.supplementaries$getCannonFlightTicks() == 0) {
+            if (!cannonRider.supplementaries$getCannonFlight().isFlying()) {
                 //a just launched rider is still listed here on the client until the shot syncs
                 cannonRider.supplementaries$setCannonPos(this.getBlockPos());
             }
@@ -576,7 +573,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
 
     public void mount(Player player) {
         this.setRider(player.getUUID());
-        ((ICannonRider) player).supplementaries$setCannonFlightTicks(0);
+        ((ICannonRider) player).supplementaries$getCannonFlight().stop();
         ((ICannonRider) player).supplementaries$setCannonPos(this.getBlockPos());
         player.setDeltaMovement(Vec3.ZERO);
         player.fallDistance = 0;
