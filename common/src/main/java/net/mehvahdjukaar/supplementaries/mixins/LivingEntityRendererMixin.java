@@ -22,7 +22,7 @@ public class LivingEntityRendererMixin {
                                               int packedLight, Entity entity, float limbSwing,
                                               float limbSwingAmount, float partialTick, float ageInTicks,
                                               float netHeadYaw, float headPitch) {
-        if (!CannonRiderRenderer.isRenderingFromCannon()) return true;
+        if (!CannonRiderRenderer.isRenderingFromInsideCannon()) return true;
         return layer instanceof HumanoidArmorLayer<?, ?, ?> || layer instanceof CustomHeadLayer<?, ?>
                 || layer instanceof Deadmau5EarsLayer;
     }

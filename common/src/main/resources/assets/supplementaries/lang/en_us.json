@@ -521,6 +521,7 @@
   "subtitles.supplementaries.bubble.blow": "Bubble blown",
   "subtitles.supplementaries.bubble.pop": "Bubble pop",
   "subtitles.supplementaries.cannon.fire": "Cannon fires",
+  "subtitles.supplementaries.cannon.enter": "Someone climbs into cannon",
   "subtitles.supplementaries.cannonball.break": "Cannonball breaks",
   "subtitles.supplementaries.clock_tick": "Clock ticking",
   "subtitles.supplementaries.confetti_popper": "Confetti popper pop",
@@ -1395,5 +1396,8 @@
   "supplementaries.configuration.blackboard.connected_gui.description": "Opening a blackboard gui also shows up to a 3x3 of connected blackboards so you can draw on all of them at once",
   "supplementaries.configuration.pignata": "Pignata",
   "supplementaries.configuration.pignata.heal_interval": "Heal Interval",
-  "supplementaries.configuration.pignata.heal_interval.description": "Ticks a pignata takes to heal one heart of damage"
+  "supplementaries.configuration.pignata.heal_interval.description": "Ticks a pignata takes to heal one heart of damage",
+  "supplementaries.configuration.building.redstone_lantern": "Redstone Lantern",
+  "supplementaries.configuration.flag.render_2d": "Render 2d",
+  "supplementaries.configuration.flag.render_2d.description": "Makes flags have no thickness"
 }

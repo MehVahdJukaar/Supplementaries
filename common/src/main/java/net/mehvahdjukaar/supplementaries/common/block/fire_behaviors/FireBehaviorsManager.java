@@ -96,6 +96,8 @@ public class FireBehaviorsManager {
         registerPresentBehavior(Items.ARMOR_STAND, spawnArmorStand);
         registerCannonBehavior(Items.ARMOR_STAND, spawnArmorStand);
 
+        registerCannonBehavior(ModRegistry.PIGNATA.get(), new SpawnMobBehavior(ModEntities.PIGNATA.get()));
+
         // Dispatch event to allow other mods to register fire behaviours
         SuppPlatformStuff.registerFireBehaviors(access, new IFireItemBehaviorRegistry() {
             @Override

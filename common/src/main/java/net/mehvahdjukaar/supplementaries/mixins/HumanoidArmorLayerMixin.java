@@ -14,7 +14,7 @@ public class HumanoidArmorLayerMixin {
 
     @Inject(method = "setPartVisibility", at = @At("TAIL"))
     private void suppl$hideRiderArmorBelowHead(HumanoidModel<?> model, EquipmentSlot slot, CallbackInfo ci) {
-        if (slot != EquipmentSlot.HEAD && CannonRiderRenderer.isRenderingFromCannon()) {
+        if (slot != EquipmentSlot.HEAD && CannonRiderRenderer.isRenderingFromInsideCannon()) {
             model.setAllVisible(false);
         }
     }

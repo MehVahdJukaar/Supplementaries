@@ -26,7 +26,7 @@ public abstract class PlayerRendererMixin {
     private void suppl$letCannonDrawRider(AbstractClientPlayer entity, float entityYaw, float partialTick,
                                           PoseStack poseStack, MultiBufferSource buffer, int packedLight,
                                           CallbackInfo ci) {
-        if (!CannonRiderRenderer.isRenderingFromCannon() && CannonBlockTile.riddenBy(entity) != null) {
+        if (!CannonRiderRenderer.isRenderingFromInsideCannon() && CannonBlockTile.riddenBy(entity) != null) {
             ci.cancel();
         }
     }
@@ -46,7 +46,7 @@ public abstract class PlayerRendererMixin {
 
     @Inject(method = "setModelProperties", at = @At("TAIL"))
     private void suppl$onlyShowRiderHead(AbstractClientPlayer player, CallbackInfo ci) {
-        if (!CannonRiderRenderer.isRenderingFromCannon()) return;
+        if (!CannonRiderRenderer.isRenderingFromInsideCannon()) return;
         PlayerModel<AbstractClientPlayer> model = ((PlayerRenderer) (Object) this).getModel();
         model.setAllVisible(false);
         model.head.visible = true;
@@ -56,7 +56,7 @@ public abstract class PlayerRendererMixin {
     @Inject(method = "setupRotations", at = @At("HEAD"), cancellable = true)
     private void suppl$keepRiderAlignedWithBarrel(AbstractClientPlayer entity, PoseStack poseStack, float bob,
                                                   float yBodyRot, float partialTick, float scale, CallbackInfo ci) {
-        if (CannonRiderRenderer.isRenderingFromCannon()) ci.cancel();
+        if (CannonRiderRenderer.isRenderingFromInsideCannon()) ci.cancel();
     }
 
     @Inject(method = "setupRotations", at = @At("HEAD"), cancellable = true)

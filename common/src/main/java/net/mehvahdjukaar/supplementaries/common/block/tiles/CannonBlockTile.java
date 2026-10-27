@@ -27,6 +27,7 @@ import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,6 +39,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -582,6 +584,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         player.setDeltaMovement(Vec3.ZERO);
         player.fallDistance = 0;
         this.keepRiderSeated(player);
+        level.playSound(null, this.getBlockPos(), ModSounds.CANNON_ENTER.get(), SoundSource.BLOCKS, 1, 1);
     }
 
     public void keepRiderSeated(Player player) {

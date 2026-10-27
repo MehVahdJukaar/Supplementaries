@@ -14,7 +14,7 @@ public class CannonRiderRenderer {
 
     private static boolean renderingFromCannon = false; //TODO: check
 
-    public static boolean isRenderingFromCannon() {
+    public static boolean isRenderingFromInsideCannon() {
         return renderingFromCannon;
     }
 

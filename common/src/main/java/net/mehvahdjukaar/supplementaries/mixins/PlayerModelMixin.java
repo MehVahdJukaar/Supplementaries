@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.mixins;
 
+import net.mehvahdjukaar.supplementaries.client.cannon.CannonRiderRenderer;
 import net.mehvahdjukaar.supplementaries.common.entities.ICannonRider;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.util.Mth;
@@ -15,10 +16,15 @@ public abstract class PlayerModelMixin {
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
     private void suppl$poseForFlight(LivingEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks,
                                      float netHeadYaw, float headPitch, CallbackInfo ci) {
+        PlayerModel<?> model = (PlayerModel<?>) (Object) this;
+        if (CannonRiderRenderer.isRenderingFromInsideCannon()) {
+            model.head.setRotation(0, 0, 0);
+            model.hat.copyFrom(model.head);
+            return;
+        }
         if (!(entity instanceof ICannonRider rider) || !rider.supplementaries$getCannonFlight().isFlying()) {
             return;
         }
-        PlayerModel<?> model = (PlayerModel<?>) (Object) this;
 
         //renderer already tilts the body
         model.head.setRotation(-Mth.HALF_PI, 0, 0);
