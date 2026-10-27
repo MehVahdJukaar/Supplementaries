@@ -22,12 +22,15 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
+
+import java.util.function.Function;
 
 import static net.mehvahdjukaar.supplementaries.client.ModMaterials.FLAG_BASE_MATERIAL;
 
@@ -83,7 +86,12 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         if (material == null) {
             return;
         }
-        VertexConsumer builder = material.buffer(bufferIn, solid ? RenderType::entitySolid : RenderType::entityNoOutline);
+        //otherwise 2d flag zifghts like hell
+        Function<ResourceLocation, RenderType> renderType;
+        if (!solid) renderType = RenderType::entityNoOutline;
+        else if (flat) renderType = RenderType::entityCutoutNoCull;
+        else renderType = RenderType::entitySolid;
+        VertexConsumer builder = material.buffer(bufferIn, renderType);
 
         matrixStackIn.pushPose();
 
@@ -149,8 +157,8 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
 
         matrixStack.popPose();
 
-        boolean drawBackFace = !flat || solid;
-        if (!drawBackFace) return;
+        //no cull, back reuses the same quad so patterns dont z fight with it
+        if (flat) return;
 
         //right
         matrixStack.pushPose();
@@ -168,8 +176,6 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         VertexUtil.vert(builder, matrixStack, 0, h, 0, maxU, v, r, g, b, 1, lu, lv, -nx, ny, nz);
 
         matrixStack.popPose();
-
-        if (flat) return;
 
         //top
         matrixStack.pushPose();
