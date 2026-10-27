@@ -82,6 +82,14 @@ public class ModCreativeTabs {
                 ModConstants.STONE_LAMP_NAME,
                 ModRegistry.STONE_LAMP);
 
+        adder.after(Items.SOUL_LANTERN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.REDSTONE_LANTERN_NAME,
+                ModRegistry.REDSTONE_LANTERN);
+
+        adder.after(Items.REDSTONE_TORCH, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.REDSTONE_LANTERN_NAME,
+                ModRegistry.REDSTONE_LANTERN);
+
         adder.after(Items.DAMAGED_ANVIL, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.PEDESTAL_NAME,
                 ModRegistry.PEDESTAL);

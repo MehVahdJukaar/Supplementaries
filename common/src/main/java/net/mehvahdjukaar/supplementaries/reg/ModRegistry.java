@@ -1072,6 +1072,11 @@ public class ModRegistry {
             BlockBehaviour.Properties.ofFullCopy(Blocks.END_STONE).lightLevel(s -> 15)
     ));
 
+    //redstone lantern
+    public static final Supplier<Block> REDSTONE_LANTERN = regWithItem(REDSTONE_LANTERN_NAME, () -> new RedstoneLanternBlock(
+            BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).strength(0.5f)
+    ));
+
     //flower box
     public static final Supplier<Block> FLOWER_BOX = regWithItem(FLOWER_BOX_NAME, () -> {
         var p = BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).strength(0.5F);

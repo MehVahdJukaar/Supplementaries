@@ -422,6 +422,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SCONCE_LEVER_ENABLED;
         public static final Supplier<Boolean> STONE_LAMP_ENABLED;
         public static final Supplier<Boolean> END_STONE_LAMP_ENABLED;
+        public static final Supplier<Boolean> REDSTONE_LANTERN_ENABLED;
         public static final Supplier<Boolean> BLACKSTONE_LAMP_ENABLED;
         public static final Supplier<Boolean> DEEPSLATE_LAMP_ENABLED;
         public static final Supplier<Boolean> CHECKERBOARD_ENABLED;
@@ -639,6 +640,7 @@ public class CommonConfigs {
             //BRITTLESTONE_BRICKS_ENABLED = ()-> false;// builder.feature(ModConstants.BRITTLESTONE_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = builder.feature(ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = builder.feature(ModConstants.END_STONE_LAMP_NAME);
+            REDSTONE_LANTERN_ENABLED = builder.feature(ModConstants.REDSTONE_LANTERN_NAME);
             BLACKSTONE_LAMP_ENABLED = builder.feature(ModConstants.BLACKSTONE_LAMP_NAME);
             STONE_LAMP_ENABLED = builder.feature(ModConstants.STONE_LAMP_NAME);
             TILE_ENABLED = builder.feature(ModConstants.STONE_TILE_NAME);

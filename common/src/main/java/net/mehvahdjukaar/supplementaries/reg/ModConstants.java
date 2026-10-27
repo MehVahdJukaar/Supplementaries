@@ -129,6 +129,7 @@ public final class ModConstants {
     public static final String BLACKSTONE_LAMP_NAME = "blackstone_lamp";
     public static final String DEEPSLATE_LAMP_NAME = "deepslate_lamp";
     public static final String END_STONE_LAMP_NAME = "end_stone_lamp";
+    public static final String REDSTONE_LANTERN_NAME = "redstone_lantern";
     public static final String FLOWER_BOX_NAME = "flower_box";
     public static final String STATUE_NAME = "statue";
     public static final String FEATHER_BLOCK_NAME = "feather_block";

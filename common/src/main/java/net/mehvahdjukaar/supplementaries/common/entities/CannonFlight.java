@@ -8,8 +8,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+//TODO: wil this survive a save? maybe we should use attachments instead?
 public class CannonFlight {
     private final Player player;
+    //can only hit an entity once per shoot
     private final IntSet rammedEntities = new IntOpenHashSet();
 
     private int ticksLeft = 0;
@@ -63,6 +65,7 @@ public class CannonFlight {
     private Vec3 trackVelocity() {
         Vec3 pos = player.position();
         Vec3 moved = pos.subtract(lastPos);
+
         lastPos = pos;
         prevVelocity = velocity;
         velocity = player.isLocalPlayer() ? moved : velocity.lerp(moved, 0.5);

@@ -217,6 +217,7 @@ public class ClientRegistry {
         ClientHelper.registerRenderType(ModRegistry.GLOBE_SEPIA.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.CRANK.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.WAY_SIGN.get(), cutout);
+        ClientHelper.registerRenderType(ModRegistry.REDSTONE_LANTERN.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.BELLOWS.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.SCONCE_WALL.get(), cutout);
         ClientHelper.registerRenderType(ModRegistry.SCONCE.get(), cutout);
