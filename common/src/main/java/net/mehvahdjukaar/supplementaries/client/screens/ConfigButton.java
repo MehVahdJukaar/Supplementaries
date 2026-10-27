@@ -7,7 +7,6 @@ import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
-import net.minecraft.util.FastColor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,6 +17,7 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FastColor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +52,7 @@ public class ConfigButton extends Button {
         ConfigUtils.openModConfigs();
     }
 
+    //TODO: make attach to any button incase of very crowded menus and allow manual placement too
     public static void setupConfigButton(Screen screen, List<? extends GuiEventListener> listeners,
                                          Consumer<AbstractWidget> adder, Consumer<AbstractWidget> remover) {
         if (!(screen instanceof TitleScreen) && !(screen instanceof PauseScreen)) return;
@@ -76,10 +77,14 @@ public class ConfigButton extends Button {
         List<String> targets = Arrays.asList(
                 Component.translatable("menu.online").getString(),
                 Component.translatable("fml.menu.modoptions").getString(),
-                Component.translatable("menu.shareToLan").getString());
+                Component.translatable("menu.shareToLan").getString(),
+                Component.translatable("menu.multiplayer").getString(),
+                Component.translatable("menu.singleplayer").getString());
 
-        for (GuiEventListener w : listeners) {
-            if (w instanceof AbstractWidget b && targets.contains(b.getMessage().getString())) return b;
+        for (var t : targets) {
+            for (GuiEventListener w : listeners) {
+                if (w instanceof AbstractWidget b && t.equals(b.getMessage().getString())) return b;
+            }
         }
         return null;
     }
