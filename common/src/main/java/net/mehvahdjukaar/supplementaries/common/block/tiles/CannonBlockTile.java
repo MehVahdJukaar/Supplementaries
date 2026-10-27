@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
 import net.mehvahdjukaar.moonlight.api.misc.OrientationRig;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
@@ -453,6 +454,9 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             this.setRider(null);
             Vec3 velocity = this.getRiderLaunchVelocity();
             launchPlayer(rider, velocity);
+            if (rider instanceof ServerPlayer serverPlayer) {
+                Utils.awardAdvancement(serverPlayer, Supplementaries.res("adventure/cannon"));
+            }
             NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(rider,
                     new ClientBoundLaunchCannonRiderPacket(rider.getId(), velocity));
             return true;
