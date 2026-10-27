@@ -55,7 +55,7 @@ dependencies {
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
 
     modImplementation("curse.maven:configured-457570:7276577")
-    modCompileOnly("maven.modrinth:amendments:1.21-2.0.15-neoforge")
+    modImplementation("net.mehvahdjukaar:amendments-neoforge:1.21-2.2.2")
     //modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140")
     //  modRuntimeOnly("curse.maven:regions-unexplored-659110:7745476")
 //    modRuntimeOnly("curse.maven:lithostitched-936015:7731887")

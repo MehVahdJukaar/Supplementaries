@@ -23,7 +23,7 @@ public class RedstoneLanternBlock extends LanternBlock {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     public RedstoneLanternBlock(BlockBehaviour.Properties properties) {
-        super(properties.lightLevel(state -> state.getValue(POWERED) ? 0 : 15));
+        super(properties.lightLevel(state -> state.getValue(POWERED) ? 0 : 8));
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(HANGING, false).setValue(WATERLOGGED, false)
                 .setValue(POWERED, false));
