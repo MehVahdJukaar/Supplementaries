@@ -309,6 +309,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> GLOBE_RANDOM;
         public static final Supplier<GraphicsFanciness> FLAG_FANCINESS;
         public static final Supplier<Boolean> FLAG_BANNER;
+        public static final Supplier<Boolean> FLAG_2D;
         public static final Supplier<Integer> FLAG_PERIOD;
         public static final Supplier<Double> FLAG_WAVELENGTH;
         public static final Supplier<Double> FLAG_AMPLITUDE;
@@ -407,6 +408,8 @@ public class ClientConfigs {
                     .define("fanciness", GraphicsFanciness.FABULOUS);
             FLAG_BANNER = builder.comment("Makes flags render as sideways banner. Ignores many of the previously defined configs")
                     .define("render_as_banner", false);
+            FLAG_2D = builder.comment("Makes flags have no thickness")
+                    .define("render_2d", false);
             builder.pop();
 
             builder.icon("jar").push("captured_mobs").comment("THIS IS ONLY FOR VISUALS! To allow more entities in cages you need to edit the respective tags!");
