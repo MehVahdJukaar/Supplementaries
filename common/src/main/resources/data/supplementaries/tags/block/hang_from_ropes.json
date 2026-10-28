@@ -9,7 +9,7 @@
     {"id":"minecraft:soul_lantern","required":false},
     "supplementaries:rope",
     "supplementaries:pignata_anchor",
-    {"id":"#supplementaries:sack","required":false},
+    {"id":"#supplementaries:sacks","required":false},
     {"id":"amendments:hanging_flower_pot","required":false},
     {"id":"supplementaries:rope_chandelier","required":false},
     {"id":"supplementaries:rope_soul_chandelier","required":false},
