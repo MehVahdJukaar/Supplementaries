@@ -36,6 +36,7 @@ public class DyeBlackBoardButton extends BlackboardButton {
         RenderSystem.setShaderColor(r, g, b, 1.0F);
         graphics.blitSprite(ModTextures.BLACKBOARD_DYE_SPRITE,
                 this.x, this.y, size, size);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         this.shouldDrawOverlay = parent.getSelectedColor() == this.color;
     }
 
