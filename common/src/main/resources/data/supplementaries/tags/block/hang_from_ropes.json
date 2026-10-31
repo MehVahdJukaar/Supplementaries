@@ -5,6 +5,10 @@
     {"id":"#minecraft:ceiling_hanging_signs","required":false},
     {"id":"#minecraft:lanterns","required":false},
     {"id":"#c:lanterns","required":false},
+    {
+      "id": "supplementaries:redstone_lantern",
+      "required": false
+    },
     {"id":"minecraft:lantern","required":false},
     {"id":"minecraft:soul_lantern","required":false},
     "supplementaries:rope",

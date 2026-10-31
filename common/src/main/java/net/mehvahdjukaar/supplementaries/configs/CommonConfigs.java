@@ -1202,6 +1202,8 @@ public class CommonConfigs {
         public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
         public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;
+        public static final Supplier<Boolean> MUD_BALL_SLIMED;
+        public static final Supplier<Integer> MUD_BALL_DURATION;
         public static final Supplier<Boolean> PUSH_BLOCK_ENTITIES;
         public static final Supplier<Boolean> COOPERATIVE_PISTONS;
         public static final Supplier<Boolean> MOVED_CAULDRON_FILLING;
@@ -1347,6 +1349,10 @@ public class CommonConfigs {
                     .define("hinders_jump", SlimedJumpMode.NORMAL_DIFFICULTY);
             SLIME_DURATION = builder.comment("Duration of the slimed effect in ticks")
                     .define("duration", 300, 0, 1000);
+            MUD_BALL_SLIMED = builder.comment("Makes Environmental mud balls apply a muddy version of the slimed effect (Environmental only)")
+                    .define("environmental_mud_ball_compat", true);
+            MUD_BALL_DURATION = builder.comment("Duration of the muddy effect in ticks. Longer than slimed since mud balls fly shorter")
+                    .define("mud_ball_duration", 600, 0, 2000);
             SLIMED_PER_SIZE = builder.comment("Chance that a slime mob will apply slimed effect on successful attack. Multiplied by the slime size")
                     .define("chance_per_slime_size", 0.15d, 0, 1);
             builder.pop();

@@ -62,11 +62,13 @@ public class ModTextures {
     public static final ResourceLocation THICK_GOLEM = Supplementaries.res("textures/entity/misc/iron_golem.png");
     public static final ResourceLocation SEA_PICKLE_RICK = Supplementaries.res("textures/entity/misc/sea_pickle.png");
     public static final ResourceLocation JAR_MAN = Supplementaries.res("textures/entity/misc/jar_man.png");
+    public static final ResourceLocation MUD_ENTITY_OVERLAY = Supplementaries.res("textures/entity/mud_overlay.png");
     public static final ResourceLocation SLIME_ENTITY_OVERLAY = Supplementaries.res("textures/entity/slime_overlay.png");
 
     public static final ResourceLocation ANTIQUABLE_FONT = Supplementaries.res("antiquable");
 
     //gui
+    public static final ResourceLocation MUD_GUI_OVERLAY = Supplementaries.res("textures/gui/mud_overlay.png");
     public static final ResourceLocation SLIME_GUI_OVERLAY = Supplementaries.res("textures/gui/slime_overlay.png");
     public static final ResourceLocation BLACKBOARD_GUI_TEXTURE = Supplementaries.res("textures/gui/blackboard.png");
     public static final ResourceLocation CONFIG_BACKGROUND = Supplementaries.res("textures/gui/config_background.png");

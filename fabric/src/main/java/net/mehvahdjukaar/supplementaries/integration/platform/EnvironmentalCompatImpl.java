@@ -7,4 +7,8 @@ public class EnvironmentalCompatImpl {
     public static boolean maybeCleanMuddyPig(Pig pig) {
         return false;
     }
+
+    public static boolean getsMuddyFromMudBall(Pig pig) {
+        return false;
+    }
 }
