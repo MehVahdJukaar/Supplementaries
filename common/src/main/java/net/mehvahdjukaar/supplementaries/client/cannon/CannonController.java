@@ -121,8 +121,9 @@ public class CannonController {
 
         if (lastCameraPos == null) {
             lastCameraPos = camera.getPosition();
-            lastCameraYaw = camera.getYRot();
-            lastCameraPitch = camera.getXRot();
+            EntityAngles angles = EntityAngles.fromQuaternion(cannon.getWorldOrientation(partialTick));
+            lastCameraYaw = angles.yaw();
+            lastCameraPitch = angles.pitch();
         }
 
         // lerp camera
