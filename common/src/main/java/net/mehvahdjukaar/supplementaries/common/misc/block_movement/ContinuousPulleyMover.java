@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.misc.block_movement;
 
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.MovingPulleyBlock;
+import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.MovingPulleyBlockEntity;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEvent.Context;
+import net.minecraft.world.level.material.FluidState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,13 +44,17 @@ public final class ContinuousPulleyMover {
                 if (nbt != null) carriedBeNbt.put(pos.immutable(), nbt);
             }
         }
-        Map<BlockPos, BlockState> retractedRopeStatesBeforeOverwrite = new HashMap<>();
+        Map<BlockPos, BlockState> ropesRetractedIntoPulleys = new HashMap<>();
+
         for (BlockPos retractedPos : resolvedStructure.getRopesRetractedIntoPulleys()) {
-            retractedRopeStatesBeforeOverwrite.put(retractedPos.immutable(), level.getBlockState(retractedPos));
+            ropesRetractedIntoPulleys.put(retractedPos.immutable(), level.getBlockState(retractedPos));
         }
         Map<BlockPos, BlockState> ropesEmergingFromPulleys = resolvedStructure.getRopesEmergingFromPulleys();
 
         List<BlockPos> toDestroy = resolvedStructure.getToDestroy();
+
+        Map<BlockPos, FluidState> fluidsLeftBehind = MovedFluidFiller.snapshotFluidsLeftBehind(level, toPush, toDestroy);
+
         destroyBlocksInTheWay(level, toDestroy, pushDir);
 
         Block movingBlock = ModRegistry.MOVING_PULLEY_BLOCK.get();
@@ -61,10 +67,16 @@ public final class ContinuousPulleyMover {
                     .setValue(MovingPistonBlock.FACING, pushDir)
                     .setValue(MovingPistonBlock.TYPE, PistonType.DEFAULT);
             level.setBlock(dstPos, movingState, 68);
+
+            FluidState dstFluid = MovedFluidFiller.getSnapshotFluid(fluidsLeftBehind, dstPos);
+            srcState = MovedFluidFiller.getStateMovedInto(srcState, level, dstPos, dstFluid);
             MovingPulleyBlockEntity movingBe = MovingPulleyBlock.newMovingBlockEntity(
                     dstPos, movingState, srcState, pushDir, true, false);
+
+            MovedFluidFiller.markForPostPlacement(movingBe, srcState, dstFluid);
+
             movingBe.setAnimationDuration(animationTicks);
-            BlockState ropeSlidingIntoPulley = retractedRopeStatesBeforeOverwrite.get(dstPos);
+            BlockState ropeSlidingIntoPulley = ropesRetractedIntoPulleys.get(dstPos);
             if (ropeSlidingIntoPulley != null) {
                 movingBe.setLeadingState(ropeSlidingIntoPulley);
             }
@@ -80,9 +92,8 @@ public final class ContinuousPulleyMover {
             level.setBlockEntity(movingBe);
         }
 
-        BlockState air = Blocks.AIR.defaultBlockState();
         for (BlockPos vacated : slotsNotRefilledByMove.keySet()) {
-            level.setBlock(vacated, air, 82);
+            level.setBlock(vacated, MovedFluidFiller.getSnapshotFluid(fluidsLeftBehind, vacated).createLegacyBlock(), 82);
         }
 
         for (Map.Entry<BlockPos, BlockState> entry : resolvedStructure.getRopesPlacedWithoutAnimation().entrySet()) {

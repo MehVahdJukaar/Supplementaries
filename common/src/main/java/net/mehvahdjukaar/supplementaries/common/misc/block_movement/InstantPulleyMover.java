@@ -20,9 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -76,7 +74,7 @@ public class InstantPulleyMover {
             tileTag = BlockMovementHelper.captureAndDetachBlockEntity(level, originPos);
         }
 
-        FluidState originalFluid = level.getFluidState(originPos);
+        FluidState originalFluid = MovedFluidFiller.getFluidLeftBehind(originalState, level, originPos);
 
         if (placeWhereItWas != null) {
             level.setBlock(originPos, originalFluid.createLegacyBlock(), Block.UPDATE_KNOWN_SHAPE | Block.UPDATE_CLIENTS);
@@ -101,23 +99,14 @@ public class InstantPulleyMover {
         }
 
         FluidState targetFluid = level.getFluidState(targetPos);
-
-        boolean waterFluid = targetFluid.is(Fluids.WATER);
-        boolean canHoldWater;
-        if (originalState.hasProperty(BlockStateProperties.WATERLOGGED)) {
-            canHoldWater = originalState.is(ModTags.WATER_HOLDER);
-            if (!canHoldWater) originalState = originalState.setValue(BlockStateProperties.WATERLOGGED, waterFluid);
-        } else {
-            originalState = MovedFluidFiller.fillIfMovedIntoFluid(originalState, level, targetPos, targetFluid);
-        }
-
+        originalState = MovedFluidFiller.getStateMovedInto(originalState, level, targetPos, targetFluid);
         originalState = Block.updateFromNeighbourShapes(originalState, level, targetPos);
         level.setBlockAndUpdate(targetPos, originalState);
         if (tileTag != null) {
             BlockMovementHelper.restoreBlockEntity(level, targetPos, originalState, tileTag);
         }
         //populate any block-entity data for cauldron-like blocks moved into a fluid
-        MovedFluidFiller.applyPostPlacement(level, targetPos, targetFluid);
+        MovedFluidFiller.applyPostPlacement(level, targetPos, originalState, targetFluid);
         if (originalState.is(ModRegistry.PIGNATA_ANCHOR.get())) {
             PignataEntity.onAnchorMoved(level, originPos, targetPos);
         }

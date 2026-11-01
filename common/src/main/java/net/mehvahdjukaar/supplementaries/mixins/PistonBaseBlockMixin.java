@@ -8,7 +8,6 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mehvahdjukaar.supplementaries.common.block.cauldron.MovedFluidFiller;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.BlockMovementHelper;
 import net.mehvahdjukaar.supplementaries.common.misc.block_movement.ICarryingMovingPiston;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -23,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(PistonBaseBlock.class)
@@ -67,37 +65,35 @@ public class PistonBaseBlockMixin {
     @Inject(method = "moveBlocks",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/block/piston/PistonStructureResolver;getToPush()Ljava/util/List;"))
-    private void supp$snapshotCauldronFluids(Level level, BlockPos pos, Direction facing, boolean extending,
-                                             CallbackInfoReturnable<Boolean> cir,
-                                             @Local PistonStructureResolver resolver,
-                                             @Share("suppCauldronFluids") LocalRef<Map<BlockPos, FluidState>> fluidShare) {
-        if (!CommonConfigs.Tweaks.MOVED_CAULDRON_FILLING.get()) return;
-        Map<BlockPos, FluidState> fluids = new HashMap<>();
-        for (BlockPos destroyed : resolver.getToDestroy()) {
-            FluidState fluid = level.getFluidState(destroyed);
-            if (!fluid.isEmpty()) fluids.put(destroyed.immutable(), fluid);
-        }
-        fluidShare.set(fluids);
+    private void supp$snapshotFluids(Level level, BlockPos pos, Direction facing, boolean extending,
+                                     CallbackInfoReturnable<Boolean> cir,
+                                     @Local PistonStructureResolver resolver,
+                                     @Share("suppFluids") LocalRef<Map<BlockPos, FluidState>> fluidShare) {
+        fluidShare.set(MovedFluidFiller.snapshotFluidsLeftBehind(level, resolver.getToPush(), resolver.getToDestroy()));
     }
 
     @WrapOperation(method = "moveBlocks",
             at = @At(value = "INVOKE", ordinal = 0,
                     target = "Lnet/minecraft/world/level/block/piston/MovingPistonBlock;newMovingBlockEntity(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/Direction;ZZ)Lnet/minecraft/world/level/block/entity/BlockEntity;"))
-    private BlockEntity supp$fillPushedCauldron(BlockPos destPos, BlockState movingPistonState, BlockState movedState,
-                                                Direction facing, boolean extending, boolean isSourcePiston,
-                                                Operation<BlockEntity> original,
-                                                @Local(argsOnly = true) Level level,
-                                                @Share("suppCauldronFluids") LocalRef<Map<BlockPos, FluidState>> fluidShare) {
-        Map<BlockPos, FluidState> fluids = fluidShare.get();
-        FluidState fluid = fluids != null ? fluids.get(destPos) : null;
-        if (fluid != null) {
-            movedState = MovedFluidFiller.fillIfMovedIntoFluid(movedState, level, destPos, fluid);
-        }
+    private BlockEntity supp$moveIntoFluid(BlockPos destPos, BlockState movingPistonState, BlockState movedState,
+                                           Direction facing, boolean extending, boolean isSourcePiston,
+                                           Operation<BlockEntity> original,
+                                           @Local(argsOnly = true) Level level,
+                                           @Share("suppFluids") LocalRef<Map<BlockPos, FluidState>> fluidShare) {
+        FluidState fluid = MovedFluidFiller.getSnapshotFluid(fluidShare.get(), destPos);
+        movedState = MovedFluidFiller.getStateMovedInto(movedState, level, destPos, fluid);
         BlockEntity movingBe = original.call(destPos, movingPistonState, movedState, facing, extending, isSourcePiston);
-        if (fluid != null && movingBe instanceof ICarryingMovingPiston carrying
-                && MovedFluidFiller.needsPostPlacement(movedState)) {
-            carrying.supp$setMovedFluid(fluid);
-        }
+        MovedFluidFiller.markForPostPlacement(movingBe, movedState, fluid);
         return movingBe;
+    }
+
+    @WrapOperation(method = "moveBlocks",
+            at = @At(value = "INVOKE", ordinal = 4,
+                    target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
+    private boolean supp$leaveFluidBehind(Level level, BlockPos vacatedPos, BlockState air, int flags,
+                                          Operation<Boolean> original,
+                                          @Share("suppFluids") LocalRef<Map<BlockPos, FluidState>> fluidShare) {
+        BlockState left = MovedFluidFiller.getSnapshotFluid(fluidShare.get(), vacatedPos).createLegacyBlock();
+        return original.call(level, vacatedPos, left, flags);
     }
 }
