@@ -1001,6 +1001,8 @@ public class CommonConfigs {
         public static final Supplier<Boolean> ANTIQUE_INK_ENABLED;
         public static final Supplier<Boolean> CANDY_ENABLED;
         public static final Supplier<Boolean> STASIS_ENABLED;
+        public static final Supplier<Boolean> WHIMSY_ENABLED;
+        public static final Supplier<Boolean> CAROUSEL_ENABLED;
         public static final Supplier<Boolean> DEPTH_METER_ENABLED;
         public static final Supplier<Boolean> POPPER_ENABLED;
         public static final Supplier<Boolean> SLICE_MAP_ENABLED;
@@ -1144,7 +1146,16 @@ public class CommonConfigs {
             ANTIQUE_INK_ENABLED = builder.mainFeature();
             builder.pop();
             CANDY_ENABLED = builder.feature(ModConstants.CANDY_NAME);
-            STASIS_ENABLED = builder.feature(ModConstants.STASIS_NAME);
+
+            builder.push("enchantments");
+            STASIS_ENABLED = builder.comment("Slingshot projectiles ignore gravity")
+                    .feature(ModConstants.STASIS_NAME);
+            WHIMSY_ENABLED = builder.comment("Quivers and lunch baskets pick a random slot")
+                    .feature(ModConstants.WHIMSY_NAME);
+            CAROUSEL_ENABLED = builder.comment("Quivers and lunch baskets cycle to the next slot")
+                    .feature(ModConstants.CAROUSEL_NAME);
+            builder.pop();
+
             DEPTH_METER_ENABLED = builder.feature(ModConstants.DEPTH_METER_NAME);
             POPPER_ENABLED = builder.feature(ModConstants.CONFETTI_POPPER_NAME);
 

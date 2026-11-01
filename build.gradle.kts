@@ -36,6 +36,11 @@ subprojects {
         options.compilerArgs.addAll(listOf("-Xmaxerrs", "4000"))
     }
 
+    //mixin overwrite tags
+    tasks.withType<Javadoc> {
+        (options as StandardJavadocDocletOptions).tags("reason:a:Reason:", "date:a:Date:", "Date:a:Date:")
+    }
+
     upload {
 
         curseforge {

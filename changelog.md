@@ -1,2 +1,3 @@
-- added more compat with polytone colored lights
-- fixed a dupe with pully
+- added redstone lantern
+- added cannnon shoot animations
+- you can damage entities you pass through when shot by a cannon

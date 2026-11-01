@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "supplementaries:slingshot",
+    "supplementaries:bubble_blower",
+    "supplementaries:quiver",
+    "supplementaries:lunch_basket"
+  ]
+}

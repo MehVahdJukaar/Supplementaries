@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.TabAdderHelper;
@@ -18,6 +19,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -51,9 +53,14 @@ public class ModCreativeTabs {
                 ModConstants.SCONCE_NAME,
                 sconces.toArray(Supplier[]::new));
 
-        if (!CommonConfigs.Tools.STASIS_ENABLED.get()) {
-            var enchantment = ModEnchantments.STASIS_ENCHANTMENT.getHolder(event.getParameters().holders());
-            ItemStack book = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, 1));
+        var holders = event.getParameters().holders();
+        Map<HolderRef<Enchantment>, Supplier<Boolean>> enchantmentConfigs = Map.of(
+                ModEnchantments.STASIS_ENCHANTMENT, CommonConfigs.Tools.STASIS_ENABLED,
+                ModEnchantments.WHIMSY_ENCHANTMENT, CommonConfigs.Tools.WHIMSY_ENABLED,
+                ModEnchantments.CAROUSEL_ENCHANTMENT, CommonConfigs.Tools.CAROUSEL_ENABLED);
+        for (var entry : enchantmentConfigs.entrySet()) {
+            if (entry.getValue().get()) continue;
+            ItemStack book = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(entry.getKey().getHolder(holders), 1));
             event.remove(CreativeModeTabs.TOOLS_AND_UTILITIES, book);
         }
 

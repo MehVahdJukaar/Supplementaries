@@ -4,6 +4,14 @@
     {
       "id": "supplementaries:stasis",
       "required": false
+    },
+    {
+      "id": "supplementaries:whimsy",
+      "required": false
+    },
+    {
+      "id": "supplementaries:carousel",
+      "required": false
     }
   ]
 }

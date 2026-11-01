@@ -4,10 +4,12 @@ import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
 import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
 import net.mehvahdjukaar.supplementaries.common.utils.SlotReference;
+import net.mehvahdjukaar.supplementaries.reg.ModEnchantments;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -22,6 +24,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -239,6 +242,14 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
     }
 
     public abstract int getMaxSlots();
+
+    //whimsy and carusel
+    public static boolean applySelectionEnchantments(ItemStack stack, SelectableContainerContent.Mut<?> data, RandomSource random) {
+        if (EnchantmentHelper.has(stack, ModEnchantments.RANDOMIZE_SELECTED_SLOT.get()))
+            return data.selectRandom(random);
+        if (EnchantmentHelper.has(stack, ModEnchantments.CYCLE_SELECTED_SLOT.get())) return data.cycle();
+        return false;
+    }
 
     public boolean modify(ItemStack stack, Function<M, Boolean> consumer) {
         C data = stack.get(this.getComponentType());

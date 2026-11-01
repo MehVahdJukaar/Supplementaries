@@ -63,6 +63,10 @@ public class LootTablesInjects {
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectBlueBomb);
         if (CommonConfigs.Tools.BOMB_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectBomb);
         if (CommonConfigs.stasisEnabled()) LOOT_INJECTS.add(LootTablesInjects::tryInjectStasis);
+        if (CommonConfigs.Tools.QUIVER_ENABLED.get() || CommonConfigs.Tools.LUNCH_BOX_ENABLED.get()) {
+            if (CommonConfigs.Tools.WHIMSY_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectWhimsy);
+            if (CommonConfigs.Tools.CAROUSEL_ENABLED.get()) LOOT_INJECTS.add(LootTablesInjects::tryInjectCarousel);
+        }
         if (CommonConfigs.Functional.BAMBOO_SPIKES_ENABLED.get() &&
                 CommonConfigs.Functional.TIPPED_SPIKES_ENABLED.get())
             LOOT_INJECTS.add(LootTablesInjects::tryInjectSpikes);
@@ -183,6 +187,18 @@ public class LootTablesInjects {
     private static void tryInjectStasis(Consumer<ResourceLocation> e, TableType type) {
         if (type == TableType.END_CITY) {
             injectPool(e, type, "stasis");
+        }
+    }
+
+    private static void tryInjectWhimsy(Consumer<ResourceLocation> e, TableType type) {
+        if (type == TableType.DUNGEON) {
+            injectPool(e, type, "whimsy");
+        }
+    }
+
+    private static void tryInjectCarousel(Consumer<ResourceLocation> e, TableType type) {
+        if (type == TableType.PILLAGER) {
+            injectPool(e, type, "carousel");
         }
     }
 
