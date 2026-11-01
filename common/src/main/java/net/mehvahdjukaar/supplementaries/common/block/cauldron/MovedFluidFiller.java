@@ -50,8 +50,9 @@ public class MovedFluidFiller {
 
     public static BlockState getStateMovedInto(BlockState movedState, Level level, BlockPos destPos, FluidState destFluid) {
         if (movedState.hasProperty(BlockStateProperties.WATERLOGGED)) {
-            if (movedState.is(ModTags.WATER_HOLDER)) return movedState;
-            return movedState.setValue(BlockStateProperties.WATERLOGGED, destFluid.is(Fluids.WATER));
+            boolean waterlogged = destFluid.is(Fluids.WATER)
+                    || (movedState.is(ModTags.WATER_HOLDER) && movedState.getValue(BlockStateProperties.WATERLOGGED));
+            return movedState.setValue(BlockStateProperties.WATERLOGGED, waterlogged);
         }
         if (destFluid.isEmpty() || !CommonConfigs.Tweaks.MOVED_CAULDRON_FILLING.get()) return movedState;
 

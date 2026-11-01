@@ -14,10 +14,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.PistonType;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEvent.Context;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ public final class ContinuousPulleyMover {
         Map<BlockPos, BlockState> slotsNotRefilledByMove = new HashMap<>();
         List<BlockState> originalStates = new ArrayList<>();
         Map<BlockPos, CompoundTag> carriedBeNbt = new HashMap<>();
+
         for (BlockPos pos : toPush) {
             BlockState state = level.getBlockState(pos);
             originalStates.add(state);
@@ -44,6 +47,8 @@ public final class ContinuousPulleyMover {
                 if (nbt != null) carriedBeNbt.put(pos.immutable(), nbt);
             }
         }
+
+
         Map<BlockPos, BlockState> ropesRetractedIntoPulleys = new HashMap<>();
 
         for (BlockPos retractedPos : resolvedStructure.getRopesRetractedIntoPulleys()) {
@@ -63,12 +68,17 @@ public final class ContinuousPulleyMover {
             BlockState srcState = originalStates.get(j);
             BlockPos dstPos = srcPos.relative(pushDir);
             slotsNotRefilledByMove.remove(dstPos);
-            BlockState movingState = movingBlock.defaultBlockState()
-                    .setValue(MovingPistonBlock.FACING, pushDir)
-                    .setValue(MovingPistonBlock.TYPE, PistonType.DEFAULT);
-            level.setBlock(dstPos, movingState, 68);
 
             FluidState dstFluid = MovedFluidFiller.getSnapshotFluid(fluidsLeftBehind, dstPos);
+
+            //keeps the water there while the block slides in
+            BlockState movingState = movingBlock.defaultBlockState()
+                    .setValue(MovingPistonBlock.FACING, pushDir)
+                    .setValue(MovingPistonBlock.TYPE, PistonType.DEFAULT)
+                    .setValue(BlockStateProperties.WATERLOGGED, dstFluid.is(Fluids.WATER));
+
+            level.setBlock(dstPos, movingState, 68);
+
             srcState = MovedFluidFiller.getStateMovedInto(srcState, level, dstPos, dstFluid);
             MovingPulleyBlockEntity movingBe = MovingPulleyBlock.newMovingBlockEntity(
                     dstPos, movingState, srcState, pushDir, true, false);

@@ -68,6 +68,7 @@
     "WanderingTraderMixin",
     "ZombieHorseMixin",
     "compat.CompatCreeperArclightMixin",
+    "compat.CompatEnvironmentalMudBallMixin",
     "compat.CompatFarmersDelightTomatoMixin"
   ],
   "client": [

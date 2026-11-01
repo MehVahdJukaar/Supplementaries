@@ -88,12 +88,14 @@ public class PistonBaseBlockMixin {
     }
 
     @WrapOperation(method = "moveBlocks",
-            at = @At(value = "INVOKE", ordinal = 4,
+            at = @At(value = "INVOKE", ordinal = 3,
                     target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
     private boolean supp$leaveFluidBehind(Level level, BlockPos vacatedPos, BlockState air, int flags,
                                           Operation<Boolean> original,
                                           @Share("suppFluids") LocalRef<Map<BlockPos, FluidState>> fluidShare) {
+
         BlockState left = MovedFluidFiller.getSnapshotFluid(fluidShare.get(), vacatedPos).createLegacyBlock();
+
         return original.call(level, vacatedPos, left, flags);
     }
 }

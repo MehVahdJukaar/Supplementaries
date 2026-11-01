@@ -52,7 +52,9 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         FluidState fluid = this.supp$movedFluidFill;
         this.supp$movedFluidFill = null;
         if (fluid == null || this.level == null) return;
-        MovedFluidFiller.applyPostPlacement(this.level, this.worldPosition, fluid);
+
+        MovedFluidFiller.applyPostPlacement(this.level, this.worldPosition,
+                ((PistonMovingBlockEntity) (Object) this).getMovedState(), fluid);
     }
 
     @Override
