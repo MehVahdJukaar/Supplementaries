@@ -1,26 +1,306 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flower_box",
-    "supplementaries:clock_block",
-    "supplementaries:pulley_block",
-    "supplementaries:lock_block",
-    "supplementaries:bellows",
-    "supplementaries:fine_wood",
-    "supplementaries:fine_wood_slab",
-    "supplementaries:fine_wood_stairs",
-    "supplementaries:way_sign_wall",
-    "supplementaries:way_sign",
-    "supplementaries:speaker_block",
-    "supplementaries:bamboo_spikes",
-    "supplementaries:notice_board",
+    {
+      "id": "supplementaries:flower_box",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flower_box"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flower_box"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:clock_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "clock_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "clock_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:pulley_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "pulley_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "pulley_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:lock_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lock_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lock_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bellows",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bellows"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bellows"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:fine_wood",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:fine_wood_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:fine_wood_stairs",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign_wall",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:speaker_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "speaker_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "speaker_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bamboo_spikes",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bamboo_spikes"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bamboo_spikes"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:notice_board",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "notice_board"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "notice_board"
+        }
+      ]
+    },
     "supplementaries:stick",
-    "supplementaries:timber_cross_brace",
-    "supplementaries:timber_brace",
-    "supplementaries:timber_frame",
-    "supplementaries:daub_cross_brace",
-    "supplementaries:daub_brace",
-    "supplementaries:daub_frame",
-    "supplementaries:wicker_fence"
+    {
+      "id": "supplementaries:timber_cross_brace",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:timber_brace",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:timber_frame",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:daub_cross_brace",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:daub_brace",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:daub_frame",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:wicker_fence",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wicker_fence"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wicker_fence"
+        }
+      ]
+    }
   ]
 }

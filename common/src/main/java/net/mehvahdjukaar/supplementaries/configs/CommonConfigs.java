@@ -110,12 +110,11 @@ public class CommonConfigs {
     public static boolean isEnabled(String key) {
         if (!CONFIG_HOLDER.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
-            // the config name is 'sepia_globe', so the default lookup by name would miss it
             case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get();
+            case ModConstants.NETHERITE_DOOR_NAME -> Building.NETHERITE_DOOR_ENABLED.get();
+            case ModConstants.NETHERITE_TRAPDOOR_NAME -> Building.NETHERITE_TRAPDOOR_ENABLED.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
-            // every feature() gate/leaf is registered in the config holder by name (see Moonlight ConfigBuilder),
-            // so we query it there instead of keeping our own map. Unknown keys read as enabled.
             default -> CONFIG_HOLDER.isFeatureEnabled(key);
         };
     }
@@ -557,7 +556,7 @@ public class CommonConfigs {
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
             BASALT_ASH_ENABLED = builder.comment("Use a datapack to tweak rarity")
-                    .worldReload().define("basalt_ash", true);
+                    .worldReload().feature("basalt_ash");
             builder.pop();
 
             builder.push("flag");
@@ -848,7 +847,7 @@ public class CommonConfigs {
             URN_ENABLED = builder.mainFeature();
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
                     .define("critter_spawn_chance", 0.01d, 0, 1);
-            URN_PILE_ENABLED = builder.worldReload().define("cave_urns", true);
+            URN_PILE_ENABLED = builder.worldReload().feature("cave_urns");
             builder.pop();
 
             builder.push("soap");
@@ -919,7 +918,7 @@ public class CommonConfigs {
 
             builder.push("flax");
             FLAX_ENABLED = builder.mainFeature();
-            WILD_FLAX_ENABLED = builder.worldReload().define("wild_flax", true);
+            WILD_FLAX_ENABLED = builder.worldReload().feature("wild_flax");
             builder.pop();
 
             LUMISENE_ENABLED = builder

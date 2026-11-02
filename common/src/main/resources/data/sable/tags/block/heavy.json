@@ -1,9 +1,65 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:cannonball",
-    "supplementaries:netherite_door",
-    "supplementaries:netherite_trapdoor",
-    "supplementaries:slidy_block"
+    {
+      "id": "supplementaries:cannonball",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "cannonball"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cannonball"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:netherite_door",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:netherite_trapdoor",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:slidy_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "slidy_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "slidy_block"
+        }
+      ]
+    }
   ]
 }

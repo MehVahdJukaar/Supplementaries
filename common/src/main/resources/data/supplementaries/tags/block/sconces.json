@@ -1,18 +1,206 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:sconce","required":false},
-    {"id":"supplementaries:sconce_wall","required":false},
-    {"id":"supplementaries:sconce_soul","required":false},
-    {"id":"supplementaries:sconce_wall_soul","required":false},
-    {"id":"supplementaries:sconce_green","required":false},
-    {"id":"supplementaries:sconce_wall_green","required":false},
-    {"id":"supplementaries:sconce_ender","required":false},
-    {"id":"supplementaries:sconce_wall_ender","required":false},
-    {"id":"supplementaries:sconce_nether_brass","required":false},
-    {"id":"supplementaries:sconce_wall_nether_brass","required":false},
-    {"id":"supplementaries:sconce_wall_glow","required":false},
-    {"id":"supplementaries:sconce_glow","required":false},
-    {"id":"supplementaries:sconce_lever","required":false}
+    {
+      "id": "supplementaries:sconce",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_wall",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_soul",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_wall_soul",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_green",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_wall_green",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_ender",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_wall_ender",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_nether_brass",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_wall_nether_brass",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_wall_glow",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_glow",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_lever",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce_lever"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce_lever"
+        }
+      ]
+    }
   ]
 }

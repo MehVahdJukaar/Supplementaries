@@ -1,7 +1,35 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:gold_gate","required":false},
-    {"id":"supplementaries:iron_gate","required":false}
+    {
+      "id": "supplementaries:gold_gate",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:iron_gate",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ]
+    }
   ]
 }

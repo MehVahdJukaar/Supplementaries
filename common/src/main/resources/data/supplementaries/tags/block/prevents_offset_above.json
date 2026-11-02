@@ -1,7 +1,22 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:planter","required":true},
+    {
+      "id": "supplementaries:planter",
+      "required": true,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "planter"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "planter"
+        }
+      ]
+    },
     {"id":"betterlily:water_lily_pad","required":false},
     {"id":"amendments:water_lily_pad","required":false}
 

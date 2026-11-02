@@ -1,6 +1,34 @@
 {
   "values": [
-    "supplementaries:globe_sepia",
-    "supplementaries:globe"
+    {
+      "id": "supplementaries:globe_sepia",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "globe_sepia"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "globe_sepia"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:globe",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "globe"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "globe"
+        }
+      ]
+    }
   ]
 }

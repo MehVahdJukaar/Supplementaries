@@ -5,14 +5,38 @@
     {"id":"#minecraft:ceiling_hanging_signs","required":false},
     {"id":"#minecraft:lanterns","required":false},
     {"id":"#c:lanterns","required":false},
-    {
-      "id": "supplementaries:redstone_lantern",
-      "required": false
-    },
     {"id":"minecraft:lantern","required":false},
     {"id":"minecraft:soul_lantern","required":false},
-    "supplementaries:rope",
-    "supplementaries:pignata_anchor",
+    {
+      "id": "supplementaries:rope",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "rope"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "rope"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:pignata_anchor",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "pignata"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "pignata"
+        }
+      ]
+    },
     {"id":"#supplementaries:sacks","required":false},
     {"id":"amendments:hanging_flower_pot","required":false},
     {"id":"supplementaries:rope_chandelier","required":false},

@@ -8,7 +8,22 @@
     {"id":"minecraft:chain_command_block","required":true},
     {"id":"minecraft:structure_block","required":true},
     {"id":"minecraft:jigsaw","required":true},
-    {"id":"supplementaries:moving_slidy_block_source","required":true},
+    {
+      "id": "supplementaries:moving_slidy_block_source",
+      "required": true,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "slidy_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "slidy_block"
+        }
+      ]
+    },
     {"id":"fastpaintings:painting","required":false},
     {"id":"create:belt","required":false},
     {"id":"create:belt_connector","required":false},

@@ -1,7 +1,35 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:cannon",
-    "supplementaries:hourglass"
+    {
+      "id": "supplementaries:cannon",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "cannon"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cannon"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:hourglass",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "hourglass"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "hourglass"
+        }
+      ]
+    }
   ]
 }

@@ -1,12 +1,82 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:blackboard","required":false},
+    {
+      "id": "supplementaries:blackboard",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "blackboard"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackboard"
+        }
+      ]
+    },
     {"id":"#supplementaries:flags","required":false},
-    {"id":"supplementaries:speaker_block","required":false},
+    {
+      "id": "supplementaries:speaker_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "speaker_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "speaker_block"
+        }
+      ]
+    },
     {"id":"#supplementaries:globes","required":false},
-    {"id":"supplementaries:lock_block","required":false},
-    {"id":"supplementaries:netherite_door","required":false},
-    {"id":"supplementaries:netherite_trapdoor","required":false}
+    {
+      "id": "supplementaries:lock_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lock_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lock_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:netherite_door",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:netherite_trapdoor",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ]
+    }
   ]
 }

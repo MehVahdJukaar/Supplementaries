@@ -4,13 +4,111 @@
     {"id":"#supplementaries:candle_holders","required":false},
     {"id":"#supplementaries:sconces","required":false},
     {"id":"#supplementaries:buntings","required":false},
-    {"id":"supplementaries:ash","required":false},
-    {"id":"supplementaries:barnacles","required":false},
-    {"id":"supplementaries:crank","required":false},
-    {"id":"supplementaries:doormat","required":false},
+    {
+      "id": "supplementaries:ash",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:barnacles",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:crank",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "crank"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "crank"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:doormat",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "doormat"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "doormat"
+        }
+      ]
+    },
     {"id":"supplementaries:gunpowder","required":false},
-    {"id":"supplementaries:item_shelf","required":false},
-    {"id":"supplementaries:pancake","required":false},
-    {"id":"supplementaries:sconce_lever","required":false}
+    {
+      "id": "supplementaries:item_shelf",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "item_shelf"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "item_shelf"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:pancake",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "pancake"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "pancake"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_lever",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce_lever"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce_lever"
+        }
+      ]
+    }
   ]
 }

@@ -1,13 +1,139 @@
 {
   "values": [
-    "supplementaries:way_sign_acacia",
-    "supplementaries:way_sign_warped",
-    "supplementaries:way_sign_oak",
-    "supplementaries:way_sign_spruce",
-    "supplementaries:way_sign_mangrove",
-    "supplementaries:way_sign_jungle",
-    "supplementaries:way_sign_crimson",
-    "supplementaries:way_sign_birch",
-    "supplementaries:way_sign_dark_oak"
+    {
+      "id": "supplementaries:way_sign_acacia",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign_warped",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign_oak",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign_spruce",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign_mangrove",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign_jungle",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign_crimson",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign_birch",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:way_sign_dark_oak",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "way_sign"
+        }
+      ]
+    }
   ]
 }

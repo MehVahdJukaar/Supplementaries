@@ -417,6 +417,20 @@
     {"id":"minecraft:twisting_vines","required":false},
     {"id":"minecraft:cactus","required":false},
     {"id":"quark:glow_shroom","required":false},
-    {"id":"supplementaries:flax_seeds","required":false}
+    {
+      "id": "supplementaries:flax_seeds",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
+    }
   ]
 }

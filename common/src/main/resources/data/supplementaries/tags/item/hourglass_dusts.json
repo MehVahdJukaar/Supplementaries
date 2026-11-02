@@ -3,7 +3,21 @@
   "values": [
     {"id":"minecraft:gunpowder","required":false},
     {"id":"#c:dusts","required":false},
-    {"id":"supplementaries:ash","required":false},
+    {
+      "id": "supplementaries:ash",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ]
+    },
     {"id":"thermal:pythogro","required":false},
     {"id":"darkerdepths:ash","required":false},
     {"id":"thermal:sawdust","required":false},

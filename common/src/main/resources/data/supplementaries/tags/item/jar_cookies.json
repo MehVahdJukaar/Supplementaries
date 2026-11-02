@@ -4,7 +4,21 @@
     {"id":"#c:foods/cookie","required":false},
     {"id":"minecraft:cookie","required":false},
     {"id":"snowyspirit:gingerbread_cookie","required":false},
-    {"id":"supplementaries:candy","required":false},
+    {
+      "id": "supplementaries:candy",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candy"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candy"
+        }
+      ]
+    },
     {"id":"farmersdelight:honey_cookie","required":false},
     {"id":"farmersdelight:sweet_berry_cookie","required":false},
     {"id":"farmersdelight:peanut_butter_cookie","required":false},

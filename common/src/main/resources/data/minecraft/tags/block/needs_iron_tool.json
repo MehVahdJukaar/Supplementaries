@@ -1,7 +1,35 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:gold_door",
-    "supplementaries:gold_trapdoor"
+    {
+      "id": "supplementaries:gold_door",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gold_door"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_door"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gold_trapdoor",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gold_trapdoor"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_trapdoor"
+        }
+      ]
+    }
   ]
 }

@@ -4,6 +4,20 @@
     "supplementaries:blaze_rod",
     "minecraft:magma_block",
     "minecraft:lava",
-    "supplementaries:lumisene"
+    {
+      "id": "supplementaries:lumisene",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lumisene"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lumisene"
+        }
+      ]
+    }
   ]
 }

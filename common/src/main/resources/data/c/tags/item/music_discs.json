@@ -1,5 +1,19 @@
 {
   "values": [
-    "supplementaries:music_disc_heave_ho"
+    {
+      "id": "supplementaries:music_disc_heave_ho",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "music_disc_heave_ho"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "music_disc_heave_ho"
+        }
+      ]
+    }
   ]
 }

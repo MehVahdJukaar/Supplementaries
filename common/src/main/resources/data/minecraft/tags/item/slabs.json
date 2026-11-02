@@ -1,11 +1,95 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:checker_slab",
-    "supplementaries:stone_tile_slab",
-    "supplementaries:blackstone_tile_slab",
-    "supplementaries:ash_bricks_slab",
-    "supplementaries:lapis_bricks_slab",
-    "supplementaries:fine_wood_slab"
+    {
+      "id": "supplementaries:checker_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "checker_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "checker_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:stone_tile_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:blackstone_tile_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:ash_bricks_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:lapis_bricks_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:fine_wood_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ]
+    }
   ]
 }

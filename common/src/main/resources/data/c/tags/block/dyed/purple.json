@@ -1,12 +1,110 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flag_purple",
-    "supplementaries:present_purple",
-    "supplementaries:trapped_present_purple",
-    "supplementaries:candle_holder_purple",
-    "supplementaries:awning_purple",
-    "supplementaries:bunting_purple",
-    "supplementaries:bunting_wall_purple"
+    {
+      "id": "supplementaries:flag_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:awning_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "awning"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "awning"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    }
   ]
 }

@@ -1,9 +1,65 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:slingshot",
-    "supplementaries:bubble_blower",
-    "supplementaries:quiver",
-    "supplementaries:lunch_basket"
+    {
+      "id": "supplementaries:slingshot",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "slingshot"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "slingshot"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bubble_blower",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bubble_blower"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bubble_blower"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:quiver",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "quiver"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "quiver"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:lunch_basket",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lunch_basket"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lunch_basket"
+        }
+      ]
+    }
   ]
 }

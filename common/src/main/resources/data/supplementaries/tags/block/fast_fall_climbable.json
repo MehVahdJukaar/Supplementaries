@@ -1,7 +1,35 @@
 {
   "values": [
-    "supplementaries:rope",
-    "supplementaries:rope_buntings",
+    {
+      "id": "supplementaries:rope",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "rope"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "rope"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:rope_buntings",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
     {"id":"supplementaries:rope_tomato","required":false}
 
   ]

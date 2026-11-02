@@ -1,11 +1,95 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flag_black",
-    "supplementaries:present_black",
-    "supplementaries:trapped_present_black",
-    "supplementaries:candle_holder_black",
-    "supplementaries:awning_black",
-    "supplementaries:bunting_black"
+    {
+      "id": "supplementaries:flag_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:awning_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "awning"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "awning"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    }
   ]
 }

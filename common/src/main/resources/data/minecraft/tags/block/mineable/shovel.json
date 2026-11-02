@@ -1,10 +1,80 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:raked_gravel",
-    "supplementaries:sugar_cube",
-    "supplementaries:gravel_bricks",
-    "supplementaries:suspicious_gravel_bricks",
-    "supplementaries:ash"
+    {
+      "id": "supplementaries:raked_gravel",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "raked_gravel"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "raked_gravel"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sugar_cube",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sugar_cube"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sugar_cube"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gravel_bricks",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:suspicious_gravel_bricks",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:ash",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ]
+    }
   ]
 }

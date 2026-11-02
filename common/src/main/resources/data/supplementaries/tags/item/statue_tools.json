@@ -1,7 +1,21 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:wrench","required":false},
+    {
+      "id": "supplementaries:wrench",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wrench"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wrench"
+        }
+      ]
+    },
     {"id":"create:wrench","required":false}
   ]
 }

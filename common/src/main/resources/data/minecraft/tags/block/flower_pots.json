@@ -1,6 +1,20 @@
 {
   "replace": false,
   "values": [
-	"supplementaries:potted_flax"
+    {
+      "id": "supplementaries:potted_flax",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
+    }
   ]
 }

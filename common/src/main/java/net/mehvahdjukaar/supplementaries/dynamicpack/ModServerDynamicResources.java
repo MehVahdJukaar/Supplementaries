@@ -11,14 +11,11 @@ import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
-import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.biome.Biomes;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -73,73 +70,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
                 addCannonBoatRecipes(manager, sink);
             }
 
-            //way signs tag
-            {
-                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_ROAD_SIGNS);
-                if (CommonConfigs.Building.ROAD_SIGN_ENABLED.get()) {
-                    builder.addTag(BiomeTags.IS_OVERWORLD);
-                }
-                sink.addTag(builder, Registries.BIOME);
-            }
-
-            //galleons
-            {
-                SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_GALLEONS);
-                if (CommonConfigs.Functional.GALLEONS_ENABLED.get()) {
-                    builder.addTag(BiomeTags.IS_OCEAN);
-                }
-                sink.addTag(builder, Registries.BIOME);
-            }
-
-            //fabric has it done another way beucase it needs tag before this... for features only
-            if (PlatHelper.getPlatform().isForge()) {
-                //cave urns tag
-
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_CAVE_URNS);
-
-                    if (CommonConfigs.Functional.URN_PILE_ENABLED.get()) {
-                        builder.addTag(BiomeTags.IS_OVERWORLD);
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-
-                //barnacles
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BARNACLES);
-
-                    if (CommonConfigs.Building.BARNACLES_ENABLED.get()) {
-                        builder.addTag(BiomeTags.IS_OCEAN);
-                        builder.add(Biomes.STONY_SHORE.location());
-                        builder.addTag(BiomeTags.IS_BEACH);
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-
-                //wild flax tag
-
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_WILD_FLAX);
-
-                    if (CommonConfigs.Functional.WILD_FLAX_ENABLED.get()) {
-                        builder.addTag(BiomeTags.IS_OVERWORLD);
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-
-                //ash
-
-                {
-                    SimpleTagBuilder builder = SimpleTagBuilder.of(ModTags.HAS_BASALT_ASH);
-
-                    if (CommonConfigs.Building.BASALT_ASH_ENABLED.get()) {
-                        builder.add(Biomes.BASALT_DELTAS.location());
-                        builder.addOptionalElement(ResourceLocation.parse("incendium:volcanic_deltas"));
-                    }
-                    sink.addTag(builder, Registries.BIOME);
-                }
-            } else {
-
+            if (PlatHelper.getPlatform().isFabric()) {
                 //fabric stuff
                 sink.appendItemToEnchantment(manager, Enchantments.QUICK_CHARGE, ModRegistry.SLINGSHOT_ITEM.get());
                 sink.appendItemToEnchantment(manager, Enchantments.MULTISHOT, ModRegistry.SLINGSHOT_ITEM.get());

@@ -1,5 +1,19 @@
 {
   "values": [
-    "supplementaries:sugar_cube"
+    {
+      "id": "supplementaries:sugar_cube",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sugar_cube"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sugar_cube"
+        }
+      ]
+    }
   ]
 }

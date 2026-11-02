@@ -1,73 +1,1011 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:statue",
-    "supplementaries:barnacles",
-    "supplementaries:end_stone_lamp",
-    "supplementaries:deepslate_lamp",
-    "supplementaries:blackstone_tile_slab",
-    "supplementaries:blackstone_tile",
-    "supplementaries:blackstone_tile_stairs",
-    "supplementaries:blackstone_tile_wall",
-    "supplementaries:blackstone_lamp",
-    "supplementaries:stone_tile_slab",
-    "supplementaries:stone_tile",
-    "supplementaries:stone_tile_stairs",
-    "supplementaries:stone_tile_wall",
-    "supplementaries:stone_lamp",
-    "supplementaries:redstone_lantern",
-    "supplementaries:daub_cross_brace",
-    "supplementaries:daub_brace",
-    "supplementaries:daub_frame",
-    "supplementaries:daub",
-    "supplementaries:flint_block",
-    "supplementaries:checker_slab",
-    "supplementaries:checker_block",
-    "supplementaries:slidy_block",
-    "supplementaries:gold_bars",
-    "supplementaries:gold_gate",
-    "supplementaries:iron_gate",
-    "supplementaries:netherite_trapdoor",
-    "supplementaries:netherite_door",
-    "supplementaries:gold_door",
-    "supplementaries:gold_trapdoor",
-    "supplementaries:faucet",
-    "supplementaries:wind_vane",
-    "supplementaries:redstone_illuminator",
-    "supplementaries:turn_table",
-    "supplementaries:spring_launcher_arm",
-    "supplementaries:spring_launcher_head",
-    "supplementaries:spring_launcher",
-    "supplementaries:cog_block",
-    "supplementaries:hourglass",
-    "supplementaries:goblet",
-    "supplementaries:hourglass",
-    "supplementaries:blackboard",
-    "supplementaries:globe",
-    "supplementaries:cage",
-    "supplementaries:cannon",
-    "supplementaries:cannonball",
-    "supplementaries:safe",
-    "supplementaries:pedestal",
-    "supplementaries:fire_pit",
-    "supplementaries:planter",
-    "supplementaries:globe_sepia",
-    "supplementaries:gravel_bricks",
-    "supplementaries:suspicious_gravel_bricks",
-    "supplementaries:ash_bricks_slab",
-    "supplementaries:ash_bricks",
-    "supplementaries:ash_bricks_stairs",
-    "supplementaries:ash_bricks_wall",
-    "supplementaries:soap_block",
-    "supplementaries:urn",
-    "supplementaries:jar",
-    "supplementaries:relayer",
-    "supplementaries:grouper",
-    "supplementaries:crystal_display",
-    "supplementaries:lapis_bricks_slab",
-    "supplementaries:lapis_bricks",
-    "supplementaries:lapis_bricks_stairs",
-    "supplementaries:lapis_bricks_wall",
+    {
+      "id": "supplementaries:statue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "statue"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "statue"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:barnacles",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:end_stone_lamp",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "end_stone_lamp"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "end_stone_lamp"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:deepslate_lamp",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "deepslate_lamp"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "deepslate_lamp"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:blackstone_tile_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:blackstone_tile",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:blackstone_tile_stairs",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:blackstone_tile_wall",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackstone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:blackstone_lamp",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "blackstone_lamp"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackstone_lamp"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:stone_tile_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:stone_tile",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:stone_tile_stairs",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:stone_tile_wall",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "stone_tile"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:stone_lamp",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "stone_lamp"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "stone_lamp"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:redstone_lantern",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "redstone_lantern"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "redstone_lantern"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:daub_cross_brace",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:daub_brace",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:daub_frame",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:daub",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "daub"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flint_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flint_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flint_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:checker_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "checker_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "checker_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:checker_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "checker_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "checker_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:slidy_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "slidy_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "slidy_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gold_bars",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gold_bars"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_bars"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gold_gate",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:iron_gate",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:netherite_trapdoor",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:netherite_door",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gold_door",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gold_door"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_door"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gold_trapdoor",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gold_trapdoor"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_trapdoor"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:faucet",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "faucet"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "faucet"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:wind_vane",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wind_vane"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wind_vane"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:redstone_illuminator",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "redstone_illuminator"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "redstone_illuminator"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:turn_table",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "turn_table"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "turn_table"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:spring_launcher_arm",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "spring_launcher"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "spring_launcher"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:spring_launcher_head",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "spring_launcher"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "spring_launcher"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:spring_launcher",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "spring_launcher"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "spring_launcher"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:cog_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "cog_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cog_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:hourglass",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "hourglass"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "hourglass"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:goblet",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "goblet"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "goblet"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:hourglass",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "hourglass"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "hourglass"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:blackboard",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "blackboard"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "blackboard"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:globe",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "globe"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "globe"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:cage",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "cage"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cage"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:cannon",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "cannon"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cannon"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:cannonball",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "cannonball"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cannonball"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:safe",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "safe"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "safe"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:pedestal",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "pedestal"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "pedestal"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:fire_pit",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "fire_pit"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "fire_pit"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:planter",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "planter"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "planter"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:globe_sepia",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "globe_sepia"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "globe_sepia"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gravel_bricks",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:suspicious_gravel_bricks",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:ash_bricks_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:ash_bricks",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:ash_bricks_stairs",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:ash_bricks_wall",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:soap_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "soap"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "soap"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:urn",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "urn"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "urn"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:jar",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "jar"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "jar"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:relayer",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "relayer"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "relayer"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:grouper",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "grouper"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "grouper"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:crystal_display",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "crystal_display"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "crystal_display"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:lapis_bricks_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:lapis_bricks",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:lapis_bricks_stairs",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:lapis_bricks_wall",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lapis_bricks"
+        }
+      ]
+    },
     "supplementaries:ashen_basalt"
   ]
 }

@@ -1,8 +1,51 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:sconce_soul",
-    "supplementaries:sconce_wall_soul",
-    {"id":"supplementaries:candle_holder_soul","required":false}
+    {
+      "id": "supplementaries:sconce_soul",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sconce_wall_soul",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_soul",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    }
   ]
 }

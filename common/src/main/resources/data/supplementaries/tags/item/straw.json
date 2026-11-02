@@ -1,7 +1,21 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:flax","required":false},
+    {
+      "id": "supplementaries:flax",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
+    },
     {"id":"minecraft:wheat","required":false},
     {"id":"farmersdelight:straw","required":false}
   ]

@@ -1,6 +1,20 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:candy"
+    {
+      "id": "supplementaries:candy",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candy"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candy"
+        }
+      ]
+    }
   ]
 }

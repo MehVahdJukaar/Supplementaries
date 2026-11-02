@@ -1,6 +1,34 @@
 {
   "values": [
-    "supplementaries:ash",
-    "supplementaries:doormat"
+    {
+      "id": "supplementaries:ash",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:doormat",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "doormat"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "doormat"
+        }
+      ]
+    }
   ]
 }

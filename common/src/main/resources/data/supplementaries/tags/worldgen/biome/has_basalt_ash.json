@@ -1,0 +1,36 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "minecraft:basalt_deltas",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "basalt_ash"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "basalt_ash"
+        }
+      ]
+    },
+    {
+      "id": "incendium:volcanic_deltas",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "basalt_ash"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "basalt_ash"
+        }
+      ]
+    }
+  ]
+}

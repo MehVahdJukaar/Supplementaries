@@ -1,0 +1,50 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "#minecraft:is_ocean",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ]
+    },
+    {
+      "id": "minecraft:stony_shore",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ]
+    },
+    {
+      "id": "#minecraft:is_beach",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ]
+    }
+  ]
+}

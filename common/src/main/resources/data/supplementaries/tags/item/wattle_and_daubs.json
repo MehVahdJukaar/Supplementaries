@@ -1,8 +1,50 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:daub_frame",
-    "supplementaries:daub_cross_brace",
-    "supplementaries:daub_brace"
+    {
+      "id": "supplementaries:daub_frame",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:daub_cross_brace",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:daub_brace",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wattle_and_daub"
+        }
+      ]
+    }
   ]
 }

@@ -1,10 +1,80 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flax_block",
-    "supplementaries:flint_block",
-    "supplementaries:feather_block",
-    "supplementaries:sugar_cube",
-    "supplementaries:soap_block"
+    {
+      "id": "supplementaries:flax_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flint_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flint_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flint_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:feather_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "feather_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "feather_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sugar_cube",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sugar_cube"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sugar_cube"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:soap_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "soap"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "soap"
+        }
+      ]
+    }
   ]
 }

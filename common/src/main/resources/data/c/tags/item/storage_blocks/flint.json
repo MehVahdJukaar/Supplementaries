@@ -1,6 +1,20 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flint_block"
+    {
+      "id": "supplementaries:flint_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flint_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flint_block"
+        }
+      ]
+    }
   ]
 }

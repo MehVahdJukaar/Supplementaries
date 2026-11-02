@@ -1,6 +1,20 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:enderman_head"
+    {
+      "id": "supplementaries:enderman_head",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "enderman_head"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "enderman_head"
+        }
+      ]
+    }
   ]
 }

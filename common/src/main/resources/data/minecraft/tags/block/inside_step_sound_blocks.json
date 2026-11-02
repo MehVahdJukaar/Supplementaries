@@ -1,8 +1,64 @@
 {
   "values": [
-    "supplementaries:ash",
-    "supplementaries:bamboo_spikes",
-    "supplementaries:barnacles",
-    "supplementaries:pancake"
+    {
+      "id": "supplementaries:ash",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "ash"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bamboo_spikes",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bamboo_spikes"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bamboo_spikes"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:barnacles",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "barnacles"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:pancake",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "pancake"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "pancake"
+        }
+      ]
+    }
   ]
 }

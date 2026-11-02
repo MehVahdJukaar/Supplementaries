@@ -3,7 +3,21 @@
   "values": [
     "minecraft:splash_potion",
     "minecraft:lingering_potion",
-    {"id":"supplementaries:lunch_basket","required":false},
+    {
+      "id": "supplementaries:lunch_basket",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lunch_basket"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lunch_basket"
+        }
+      ]
+    },
     {"id":"potionbundles:potion_bundle","required":false},
     {"id":"ars_nouveau:potion_flask","required":false},
     {"id":"ars_nouveau:potion_flask_amplify","required":false},

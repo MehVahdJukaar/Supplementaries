@@ -1,7 +1,21 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:urn",
+    {
+      "id": "supplementaries:urn",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "urn"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "urn"
+        }
+      ]
+    },
     "#supplementaries:gravel_bricks",
     "minecraft:tnt",
     {"id":"immersive_weathering:icicle","required":false}

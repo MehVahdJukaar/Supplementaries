@@ -1,6 +1,21 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:planter_rich","required":false}
+    {
+      "id": "supplementaries:planter_rich",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "planter"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "planter"
+        }
+      ]
+    }
   ]
 }
