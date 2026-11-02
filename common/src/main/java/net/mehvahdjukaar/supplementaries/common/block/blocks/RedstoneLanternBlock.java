@@ -61,7 +61,17 @@ public class RedstoneLanternBlock extends LanternBlock {
 
     protected boolean hasNeighborSignal(Level level, BlockPos pos, BlockState state) {
         Direction toSupport = LanternBlock.getConnectedDirection(state).getOpposite();
-        return level.hasSignal(pos.relative(toSupport), toSupport);
+        BlockPos supportPos = pos.relative(toSupport);
+        BlockState support = level.getBlockState(supportPos);
+        if (support.getSignal(level, supportPos, toSupport) > 0) return true;
+        if (!support.isRedstoneConductor(level, supportPos)) return false;
+
+        //skip ourselves or we turn off from our own power
+        Direction toLantern = toSupport.getOpposite();
+        for (Direction d : Direction.values()) {
+            if (d != toLantern && level.getDirectSignal(supportPos.relative(d), d) > 0) return true;
+        }
+        return false;
     }
 
     @Override
@@ -81,7 +91,12 @@ public class RedstoneLanternBlock extends LanternBlock {
 
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction side) {
-        return !state.getValue(POWERED) && side.getAxis().isHorizontal() ? 15 : 0;
+        return !state.getValue(POWERED) && side != Direction.DOWN ? 15 : 0;
+    }
+
+    @Override
+    protected int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction side) {
+        return side == Direction.UP ? state.getSignal(level, pos, side) : 0;
     }
 
     @Override

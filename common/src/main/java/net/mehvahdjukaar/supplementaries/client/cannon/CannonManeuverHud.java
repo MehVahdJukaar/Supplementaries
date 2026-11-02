@@ -55,7 +55,7 @@ public class CannonManeuverHud implements LayeredDraw.Layer {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.depthMask(false);
-        int barrelBorderColor = 0xff1d1d1d;
+        int barrelBorderColor = 0xff000000;
 
         graphics.blit(ModTextures.CANNON_OVERLAY_TEXTURE, left, top, -90, 0, 0, size, size, size, size);
         graphics.fill(RenderType.guiOverlay(), 0, 0, w, top, -90, barrelBorderColor);
