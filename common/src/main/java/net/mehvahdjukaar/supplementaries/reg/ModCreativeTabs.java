@@ -491,6 +491,10 @@ public class ModCreativeTabs {
                 ModConstants.ANTIQUE_INK_NAME,
                 ModRegistry.ANTIQUE_INK);
 
+        adder.after(Items.NETHERITE_INGOT, CreativeModeTabs.INGREDIENTS,
+                ModConstants.ORICHALCUM_NAME,
+                ModRegistry.ORICHALCUM);
+
         adder.after(Items.WHEAT, CreativeModeTabs.INGREDIENTS,
                 ModConstants.FLAX_NAME,
                 ModRegistry.FLAX_ITEM);
@@ -503,7 +507,7 @@ public class ModCreativeTabs {
         //        ModConstants.RED_MERCHANT_NAME,
         //        ModRegistry.RED_MERCHANT_SPAWN_EGG_ITEM);
 
-        adder.add(CreativeModeTabs.SPAWN_EGGS,
+        adder.after(Items.PILLAGER_SPAWN_EGG, CreativeModeTabs.SPAWN_EGGS,
                 ModConstants.PLUNDERER_NAME,
                 ModRegistry.PLUNDERER_SPAWN_EGG_ITEM);
 

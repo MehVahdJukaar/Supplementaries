@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -43,6 +44,11 @@ public class LootTablesInjects {
     }
 
     private static ResourceLocation injectLootPools(RegHelper.LootInjectEvent event) {
+        //neoforge uses a glm for this
+        if (PlatHelper.getPlatform().isFabric() && CommonConfigs.Tools.ORICHALCUM_ENABLED.get()
+                && (event.getTable().getPath().startsWith("blocks/"))) {
+            event.addTableReference(Supplementaries.res("inject/orichalcum"));
+        }
         String nameSpace = event.getTable().getNamespace();
         if (nameSpace.equals("minecraft") || nameSpace.equals("repurposed_structures")) {
             String location = event.getTable().toString();

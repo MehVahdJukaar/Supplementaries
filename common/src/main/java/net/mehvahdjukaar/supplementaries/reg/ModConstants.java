@@ -29,6 +29,7 @@ public final class ModConstants {
     public static final String KEY_NAME = "key";
     public static final String CANDY_NAME = "candy";
     public static final String ANTIQUE_INK_NAME = "antique_ink";
+    public static final String ORICHALCUM_NAME = "orichalcum";
     public static final String WRENCH_NAME = "wrench";
     public static final String QUIVER_NAME = "quiver";
     public static final String LUNCH_BASKET_NAME = "lunch_basket";

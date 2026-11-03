@@ -20,7 +20,6 @@
     "ZetaPistonStructureResolverMixin",
     "self.SelfFlammableFluidBlockMixin",
     "self.SelfFrameMixin",
-    "self.SelfGunpowderMixin",
     "self.SelfLumiseneFluidMixin",
     "self.SelfNetheriteDoorMixin",
     "self.SelfPlanterMixin",

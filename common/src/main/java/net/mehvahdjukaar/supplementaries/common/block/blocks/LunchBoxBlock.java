@@ -132,11 +132,10 @@ public class LunchBoxBlock extends WaterBlock implements EntityBlock, IWashable 
 
     @Override
     public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
-        ItemStack itemstack = super.getCloneItemStack(level, pos, state);
         if (level.getBlockEntity(pos) instanceof LunchBoxBlockTile tile) {
-            Utils.saveTileToItem(tile);
+            return Utils.saveTileToItem(tile);
         }
-        return itemstack;
+        return super.getCloneItemStack(level, pos, state);
     }
 
     @Override

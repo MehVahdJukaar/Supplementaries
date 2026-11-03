@@ -130,18 +130,17 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
             if (filledAmount != null) return filledAmount;
         }
 
-        if (!this.isConnectedBelow() && !simulate &&
-                (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get() ||
-                        CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get())) {
-            for (var bi : behaviors.getItemInteractions()) {
-                ItemStack removed = bi.tryExtractItem(level, behind, backState, dir, tileBack);
-                if (!removed.isEmpty()) {
-                    if (CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get() && fillEntityBelow(removed)) {
-                        //TODO
-                    } else if (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get()) {
-                        drop(removed);
+        if (!this.isConnectedBelow() && !simulate) {
+            List<Entity> entitiesBelow = CommonConfigs.Redstone.FAUCET_FILL_ENTITIES.get() ? getEntitiesBelow() : List.of();
+            if (CommonConfigs.Redstone.FAUCET_DROP_ITEMS.get() || !entitiesBelow.isEmpty()) {
+                for (var bi : behaviors.getItemInteractions()) {
+                    ItemStack removed = bi.tryExtractItem(level, behind, backState, dir, tileBack);
+                    if (!removed.isEmpty()) {
+                        ItemStack left = fillEntities(entitiesBelow, removed);
+                        //drops even with drops off, its already out of the container
+                        if (!left.isEmpty()) drop(left);
+                        return COOLDOWN_PER_BOTTLE;
                     }
-                    return COOLDOWN_PER_BOTTLE;
                 }
             }
         }
@@ -225,16 +224,20 @@ public class FaucetBlockTile extends BlockEntity implements IExtraModelDataProvi
         level.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.3F, 0.5f + f);
     }
 
-    private boolean fillEntityBelow(ItemStack stack) {
+    private List<Entity> getEntitiesBelow() {
         List<Entity> list = level.getEntities((Entity) null,
                 new AABB(worldPosition).move(0, -0.75, 0),
                 NON_PLAYER);
         Collections.shuffle(list);
-        for (Entity entity : list) {
+        return list;
+    }
+
+    private ItemStack fillEntities(List<Entity> entities, ItemStack stack) {
+        for (Entity entity : entities) {
             stack = ItemsUtil.tryAddingItem(stack, level, entity);
-            if (stack.isEmpty()) return true;
+            if (stack.isEmpty()) break;
         }
-        return false;
+        return stack;
     }
 
     @Override

@@ -26,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
@@ -44,6 +45,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * The main gunpowder block. Very similar to the RedstoneWireBlock
@@ -496,6 +498,15 @@ public class GunpowderBlock extends LightUpBlock {
                 world.scheduleTick(p, this, Math.max(getDelay() - 1, 1));
                 this.lightUpByWire(neighbourState, p, world);
             }
+        }
+    }
+
+    @Override
+    protected void onExplosionHit(BlockState state, Level level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
+        if (!level.isClientSide && this.canSurvive(state, level, pos)) {
+            this.tryLightUp(null, state, pos, level, FireSoundType.FLAMING_ARROW);
+        } else {
+            super.onExplosionHit(state, level, pos, explosion, dropConsumer);
         }
     }
 

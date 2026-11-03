@@ -998,6 +998,7 @@ public class CommonConfigs {
         public static final Supplier<Integer> ROPE_ARROW_CAPACITY;
         public static final Supplier<Boolean> ROPE_ARROW_CROSSBOW;
         public static final Supplier<Boolean> ANTIQUE_INK_ENABLED;
+        public static final Supplier<Boolean> ORICHALCUM_ENABLED;
         public static final Supplier<Boolean> CANDY_ENABLED;
         public static final Supplier<Boolean> STASIS_ENABLED;
         public static final Supplier<Boolean> WHIMSY_ENABLED;
@@ -1143,6 +1144,10 @@ public class CommonConfigs {
 
             builder.push("antique_ink");
             ANTIQUE_INK_ENABLED = builder.mainFeature();
+            builder.pop();
+
+            builder.push("orichalcum");
+            ORICHALCUM_ENABLED = builder.mainFeature();
             builder.pop();
             CANDY_ENABLED = builder.feature(ModConstants.CANDY_NAME);
 

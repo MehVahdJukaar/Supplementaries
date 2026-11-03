@@ -291,29 +291,17 @@ public class PlundererEntity extends AbstractIllager implements InventoryCarrier
         return i >= 0 && i < this.inventory.getContainerSize() ? SlotAccess.forContainer(this.inventory, i) : super.getSlot(slot);
     }
 
-    //TODO: add this
     @Override
     public void applyRaidBuffs(ServerLevel level, int wave, boolean unused) {
         Raid raid = this.getCurrentRaid();
-        boolean shouldRun = this.random.nextFloat() <= raid.getEnchantOdds();
-        if (shouldRun) {
-            ItemStack itemStack = new ItemStack(Items.CROSSBOW);
-            ResourceKey<EnchantmentProvider> resourceKey;
-            if (wave > raid.getNumGroups(Difficulty.NORMAL)) {
-                resourceKey = VanillaEnchantmentProviders.RAID_PILLAGER_POST_WAVE_5;
-            } else if (wave > raid.getNumGroups(Difficulty.EASY)) {
-                resourceKey = VanillaEnchantmentProviders.RAID_PILLAGER_POST_WAVE_3;
-            } else {
-                resourceKey = null;
-            }
-
-            if (resourceKey != null) {
-                EnchantmentHelper.enchantItemFromProvider(
-                        itemStack, level.registryAccess(), resourceKey, level.getCurrentDifficultyAt(this.blockPosition()), this.getRandom()
-                );
-                this.setItemSlot(EquipmentSlot.MAINHAND, itemStack);
-            }
+        ItemStack sword = new ItemStack(Items.GOLDEN_SWORD);
+        if (this.random.nextFloat() <= raid.getEnchantOdds()) {
+            ResourceKey<EnchantmentProvider> provider = wave > raid.getNumGroups(Difficulty.NORMAL) ?
+                    VanillaEnchantmentProviders.RAID_VINDICATOR_POST_WAVE_5 : VanillaEnchantmentProviders.RAID_VINDICATOR;
+            EnchantmentHelper.enchantItemFromProvider(sword, level.registryAccess(), provider,
+                    level.getCurrentDifficultyAt(this.blockPosition()), this.getRandom());
         }
+        this.setItemSlot(EquipmentSlot.MAINHAND, sword);
     }
 
     // parrot. A bunch of copied player code

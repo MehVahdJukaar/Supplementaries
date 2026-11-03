@@ -20,6 +20,7 @@
     "BiomeAccessor",
     "CropBlockMixin",
     "FireBlockAccessor",
+    "ItemEntityMixin",
     "MobMixin",
     "RedstoneWireBlockMixin",
     "SugarCaneBlockMixin",

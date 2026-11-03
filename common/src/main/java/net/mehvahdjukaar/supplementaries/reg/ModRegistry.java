@@ -14,6 +14,7 @@ import net.mehvahdjukaar.supplementaries.common.entities.BombEntity;
 import net.mehvahdjukaar.supplementaries.common.items.*;
 import net.mehvahdjukaar.supplementaries.common.items.components.LunchBaskedContent;
 import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
+import net.mehvahdjukaar.supplementaries.common.items.loot.BlockTagCondition;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomArrowFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.RandomEnchantFunction;
 import net.mehvahdjukaar.supplementaries.common.items.loot.SetChargesFunction;
@@ -41,6 +42,7 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +73,8 @@ public class ModRegistry {
             res("random_arrows"), RandomArrowFunction.CODEC);
     public static final Supplier<LootItemFunctionType<SetChargesFunction>> SET_CHARGES_FUNCTION = RegHelper.registerLootFunction(
             res("set_charges"), SetChargesFunction.CODEC);
+    public static final Supplier<LootItemConditionType> BLOCK_TAG_CONDITION = RegHelper.registerLootCondition(
+            res("block_tag"), () -> BlockTagCondition.CODEC);
 
 
     //effects
@@ -146,6 +150,9 @@ public class ModRegistry {
 
     //antique ink
     public static final Supplier<Item> ANTIQUE_INK = regItem(ANTIQUE_INK_NAME, () -> new AntiqueInkItem(new Item.Properties()));
+
+    public static final Supplier<Item> ORICHALCUM = regItem(ORICHALCUM_NAME, () -> new Item(new Item.Properties()
+            .rarity(Rarity.RARE)));
 
     //wrench
     public static final Supplier<Item> WRENCH = regItem(WRENCH_NAME, () -> new WrenchItem(new Item.Properties()
