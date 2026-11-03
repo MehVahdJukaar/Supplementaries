@@ -307,6 +307,7 @@ public class ModRegistry {
                     .pushReaction(PushReaction.DESTROY)
                     .strength(3f, 6f)
                     .sound(SoundType.METAL)
+                    .noOcclusion()
     ));
 
     public static final Supplier<BlockEntityType<CageBlockTile>> CAGE_TILE = regTile(

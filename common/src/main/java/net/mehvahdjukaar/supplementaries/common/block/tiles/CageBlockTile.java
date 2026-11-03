@@ -26,7 +26,7 @@ public class CageBlockTile extends BlockEntity implements IMobContainerProvider 
     public CageBlockTile(BlockPos pos, BlockState state) {
         super(ModRegistry.CAGE_TILE.get(), pos, state);
         AbstractMobContainerItem item = ((AbstractMobContainerItem) ModRegistry.CAGE_ITEM.get());
-        this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), false);
+        this.mobContainer = new MobContainer(item.getMobContainerWidth(), item.getMobContainerHeight(), item.getMobContainerFloorHeight(), false);
     }
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, CageBlockTile tile) {

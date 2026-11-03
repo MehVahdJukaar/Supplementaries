@@ -17,7 +17,12 @@ public class CageItem extends AbstractMobContainerItem {
 
 
     public CageItem(Block block, Properties properties) {
-        super(block, properties, 0.875f, 1f, false);
+        super(block, properties, 1f, 1f, false);
+    }
+
+    @Override
+    public float getMobContainerFloorHeight() {
+        return 0;
     }
 
     @Override

@@ -83,6 +83,10 @@ public abstract class AbstractMobContainerItem extends BlockItem {
         return mobContainerWidth;
     }
 
+    public float getMobContainerFloorHeight() {
+        return 1 / 16f;
+    }
+
     protected boolean canFitEntity(Entity e) {
         float margin = 0.125f;
         float h = e.getBbHeight() - margin;
@@ -162,7 +166,7 @@ public abstract class AbstractMobContainerItem extends BlockItem {
      */
     public ItemStack saveEntityInItem(Entity entity, ItemStack currentStack, ItemStack bucketStack) {
         ItemStack returnStack = currentStack.copyWithCount(1);
-        MobContainer mobContainer = new MobContainer(this.getMobContainerWidth(), this.getMobContainerHeight(), this.isAquarium);
+        MobContainer mobContainer = new MobContainer(this.getMobContainerWidth(), this.getMobContainerHeight(), this.getMobContainerFloorHeight(), this.isAquarium);
         boolean success = mobContainer.captureEntity(entity, bucketStack);
         if (success) {
             returnStack.set(ModComponents.MOB_HOLDER_CONTENT.get(), MobContainerView.of(mobContainer));

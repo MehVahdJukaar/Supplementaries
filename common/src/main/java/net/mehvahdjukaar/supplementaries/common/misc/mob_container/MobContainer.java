@@ -60,6 +60,7 @@ public class MobContainer {
 
     private final float width;
     private final float height;
+    private final float floorHeight;
     private final boolean isAquarium;
 
     //stuff that actually gets saved
@@ -74,8 +75,13 @@ public class MobContainer {
     private boolean needsInitialization = false;
 
     public MobContainer(float width, float height, boolean isAquarium) {
+        this(width, height, 1 / 16f, isAquarium);
+    }
+
+    public MobContainer(float width, float height, float floorHeight, boolean isAquarium) {
         this.width = width;
         this.height = height;
+        this.floorHeight = floorHeight;
         this.isAquarium = isAquarium;
     }
 
@@ -196,6 +202,11 @@ public class MobContainer {
      */
     public static Pair<Float, Float> calculateMobDimensionsForContainer(
             Entity mob, float blockW, float blockH, boolean waterlogged) {
+        return calculateMobDimensionsForContainer(mob, blockW, blockH, 1 / 16f, waterlogged);
+    }
+
+    public static Pair<Float, Float> calculateMobDimensionsForContainer(
+            Entity mob, float blockW, float blockH, float floorHeight, boolean waterlogged) {
 
         @Nullable
         var cap = CapturedMobHandler.getInstance(mob.level()).getCatchableMobCapOrDefault(mob);
@@ -221,7 +232,7 @@ public class MobContainer {
         float margin = 1 / 16f * 2;
         float yMargin = 1 / 16f;
 
-        float maxH = blockH - 2 * (isAir ? margin : yMargin);
+        float maxH = blockH - (isAir ? 2 * margin : floorHeight + yMargin);
         float maxW = blockW - 2 * margin;
         //if width and height are greater than maximum allowed vales for container scale down
         if (aW > maxW || aH > maxH) {
@@ -236,7 +247,7 @@ public class MobContainer {
             scale *= 0.45f;
         }
 
-        float yOffset = isAir ? (blockH / 2f) - aH * scale / 2f : yMargin;
+        float yOffset = isAir ? (blockH / 2f) - aH * scale / 2f : floorHeight;
 
         if (mob instanceof Bat) {
             yOffset *= 1.5f;
@@ -246,7 +257,7 @@ public class MobContainer {
     }
 
     public MobContainer makeCopy() {
-        MobContainer container = new MobContainer(this.width, this.height, this.isAquarium);
+        MobContainer container = new MobContainer(this.width, this.height, this.floorHeight, this.isAquarium);
         container.setData(this.data);
         return container;
     }
@@ -435,7 +446,7 @@ public class MobContainer {
             }
             newData = new MobData.Bucket(Optional.of(name), bucketStack, cap.getFishTextureIndex(), f);
         } else {
-            Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(mob, width, height, isAquarium);
+            Pair<Float, Float> dimensions = calculateMobDimensionsForContainer(mob, width, height, floorHeight, isAquarium);
             float scale = dimensions.getLeft();
             float yOffset = dimensions.getRight();
 
