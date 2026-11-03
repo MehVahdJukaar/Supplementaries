@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.*;
@@ -59,7 +60,8 @@ public class ClientEventsForge {
         }
     }
 
-    @SubscribeEvent
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onScreenInit(ScreenEvent.Init.Post event) {
         ClientEvents.addConfigButton(event.getScreen(), event.getListenersList(), event::addListener, event::removeListener);
     }

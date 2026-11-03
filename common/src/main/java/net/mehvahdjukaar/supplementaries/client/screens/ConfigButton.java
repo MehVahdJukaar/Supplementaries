@@ -13,11 +13,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FastColor;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +34,8 @@ public class ConfigButton extends Button {
     private static final int CORNER_MARGIN = 4;
     private static final int BUTTON_SIZE = 20;
     private static final int BOTTOM_TEXT_CLEARANCE = 12;
+    private static final List<String> PREFERRED_ANCHORS = List.of(
+            "menu.online", "fml.menu.modoptions", "menu.shareToLan", "menu.multiplayer", "menu.singleplayer");
 
     private final boolean opensModList;
 
@@ -52,42 +56,70 @@ public class ConfigButton extends Button {
         ConfigUtils.openModConfigs();
     }
 
-    //TODO: make attach to any button incase of very crowded menus and allow manual placement too
+    //TODO: allow manual placement too
     public static void setupConfigButton(Screen screen, List<? extends GuiEventListener> listeners,
                                          Consumer<AbstractWidget> adder, Consumer<AbstractWidget> remover) {
         if (!(screen instanceof TitleScreen) && !(screen instanceof PauseScreen)) return;
 
-        AbstractWidget anchor = findAnchorButton(listeners);
-        int x;
-        int y;
-        if (anchor != null) {
-            x = anchor.getX() + anchor.getWidth() + ANCHOR_SPACING;
-            y = anchor.getY();
-        } else {
-            x = CORNER_MARGIN;
-            y = screen.height - BUTTON_SIZE - CORNER_MARGIN - BOTTOM_TEXT_CLEARANCE;
+        int yOffset = ClientConfigs.General.CONFIG_BUTTON_Y_OFF.get();
+        boolean openList = ClientConfigs.General.CONFIG_BUTTON_OPENS_MOD_LIST.get();
+        List<AbstractWidget> widgets = new ArrayList<>();
+        for (GuiEventListener l : listeners) {
+            if ((l instanceof AbstractWidget w) && w.visible) widgets.add(w);
         }
 
-        ConfigButton button = new ConfigButton(x, y + ClientConfigs.General.CONFIG_BUTTON_Y_OFF.get(),
-                ClientConfigs.General.CONFIG_BUTTON_OPENS_MOD_LIST.get());
+        ScreenRectangle spot = null;
+        for (AbstractWidget anchor : sortAnchorsByPreference(widgets)) {
+            spot = findFreeSpotNextTo(anchor, screen, widgets, yOffset);
+            if (spot != null) break;
+        }
+
+        ConfigButton button;
+        if (spot != null) {
+            button = new ConfigButton(spot.left(), spot.top(), openList);
+        } else {
+            int y = screen.height - BUTTON_SIZE - CORNER_MARGIN - BOTTOM_TEXT_CLEARANCE;
+            button = new ConfigButton(CORNER_MARGIN, y + yOffset, openList);
+        }
         addOnTop(button, listeners, adder, remover);
     }
 
-    private static AbstractWidget findAnchorButton(List<? extends GuiEventListener> listeners) {
-        List<String> targets = Arrays.asList(
-                Component.translatable("menu.online").getString(),
-                Component.translatable("fml.menu.modoptions").getString(),
-                Component.translatable("menu.shareToLan").getString(),
-                Component.translatable("menu.multiplayer").getString(),
-                Component.translatable("menu.singleplayer").getString());
-
-        for (var t : targets) {
-            for (GuiEventListener w : listeners) {
-                if (w instanceof AbstractWidget b && t.equals(b.getMessage().getString())) return b;
+    private static List<AbstractWidget> sortAnchorsByPreference(List<AbstractWidget> widgets) {
+        List<AbstractWidget> anchors = new ArrayList<>();
+        for (String key : PREFERRED_ANCHORS) {
+            String text = Component.translatable(key).getString();
+            for (AbstractWidget w : widgets) {
+                if (!anchors.contains(w) && text.equals(w.getMessage().getString())) anchors.add(w);
             }
+        }
+        for (AbstractWidget w : widgets) {
+            if (!anchors.contains(w)) anchors.add(w);
+        }
+        return anchors;
+    }
+
+    @Nullable
+    private static ScreenRectangle findFreeSpotNextTo(AbstractWidget anchor, Screen screen,
+                                                      List<AbstractWidget> widgets, int yOffset) {
+        int y = anchor.getY() + (anchor.getHeight() - BUTTON_SIZE) / 2 + yOffset;
+        int rightSide = anchor.getX() + anchor.getWidth() + ANCHOR_SPACING;
+        int leftSide = anchor.getX() - ANCHOR_SPACING - BUTTON_SIZE;
+        for (int x : new int[]{rightSide, leftSide}) {
+            ScreenRectangle spot = new ScreenRectangle(x, y, BUTTON_SIZE, BUTTON_SIZE);
+            if (isFree(spot, screen, widgets)) return spot;
         }
         return null;
     }
+
+    private static boolean isFree(ScreenRectangle spot, Screen screen, List<AbstractWidget> widgets) {
+        boolean onScreen = spot.left() >= 0 && spot.top() >= 0 && spot.right() <= screen.width && spot.bottom() <= screen.height;
+        if (!onScreen) return false;
+        for (AbstractWidget w : widgets) {
+            if (w.getRectangle().overlaps(spot)) return false;
+        }
+        return true;
+    }
+
 
     private static void addOnTop(ConfigButton button, List<? extends GuiEventListener> listeners,
                                  Consumer<AbstractWidget> adder, Consumer<AbstractWidget> remover) {
