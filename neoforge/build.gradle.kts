@@ -34,6 +34,8 @@ dependencies {
     modRuntimeOnly("net.mehvahdjukaar:codecui-neoforge:${codecui_version}")
     modImplementation("net.mehvahdjukaar:polytone-neoforge:${polytone_version}")
     modRuntimeOnly("net.mehvahdjukaar:heraldics-neoforge:1.21.1-1.2.2")
+    modRuntimeOnly("maven.modrinth:just-zoom:3.1.0-1.21.1-neoforge")
+    modRuntimeOnly("maven.modrinth:konkrete:1.9.9-1.21-neoforge")
 
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 

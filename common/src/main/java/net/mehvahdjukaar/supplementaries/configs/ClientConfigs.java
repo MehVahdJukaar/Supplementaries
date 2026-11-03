@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigBuilder;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ConfigType;
 import net.mehvahdjukaar.moonlight.api.platform.configs.ModConfigHolder;
+import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.renderers.entities.layers.QuiverLayer;
 import net.mehvahdjukaar.supplementaries.dynamicpack.GenMode;
@@ -240,6 +241,7 @@ public class ClientConfigs {
         public static final Supplier<Boolean> CONFIG_BUTTON;
         public static final Supplier<Boolean> CONFIG_BUTTON_OPENS_MOD_LIST;
         public static final Supplier<Integer> CONFIG_BUTTON_Y_OFF;
+        public static final Supplier<Vec2i> CONFIG_BUTTON_POS;
         public static final Supplier<Boolean> CONFIG_BUTTON_RAINBOW;
         public static final Supplier<Boolean> TOOLTIP_HINTS;
         public static final Supplier<Boolean> PLACEABLE_TOOLTIP;
@@ -274,6 +276,8 @@ public class ClientConfigs {
                     .define("configs_button_opens_mod_list", true);
             CONFIG_BUTTON_Y_OFF = builder.comment("Config button Y offset")
                     .define("configs_button_y_offset", 0, -10000, 10000);
+            CONFIG_BUTTON_POS = builder.comment("Manual config button position. Set either to -1 to place it automatically")
+                    .defineVec2i("configs_button_position", new Vec2i(-1, -1), -1, 10000);
             CONFIG_BUTTON_RAINBOW = builder.comment("Outline the config button with a rainbow when hovered")
                     .define("configs_button_rainbow_outline", true);
             TOOLTIP_HINTS = builder.comment("Show some tooltip hints to guide players through the mod")

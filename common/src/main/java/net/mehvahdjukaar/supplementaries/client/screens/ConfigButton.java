@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.screens;
 
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.moonlight.api.util.math.Vec2i;
 import net.mehvahdjukaar.supplementaries.client.renderers.color.ColorHelper;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.ConfigUtils;
@@ -35,7 +36,8 @@ public class ConfigButton extends Button {
     private static final int BUTTON_SIZE = 20;
     private static final int BOTTOM_TEXT_CLEARANCE = 12;
     private static final List<String> PREFERRED_ANCHORS = List.of(
-            "menu.online", "fml.menu.modoptions", "menu.shareToLan", "menu.multiplayer", "menu.singleplayer");
+            "fml.menu.mods", "fml.menu.mods.title", "menu.online", "fml.menu.modoptions", "menu.shareToLan",
+            "menu.reportBugs", "menu.multiplayer", "menu.singleplayer");
 
     private final boolean opensModList;
 
@@ -69,9 +71,14 @@ public class ConfigButton extends Button {
         }
 
         ScreenRectangle spot = null;
-        for (AbstractWidget anchor : sortAnchorsByPreference(widgets)) {
-            spot = findFreeSpotNextTo(anchor, screen, widgets, yOffset);
-            if (spot != null) break;
+        Vec2i manualPos = ClientConfigs.General.CONFIG_BUTTON_POS.get();
+        if (manualPos.x() != -1 && manualPos.y() != -1) {
+            spot = new ScreenRectangle(manualPos.x(), manualPos.y(), BUTTON_SIZE, BUTTON_SIZE);
+        } else {
+            for (AbstractWidget anchor : sortAnchorsByPreference(widgets)) {
+                spot = findFreeSpotNextTo(anchor, screen, widgets, yOffset);
+                if (spot != null) break;
+            }
         }
 
         ConfigButton button;
