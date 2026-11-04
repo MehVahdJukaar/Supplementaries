@@ -11,7 +11,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LevelEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootParams;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 import vectorwing.farmersdelight.common.block.TomatoBlock;
 
 public abstract class TomatoLoggedBlock extends TomatoBlock {
@@ -37,5 +40,12 @@ public abstract class TomatoLoggedBlock extends TomatoBlock {
     public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity blockEntity, ItemStack tool) {
         super.playerDestroy(level, player, pos, state, blockEntity, tool);
         level.setBlockAndUpdate(pos, getInnerState(state, level, pos));
+    }
+
+    @Override
+    protected List<ItemStack> getDrops(BlockState state, LootParams.Builder params) {
+        //ropelogged so FD skips the seeds
+        BlockState fdTomato = CompatObjects.TOMATOES.get().withPropertiesOf(state).setValue(ROPELOGGED, true);
+        return fdTomato.getDrops(params);
     }
 }
