@@ -2,10 +2,12 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.StickBlock;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -15,12 +17,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import vectorwing.farmersdelight.common.block.TomatoBlock;
 
-/**
- * A tomato crop sitting on a stick. Created when a vine climbs into our stick block (and when a stick
- * is added onto a tomato, see {@link FarmersDelightCompat#canAddStickToTomato}). The inherited
- * {@code ROPELOGGED} property is left unused.
- */
-public class TomatoStickBlock extends TomatoBlock {
+public class TomatoStickBlock extends TomatoLoggedBlock {
 
     public static final BooleanProperty AXIS_X = ModBlockProperties.AXIS_X;
     public static final BooleanProperty AXIS_Z = ModBlockProperties.AXIS_Z;
@@ -36,6 +33,11 @@ public class TomatoStickBlock extends TomatoBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AXIS_X, AXIS_Z);
         super.createBlockStateDefinition(builder);
+    }
+
+    @Override
+    public BlockState getInnerState(BlockState state, LevelAccessor level, BlockPos pos) {
+        return ModRegistry.STICK_BLOCK.get().withPropertiesOf(state);
     }
 
     @Override
