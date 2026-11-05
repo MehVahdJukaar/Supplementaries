@@ -39,7 +39,7 @@ public class SoapClearRecipe extends CustomRecipe {
                 Item item = itemstack.getItem();
                 boolean isColored = (BlocksColorAPI.getColor(item) != null &&
                         SoapWashableHelper.canCleanColor(item));
-                if (isColored || itemstack.has(DataComponents.DYED_COLOR) || hasTrim(item)) {
+                if (isColored || itemstack.has(DataComponents.DYED_COLOR) || hasTrim(itemstack)) {
                     ++dyes;
                 } else {
                     if (!soap.test(itemstack)) {
@@ -53,9 +53,9 @@ public class SoapClearRecipe extends CustomRecipe {
         return soaps == 1 && dyes == dyeAmount;
     }
 
-    //TODO: add this and JEI view of it
-    private boolean hasTrim(Item item) {
-        return false;
+    //TODO: JEI view of it
+    private boolean hasTrim(ItemStack stack) {
+        return stack.has(DataComponents.TRIM);
     }
 
     @Override
@@ -66,11 +66,12 @@ public class SoapClearRecipe extends CustomRecipe {
             if (!stack.isEmpty()) {
                 Item item = stack.getItem();
                 if (BlocksColorAPI.getColor(item) != null ||
-                        stack.has(DataComponents.DYED_COLOR) || hasTrim(item)) {
+                        stack.has(DataComponents.DYED_COLOR) || hasTrim(stack)) {
                     toRecolor = stack.copyWithCount(1);
                 }
             }
         }
+        toRecolor.remove(DataComponents.TRIM);
 
         ItemStack result;
         Item i = toRecolor.getItem();

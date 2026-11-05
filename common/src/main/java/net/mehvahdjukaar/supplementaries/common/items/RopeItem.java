@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.AbstractRopeKnotBlock;
+import net.mehvahdjukaar.supplementaries.common.block.blocks.RopeBlock;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -33,7 +34,9 @@ public class RopeItem extends BlockItem {
 
             BlockPos hitPos = context.getHitResult().getBlockPos();
             BlockState blockHit = world.getBlockState(hitPos);
-            if (blockHit.is(ModRegistry.ROPE.get())) {
+            boolean isHangingRope = blockHit.getBlock() instanceof RopeBlock rope
+                    && (rope.hasConnection(Direction.UP, blockHit) || rope.hasConnection(Direction.DOWN, blockHit));
+            if (isHangingRope && !context.isSecondaryUseActive()) {
                 BlockPos.MutableBlockPos cursor = hitPos.mutable();
                 while (world.getBlockState(cursor.below()).is(ModRegistry.ROPE.get())) {
                     cursor.move(0, -1, 0);
