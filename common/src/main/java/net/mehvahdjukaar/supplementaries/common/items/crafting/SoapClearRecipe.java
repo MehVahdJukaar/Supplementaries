@@ -53,7 +53,6 @@ public class SoapClearRecipe extends CustomRecipe {
         return soaps == 1 && dyes == dyeAmount;
     }
 
-    //TODO: JEI view of it
     private boolean hasTrim(ItemStack stack) {
         return stack.has(DataComponents.TRIM);
     }
