@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.common.items;
 
 
 import net.mehvahdjukaar.candlelight.api.VirtualOverride;
+import net.mehvahdjukaar.moonlight.api.set.BlocksColorAPI;
 import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.InventoryViewTooltip;
 import net.mehvahdjukaar.supplementaries.common.utils.ItemsUtil;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
@@ -120,7 +121,8 @@ public class SackItem extends BlockItem {
             if (!pStack.has(DataComponents.CONTAINER_LOOT)) {
                 var container = pStack.get(DataComponents.CONTAINER);
                 if (container != null && container.stream().anyMatch(s -> !s.isEmpty())) {
-                    return Optional.of(new InventoryViewTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get()));
+                    return Optional.of(new InventoryViewTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get(),
+                            BlocksColorAPI.getColor(this)));
                 }
             }
         }

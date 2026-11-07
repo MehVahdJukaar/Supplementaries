@@ -49,7 +49,7 @@ public class SafeItem extends BlockItem {
         if (quarkTooltip && !sbtTooltip) {
             var container = pStack.get(DataComponents.CONTAINER);
             if (container != null && container.stream().anyMatch(s -> !s.isEmpty())) {
-                return Optional.of(new InventoryViewTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get()));
+                return Optional.of(new InventoryViewTooltip(container, CommonConfigs.Functional.SACK_SLOTS.get(), null));
             }
         }
         return Optional.empty();
