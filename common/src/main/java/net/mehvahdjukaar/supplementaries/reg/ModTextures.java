@@ -1,13 +1,8 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
-import com.google.common.collect.ImmutableList;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
-import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
-import net.minecraft.Util;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //Needed on both sides because...
@@ -143,32 +138,6 @@ public class ModTextures {
     public static final ResourceLocation BANNER_PATTERN_ICON = Supplementaries.res("item/gui_slots/empty_slot_banner_pattern");
     public static final ResourceLocation BOOK_ICON = Supplementaries.res("item/gui_slots/empty_slot_book");
     public static final ResourceLocation ANTIQUE_INK_ICON = Supplementaries.res("item/gui_slots/empty_slot_antique_ink");
-    public static final ResourceLocation MAP_ATLAS_ICON = Supplementaries.res("item/gui_slots/empty_slot_map_atlas");
-    public static final ResourceLocation PAPER_ICON = Supplementaries.res("item/gui_slots/empty_slot_paper");
-    public static final ResourceLocation GLASS_PANE_ICON = Supplementaries.res("item/gui_slots/empty_slot_glass_pane");
-
-
-    public static final List<ResourceLocation> CARTOGRAPHY_INGREDIENTS_ICONS = Util.make(() -> {
-        var l = new ArrayList<ResourceLocation>();
-        l.add(PAPER_ICON);
-        l.add(GLASS_PANE_ICON);
-        if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
-            l.add(ANTIQUE_INK_ICON);
-        }
-        if (CompatHandler.MAPATLAS) {
-            l.add(MAP_ATLAS_ICON);
-        }
-        return ImmutableList.copyOf(l);
-    });
-
-    public static final List<ResourceLocation> MAP_ICONS = Util.make(() -> {
-        var l = new ArrayList<ResourceLocation>();
-        l.add(MAP_ICON);
-        if (CompatHandler.MAPATLAS) {
-            l.add(MAP_ATLAS_ICON);
-        }
-        return ImmutableList.copyOf(l);
-    });
 
     public static final List<ResourceLocation> PULLEY_SLOT_ICONS =
             List.of(ROPE_ICON, CHAIN_ICON);

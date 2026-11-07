@@ -10,6 +10,7 @@ import net.mehvahdjukaar.moonlight.api.client.renderer.FallingBlockRendererGener
 import net.mehvahdjukaar.moonlight.api.client.util.RenderUtil;
 import net.mehvahdjukaar.moonlight.api.misc.EventCalled;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
+import net.mehvahdjukaar.moonlight.api.util.CartographyTableHelper;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodType;
 import net.mehvahdjukaar.moonlight.api.set.wood.WoodTypeRegistry;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -49,6 +50,7 @@ import net.mehvahdjukaar.supplementaries.common.items.tooltip_components.SherdTo
 import net.mehvahdjukaar.supplementaries.common.misc.map_markers.client.ModMapMarkersClient;
 import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
+import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.AmendmentsCompat;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandlerClient;
@@ -82,6 +84,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.CartographyTableMenu;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -200,6 +203,10 @@ public class ClientRegistry {
 
         //map markers
         ModMapMarkersClient.init();
+
+        if (CommonConfigs.Tools.ANTIQUE_INK_ENABLED.get()) {
+            CartographyTableHelper.addSlotIcon(CartographyTableMenu.ADDITIONAL_SLOT, ModTextures.ANTIQUE_INK_ICON);
+        }
 
         RenderType cutoutMipped = RenderType.cutoutMipped();
         ClientHelper.registerRenderType(ModRegistry.COG_BLOCK.get(), cutoutMipped);
