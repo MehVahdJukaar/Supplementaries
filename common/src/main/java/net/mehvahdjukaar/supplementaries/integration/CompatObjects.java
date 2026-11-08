@@ -40,6 +40,7 @@ public class CompatObjects {
 
     public static final OptRegSupplier<ParticleType<?>> ENDER_FLAME = builtin("endergetic:ender_fire_flame", Registries.PARTICLE_TYPE);
     public static final OptRegSupplier<ParticleType<?>> GLOW_FLAME = builtin("infernalexp:glowstone_sparkle", Registries.PARTICLE_TYPE);
+    public static final OptRegSupplier<ParticleType<?>> COPPER_FLAME = builtin("minecraft:copper_fire_flame", Registries.PARTICLE_TYPE);
     public static final OptRegSupplier<ParticleType<?>> NETHER_BRASS_FLAME = builtin("architects_palette:green_flame", Registries.PARTICLE_TYPE);
 
     public static final OptRegSupplier<ParticleType<?>> SMALL_SOUL_FLAME = builtin("buzzier_bees:small_soul_fire_flame", Registries.PARTICLE_TYPE);

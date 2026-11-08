@@ -108,6 +108,134 @@
           "flag": "sconce"
         }
       ]
+    },
+    {
+      "id": "supplementaries:copper_sconce",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:exposed_copper_sconce",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:weathered_copper_sconce",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:oxidized_copper_sconce",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:waxed_copper_sconce",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:waxed_exposed_copper_sconce",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:waxed_weathered_copper_sconce",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:waxed_oxidized_copper_sconce",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sconce"
+        }
+      ]
     }
   ]
 }

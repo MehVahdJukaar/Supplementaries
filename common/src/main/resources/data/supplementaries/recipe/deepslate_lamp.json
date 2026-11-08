@@ -3,12 +3,26 @@
     {
       "flag": "deepslate_lamp",
       "condition": "supplementaries:flag"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "fabric:mod_loaded",
+        "modid": "vanillabackport"
+      }
     }
   ],
   "neoforge:conditions": [
     {
       "type": "supplementaries:flag",
       "flag": "deepslate_lamp"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "vanillabackport"
+      }
     }
   ],
   "type": "minecraft:crafting_shaped",

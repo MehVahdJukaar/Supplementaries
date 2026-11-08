@@ -1,0 +1,40 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "vanillabackport"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "sconce"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vanillabackport"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    "212",
+    " 2 "
+  ],
+  "key": {
+    "1": {
+      "item": "minecraft:copper_torch"
+    },
+    "2": {
+      "tag": "c:nuggets/copper"
+    }
+  },
+  "result": {
+    "id": "supplementaries:copper_sconce",
+    "count": 1
+  }
+}

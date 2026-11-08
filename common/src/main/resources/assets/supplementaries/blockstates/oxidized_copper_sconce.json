@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=true": {
+      "model": "supplementaries:block/copper_sconces/oxidized_copper_sconce"
+    },
+    "lit=false": {
+      "model": "supplementaries:block/copper_sconces/oxidized_copper_sconce_off"
+    }
+  }
+}

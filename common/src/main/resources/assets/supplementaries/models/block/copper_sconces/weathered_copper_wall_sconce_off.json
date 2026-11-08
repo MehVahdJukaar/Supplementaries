@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:block/sconce_wall_off",
+  "textures": {
+    "0": "supplementaries:block/sconce_copper_weathered",
+    "particle": "supplementaries:block/sconce_copper_weathered"
+  }
+}

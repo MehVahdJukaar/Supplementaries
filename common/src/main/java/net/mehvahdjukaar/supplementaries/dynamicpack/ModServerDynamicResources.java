@@ -9,6 +9,8 @@ import net.mehvahdjukaar.moonlight.api.resources.pack.ResourceSink;
 import net.mehvahdjukaar.moonlight.api.set.wood.VanillaWoodTypes;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.VanillaBackportCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.registries.Registries;
@@ -40,7 +42,7 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
     @Override
     protected Collection<String> gatherSupportedNamespaces() {
-        return List.of("minecraft");
+        return List.of("minecraft", "neoforge");
     }
 
     @Override
@@ -68,6 +70,10 @@ public class ModServerDynamicResources extends DynamicServerResourceProvider {
 
             if (CommonConfigs.Functional.CANNON_BOAT_ENABLED.get()) {
                 addCannonBoatRecipes(manager, sink);
+            }
+
+            if (CompatHandler.VANILLA_BACKPORT) {
+                VanillaBackportCompat.addCopperDataMaps(sink);
             }
 
             if (PlatHelper.getPlatform().isFabric()) {

@@ -3,12 +3,26 @@
     {
       "type": "supplementaries:flag",
       "flag": "deepslate_lamp"
+    },
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "vanillabackport"
+      }
     }
   ],
   "fabric:load_conditions": [
     {
       "flag": "deepslate_lamp",
       "condition": "supplementaries:flag"
+    },
+    {
+      "condition": "fabric:not",
+      "value": {
+        "condition": "fabric:mod_loaded",
+        "modid": "vanillabackport"
+      }
     }
   ],
   "parent": "minecraft:recipes/root",

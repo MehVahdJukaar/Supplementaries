@@ -1,0 +1,7 @@
+{
+  "parent": "supplementaries:block/sconce_off",
+  "textures": {
+    "0": "supplementaries:block/sconce_copper",
+    "particle": "supplementaries:block/sconce_copper"
+  }
+}
