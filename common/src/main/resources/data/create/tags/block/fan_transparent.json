@@ -30,6 +30,66 @@
           "flag": "iron_gate"
         }
       ]
+    },
+    {
+      "id": "supplementaries:gold_bars",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gold_bars"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_bars"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:wind_vane",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "wind_vane"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "wind_vane"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:globe_sepia",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "globe_sepia"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "globe_sepia"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:globe",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "globe"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "globe"
+        }
+      ]
     }
   ]
 }
