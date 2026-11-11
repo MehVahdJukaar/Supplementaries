@@ -79,6 +79,7 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         if (!(movedState.getBlock() instanceof EntityBlock entityBlock)) return null;
         BlockEntity be = entityBlock.newBlockEntity(this.worldPosition, movedState);
         if (be == null) return null;
+
         CompoundTag nbt = this.supp$carriedBeNbt;
         if (nbt != null && BlockMovementHelper.matchesCapturedType(be, nbt)) {
             be.loadWithComponents(nbt, this.level.registryAccess());
@@ -110,8 +111,23 @@ public abstract class PistonMovingBlockEntityMixin extends BlockEntity implement
         this.supp$cachedCarriedBE = null;
         if (nbt == null || this.level == null) return;
         BlockState placed = this.level.getBlockState(this.worldPosition);
-        if (placed.isAir() || placed.is(Blocks.MOVING_PISTON)) return;
+        if (placed.is(Blocks.MOVING_PISTON)) return;
+        if (placed.isAir()) {
+            if (!this.level.isClientSide) {
+                BlockMovementHelper.dropCarriedContents(this.level, this.worldPosition,
+                        ((PistonMovingBlockEntity) (Object) this).getMovedState(), nbt);
+            }
+            return;
+        }
         BlockMovementHelper.restoreBlockEntity(this.level, this.worldPosition, placed, nbt);
+    }
+
+    //must be  before updateOrDestroy so the block breaks with its contents if BE were to pop when moved
+    @Inject(method = "tick", at = @At(value = "INVOKE", ordinal = 0, shift = At.Shift.AFTER,
+            target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
+    private static void supp$restoreCarriedBeBeforeDestroy(Level level, BlockPos pos, BlockState state,
+                                                           PistonMovingBlockEntity be, CallbackInfo ci) {
+        ((ICarryingMovingPiston) be).supp$restoreCarriedBe();
     }
 
     @Inject(method = "tick", at = {

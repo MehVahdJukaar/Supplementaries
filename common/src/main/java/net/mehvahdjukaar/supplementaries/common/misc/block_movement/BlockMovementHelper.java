@@ -11,6 +11,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -81,6 +83,20 @@ public class BlockMovementHelper {
         if (restored == null || !matchesCapturedType(restored, nbt)) return;
         restored.loadWithComponents(nbt, level.registryAccess());
         level.setBlockEntity(restored);
+    }
+
+    public static void dropCarriedContents(Level level, BlockPos pos, BlockState movedState, CompoundTag nbt) {
+        if (!(movedState.getBlock() instanceof EntityBlock entityBlock)) {
+            return;
+        }
+        BlockEntity be = entityBlock.newBlockEntity(pos, movedState);
+        if (be == null || !matchesCapturedType(be, nbt)) {
+            return;
+        }
+        be.loadWithComponents(nbt, level.registryAccess());
+        if (be instanceof Container container) {
+            Containers.dropContents(level, pos, container);
+        }
     }
 
     public static boolean matchesCapturedType(BlockEntity be, CompoundTag nbt) {

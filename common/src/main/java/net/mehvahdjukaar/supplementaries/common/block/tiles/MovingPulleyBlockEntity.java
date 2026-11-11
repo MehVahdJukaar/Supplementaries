@@ -110,6 +110,10 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
                     BlockState movedAfter = Block.updateFromNeighbourShapes(be.getMovedState(), level, pos);
                     if (movedAfter.isAir()) {
                         level.setBlock(pos, be.getMovedState(), 84);
+                        CompoundTag carriedNbt = ((ICarryingMovingPiston) be).supp$getCarriedBlockEntityNbt();
+                        if (carriedNbt != null) {
+                            BlockMovementHelper.restoreBlockEntity(level, pos, be.getMovedState(), carriedNbt);
+                        }
                         Block.updateOrDestroy(be.getMovedState(), movedAfter, level, pos, 3);
                     } else {
                         if (movedAfter.hasProperty(BlockStateProperties.WATERLOGGED)

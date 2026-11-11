@@ -232,8 +232,11 @@ public class UrnBlock extends FallingBlock implements EntityBlock, SimpleWaterlo
     public void onProjectileHit(Level pLevel, BlockState pState, BlockHitResult pHit, Projectile pProjectile) {
         super.onProjectileHit(pLevel, pState, pHit, pProjectile);
         BlockPos pos = pHit.getBlockPos();
-        pLevel.destroyBlock(pos, true);
-        spawnExtraBrokenParticles(pState, pos, pLevel);
+        //same checks as decorted pots
+        if (pProjectile.mayInteract(pLevel, pos) && pProjectile.mayBreak(pLevel)) {
+            pLevel.destroyBlock(pos, true);
+            spawnExtraBrokenParticles(pState, pos, pLevel);
+        }
     }
 
     @Override

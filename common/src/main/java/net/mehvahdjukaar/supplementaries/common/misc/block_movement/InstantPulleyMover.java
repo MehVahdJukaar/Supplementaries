@@ -84,6 +84,9 @@ public class InstantPulleyMover {
                 InteractionResult placeResult = bi.place(context);
                 if (placeResult == InteractionResult.PASS || placeResult == InteractionResult.FAIL) {
                     level.setBlock(originPos, originalState, Block.UPDATE_NONE);
+                    if (tileTag != null) {
+                        BlockMovementHelper.restoreBlockEntity(level, originPos, originalState, tileTag);
+                    }
                     return false;
                 }
 
