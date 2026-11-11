@@ -38,9 +38,7 @@ public record ServerBoundSetSpeakerBlockPacket(
         if (context.getPlayer() instanceof ServerPlayer sender) {
             Level level = sender.level();
             BlockPos pos = this.pos;
-            if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SpeakerBlockTile speaker) {
-                speaker.setVolume(this.volume);
-                speaker.setMode(this.mode);
+            if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SpeakerBlockTile) {
                 sender.connection.filterTextPacket(this.str).thenAcceptAsync((l) -> {
                     this.updateSpeakerText(sender, l);
                 }, sender.server);
@@ -53,7 +51,7 @@ public record ServerBoundSetSpeakerBlockPacket(
         Level level = player.level();
 
         if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof SpeakerBlockTile be) {
-            if (be.tryAcceptingClientText(player, filteredText)) {
+            if (be.tryAcceptingClientText(player, filteredText, this.mode, this.volume)) {
                 level.sendBlockUpdated(be.getBlockPos(), be.getBlockState(), be.getBlockState(), 3);
                 be.setChanged();
             }

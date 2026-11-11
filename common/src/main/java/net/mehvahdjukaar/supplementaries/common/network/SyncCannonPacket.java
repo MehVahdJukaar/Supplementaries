@@ -10,21 +10,17 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public record SyncCannonPacket(
         Quaternionf localRot, byte firePower, boolean ignite, boolean stopControlling,
         Optional<BallisticData> ballisticData,
-        TileOrEntityTarget target, @Nullable UUID userEntityId) implements Message {
+        TileOrEntityTarget target) implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, SyncCannonPacket> CODEC = Message.makeType(
             Supplementaries.res("sync_cannon"), SyncCannonPacket::new);
@@ -33,8 +29,7 @@ public record SyncCannonPacket(
         this(ByteBufCodecs.QUATERNIONF.decode(buf), buf.readByte(),
                 buf.readBoolean(), buf.readBoolean(),
                 buf.readOptional(BallisticData.STREAM_CODEC),
-                TileOrEntityTarget.read(buf),
-                buf.readOptional(buffer -> buffer.readUUID()).orElse(null));
+                TileOrEntityTarget.read(buf));
     }
 
     @Override
@@ -45,8 +40,6 @@ public record SyncCannonPacket(
         buf.writeBoolean(this.stopControlling);
         buf.writeOptional(this.ballisticData, BallisticData.STREAM_CODEC);
         this.target.write(buf);
-        buf.writeOptional(Optional.ofNullable(this.userEntityId), (buffer, value) ->
-                buffer.writeUUID(value));
     }
 
     @Override
@@ -54,7 +47,8 @@ public record SyncCannonPacket(
 
         Level level = context.getPlayer().level();
 
-
+        BlockPos targetPos = this.target.getPos();
+        if (targetPos != null && !level.isLoaded(targetPos)) return;
         BlockEntity be = this.target.findTileOrContainedTile(level);
         if (!(be instanceof CannonBlockTile cannon)) {
             Supplementaries.LOGGER.warn("Cannon not found: {}", this.target);
@@ -67,28 +61,20 @@ public record SyncCannonPacket(
             if (stopControlling) {
                 cannon.setCurrentUser(null);
             }
-        } else if (level instanceof ServerLevel sl) {
-            Entity entity = null;
+        } else if (context.getPlayer() instanceof ServerPlayer player) {
+            boolean badRotation = !this.localRot.isFinite() || this.localRot.lengthSquared() < 1.0E-6f;
+            BlockPos cannonPos = BlockPos.containing(cannon.getGlobalPosition(1));
 
-            if (this.userEntityId != null) {
-                entity = sl.getEntity(userEntityId);
-
-                if (entity == null) {
-                    Supplementaries.error("Failed to find entity with id {} for cannon controlling", userEntityId);
-                    return;
-                }
-            }
-
-            if (entity == null || cannon.canBeUsedBy(BlockPos.containing(cannon.getGlobalPosition(1)), entity)) {
-                cannon.setTrustedInternalAttributes(this.localRot, this.firePower, this.ignite, entity, null);
+            if (!badRotation && cannon.isCloseEnoughToUse(player, cannonPos) && cannon.canBeUsedBy(cannonPos, player)) {
+                cannon.setTrustedInternalAttributes(this.localRot, this.firePower, this.ignite, player, null);
                 cannon.setChanged();
                 if (stopControlling) {
                     cannon.setCurrentUser(null);
-                    if (entity instanceof Player p && cannon.isRider(p) && !cannon.isFiring()) cannon.dismount();
+                    if (cannon.isRider(player) && !cannon.isFiring()) cannon.dismount();
                 }
                 cannon.syncToClients(ignite);
             } else {
-                Supplementaries.LOGGER.warn("Entity {} tried to control cannon {} without permission", entity, this.target);
+                Supplementaries.LOGGER.warn("Player {} tried to control cannon {} without permission", player.getName().getString(), this.target);
             }
         }
     }

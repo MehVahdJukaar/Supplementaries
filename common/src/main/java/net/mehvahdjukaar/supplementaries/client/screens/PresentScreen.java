@@ -128,7 +128,7 @@ public class PresentScreen extends AbstractContainerScreen<PresentContainerMenu>
             String recipient = this.recipient.getText();
             String description = this.descriptionBox.getText();
             NetworkHelper.sendToServer(new ServerBoundSetPresentPacket(this.tile.getBlockPos(),
-                    this.packed, recipient, sender, description));
+                    this.packed, recipient, description));
             this.tile.updateState(this.packed, recipient, sender, description, Minecraft.getInstance().player);
 
             //close on client when packed. server side is handled by packet when it arrives

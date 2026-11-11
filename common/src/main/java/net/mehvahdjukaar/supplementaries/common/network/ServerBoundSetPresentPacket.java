@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.network;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.tiles.PresentBlockTile;
+import net.mehvahdjukaar.supplementaries.common.inventories.PresentContainerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -14,7 +15,6 @@ public record ServerBoundSetPresentPacket(
         BlockPos pos,
         boolean packed,
         String recipient,
-        String sender,
         String description) implements Message {
 
     public static final TypeAndCodec<RegistryFriendlyByteBuf, ServerBoundSetPresentPacket> CODEC = Message.makeType(
@@ -22,8 +22,8 @@ public record ServerBoundSetPresentPacket(
 
 
     public ServerBoundSetPresentPacket(RegistryFriendlyByteBuf buf) {
-        this(buf.readBlockPos(), buf.readBoolean(), buf.readUtf(),
-                buf.readUtf(), buf.readUtf());
+        this(buf.readBlockPos(), buf.readBoolean(), buf.readUtf(64),
+                buf.readUtf(512));
     }
 
 
@@ -32,7 +32,6 @@ public record ServerBoundSetPresentPacket(
         buf.writeBlockPos(this.pos);
         buf.writeBoolean(this.packed);
         buf.writeUtf(this.recipient);
-        buf.writeUtf(this.sender);
         buf.writeUtf(this.description);
     }
 
@@ -42,10 +41,11 @@ public record ServerBoundSetPresentPacket(
         if (context.getPlayer() instanceof ServerPlayer player) {
             Level level = player.level();
 
-            if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof PresentBlockTile present) {
+            if (level.hasChunkAt(pos) && level.getBlockEntity(pos) instanceof PresentBlockTile present
+                    && player.containerMenu instanceof PresentContainerMenu menu && menu.getContainer() == present) {
                 //TODO: sound here
                 //TODO: check if 2 players cant edit at once of it it needs OnePlyaerInteractable
-                present.updateState(this.packed, this.recipient, this.sender, this.description, player);
+                present.updateState(this.packed, this.recipient, player.getName().getString(), this.description, player);
 
                 BlockState state = level.getBlockState(pos);
                 present.setChanged();

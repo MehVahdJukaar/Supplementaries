@@ -40,7 +40,7 @@ public interface ReferenceFrame {
                               boolean removeOwner, Player player) {
         NetworkHelper.sendToServer(new SyncCannonPacket(
                 localRot, firePower, ignite, removeOwner, Optional.empty(),
-                makeNetworkTarget(), player.getUUID()));
+                makeNetworkTarget()));
     }
 
     default void syncToClients(CannonBlockTile tile, Quaternionf localRot, byte firePower, boolean ignite,
@@ -49,7 +49,7 @@ public interface ReferenceFrame {
             NetworkHelper.sendToAllClientPlayersInDefaultRange(sl,
                     BlockPos.containing(position(1)),
                     new SyncCannonPacket(localRot, firePower, ignite, false, ballisticData,
-                            makeNetworkTarget(), null));
+                            makeNetworkTarget()));
         }
     }
 }

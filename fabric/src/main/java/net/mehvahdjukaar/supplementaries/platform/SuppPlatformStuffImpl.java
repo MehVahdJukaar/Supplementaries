@@ -178,7 +178,9 @@ public class SuppPlatformStuffImpl {
         BlockPos blockPos = context.getClickedPos();
 
         //not needed on forge as forge has so many events for this shit
-        if (player != null && CompatHandler.FLAN && FlanCompat.canPlace(player, blockPos)) {
+        if (player != null && CompatHandler.FLAN && !FlanCompat.canPlace(player, blockPos))
+            return InteractionResult.PASS;
+        if (player != null && !context.getLevel().mayInteract(player, blockPos)) {
             return InteractionResult.PASS;
         }
 
