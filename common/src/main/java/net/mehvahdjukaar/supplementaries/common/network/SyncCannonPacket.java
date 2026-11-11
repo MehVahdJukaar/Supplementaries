@@ -62,10 +62,10 @@ public record SyncCannonPacket(
                 cannon.setCurrentUser(null);
             }
         } else if (context.getPlayer() instanceof ServerPlayer player) {
-            boolean badRotation = !this.localRot.isFinite() || this.localRot.lengthSquared() < 1.0E-6f;
+            if (!this.localRot.isFinite() || this.localRot.lengthSquared() == 0) return;
             BlockPos cannonPos = BlockPos.containing(cannon.getGlobalPosition(1));
 
-            if (!badRotation && cannon.isCloseEnoughToUse(player, cannonPos) && cannon.canBeUsedBy(cannonPos, player)) {
+            if (cannon.isCloseEnoughToUse(player, cannonPos) && cannon.canBeUsedBy(cannonPos, player)) {
                 cannon.setTrustedInternalAttributes(this.localRot, this.firePower, this.ignite, player, null);
                 cannon.setChanged();
                 if (stopControlling) {

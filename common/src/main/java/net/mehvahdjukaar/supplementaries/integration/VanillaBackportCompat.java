@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.integration;
 
-
 import com.google.gson.JsonObject;
 import net.mehvahdjukaar.moonlight.api.platform.ClientHelper;
 import net.mehvahdjukaar.moonlight.api.resources.ResType;
@@ -37,8 +36,6 @@ public class VanillaBackportCompat {
     static {
         for (WeatherState age : WeatherState.values()) {
             COPPER_SCONCES.put(age, regCopperSconce(age, false));
-        }
-        for (WeatherState age : WeatherState.values()) {
             WAXED_COPPER_SCONCES.put(age, regCopperSconce(age, true));
         }
     }
@@ -54,17 +51,13 @@ public class VanillaBackportCompat {
 
         Supplier<Block> standing = regBlock(name, () -> {
             var p = BlockBehaviour.Properties.ofFullCopy(ModRegistry.SCONCE.get());
-            if (waxed) {
-                return new SconceBlock(p, 14, CompatObjects.COPPER_FLAME);
-            }
-            else return new WeatheringSconceBlock(age, p, 14, CompatObjects.COPPER_FLAME);
+            if (waxed) return new SconceBlock(p, 14, CompatObjects.COPPER_FLAME);
+            return new WeatheringSconceBlock(age, p, 14, CompatObjects.COPPER_FLAME);
         });
         Supplier<Block> wall = regBlock(prefix + "copper_wall_sconce", () -> {
             var p = BlockBehaviour.Properties.ofFullCopy(standing.get()).dropsLike(standing.get());
-            if (waxed){
-                return new SconceWallBlock(p, CompatObjects.COPPER_FLAME);
-            }
-            else return new WeatheringSconceWallBlock(age, p, CompatObjects.COPPER_FLAME);
+            if (waxed) return new SconceWallBlock(p, CompatObjects.COPPER_FLAME);
+            return new WeatheringSconceWallBlock(age, p, CompatObjects.COPPER_FLAME);
         });
         Supplier<Item> item = regItem(name, () -> new StandingAndWallBlockItem(
                 standing.get(), wall.get(), new Item.Properties(), Direction.DOWN));
@@ -72,7 +65,7 @@ public class VanillaBackportCompat {
     }
 
     public static void setupClient() {
-        for (var s : COPPER_SCONCES.values()) {
+        for (CopperSconce s : COPPER_SCONCES.values()) {
             ClientHelper.registerRenderType(s.standing.get(), RenderType.cutout());
             ClientHelper.registerRenderType(s.wall.get(), RenderType.cutout());
         }
