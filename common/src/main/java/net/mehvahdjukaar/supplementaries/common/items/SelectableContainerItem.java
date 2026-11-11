@@ -75,7 +75,9 @@ public abstract class SelectableContainerItem<C extends SelectableContainerConte
             }
             //add
             else if (itemstack.getItem().canFitInsideContainerItems()) {
-                ItemStack taken = pSlot.safeTake(itemstack.getCount(), itemstack.getMaxStackSize(), pPlayer);
+                int fits = itemstack.getCount() - c.toMutable().tryAdding(itemstack.copy()).getCount();
+                if (fits <= 0) return false;
+                ItemStack taken = pSlot.safeTake(itemstack.getCount(), fits, pPlayer);
                 ItemStack remaining = mutable.tryAdding(taken);
                 if (!remaining.equals(taken)) {
                     this.playInsertSound(pPlayer);

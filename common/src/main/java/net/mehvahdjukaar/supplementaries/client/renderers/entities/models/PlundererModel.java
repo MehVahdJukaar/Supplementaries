@@ -40,7 +40,7 @@ public class PlundererModel extends IllagerModel<PlundererEntity> {
                 PartPose.ZERO);
         partDefinition2.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(24, 0).addBox(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F), PartPose.offset(0.0F, -2.0F, 0.0F));
         PartDefinition bodyPart = partDefinition.addOrReplaceChild("body", CubeListBuilder.create()
-                        .texOffs(16, 22)
+                        .texOffs(16, 20)
                         .addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F)
                         .texOffs(0, 40)
                         .addBox(-4.0F, 0.0F, -3.0F, 8.0F, 14.0F, 6.0F, new CubeDeformation(0.5F)),
@@ -63,10 +63,10 @@ public class PlundererModel extends IllagerModel<PlundererEntity> {
                 .mirror()
                 .addBox(4.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F), PartPose.ZERO);
         partDefinition.addOrReplaceChild("right_leg", CubeListBuilder.create()
-                .texOffs(0, 20)
+                .texOffs(0, 22)
                 .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), PartPose.offset(-2.0F, 12.0F, 0.0F));
         partDefinition.addOrReplaceChild("left_leg", CubeListBuilder.create()
-                .texOffs(0, 20)
+                .texOffs(0, 22)
                 .mirror()
                 .addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), PartPose.offset(2.0F, 12.0F, 0.0F));
         partDefinition.addOrReplaceChild("right_arm", CubeListBuilder.create()

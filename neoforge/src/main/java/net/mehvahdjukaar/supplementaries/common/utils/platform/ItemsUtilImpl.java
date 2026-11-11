@@ -35,13 +35,11 @@ public class ItemsUtilImpl {
                 for (int s = 0; s < handler.getSlots(); s++) {
                     ItemStack selected = handler.getStackInSlot(s);
                     if (!selected.isEmpty()) {
-                        ItemStack dropped = handler.extractItem(s, 1, false);
-
-                        if (slot.mayPlace(dropped)) {
-                            slot.set(dropped);
-                            return true;
+                        if (!slot.mayPlace(handler.extractItem(s, 1, true))) {
+                            return false;
                         }
-                        return false;
+                        slot.set(handler.extractItem(s, 1, false));
+                        return true;
                     }
                 }
             }
@@ -54,6 +52,19 @@ public class ItemsUtilImpl {
 
             IItemHandler handler = getItemHandler(containerStack, player);
             if (handler != null) {
+                if (!inSlot && !simulate) {
+                    //result slots refuse aprtial takes
+                    int fits = stack.getCount() - ItemHandlerHelper.insertItem(handler, stack.copy(), true).getCount();
+                    if (fits <= 0) return false;
+                    ItemStack taken = slot.safeTake(stack.getCount(), fits, player);
+                    if (taken.isEmpty()) return false;
+
+                    ItemStack left = ItemHandlerHelper.insertItem(handler, taken, false);
+                    if (!left.isEmpty()) {
+                        slot.safeInsert(left);
+                    }
+                    return true;
+                }
                 ItemStack result = ItemHandlerHelper.insertItem(handler, stack.copy(), simulate);
                 boolean success = result.isEmpty() || result.getCount() != stack.getCount();
                 if (success) {
@@ -69,10 +80,6 @@ public class ItemsUtilImpl {
                                 slot.set(newStack);
                                 return true;
                             }
-                        } else {
-                            int i = stack.getCount() - result.getCount();
-                            slot.safeTake(i, i, player);
-                            return true;
                         }
                     }
                 }
