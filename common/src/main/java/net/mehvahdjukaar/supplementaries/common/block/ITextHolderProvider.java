@@ -63,7 +63,13 @@ public interface ITextHolderProvider extends IOneUserInteractable, IWashable, IW
     }
 
     default boolean tryAcceptingClientText(BlockPos pos, ServerPlayer player, List<List<FilteredText>> filteredText) {
-        if (!this.isWaxed() && this.canBeUsedBy(pos, player)) {
+        if (!this.isWaxed() && this.canBeUsedBy(pos, player) && this.isCloseEnoughToUse(player, pos)) {
+            if (filteredText.size() > this.textHoldersCount()) return false;
+            for (int i = 0; i < filteredText.size(); i++) {
+                if (filteredText.get(i).size() > this.getTextHolder(i).size()) {
+                    return false;
+                }
+            }
             for (int i = 0; i < filteredText.size(); i++) {
                 var holder = this.getTextHolder(i);
                 holder.acceptClientMessages(player, filteredText.get(i));

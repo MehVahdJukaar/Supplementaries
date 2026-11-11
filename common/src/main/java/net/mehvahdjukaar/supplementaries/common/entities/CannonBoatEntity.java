@@ -180,9 +180,9 @@ public class CannonBoatEntity extends Boat implements HasCustomInventoryScreen, 
             var item = player.getItemInHand(hand);
             boolean hasNoBanner = this.getBannerItem().isEmpty();
             if (hasNoBanner && item.is(ItemTags.BANNERS)) {
-                this.setBannerItem(item.copy());
-                if (!player.getAbilities().instabuild) item.shrink(1);
+                this.setBannerItem(item.copyWithCount(1));
                 this.playSound(((BlockItem) item.getItem()).getBlock().defaultBlockState().getSoundType().getPlaceSound(), 1.0F, 1.2f);
+                if (!player.getAbilities().instabuild) item.shrink(1);
                 return InteractionResult.sidedSuccess(level().isClientSide);
             }
         }

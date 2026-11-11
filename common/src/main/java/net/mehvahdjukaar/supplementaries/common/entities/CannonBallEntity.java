@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.common.entities;
 import net.mehvahdjukaar.moonlight.api.entity.ImprovedProjectileEntity;
 import net.mehvahdjukaar.moonlight.api.platform.ForgeHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
+import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
 import net.mehvahdjukaar.supplementaries.SuppPlatformStuff;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
@@ -178,6 +179,10 @@ public class CannonBallEntity extends ImprovedProjectileEntity {
                     .entityPointToBlockSpace(this.position());
 
             CannonballWhitelist wl = this.getItem().get(ModComponents.CANNONBALL_WHITELIST.get());
+            Entity owner = this.getOwner();
+            if (owner != null && !(owner instanceof Player) && !PlatHelper.isMobGriefingOn(level(), owner)) {
+                wl = CannonballWhitelist.EMPTY;
+            }
             //similar to level explode
             Float exploded = explodeWithCannonball(level(), loc, pos, maxAmount, (float) radius, wl, movement);
             if (exploded == null) return;
