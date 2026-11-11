@@ -1,6 +1,5 @@
 package net.mehvahdjukaar.supplementaries.common.block.blocks;
 
-import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.common.block.ILavaAndWaterLoggable;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
@@ -162,15 +161,18 @@ public class SafeBlock extends Block implements ILavaAndWaterLoggable, EntityBlo
     public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         if (level.getBlockEntity(pos) instanceof SafeBlockTile tile) {
             Utils.spawnItemWithTileData(player, tile);
-            //forge has a better override for this (no particls)
-            if (PlatHelper.getPlatform().isFabric()) {
-                if (CommonConfigs.Functional.SAFE_UNBREAKABLE.get()) {
-                    if (!tile.canPlayerOpen(player, true)) return state;
-                }
-            }
         }
 
         return super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        if (CommonConfigs.Functional.SAFE_UNBREAKABLE.get() && (level.getBlockEntity(pos) instanceof SafeBlockTile tile
+                && !tile.canPlayerOpen(player, false))) {
+            return 0;
+        }
+        return super.getDestroyProgress(state, player, level, pos);
     }
 
     @Override
