@@ -4,7 +4,7 @@ plugins {
     id("com.possible-triangle.common") version "1.4.259" apply false
     id("com.possible-triangle.fabric") version "1.4.259" apply false
     id("com.possible-triangle.neoforge") version "1.4.259" apply false
-    id("net.mehvahdjukaar.candlelight") version "1.2.4" apply false
+    id("net.mehvahdjukaar.candlelight") version "1.2.7" apply false
 
 }
 
@@ -29,7 +29,7 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("net.mehvahdjukaar:candlelight:1.2.4")
+        compileOnly("net.mehvahdjukaar:candlelight:1.2.7")
     }
 
     tasks.withType<JavaCompile> {
