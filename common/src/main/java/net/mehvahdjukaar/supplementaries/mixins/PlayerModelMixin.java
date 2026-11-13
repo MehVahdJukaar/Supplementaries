@@ -32,8 +32,8 @@ public abstract class PlayerModelMixin {
         model.rightArm.setRotation(Mth.PI, 0, -0.2f);
         model.leftArm.setRotation(Mth.PI, 0, 0.2f);
         float flutter = Mth.sin(ageInTicks * 0.8f) * 0.08f;
-        model.rightLeg.setRotation(flutter, 0, 0.1f);
-        model.leftLeg.setRotation(-flutter, 0, -0.1f);
+        model.rightLeg.setRotation(flutter, 0, 0);
+        model.leftLeg.setRotation(-flutter, 0, 0);
 
         model.hat.copyFrom(model.head);
         model.rightSleeve.copyFrom(model.rightArm);

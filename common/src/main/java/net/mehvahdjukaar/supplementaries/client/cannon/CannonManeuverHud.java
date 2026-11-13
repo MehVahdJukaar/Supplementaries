@@ -86,7 +86,8 @@ public class CannonManeuverHud implements LayeredDraw.Layer {
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
         if (mc.options.hideGui) return;
 
-        if (CannonBlockTile.riddenBy(mc.player) != null) {
+        if (mc.options.getCameraType().isFirstPerson() &&
+                CannonBlockTile.riddenBy(mc.player) != null) {
             renderBarrelOverlay(graphics);
         }
 

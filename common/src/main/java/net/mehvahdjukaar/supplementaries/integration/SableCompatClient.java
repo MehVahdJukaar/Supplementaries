@@ -39,9 +39,11 @@ public class SableCompatClient {
         return subLevel == null ? pos : subLevel.renderPose(partialTicks).transformPosition(pos);
     }
 
-    public static Vec3 projectIntoSubLevel(BlockEntity be, Vec3 worldPos, float partialTicks) {
+    public static Quaternionf rotateIntoSubLevel(BlockEntity be, Quaternionf worldRot, float partialTicks) {
         ClientSubLevelAccess subLevel = SableCompanion.INSTANCE.getContainingClient(be);
-        return subLevel == null ? worldPos : subLevel.renderPose(partialTicks).transformPositionInverse(worldPos);
+        if (subLevel == null) return worldRot;
+        Quaterniondc q = subLevel.renderPose(partialTicks).orientation();
+        return new Quaternionf((float) q.x(), (float) q.y(), (float) q.z(), (float) q.w()).conjugate().mul(worldRot);
     }
 
     public static HitResult clipIncludingSubLevels(BlockGetter level, Entity entity, Vec3 start, Vec3 end,
