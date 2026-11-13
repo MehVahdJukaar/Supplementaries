@@ -1,3 +1,15 @@
 - added redstone lantern
 - added cannnon shoot animations
 - you can damage entities you pass through when shot by a cannon
+- misc improvements to cannons
+- many many misc fixes
+- pignatas can be fired from cannons
+- added whimsy and carousel enchantments for quivers and lunch baskets
+- mod mod compat for slimed effect (environmental mud balls)
+- when vanilla backport is on all copper sconces will be registered
+- added a cannon advancement
+- soap can finall remove armor trims
+- added a config to render flags 2d
+- ash wont extinguish fire as it lands
+- all mod tags will be disabled when their feature config is off.
+

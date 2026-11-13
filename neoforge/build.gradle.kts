@@ -149,5 +149,6 @@ dependencies {
 
     api("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[${sable_companion_version},)")
     jarJar("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[${sable_companion_version},)")
+    modRuntimeOnly("maven.modrinth:sable:fg9dTRz9")
 }
 
