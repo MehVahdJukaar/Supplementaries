@@ -65,7 +65,7 @@ public abstract class PlayerRendererMixin {
         CannonFlight flight = ((ICannonRider) entity).supplementaries$getCannonFlight();
         if (!flight.isFlying()) return;
         Vec3 vel = flight.getVelocity(partialTick);
-        if (vel.lengthSqr() < 1.0E-4) return;
+        if (vel.lengthSqr() < 0.0001) return;
 
         float yaw = (float) (Mth.atan2(vel.z, vel.x) * Mth.RAD_TO_DEG) - 90;
         float pitch = (float) (Mth.atan2(vel.y, vel.horizontalDistance()) * Mth.RAD_TO_DEG);
