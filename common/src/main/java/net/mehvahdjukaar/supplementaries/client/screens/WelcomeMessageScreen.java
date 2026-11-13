@@ -37,7 +37,7 @@ public class WelcomeMessageScreen extends Screen {
             .withStyle(ChatFormatting.GOLD).withStyle(ChatFormatting.BOLD);
     private static final Component VOXY_URL = Component.literal("Voxy: see the issue HERE")
             .withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).applyFormat(ChatFormatting.UNDERLINE)
-                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/m3t4f1v3/voxy/pull/166")));
+                    .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/MCRcortex/voxy/issues/727")));
 
     //leave accessible
     public static final ArrayList<String> MODS_WITH_KNOWN_ISSUES =

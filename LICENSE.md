@@ -1,5 +1,6 @@
 # Supplementaries Team License
-Version 1.5, September 2025
+
+Version 1.6, November 2026
 
 Copyright (c) 2025 Supplementaries Team.  All Rights Reserved.
 
@@ -12,6 +13,7 @@ This license allows nearly all uses for personal purposes, including modificatio
 The license protects authors' rights while maintaining some open-source qualities, such as accepting contributions and allowing code integration in non-competing projects.
 Public use is permitted with proper credit to the authors.
 Public redistribution and commercial use are prohibited.
+Reimplementations of the Software, including AI-generated and so-called "clean room" copies, are prohibited.
 
 ## 1. Definitions
 
@@ -41,7 +43,6 @@ The Licensee may incorporate part of this Software code into their own projects 
 - The Licensee's project does not "Compete" with the Software.
 - "Assets" are exempt from this clause and require explicit permission unless they are part of a project that is a dependency of the Software.
 
-
 ### 2.3. Modification
 The Software may be modified for private use or to contribute to its development.
 
@@ -60,6 +61,33 @@ The Licensee shall not, under any circumstances, sub-license, lease, rent, or ot
 
 ### 2.6. Selling
 The sale of the Software, including its associated files, is strictly prohibited.
+
+### 2.7. Reimplementation and Automated Derivation
+
+The Licensee shall not create, publish, or distribute any "Reimplementation" of the Software, in whole or in part,
+without the express written permission of the authors.
+
+A "Reimplementation" is any work that reproduces the features, behavior, structure, or "Assets" of the Software and was
+produced with reference to the Software. This includes, but is not limited to:
+
+- Rewrites, ports, or translations of the Software to another codebase, programming language, platform, mod loader, or
+  game version.
+- Works produced by supplying the Software's source code, decompiled code, "Assets", documentation, or any description
+  derived from them to an artificial intelligence, machine learning, or other automated code or content generation tool.
+- So-called "clean room" reimplementations, where one person or tool analyzes or describes the Software and another
+  person or tool writes the new implementation from that analysis or description.
+
+A Reimplementation is a derivative work of the Software for the purposes of this Agreement. This applies regardless of
+whether any code or "Assets" were copied literally, and regardless of the tools or process used to produce it. Renaming,
+restructuring, or rewriting code does not exempt a work from this section.
+
+The Software, including its source code and "Assets", shall not be used to train or fine-tune any artificial
+intelligence or machine learning model, or be included in any dataset intended for that purpose.
+
+This section does not restrict:
+
+- Private use of automated tools on the Software, or their use to contribute to the Software's development.
+- Works created independently, without reference to the Software, that share general ideas or game mechanics with it.
 
 ## 3. Attribution
 Any public media produced by the Licensee (such as web pages or videos) that primarily focuses on the content of this Software must include explicit credits to the authors of the Software.
