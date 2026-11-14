@@ -259,19 +259,15 @@ public class BlackBoardScreen extends Screen {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, CommonColors.WHITE);
-
-        // RenderSystem.enableDepthTest();
         super.render(graphics, mouseX, mouseY, partialTicks);
-        // RenderSystem.disableDepthTest();
-        graphics.pose().pushPose();
+
         for (DrawableBlackBoardButton button : this.buttons) {
             if (button.isShouldDrawOverlay()) {
                 button.renderHoverOverlay(graphics);
                 break;
             }
         }
-        graphics.pose().popPose();
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 40, CommonColors.WHITE);
     }
 
     private record Entry(int u, int v, byte color) {

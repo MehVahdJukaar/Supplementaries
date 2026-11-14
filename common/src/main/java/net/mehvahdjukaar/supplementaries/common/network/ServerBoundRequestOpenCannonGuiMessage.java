@@ -4,6 +4,8 @@ import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.CannonBlockTile;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -28,6 +30,11 @@ public record ServerBoundRequestOpenCannonGuiMessage(TileOrEntityTarget target) 
     @Override
     public void handle(Context context) {
         if (context.getPlayer() instanceof ServerPlayer player) {
+            BlockPos targetPos = target.getPos();
+            if (targetPos != null && !player.level().isLoaded(targetPos)) return;
+            if (!(target.findTileOrContainedTile(player.level()) instanceof CannonBlockTile cannon)) return;
+            if (!cannon.isCloseEnoughToUse(player, BlockPos.containing(cannon.getGlobalPosition(1)))) return;
+
             ItemStack stack = player.getMainHandItem();
             Utils.openGuiIfPossible(target, player, stack, Direction.NORTH, Vec3.ZERO);
         }

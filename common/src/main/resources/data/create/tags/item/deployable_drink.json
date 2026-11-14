@@ -1,6 +1,20 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:lumisene_bottle","required":false}
+    {
+      "id": "supplementaries:lumisene_bottle",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lumisene_bottle"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lumisene_bottle"
+        }
+      ]
+    }
   ]
 }

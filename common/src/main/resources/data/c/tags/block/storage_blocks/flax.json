@@ -1,6 +1,20 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flax_block"
+    {
+      "id": "supplementaries:flax_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
+    }
   ]
 }

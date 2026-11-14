@@ -7,8 +7,36 @@
     {"id":"minecraft:raw_iron_block","required":false},
     {"id":"minecraft:ancient_debris","required":false},
     {"id":"minecraft:netherite_block","required":false},
-    {"id":"supplementaries:netherite_door","required":false},
-    {"id":"supplementaries:netherite_trapdoor","required":false},
+    {
+      "id": "supplementaries:netherite_door",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:netherite_trapdoor",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ]
+    },
 
     {"id":"c:storage_block/steel","required":false},
     {"id":"c:storage_block/iron","required":false},

@@ -581,6 +581,23 @@
       "supplementaries:block/cannon_fizzle"
     ]
   },
+  "block.cannon.enter": {
+    "sounds": [
+      {
+        "name": "minecraft:item/armor/equip_iron1",
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:item/armor/equip_iron3",
+        "pitch": 0.7
+      },
+      {
+        "name": "minecraft:item/armor/equip_iron5",
+        "pitch": 0.7
+      }
+    ],
+    "subtitle": "subtitles.supplementaries.cannon.enter"
+  },
   "block.rotate": {
     "subtitle": "subtitles.supplementaries.generic.block.rotate",
     "sounds": [

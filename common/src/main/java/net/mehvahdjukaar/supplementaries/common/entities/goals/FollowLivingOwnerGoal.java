@@ -5,9 +5,6 @@ import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.pathfinder.PathType;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,7 +14,6 @@ import java.util.EnumSet;
 public class FollowLivingOwnerGoal extends Goal {
     private final Mob mob;
     private final double speedModifier;
-    private final PathNavigation navigation;
     private final float stopDistance;
     private final float startDistance;
     @Nullable
@@ -28,13 +24,9 @@ public class FollowLivingOwnerGoal extends Goal {
     public FollowLivingOwnerGoal(Mob mob, double speedModifier, float startDistance, float stopDistance) {
         this.mob = mob;
         this.speedModifier = speedModifier;
-        this.navigation = mob.getNavigation();
         this.startDistance = startDistance;
         this.stopDistance = stopDistance;
         this.setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
-        if (!(mob.getNavigation() instanceof GroundPathNavigation) && !(mob.getNavigation() instanceof FlyingPathNavigation)) {
-            throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
-        }
     }
 
     @Override
@@ -58,7 +50,7 @@ public class FollowLivingOwnerGoal extends Goal {
     @Override
     public boolean canContinueToUse() {
         LivingEntityTamableAttachment livingTamable = ModData.LIVING_TAMABLE.getOrCreate(this.mob);
-        if (this.navigation.isDone()) {
+        if (this.mob.getNavigation().isDone()) {
             return false;
         } else if (livingTamable.unableToMoveToOwner(this.mob)) {
             return false;
@@ -77,7 +69,7 @@ public class FollowLivingOwnerGoal extends Goal {
     @Override
     public void stop() {
         this.owner = null;
-        this.navigation.stop();
+        this.mob.getNavigation().stop();
         this.mob.setPathfindingMalus(PathType.WATER, this.oldWaterCost);
     }
 
@@ -87,7 +79,7 @@ public class FollowLivingOwnerGoal extends Goal {
 
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = this.adjustedTickDelay(10);
-            this.navigation.moveTo(this.owner, this.speedModifier);
+            this.mob.getNavigation().moveTo(this.owner, this.speedModifier);
         }
     }
 }

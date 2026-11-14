@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.reg.ClientRegistry;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.renderer.RenderType;
@@ -22,14 +23,17 @@ public class SlimedRenderTypes extends RenderType {
         TYPES.clear();
     }
 
-    public static RenderType get(int width, int height) {
-        return TYPES.computeIfAbsent((width << 16) | (height & 0xFFFF), k -> create("slimed",
+    public static RenderType get(int width, int height, SlimedData.Type type) {
+        return TYPES.computeIfAbsent((type.ordinal() << 28) | (width << 14) | (height & 0x3FFF), k -> create("slimed",
                 DefaultVertexFormat.NEW_ENTITY,
                 VertexFormat.Mode.QUADS,
                 256,
                 false, true,
                 CompositeState.builder()
-                        .setTextureState(new TextureStateShard(ModTextures.SLIME_ENTITY_OVERLAY, false, false))
+                        .setTextureState(new TextureStateShard(switch (type) {
+                            case SLIME -> ModTextures.SLIME_ENTITY_OVERLAY;
+                            case MUD -> ModTextures.MUD_ENTITY_OVERLAY;
+                        }, false, false))
                         .setCullState(NO_CULL)
                         .setShaderState(new ShaderStateShard(ClientRegistry.ENTITY_OFFSET_SHADER))
                         .setOverlayState(OVERLAY)

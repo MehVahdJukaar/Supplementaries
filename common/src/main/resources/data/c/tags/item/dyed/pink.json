@@ -1,11 +1,95 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:flag_pink",
-    "supplementaries:present_pink",
-    "supplementaries:trapped_present_pink",
-    "supplementaries:candle_holder_pink",
-    "supplementaries:awning_pink",
-    "supplementaries:bunting_pink"
+    {
+      "id": "supplementaries:flag_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:awning_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "awning"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "awning"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    }
   ]
 }

@@ -1,8 +1,50 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:lumisene_bottle","required":false},
-    {"id":"supplementaries:antique_ink","required":false},
-    {"id":"supplementaries:lumisene_bucket","required":false}
+    {
+      "id": "supplementaries:lumisene_bottle",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lumisene_bottle"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lumisene_bottle"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:antique_ink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "antique_ink"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "antique_ink"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:lumisene_bucket",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "lumisene"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "lumisene"
+        }
+      ]
+    }
   ]
 }

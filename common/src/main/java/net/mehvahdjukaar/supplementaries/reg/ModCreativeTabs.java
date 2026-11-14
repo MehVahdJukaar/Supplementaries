@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.reg;
 
+import net.mehvahdjukaar.moonlight.api.misc.HolderRef;
 import net.mehvahdjukaar.moonlight.api.misc.RegSupplier;
 import net.mehvahdjukaar.moonlight.api.platform.RegHelper;
 import net.mehvahdjukaar.moonlight.api.platform.TabAdderHelper;
@@ -18,6 +19,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -51,9 +53,14 @@ public class ModCreativeTabs {
                 ModConstants.SCONCE_NAME,
                 sconces.toArray(Supplier[]::new));
 
-        if (!CommonConfigs.Tools.STASIS_ENABLED.get()) {
-            var enchantment = ModEnchantments.STASIS_ENCHANTMENT.getHolder(event.getParameters().holders());
-            ItemStack book = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, 1));
+        var holders = event.getParameters().holders();
+        Map<HolderRef<Enchantment>, Supplier<Boolean>> enchantmentConfigs = Map.of(
+                ModEnchantments.STASIS_ENCHANTMENT, CommonConfigs.Tools.STASIS_ENABLED,
+                ModEnchantments.WHIMSY_ENCHANTMENT, CommonConfigs.Tools.WHIMSY_ENABLED,
+                ModEnchantments.CAROUSEL_ENCHANTMENT, CommonConfigs.Tools.CAROUSEL_ENABLED);
+        for (var entry : enchantmentConfigs.entrySet()) {
+            if (entry.getValue().get()) continue;
+            ItemStack book = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(entry.getKey().getHolder(holders), 1));
             event.remove(CreativeModeTabs.TOOLS_AND_UTILITIES, book);
         }
 
@@ -81,6 +88,14 @@ public class ModCreativeTabs {
         adder.after(Items.PEARLESCENT_FROGLIGHT, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.STONE_LAMP_NAME,
                 ModRegistry.STONE_LAMP);
+
+        adder.after(Items.SOUL_LANTERN, CreativeModeTabs.FUNCTIONAL_BLOCKS,
+                ModConstants.REDSTONE_LANTERN_NAME,
+                ModRegistry.REDSTONE_LANTERN);
+
+        adder.after(Items.REDSTONE_TORCH, CreativeModeTabs.REDSTONE_BLOCKS,
+                ModConstants.REDSTONE_LANTERN_NAME,
+                ModRegistry.REDSTONE_LANTERN);
 
         adder.after(Items.DAMAGED_ANVIL, CreativeModeTabs.FUNCTIONAL_BLOCKS,
                 ModConstants.PEDESTAL_NAME,
@@ -476,6 +491,10 @@ public class ModCreativeTabs {
                 ModConstants.ANTIQUE_INK_NAME,
                 ModRegistry.ANTIQUE_INK);
 
+        adder.after(Items.NETHERITE_INGOT, CreativeModeTabs.INGREDIENTS,
+                ModConstants.ORICHALCUM_NAME,
+                ModRegistry.ORICHALCUM);
+
         adder.after(Items.WHEAT, CreativeModeTabs.INGREDIENTS,
                 ModConstants.FLAX_NAME,
                 ModRegistry.FLAX_ITEM);
@@ -488,7 +507,7 @@ public class ModCreativeTabs {
         //        ModConstants.RED_MERCHANT_NAME,
         //        ModRegistry.RED_MERCHANT_SPAWN_EGG_ITEM);
 
-        adder.add(CreativeModeTabs.SPAWN_EGGS,
+        adder.after(Items.PILLAGER_SPAWN_EGG, CreativeModeTabs.SPAWN_EGGS,
                 ModConstants.PLUNDERER_NAME,
                 ModRegistry.PLUNDERER_SPAWN_EGG_ITEM);
 

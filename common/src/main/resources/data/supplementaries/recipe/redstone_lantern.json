@@ -1,0 +1,32 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "supplementaries:flag",
+      "flag": "redstone_lantern"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "redstone_lantern"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "010",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:iron_nugget"
+    },
+    "1": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "result": {
+    "id": "supplementaries:redstone_lantern",
+    "count": 1
+  }
+}

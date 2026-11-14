@@ -3,6 +3,20 @@
   "values": [
     "#supplementaries:sconces",
     "#supplementaries:candle_holders",
-    "supplementaries:crank"
+    {
+      "id": "supplementaries:crank",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "crank"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "crank"
+        }
+      ]
+    }
   ]
 }

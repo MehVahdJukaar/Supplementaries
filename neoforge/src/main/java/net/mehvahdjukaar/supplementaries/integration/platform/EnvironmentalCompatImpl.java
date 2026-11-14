@@ -1,6 +1,7 @@
 package net.mehvahdjukaar.supplementaries.integration.platform;
 
 import com.teamabnormals.blueprint.common.world.storage.tracking.IDataManager;
+import com.teamabnormals.environmental.common.entity.animal.MuddyPig;
 import com.teamabnormals.environmental.core.other.EnvironmentalDataProcessors;
 import net.minecraft.world.entity.animal.Pig;
 
@@ -12,5 +13,9 @@ public class EnvironmentalCompatImpl {
             return true;
         }
         return false;
+    }
+
+    public static boolean getsMuddyFromMudBall(Pig pig) {
+        return MuddyPig.enabled();
     }
 }

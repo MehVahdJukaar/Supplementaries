@@ -3,7 +3,18 @@
   "values": [
     {
       "id": "supplementaries:key",
-      "required": false
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "key"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "key"
+        }
+      ]
     },
     {
       "id": "suppsquared:heavy_key",

@@ -21,6 +21,7 @@ public class CompatHandlerClient {
         if (INFERNALEXP) InfernalExpCompat.setupClient();
         if (ARCHITECTS_PALETTE) ArchitectsPalCompat.setupClient();
         if (ENDERGETIC) EndergeticCompat.setupClient();
+        if (VANILLA_BACKPORT) VanillaBackportCompat.setupClient();
         if (QUARK) QuarkClientCompat.setupClient();
         if (FLYWHEEL) FlywheelCompat.setupClient();
         if (POLYTONE) PolytoneCompat.setupClient();

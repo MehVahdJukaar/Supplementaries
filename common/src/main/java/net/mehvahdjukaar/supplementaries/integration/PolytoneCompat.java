@@ -33,6 +33,7 @@ public class PolytoneCompat {
             event.addBlockLight(ModRegistry.SCONCE_GREEN.get(), 0x93F37C);
             event.addBlockLight(ModRegistry.SCONCE_WALL_GREEN.get(), 0x93F37C);
             event.addBlockAlias(ModRegistry.BLACKSTONE_LAMP.get(), Blocks.SOUL_TORCH);
+            event.addBlockAlias(ModRegistry.REDSTONE_LANTERN.get(), s -> s.getValue(BlockStateProperties.POWERED) ? s : Blocks.REDSTONE_TORCH.defaultBlockState());
             event.addBlockLight(ModRegistry.BLAZE_ROD_BLOCK.get(), 0xF3C34A);
             event.addBlockLight(ModRegistry.GROUPER.get(), 0x4FE0D0);
             event.addBlockLight(ModRegistry.END_STONE_LAMP.get(), 0xE8DCF5);

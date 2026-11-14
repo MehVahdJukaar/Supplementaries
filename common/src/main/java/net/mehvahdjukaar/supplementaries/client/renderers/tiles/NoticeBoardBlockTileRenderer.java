@@ -37,7 +37,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ComplexItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -208,8 +207,7 @@ public class NoticeBoardBlockTileRenderer implements BlockEntityRenderer<NoticeB
             poseStack.popPose();
         } else {
             //request map data from server
-            Player player = Minecraft.getInstance().player;
-            NetworkHelper.sendToServer(new ServerBoundRequestMapDataPacket(tile.getBlockPos(), player.getUUID()));
+            NetworkHelper.sendToServer(new ServerBoundRequestMapDataPacket(tile.getBlockPos()));
         }
     }
 

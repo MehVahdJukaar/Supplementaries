@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.items.QuiverItem;
 import net.mehvahdjukaar.supplementaries.common.items.RopeArrowItem;
+import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.SlingshotItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.QuiverContent;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
@@ -71,6 +72,7 @@ public abstract class ProjectileWeaponItemMixin {
                     ItemStack selectedCopy = data.getSelected();
                     var mutable = data.toMutable();
                     mutable.consumeSelected(amount);
+                    SelectableContainerItem.applySelectionEnchantments(q, mutable, shooter.getRandom());
                     q.set(ModComponents.QUIVER_CONTENT.get(), mutable.toImmutable());
                     return selectedCopy;
                 }

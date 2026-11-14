@@ -25,6 +25,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 
@@ -121,8 +122,9 @@ public class CannonController {
 
         if (lastCameraPos == null) {
             lastCameraPos = camera.getPosition();
-            lastCameraYaw = camera.getYRot();
-            lastCameraPitch = camera.getXRot();
+            EntityAngles angles = EntityAngles.fromQuaternion(cannon.getWorldOrientation(partialTick));
+            lastCameraYaw = angles.yaw();
+            lastCameraPitch = angles.pitch();
         }
 
         // lerp camera
@@ -178,13 +180,15 @@ public class CannonController {
 
             hit = SableCompatClient.clipIncludingSubLevels(level, entity, actualCameraPos, endPos, partialTick);
 
-            Vec3 target = SableCompatClient.projectIntoSubLevel(cannon, hit.getLocation(), partialTick);
-            BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, target, shootingMode,
+            //this issolved in world space since sublevels are a thing. so pain
+            Vec3 cannonPos = SableCompatClient.projectOutOfSubLevel(cannon, cannon.getGlobalPosition(partialTick), partialTick);
+            BallisticTrajectory3D comp = CannonUtils.computeTrajectory(cannon, cannonPos, hit.getLocation(), shootingMode,
                     inside ? BallisticData.PLAYER : cannon.getBallisticData());
 
             if (comp != null) {
                 trajectory = comp.trajectory();
-                cannon.setRotationToMatchTrajectory(comp, partialTick);
+                Quaternionf aim = EntityAngles.of(trajectory.pitch() * Mth.RAD_TO_DEG, comp.yaw() * Mth.RAD_TO_DEG).toQuaternion();
+                cannon.setWorldOrientation(SableCompatClient.rotateIntoSubLevel(cannon, aim, partialTick));
                 if (turnedLastTick) cannon.snapToWantedRotationInstantly();
                 turnedLastTick = true;
                 return true;

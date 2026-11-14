@@ -1,25 +1,323 @@
 {
   "values": [
-    "supplementaries:candle_holder",
-    "supplementaries:candle_holder_white",
-    "supplementaries:candle_holder_red",
-    "supplementaries:candle_holder_cyan",
-    "supplementaries:candle_holder_lime",
-    "supplementaries:candle_holder_yellow",
-    "supplementaries:candle_holder_magenta",
-    "supplementaries:candle_holder_brown",
-    "supplementaries:candle_holder_light_blue",
-    "supplementaries:candle_holder_blue",
-    "supplementaries:candle_holder_green",
-    "supplementaries:candle_holder_pink",
-    "supplementaries:candle_holder_light_gray",
-    "supplementaries:candle_holder_purple",
-    "supplementaries:candle_holder_black",
-    "supplementaries:candle_holder_orange",
-    "supplementaries:candle_holder_gray",
-    {"id":"supplementaries:candle_holder_soul","required":false},
-    {"id":"supplementaries:candle_holder_ender","required":false},
-    {"id":"supplementaries:candle_holder_cupric","required":false},
-    {"id":"supplementaries:candle_holder_spectacle","required":false}
+    {
+      "id": "supplementaries:candle_holder",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_white",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_red",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_cyan",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_lime",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_yellow",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_magenta",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_brown",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_light_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_green",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_light_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_orange",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_soul",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_ender",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_cupric",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:candle_holder_spectacle",
+      "required": false,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "candle_holder"
+        }
+      ]
+    }
   ]
 }

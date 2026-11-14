@@ -16,6 +16,10 @@ public class ModEnchantments {
     //enchantment
     public static final HolderRef<Enchantment> STASIS_ENCHANTMENT = HolderRef.of(
             res("stasis"), Registries.ENCHANTMENT);
+    public static final HolderRef<Enchantment> WHIMSY_ENCHANTMENT = HolderRef.of(
+            res(ModConstants.WHIMSY_NAME), Registries.ENCHANTMENT);
+    public static final HolderRef<Enchantment> CAROUSEL_ENCHANTMENT = HolderRef.of(
+            res(ModConstants.CAROUSEL_NAME), Registries.ENCHANTMENT);
 
     public static final Supplier<DataComponentType<Unit>> PROJECTILE_NO_GRAVITY = RegHelper.register(
             res("projectile_no_gravity"),
@@ -25,6 +29,18 @@ public class ModEnchantments {
     );
     public static final Supplier<DataComponentType<Unit>> SPAWN_BUBBLE_BLOCK = RegHelper.register(
             res("spawn_bubble_block"),
+            () -> DataComponentType.<Unit>builder()
+                    .persistent(Unit.CODEC).build(),
+            Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE
+    );
+    public static final Supplier<DataComponentType<Unit>> RANDOMIZE_SELECTED_SLOT = RegHelper.register(
+            res("randomize_selected_slot"),
+            () -> DataComponentType.<Unit>builder()
+                    .persistent(Unit.CODEC).build(),
+            Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE
+    );
+    public static final Supplier<DataComponentType<Unit>> CYCLE_SELECTED_SLOT = RegHelper.register(
+            res("cycle_selected_slot"),
             () -> DataComponentType.<Unit>builder()
                     .persistent(Unit.CODEC).build(),
             Registries.ENCHANTMENT_EFFECT_COMPONENT_TYPE

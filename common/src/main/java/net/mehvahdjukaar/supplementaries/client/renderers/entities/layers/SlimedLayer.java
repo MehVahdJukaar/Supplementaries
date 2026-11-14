@@ -7,6 +7,7 @@ import net.mehvahdjukaar.supplementaries.client.renderers.SlimedRenderTypes;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
 import net.mehvahdjukaar.supplementaries.integration.EMFCompat;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -28,7 +29,8 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
                        float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks,
                        float netHeadYaw, float headPitch) {
 
-        float alpha = SlimedData.getAlpha(entity, partialTicks);
+        SlimedData data = ModData.SLIMED_DATA.getOrCreate(entity);
+        float alpha = data.getAlpha(partialTicks);
 
         if (alpha == 0) return;
 
@@ -49,7 +51,7 @@ public class SlimedLayer<T extends LivingEntity, M extends EntityModel<T>> exten
             width = part.moonlight$getTextWidth();
         }
 
-        VertexConsumer consumer = buffer.getBuffer(SlimedRenderTypes.get(width, height));
+        VertexConsumer consumer = buffer.getBuffer(SlimedRenderTypes.get(width, height, data.getType()));
 
         poseStack.pushPose();
         model.renderToBuffer(poseStack, consumer, packedLight,

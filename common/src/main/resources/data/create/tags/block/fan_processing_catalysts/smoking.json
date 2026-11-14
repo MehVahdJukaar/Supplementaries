@@ -1,6 +1,20 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:fire_pit","required":false}
+    {
+      "id": "supplementaries:fire_pit",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "fire_pit"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "fire_pit"
+        }
+      ]
+    }
   ]
 }

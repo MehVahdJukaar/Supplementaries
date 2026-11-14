@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import org.violetmoon.quark.base.Quark;
 import org.violetmoon.quark.content.client.module.ChestSearchingModule;
+import org.violetmoon.quark.content.client.module.ImprovedTooltipsModule;
 import org.violetmoon.quark.content.client.tooltip.ShulkerBoxTooltips;
 
 public class InventoryTooltipComponent implements ClientTooltipComponent {
@@ -26,11 +27,14 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
     private final NonNullList<ItemStack> items;
     private final int[] dimensions;
     private final int size;
+    private final int color;
     protected ChestSearchingModule module = Quark.ZETA.modules.get(ChestSearchingModule.class);
 
     public InventoryTooltipComponent(InventoryViewTooltip tooltip) {
         ItemContainerContents contents = tooltip.contents();
         this.size = tooltip.size();
+        this.color = ImprovedTooltipsModule.shulkerBoxUseColors && tooltip.color() != null ?
+                tooltip.color().getTextureDiffuseColor() : -1;
         this.dimensions = VariableSizeContainerMenu.getRatio(this.size);
         this.items = NonNullList.withSize(this.size, ItemStack.EMPTY);
         contents.copyInto(this.items);
@@ -53,8 +57,6 @@ public class InventoryTooltipComponent implements ClientTooltipComponent {
         PoseStack pose = graphics.pose();
         pose.pushPose();
         pose.translate(0.0D, 0.0D, 700.0D);
-
-        int color = -1;
 
         ShulkerBoxTooltips.ShulkerComponent.renderTooltipBackground(graphics, mc, pose, currentX, tooltipY, dimensions[0], dimensions[1], color);
 

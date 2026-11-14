@@ -1,22 +1,260 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:trapped_present","required":false},
-    {"id":"supplementaries:trapped_present_white","required":false},
-    {"id":"supplementaries:trapped_present_orange","required":false},
-    {"id":"supplementaries:trapped_present_yellow","required":false},
-    {"id":"supplementaries:trapped_present_red","required":false},
-    {"id":"supplementaries:trapped_present_blue","required":false},
-    {"id":"supplementaries:trapped_present_cyan","required":false},
-    {"id":"supplementaries:trapped_present_light_blue","required":false},
-    {"id":"supplementaries:trapped_present_lime","required":false},
-    {"id":"supplementaries:trapped_present_green","required":false},
-    {"id":"supplementaries:trapped_present_magenta","required":false},
-    {"id":"supplementaries:trapped_present_pink","required":false},
-    {"id":"supplementaries:trapped_present_purple","required":false},
-    {"id":"supplementaries:trapped_present_black","required":false},
-    {"id":"supplementaries:trapped_present_gray","required":false},
-    {"id":"supplementaries:trapped_present_light_gray","required":false},
-    {"id":"supplementaries:trapped_present_brown","required":false}
+    {
+      "id": "supplementaries:trapped_present",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_white",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_orange",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_yellow",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_red",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_cyan",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_light_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_lime",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_green",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_magenta",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_light_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:trapped_present_brown",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "trapped_present"
+        }
+      ]
+    }
   ]
 }

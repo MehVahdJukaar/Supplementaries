@@ -1,7 +1,35 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:spring_launcher_arm",
-	"supplementaries:safe"
+    {
+      "id": "supplementaries:spring_launcher_arm",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "spring_launcher"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "spring_launcher"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:safe",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "safe"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "safe"
+        }
+      ]
+    }
   ]
 }

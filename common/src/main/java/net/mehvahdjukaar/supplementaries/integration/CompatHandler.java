@@ -46,6 +46,7 @@ public class CompatHandler {
     public static final boolean RGBLIB = isLoaded("rgblib");
     public static final boolean ENDERGETIC = isLoaded("endergetic");
     public static final boolean CAVERNS_AND_CHASMS = isLoaded("caverns_and_chasms");
+    public static final boolean VANILLA_BACKPORT = isLoaded("vanillabackport");
     public static final boolean DECO_BLOCKS_ABNORMALS = isLoaded("decorative_blocks_abnormals");
     public static final boolean MUCH_MORE_MOD_COMPAT = isLoaded("muchmoremodcompat");
     public static final boolean AUTUMNITY = isLoaded("autumnity");
@@ -128,6 +129,7 @@ public class CompatHandler {
         if (DECO_BLOCKS) DecoBlocksCompat.init();
         if (QUARK) QuarkCompat.init();
         if (ENDERGETIC) EndergeticCompat.init();
+        if (VANILLA_BACKPORT) VanillaBackportCompat.init();
         initPlat();
         if (CAVERNS_AND_CHASMS) ModRegistry.SCONCES.add(ModRegistry.SCONCE_ITEM_GREEN);
         if (INFERNALEXP) InfernalExpCompat.init();

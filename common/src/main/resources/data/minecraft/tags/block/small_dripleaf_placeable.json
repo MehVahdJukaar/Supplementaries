@@ -1,5 +1,19 @@
 {
   "values": [
-    "supplementaries:planter"
+    {
+      "id": "supplementaries:planter",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "planter"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "planter"
+        }
+      ]
+    }
   ]
 }

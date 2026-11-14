@@ -1,6 +1,34 @@
 {
   "values": [
-    "supplementaries:fine_wood",
-    "supplementaries:fine_wood_slab"
+    {
+      "id": "supplementaries:fine_wood",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:fine_wood_slab",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "fine_wood"
+        }
+      ]
+    }
   ]
 }

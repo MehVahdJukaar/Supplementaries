@@ -2,6 +2,7 @@ package net.mehvahdjukaar.supplementaries.integration;
 
 import net.mehvahdjukaar.supplementaries.common.block.IRopeConnection;
 import net.mehvahdjukaar.supplementaries.common.block.ModBlockProperties;
+import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -16,12 +17,7 @@ import vectorwing.farmersdelight.common.block.TomatoBlock;
 
 import java.util.Map;
 
-/**
- * A tomato crop that visually connects like our rope. Created when a vine climbs onto our rope.
- * Extends the FD crop (so it keeps growing/harvesting) and implements {@link IRopeConnection} for
- * the rope visuals/connections. The inherited {@code ROPELOGGED} property is left unused (false).
- */
-public class TomatoRopeBlock extends TomatoBlock implements IRopeConnection {
+public class TomatoRopeBlock extends TomatoLoggedBlock implements IRopeConnection {
 
     public static final BooleanProperty NORTH = BlockStateProperties.NORTH;
     public static final BooleanProperty SOUTH = BlockStateProperties.SOUTH;
@@ -29,7 +25,6 @@ public class TomatoRopeBlock extends TomatoBlock implements IRopeConnection {
     public static final BooleanProperty EAST = BlockStateProperties.EAST;
     public static final BooleanProperty KNOT = ModBlockProperties.KNOT;
 
-    // map horizontal directions to properties
     private static final Map<Direction, BooleanProperty> HMAP = Map.of(
             Direction.NORTH, NORTH,
             Direction.EAST, EAST,
@@ -46,15 +41,17 @@ public class TomatoRopeBlock extends TomatoBlock implements IRopeConnection {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        // first the tomato properties
         super.createBlockStateDefinition(builder);
-        // then the rope connection properties
         builder.add(NORTH, SOUTH, EAST, WEST, KNOT);
     }
 
     @Override
+    public BlockState getInnerState(BlockState state, LevelAccessor level, BlockPos pos) {
+        return Block.updateFromNeighbourShapes(ModRegistry.ROPE.get().withPropertiesOf(state), level, pos);
+    }
+
+    @Override
     public boolean canSideAcceptConnection(BlockState state, Direction direction) {
-        // allow connections from any side (IRopeConnection helpers filter)
         return true;
     }
 
@@ -83,8 +80,8 @@ public class TomatoRopeBlock extends TomatoBlock implements IRopeConnection {
         return withConnections(this.defaultBlockState(), context.getClickedPos(), context.getLevel());
     }
 
-    // FD places the climbing state raw (via getClimbingState), so resolve our connections/knot here -
-    // this makes the block correct no matter who places it, not only on player placement.
+    //FD places the climbing state raw (via getClimbingState), so resolve our connections/knot here
+    //this makes the block correct no matter who places it, not only on player placement.
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);

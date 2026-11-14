@@ -1,8 +1,50 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:netherite_trapdoor",
-    "supplementaries:netherite_door",
-    "supplementaries:safe"
+    {
+      "id": "supplementaries:netherite_trapdoor",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_trapdoor"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:netherite_door",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "netherite_door"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:safe",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "safe"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "safe"
+        }
+      ]
+    }
   ]
 }

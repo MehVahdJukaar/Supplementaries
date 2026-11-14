@@ -262,7 +262,6 @@ public class ServerEvents {
     }
 
 
-    //TODO: fabric
     @EventCalled
     public static boolean onItemPickup(ItemEntity itemEntity, Player player) {
         ItemStack stack = itemEntity.getItem();

@@ -27,6 +27,7 @@ import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.mehvahdjukaar.supplementaries.integration.CompatHandler;
+import net.mehvahdjukaar.supplementaries.integration.VanillaBackportCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModConstants;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.minecraft.client.renderer.block.model.ItemOverride;
@@ -178,6 +179,8 @@ public class ModClientDynamicResources extends DynamicClientResourceProvider {
             sink.copyResource(manager, ResType.ITEM_TEXTURES.getPath(Supplementaries.res("party_hat")),
                     ResType.ITEM_TEXTURES.getPath(Supplementaries.res("party_hat_christmas")), false);
         }
+
+        if (CompatHandler.VANILLA_BACKPORT) VanillaBackportCompat.swapDeepslateLampTexture(manager, sink);
     }
 
     private void addMissingFlagPatterns(ResourceManager manager, ResourceSink sink) {

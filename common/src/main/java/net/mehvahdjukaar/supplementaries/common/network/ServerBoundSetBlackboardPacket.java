@@ -23,7 +23,7 @@ public class ServerBoundSetBlackboardPacket implements Message {
         this.pos = buf.readBlockPos();
         this.pixels = new byte[16][16];
         for (int i = 0; i < this.pixels.length; i++) {
-            this.pixels[i] = buf.readByteArray();
+            this.pixels[i] = buf.readByteArray(16);
         }
     }
 

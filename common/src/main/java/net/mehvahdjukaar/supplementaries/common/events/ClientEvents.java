@@ -20,6 +20,8 @@ import net.mehvahdjukaar.supplementaries.common.entities.IPartyCreeper;
 import net.mehvahdjukaar.supplementaries.common.entities.IQuiverEntity;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.InteractEventsHandler;
 import net.mehvahdjukaar.supplementaries.common.events.overrides.SuppAdditionalPlacement;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsClient;
+import net.mehvahdjukaar.supplementaries.common.misc.map_data.MapTintColorsHandler;
 import net.mehvahdjukaar.supplementaries.common.network.SyncEquippedQuiverPacket;
 import net.mehvahdjukaar.supplementaries.common.network.SyncPartyCreeperPacket;
 import net.mehvahdjukaar.supplementaries.configs.ClientConfigs;
@@ -150,6 +152,9 @@ public class ClientEvents {
     @EventCalled
     public static void onDisconnect() {
         PickleData.onPlayerLogOff();
+        CapturedMobCache.clear();
+        MapTintColorsClient.clearColorCache();
+        MapTintColorsHandler.clearIdCache();
     }
 
     public static double getRopeWobble(double partialTicks) {

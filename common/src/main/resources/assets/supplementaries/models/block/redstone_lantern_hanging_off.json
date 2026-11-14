@@ -1,0 +1,6 @@
+{
+  "parent": "supplementaries:block/redstone_lantern_hanging_template",
+  "textures": {
+    "lantern": "supplementaries:block/redstone_lantern_off"
+  }
+}

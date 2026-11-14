@@ -2,7 +2,22 @@
   "replace": false,
   "values": [
     {"id":"spelunkery:depth_gauge","required":false},
-    {"id":"supplementaries:altimeter","required":true},
+    {
+      "id": "supplementaries:altimeter",
+      "required": true,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "altimeter"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "altimeter"
+        }
+      ]
+    },
     {"id":"caverns_and_chasms:depth_gauge","required":false}
   ]
 }

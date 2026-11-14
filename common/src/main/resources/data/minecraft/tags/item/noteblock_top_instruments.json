@@ -1,6 +1,34 @@
 {
   "values": [
-    "supplementaries:enderman_head",
-    "supplementaries:spider_head"
+    {
+      "id": "supplementaries:enderman_head",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "enderman_head"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "enderman_head"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:spider_head",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "spider_head"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "spider_head"
+        }
+      ]
+    }
   ]
 }

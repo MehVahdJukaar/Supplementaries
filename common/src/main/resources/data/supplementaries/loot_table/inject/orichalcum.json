@@ -1,0 +1,24 @@
+{
+  "pools": [
+    {
+      "rolls": 1,
+      "conditions": [
+        {
+          "condition": "supplementaries:block_tag",
+          "tag": "supplementaries:drops_orichalcum"
+        },
+        {
+          "condition": "random_chance",
+          "chance": 0.1
+        }
+      ],
+      "entries": [
+        {
+          "type": "item",
+          "weight": 1,
+          "name": "supplementaries:orichalcum"
+        }
+      ]
+    }
+  ]
+}

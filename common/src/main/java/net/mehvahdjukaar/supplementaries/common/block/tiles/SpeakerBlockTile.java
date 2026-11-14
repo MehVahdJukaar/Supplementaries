@@ -82,6 +82,7 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserI
     }
 
     public void setMode(Mode mode) {
+        if (mode == Mode.NARRATOR && !CommonConfigs.Redstone.SPEAKER_NARRATOR.get()) mode = Mode.CHAT;
         this.mode = mode;
     }
 
@@ -180,8 +181,11 @@ public class SpeakerBlockTile extends BlockEntity implements Nameable, IOneUserI
         return this.saveWithoutMetadata(registries);
     }
 
-    public boolean tryAcceptingClientText(ServerPlayer player, FilteredText filteredText) {
-        if (this.canBeUsedBy(worldPosition, player)) {
+    public boolean tryAcceptingClientText(ServerPlayer player, FilteredText filteredText, Mode mode, double volume) {
+        boolean tooLong = filteredText.raw().length() > CommonConfigs.Redstone.SPEAKER_BLOCK_MAX_TEXT.get();
+        if (!tooLong && this.canBeUsedBy(worldPosition, player) && this.isCloseEnoughToUse(player, worldPosition)) {
+            this.setVolume(volume);
+            this.setMode(mode);
             this.acceptClientMessages(player, filteredText);
             this.setCurrentUser(null);
             return true;

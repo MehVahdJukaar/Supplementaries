@@ -6,6 +6,7 @@ import net.mehvahdjukaar.moonlight.api.block.IOneUserInteractable;
 import net.mehvahdjukaar.moonlight.api.block.OpenableContainerBlockTile;
 import net.mehvahdjukaar.moonlight.api.misc.OrientationRig;
 import net.mehvahdjukaar.moonlight.api.platform.network.NetworkHelper;
+import net.mehvahdjukaar.moonlight.api.util.Utils;
 import net.mehvahdjukaar.moonlight.api.util.math.EntityAngles;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.blocks.CannonBlock;
@@ -23,9 +24,11 @@ import net.mehvahdjukaar.supplementaries.common.network.ClientBoundCannonAnimati
 import net.mehvahdjukaar.supplementaries.common.network.ClientBoundLaunchCannonRiderPacket;
 import net.mehvahdjukaar.supplementaries.common.network.ServerBoundRequestOpenCannonGuiMessage;
 import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
+import net.mehvahdjukaar.supplementaries.integration.SableCompat;
 import net.mehvahdjukaar.supplementaries.reg.ModComponents;
 import net.mehvahdjukaar.supplementaries.reg.ModParticles;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
+import net.mehvahdjukaar.supplementaries.reg.ModSounds;
 import net.mehvahdjukaar.supplementaries.reg.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -37,6 +40,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -201,7 +205,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
             Player rider = this.getRider();
             if (rider != null && rider.isLocalPlayer()) {
                 this.setRider(null);
-                launchPlayer(rider, this.getRiderLaunchVelocity());
+                launchPlayer(rider, this.getRiderLaunchVelocity(rider));
             }
         }
         this.cooldownTimer = CommonConfigs.Functional.CANNON_COOLDOWN.get();
@@ -451,8 +455,11 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         Player rider = this.getRider();
         if (rider != null) {
             this.setRider(null);
-            Vec3 velocity = this.getRiderLaunchVelocity();
+            Vec3 velocity = this.getRiderLaunchVelocity(rider);
             launchPlayer(rider, velocity);
+            if (rider instanceof ServerPlayer serverPlayer) {
+                Utils.awardAdvancement(serverPlayer, Supplementaries.res("adventure/cannon"));
+            }
             NetworkHelper.sendToAllClientPlayersTrackingEntityAndSelf(rider,
                     new ClientBoundLaunchCannonRiderPacket(rider.getId(), velocity));
             return true;
@@ -460,10 +467,11 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return false;
     }
 
-    private Vec3 getRiderLaunchVelocity() {
+    private Vec3 getRiderLaunchVelocity(Player rider) {
+        Vec3 facing = SableCompat.subLevelsBetween(this, rider)
+                .directionToEntitySpace(new Vec3(this.getGlobalFacing(1)));
         //half a tick of gravity back, players move before it gets applied
-        return new Vec3(this.getGlobalFacing(1))
-                .scale(this.getFirePower() * BallisticData.PLAYER.initialSpeed())
+        return facing.scale(this.getFirePower() * BallisticData.PLAYER.initialSpeed())
                 .subtract(0, 0.5 * BallisticData.PLAYER.gravity(), 0);
     }
 
@@ -578,6 +586,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         player.setDeltaMovement(Vec3.ZERO);
         player.fallDistance = 0;
         this.keepRiderSeated(player);
+        level.playSound(null, this.getBlockPos(), ModSounds.CANNON_ENTER.get(), SoundSource.BLOCKS, 1, 1);
     }
 
     public void keepRiderSeated(Player player) {
@@ -603,7 +612,7 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         releaseRider(rider);
         if (level == null || level.isClientSide) return;
         Vec3 spot = findDismountSpot(rider);
-        if (spot != null) positionRider(rider, spot);
+        if (spot != null) positionRider(rider, SableCompat.projectOutOfSubLevel(level, spot));
     }
 
     @Nullable
@@ -645,8 +654,9 @@ public class CannonBlockTile extends OpenableContainerBlockTile implements IOneU
         return null;
     }
 
+    //players never live inside a sublevel plot. we cant teleteport them there. careful
     public Vec3 getSeatPosition(float partialTicks) {
-        return this.getGlobalPosition(partialTicks).subtract(0, 0.3, 0);
+        return SableCompat.projectOutOfSubLevel(level, this.getGlobalPosition(partialTicks).subtract(0, 0.3, 0));
     }
 
     private Vec3 getPointAlongBarrel(float partialTicks, double distanceFromCenter) {

@@ -196,9 +196,18 @@ public class BlackboardBlockTile extends BlockEntity implements
     }
 
     public boolean tryAcceptingClientPixels(ServerPlayer player, byte[][] pixels) {
-        if (!this.canBeUsedBy(worldPosition, player) || this.isWaxed()) {
+        if (!this.canBeUsedBy(worldPosition, player) || this.isWaxed() || !this.isCloseEnoughToUse(player, worldPosition)) {
             Supplementaries.LOGGER.warn("Player {} just tried to change non-editable blackboard block",
                     player.getName().getString());
+            return false;
+        }
+        //validate pixels first
+        if (pixels.length != 16) return false;
+        for (byte[] row : pixels) {
+            if (row.length != 16) return false;
+            for (byte b : row) {
+                if (b < 0 || b > 15) return false;
+            }
         }
         //check if all pixels are non colored
         if (!CommonConfigs.Building.BLACKBOARD_COLOR.get()) {

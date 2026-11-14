@@ -1,7 +1,49 @@
 {
   "values": [
-    "supplementaries:flax",
-    "supplementaries:flax_block",
-    "supplementaries:sugar_cube"
+    {
+      "id": "supplementaries:flax",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flax_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flax"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:sugar_cube",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "sugar_cube"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "sugar_cube"
+        }
+      ]
+    }
   ]
 }

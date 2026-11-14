@@ -1,10 +1,52 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:cannon",
-    "supplementaries:safe"
+    {
+      "id": "supplementaries:cannon",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "cannon"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cannon"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:safe",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "safe"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "safe"
+        }
+      ]
+    }
   ],
   "remove": [
-    "supplementaries:feather_block"
+    {
+      "id": "supplementaries:feather_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "feather_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "feather_block"
+        }
+      ]
+    }
   ]
 }

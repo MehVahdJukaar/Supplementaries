@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "supplementaries:whimsy",
+      "required": false
+    },
+    {
+      "id": "supplementaries:carousel",
+      "required": false
+    }
+  ]
+}

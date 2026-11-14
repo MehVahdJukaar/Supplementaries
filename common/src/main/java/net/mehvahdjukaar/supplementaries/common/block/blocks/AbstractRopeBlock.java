@@ -210,7 +210,7 @@ public abstract class AbstractRopeBlock extends WaterBlock implements IRopeConne
         Item i = stack.getItem();
 
         if (i == this.asItem()) {
-            if (hit.getDirection().getAxis() == Direction.Axis.Y || hasConnection(Direction.DOWN, state)) {
+            if (hit.getDirection().getAxis() == Direction.Axis.Y || hasConnection(Direction.DOWN, state) || hasConnection(Direction.UP, state)) {
                 //restores sheared
                 if (hasConnection(Direction.UP, state) && !hasConnection(Direction.DOWN, state)) {
                     state = setConnection(Direction.DOWN, state, true);

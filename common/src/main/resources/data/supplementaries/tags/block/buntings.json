@@ -1,36 +1,484 @@
 {
   "values": [
-    "supplementaries:bunting_wall_white",
-    "supplementaries:bunting_wall_red",
-    "supplementaries:bunting_wall_cyan",
-    "supplementaries:bunting_wall_lime",
-    "supplementaries:bunting_wall_yellow",
-    "supplementaries:bunting_wall_magenta",
-    "supplementaries:bunting_wall_brown",
-    "supplementaries:bunting_wall_light_blue",
-    "supplementaries:bunting_wall_blue",
-    "supplementaries:bunting_wall_green",
-    "supplementaries:bunting_wall_pink",
-    "supplementaries:bunting_wall_light_gray",
-    "supplementaries:bunting_wall_purple",
-    "supplementaries:bunting_wall_black",
-    "supplementaries:bunting_wall_orange",
-    "supplementaries:bunting_wall_gray",
-    "supplementaries:bunting_white",
-    "supplementaries:bunting_red",
-    "supplementaries:bunting_cyan",
-    "supplementaries:bunting_lime",
-    "supplementaries:bunting_yellow",
-    "supplementaries:bunting_magenta",
-    "supplementaries:bunting_brown",
-    "supplementaries:bunting_light_blue",
-    "supplementaries:bunting_blue",
-    "supplementaries:bunting_green",
-    "supplementaries:bunting_pink",
-    "supplementaries:bunting_light_gray",
-    "supplementaries:bunting_purple",
-    "supplementaries:bunting_black",
-    "supplementaries:bunting_orange",
-    "supplementaries:bunting_gray"
+    {
+      "id": "supplementaries:bunting_wall_white",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_red",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_cyan",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_lime",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_yellow",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_magenta",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_brown",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_light_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_green",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_light_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_orange",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_wall_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_white",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_red",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_cyan",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_lime",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_yellow",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_magenta",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_brown",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_light_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_green",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_light_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_orange",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bunting_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bunting"
+        }
+      ]
+    }
   ]
 }

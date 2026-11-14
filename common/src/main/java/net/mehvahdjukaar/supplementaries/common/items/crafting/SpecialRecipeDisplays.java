@@ -24,6 +24,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.armortrim.ArmorTrim;
+import net.minecraft.world.item.armortrim.TrimMaterials;
+import net.minecraft.world.item.armortrim.TrimPatterns;
 import net.minecraft.world.item.component.ItemLore;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.BannerBlock;
@@ -253,6 +256,24 @@ public class SpecialRecipeDisplays {
         return recipes;
     }
 
+    private static List<RecipeHolder<? extends CraftingRecipe>> createRemoveTrimRecipe() {
+        List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
+        String group = "remove_trim";
+
+        ItemStack output = new ItemStack(Items.IRON_CHESTPLATE);
+        ItemStack input = output.copy();
+        var reg = Utils.hackyGetRegistryAccess();
+        input.set(DataComponents.TRIM, new ArmorTrim(HolderRef.of(TrimMaterials.GOLD).getHolder(reg),
+                HolderRef.of(TrimPatterns.SENTRY).getHolder(reg)));
+
+        NonNullList<Ingredient> inputs = NonNullList.of(Ingredient.EMPTY, Ingredient.of(input), Ingredient.of(ModRegistry.SOAP.get()));
+        ResourceLocation id = Supplementaries.res("/remove_trim_display");
+        ShapelessRecipe recipe = new ShapelessRecipe(group, CraftingBookCategory.MISC, output, inputs);
+        recipes.add(new RecipeHolder<>(id, recipe));
+
+        return recipes;
+    }
+
     private static List<RecipeHolder<? extends CraftingRecipe>> createSusRecipe() {
         List<RecipeHolder<? extends CraftingRecipe>> recipes = new ArrayList<>();
 
@@ -454,6 +475,7 @@ public class SpecialRecipeDisplays {
             registry.add("item_lore", SpecialRecipeDisplays::createItemLoreRecipe);
             registry.add("item_lore_clear", SpecialRecipeDisplays::createRemoveLoreRecipe);
             registry.add("soap/clear", SpecialRecipeDisplays::createSoapCleanRecipe);
+            registry.add("soap/clear", SpecialRecipeDisplays::createRemoveTrimRecipe);
             registry.add("present_dye", SpecialRecipeDisplays::createPresentColoringRecipes);
             registry.add("trapped_present", SpecialRecipeDisplays::createTrappedPresentRecipes);
             registry.add("sus_crafting", SpecialRecipeDisplays::createSusRecipe);

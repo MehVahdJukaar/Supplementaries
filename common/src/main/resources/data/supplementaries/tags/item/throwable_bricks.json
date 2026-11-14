@@ -5,7 +5,21 @@
     {"id":"#c:ingots/brick","required":false},
     {"id":"#c:bricks","required":false},
     {"id":"deeperdarker:grime_brick","required":false},
-    {"id":"supplementaries:ash_brick","required":false},
+      {
+        "id": "supplementaries:ash_brick",
+        "fabric:load_conditions": [
+          {
+            "condition": "supplementaries:flag",
+            "flag": "ash_bricks"
+          }
+        ],
+        "neoforge:conditions": [
+          {
+            "type": "supplementaries:flag",
+            "flag": "ash_bricks"
+          }
+        ]
+      },
     {"id":"minecraft:brick","required":false},
     {"id":"minecraft:nether_brick","required":false},
     {"id":"immersive_weathering:stone_brick","required":false},

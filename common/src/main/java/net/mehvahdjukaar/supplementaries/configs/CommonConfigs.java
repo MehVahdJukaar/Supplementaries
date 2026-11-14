@@ -110,12 +110,11 @@ public class CommonConfigs {
     public static boolean isEnabled(String key) {
         if (!CONFIG_HOLDER.isLoaded()) throw new AssertionError("Config isn't loaded. How?");
         return switch (key) {
-            // the config name is 'sepia_globe', so the default lookup by name would miss it
             case ModConstants.GLOBE_SEPIA_NAME -> Building.GLOBE_SEPIA.get();
+            case ModConstants.NETHERITE_DOOR_NAME -> Building.NETHERITE_DOOR_ENABLED.get();
+            case ModConstants.NETHERITE_TRAPDOOR_NAME -> Building.NETHERITE_TRAPDOOR_ENABLED.get();
             case ModConstants.KEY_NAME ->
                     Building.NETHERITE_DOOR_ENABLED.get() || Building.NETHERITE_TRAPDOOR_ENABLED.get() || Functional.SAFE_ENABLED.get();
-            // every feature() gate/leaf is registered in the config holder by name (see Moonlight ConfigBuilder),
-            // so we query it there instead of keeping our own map. Unknown keys read as enabled.
             default -> CONFIG_HOLDER.isFeatureEnabled(key);
         };
     }
@@ -422,6 +421,7 @@ public class CommonConfigs {
         public static final Supplier<Boolean> SCONCE_LEVER_ENABLED;
         public static final Supplier<Boolean> STONE_LAMP_ENABLED;
         public static final Supplier<Boolean> END_STONE_LAMP_ENABLED;
+        public static final Supplier<Boolean> REDSTONE_LANTERN_ENABLED;
         public static final Supplier<Boolean> BLACKSTONE_LAMP_ENABLED;
         public static final Supplier<Boolean> DEEPSLATE_LAMP_ENABLED;
         public static final Supplier<Boolean> CHECKERBOARD_ENABLED;
@@ -556,7 +556,7 @@ public class CommonConfigs {
             ASH_RAIN = builder.comment("Allows rain to wash away ash layers overtime")
                     .define("rain_wash_ash", true);
             BASALT_ASH_ENABLED = builder.comment("Use a datapack to tweak rarity")
-                    .worldReload().define("basalt_ash", true);
+                    .worldReload().feature("basalt_ash");
             builder.pop();
 
             builder.push("flag");
@@ -639,6 +639,7 @@ public class CommonConfigs {
             //BRITTLESTONE_BRICKS_ENABLED = ()-> false;// builder.feature(ModConstants.BRITTLESTONE_BRICKS_NAME);
             DEEPSLATE_LAMP_ENABLED = builder.feature(ModConstants.DEEPSLATE_LAMP_NAME);
             END_STONE_LAMP_ENABLED = builder.feature(ModConstants.END_STONE_LAMP_NAME);
+            REDSTONE_LANTERN_ENABLED = builder.feature(ModConstants.REDSTONE_LANTERN_NAME);
             BLACKSTONE_LAMP_ENABLED = builder.feature(ModConstants.BLACKSTONE_LAMP_NAME);
             STONE_LAMP_ENABLED = builder.feature(ModConstants.STONE_LAMP_NAME);
             TILE_ENABLED = builder.feature(ModConstants.STONE_TILE_NAME);
@@ -846,7 +847,7 @@ public class CommonConfigs {
             URN_ENABLED = builder.mainFeature();
             URN_ENTITY_SPAWN_CHANCE = builder.comment("Chance for an urn to spawn a critter from the urn_spawn tag")
                     .define("critter_spawn_chance", 0.01d, 0, 1);
-            URN_PILE_ENABLED = builder.worldReload().define("cave_urns", true);
+            URN_PILE_ENABLED = builder.worldReload().feature("cave_urns");
             builder.pop();
 
             builder.push("soap");
@@ -917,7 +918,7 @@ public class CommonConfigs {
 
             builder.push("flax");
             FLAX_ENABLED = builder.mainFeature();
-            WILD_FLAX_ENABLED = builder.worldReload().define("wild_flax", true);
+            WILD_FLAX_ENABLED = builder.worldReload().feature("wild_flax");
             builder.pop();
 
             LUMISENE_ENABLED = builder
@@ -997,8 +998,11 @@ public class CommonConfigs {
         public static final Supplier<Integer> ROPE_ARROW_CAPACITY;
         public static final Supplier<Boolean> ROPE_ARROW_CROSSBOW;
         public static final Supplier<Boolean> ANTIQUE_INK_ENABLED;
+        public static final Supplier<Boolean> ORICHALCUM_ENABLED;
         public static final Supplier<Boolean> CANDY_ENABLED;
         public static final Supplier<Boolean> STASIS_ENABLED;
+        public static final Supplier<Boolean> WHIMSY_ENABLED;
+        public static final Supplier<Boolean> CAROUSEL_ENABLED;
         public static final Supplier<Boolean> DEPTH_METER_ENABLED;
         public static final Supplier<Boolean> POPPER_ENABLED;
         public static final Supplier<Boolean> SLICE_MAP_ENABLED;
@@ -1141,8 +1145,21 @@ public class CommonConfigs {
             builder.push("antique_ink");
             ANTIQUE_INK_ENABLED = builder.mainFeature();
             builder.pop();
+
+            builder.push("orichalcum");
+            ORICHALCUM_ENABLED = builder.mainFeature();
+            builder.pop();
             CANDY_ENABLED = builder.feature(ModConstants.CANDY_NAME);
-            STASIS_ENABLED = builder.feature(ModConstants.STASIS_NAME);
+
+            builder.push("enchantments");
+            STASIS_ENABLED = builder.comment("Slingshot projectiles ignore gravity")
+                    .feature(ModConstants.STASIS_NAME);
+            WHIMSY_ENABLED = builder.comment("Quivers and lunch baskets pick a random slot")
+                    .feature(ModConstants.WHIMSY_NAME);
+            CAROUSEL_ENABLED = builder.comment("Quivers and lunch baskets cycle to the next slot")
+                    .feature(ModConstants.CAROUSEL_NAME);
+            builder.pop();
+
             DEPTH_METER_ENABLED = builder.feature(ModConstants.DEPTH_METER_NAME);
             POPPER_ENABLED = builder.feature(ModConstants.CONFETTI_POPPER_NAME);
 
@@ -1200,6 +1217,8 @@ public class CommonConfigs {
         public static final Supplier<SlimedJumpMode> HINDERS_JUMP;
         public static final Supplier<Double> SLIMED_PER_SIZE;
         public static final Supplier<Integer> SLIME_DURATION;
+        public static final Supplier<Boolean> MUD_BALL_SLIMED;
+        public static final Supplier<Integer> MUD_BALL_DURATION;
         public static final Supplier<Boolean> PUSH_BLOCK_ENTITIES;
         public static final Supplier<Boolean> COOPERATIVE_PISTONS;
         public static final Supplier<Boolean> MOVED_CAULDRON_FILLING;
@@ -1345,6 +1364,10 @@ public class CommonConfigs {
                     .define("hinders_jump", SlimedJumpMode.NORMAL_DIFFICULTY);
             SLIME_DURATION = builder.comment("Duration of the slimed effect in ticks")
                     .define("duration", 300, 0, 1000);
+            MUD_BALL_SLIMED = builder.comment("Makes Environmental mud balls apply a muddy version of the slimed effect (Environmental only)")
+                    .define("environmental_mud_ball_compat", true);
+            MUD_BALL_DURATION = builder.comment("Duration of the muddy effect in ticks. Longer than slimed since mud balls fly shorter")
+                    .define("mud_ball_duration", 600, 0, 2000);
             SLIMED_PER_SIZE = builder.comment("Chance that a slime mob will apply slimed effect on successful attack. Multiplied by the slime size")
                     .define("chance_per_slime_size", 0.15d, 0, 1);
             builder.pop();

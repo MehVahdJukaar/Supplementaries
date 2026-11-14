@@ -2,6 +2,21 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:rope","required":true}
+    {
+      "id": "supplementaries:rope",
+      "required": true,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "rope"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "rope"
+        }
+      ]
+    }
   ]
 }

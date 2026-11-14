@@ -1,7 +1,35 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:gravel_bricks",
-    "supplementaries:suspicious_gravel_bricks"
+    {
+      "id": "supplementaries:gravel_bricks",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:suspicious_gravel_bricks",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ]
+    }
   ]
 }

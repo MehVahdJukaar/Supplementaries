@@ -1,12 +1,110 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:hourglass",
-    "supplementaries:gold_bars",
-    "supplementaries:gold_door",
-    "supplementaries:gold_trapdoor",
-    "supplementaries:gold_gate",
-    "supplementaries:clock_block",
-    "supplementaries:key"
+    {
+      "id": "supplementaries:hourglass",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "hourglass"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "hourglass"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gold_bars",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gold_bars"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_bars"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gold_door",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gold_door"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_door"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gold_trapdoor",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gold_trapdoor"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gold_trapdoor"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:gold_gate",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "iron_gate"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:clock_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "clock_block"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "clock_block"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:key",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "key"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "key"
+        }
+      ]
+    }
   ]
 }

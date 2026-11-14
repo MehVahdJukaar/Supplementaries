@@ -42,6 +42,9 @@ public record ServerBoundCycleSelectableContainerItemPacket(int amount, SlotRefe
             } else {
                 item.modify(stack, data -> {
                     if (setSlot) {
+                        if (amount < 0 || amount >= data.getSlots()) {
+                            return false;
+                        }
                         data.setSelectedSlot(amount);
                     } else {
                         data.cycle(amount);

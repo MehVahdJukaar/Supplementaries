@@ -44,17 +44,15 @@ public class CannonTrajectoryRenderer {
 
         boolean debug = PlatHelper.isDev() || !mc.showOnlyReducedInfo() && mc.getEntityRenderDispatcher().shouldRenderHitBoxes();
 
-        //trajectory and hit are both in the cannon's own space, so the block lookup has to stay there too
         Vec3 localPos = cannon.getGlobalPosition(partialTicks);
         Quaternionf localOrientation = tile.getLocalOrientation(partialTicks);
-        float localYaw = EntityAngles.fromQuaternion(localOrientation).yawRad();
-        boolean hitAir = shootingMode == ShootingMode.STRAIGHT || trajectory.miss() ||
-                mc.level.getBlockState(trajectory.getHitPos(localPos, localYaw)).isAir();
 
         //gravity is world aligned so the parabola gets drawn in world space, not in the sublevel's tilted one
         var world = SableCompatClient.projectOutOfSubLevel(tile, localPos, localOrientation, partialTicks);
         boolean onSubLevel = world.onSubLevel();
         float yaw = EntityAngles.fromQuaternion(world.orientation()).yawRad();
+        boolean hitAir = shootingMode == ShootingMode.STRAIGHT || trajectory.miss() ||
+                mc.level.getBlockState(trajectory.getHitPos(world.pos(), yaw)).isAir();
 
         Vec3 camPos = mc.gameRenderer.getMainCamera().getPosition();
 

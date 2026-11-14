@@ -1,20 +1,244 @@
 {
   "values": [
-    "supplementaries:flag_white",
-    "supplementaries:flag_red",
-    "supplementaries:flag_cyan",
-    "supplementaries:flag_lime",
-    "supplementaries:flag_yellow",
-    "supplementaries:flag_magenta",
-    "supplementaries:flag_brown",
-    "supplementaries:flag_light_blue",
-    "supplementaries:flag_blue",
-    "supplementaries:flag_green",
-    "supplementaries:flag_pink",
-    "supplementaries:flag_light_gray",
-    "supplementaries:flag_purple",
-    "supplementaries:flag_black",
-    "supplementaries:flag_orange",
-    "supplementaries:flag_gray"
+    {
+      "id": "supplementaries:flag_white",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_red",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_cyan",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_lime",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_yellow",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_magenta",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_brown",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_light_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_green",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_light_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_orange",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:flag_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "flag"
+        }
+      ]
+    }
   ]
 }

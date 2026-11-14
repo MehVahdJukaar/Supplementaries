@@ -3,6 +3,18 @@
   "values": [
     {
       "id": "supplementaries:item_shelf",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "item_shelf"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "item_shelf"
+        }
+      ],
       "required": true
     }
   ]

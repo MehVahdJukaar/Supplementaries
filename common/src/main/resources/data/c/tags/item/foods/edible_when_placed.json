@@ -1,6 +1,20 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:pancake"
+    {
+      "id": "supplementaries:pancake",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "pancake"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "pancake"
+        }
+      ]
+    }
   ]
 }

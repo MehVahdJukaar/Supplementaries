@@ -6,6 +6,8 @@ public final class ModConstants {
 
     public static final String DISPENSER_MINECART_NAME = "dispenser_minecart";
     public static final String STASIS_NAME = "stasis";
+    public static final String WHIMSY_NAME = "whimsy";
+    public static final String CAROUSEL_NAME = "carousel";
     public static final String RED_MERCHANT_NAME = "red_merchant";
     public static final String PLUNDERER_NAME = "plunderer";
     public static final String HAT_STAND_NAME = "hat_stand";
@@ -27,6 +29,7 @@ public final class ModConstants {
     public static final String KEY_NAME = "key";
     public static final String CANDY_NAME = "candy";
     public static final String ANTIQUE_INK_NAME = "antique_ink";
+    public static final String ORICHALCUM_NAME = "orichalcum";
     public static final String WRENCH_NAME = "wrench";
     public static final String QUIVER_NAME = "quiver";
     public static final String LUNCH_BASKET_NAME = "lunch_basket";
@@ -129,6 +132,7 @@ public final class ModConstants {
     public static final String BLACKSTONE_LAMP_NAME = "blackstone_lamp";
     public static final String DEEPSLATE_LAMP_NAME = "deepslate_lamp";
     public static final String END_STONE_LAMP_NAME = "end_stone_lamp";
+    public static final String REDSTONE_LANTERN_NAME = "redstone_lantern";
     public static final String FLOWER_BOX_NAME = "flower_box";
     public static final String STATUE_NAME = "statue";
     public static final String FEATHER_BLOCK_NAME = "feather_block";

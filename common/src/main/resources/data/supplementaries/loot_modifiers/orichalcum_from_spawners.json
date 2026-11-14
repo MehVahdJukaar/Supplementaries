@@ -1,0 +1,23 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "orichalcum"
+    }
+  ],
+  "type": "moonlight:add_item",
+  "conditions": [
+    {
+      "condition": "supplementaries:block_tag",
+      "tag": "supplementaries:drops_orichalcum"
+    },
+    {
+      "condition": "minecraft:random_chance",
+      "chance": 0.1
+    }
+  ],
+  "item": {
+    "id": "supplementaries:orichalcum",
+    "count": 1
+  }
+}

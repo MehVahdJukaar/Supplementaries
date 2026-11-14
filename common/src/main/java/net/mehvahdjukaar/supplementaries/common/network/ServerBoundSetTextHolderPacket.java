@@ -1,5 +1,6 @@
 package net.mehvahdjukaar.supplementaries.common.network;
 
+import io.netty.handler.codec.DecoderException;
 import net.mehvahdjukaar.moonlight.api.platform.network.Message;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.common.block.ITextHolderProvider;
@@ -27,14 +28,20 @@ public class ServerBoundSetTextHolderPacket implements Message {
 
     public ServerBoundSetTextHolderPacket(FriendlyByteBuf buf) {
         this.pos = buf.readBlockPos();
-        this.textHolderLines = new String[buf.readVarInt()][];
+        this.textHolderLines = new String[readCount(buf)][];
         for (int i = 0; i < textHolderLines.length; ++i) {
-            String[] lines = new String[buf.readVarInt()];
+            String[] lines = new String[readCount(buf)];
             for (int j = 0; j < lines.length; ++j) {
-                lines[j] = buf.readUtf();
+                lines[j] = buf.readUtf(384);
             }
             this.textHolderLines[i] = lines;
         }
+    }
+
+    private static int readCount(FriendlyByteBuf buf) {
+        int count = buf.readVarInt();
+        if (count < 0 || count > 64) throw new DecoderException("Bad text holder size " + count);
+        return count;
     }
 
     public ServerBoundSetTextHolderPacket(BlockPos pos, String[][] holderLines) {

@@ -104,7 +104,7 @@ public class WeatheredHandler {
     public static MapId createAntiqueMapData(MapItemSavedData mapitemsaveddata, Level level, boolean on, boolean replaceOld) {
         if (mapitemsaveddata instanceof ExpandedMapData data) {
 
-            MapItemSavedData newData = replaceOld ? mapitemsaveddata : data.ml$copy();
+            MapItemSavedData newData = replaceOld ? mapitemsaveddata : data.ml$copy(level.registryAccess());
             WeatheredMapData instance = getAntiqueData(newData);
             var colorData = MapTintColorsHandler.getColorData(newData);
             colorData.clear();

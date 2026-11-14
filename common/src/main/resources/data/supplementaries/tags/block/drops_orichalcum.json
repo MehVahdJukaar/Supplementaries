@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:spawner",
+    "minecraft:trial_spawner",
+    {
+      "id": "quark:monster_box",
+      "required": false
+    }
+  ]
+}

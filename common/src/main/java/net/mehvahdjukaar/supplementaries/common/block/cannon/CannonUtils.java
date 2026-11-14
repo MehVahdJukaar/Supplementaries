@@ -19,13 +19,11 @@ public class CannonUtils {
 
     public static BallisticTrajectory3D computeTrajectory(
             CannonBlockTile cannon, Vec3 targetPos, ShootingMode shootingMode) {
-        return computeTrajectory(cannon, targetPos, shootingMode, cannon.getBallisticData());
+        return computeTrajectory(cannon, cannon.getGlobalPosition(0), targetPos, shootingMode, cannon.getBallisticData());
     }
 
-    public static BallisticTrajectory3D computeTrajectory(
-            CannonBlockTile cannon, Vec3 targetPos, ShootingMode shootingMode, BallisticData ballistic) {
-        Vec3 cannonPos = cannon.getGlobalPosition(0);
-
+    public static BallisticTrajectory3D computeTrajectory(CannonBlockTile cannon, Vec3 cannonPos, Vec3 targetPos,
+                                                          ShootingMode shootingMode, BallisticData ballistic) {
         Vec3 localTarget = targetPos.subtract(cannonPos);
         //so we hopefully hit the block we are looking at
         localTarget = localTarget.add(localTarget.normalize().scale(0.05f));

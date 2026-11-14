@@ -3,7 +3,6 @@ package net.mehvahdjukaar.supplementaries.common.inventories;
 import net.mehvahdjukaar.moonlight.api.misc.IContainerProvider;
 import net.mehvahdjukaar.moonlight.api.misc.TileOrEntityTarget;
 import net.mehvahdjukaar.moonlight.api.platform.PlatHelper;
-import net.mehvahdjukaar.supplementaries.configs.CommonConfigs;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -146,7 +145,7 @@ public class VariableSizeContainerMenu extends AbstractContainerMenu implements 
         if (slot.hasItem()) {
             ItemStack item = slot.getItem();
             itemstack = item.copy();
-            int activeSlots = CommonConfigs.Functional.SACK_SLOTS.get();
+            int activeSlots = this.unlockedSlots;
             if (index < activeSlots) {
                 if (!this.moveItemStackTo(item, activeSlots, this.slots.size(), true)) {
                     return ItemStack.EMPTY;

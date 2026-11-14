@@ -1,6 +1,20 @@
 {
   "replace": false,
   "values": [
-    "supplementaries:soap_block"
+    {
+      "id": "supplementaries:soap_block",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "soap"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "soap"
+        }
+      ]
+    }
   ]
 }

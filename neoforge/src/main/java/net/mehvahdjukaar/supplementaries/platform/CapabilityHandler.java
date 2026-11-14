@@ -6,14 +6,17 @@ import net.mehvahdjukaar.moonlight.api.platform.platform.ForgeHelperImpl;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.api.ICatchableMob;
 import net.mehvahdjukaar.supplementaries.common.block.IAntiquable;
+import net.mehvahdjukaar.supplementaries.common.block.tiles.SackBlockTile;
 import net.mehvahdjukaar.supplementaries.common.items.SelectableContainerItem;
 import net.mehvahdjukaar.supplementaries.common.items.components.SelectableContainerContent;
+import net.mehvahdjukaar.supplementaries.common.utils.MiscUtils;
 import net.mehvahdjukaar.supplementaries.reg.ModEntities;
 import net.mehvahdjukaar.supplementaries.reg.ModFluids;
 import net.mehvahdjukaar.supplementaries.reg.ModRegistry;
 import net.mehvahdjukaar.supplementaries.reg.platform.FluidHandlerItemCap;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -26,6 +29,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.capabilities.*;
 import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
+import net.neoforged.neoforge.items.ComponentItemHandler;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -129,6 +133,14 @@ public class CapabilityHandler {
             }
             return null;
         }, ModRegistry.LUNCH_BASKET_ITEM.get(), ModRegistry.QUIVER_ITEM.get());
+
+        event.registerItem(Capabilities.ItemHandler.ITEM, (stack, ctx) ->
+                new ComponentItemHandler(stack, DataComponents.CONTAINER, SackBlockTile.getUnlockedSlots()) {
+                    @Override
+                    public boolean isItemValid(int slot, ItemStack item) {
+                        return MiscUtils.isAllowedInShulker(item, null);
+                    }
+                }, ModRegistry.SACK_ITEM.get());
     }
 
     private static final class SelectableContainerItemHandler<C extends SelectableContainerContent<M>, M extends SelectableContainerContent.Mut<C>>

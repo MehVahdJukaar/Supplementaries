@@ -1,5 +1,19 @@
 {
   "values": [
-    "supplementaries:cannon_boat_oak"
+    {
+      "id": "supplementaries:cannon_boat_oak",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "cannon_boat"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "cannon_boat"
+        }
+      ]
+    }
   ]
 }

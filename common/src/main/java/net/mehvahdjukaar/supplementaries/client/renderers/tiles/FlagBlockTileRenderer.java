@@ -22,12 +22,15 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import net.minecraft.world.phys.AABB;
 import org.joml.Quaternionf;
+
+import java.util.function.Function;
 
 import static net.mehvahdjukaar.supplementaries.client.ModMaterials.FLAG_BASE_MATERIAL;
 
@@ -61,29 +64,34 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         int lv = VertexUtil.lightV(combinedLightIn);
 
         renderPatterns(bufferIn, matrixStackIn, patterns, lu, lv, 0, 24, 16, 24,
-                0, 0, baseColor);
+                0, 0, baseColor, ClientConfigs.Blocks.FLAG_2D.get());
     }
 
     private static void renderPatterns(MultiBufferSource bufferIn, PoseStack poseStack, BannerPatternLayers list,
                                        int lu, int lv, int dX, int w, int h, int segmentLen,
-                                       float ang, float oldAng, DyeColor baseColor) {
+                                       float ang, float oldAng, DyeColor baseColor, boolean flat) {
 
-        renderLayer(bufferIn, poseStack, lu, lv, dX, w, h, segmentLen, ang, oldAng, FLAG_BASE_MATERIAL, true, baseColor);
+        renderLayer(bufferIn, poseStack, lu, lv, dX, w, h, segmentLen, ang, oldAng, FLAG_BASE_MATERIAL, true, baseColor, flat);
 
         for (BannerPatternLayers.Layer layer : list.layers()) {
             Material material = ModMaterials.FLAG_MATERIALS.apply(layer.pattern().value());
             DyeColor dyeColor = layer.color();
-            renderLayer(bufferIn, poseStack, lu, lv, dX, w, h, segmentLen, ang, oldAng, material, false, dyeColor);
+            renderLayer(bufferIn, poseStack, lu, lv, dX, w, h, segmentLen, ang, oldAng, material, false, dyeColor, flat);
         }
     }
 
     private static void renderLayer(MultiBufferSource bufferIn, PoseStack matrixStackIn, int lu, int lv, int dX, int w, int h,
                                     int segmentlen, float ang, float oldAng, Material material,
-                                    boolean solid, DyeColor dyeColor) {
+                                    boolean solid, DyeColor dyeColor, boolean flat) {
         if (material == null) {
             return;
         }
-        VertexConsumer builder = material.buffer(bufferIn, solid ? RenderType::entitySolid : RenderType::entityNoOutline);
+        //otherwise 2d flag zifghts like hell
+        Function<ResourceLocation, RenderType> renderType;
+        if (!solid) renderType = RenderType::entityNoOutline;
+        else if (flat) renderType = RenderType::entityCutoutNoCull;
+        else renderType = RenderType::entitySolid;
+        VertexConsumer builder = material.buffer(bufferIn, renderType);
 
         matrixStackIn.pushPose();
 
@@ -92,14 +100,14 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         float g = FastColor.ARGB32.green(color) / 255f;
         float r = FastColor.ARGB32.red(color) / 255f;
 
-        renderCurvedSegment(builder, matrixStackIn, ang, oldAng, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, r, g, b);
+        renderCurvedSegment(builder, matrixStackIn, ang, oldAng, dX, segmentlen, h, lu, lv, dX + segmentlen >= w, flat, solid, r, g, b);
 
         matrixStackIn.popPose();
     }
 
     private static void renderCurvedSegment(VertexConsumer builder, PoseStack matrixStack, float angle, float oldAng, int dX,
                                             int length, int height, int lu, int lv, boolean end,
-                                            float r, float g, float b) {
+                                            boolean flat, boolean solid, float r, float g, float b) {
 
         float textW = 32f;
         float textH = 16f;
@@ -108,7 +116,7 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         float v = 0;
         float maxV = v + height / textH;
         float maxU = u + length / textW;
-        float w = 1 / 16f;
+        float w = flat ? 0 : 1 / 16f;
         float hw = w / 2f;
         float l = length / 16f;
         float h = height / 16f;
@@ -148,6 +156,9 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         VertexUtil.vert(builder, matrixStack, 0, 0, 0, maxU, maxV, r, g, b, 1, lu, lv, nx, ny, nz);
 
         matrixStack.popPose();
+
+        //no cull, back reuses the same quad so patterns dont z fight with it
+        if (flat) return;
 
         //right
         matrixStack.pushPose();
@@ -275,13 +286,14 @@ public class FlagBlockTileRenderer implements BlockEntityRenderer<FlagBlockTile>
         } else {
 
             int segmentLen = (minecraft.options.graphicsMode().get().getId()) >= ClientConfigs.Blocks.FLAG_FANCINESS.get().ordinal() ? 1 : w;
+            boolean flat = ClientConfigs.Blocks.FLAG_2D.get();
             float oldAng = 0;
             for (int dX = 0; dX < w; dX += segmentLen) {
 
                 float ang = (float) ((wavyness + invdamping * dX) * Mth.sin((float) ((dX / l) - t * 2 * (float) Math.PI)));
 
                 renderPatterns(bufferIn, poseStack, patterns, lu, lv, dX, w, h, segmentLen,
-                        ang, oldAng, color);
+                        ang, oldAng, color, flat);
                 poseStack.mulPose(Axis.YP.rotationDegrees(ang));
                 poseStack.translate(0, 0, segmentLen / 16f);
                 poseStack.mulPose(Axis.YP.rotationDegrees(-ang));

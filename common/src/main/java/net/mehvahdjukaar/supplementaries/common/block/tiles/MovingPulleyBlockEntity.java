@@ -110,6 +110,10 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
                     BlockState movedAfter = Block.updateFromNeighbourShapes(be.getMovedState(), level, pos);
                     if (movedAfter.isAir()) {
                         level.setBlock(pos, be.getMovedState(), 84);
+                        CompoundTag carriedNbt = ((ICarryingMovingPiston) be).supp$getCarriedBlockEntityNbt();
+                        if (carriedNbt != null) {
+                            BlockMovementHelper.restoreBlockEntity(level, pos, be.getMovedState(), carriedNbt);
+                        }
                         Block.updateOrDestroy(be.getMovedState(), movedAfter, level, pos, 3);
                     } else {
                         if (movedAfter.hasProperty(BlockStateProperties.WATERLOGGED)
@@ -118,10 +122,12 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
                         }
                         level.setBlock(pos, movedAfter, 67);
                         level.neighborChanged(pos, movedAfter.getBlock(), pos);
+
                         CompoundTag carriedNbt = ((ICarryingMovingPiston) be).supp$getCarriedBlockEntityNbt();
                         if (carriedNbt != null) {
                             BlockMovementHelper.restoreBlockEntity(level, pos, movedAfter, carriedNbt);
                         }
+                        ((ICarryingMovingPiston) be).supp$applyMovedFluid();
                     }
                 }
             }
@@ -130,7 +136,9 @@ public class MovingPulleyBlockEntity extends PistonMovingBlockEntity {
             moveCollidedEntities(level, pos, f, be);
             moveStuckEntities(level, pos, f, be);
             be.progress = f;
-            if (be.progress >= 1.0F) be.progress = 1.0F;
+            if (be.progress >= 1.0F) {
+                be.progress = 1.0F;
+            }
         }
     }
 }

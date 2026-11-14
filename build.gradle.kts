@@ -1,10 +1,10 @@
 
 plugins {
-    id("com.possible-triangle.core")
-    id("com.possible-triangle.common") apply false
-    id("com.possible-triangle.fabric") apply false
-    id("com.possible-triangle.neoforge") apply false
-    id("net.mehvahdjukaar.candlelight") version "1.2.4" apply false
+    id("com.possible-triangle.core") version "1.4.259"
+    id("com.possible-triangle.common") version "1.4.259" apply false
+    id("com.possible-triangle.fabric") version "1.4.259" apply false
+    id("com.possible-triangle.neoforge") version "1.4.259" apply false
+    id("net.mehvahdjukaar.candlelight") version "1.2.7" apply false
 
 }
 
@@ -29,11 +29,16 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("net.mehvahdjukaar:candlelight:1.2.4")
+        compileOnly("net.mehvahdjukaar:candlelight:1.2.7")
     }
 
     tasks.withType<JavaCompile> {
         options.compilerArgs.addAll(listOf("-Xmaxerrs", "4000"))
+    }
+
+    //mixin overwrite tags
+    tasks.withType<Javadoc> {
+        (options as StandardJavadocDocletOptions).tags("reason:a:Reason:", "date:a:Date:", "Date:a:Date:")
     }
 
     upload {

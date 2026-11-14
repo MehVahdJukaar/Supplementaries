@@ -1,10 +1,12 @@
 package net.mehvahdjukaar.supplementaries.common.items.components;
 
-import net.mehvahdjukaar.candlelight.api.VirtualOverride;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -148,13 +150,11 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
         public abstract T toImmutable();
 
 
-        @VirtualOverride("neoforge")
         public void setStackInSlot(int slot, ItemStack stack) {
             validateSlotIndex(slot, stacks);
             this.stacks.set(slot, stack);
         }
 
-        @VirtualOverride("neoforge")
         public ItemStack getStackInSlot(int slot) {
             validateSlotIndex(slot, stacks);
             return this.stacks.get(slot);
@@ -168,7 +168,6 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return stacks;
         }
 
-        @VirtualOverride("neoforge")
         public int getSlots() {
             return this.stacks.size();
         }
@@ -209,7 +208,6 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return isItemValid(0, stack);
         }
 
-        @VirtualOverride("neoforge")
         public abstract boolean isItemValid(int slot, ItemStack stack);
 
         /**
@@ -272,7 +270,16 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return originalSlot != selectedSlot;
         }
 
-        @VirtualOverride("neoforge")
+        public boolean selectRandom(RandomSource random) {
+            IntList candidates = new IntArrayList();
+            for (int i = 0; i < stacks.size(); i++) {
+                if (i != selectedSlot && !stacks.get(i).isEmpty()) candidates.add(i);
+            }
+            if (candidates.isEmpty()) return false;
+            this.selectedSlot = candidates.getInt(random.nextInt(candidates.size()));
+            return true;
+        }
+
         public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             if (stack.isEmpty()) {
                 return ItemStack.EMPTY;
@@ -307,7 +314,6 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             }
         }
 
-        @VirtualOverride("neoforge")
         public int getSlotLimit(int slot) {
             return Integer.MAX_VALUE;
         }
@@ -316,7 +322,6 @@ public abstract class SelectableContainerContent<M extends SelectableContainerCo
             return Math.min(this.getSlotLimit(slot), stack.getMaxStackSize());
         }
 
-        @VirtualOverride("neoforge")
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (amount == 0) {
                 return ItemStack.EMPTY;

@@ -66,11 +66,16 @@ public class GlobeBlock extends WaterBlock implements EntityBlock, IWashable {
     }
 
     public static void displayCurrentCoordinates(Level level, Player player, BlockPos pos) {
+        boolean scrambled = !level.dimensionType().natural() && !CommonConfigs.Tweaks.COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS.get();
+        displayCoordinates(level, player, pos, scrambled);
+    }
+
+    public static void displayCoordinates(Level level, Player player, BlockPos pos, boolean scrambled) {
         Vec3 pp = SableCompat.projectOutOfSubLevel(level, Vec3.atLowerCornerOf(pos));
 
         String x = String.valueOf(pp.x());
         String z = String.valueOf(pp.z());
-        if (!level.dimensionType().natural() && !CommonConfigs.Tweaks.COMPASS_WORKS_IN_UNNATURAL_DIMENSIONS.get()) {
+        if (scrambled) {
             x = ChatFormatting.OBFUSCATED + x + ChatFormatting.RESET;
             z = ChatFormatting.OBFUSCATED + z + ChatFormatting.RESET;
         }

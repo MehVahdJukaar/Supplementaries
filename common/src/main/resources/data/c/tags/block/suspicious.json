@@ -3,6 +3,20 @@
   "values": [
     "minecraft:suspicious_sand",
     "minecraft:suspicious_gravel",
-    {"id":"supplementaries:suspicious_gravel_bricks","required":false}
+    {
+      "id": "supplementaries:suspicious_gravel_bricks",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "gravel_bricks"
+        }
+      ]
+    }
   ]
 }

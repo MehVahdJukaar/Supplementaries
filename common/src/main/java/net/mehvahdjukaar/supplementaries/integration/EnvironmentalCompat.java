@@ -9,4 +9,9 @@ public class EnvironmentalCompat {
     public static boolean maybeCleanMuddyPig(Pig pig) {
         throw new AssertionError();
     }
+
+    @PlatformImpl
+    public static boolean getsMuddyFromMudBall(Pig pig) {
+        throw new AssertionError();
+    }
 }

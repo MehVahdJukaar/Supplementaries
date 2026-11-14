@@ -7,7 +7,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.client.player.ClientPreAttackCallback;
+import net.mehvahdjukaar.supplementaries.Supplementaries;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonManeuverHud;
 import net.mehvahdjukaar.supplementaries.client.cannon.CannonController;
 import net.mehvahdjukaar.supplementaries.client.hud.SelectableContainerItemHud;
@@ -19,6 +21,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
@@ -28,7 +31,9 @@ public class ClientEventsFabric {
         ClientEntityEvents.ENTITY_LOAD.register(ClientEvents::onEntityLoad);
 
         ItemTooltipCallback.EVENT.register(ClientEvents::onItemTooltip);
-        ScreenEvents.AFTER_INIT.register((m, s, x, y) -> {
+        ResourceLocation latePhase = Supplementaries.res("late");
+        ScreenEvents.AFTER_INIT.addPhaseOrdering(Event.DEFAULT_PHASE, latePhase);
+        ScreenEvents.AFTER_INIT.register(latePhase, (m, s, x, y) -> {
             List<AbstractWidget> buttons = Screens.getButtons(s);
             ClientEvents.addConfigButton(s, s.children(), buttons::add, buttons::remove);
         });

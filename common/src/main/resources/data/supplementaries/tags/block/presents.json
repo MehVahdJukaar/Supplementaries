@@ -1,22 +1,260 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:present","required":false},
-    {"id":"supplementaries:present_white","required":false},
-    {"id":"supplementaries:present_orange","required":false},
-    {"id":"supplementaries:present_yellow","required":false},
-    {"id":"supplementaries:present_red","required":false},
-    {"id":"supplementaries:present_blue","required":false},
-    {"id":"supplementaries:present_cyan","required":false},
-    {"id":"supplementaries:present_light_blue","required":false},
-    {"id":"supplementaries:present_lime","required":false},
-    {"id":"supplementaries:present_green","required":false},
-    {"id":"supplementaries:present_magenta","required":false},
-    {"id":"supplementaries:present_pink","required":false},
-    {"id":"supplementaries:present_purple","required":false},
-    {"id":"supplementaries:present_black","required":false},
-    {"id":"supplementaries:present_gray","required":false},
-    {"id":"supplementaries:present_light_gray","required":false},
-    {"id":"supplementaries:present_brown","required":false}
+    {
+      "id": "supplementaries:present",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_white",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_orange",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_yellow",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_red",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_cyan",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_light_blue",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_lime",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_green",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_magenta",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_pink",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_purple",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_black",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_light_gray",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:present_brown",
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "present"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "present"
+        }
+      ]
+    }
   ]
 }

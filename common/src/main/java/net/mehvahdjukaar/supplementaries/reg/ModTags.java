@@ -28,6 +28,7 @@ public class ModTags {
     public static final TagKey<Block> COLUMN_SHAPE_8X8 = blockTag("column_shape_8x8");
     public static final TagKey<Block> COLUMN_SHAPE_10X10 = blockTag("column_shape_10x10");
     public static final TagKey<Block> ROPE_SUPPORT_TAG = blockTag("rope_support");
+    public static final TagKey<Block> DROPS_ORICHALCUM = blockTag("drops_orichalcum");
     public static final TagKey<Block> ROPE_HANG_TAG = blockTag("hang_from_ropes");
     public static final TagKey<Block> BELLOWS_TICKABLE_TAG = blockTag("bellows_tickable");
     public static final TagKey<Block> WATER_HOLDER = blockTag("water_holder");

@@ -1,0 +1,36 @@
+{
+  "fabric:load_conditions": [
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "vanillabackport"
+    },
+    {
+      "condition": "supplementaries:flag",
+      "flag": "sconce"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vanillabackport"
+    },
+    {
+      "type": "supplementaries:flag",
+      "flag": "sconce"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless",
+  "group": "waxed_exposed_copper_sconce",
+  "ingredients": [
+    {
+      "item": "supplementaries:exposed_copper_sconce"
+    },
+    {
+      "item": "minecraft:honeycomb"
+    }
+  ],
+  "result": {
+    "id": "supplementaries:waxed_exposed_copper_sconce",
+    "count": 1
+  }
+}

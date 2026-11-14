@@ -1,8 +1,53 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:timber_frame","required":true},
-    {"id":"supplementaries:timber_brace","required":true},
-    {"id":"supplementaries:timber_cross_brace","required":true}
+    {
+      "id": "supplementaries:timber_frame",
+      "required": true,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:timber_brace",
+      "required": true,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:timber_cross_brace",
+      "required": true,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "timber_frame"
+        }
+      ]
+    }
   ]
 }

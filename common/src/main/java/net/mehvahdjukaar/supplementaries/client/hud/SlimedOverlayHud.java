@@ -3,6 +3,7 @@ package net.mehvahdjukaar.supplementaries.client.hud;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import net.mehvahdjukaar.supplementaries.common.entities.data.SlimedData;
+import net.mehvahdjukaar.supplementaries.reg.ModData;
 import net.mehvahdjukaar.supplementaries.reg.ModTextures;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -23,7 +24,8 @@ public class SlimedOverlayHud implements LayeredDraw.Layer {
     @Override
     public void render(GuiGraphics graphics, DeltaTracker deltaTracker) {
         float partialTicks = deltaTracker.getGameTimeDeltaPartialTick(false);
-        float alpha = SlimedData.getAlpha(mc.player, partialTicks);
+        SlimedData data = ModData.SLIMED_DATA.getOrCreate(mc.player);
+        float alpha = data.getAlpha(partialTicks);
         if (alpha > 0) {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
@@ -36,7 +38,11 @@ public class SlimedOverlayHud implements LayeredDraw.Layer {
             int screenHeight = graphics.guiHeight();
             int screenWidth = graphics.guiWidth();
             int slide = (int) (screenHeight / 3f * (1 - alpha));
-            blit(graphics, ModTextures.SLIME_GUI_OVERLAY, 0, 0, -90, 0.0F, 0.0F,
+            ResourceLocation texture = switch (data.getType()) {
+                case SLIME -> ModTextures.SLIME_GUI_OVERLAY;
+                case MUD -> ModTextures.MUD_GUI_OVERLAY;
+            };
+            blit(graphics, texture, 0, 0, -90, 0.0F, 0.0F,
                     screenWidth, screenHeight + slide, screenWidth, screenHeight + slide);
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();

@@ -34,6 +34,8 @@ dependencies {
     modRuntimeOnly("net.mehvahdjukaar:codecui-neoforge:${codecui_version}")
     modImplementation("net.mehvahdjukaar:polytone-neoforge:${polytone_version}")
     modRuntimeOnly("net.mehvahdjukaar:heraldics-neoforge:1.21.1-1.2.2")
+    modRuntimeOnly("maven.modrinth:just-zoom:3.1.0-1.21.1-neoforge")
+    modRuntimeOnly("maven.modrinth:konkrete:1.9.9-1.21-neoforge")
 
     // modCompileOnly("net.mehvahdjukaar:suppsquared-neoforge:1.21-1.2.6")
 
@@ -55,7 +57,7 @@ dependencies {
     //modRuntimeOnly("curse.maven:nbtedit-reborn-678133:5012063")
 
     modImplementation("curse.maven:configured-457570:7276577")
-    modCompileOnly("maven.modrinth:amendments:1.21-2.0.15-neoforge")
+    modImplementation("net.mehvahdjukaar:amendments-neoforge:1.21-2.2.2")
     //modRuntimeOnly("curse.maven:terrablender-neoforge-940057:5864140")
     //  modRuntimeOnly("curse.maven:regions-unexplored-659110:7745476")
 //    modRuntimeOnly("curse.maven:lithostitched-936015:7731887")
@@ -73,8 +75,9 @@ dependencies {
     modCompileOnly("curse.maven:supermartijn642s-config-lib-438332:4715408")
 
     //modCompileOnly("curse.maven:quark-oddities-301051:3575623")
-    modCompileOnly("curse.maven:quark-243121:8146177")
-    modCompileOnly("curse.maven:zeta-968868:7980010")
+    //modImplementation("curse.maven:quark-243121:8146177")
+    modImplementation("org.violetmoon.quark:Quark:4.1-488-SNAPSHOT")
+    modImplementation("curse.maven:zeta-968868:7980010")
     modImplementation("curse.maven:biolith-852512:7074761")
 
     //modImplementation("curse.maven:recipe-advancements-nuker-925511:4836115")
@@ -146,5 +149,6 @@ dependencies {
 
     api("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[${sable_companion_version},)")
     jarJar("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[${sable_companion_version},)")
+    modRuntimeOnly("maven.modrinth:sable:fg9dTRz9")
 }
 

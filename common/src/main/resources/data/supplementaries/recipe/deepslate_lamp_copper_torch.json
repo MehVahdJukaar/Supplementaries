@@ -1,0 +1,40 @@
+{
+  "fabric:load_conditions": [
+    {
+      "flag": "deepslate_lamp",
+      "condition": "supplementaries:flag"
+    },
+    {
+      "condition": "fabric:mod_loaded",
+      "modid": "vanillabackport"
+    }
+  ],
+  "neoforge:conditions": [
+    {
+      "type": "supplementaries:flag",
+      "flag": "deepslate_lamp"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "vanillabackport"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "000",
+    "010",
+    "000"
+  ],
+  "key": {
+    "0": {
+      "item": "minecraft:deepslate"
+    },
+    "1": {
+      "item": "minecraft:copper_torch"
+    }
+  },
+  "result": {
+    "id": "supplementaries:deepslate_lamp",
+    "count": 1
+  }
+}

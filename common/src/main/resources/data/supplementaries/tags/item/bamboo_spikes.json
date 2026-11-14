@@ -1,7 +1,37 @@
 {
   "replace": false,
   "values": [
-    {"id":"supplementaries:bamboo_spikes","required":true},
-    {"id":"supplementaries:bamboo_spikes_tipped","required":true}
+    {
+      "id": "supplementaries:bamboo_spikes",
+      "required": true,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "bamboo_spikes"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "bamboo_spikes"
+        }
+      ]
+    },
+    {
+      "id": "supplementaries:bamboo_spikes_tipped",
+      "required": true,
+      "fabric:load_conditions": [
+        {
+          "condition": "supplementaries:flag",
+          "flag": "tipped_spikes"
+        }
+      ],
+      "neoforge:conditions": [
+        {
+          "type": "supplementaries:flag",
+          "flag": "tipped_spikes"
+        }
+      ]
+    }
   ]
 }

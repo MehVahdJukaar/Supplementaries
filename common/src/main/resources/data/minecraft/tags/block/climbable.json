@@ -1,7 +1,21 @@
 {
   "replace": false,
   "values": [
-	"supplementaries:rope",
+	  {
+		  "id": "supplementaries:rope",
+		  "fabric:load_conditions": [
+			  {
+				  "condition": "supplementaries:flag",
+				  "flag": "rope"
+			  }
+		  ],
+		  "neoforge:conditions": [
+			  {
+				  "type": "supplementaries:flag",
+				  "flag": "rope"
+			  }
+		  ]
+	  },
     {"id":"supplementaries:rope_tomatoes","required":false}
   ]
 }
