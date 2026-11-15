@@ -20,6 +20,7 @@ import net.minecraft.world.level.material.FluidState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Map;
@@ -87,8 +88,10 @@ public class PistonBaseBlockMixin {
         return movingBe;
     }
 
+    //slice needed since forge has a different body ad diff calls
     @WrapOperation(method = "moveBlocks",
-            at = @At(value = "INVOKE", ordinal = 3,
+            slice = @Slice(from = @At(value = "INVOKE", target = "Ljava/util/Map;keySet()Ljava/util/Set;")),
+            at = @At(value = "INVOKE", ordinal = 0,
                     target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"))
     private boolean supp$leaveFluidBehind(Level level, BlockPos vacatedPos, BlockState air, int flags,
                                           Operation<Boolean> original,
