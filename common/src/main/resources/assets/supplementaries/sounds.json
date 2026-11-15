@@ -12,9 +12,9 @@
   "block.awning.bounce": {
     "sounds": [
       "supplementaries:block/awning_bounce_0",
-      "supplementaries:item/awning_bounce_1",
-      "supplementaries:item/awning_bounce_2",
-      "supplementaries:item/awning_bounce_3"
+      "supplementaries:block/awning_bounce_1",
+      "supplementaries:block/awning_bounce_2",
+      "supplementaries:block/awning_bounce_3"
     ],
     "subtitle": "subtitles.supplementaries.entity.bounce"
   },
