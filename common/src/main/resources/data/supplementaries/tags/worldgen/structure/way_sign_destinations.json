@@ -1,7 +1,10 @@
 {
   "replace": false,
   "values": [
-    "#minecraft:village",
+    {
+      "id": "#minecraft:village",
+      "required": false
+    },
     {"id": "hauntedharvest:abandoned_farm", "required": false},
     {"id": "harvestseason:abandoned_farm", "required": false},
     {"id": "pokecube_legends:village", "required": false},
@@ -20,7 +23,6 @@
     {"id":"idas:bearclaw_inn","required":false},
     {"id":"idas:treetop_tavern","required":false},
     {"id":"idas:wizardtower","required":false},
-    {"id":"idas:farmhouse","required":false},
     {"id":"idas:fishermans_lodge","required":false},
     {"id":"idas:beekeepers_house","required":false},
     {"id":"idas:desert_market/desert_market","required":false},

@@ -21,3 +21,5 @@ classes/
 *.launch
 /docs/
 /supplementaries.dev
+/trailer_renders/
+/neoforge/mods/sodium-neoforge-0.8.13.jar
