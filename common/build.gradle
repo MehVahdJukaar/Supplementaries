@@ -21,7 +21,7 @@ publishing {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${new File(rootProject.buildDir, "docsOut")}")
+    it.options.compilerArgs.add("-Acrafttweaker.processor.document.output_directory=${rootProject.layout.buildDirectory.dir("docsOut").get().asFile}")
     it.options.compilerArgs.add("-Acrafttweaker.processor.document.multi_source=true")
 
     it.options.compilerArgs << "-Xmaxerrs" << "4000"
@@ -29,8 +29,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 dependencies {
 
-    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
-    // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
 
 

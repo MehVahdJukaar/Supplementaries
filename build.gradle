@@ -13,7 +13,7 @@ allprojects {
 
     group = mod_group_id
     version = mod_version
-    archivesBaseName = mod_id
+    base { archivesName = mod_id }
 
     repositories {
         // Standard repositories
@@ -277,25 +277,23 @@ tasks.register('gitTag') {
         def tag = project.version.toString()
 
         // check if tag already exists
-        def stdout = new ByteArrayOutputStream()
-        exec {
+        def existing = providers.exec {
             commandLine 'git', 'tag', '-l', tag
-            standardOutput = stdout
-        }
+        }.standardOutput.asText.get()
 
-        if (!stdout.toString().trim().isEmpty()) {
+        if (!existing.trim().isEmpty()) {
             logger.warn("Git tag '${tag}' already exists")
         } else {
 
             // create annotated tag
-            exec {
+            providers.exec {
                 commandLine 'git', 'tag', '-a', tag, '-m', "Release ${tag}"
-            }
+            }.result.get()
 
             // push tag
-            exec {
+            providers.exec {
                 commandLine 'git', 'push', 'origin', tag
-            }
+            }.result.get()
         }
     }
 }

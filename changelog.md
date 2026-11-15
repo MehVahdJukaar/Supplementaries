@@ -1,3 +1,1 @@
-- fixed a deadlock with cannons on structures
-- added some missig supporter globes
-- misc improtant fixes
+-backported many 1.21.1 important fixes
