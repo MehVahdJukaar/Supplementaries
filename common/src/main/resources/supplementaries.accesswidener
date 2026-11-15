@@ -143,3 +143,7 @@ accessible field net/minecraft/world/level/Explosion damageSource Lnet/minecraft
 mutable field net/minecraft/world/level/Explosion damageSource Lnet/minecraft/world/damagesource/DamageSource;
 accessible field net/minecraft/world/level/Explosion blockInteraction Lnet/minecraft/world/level/Explosion$BlockInteraction;
 extendable method net/minecraft/world/level/Explosion addBlockDrops (Lit/unimi/dsi/fastutil/objects/ObjectArrayList;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/BlockPos;)V
+accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
+accessible class net/minecraft/world/item/ItemCooldowns$CooldownInstance
+accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance startTime I
+accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance endTime I

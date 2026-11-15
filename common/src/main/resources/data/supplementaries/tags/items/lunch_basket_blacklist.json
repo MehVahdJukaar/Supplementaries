@@ -7,6 +7,8 @@
     {"id":"potionbundles:potion_bundle","required":false},
     {"id":"ars_nouveau:potion_flask","required":false},
     {"id":"ars_nouveau:potion_flask_amplify","required":false},
-    {"id":"ars_nouveau:potion_flask_extend_time","required":false}
+    {"id":"ars_nouveau:potion_flask_extend_time","required":false},
+    {"id":"create:sand_paper","required":false},
+    {"id":"create:red_sand_paper","required":false}
   ]
 }

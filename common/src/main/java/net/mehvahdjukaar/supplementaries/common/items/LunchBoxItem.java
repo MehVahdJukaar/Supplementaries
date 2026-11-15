@@ -25,6 +25,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
@@ -72,9 +73,14 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
             if (food.isEmpty()) {
                 return InteractionResultHolder.fail(basket);
             }
+            //needed when trying to eat food in hand then in basket
+            if (player.getCooldowns().isOnCooldown(food.getItem())) return InteractionResultHolder.fail(basket);
+
             player.setItemInHand(hand, food);
-            //takes care of instant uses. Normally doesnt happen with food but we never know
+            Item foodItem = food.getItem();
+            //takes care of instant uses. Normally doesn't happen with food but we never know
             var result = food.use(pLevel, player, hand);
+            maybeAddCooldowns(player, foodItem);
             ItemStack resItem = result.getObject();
             swapWithSelected(player, resItem, data, food);
             ((LivingEntityAccessor) player).setUseItem(basket);
@@ -142,15 +148,27 @@ public class LunchBoxItem extends SelectableContainerItem<LunchBoxItem.Data> imp
         var data = getData(stack);
         if (data.canEatFrom()) {
             ItemStack selected = data.getSelected();
+            Item selItem = selected.getItem();
             //assume it will be decremented by at most 1
             //hacks
             ItemStack copy = selected.copyWithCount(1);
             ItemStack result = SuppPlatformStuff.finishUsingItem(copy, level, livingEntity);
+            if (livingEntity instanceof Player p) {
+                maybeAddCooldowns(p, selItem);
+            }
             //livingEntity.releaseUsingItem();
             swapWithSelected(livingEntity, result, data, selected);
             return stack;
         }
         return super.finishUsingItem(stack, level, livingEntity);
+    }
+
+    private void maybeAddCooldowns(Player p, Item item) {
+        var foodCooldown = p.getCooldowns().cooldowns.get(item);
+        if (foodCooldown != null) {
+            //just nice to have visual indication, technically a nerf as it applies to all food
+            p.getCooldowns().addCooldown(this, foodCooldown.endTime - foodCooldown.startTime);
+        }
     }
 
     @ForgeOverride
