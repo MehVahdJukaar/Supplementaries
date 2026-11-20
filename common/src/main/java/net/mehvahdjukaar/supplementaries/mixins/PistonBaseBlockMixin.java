@@ -43,21 +43,24 @@ public class PistonBaseBlockMixin {
     private void supp$captureBeForPistonMove(Level level, BlockEntity movingPiston,
                                              Operation<Void> original,
                                              @Local(argsOnly = true) Direction facing,
-                                             @Local(argsOnly = true) boolean extending) {
-        if (movingPiston == null) {
-            //nonsense check, idk what mod triggered this. pls report if you know
-            throw new IllegalStateException("Another mod passed a null moving-piston BlockEntity into " +
-                    "Level.setBlockEntity during PistonBaseBlock.moveBlocks. This is not a Supplementaries bug; " +
-                    "some other mod is overriding MovingPistonBlock.newMovingBlockEntity and returning null. ");
+                                             @Local(argsOnly = true) boolean extending,
+                                             @Share("suppDest") LocalRef<BlockPos> destShare) {
+        BlockEntity target = movingPiston;
+        if (target == null) {
+            // Carpet (and possibly others) redirects newMovingBlockEntity to return null, places the real moving
+            // piston BE itself right before this call, and turns this call into a no-op. Find the BE it placed.
+            BlockPos destPos = destShare.get();
+            BlockEntity placed = destPos == null ? null : level.getBlockEntity(destPos);
+            if (placed instanceof ICarryingMovingPiston) target = placed;
         }
-        if (!BlockMovementHelper.isBEMovementIsHandledByUs()) {
+        if (target == null || !BlockMovementHelper.isBEMovementIsHandledByUs()) {
             original.call(level, movingPiston);
             return;
         }
         Direction direction = extending ? facing : facing.getOpposite();
-        BlockPos sourcePos = movingPiston.getBlockPos().relative(direction.getOpposite());
+        BlockPos sourcePos = target.getBlockPos().relative(direction.getOpposite());
         CompoundTag compound = BlockMovementHelper.captureAndDetachBlockEntity(level, sourcePos);
-        if (compound != null && movingPiston instanceof ICarryingMovingPiston carrying) {
+        if (compound != null && target instanceof ICarryingMovingPiston carrying) {
             carrying.supp$setCarriedBlockEntityNbt(compound);
         }
         original.call(level, movingPiston);
@@ -80,7 +83,9 @@ public class PistonBaseBlockMixin {
                                            Direction facing, boolean extending, boolean isSourcePiston,
                                            Operation<BlockEntity> original,
                                            @Local(argsOnly = true) Level level,
-                                           @Share("suppFluids") LocalRef<Map<BlockPos, FluidState>> fluidShare) {
+                                           @Share("suppFluids") LocalRef<Map<BlockPos, FluidState>> fluidShare,
+                                           @Share("suppDest") LocalRef<BlockPos> destShare) {
+        destShare.set(destPos);
         FluidState fluid = MovedFluidFiller.getSnapshotFluid(fluidShare.get(), destPos);
         movedState = MovedFluidFiller.getStateMovedInto(movedState, level, destPos, fluid);
         BlockEntity movingBe = original.call(destPos, movingPistonState, movedState, facing, extending, isSourcePiston);
